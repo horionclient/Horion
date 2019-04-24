@@ -32,7 +32,7 @@ _Attack Attack;
 struct MyPlayer_t
 {
 	uintptr_t* CLocalPlayer; //address of our ent
-	vec3 Eye_Position;
+	vec3_t Eye_Position;
 	//float m_hitbox;
 	//vec3 Position;
 	void ReadInformation()
@@ -56,7 +56,7 @@ struct PlayerList_t
 {
 	uintptr_t* CBaseEntity;
 	uintptr_t pBaseEntity;
-	vec3 Eye_Position;
+	vec3_t Eye_Position;
 	//float m_hitbox;
 	PlayerList_t() {}
 	void ReadInformation(int Player)
@@ -139,7 +139,7 @@ void KillAura()
 
 		//if (MyPlayer.m_hitbox != PlayerList[i].m_hitbox) continue;
 
-		if (Distance(MyPlayer.Eye_Position, PlayerList[i].Eye_Position) > 10)continue;
+		if (MyPlayer.Eye_Position.dist(PlayerList[i].Eye_Position) > 10)continue;
 
 		//ReadProcessMemory(hProcess, (BYTE*)(InGame), &In_Game, sizeof(int), nullptr);
 
