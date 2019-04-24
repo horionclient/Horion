@@ -8,12 +8,14 @@ static bool isRunning = true;
 
 bool isKeyDown(int key) {
 	
-	return GetAsyncKeyState(key) & 0x8000;
+	//return GetAsyncKeyState(key) & 0x8000;
+	//logF("KEy: %X", gameModule->ptrBase + 0x26866E0 + (key * 0x4));
+	return mem.Read<bool>(gameModule->ptrBase + 0x26866E0 + (key * 0x4));
 }
 
 bool isKeyPressed(int key) {
 	if (isKeyDown(key)) {
-		logF("Waiting for up");
+		
 		while (isKeyDown(key))
 			Sleep(5);
 		return true;
@@ -48,6 +50,7 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 		logF("[!!!] You can try starting Horion in Administrator Mode");
 		return 1;
 	}
+	gameModule = mem.GetModule(L"Minecraft.Windows.exe");
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL);
 
 	ExitThread(0);
