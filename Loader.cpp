@@ -6,6 +6,8 @@ DllMain(HMODULE hModule,
 	LPVOID lpReserved
 )
 {
+	std::cout << "What's up dude !!";
+
 	
 	switch (ul_reason_for_call)
 	{
