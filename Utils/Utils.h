@@ -8,6 +8,7 @@
 #include <ctime>
 #include <Psapi.h>
 #include <iostream>
+#include <chrono>
 
 #define INRANGE(x,a,b)   (x >= a && x <= b)
 #define GET_BYTE( x )    (GET_BITS(x[0]) << 4 | GET_BITS(x[1]))
@@ -33,15 +34,15 @@ public:
 	{
 		const char* pattern = szSignature;
 		DWORD firstMatch = 0;
-		DWORD rangeStart = (DWORD)GetModuleHandleA(szModule);
+		uintptr_t rangeStart = (uintptr_t)GetModuleHandleA(szModule);
 		MODULEINFO miModInfo;
 		GetModuleInformation(GetCurrentProcess(), (HMODULE)rangeStart, &miModInfo, sizeof(MODULEINFO));
-		DWORD rangeEnd = rangeStart + miModInfo.SizeOfImage;
+		uintptr_t rangeEnd = rangeStart + miModInfo.SizeOfImage;
 
 		BYTE patByte = GET_BYTE(pattern);
 		const char* oldPat = pattern;
 
-		for (DWORD pCur = rangeStart; pCur < rangeEnd; pCur++)
+		for (uintptr_t pCur = rangeStart; pCur < rangeEnd; pCur++)
 		{
 			if (!*pattern)
 				return firstMatch;
@@ -80,4 +81,27 @@ public:
 		}
 		return 0u;
 	}
+
+	/**
+	*   GetCurrentSystemTime - Gets actual system time
+	*   @timeInfo: Reference to your own tm variable, gets modified.
+	*/
+	static void GetCurrentSystemTime(tm& timeInfo)
+	{
+		const std::chrono::system_clock::time_point systemNow = std::chrono::system_clock::now();
+		std::time_t now_c = std::chrono::system_clock::to_time_t(systemNow);
+		localtime_s(&timeInfo, &now_c); // using localtime_s as std::localtime is not thread-safe.
+	};
+
+
+	static void ApplySystemTime(std::stringstream *ss) {
+		using namespace std::chrono;
+
+		const std::chrono::system_clock::time_point systemNow = system_clock::now(); 
+		auto ms = duration_cast<milliseconds>(systemNow.time_since_epoch()) % 10000;
+		time_t now_c = system_clock::to_time_t(systemNow);
+		tm timeInfo{ };
+		localtime_s(&timeInfo, &now_c); // using localtime_s as std::localtime is not thread-safe.
+		*ss << "[" << std::put_time(&timeInfo, "%T") << "." << std::setfill('0') << std::setw(4) << ms.count() << "] ";
+	};
 };

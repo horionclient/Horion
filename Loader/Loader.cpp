@@ -5,7 +5,6 @@ SlimUtils::SlimMem mem;
 const SlimUtils::SlimModule* gameModule;
 static bool isRunning = true;
 
-
 bool isKeyDown(int key) {
 	static constexpr uintptr_t keyMapOffset = 0x26866E0; // Found via scan, static value
 
@@ -13,8 +12,7 @@ bool isKeyDown(int key) {
 }
 
 bool isKeyPressed(int key) {
-	if (isKeyDown(key)) {
-		
+	if (isKeyDown(key)) {		
 		while (isKeyDown(key))
 			Sleep(5);
 		return true;
@@ -35,8 +33,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		Sleep(1);
 	}
 
-	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1);
-	
+	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1); // Uninject
 	return 1;
 }
 
@@ -46,15 +43,14 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	DWORD procId = GetCurrentProcessId();
 	if (!mem.Open(procId, SlimUtils::ProcessAccess::Full))
 	{
-		logF("[!!!] Failed to open process, error-code: %i", GetLastError());
-		logF("[!!!] You can try starting Horion in Administrator Mode");
+		logF("Failed to open process, error-code: %i", GetLastError());
 		return 1;
 	}
-	gameModule = mem.GetModule(L"Minecraft.Windows.exe");
+	gameModule = mem.GetModule(L"Minecraft.Windows.exe"); // Get Module for Base Address
 
 	logF("Starting threads...");
 
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL);
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL); // Checking Keypresses
 	logF("Started!");
 
 	ExitThread(0);

@@ -1,15 +1,22 @@
 #pragma once
 
-
-#include <mutex>
-
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <Windows.h>
+
 #include <windows.storage.h>
 #include <wrl.h>
+#include <mutex>
+#include <string>
+#include <iostream>
+#include <ctime>
+#include <sstream>
+#include <iomanip>
+#include "Utils.h"
+
 #pragma comment(lib,"runtimeobject")
+
 
 #ifndef synchronized
 #define synchronized(m) for(std::unique_lock<std::recursive_mutex> lk(m); lk; lk.unlock())
@@ -19,11 +26,13 @@
 #define logF WriteLogFileF
 #endif
 
-static std::recursive_mutex loggerMutex;
-
 using namespace ABI::Windows::Storage;
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
+
+static std::recursive_mutex loggerMutex;
+
+
 
 std::wstring GetRoamingFolderPath()
 {
@@ -69,13 +78,18 @@ static void WriteLogFileF(const char* fmt, ...)
 				remove(logPath);
 			}
 			catch (std::exception e) {
-				// shrug
 			}
-
-
 		}
 
 		fopen_s(&pFile, logPath, "a");
+
+		
+		
+		std::stringstream ssTime; 
+		Utils::ApplySystemTime(&ssTime);
+		
+
+		fprintf(pFile, ssTime.str().c_str());
 		va_list arg;
 
 		va_start(arg, fmt);
