@@ -107,6 +107,7 @@
   <ItemGroup>
     <ClInclude Include="Loader\Loader.h" />
     <ClInclude Include="SDK\Offsets.h" />
+    <ClInclude Include="Utils\HMath.h" />
     <ClInclude Include="Utils\Logger.h" />
     <ClInclude Include="Memory\SlimMem.h" />
     <ClInclude Include="Utils\Utils.h" />

@@ -1,6 +1,5 @@
 #include "Loader.h"
-#include<vector>
-//#include "CalculAngle.h"
+#include <vector>
 
 _Offsets Offsets = _Offsets();
 
@@ -13,26 +12,6 @@ uintptr_t EntityPlayer_Base2;
 uintptr_t GmodeBase;
 uintptr_t InGame;
 
-vec3 Subtract(vec3 src, vec3 dst)
-{
-	vec3 diff;
-	diff.x = src.x - dst.x;
-	diff.y = src.y - dst.y;
-	diff.z = src.z - dst.z;
-	return diff;
-}
-
-float Magnitude(vec3 vec)
-{
-	return sqrtf(vec.x*vec.x + vec.y*vec.y + vec.z*vec.z);
-}
-
-float Distance(vec3 src, vec3 dst)
-{
-	vec3 diff = Subtract(src, dst);
-	return Magnitude(diff);
-}
-
 //Entity offsets
 uintptr_t dw_ViewAngles = 0xD8;
 uintptr_t dw_pitch = 0xD8;
@@ -40,9 +19,7 @@ uintptr_t dw_yaw = 0xDC;
 uintptr_t dw_EyePosition = 0xFB4;
 uintptr_t dw_Position = 0xFA8;
 uintptr_t Hitbox = 0xFC4;
-//uintptr_t dw_Gmode = 0x10C0;
 uintptr_t dw_Gmode = 0x110;
-//uintptr_t Swing = 0x1374;
 uintptr_t Swing = 0x140C;
 
 uintptr_t EntityLoopDistance = 0x8; //distance in bytes between each ent
@@ -201,7 +178,7 @@ void KillAura()
 	}
 	targetLoop = 0;
 	delete[] PlayerList;
-	//TargetList.erase(TargetList.begin(), TargetList.end());
+	
 }
 
 bool isKeyDown(int key) {
