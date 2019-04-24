@@ -18,6 +18,26 @@ uintptr_t EntityPlayer_Base2;
 uintptr_t GmodeBase;
 uintptr_t InGame;
 
+vec3 Subtract(vec3 src, vec3 dst)
+{
+	vec3 diff;
+	diff.x = src.x - dst.x;
+	diff.y = src.y - dst.y;
+	diff.z = src.z - dst.z;
+	return diff;
+}
+
+float Magnitude(vec3 vec)
+{
+	return sqrtf(vec.x*vec.x + vec.y*vec.y + vec.z*vec.z);
+}
+
+float Distance(vec3 src, vec3 dst)
+{
+	vec3 diff = Subtract(src, dst);
+	return Magnitude(diff);
+}
+
 //Entity offsets
 uintptr_t dw_ViewAngles = 0xD8;
 uintptr_t dw_pitch = 0xD8;
@@ -195,9 +215,11 @@ void KillAura()
 	delete[] PlayerList;
 	//TargetList.erase(TargetList.begin(), TargetList.end());
 }
+
 bool isKeyDown(int key) {
 	static constexpr uintptr_t keyMapOffset = 0x26866E0; // Found via scan, static value
-
+	// All keys are mapped there as bools, though 4 bytes in size
+	// key0 00 00 00 key1 00 00 00 key2 00 00 00 ...
 	return *reinterpret_cast<bool*>(gameModule->ptrBase + keyMapOffset + (key * 0x4));
 }
 
