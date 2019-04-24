@@ -11,12 +11,9 @@ DllMain(HMODULE hModule,
 	{
 	case DLL_PROCESS_ATTACH: //When the injector is called.
 	{
-		//std::wstring str = std::wstring(L"Microsoft.MinecraftUWP_8wekyb3d8bbwe");
-		WriteLogFile("hello");
-
+		logF("Starting cheat");
 		
-		//logF("%S\n", str.c_str());
-		//logF("%S\n", PackageFullNameFromFamilyName(str).c_str());
+		
 	}
 		break;
 	case DLL_THREAD_ATTACH:

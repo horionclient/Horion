@@ -57,7 +57,6 @@ static void WriteLogFileF(const char* fmt, ...)
 {
 #ifdef _DEBUG
 	
-		
 	synchronized(loggerMutex) {
 		FILE* pFile;
 
@@ -66,8 +65,15 @@ static void WriteLogFileF(const char* fmt, ...)
 		if (!yeet) {
 			std::wstring roam = GetRoamingFolderPath();
 			sprintf_s(logPath, 200, "%S\\boi.txt", roam.c_str());
-			
 			yeet = true;
+			try {
+				remove(logPath);
+			}
+			catch (std::exception e) {
+				// shrug
+			}
+			
+			
 		}
 
 		fopen_s(&pFile, logPath, "a");
