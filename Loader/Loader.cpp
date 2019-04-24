@@ -6,20 +6,12 @@ _Offsets Offsets = _Offsets();
 uintptr_t EntityList_Base = 0x26C9830;
 uintptr_t InGameBase = 0x25E53F8;
 
-
 uintptr_t* EntityPlayer_Base;
 uintptr_t EntityPlayer_Base2;
 uintptr_t* GmodeBase;
 uintptr_t InGame;
 
 //Entity offsets
-uintptr_t dw_ViewAngles = 0xD8;
-uintptr_t dw_pitch = 0xD8;
-uintptr_t dw_yaw = 0xDC;
-uintptr_t dw_EyePosition = 0xFB4;
-uintptr_t dw_Position = 0xFA8;
-uintptr_t Hitbox = 0xFC4;
-uintptr_t dw_Gmode = 0x110;
 uintptr_t Swing = 0x140C;
 
 uintptr_t EntityLoopDistance = 0x8; //distance in bytes between each ent
