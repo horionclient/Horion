@@ -15,24 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Loader.cpp">
+    <ClCompile Include="Memory\SlimMem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SlimMem.cpp">
+    <ClCompile Include="Loader\Loader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Loader.h">
+    <ClInclude Include="Utils\Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utils.h">
+    <ClInclude Include="Utils\Logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SlimMem.h">
+    <ClInclude Include="Memory\SlimMem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Logger.h">
+    <ClInclude Include="Loader\Loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -101,14 +101,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Loader.cpp" />
-    <ClCompile Include="SlimMem.cpp" />
+    <ClCompile Include="Loader\Loader.cpp" />
+    <ClCompile Include="Memory\SlimMem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Loader.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="SlimMem.h" />
-    <ClInclude Include="Utils.h" />
+    <ClInclude Include="Loader\Loader.h" />
+    <ClInclude Include="Utils\Logger.h" />
+    <ClInclude Include="Memory\SlimMem.h" />
+    <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
