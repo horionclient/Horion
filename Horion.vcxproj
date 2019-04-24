@@ -102,10 +102,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Loader.cpp" />
-    <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="SlimMem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Loader.h" />
+    <ClInclude Include="Logger.h" />
+    <ClInclude Include="SlimMem.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

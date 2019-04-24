@@ -1,5 +1,9 @@
 #include "Loader.h"
 
+
+SlimUtils::SlimMem mem;
+const SlimUtils::SlimModule* gameModule;
+
 BOOL __stdcall
 DllMain(HMODULE hModule,
 	DWORD  ul_reason_for_call,
@@ -12,7 +16,14 @@ DllMain(HMODULE hModule,
 	case DLL_PROCESS_ATTACH: //When the injector is called.
 	{
 		logF("Starting cheat");
-		
+		DWORD procId = GetCurrentProcessId();
+		if (!mem.Open(procId, SlimUtils::ProcessAccess::Full))
+		{
+			logF("[!!!] Failed to open process, error-code: %i", GetLastError());
+			logF("[!!!] You can try starting HBob in Administrator Mode");
+			Sleep(5000);
+			return 1;
+		}
 		
 	}
 		break;
