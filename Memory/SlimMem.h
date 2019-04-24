@@ -306,11 +306,3 @@ namespace SlimUtils {
 	}
 #pragma endregion
 }
-uintptr_t FindDMAAddy(uintptr_t ptr, std::vector<unsigned int> offsets);
-struct vec3
-{
-	float x, y, z;
-};
-vec3 Subtract(vec3 src, vec3 dst);
-float Magnitude(vec3 vec);
-float Magnitude(vec3 vec);

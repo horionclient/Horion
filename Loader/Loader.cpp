@@ -7,9 +7,9 @@ uintptr_t EntityList_Base = 0x26C9830;
 uintptr_t InGameBase = 0x25E53F8;
 
 
-uintptr_t EntityPlayer_Base;
+uintptr_t* EntityPlayer_Base;
 uintptr_t EntityPlayer_Base2;
-uintptr_t GmodeBase;
+uintptr_t* GmodeBase;
 uintptr_t InGame;
 
 //Entity offsets
@@ -37,16 +37,16 @@ struct MyPlayer_t
 	//vec3 Position;
 	void ReadInformation()
 	{
-		EntityPlayer_Base = mem.ReadPtr<uintptr_t>(gameModule->ptrBase + EntityList_Base, Offsets.EntityListOffsets);
+		EntityPlayer_Base = (uintptr_t*)(mem.ReadPtr<uintptr_t>(gameModule->ptrBase + EntityList_Base, Offsets.EntityListOffsets));
 		
-		CLocalPlayer = (uintptr_t*)EntityPlayer_Base;
+		CLocalPlayer = EntityPlayer_Base;
 
-		GmodeBase = mem.ReadPtr<uintptr_t>(*CLocalPlayer + dw_Gmode, Offsets.GmodeOffsets);
+		GmodeBase = (uintptr_t*)(mem.ReadPtr<uintptr_t>((*CLocalPlayer + dw_Gmode), Offsets.GmodeOffsets));
 		Attack = (_Attack)(gameModule->ptrBase + 0x222CBE0);
 		
-		Eye_Position.x = *(float*)(CLocalPlayer + 0xFB4);
-		Eye_Position.y = *(float*)(CLocalPlayer + 0xFB4 + 0x4);
-		Eye_Position.z = *(float*)(CLocalPlayer + 0xFB4 + 0x8);
+		Eye_Position.x = *(float*)(*CLocalPlayer + dw_EyePosition);
+		Eye_Position.y = *(float*)(*CLocalPlayer + dw_EyePosition + 0x4);
+		Eye_Position.z = *(float*)(*CLocalPlayer + dw_EyePosition + 0x8);
 	}
 }MyPlayer;
 
@@ -55,20 +55,20 @@ struct MyPlayer_t
 struct PlayerList_t
 {
 	uintptr_t* CBaseEntity;
-	uintptr_t pBaseEntity;
+	uintptr_t* pBaseEntity;
 	vec3_t Eye_Position;
 	//float m_hitbox;
 	PlayerList_t() {}
 	void ReadInformation(int Player)
 	{
 		//Get Addres of Entity
-		pBaseEntity = (EntityPlayer_Base + (Player*EntityLoopDistance));
+		pBaseEntity = (EntityPlayer_Base + (Player * EntityLoopDistance));
 		//ReadProcessMemory(hProcess, (BYTE*)(EntityPlayer_Base + (Player * EntityLoopDistance)), &CBaseEntity, sizeof(uintptr_t), nullptr);
-		CBaseEntity = (uintptr_t*)((EntityPlayer_Base + (Player * EntityLoopDistance)));
+		CBaseEntity = (EntityPlayer_Base + (Player * EntityLoopDistance));
 		//ReadProcessMemory(hProcess, (BYTE*)(CBaseEntity + dw_EyePosition), &Eye_Position, sizeof(vec3), 0);
-		Eye_Position.x = *(float*)(*CBaseEntity + 0xFB4);
-		Eye_Position.y = *(float*)(*CBaseEntity + 0xFB4 + 0x4);
-		Eye_Position.z = *(float*)(*CBaseEntity + 0xFB4 + 0x8);
+		Eye_Position.x = *(float*)(*CBaseEntity + dw_EyePosition);
+		Eye_Position.y = *(float*)(*CBaseEntity + dw_EyePosition + 0x4);
+		Eye_Position.z = *(float*)(*CBaseEntity + dw_EyePosition + 0x8);
 		//ReadProcessMemory(hProcess, (BYTE*)(CBaseEntity + Hitbox), &m_hitbox, sizeof(float), nullptr);
 	}
 };
@@ -81,9 +81,9 @@ struct TargetList_t
 
 	TargetList_t() {}
 
-	TargetList_t(uintptr_t BaseEntity)	//, float distance)//, vec3 myEyeCoords, vec3 enemyEyeCoord)
+	TargetList_t(uintptr_t* BaseEntity)	//, float distance)//, vec3 myEyeCoords, vec3 enemyEyeCoord)
 	{
-		CBaseEntity = (uintptr_t*)BaseEntity;
+		CBaseEntity = BaseEntity;
 		//m_Distance = distance;
 		//m_Distance = Distance(myEyeCoords, enemyEyeCoord);
 	}
@@ -94,17 +94,17 @@ int SetEntityListSize()
 	throw std::runtime_error("Not implemented yet");
 	//EntityPlayer_Base2 = FindDMAAddy((gameModule->ptrBase + EntityList_Base), { EntityListOffsets[0],EntityListOffsets[1]
 	//,EntityListOffsets[2] });
-	uintptr_t FirstEntity_p = EntityPlayer_Base;
-	uintptr_t *LastEntity_p;
+	uintptr_t* FirstEntity_p = EntityPlayer_Base;
+	uintptr_t* LastEntity_p;
 	
 	LastEntity_p = (uintptr_t*)(EntityPlayer_Base2 + 0x8);
-	int i = (int)((*LastEntity_p - FirstEntity_p) / sizeof(uintptr_t));
+	int i = (int)((LastEntity_p - FirstEntity_p) / sizeof(uintptr_t));
 	return i;
 }
-int CheckEntity(uintptr_t player, int i)
+int CheckEntity(uintptr_t* player, int i)
 {
-	uintptr_t FirstEntity_p = EntityPlayer_Base;
-	uintptr_t pUnknowEntity = player;
+	uintptr_t* FirstEntity_p = EntityPlayer_Base;
+	uintptr_t* pUnknowEntity = player;
 	return (((int)((pUnknowEntity - FirstEntity_p) / sizeof(uintptr_t))) == i);
 }
 
@@ -122,7 +122,7 @@ struct CompareTargetEnArray
 void KillAura()
 {
 	//Declare our target list to define our victims through a dynamic array
-	int size = SetEntityListSize();
+	int size = 100;
 	//std::vector<PlayerList_t> PlayerList;
 	PlayerList_t* PlayerList = new PlayerList_t[size];
 	std::vector<TargetList_t> TargetList;
@@ -142,7 +142,7 @@ void KillAura()
 			continue;
 	
 
-		TargetList.push_back(TargetList_t((uintptr_t)PlayerList[i].CBaseEntity));
+		TargetList.push_back(TargetList_t(PlayerList[i].CBaseEntity));
 		//Increment to advance the array for the next iteration
 		targetLoop++;
 	}
@@ -158,17 +158,18 @@ void KillAura()
 
 		//ReadProcessMemory(hProcess, (BYTE*)(InGame), &In_Game, sizeof(int), nullptr);
 		//AIM at the closest ent, by default aim at ALL times, if you right click hold it switches it off
-		for (int i = 0; i < TargetList.size() && TargetList[i].CBaseEntity != 0 && bKillAura
-			&&TargetList[i].CBaseEntity != 0; i++)//  && In_Game == 1; i++)
+		/*for (int i = 0; i < TargetList.size() && (*(TargetList[i].CBaseEntity)) != 0 && bKillAura
+			; i++)//  && In_Game == 1; i++)
 		{
 			if (bKillAura)
 			{
 				Sleep(120);
-				Attack((void*)GmodeBase, (void*)(*(TargetList[i].CBaseEntity)));
+				/*Attack((void*)GmodeBase, (void*)(*(TargetList[i].CBaseEntity)));
+				*(int*)((*(MyPlayer.CLocalPlayer)) + 0x140C) = 1;*/
 				//CallAttackFunc(hProcess, GmodeBase, TargetList[i].CBaseEntity, MyPlayer.CLocalPlayer);
-			}
+			//}
 			//CallAttackFunc(hProcess, GmodeBase, TargetList[i].CBaseEntity, MyPlayer.CLocalPlayer);
-		}
+		//}
 
 
 
@@ -199,10 +200,19 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 	logF("Key thread started");
 	while (isRunning) {
 		if (isKeyPressed('L')) { // Press L to uninject
-			isRunning = false;
+			/*isRunning = false;
 			logF("Uninjecting...");
-			break;
+			break;*/
+			bKillAura = !bKillAura;
+			logF("Activating KillAura");
 		}
+		if (bKillAura)
+		{
+			
+			MyPlayer.ReadInformation();
+			//KillAura();
+		}
+
 
 		Sleep(1);
 	}
@@ -221,7 +231,7 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 		return 1;
 	}
 	gameModule = mem.GetModule(L"Minecraft.Windows.exe"); // Get Module for Base Address
-
+	bKillAura = false;
 	logF("Starting threads...");
 
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL); // Checking Keypresses
