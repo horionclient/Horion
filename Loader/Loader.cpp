@@ -10,7 +10,7 @@ bool isKeyDown(int key) {
 	
 	//return GetAsyncKeyState(key) & 0x8000;
 	//logF("KEy: %X", gameModule->ptrBase + 0x26866E0 + (key * 0x4));
-	return mem.Read<bool>(gameModule->ptrBase + 0x26866E0 + (key * 0x4));
+	return *reinterpret_cast<bool*>(gameModule->ptrBase + 0x26866E0 + (key * 0x4));
 }
 
 bool isKeyPressed(int key) {
