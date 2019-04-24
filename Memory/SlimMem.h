@@ -23,6 +23,7 @@
 #include <type_traits>	//Used to restrict usage of template functions Read and Write to specific types
 #include <iostream>		//cout
 #include <memory>		//unique_ptr
+#include <vector>
 
 namespace SlimUtils {
 
@@ -305,3 +306,11 @@ namespace SlimUtils {
 	}
 #pragma endregion
 }
+uintptr_t FindDMAAddy(uintptr_t ptr, std::vector<unsigned int> offsets);
+struct vec3
+{
+	float x, y, z;
+};
+vec3 Subtract(vec3 src, vec3 dst);
+float Magnitude(vec3 vec);
+float Magnitude(vec3 vec);
