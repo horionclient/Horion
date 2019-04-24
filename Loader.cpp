@@ -6,17 +6,17 @@ DllMain(HMODULE hModule,
 	LPVOID lpReserved
 )
 {
-	std::cout << "What's up dude !!";
-
 	
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH: //When the injector is called.
 	{
-		std::wstring str = std::wstring(L"Microsoft.MinecraftUWP_8wekyb3d8bbwe");
+		//std::wstring str = std::wstring(L"Microsoft.MinecraftUWP_8wekyb3d8bbwe");
+		WriteLogFile("hello");
 
-		logF("%S\n", str);
-		logF("%S\n", PackageFullNameFromFamilyName(str));
+		
+		//logF("%S\n", str.c_str());
+		//logF("%S\n", PackageFullNameFromFamilyName(str).c_str());
 	}
 		break;
 	case DLL_THREAD_ATTACH:
