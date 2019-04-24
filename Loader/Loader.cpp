@@ -14,13 +14,14 @@ uintptr_t InGame;
 //Entity offsets
 uintptr_t Swing = 0x140C;
 
-uintptr_t EntityLoopDistance = 0x8; //distance in bytes between each ent
+typedef void(__fastcall * _Attack)(void* pThis, void* Player);
+_Attack Attack;
+
 int bKillAura;
 SlimUtils::SlimMem mem;
 const SlimUtils::SlimModule* gameModule;
 static bool isRunning = true;
-typedef void(__fastcall * _Attack)(void* pThis, void* Player);
-_Attack Attack;
+
 struct MyPlayer_t
 {
 	C_Entity* CLocalPlayer; //address of our ent
@@ -47,17 +48,13 @@ struct PlayerList_t
 	C_Entity* CBaseEntity;
 	uintptr_t* pBaseEntity;
 	vec3_t Eye_Position;
-	//float m_hitbox;
-	PlayerList_t() {}
+
 	void ReadInformation(int Player)
 	{
-		//Get Addres of Entity
-		pBaseEntity = (EntityPlayer_Base + (Player * EntityLoopDistance));
-		//ReadProcessMemory(hProcess, (BYTE*)(EntityPlayer_Base + (Player * EntityLoopDistance)), &CBaseEntity, sizeof(uintptr_t), nullptr);
-		CBaseEntity = reinterpret_cast<C_Entity*>(EntityPlayer_Base + (Player * EntityLoopDistance));
-		//ReadProcessMemory(hProcess, (BYTE*)(CBaseEntity + dw_EyePosition), &Eye_Position, sizeof(vec3), 0);
+		//Get Address of Entity
+		pBaseEntity = EntityPlayer_Base + (Player * sizeof(uintptr_t));
+		CBaseEntity = reinterpret_cast<C_Entity*>(EntityPlayer_Base + (Player * sizeof(uintptr_t)));
 		Eye_Position = CBaseEntity->eyePos1;
-		//ReadProcessMemory(hProcess, (BYTE*)(CBaseEntity + Hitbox), &m_hitbox, sizeof(float), nullptr);
 	}
 };
 
