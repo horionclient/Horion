@@ -73,7 +73,6 @@ struct PlayerList_t
 	}
 };
 
-
 struct TargetList_t
 {
 	uintptr_t *CBaseEntity;
@@ -133,17 +132,15 @@ void KillAura()
 	{
 		PlayerList[i].ReadInformation(i);
 
-		if (PlayerList[i].CBaseEntity == MyPlayer.CLocalPlayer) continue;
+		if (PlayerList[i].CBaseEntity == MyPlayer.CLocalPlayer) // Skip Local player
+			continue;
 
-		if (!CheckEntity((PlayerList[i].pBaseEntity), i)) continue;
+		if (!CheckEntity((PlayerList[i].pBaseEntity), i)) // Ghetto code
+			continue;
 
-		//if (MyPlayer.m_hitbox != PlayerList[i].m_hitbox) continue;
-
-		if (MyPlayer.Eye_Position.dist(PlayerList[i].Eye_Position) > 10)continue;
-
-		//ReadProcessMemory(hProcess, (BYTE*)(InGame), &In_Game, sizeof(int), nullptr);
-
-		//Populate array of targets with only good targets
+		if (MyPlayer.Eye_Position.dist(PlayerList[i].Eye_Position) > 10) // Throw away if distance > 10
+			continue;
+	
 
 		TargetList.push_back(TargetList_t((uintptr_t)PlayerList[i].CBaseEntity));
 		//Increment to advance the array for the next iteration
