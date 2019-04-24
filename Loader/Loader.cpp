@@ -2,7 +2,7 @@
 #include<vector>
 //#include "CalculAngle.h"
 
-_Offsets Offsets;
+_Offsets Offsets = _Offsets();
 
 uintptr_t EntityList_Base = 0x26C9830;
 uintptr_t InGameBase = 0x25E53F8;
