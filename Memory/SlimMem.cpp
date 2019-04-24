@@ -195,3 +195,33 @@ namespace SlimUtils {
 
 #pragma endregion
 }
+uintptr_t FindDMAAddy(uintptr_t ptr, std::vector<unsigned int> offsets)
+{
+	uintptr_t addr = ptr;
+	for (unsigned int i = 0; i < offsets.size(); ++i)
+	{
+		addr = *(uintptr_t*)addr;
+		addr += offsets[i];
+	}
+	return addr;
+}
+
+vec3 Subtract(vec3 src, vec3 dst)
+{
+	vec3 diff;
+	diff.x = src.x - dst.x;
+	diff.y = src.y - dst.y;
+	diff.z = src.z - dst.z;
+	return diff;
+}
+
+float Magnitude(vec3 vec)
+{
+	return sqrtf(vec.x*vec.x + vec.y*vec.y + vec.z*vec.z);
+}
+
+float Distance(vec3 src, vec3 dst)
+{
+	vec3 diff = Subtract(src, dst);
+	return Magnitude(diff);
+}
