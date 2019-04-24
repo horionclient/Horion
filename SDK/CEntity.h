@@ -2,6 +2,7 @@
 
 #include "../Utils/HMath.h"
 #include "TextHolder.h"
+#include "CEntityList.h"
 
 class PointingStruct
 {
@@ -16,10 +17,24 @@ public:
 
 }; //Size=0x0598
 
+struct _ptr2 {
+	char pad_0x0000[0x10]; //0x0000
+	CEntityList* entityList; //0x0010 
+};
+
+struct _ptr1 {
+	char pad_0x0000[0x30]; //0x0000
+	_ptr2* ptrToEntList; //0x0030 
+};
+
 class C_Entity
 {
 private:
-	char pad_0x0000[0xD8]; //0x0000
+	char pad_0x0000[0x8]; //0x0000
+public:
+	_ptr1* ptrToPtrToEntList; //0x0008 
+private:
+	char pad_0x0010[0xC8]; //0x0010
 public:
 	float pitch; //0x00D8 
 	float yaw; //0x00DC 
