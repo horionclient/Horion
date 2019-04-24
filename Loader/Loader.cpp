@@ -73,15 +73,12 @@ struct TargetList_t
 {
 	C_Entity *CBaseEntity;
 	float m_Distance;
-	//float m_Distance;
 
 	TargetList_t() {}
 
-	TargetList_t(C_Entity* BaseEntity)	//, float distance)//, vec3 myEyeCoords, vec3 enemyEyeCoord)
+	TargetList_t(C_Entity* BaseEntity)
 	{
 		CBaseEntity = BaseEntity;
-		//m_Distance = distance;
-		//m_Distance = Distance(myEyeCoords, enemyEyeCoord);
 	}
 
 };
@@ -196,15 +193,16 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 	logF("Key thread started");
 	while (isRunning) {
 		if (isKeyPressed('L')) { // Press L to uninject
-			/*isRunning = false;
+			isRunning = false;
 			logF("Uninjecting...");
-			break;*/
+			break;
+		}
+		if (isKeyPressed('P')) {
 			bKillAura = !bKillAura;
 			logF("Activating KillAura");
 		}
 		if (bKillAura)
 		{
-			
 			MyPlayer.ReadInformation();
 			//KillAura();
 		}
