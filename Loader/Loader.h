@@ -12,3 +12,4 @@
 #include "../Utils/Utils.h"
 #include "../SDK/Offsets.h"
 #include "../Utils/HMath.h"
+#include "../SDK/CEntity.h"

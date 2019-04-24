@@ -41,10 +41,10 @@
     <ClInclude Include="Utils\HMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\Entity.h">
+    <ClInclude Include="SDK\TextHolder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\TextHolder.h">
+    <ClInclude Include="SDK\CEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

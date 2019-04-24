@@ -3,6 +3,20 @@
 #include "../Utils/HMath.h"
 #include "TextHolder.h"
 
+class PointingStruct
+{
+public:
+private:
+	char pad_0x0000[0x570]; //0x0000
+public:
+	short rayHitType; //0x0570 
+	short blockSide; //0x0574 
+	vec3_ti block; //0x0578 
+	vec3_t rayHitVec; //0x0584 
+	uint64_t entityPtr; //0x0590 
+
+}; //Size=0x0598
+
 class C_Entity
 {
 private:
@@ -17,7 +31,11 @@ private:
 public:
 	vec3_t eyePos0; //0x00F8 
 private:
-	char pad_0x0104[0x48]; //0x0104
+	char pad_0x0104[0xC]; //0x0104
+public:
+	void* CGameMode; //0x0110 
+private:
+	char pad_0x0118[0x34]; //0x0118
 public:
 	uint8_t onGround; //0x014C 
 private:
@@ -38,7 +56,7 @@ public:
 	uint64_t ticksAlive; //0x0258 
 private:
 	char pad_0x0260[0xA98]; //0x0260
-protected:
+private:
 	PointingStruct* pointingAt; //0x0CF8 
 private:
 	char pad_0x0D00[0x2A8]; //0x0D00
@@ -83,16 +101,3 @@ public:
 	TextHolder uuid; //0x1CA4 
 };
 
-class PointingStruct
-{
-public:
-private:
-	char pad_0x0000[0x570]; //0x0000
-public:
-	short rayHitType; //0x0570 
-	short blockSide; //0x0574 
-	vec3_ti block; //0x0578 
-	vec3_t rayHitVec; //0x0584 
-	uint64_t entityPtr; //0x0590 
-
-}; //Size=0x0598

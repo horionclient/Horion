@@ -31,7 +31,7 @@ typedef void(__fastcall * _Attack)(void* pThis, void* Player);
 _Attack Attack;
 struct MyPlayer_t
 {
-	uintptr_t* CLocalPlayer; //address of our ent
+	C_Entity* CLocalPlayer; //address of our ent
 	vec3_t Eye_Position;
 	//float m_hitbox;
 	//vec3 Position;
@@ -39,14 +39,12 @@ struct MyPlayer_t
 	{
 		EntityPlayer_Base = (uintptr_t*)(mem.ReadPtr<uintptr_t>(gameModule->ptrBase + EntityList_Base, Offsets.EntityListOffsets));
 		
-		CLocalPlayer = EntityPlayer_Base;
+		CLocalPlayer = reinterpret_cast<C_Entity*>(EntityPlayer_Base);
 
-		GmodeBase = (uintptr_t*)(mem.ReadPtr<uintptr_t>((*CLocalPlayer + dw_Gmode), Offsets.GmodeOffsets));
+		GmodeBase = (uintptr_t*)(mem.ReadPtr<uintptr_t>((uintptr_t)(CLocalPlayer->CGameMode), Offsets.GmodeOffsets));
 		Attack = (_Attack)(gameModule->ptrBase + 0x222CBE0);
 		
-		Eye_Position.x = *(float*)(*CLocalPlayer + dw_EyePosition);
-		Eye_Position.y = *(float*)(*CLocalPlayer + dw_EyePosition + 0x4);
-		Eye_Position.z = *(float*)(*CLocalPlayer + dw_EyePosition + 0x8);
+		Eye_Position = CLocalPlayer->eyePos1;
 	}
 }MyPlayer;
 
@@ -54,7 +52,7 @@ struct MyPlayer_t
 
 struct PlayerList_t
 {
-	uintptr_t* CBaseEntity;
+	C_Entity* CBaseEntity;
 	uintptr_t* pBaseEntity;
 	vec3_t Eye_Position;
 	//float m_hitbox;
@@ -64,24 +62,22 @@ struct PlayerList_t
 		//Get Addres of Entity
 		pBaseEntity = (EntityPlayer_Base + (Player * EntityLoopDistance));
 		//ReadProcessMemory(hProcess, (BYTE*)(EntityPlayer_Base + (Player * EntityLoopDistance)), &CBaseEntity, sizeof(uintptr_t), nullptr);
-		CBaseEntity = (EntityPlayer_Base + (Player * EntityLoopDistance));
+		CBaseEntity = reinterpret_cast<C_Entity*>(EntityPlayer_Base + (Player * EntityLoopDistance));
 		//ReadProcessMemory(hProcess, (BYTE*)(CBaseEntity + dw_EyePosition), &Eye_Position, sizeof(vec3), 0);
-		Eye_Position.x = *(float*)(*CBaseEntity + dw_EyePosition);
-		Eye_Position.y = *(float*)(*CBaseEntity + dw_EyePosition + 0x4);
-		Eye_Position.z = *(float*)(*CBaseEntity + dw_EyePosition + 0x8);
+		Eye_Position = CBaseEntity->eyePos1;
 		//ReadProcessMemory(hProcess, (BYTE*)(CBaseEntity + Hitbox), &m_hitbox, sizeof(float), nullptr);
 	}
 };
 
 struct TargetList_t
 {
-	uintptr_t *CBaseEntity;
+	C_Entity *CBaseEntity;
 	float m_Distance;
 	//float m_Distance;
 
 	TargetList_t() {}
 
-	TargetList_t(uintptr_t* BaseEntity)	//, float distance)//, vec3 myEyeCoords, vec3 enemyEyeCoord)
+	TargetList_t(C_Entity* BaseEntity)	//, float distance)//, vec3 myEyeCoords, vec3 enemyEyeCoord)
 	{
 		CBaseEntity = BaseEntity;
 		//m_Distance = distance;
