@@ -2,17 +2,12 @@
 #include<vector>
 //#include "CalculAngle.h"
 
+_Offsets Offsets;
 
 uintptr_t EntityList_Base = 0x26C9830;
 uintptr_t InGameBase = 0x25E53F8;
 
-//Multilevel pointer offsets
-std::vector<unsigned int> EntityListOffsetsOut = { 0x10,0xF0,0x0,0x80,0x30,0x0,0x0 };
-std::vector<unsigned int> EntityListOffsets = { 0x60,0x10,0x40,0x0 };
-//std::vector<unsigned int> InGameOffsets = {0x10,0x150};
-std::vector<unsigned int> InGameOffsets = { 0x48,0xA8,0x150 };
-//std::vector<unsigned int> GmodeOffsets = {0x0,0xA90,0x0};
-std::vector<unsigned int> GmodeOffsets = { 0x240,0x18,0x8B8,0x0 };
+
 uintptr_t EntityPlayer_Base;
 uintptr_t EntityPlayer_Base2;
 uintptr_t GmodeBase;
@@ -65,24 +60,19 @@ struct MyPlayer_t
 	//vec3 Position;
 	void ReadInformation()
 	{
-		//Get address of entity
-		//EntityPlayer_Base = FindDMAAddy(hProcess, (moduleBase + EntityList_Base), EntityListOffsets);
-		EntityPlayer_Base = FindDMAAddy((gameModule->ptrBase + EntityList_Base), EntityListOffsets);
-		//ReadProcessMemory(hProcess, (BYTE*)(EntityPlayer_Base), &CLocalPlayer, sizeof(uintptr_t), nullptr);
-		CLocalPlayer = (uintptr_t*)EntityPlayer_Base;
-		//GmodeBase = FindDMAAddy(hProcess, (CLocalPlayer + dw_Gmode), GmodeOffsets);
-		GmodeBase = (FindDMAAddy((*CLocalPlayer + dw_Gmode), GmodeOffsets));
-		//ReadProcessMemory(hProcess, (BYTE*)(CLocalPlayer + dw_EyePosition), &Eye_Position, sizeof(vec3), nullptr);
-		Eye_Position.x = *(float*)(CLocalPlayer + 0xFB4);
-		Eye_Position.y = *(float*)(CLocalPlayer + 0xFB4+0x4);
-		Eye_Position.z = *(float*)(CLocalPlayer + 0xFB4+0x8);
-		//SlimUtils::ReadRaw(std::uintptr_t ptrAddress, int size)
-
-		//ReadProcessMemory(hProcess, (BYTE*)(CLocalPlayer + dw_Position), &Position, sizeof(vec3), nullptr);
+		EntityPlayer_Base = mem.ReadPtr<uintptr_t>(gameModule->ptrBase + EntityList_Base, Offsets.EntityListOffsets);
 		
+		CLocalPlayer = (uintptr_t*)EntityPlayer_Base;
 
+		GmodeBase = mem.ReadPtr<uintptr_t>(*CLocalPlayer + dw_Gmode, Offsets.GmodeOffsets);
+		Attack = (_Attack)(gameModule->ptrBase + 0x222CBE0);
+		
+		Eye_Position.x = *(float*)(CLocalPlayer + 0xFB4);
+		Eye_Position.y = *(float*)(CLocalPlayer + 0xFB4 + 0x4);
+		Eye_Position.z = *(float*)(CLocalPlayer + 0xFB4 + 0x8);
 	}
 }MyPlayer;
+
 
 
 struct PlayerList_t
@@ -125,14 +115,12 @@ struct TargetList_t
 };
 int SetEntityListSize()
 {
-	/*EntityPlayer_Base2 = FindDMAAddy(hProcess, (moduleBase + EntityList_Base), { EntityListOffsets[0],EntityListOffsets[1]
-	,EntityListOffsets[2],EntityListOffsets[3],EntityListOffsets[4],EntityListOffsets[5] });*/
-	EntityPlayer_Base2 = FindDMAAddy((gameModule->ptrBase + EntityList_Base), { EntityListOffsets[0],EntityListOffsets[1]
-	,EntityListOffsets[2] });
+	throw std::runtime_error("Not implemented yet");
+	//EntityPlayer_Base2 = FindDMAAddy((gameModule->ptrBase + EntityList_Base), { EntityListOffsets[0],EntityListOffsets[1]
+	//,EntityListOffsets[2] });
 	uintptr_t FirstEntity_p = EntityPlayer_Base;
 	uintptr_t *LastEntity_p;
-	//ReadProcessMemory(hProcess, (BYTE*)EntityPlayer_Base, &FirstEntity_p, sizeof(uintptr_t), nullptr);
-	//ReadProcessMemory((BYTE*)(EntityPlayer_Base2 + 0x8), &LastEntity_p, sizeof(uintptr_t), nullptr);
+	
 	LastEntity_p = (uintptr_t*)(EntityPlayer_Base2 + 0x8);
 	int i = (int)((*LastEntity_p - FirstEntity_p) / sizeof(uintptr_t));
 	return i;
