@@ -47,5 +47,8 @@
     <ClInclude Include="SDK\CEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SDK\CGameMode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

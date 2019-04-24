@@ -100,6 +100,16 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Loader\Loader.cpp" />
     <ClCompile Include="Memory\SlimMem.cpp" />
@@ -107,6 +117,7 @@
   <ItemGroup>
     <ClInclude Include="Loader\Loader.h" />
     <ClInclude Include="SDK\CEntity.h" />
+    <ClInclude Include="SDK\CGameMode.h" />
     <ClInclude Include="SDK\Offsets.h" />
     <ClInclude Include="SDK\TextHolder.h" />
     <ClInclude Include="Utils\HMath.h" />

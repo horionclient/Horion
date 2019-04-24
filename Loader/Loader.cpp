@@ -30,11 +30,11 @@ struct MyPlayer_t
 	//vec3 Position;
 	void ReadInformation()
 	{
-		EntityPlayer_Base = (uintptr_t*)(mem.ReadPtr<uintptr_t>(gameModule->ptrBase + EntityList_Base, Offsets.EntityListOffsets));
+		EntityPlayer_Base = mem.ReadPtr<uintptr_t*>(gameModule->ptrBase + EntityList_Base, Offsets.EntityListOffsets);
 		
 		CLocalPlayer = reinterpret_cast<C_Entity*>(EntityPlayer_Base);
 
-		GmodeBase = (uintptr_t*)(mem.ReadPtr<uintptr_t>((uintptr_t)(CLocalPlayer->CGameMode), Offsets.GmodeOffsets));
+		GmodeBase = mem.ReadPtr<uintptr_t*>((uintptr_t)(CLocalPlayer->CGameMode), Offsets.GmodeOffsets);
 		Attack = (_Attack)(gameModule->ptrBase + 0x222CBE0);
 		
 		Eye_Position = CLocalPlayer->eyePos1;

@@ -5,11 +5,17 @@
 #endif
 #include <Windows.h>
 
+#ifdef _DEBUG
+#include <ios>
+#include <iostream>
+#include <streambuf>
+#include <iosfwd>
+#endif
+
 #include <windows.storage.h>
 #include <wrl.h>
 #include <mutex>
 #include <string>
-#include <iostream>
 #include <ctime>
 #include <sstream>
 #include <iomanip>
@@ -31,7 +37,6 @@ using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
 
 static std::recursive_mutex loggerMutex;
-
 
 
 std::wstring GetRoamingFolderPath()
