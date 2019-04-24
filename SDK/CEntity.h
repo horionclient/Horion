@@ -5,7 +5,6 @@
 
 class PointingStruct
 {
-public:
 private:
 	char pad_0x0000[0x570]; //0x0000
 public:
