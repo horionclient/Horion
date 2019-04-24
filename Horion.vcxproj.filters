@@ -44,5 +44,8 @@
     <ClInclude Include="SDK\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SDK\TextHolder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

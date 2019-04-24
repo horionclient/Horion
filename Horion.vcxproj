@@ -108,6 +108,7 @@
     <ClInclude Include="Loader\Loader.h" />
     <ClInclude Include="SDK\Entity.h" />
     <ClInclude Include="SDK\Offsets.h" />
+    <ClInclude Include="SDK\TextHolder.h" />
     <ClInclude Include="Utils\HMath.h" />
     <ClInclude Include="Utils\Logger.h" />
     <ClInclude Include="Memory\SlimMem.h" />

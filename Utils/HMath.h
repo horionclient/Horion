@@ -192,16 +192,16 @@ struct vec3_ti {
 		return vec;
 	}
 };
-struct vec4
+struct vec4_t
 {
 	union
 	{
 		struct { float x, y, z, w; };
 		float v[4];
 	};
-	vec4() {}
-	explicit vec4(const vec3_t &p, float w = 0) : x(p.x), y(p.y), z(p.z), w(w) {}
-	vec4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
+	vec4_t() {}
+	explicit vec4_t(const vec3_t &p, float w = 0) : x(p.x), y(p.y), z(p.z), w(w) {}
+	vec4_t(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
 	float &operator[](int i) { return v[i]; }
 	float  operator[](int i) const { return v[i]; }
 };
@@ -270,7 +270,7 @@ struct glmatrixf
 		pos.z = p.x*v[8] + p.y*v[9] + p.z*v[10];
 	}
 
-	void transform(const vec3_t &in, vec4 &out) const
+	void transform(const vec3_t &in, vec4_t &out) const
 	{
 		out.x = transformx(in);
 		out.y = transformy(in);
@@ -315,7 +315,7 @@ struct glmatrixf
 	vec3_t WorldToScreen(vec3_t pos, int width, int height)
 	{
 		//Matrix-vector Product, multiplying world(eye) coordinates by projection matrix = clipCoords
-		vec4 clipCoords;
+		vec4_t clipCoords;
 		clipCoords.x = pos.x*v[0] + pos.y*v[4] + pos.z*v[8] + v[12];
 		clipCoords.y = pos.x*v[1] + pos.y*v[5] + pos.z*v[9] + v[13];
 		clipCoords.z = pos.x*v[2] + pos.y*v[6] + pos.z*v[10] + v[14];
@@ -335,6 +335,11 @@ struct glmatrixf
 
 		return playerscreen;
 	}
+};
+
+struct AABB {
+	vec3_t lower;
+	vec3_t upper;
 };
 
 inline int random(int start, int end) {
