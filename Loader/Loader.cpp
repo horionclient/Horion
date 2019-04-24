@@ -25,11 +25,11 @@ bool isKeyPressed(int key) {
 
 DWORD WINAPI keyThread(LPVOID lpParam)
 {
-	logF("Key thread");
+	logF("Key thread started");
 	while (isRunning) {
 		if (isKeyPressed('L')) { // Press L to uninject
 			isRunning = false;
-			logF("L pressed");
+			logF("Uninjecting...");
 			break;
 		}
 
@@ -43,6 +43,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 
 DWORD WINAPI startCheat(LPVOID lpParam)
 {
+	logF("Starting cheat..."); 
 	DWORD procId = GetCurrentProcessId();
 	if (!mem.Open(procId, SlimUtils::ProcessAccess::Full))
 	{
@@ -51,7 +52,11 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 		return 1;
 	}
 	gameModule = mem.GetModule(L"Minecraft.Windows.exe");
+
+	logF("Starting threads...");
+
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL);
+	logF("Started!");
 
 	ExitThread(0);
 	return 1;
