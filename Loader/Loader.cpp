@@ -23,11 +23,6 @@ const SlimUtils::SlimModule* gameModule;
 static bool isRunning = true;
 C_Entity* localPlayer = 0x0;
 
-// 
-// 
-
-
-
 //Compare the distance when sorting the array of Target Enemies, it's called a "sort predicate"
 /*struct CompareTargetEnArray
 {
@@ -45,55 +40,38 @@ void KillAura()
 	//Declare our target list to define our victims through a dynamic array
 
 	CEntityList* entList = localPlayer->ptrToPtrToEntList->ptrToEntList->entityList;
-	//CEntityList* entList = mem.ReadPtr<CEntityList*>(gameModule->ptrBase + 0x26dc038, {0x10, 0xF0, 0x0,0x80,0x30,0x0,0x0});
 	uintptr_t listSize = entList->getListSize();
 	uintptr_t test = (uintptr_t)(entList->firstEntity);
-	logF("entList: %llX", entList);
-	logF("ptr_entList: %llX", test);
 
-	std::vector<C_Entity*> TargetList;
 	//Loop through all our players and retrieve their information
 	float maxDist = 10;
-	//C_Entity* targetEnt = 0x0;
-	std::vector <uintptr_t> Target;
-	int targetLoop = 0;
+	std::vector <C_Entity*> targetList;
 	for (int i = 0; i < listSize; i++)
 	{
 		//PlayerList[i].ReadInformation(i);
 		C_Entity* currentEntity = reinterpret_cast<C_Entity*>(entList->firstEntity + i * sizeof(uintptr_t));
-		currentEntity = mem.ReadPtr<C_Entity*>(reinterpret_cast<uintptr_t>(currentEntity), { 0x0 });
-
+		currentEntity = mem.Read<C_Entity*>(reinterpret_cast<uintptr_t>(currentEntity));
 
 		if (currentEntity == localPlayer) // Skip Local player
 			continue;
 
 		if (currentEntity == 0)
 			continue;
-		//targetEnt = currentEntity;
-		logF("currentEntity: %llX", currentEntity);
 
 		float dist = currentEntity->eyePos1.dist(localPlayer->eyePos1);
 
-		logF("dist: %f", dist);
 		if (dist < maxDist) {
-			maxDist = dist;
-			Target.push_back((uintptr_t)currentEntity);
-			//targetEnt = currentEntity;
+			targetList.push_back(currentEntity);
 		}
-		//logF("target: %llX", Target[targetLoop]);
-		targetLoop++;
 	}
+
 	//ONLY AIM if we have any enemies
-	if (targetLoop > 0)
+	if (targetList.size() > 0)
 	{
-		//logF("Pounching %X, dist %f", targetEnt, maxDist);
-
-
-		//AIM at the closest ent, by default aim at ALL times, if you right click hold it switches it off
-		for (int i = 0; i < Target.size() && bKillAura; i++)
+		// Attack every entity in targetList
+		for (int i = 0; i < targetList.size() && bKillAura; i++)
 		{
-			//Sleep(20);
-			Attack((uintptr_t*)GmodeBase, (uintptr_t*)Target[i]);
+			Attack((uintptr_t*)GmodeBase, (uintptr_t*)targetList[i]);
 			*(int*)((uintptr_t)localPlayer + 0x140C) = 1;
 		}
 	}
@@ -126,23 +104,22 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		}
 		if (isKeyPressed('P')) {
 			bKillAura = !bKillAura; //true;
-			logF("Activating KillAura");
+			logF("%s KillAura", bKillAura ? "Activating" : "Deactivating");
 		}
 		if (bKillAura)
 		{
-			localPlayer = mem.ReadPtr<C_Entity*>(gameModule->ptrBase + 0x26dc038, { 0x0, 0x10, 0xF0, 0x0 });
-			localPlayer = mem.ReadPtr<C_Entity*>(reinterpret_cast<uintptr_t>(localPlayer), { 0xE0 });
-			logF("local pllayer: %llX", localPlayer);
-			GmodeBase = mem.ReadPtr<uintptr_t*>((uintptr_t)(localPlayer->CGameMode), { 0x238,0x18,0x8B8 });
+			localPlayer = mem.ReadPtr<C_Entity*>(gameModule->ptrBase + 0x26dc038, { 0x0, 0x10, 0xF0, 0x0, 0xE0 });
+			if (localPlayer != 0x0) {
+				GmodeBase = mem.ReadPtr<uintptr_t*>((uintptr_t)(localPlayer->CGameMode), { 0x238,0x18,0x8B8 });
 
-			logF("gmode: %llX", GmodeBase);
-
-
-			KillAura();
+				KillAura();
+			}
+		
+			
 		}
 
 
-		Sleep(1);
+		Sleep(50); // 1/20
 	}
 
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1); // Uninject
