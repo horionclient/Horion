@@ -3,6 +3,7 @@
 #include "../Utils/HMath.h"
 #include "TextHolder.h"
 #include "CEntityList.h"
+#include "CGameMode.h"
 
 class PointingStruct
 {
@@ -19,12 +20,27 @@ public:
 
 struct _ptr2 {
 	char pad_0x0000[0x10]; //0x0000
-	CEntityList* entityList; //0x0010 
+	C_EntityList* entityList; //0x0010 
 };
 
 struct _ptr1 {
 	char pad_0x0000[0x30]; //0x0000
 	_ptr2* ptrToEntList; //0x0030 
+};
+
+struct _1ptr3 {
+	char pad_0x0000[0x8B8];
+	C_GameMode* cGameMode; //0x08B8
+};
+
+struct _1ptr2 {
+	char pad_0x0000[0x18]; //0x0000
+	_1ptr3* ptrToCGameMode; //0x0018 
+};
+
+struct _1ptr1 {
+	char pad_0x0000[0x238]; //0x0000
+	_1ptr2* ptrToPtrToCGameMode; //0x0238 
 };
 
 class C_Entity
@@ -47,7 +63,7 @@ public:
 private:
 	char pad_0x0104[0xC]; //0x0104
 public:
-	void* CGameMode; //0x0110 
+	_1ptr1* ptrToPtrToPtrToCGameMode; //0x0110 
 private:
 	char pad_0x0118[0x34]; //0x0118
 public:
@@ -67,10 +83,10 @@ public:
 private:
 	char pad_0x01F4[0x64]; //0x01F4
 public:
-	uint64_t ticksAlive; //0x0258 
+	uintptr_t ticksAlive; //0x0258 
 private:
 	char pad_0x0260[0xA98]; //0x0260
-private:
+public:
 	PointingStruct* pointingAt; //0x0CF8 
 private:
 	char pad_0x0D00[0x2A8]; //0x0D00
@@ -97,7 +113,11 @@ public:
 	float yawUnused2; //0x1394 
 	int damageTime; //0x1398 
 private:
-	char pad_0x139C[0x8C]; //0x139C
+	char pad_0x139C[0x70]; //0x139C
+public:
+	int swing; //0x140C 
+private:
+	char pad_0x1410[0x18]; //0x1410
 public:
 	int timeSinceDeath; //0x1428 
 private:
@@ -115,3 +135,13 @@ public:
 	TextHolder uuid; //0x1CA4 
 };
 
+class C_LocalPlayer : public C_Entity {
+public:
+	C_EntityList* getEntityList() {
+		return this->ptrToPtrToEntList->ptrToEntList->entityList;
+	}
+
+	C_GameMode* getCGameMode() {
+		return this->ptrToPtrToPtrToCGameMode->ptrToPtrToCGameMode->ptrToCGameMode->cGameMode;
+	}
+};
