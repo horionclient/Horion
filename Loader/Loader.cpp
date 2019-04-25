@@ -131,7 +131,7 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	gameModule = mem.GetModule(L"Minecraft.Windows.exe"); // Get Module for Base Address
 	uintptr_t* GameModeAttack = (uintptr_t*)(gameModule->ptrBase + 0x222cbe0);
 	Attack = (_Attack)(*GameModeAttack);
-	bKillAura = false;
+
 	logF("Starting threads...");
 
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL); // Checking Keypresses

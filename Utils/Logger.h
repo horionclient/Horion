@@ -36,7 +36,7 @@ using namespace ABI::Windows::Storage;
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
 
-static std::recursive_mutex loggerMutex;
+static CRITICAL_SECTION loggerLock;
 
 std::wstring GetRoamingFolderPath()
 {
@@ -67,46 +67,52 @@ std::wstring GetRoamingFolderPath()
 
 static void WriteLogFileF(const char* fmt, ...)
 {
+	
 #ifdef _DEBUG
 	try {
-		synchronized(loggerMutex) {
-			FILE* pFile;
+		
+		FILE* pFile;
 
-			static char logPath[200];
-			static bool yeet = false;
-			if (!yeet) {
-				std::wstring roam = GetRoamingFolderPath();
-				sprintf_s(logPath, 200, "%S\\boi.txt", roam.c_str());
-				yeet = true;
-				try {
-					remove(logPath);
-				}
-				catch (std::exception e) {
-				}
+		static char logPath[200];
+		static bool yeet = false;
+		if (!yeet) {
+			InitializeCriticalSection(&loggerLock);
+			yeet = true;
+			std::wstring roam = GetRoamingFolderPath();
+			sprintf_s(logPath, 200, "%S\\boi.txt", roam.c_str());
+				
+			try {
+				remove(logPath);
 			}
-
-			fopen_s(&pFile, logPath, "a");
-
-			std::stringstream ssTime;
-			Utils::ApplySystemTime(&ssTime);
-
-
-			fprintf(pFile, ssTime.str().c_str());
-			va_list arg;
-
-			va_start(arg, fmt);
-			vfprintf(pFile, fmt, arg);
-			va_end(arg);
-			fprintf(pFile, "\n");
-
-			fclose(pFile);
+			catch (std::exception e) {
+			}
 		}
+		EnterCriticalSection(&loggerLock);
+
+		fopen_s(&pFile, logPath, "a");
+
+		std::stringstream ssTime;
+		Utils::ApplySystemTime(&ssTime);
+
+
+		fprintf(pFile, ssTime.str().c_str());
+		va_list arg;
+
+		va_start(arg, fmt);
+		vfprintf(pFile, fmt, arg);
+		va_end(arg);
+		fprintf(pFile, "\n");
+
+		fclose(pFile);
+
+			
+		
 	}
 	catch (std::exception e) {
 		// This throws an error when we cant acquire a lock on the logfile
 		// That can happen when another process opens the file, or my code is shit and the mutex isnt doing what its supposed to
 	}
-
+	LeaveCriticalSection(&loggerLock);
 #endif
 
 }
