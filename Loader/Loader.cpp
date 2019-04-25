@@ -66,7 +66,7 @@ void KillAura()
 	for (int i = 0; i < targetList.size(); i++)
 	{
 		Attack((uintptr_t*)GmodeBase, targetList[i]);
-		localPlayer->swing = 1;
+		localPlayer->swingArm();
 	}
 
 	
@@ -157,9 +157,9 @@ DllMain(HMODULE hModule,
 		DisableThreadLibraryCalls(hModule);
 	}
 	break;
-	case DLL_THREAD_ATTACH:
-	case DLL_THREAD_DETACH:
 	case DLL_PROCESS_DETACH:
+		logF("Removing logger");
+		DisableLogger();
 		break;
 	}
 	return TRUE;

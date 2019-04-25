@@ -117,6 +117,12 @@ static void WriteLogFileF(const char* fmt, ...)
 
 }
 
+static void DisableLogger() {
+#ifdef _DEBUG
+	DeleteCriticalSection(&loggerLock);
+#endif
+}
+
 static void WriteLogFile(const char* szString)
 {
 	WriteLogFileF("%s", szString);
