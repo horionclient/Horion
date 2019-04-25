@@ -14,7 +14,7 @@ uintptr_t InGame;
 //Entity offsets
 uintptr_t Swing = 0x140C;
 
-typedef void(__fastcall * _Attack)(void* pThis, void* Player);
+typedef void(__fastcall * _Attack)(uintptr_t* pThis, uintptr_t* Player);
 _Attack Attack;
 
 int bKillAura;
@@ -43,9 +43,13 @@ void KillAura()
 	if (localPlayer == 0x0)
 		return;
 	//Declare our target list to define our victims through a dynamic array
+
 	CEntityList* entList = localPlayer->ptrToPtrToEntList->ptrToEntList->entityList;
-	uintptr_t listSize = entList->getListSize();
-	
+	//CEntityList* entList = mem.ReadPtr<CEntityList*>(gameModule->ptrBase + 0x26dc038, {0x10, 0xF0, 0x0,0x80,0x30,0x0,0x0});
+	uintptr_t listSize = entList->getListSize(); 
+	uintptr_t test = (uintptr_t)(entList->firstEntity);
+	logF("entList: %llX", entList);
+	logF("ptr_entList: %llX", test);
 
 	std::vector<C_Entity*> TargetList;
 	//Loop through all our players and retrieve their information
@@ -55,15 +59,24 @@ void KillAura()
 	{
 		//PlayerList[i].ReadInformation(i);
 		C_Entity* currentEntity = reinterpret_cast<C_Entity*>(entList->firstEntity + i * sizeof(uintptr_t));
+		currentEntity = mem.ReadPtr<C_Entity*>(reinterpret_cast<uintptr_t>(currentEntity), { 0x0 });
+		
 
 		if (currentEntity == localPlayer) // Skip Local player
 			continue;
 
+		if (currentEntity == 0) 
+			continue;
+		//targetEnt = currentEntity;
+		logF("currentEntity: %llX", currentEntity);
 		float dist = currentEntity->eyePos1.dist(localPlayer->eyePos1);
+		logF("dist: %f", dist);
 		if (dist < maxDist) {
 			maxDist = dist;
 			targetEnt = currentEntity;
 		}
+		logF("target: %llX", targetEnt);
+		
 	}
 	//ONLY AIM if we have any enemies
 	if (targetEnt != 0x0)
@@ -76,11 +89,9 @@ void KillAura()
 		{
 			if (bKillAura)
 			{
-				Sleep(120);
-				Attack(GmodeBase, targetEnt);
-				*(int*)((localPlayer) + 0x140C) = 1;
-				//CallAttackFunc(hProcess, GmodeBase, TargetList[i].CBaseEntity, MyPlayer.CLocalPlayer);
-				bKillAura = 0;
+				Sleep(20);
+				Attack((uintptr_t*)GmodeBase, (uintptr_t*)targetEnt);
+				*(int*)((uintptr_t)localPlayer + 0x140C) = 1;
 			}
 			
 		}
@@ -116,7 +127,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			break;
 		}
 		if (isKeyPressed('P')) {
-			bKillAura = true;
+			bKillAura = !bKillAura; //true;
 			logF("Activating KillAura");
 		}
 		if (bKillAura)
@@ -124,10 +135,11 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			localPlayer = mem.ReadPtr<C_Entity*>(gameModule->ptrBase + 0x26dc038, {0x0, 0x10, 0xF0, 0x0});
 			localPlayer = mem.ReadPtr<C_Entity*>(reinterpret_cast<uintptr_t>(localPlayer), { 0xE0 });
 			logF("local pllayer: %llX", localPlayer);
-			//GmodeBase = mem.ReadPtr<uintptr_t*>((uintptr_t)(localPlayer->CGameMode), Offsets.GmodeOffsets);
-			GmodeBase = reinterpret_cast<uintptr_t *>(0x203F78D8CF0);
+			GmodeBase = mem.ReadPtr<uintptr_t*>((uintptr_t)(localPlayer->CGameMode), { 0x238,0x18,0x8B8 });
+
 			logF("gmode: %llX", GmodeBase);
-			Attack = (_Attack)(gameModule->ptrBase + 0x222CBE0);
+			
+			
 			KillAura();
 		}
 
@@ -149,6 +161,8 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 		return 1;
 	}
 	gameModule = mem.GetModule(L"Minecraft.Windows.exe"); // Get Module for Base Address
+	uintptr_t* GameModeAttack = (uintptr_t*)(gameModule->ptrBase + 0x222cbe0);
+	Attack = (_Attack)(*GameModeAttack);
 	bKillAura = false;
 	logF("Starting threads...");
 

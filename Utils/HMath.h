@@ -84,15 +84,18 @@ struct vec3_t
 	vec3_t &sub(const vec3_t &o) { x -= o.x; y -= o.y; z -= o.z; return *this; }
 
 	float squaredlen() const { return x * x + y * y + z * z; }
+
 	float sqrxy() const { return x * x + y * y; }
 
 	float dot(const vec3_t &o) const { return x * o.x + y * o.y + z * o.z; }
 	float dotxy(const vec3_t &o) const { return x * o.x + y * o.y; }
 
 	float magnitude() const { return sqrtf(squaredlen()); }
+
 	vec3_t &normalize() { div(magnitude()); return *this; }
 
 	float dist(const vec3_t &e) const { vec3_t t; return dist(e, t); }
+
 	float dist(const vec3_t &e, vec3_t &t) const { t = *this; t.sub(e); return t.magnitude(); }
 
 	float Get2DDist(const vec3_t &e) const { float dx = e.x - x, dy = e.y - y; return sqrtf(dx*dx + dy * dy); }
