@@ -46,7 +46,7 @@ void KillAura()
 
 	CEntityList* entList = localPlayer->ptrToPtrToEntList->ptrToEntList->entityList;
 	//CEntityList* entList = mem.ReadPtr<CEntityList*>(gameModule->ptrBase + 0x26dc038, {0x10, 0xF0, 0x0,0x80,0x30,0x0,0x0});
-	uintptr_t listSize = entList->getListSize(); 
+	uintptr_t listSize = entList->getListSize();
 	uintptr_t test = (uintptr_t)(entList->firstEntity);
 	logF("entList: %llX", entList);
 	logF("ptr_entList: %llX", test);
@@ -54,50 +54,48 @@ void KillAura()
 	std::vector<C_Entity*> TargetList;
 	//Loop through all our players and retrieve their information
 	float maxDist = 10;
-	C_Entity* targetEnt = 0x0;
+	//C_Entity* targetEnt = 0x0;
+	std::vector <uintptr_t> Target;
+	int targetLoop = 0;
 	for (int i = 0; i < listSize; i++)
 	{
 		//PlayerList[i].ReadInformation(i);
 		C_Entity* currentEntity = reinterpret_cast<C_Entity*>(entList->firstEntity + i * sizeof(uintptr_t));
 		currentEntity = mem.ReadPtr<C_Entity*>(reinterpret_cast<uintptr_t>(currentEntity), { 0x0 });
-		
+
 
 		if (currentEntity == localPlayer) // Skip Local player
 			continue;
 
-		if (currentEntity == 0) 
+		if (currentEntity == 0)
 			continue;
 		//targetEnt = currentEntity;
 		logF("currentEntity: %llX", currentEntity);
+
 		float dist = currentEntity->eyePos1.dist(localPlayer->eyePos1);
+
 		logF("dist: %f", dist);
 		if (dist < maxDist) {
 			maxDist = dist;
-			targetEnt = currentEntity;
+			Target.push_back((uintptr_t)currentEntity);
+			//targetEnt = currentEntity;
 		}
-		logF("target: %llX", targetEnt);
-		
+		//logF("target: %llX", Target[targetLoop]);
+		targetLoop++;
 	}
 	//ONLY AIM if we have any enemies
-	if (targetEnt != 0x0)
+	if (targetLoop > 0)
 	{
-		logF("Pounching %X, dist %f", targetEnt, maxDist);
+		//logF("Pounching %X, dist %f", targetEnt, maxDist);
 
-		
+
 		//AIM at the closest ent, by default aim at ALL times, if you right click hold it switches it off
-
+		for (int i = 0; i < Target.size() && bKillAura; i++)
 		{
-			if (bKillAura)
-			{
-				Sleep(20);
-				Attack((uintptr_t*)GmodeBase, (uintptr_t*)targetEnt);
-				*(int*)((uintptr_t)localPlayer + 0x140C) = 1;
-			}
-			
+			Sleep(20);
+			Attack((uintptr_t*)GmodeBase, (uintptr_t*)Target[i]);
+			*(int*)((uintptr_t)localPlayer + 0x140C) = 1;
 		}
-
-
-
 	}
 }
 
@@ -109,7 +107,7 @@ bool isKeyDown(int key) {
 }
 
 bool isKeyPressed(int key) {
-	if (isKeyDown(key)) {		
+	if (isKeyDown(key)) {
 		while (isKeyDown(key))
 			Sleep(5);
 		return true;
@@ -132,14 +130,14 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		}
 		if (bKillAura)
 		{
-			localPlayer = mem.ReadPtr<C_Entity*>(gameModule->ptrBase + 0x26dc038, {0x0, 0x10, 0xF0, 0x0});
+			localPlayer = mem.ReadPtr<C_Entity*>(gameModule->ptrBase + 0x26dc038, { 0x0, 0x10, 0xF0, 0x0 });
 			localPlayer = mem.ReadPtr<C_Entity*>(reinterpret_cast<uintptr_t>(localPlayer), { 0xE0 });
 			logF("local pllayer: %llX", localPlayer);
 			GmodeBase = mem.ReadPtr<uintptr_t*>((uintptr_t)(localPlayer->CGameMode), { 0x238,0x18,0x8B8 });
 
 			logF("gmode: %llX", GmodeBase);
-			
-			
+
+
 			KillAura();
 		}
 
@@ -153,7 +151,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 
 DWORD WINAPI startCheat(LPVOID lpParam)
 {
-	logF("Starting cheat..."); 
+	logF("Starting cheat...");
 	DWORD procId = GetCurrentProcessId();
 	if (!mem.Open(procId, SlimUtils::ProcessAccess::Full))
 	{
@@ -179,7 +177,7 @@ DllMain(HMODULE hModule,
 	LPVOID lpReserved
 )
 {
-	
+
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH: //When the injector is called.
@@ -189,7 +187,7 @@ DllMain(HMODULE hModule,
 		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)startCheat, hModule, NULL, NULL);
 		DisableThreadLibraryCalls(hModule);
 	}
-		break;
+	break;
 	case DLL_THREAD_ATTACH:
 	case DLL_THREAD_DETACH:
 	case DLL_PROCESS_DETACH:
