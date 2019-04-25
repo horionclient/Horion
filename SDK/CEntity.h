@@ -145,6 +145,16 @@ public:
 		return this->ptrToPtrToPtrToCGameMode->ptrToPtrToCGameMode->ptrToCGameMode->cGameMode;
 	}
 
+	void displayClientMessageStr(std::string str) {
+		using displayClientMessage = void(__fastcall*)(void*, char*);
+		static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(Utils::FindSignature("40 53 48 83 EC 20 48 8B 89 ?? ?? ?? ?? 48 8B DA 48 8B 01 FF 90 ?? ?? ?? ?? 48 8B C8"));
+		displayMessageFunc(this, (char*)str.c_str());
+	}
+
+	void displayClientMessage(char* message) {
+		displayClientMessageStr(std::string(message));
+	}
+
 	void swingArm() {
 		using SwingArm = void(__thiscall*)(void*);
 		static SwingArm swingFunc = reinterpret_cast<SwingArm>(Utils::FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B D9 80 B9"));

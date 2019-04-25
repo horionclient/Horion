@@ -1,5 +1,4 @@
 #include "Loader.h"
-#include <vector>
 
 _Offsets Offsets = _Offsets();
 
@@ -22,6 +21,7 @@ SlimUtils::SlimMem mem;
 const SlimUtils::SlimModule* gameModule;
 static bool isRunning = true;
 C_LocalPlayer* localPlayer = 0x0;
+C_ClientInstance* clientInstance = 0x0;
 
 //Compare the distance when sorting the array of Target Enemies, it's called a "sort predicate"
 /*struct CompareTargetEnArray
@@ -113,21 +113,21 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			bKillAura = !bKillAura; //true;
 			logF("%s KillAura", bKillAura ? "Activating" : "Deactivating");
 		}
+		if (isKeyPressed('O')) {
+			localPlayer = clientInstance->getLocalPlayer();
+			if (localPlayer != 0x0)
+				localPlayer->displayClientMessage("Hi world");
+		}
 		if (bKillAura)
 		{
-			localPlayer = mem.ReadPtr<C_LocalPlayer*>(gameModule->ptrBase + 0x26dc038, { 0x0, 0x10, 0xF0, 0x0, 0xE0 });
+			localPlayer = clientInstance->getLocalPlayer();
 			if (localPlayer != 0x0) {
 				GmodeBase = localPlayer->getCGameMode();
 				KillAura();
 			}
-		
-			
 		}
-
-
-		Sleep(50); // 1/20
+		Sleep(50); // 1000 / 20 
 	}
-
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1); // Uninject
 }
 
@@ -143,6 +143,8 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	gameModule = mem.GetModule(L"Minecraft.Windows.exe"); // Get Module for Base Address
 	uintptr_t* GameModeAttack = (uintptr_t*)(gameModule->ptrBase + 0x222cbe0);
 	Attack = (_Attack)(*GameModeAttack);
+
+	clientInstance = mem.ReadPtr<C_ClientInstance*>(gameModule->ptrBase + 0x26dc038, { 0x0, 0x10, 0xF0, 0x0 });
 
 	logF("Starting threads...");
 

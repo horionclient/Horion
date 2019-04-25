@@ -8,8 +8,10 @@
 #include <Windows.h>
 #include <iostream>
 #include <string>
+#include <vector>
 #include "../Memory/SlimMem.h"
 #include "../Utils/Utils.h"
 #include "../SDK/Offsets.h"
 #include "../Utils/HMath.h"
 #include "../SDK/CEntity.h"
+#include "../SDK/CClientInstance.h"

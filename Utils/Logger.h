@@ -67,7 +67,6 @@ std::wstring GetRoamingFolderPath()
 
 static void WriteLogFileF(const char* fmt, ...)
 {
-	
 #ifdef _DEBUG
 	try {
 		
@@ -104,9 +103,6 @@ static void WriteLogFileF(const char* fmt, ...)
 		fprintf(pFile, "\n");
 
 		fclose(pFile);
-
-			
-		
 	}
 	catch (std::exception e) {
 		// This throws an error when we cant acquire a lock on the logfile
