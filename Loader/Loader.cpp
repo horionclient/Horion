@@ -92,7 +92,7 @@ void KillAura()
 		//AIM at the closest ent, by default aim at ALL times, if you right click hold it switches it off
 		for (int i = 0; i < Target.size() && bKillAura; i++)
 		{
-			Sleep(20);
+			//Sleep(20);
 			Attack((uintptr_t*)GmodeBase, (uintptr_t*)Target[i]);
 			*(int*)((uintptr_t)localPlayer + 0x140C) = 1;
 		}
