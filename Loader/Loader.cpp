@@ -117,7 +117,6 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 	}
 
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1); // Uninject
-	return 1;
 }
 
 DWORD WINAPI startCheat(LPVOID lpParam)
@@ -139,13 +138,12 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	logF("Started!");
 
 	ExitThread(0);
-	return 1;
 }
 
 BOOL __stdcall
 DllMain(HMODULE hModule,
 	DWORD  ul_reason_for_call,
-	LPVOID lpReserved
+	LPVOID
 )
 {
 

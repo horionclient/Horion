@@ -33,7 +33,7 @@ public:
 	static uintptr_t FindSignatureModule(const char* szModule, const char* szSignature)
 	{
 		const char* pattern = szSignature;
-		DWORD firstMatch = 0;
+		uintptr_t firstMatch = 0;
 		uintptr_t rangeStart = (uintptr_t)GetModuleHandleA(szModule);
 		MODULEINFO miModInfo;
 		GetModuleInformation(GetCurrentProcess(), (HMODULE)rangeStart, &miModInfo, sizeof(MODULEINFO));
