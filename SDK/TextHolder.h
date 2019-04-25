@@ -4,7 +4,7 @@
 __declspec(align(4)) 
 class TextHolder
 {	
-public:
+private:
 
 	union {
 		char inlineText[16]; //0x0000 
@@ -12,6 +12,7 @@ public:
 	};
 
 	int textLength; //0x0010 
+public:
 
 	char* getText() {
 		if (textLength < 16)

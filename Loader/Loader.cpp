@@ -67,14 +67,6 @@ void KillAura()
 	{
 		Attack((uintptr_t*)GmodeBase, targetList[i]);
 		localPlayer->swing = 1;
-		logF("swing: %llX", &localPlayer->ticksAlive);
-		logF("wid: %llX", &localPlayer->width);
-		logF("tt: %llX", &localPlayer->name);
-		logF("tt i: %llX", &localPlayer->name.inlineText);
-		logF("tt p: %llX", &localPlayer->name.pText);
-		logF("tt s: %llX", &localPlayer->name.textLength);
-		logF("bodyYaw: %llX", &localPlayer->bodyYaw);
-		
 	}
 
 	
