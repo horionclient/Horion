@@ -1,16 +1,18 @@
 #pragma once
 
+#pragma pack(push,4)
+__declspec(align(4)) 
 class TextHolder
-{
+{	
 public:
-private:
+
 	union {
 		char inlineText[16]; //0x0000 
 		char *pText; //0x0000 
 	};
 
 	int textLength; //0x0010 
-public:
+
 	char* getText() {
 		if (textLength < 16)
 			return this->inlineText;
@@ -22,3 +24,5 @@ public:
 		return textLength;
 	}
 };
+
+#pragma pack(pop)

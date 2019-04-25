@@ -43,7 +43,8 @@ void KillAura()
 
 	//Loop through all our players and retrieve their information
 	float maxDist = 10;
-	std::vector <C_Entity*> targetList;
+	static std::vector <C_Entity*> targetList;
+	targetList.clear();
 	for (size_t i = 0; i < listSize; i++)
 	{
 		C_Entity* currentEntity = entList->get(i);
@@ -66,7 +67,17 @@ void KillAura()
 	{
 		Attack((uintptr_t*)GmodeBase, targetList[i]);
 		localPlayer->swing = 1;
+		logF("swing: %llX", &localPlayer->ticksAlive);
+		logF("wid: %llX", &localPlayer->width);
+		logF("tt: %llX", &localPlayer->name);
+		logF("tt i: %llX", &localPlayer->name.inlineText);
+		logF("tt p: %llX", &localPlayer->name.pText);
+		logF("tt s: %llX", &localPlayer->name.textLength);
+		logF("bodyYaw: %llX", &localPlayer->bodyYaw);
+		
 	}
+
+	
 }
 
 bool isKeyDown(int key) {
