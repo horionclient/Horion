@@ -115,8 +115,11 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		}
 		if (isKeyPressed('O')) {
 			localPlayer = clientInstance->getLocalPlayer();
-			if (localPlayer != 0x0)
-				localPlayer->displayClientMessage("Hi world");
+			//if (localPlayer != 0x0)
+				//localPlayer->displayClientMessage("Hi world");
+			uintptr_t* rcx = reinterpret_cast<uintptr_t*>(mem.ReadPtr<uintptr_t>(gameModule->ptrBase + 0x026C9828, { 0, 0x60, 0x10, 0x4B8, 0x0, 0xA8, 0x58, 0x5E0 }) + 0x10);
+			C_ClientInstanceScreenModel* cli = reinterpret_cast<C_ClientInstanceScreenModel*>(rcx);
+			cli->sendChatMessage("Hi!");
 		}
 		if (bKillAura)
 		{

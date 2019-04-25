@@ -15,3 +15,4 @@
 #include "../Utils/HMath.h"
 #include "../SDK/CEntity.h"
 #include "../SDK/CClientInstance.h"
+#include "../SDK/CClientInstanceScreenModel.h"

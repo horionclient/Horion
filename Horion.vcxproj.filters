@@ -56,5 +56,8 @@
     <ClInclude Include="SDK\CClientInstance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SDK\CClientInstanceScreenModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
