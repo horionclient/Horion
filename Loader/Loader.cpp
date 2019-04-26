@@ -2,23 +2,13 @@
 
 _Offsets Offsets = _Offsets();
 
-uintptr_t EntityList_Base = 0x26C9830;
-uintptr_t InGameBase = 0x25E53F8;
-
-uintptr_t* EntityPlayer_Base;
-uintptr_t EntityPlayer_Base2;
-C_GameMode* GmodeBase;
-uintptr_t InGame;
-
 //Entity offsets
-
-typedef void(__fastcall * _Attack)(uintptr_t* pThis, C_Entity* Player);
-_Attack Attack;
 
 int bKillAura;
 SlimUtils::SlimMem mem;
 const SlimUtils::SlimModule* gameModule;
 static bool isRunning = true;
+
 C_LocalPlayer* localPlayer = 0x0;
 C_ClientInstance* clientInstance = 0x0;
 
@@ -64,10 +54,12 @@ void KillAura()
 	if(targetList.size() > 0)
 		localPlayer->swingArm();
 
+	C_GameMode* gameMode = localPlayer->getCGameMode();
+
 	// Attack all entitys in targetList 
 	for (int i = 0; i < targetList.size(); i++)
 	{
-		Attack((uintptr_t*)GmodeBase, targetList[i]);
+		gameMode->attack(targetList[i]);
 		
 	}
 }
@@ -133,7 +125,6 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		{
 			localPlayer = clientInstance->getLocalPlayer();
 			if (localPlayer != 0x0) {
-				GmodeBase = localPlayer->getCGameMode();
 				KillAura();
 			}
 		}
@@ -152,8 +143,6 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 		return 1;
 	}
 	gameModule = mem.GetModule(L"Minecraft.Windows.exe"); // Get Module for Base Address
-	uintptr_t* GameModeAttack = (uintptr_t*)(gameModule->ptrBase + 0x222cbe0);
-	Attack = (_Attack)(*GameModeAttack);
 
 	clientInstance = mem.ReadPtr<C_ClientInstance*>(gameModule->ptrBase + 0x26dc038, { 0x0, 0x10, 0xF0, 0x0 });
 
