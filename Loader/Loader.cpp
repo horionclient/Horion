@@ -11,7 +11,6 @@ C_GameMode* GmodeBase;
 uintptr_t InGame;
 
 //Entity offsets
-uintptr_t Swing = 0x140C;
 
 typedef void(__fastcall * _Attack)(uintptr_t* pThis, C_Entity* Player);
 _Attack Attack;
@@ -62,14 +61,15 @@ void KillAura()
 		}
 	}
 
+	if(targetList.size() > 0)
+		localPlayer->swingArm();
+
 	// Attack all entitys in targetList 
 	for (int i = 0; i < targetList.size(); i++)
 	{
 		Attack((uintptr_t*)GmodeBase, targetList[i]);
-		localPlayer->swingArm();
+		
 	}
-
-	
 }
 
 bool isKeyDown(int key) {
@@ -119,7 +119,15 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 				//localPlayer->displayClientMessage("Hi world");
 			uintptr_t* rcx = reinterpret_cast<uintptr_t*>(mem.ReadPtr<uintptr_t>(gameModule->ptrBase + 0x026C9828, { 0, 0x60, 0x10, 0x4B8, 0x0, 0xA8, 0x58, 0x5E0 }) + 0x10);
 			C_ClientInstanceScreenModel* cli = reinterpret_cast<C_ClientInstanceScreenModel*>(rcx);
-			cli->sendChatMessage("Hi!");
+			cli->sendChatMessage("      /\\");
+			Sleep(2300);
+			cli->sendChatMessage("     /  \\");
+			Sleep(2300);
+			cli->sendChatMessage("    /    \\");
+			Sleep(2300);
+			cli->sendChatMessage("   /   @  \\");
+			Sleep(2300);
+			cli->sendChatMessage("  /_______\\");
 		}
 		if (bKillAura)
 		{
