@@ -124,6 +124,16 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			Sleep(2300);
 			cli->sendChatMessage("  /_______\\");
 		}
+		if (isKeyPressed('M')) {
+			localPlayer = clientInstance->getLocalPlayer();
+			C_BlockPos pos;
+			pos.x = 388;
+			pos.y = 3;
+			pos.z = 219;
+			bool boi = false;
+			localPlayer->getCGameMode()->startDestroyBlock(&pos, 1, &boi);
+		}
+
 		if (bKillAura)
 		{
 			localPlayer = clientInstance->getLocalPlayer();

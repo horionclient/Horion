@@ -115,7 +115,7 @@
   <ItemGroup>
     <ClCompile Include="Loader\Loader.cpp" />
     <ClCompile Include="Memory\SlimMem.cpp" />
-    <ClCompile Include="SDK\CBlockPos.cpp" />
+    <ClCompile Include="SDK\CBlockPos.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Loader\Loader.h" />

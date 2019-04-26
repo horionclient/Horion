@@ -21,7 +21,7 @@
     <ClCompile Include="Loader\Loader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SDK\CBlockPos.cpp">
+    <ClCompile Include="SDK\CBlockPos.h">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
