@@ -137,11 +137,10 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		if (isKeyPressed('M')) {
 			localPlayer = clientInstance->getLocalPlayer();
 			C_BlockPos pos;
-			pos.x = 388;
-			pos.y = 3;
-			pos.z = 219;
-			bool boi = false;
-			localPlayer->getCGameMode()->startDestroyBlock(&pos, 1, &boi);
+			pos.x = 0;
+			pos.y = 5;
+			pos.z = 0;
+			localPlayer->getCGameMode()->_destroyBlockInternal(&pos, 1);
 		}
 
 		if (bKillAura)

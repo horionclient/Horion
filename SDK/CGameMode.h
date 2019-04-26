@@ -15,7 +15,7 @@ public:
 	}
 
 	void destroyBlock(C_BlockPos* block, uint8_t blockSide) {
-		using destroyBlock = void(__fastcall*)(void*, const void*, uint8_t);
+		using destroyBlock = void(__fastcall*)(void*, void*, int);
 		static destroyBlock destroyBlockFunc = reinterpret_cast<destroyBlock>(Utils::FindSignature("55 57 41 56 48 8D 68 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 45 0F B6 F0") - 3);
 
 		if (destroyBlockFunc != 0x0) {
@@ -38,15 +38,13 @@ public:
 
 	}
 
-	void startDestroyBlock(C_BlockPos* block, uint8_t blockSide, bool* idk) {
-		// 
+	void _destroyBlockInternal(C_BlockPos* block, uint8_t blockSide) {
 
-		using startDestroyBlock = void(__fastcall*)(void*, const void*, uint8_t face, bool*);
-		static startDestroyBlock destroyBlockFunc = reinterpret_cast<startDestroyBlock>(Utils::FindSignature("56 57 48 81 EC 80 00 00 00 48 C7 44 24 20 FE FF FF FF 48 8B 05 5D 24 13 01 48 33 C4") - 2);
-		destroyBlockFunc = reinterpret_cast<startDestroyBlock>(0x7FF737A37440);
+		using destroyBlockInternal = void(__fastcall*)(void*, const void*, uint8_t face);
+		static destroyBlockInternal destroyBlockFunc = reinterpret_cast<destroyBlockInternal>(Utils::FindSignature("40 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 D9 48 81 EC E0 00 00 00 48 C7 45 87 FE FF FF FF 48 89 9C 24 30 01 00 00"));
 		if (destroyBlockFunc != 0x0) {
 			// 
-			destroyBlockFunc(this, block, blockSide, idk);
+			destroyBlockFunc(this, block, blockSide);
 		}
 
 	}
