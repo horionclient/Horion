@@ -108,6 +108,13 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			bKillAura = !bKillAura; //true;
 			logF("%s KillAura", bKillAura ? "Activating" : "Deactivating");
 		}
+		if (isKeyPressed('M')) {
+			using DestroyBlock = void(__fastcall*)(void*, void*,int);
+			DestroyBlock destroyBlock = (DestroyBlock)0x00007FF7BB3E7740;
+			uintptr_t* test = (uintptr_t*)0x00000008A123FEF60;
+			CBlockPos* test2 = reinterpret_cast<CBlockPos*>(test);
+			destroyBlock((void*)0x000002A4F60CBE00, (void*)test2, 5);
+		}
 		if (isKeyPressed('O')) {
 			localPlayer = clientInstance->getLocalPlayer();
 			//if (localPlayer != 0x0)

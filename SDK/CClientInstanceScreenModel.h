@@ -12,3 +12,8 @@ public:
 			sendChatMessageFunc(this, (char*)std::string(message).c_str());
 	}
 };
+
+class CBlockPos {
+public:
+	uintptr_t a = 0x440000008A;//0x000
+};
