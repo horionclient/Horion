@@ -43,6 +43,11 @@ void KillAura()
 
 		if (currentEntity == localPlayer) // Skip Local player
 			continue;
+		//if (!((localPlayer->aabb.upper.y) - (localPlayer->aabb.lower.y)) == ((currentEntity->aabb.upper.y) - (currentEntity->aabb.lower.y)))
+			//continue;
+
+		if (localPlayer->width != currentEntity->width)
+			continue;
 
 		float dist = currentEntity->eyePos1.dist(localPlayer->eyePos1);
 
