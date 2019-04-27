@@ -71,5 +71,8 @@
     <ClInclude Include="Memory\Hooks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SDK\CPacket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

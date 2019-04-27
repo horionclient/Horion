@@ -137,6 +137,7 @@
     <ClInclude Include="SDK\CEntity.h" />
     <ClInclude Include="SDK\CEntityList.h" />
     <ClInclude Include="SDK\CGameMode.h" />
+    <ClInclude Include="SDK\CPacket.h" />
     <ClInclude Include="SDK\Offsets.h" />
     <ClInclude Include="SDK\TextHolder.h" />
     <ClInclude Include="Utils\HMath.h" />

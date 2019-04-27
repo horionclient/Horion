@@ -1,4 +1,5 @@
 #include "Loader.h"
+#include "../SDK/CPacket.h"
 
 _Offsets Offsets = _Offsets();
 
@@ -135,19 +136,35 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			cli->sendChatMessage("  /_______\\");
 		}
 		
-		/*if (isKeyPressed('M')) {
-			using DestroyBlock = void(__fastcall*)(uintptr_t*, C_BlockPos*,int);
-			DestroyBlock destroyBlock = (DestroyBlock)0x00007FF7BB3E7740;
-			//uintptr_t* test = (uintptr_t*)0x00000008A123FEF60;
-			C_BlockPos* test2 = new C_BlockPos();
-			test2->x = 137;  // = reinterpret_cast<C_BlockPos*>(test);
-			test2->y = 68;
-			test2->z = 233;
-			destroyBlock((uintptr_t*)0x000001FF16916360,test2, 5);
-			logF("Function called");
-		}*/
-		
 		if (isKeyPressed('M')) {
+			uintptr_t* PacketSenderP = (uintptr_t*)(gameModule->ptrBase + 0x21CCD48);
+			using sendPacket = void(__fastcall*)(uintptr_t*, MovePlayerPacket*);
+			sendPacket Sender = (sendPacket)(*PacketSenderP);
+			localPlayer = clientInstance->getLocalPlayer();
+			MovePlayerPacket* Packet = new MovePlayerPacket();
+			Packet->Vtable = (uintptr_t**)0x00007FF7A1C4F778;
+			Packet->a = 2;
+			Packet->b = 1;
+			Packet->c = 0;
+			Packet->d = 0;
+			Packet->e = 0;
+			Packet->f = 0;
+			Packet->g = 1000;
+			Packet->h = 0;
+			Packet->ID = 256;
+			Packet->Position.x = (localPlayer->eyePos0.x - 10);
+			Packet->Position.y = (localPlayer->eyePos0.y);
+			Packet->Position.z = localPlayer->eyePos0.z;
+			Packet->ViewAngles.x = localPlayer->pitch;
+			Packet->ViewAngles.y = localPlayer->yaw;
+			Packet->ViewAngles.z = localPlayer->yaw;
+
+			Sender((uintptr_t*)clientInstance->loopbackPacketSender, Packet);
+			delete Packet;
+			logF("Function called");
+		}
+		
+		/*if (isKeyPressed('M')) {
 			/*logF("Function called");
 			localPlayer = clientInstance->getLocalPlayer();
 			C_BlockPos* pos = new C_BlockPos();
@@ -156,8 +173,8 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			pos->z = (int)floorf(localPlayer->eyePos1.z);
 			logF("Function called2");
 			localPlayer->getCGameMode()->_destroyBlockInternal(pos, 2);*/
-			zeHook = clientInstance->getLocalPlayer()->getCGameMode()->placeHook(clientInstance);
-		}
+			//zeHook = clientInstance->getLocalPlayer()->getCGameMode()->placeHook(clientInstance);
+		//}
 
 		if (bKillAura)
 		{
@@ -183,6 +200,7 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 		return 1;
 	}
 	gameModule = mem.GetModule(L"Minecraft.Windows.exe"); // Get Module for Base Address
+	
 
 
 	logF("MH_Initialize %i", MH_Initialize());
