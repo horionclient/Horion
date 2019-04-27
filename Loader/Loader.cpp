@@ -1,5 +1,5 @@
 #include "Loader.h"
-#include "../SDK/CPacket.h"
+
 
 _Offsets Offsets = _Offsets();
 
@@ -122,7 +122,6 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		if (isKeyPressed('O')) {
 			localPlayer = clientInstance->getLocalPlayer();
 			localPlayer->displayClientMessage("Hi!!!");
-			
 			uintptr_t* rcx = reinterpret_cast<uintptr_t*>(mem.ReadPtr<uintptr_t>(gameModule->ptrBase + 0x26ce868, { 0, 0x60, 0x10, 0x4B8, 0x0, 0xA8, 0x58, 0x5E0 })); //1.11.0
 			C_ClientInstanceScreenModel* cli = reinterpret_cast<C_ClientInstanceScreenModel*>(rcx);
 			cli->sendChatMessage("      /\\");
@@ -136,7 +135,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			cli->sendChatMessage("  /_______\\");
 		}
 		
-		if (isKeyPressed('M')) {
+		if (isKeyPressed('J')) {
 			localPlayer = clientInstance->getLocalPlayer();
 
 			if (localPlayer != 0x0) {
@@ -156,7 +155,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			
 		}
 		
-		/*if (isKeyPressed('M')) {
+		if (isKeyPressed('M')) {
 			/*logF("Function called");
 			localPlayer = clientInstance->getLocalPlayer();
 			C_BlockPos* pos = new C_BlockPos();
@@ -165,8 +164,8 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			pos->z = (int)floorf(localPlayer->eyePos1.z);
 			logF("Function called2");
 			localPlayer->getCGameMode()->_destroyBlockInternal(pos, 2);*/
-			//zeHook = clientInstance->getLocalPlayer()->getCGameMode()->placeHook(clientInstance);
-		//}
+			zeHook = clientInstance->getLocalPlayer()->getCGameMode()->placeHook(clientInstance);
+		}
 
 		if (bKillAura)
 		{
