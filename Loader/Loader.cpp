@@ -122,7 +122,8 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		if (isKeyPressed('O')) {
 			localPlayer = clientInstance->getLocalPlayer();
 			localPlayer->displayClientMessage("Hi!!!");
-			uintptr_t* rcx = reinterpret_cast<uintptr_t*>(mem.ReadPtr<uintptr_t>(gameModule->ptrBase + 0x026C9828, { 0, 0x60, 0x10, 0x4B8, 0x0, 0xA8, 0x58, 0x5E0 }) + 0x10); //1.11.0
+			
+			uintptr_t* rcx = reinterpret_cast<uintptr_t*>(mem.ReadPtr<uintptr_t>(gameModule->ptrBase + 0x26ce868, { 0, 0x60, 0x10, 0x4B8, 0x0, 0xA8, 0x58, 0x5E0 })); //1.11.0
 			C_ClientInstanceScreenModel* cli = reinterpret_cast<C_ClientInstanceScreenModel*>(rcx);
 			cli->sendChatMessage("      /\\");
 			Sleep(2300);
