@@ -86,21 +86,23 @@ static void WriteLogFileF(const char* fmt, ...)
 		}
 		EnterCriticalSection(&loggerLock);
 
-		fopen_s(&pFile, logPath, "a");
+		pFile = _fsopen(logPath, "a", _SH_DENYWR);
+		if (pFile != nullptr) {
+			std::stringstream ssTime;
+			Utils::ApplySystemTime(&ssTime);
 
-		std::stringstream ssTime;
-		Utils::ApplySystemTime(&ssTime);
 
+			fprintf(pFile, ssTime.str().c_str());
+			va_list arg;
 
-		fprintf(pFile, ssTime.str().c_str());
-		va_list arg;
+			va_start(arg, fmt);
+			vfprintf(pFile, fmt, arg);
+			va_end(arg);
+			fprintf(pFile, "\n");
 
-		va_start(arg, fmt);
-		vfprintf(pFile, fmt, arg);
-		va_end(arg);
-		fprintf(pFile, "\n");
-
-		fclose(pFile);
+			fclose(pFile);
+		}
+		
 	}
 	catch (std::exception e) {
 		// This throws an error when we cant acquire a lock on the logfile

@@ -19,3 +19,4 @@
 #include "../SDK/CClientInstanceScreenModel.h"
 #include "../Memory/MinHook.h"
 #include "../SDK/CPacket.h"
+#include "../Memory/Hooks.h"

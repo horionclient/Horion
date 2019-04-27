@@ -187,7 +187,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		}
 		Sleep(50); // 1000 / 20 
 	}
-	MH_DisableHook(zeHook);
+	//MH_DisableHook(zeHook);
 
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1); // Uninject
 }
@@ -202,15 +202,13 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 		return 1;
 	}
 	gameModule = mem.GetModule(L"Minecraft.Windows.exe"); // Get Module for Base Address
-	
-
 
 	logF("MH_Initialize %i", MH_Initialize());
-	//clientInstance = mem.ReadPtr<C_ClientInstance*>(gameModule->ptrBase + 0x26dc038, { 0x0, 0x10, 0xF0, 0x0 }); //1.11.0
+
 	clientInstance = mem.ReadPtr<C_ClientInstance*>(gameModule->ptrBase + 0x26e1108, { 0x0, 0x10, 0xF0, 0x0 });   //1.11.1
 
 	logF("Starting threads...");
-
+	Hooks::Init();
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL); // Checking Keypresses
 	logF("Started!");
 
@@ -237,6 +235,7 @@ DllMain(HMODULE hModule,
 	case DLL_PROCESS_DETACH:
 		logF("Removing logger");
 		DisableLogger();
+		Hooks::Restore();
 		MH_Uninitialize();
 		break;
 	}

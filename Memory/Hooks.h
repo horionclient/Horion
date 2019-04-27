@@ -1,9 +1,11 @@
 #pragma once
 
-#include "../Utils/Logger.h"
 #include "MinHook.h"
+#include "../Utils/Logger.h"
+#include "../SDK/CGameMode.h"
 
 class VMTHook;
+class FuncHook;
 
 class Hooks {
 private:
@@ -12,18 +14,24 @@ public:
 	static void Restore();
 
 private:
+	static void __fastcall GameMode_tick(C_GameMode* _this);
 
-	std::unique_ptr<VMTHook> pGameModeHook;
+	std::unique_ptr<FuncHook> gameMode_tickHook;
+
+	typedef void(__fastcall* GameMode_tick_t)(C_GameMode* _this);
 };
+
+extern Hooks g_Hooks;
 
 class FuncHook
 {
 public:
 	void *funcPtr;
+	void *funcReal;
 
-	FuncHook(void* func, void* hooked, void** funcReal) {
+	FuncHook(void* func, void* hooked) {
 		funcPtr = func;
-		int ret = MH_CreateHook(func, hooked, funcReal);
+		int ret = MH_CreateHook(func, hooked, &funcReal);
 		if (ret == MH_OK) {
 			ret = MH_EnableHook(func);
 			if(ret != MH_OK)
@@ -33,9 +41,18 @@ public:
 	};
 
 	~FuncHook() {
+		Restore();
+	}
+
+	void Restore() {
 		MH_DisableHook(funcPtr);
 	}
 
+	template<class Type>
+	Type GetOriginal()
+	{
+		return reinterpret_cast<Type>(funcReal);
+	};
 };
 
 class VMTHook
