@@ -4,7 +4,7 @@ class MovePlayerPacket
 {
 public:
 	uintptr_t** Vtable;
-	int a, b, c, d, e, f, g, h, ID;
+	int a, b, c, d, e, f, entityRuntimeID, h;
 	vec3_t Position;
 	vec3_t ViewAngles;
 

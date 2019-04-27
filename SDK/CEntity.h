@@ -102,7 +102,11 @@ public:
 	vec3_t eyePos1; //0x0FE0
 	vec3_t eyePos2; //0x0FEC
 private:
-	char pad_0x0FF8[0x90]; //0x0FF8
+	char pad_0x0FF0[0x58]; //0x0FF8
+public:
+	__int64 entityRuntimeId; //0x1050
+private:
+	char pad_0x1050[0x30]; //0x1058
 public:
 	TextHolder name; //0x1088
 private:
