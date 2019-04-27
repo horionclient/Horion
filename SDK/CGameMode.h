@@ -59,9 +59,12 @@ public:
 			logF("hoook");
 			C_BlockPos yeet;
 			
-			for (int x = -3; x < 3; x++) {
-				for (int y = -2; y < 2; y++) {
-					for (int z = -3; z < 3; z++) {
+			int x = 0;
+			int z = 0;
+
+			for (int x = -4; x < 4; x++) {
+				for (int y = -4; y < 4; y++) {
+					for (int z = -4; z < 4; z++) {
 						yeet.x = blockPos->x + x;
 						yeet.y = blockPos->y + y;
 						yeet.z = blockPos->z + z;
