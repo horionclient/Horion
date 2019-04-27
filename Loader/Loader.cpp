@@ -81,7 +81,7 @@ bool isKeyDown(int key) {
 	if (keyMapOffset == 0x0) {
 		uintptr_t sigOffset = Utils::FindSignature("48 8D 0D ?? ?? ?? ?? 89 3C 81 E9");
 		if (sigOffset != 0x0) {
-			uint32_t offset = *reinterpret_cast<uint32_t*>((sigOffset + 3)); // Get Offset from code
+			int offset = *reinterpret_cast<int*>((sigOffset + 3)); // Get Offset from code
 			keyMapOffset = sigOffset - gameModule->ptrBase + offset + /*length of instruction*/ 7; // Offset is relative
 #ifdef _DEBUG
 			logF("Recovered KeyMapOffset: %X", keyMapOffset);
@@ -122,7 +122,17 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		if (isKeyPressed('O')) {
 			localPlayer = clientInstance->getLocalPlayer();
 			localPlayer->displayClientMessage("Hi!!!");
-			uintptr_t* rcx = reinterpret_cast<uintptr_t*>(mem.ReadPtr<uintptr_t>(gameModule->ptrBase + 0x26ce868, { 0, 0x60, 0x10, 0x4B8, 0x0, 0xA8, 0x58, 0x5E0 }) + 0x10); //1.11.0
+			static uintptr_t screenModelBase = 0x0;
+			if (screenModelBase == 0x0) {
+				uintptr_t sigOffset = Utils::FindSignature("41 89 86 ?? ?? ?? ?? 48 8B 4C 24 ?? 48 89 0D ?? ?? ?? ?? 48 8B 4C 24 ?? 48 89 0D");
+				if (sigOffset != 0x0) {
+					int offset = *reinterpret_cast<int*>((sigOffset + 15)); // Get Offset from code
+					screenModelBase = sigOffset + offset + /*length of instruction*/ 7 + 12; // Offset is relative
+				}
+				else
+					logF("screenModelBase not found!!!");
+			}
+			uintptr_t* rcx = reinterpret_cast<uintptr_t*>(mem.ReadPtr<uintptr_t>(screenModelBase, { 0, 0x60, 0x10, 0x4B8, 0x0, 0xA8, 0x58, 0x5E0 }) + 0x10); //1.11.0
 
 			C_ClientInstanceScreenModel* cli = reinterpret_cast<C_ClientInstanceScreenModel*>(rcx);
 			cli->sendChatMessage("      /\\");
