@@ -13,8 +13,10 @@ public:
 			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 82 ?? ?? ?? ?? 48 89 41 ?? 48 8B 02 48 8B CA FF 50 60");
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
 			movePlayerPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset  + offset + /*length of instruction*/ 7);
+			if (movePlayerPacketVtable == 0x0 || sigOffset == 0x0)
+				logF("C_MovePlayerPacket signature not working!!!");
 		}
-		logF("vtable=%llX", movePlayerPacketVtable);
+		//logF("vtagble = %llX", movePlayerPacketVtable);
 		vTable = movePlayerPacketVtable;
 	}
 

@@ -137,24 +137,29 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		}
 		
 		if (isKeyPressed('M')) {
-			uintptr_t* PacketSenderP = (uintptr_t*)(gameModule->ptrBase + 0x21CCD48);
+			//uintptr_t* PacketSenderP = (uintptr_t*)(gameModule->ptrBase + 0x21CCD48);
 			using sendPacket = void(__fastcall*)(uintptr_t*, C_MovePlayerPacket*);
-			sendPacket Sender = (sendPacket)(*PacketSenderP);
-			localPlayer = clientInstance->getLocalPlayer();
-			C_MovePlayerPacket* Packet = new C_MovePlayerPacket();
-			Packet->entityRuntimeID = localPlayer->entityRuntimeId;
-			Packet->Position.x = localPlayer->eyePos0.x;
-			Packet->Position.y = localPlayer->eyePos0.y;
-			Packet->Position.z = localPlayer->eyePos0.z;
-			Packet->ViewAngles.x = localPlayer->pitch;
-			Packet->ViewAngles.y = localPlayer->yaw;
-			Packet->ViewAngles.z = localPlayer->yaw;
-			Packet->onGround = true;
-			Packet->mode = 0;
 
-			Sender((uintptr_t*)clientInstance->loopbackPacketSender, Packet);
-			delete Packet;
-			logF("Function called");
+			uintptr_t** packetSenderVTable = *reinterpret_cast<uintptr_t***>(clientInstance->loopbackPacketSender);
+			sendPacket Sender = reinterpret_cast<sendPacket>(packetSenderVTable[2]);
+			localPlayer = clientInstance->getLocalPlayer();
+
+			if (localPlayer != 0x0) {
+				C_MovePlayerPacket* Packet = new C_MovePlayerPacket();
+				Packet->entityRuntimeID = localPlayer->entityRuntimeId;
+				Packet->Position.x = localPlayer->eyePos0.x;
+				Packet->Position.y = localPlayer->eyePos0.y;
+				Packet->Position.z = localPlayer->eyePos0.z;
+				Packet->ViewAngles.x = localPlayer->pitch;
+				Packet->ViewAngles.y = localPlayer->yaw;
+				Packet->ViewAngles.z = localPlayer->yaw;
+				Packet->onGround = true;
+				Packet->mode = 0;
+
+				Sender((uintptr_t*)clientInstance->loopbackPacketSender, Packet);
+				delete Packet;
+			}
+			
 		}
 		
 		/*if (isKeyPressed('M')) {
