@@ -121,7 +121,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		
 		if (isKeyPressed('O')) {
 			localPlayer = clientInstance->getLocalPlayer();
-			localPlayer->displayClientMessage("Hi!!!");
+			
 			static uintptr_t screenModelBase = 0x0;
 			if (screenModelBase == 0x0) {
 				uintptr_t sigOffset = Utils::FindSignature("41 89 86 ?? ?? ?? ?? 48 8B 4C 24 ?? 48 89 0D ?? ?? ?? ?? 48 8B 4C 24 ?? 48 89 0D");
@@ -237,6 +237,7 @@ DllMain(HMODULE hModule,
 	case DLL_PROCESS_DETACH:
 		logF("Removing logger");
 		DisableLogger();
+		MH_Uninitialize();
 		break;
 	}
 	return TRUE;

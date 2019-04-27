@@ -19,9 +19,22 @@ private:
 class FuncHook
 {
 public:
-	FuncHook(void* func) {
+	void *funcPtr;
 
+	FuncHook(void* func, void* hooked, void** funcReal) {
+		funcPtr = func;
+		int ret = MH_CreateHook(func, hooked, funcReal);
+		if (ret == MH_OK) {
+			ret = MH_EnableHook(func);
+			if(ret != MH_OK)
+				logF("MH_EnableHook = %i", ret);
+		}else
+			logF("MH_CreateHook = %i", ret);
 	};
+
+	~FuncHook() {
+		MH_DisableHook(funcPtr);
+	}
 
 };
 
