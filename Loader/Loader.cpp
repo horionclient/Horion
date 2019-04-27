@@ -143,12 +143,10 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 				C_MovePlayerPacket* Packet = new C_MovePlayerPacket();
 			
 				Packet->entityRuntimeID = localPlayer->entityRuntimeId;
-				Packet->Position.x = localPlayer->eyePos0.x;
-				Packet->Position.y = localPlayer->eyePos0.y;
-				Packet->Position.z = localPlayer->eyePos0.z;
-				Packet->ViewAngles.x = localPlayer->pitch;
-				Packet->ViewAngles.y = localPlayer->yaw;
-				Packet->ViewAngles.z = localPlayer->yaw;
+				Packet->Position = localPlayer->eyePos0;
+				Packet->pitch = localPlayer->pitch;
+				Packet->yaw = localPlayer->yaw;
+				Packet->headYaw = localPlayer->yaw;
 				Packet->onGround = true;
 				Packet->mode = 0;
 

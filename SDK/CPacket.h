@@ -32,7 +32,9 @@ private:
 public:
 	__int64 entityRuntimeID;// 0x20
 	vec3_t Position;		// 0x28
-	vec3_t ViewAngles;		// 0x34
+	float pitch;			// 0x34
+	float yaw;				// 0x38
+	float headYaw;			// 0x3C
 	uint8_t mode;			// 0x40
 	bool onGround;			// 0x41
 	__int64 ridingEid;		// 0x48 // works because aligning
