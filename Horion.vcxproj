@@ -124,12 +124,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Loader\Loader.cpp" />
+    <ClCompile Include="Memory\GameData.cpp" />
     <ClCompile Include="Memory\Hooks.cpp" />
     <ClCompile Include="Memory\SlimMem.cpp" />
     <ClCompile Include="SDK\CBlockPos.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Loader\Loader.h" />
+    <ClInclude Include="Memory\GameData.h" />
     <ClInclude Include="Memory\Hooks.h" />
     <ClInclude Include="Memory\MinHook.h" />
     <ClInclude Include="SDK\CClientInstance.h" />
@@ -139,7 +141,7 @@
     <ClInclude Include="SDK\CGameMode.h" />
     <ClInclude Include="SDK\CPacket.h" />
     <ClInclude Include="SDK\CLoopbackPacketSender.h" />
-    <ClInclude Include="SDK\Offsets.h" />
+    <ClInclude Include="Memory\Offsets.h" />
     <ClInclude Include="SDK\TextHolder.h" />
     <ClInclude Include="Utils\HMath.h" />
     <ClInclude Include="Utils\Logger.h" />

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Utils/HMath.h"
+#include "../Utils/Utils.h"
 #include "TextHolder.h"
 #include "CEntityList.h"
 

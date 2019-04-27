@@ -23,4 +23,5 @@ void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
 {
 	static auto oTick = g_Hooks.gameMode_tickHook->GetOriginal<GameMode_tick_t>();
 	oTick(_this); // Call Original Func
+	GameData::updateGameData(_this);
 }

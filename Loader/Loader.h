@@ -11,7 +11,7 @@
 #include <vector>
 #include "../Memory/SlimMem.h"
 #include "../Utils/Utils.h"
-#include "../SDK/Offsets.h"
+#include "../Memory/Offsets.h"
 #include "../Utils/HMath.h"
 #include "../SDK/CEntity.h"
 #include "../SDK/CGameMode.h"
@@ -20,3 +20,4 @@
 #include "../Memory/MinHook.h"
 #include "../SDK/CPacket.h"
 #include "../Memory/Hooks.h"
+#include "../Memory/GameData.h"

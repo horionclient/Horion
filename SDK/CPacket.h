@@ -1,5 +1,6 @@
 #pragma once
 #include "../Utils/HMath.h"
+#include "../Utils/Logger.h"
 
 class C_Packet {
 

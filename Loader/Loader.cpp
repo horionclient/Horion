@@ -10,8 +10,7 @@ SlimUtils::SlimMem mem;
 const SlimUtils::SlimModule* gameModule;
 static bool isRunning = true;
 
-C_LocalPlayer* localPlayer = 0x0;
-C_ClientInstance* clientInstance = 0x0;
+
 
 #if defined _M_X64
 #pragma comment(lib, "MinHook.x64.lib")
@@ -33,7 +32,8 @@ C_ClientInstance* clientInstance = 0x0;
 
 void KillAura()
 {
-	if (localPlayer == 0x0 || !bKillAura)
+	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
+	if (!bKillAura)
 		return;
 	//Declare our target list to define our victims through a dynamic array
 	C_EntityList* entList = localPlayer->getEntityList();
@@ -108,6 +108,10 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 {
 	void* zeHook = 0x0;
 	logF("Key thread started");
+	C_ClientInstance* clientInstance = g_Data.getClientInstance();
+	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
+	C_GameMode* gameMode = g_Data.getCGameMode();
+
 	while (isRunning) {
 		if (isKeyPressed('L')) { // Press L to uninject
 			isRunning = false;
@@ -120,7 +124,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		}
 		
 		if (isKeyPressed('O')) {
-			localPlayer = clientInstance->getLocalPlayer();
+			//localPlayer = clientInstance->getLocalPlayer();
 			
 			static uintptr_t screenModelBase = 0x0;
 			if (screenModelBase == 0x0) {
@@ -147,7 +151,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		}
 		
 		if (isKeyPressed('J')) {
-			localPlayer = clientInstance->getLocalPlayer();
+			//localPlayer = clientInstance->getLocalPlayer();
 
 			if (localPlayer != 0x0) {
 				C_MovePlayerPacket* Packet = new C_MovePlayerPacket();
@@ -180,7 +184,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 
 		if (bKillAura)
 		{
-			localPlayer = clientInstance->getLocalPlayer();
+			//localPlayer = clientInstance->getLocalPlayer();
 			if (localPlayer != 0x0) {
 				KillAura();
 			}
@@ -204,8 +208,7 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	gameModule = mem.GetModule(L"Minecraft.Windows.exe"); // Get Module for Base Address
 
 	logF("MH_Initialize %i", MH_Initialize());
-
-	clientInstance = mem.ReadPtr<C_ClientInstance*>(gameModule->ptrBase + 0x26e1108, { 0x0, 0x10, 0xF0, 0x0 });   //1.11.1
+	GameData::initGameData(gameModule, &mem);
 
 	logF("Starting threads...");
 	Hooks::Init();

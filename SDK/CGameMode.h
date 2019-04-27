@@ -3,6 +3,7 @@
 #include "CClientInstance.h"
 #include "CEntity.h"
 #include "CBlockPos.h"
+#include "../Utils/Logger.h"
 
 #include <stdint.h>
 #include "../Memory/MinHook.h"

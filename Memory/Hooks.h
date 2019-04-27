@@ -3,6 +3,7 @@
 #include "MinHook.h"
 #include "../Utils/Logger.h"
 #include "../SDK/CGameMode.h"
+#include "GameData.h"
 
 class VMTHook;
 class FuncHook;

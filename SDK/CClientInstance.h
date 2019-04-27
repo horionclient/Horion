@@ -35,7 +35,7 @@ private:
 	char pad_0x00B8[0x28]; //0x00B8
 public:
 	C_LocalPlayer* localPlayer; //0x00E0 
-public:
+
 	C_LocalPlayer* getLocalPlayer() {
 		return localPlayer;
 	};

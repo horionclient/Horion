@@ -7,7 +7,9 @@
 #include <Windows.h>
 #include <ctime>
 #include <Psapi.h>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <chrono>
 
 #define INRANGE(x,a,b)   (x >= a && x <= b)
