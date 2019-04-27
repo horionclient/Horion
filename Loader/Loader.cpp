@@ -12,6 +12,12 @@ static bool isRunning = true;
 C_LocalPlayer* localPlayer = 0x0;
 C_ClientInstance* clientInstance = 0x0;
 
+#if defined _M_X64
+#pragma comment(lib, "MinHook.x64.lib")
+#elif defined _M_IX86
+#pragma comment(lib, "MinHook.x86.lib")
+#endif
+
 //Compare the distance when sorting the array of Target Enemies, it's called a "sort predicate"
 /*struct CompareTargetEnArray
 {
