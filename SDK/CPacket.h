@@ -1,10 +1,15 @@
 #pragma once
 #include "../Utils/HMath.h"
 
+class C_Packet {
+
+};
+
+
 #pragma pack(push,8)
 
 __declspec(align(8))
-class C_MovePlayerPacket
+class C_MovePlayerPacket : public C_Packet
 {
 public:
 	C_MovePlayerPacket() {
@@ -16,7 +21,7 @@ public:
 			if (movePlayerPacketVtable == 0x0 || sigOffset == 0x0)
 				logF("C_MovePlayerPacket signature not working!!!");
 		}
-		//logF("vtagble = %llX", movePlayerPacketVtable);
+		memset(this, 0, sizeof(C_MovePlayerPacket)); // Avoid overwriting vtable
 		vTable = movePlayerPacketVtable;
 	}
 
