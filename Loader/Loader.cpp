@@ -113,7 +113,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			localPlayer = clientInstance->getLocalPlayer();
 			//if (localPlayer != 0x0)
 				//localPlayer->displayClientMessage("Hi world");
-			uintptr_t* rcx = reinterpret_cast<uintptr_t*>(mem.ReadPtr<uintptr_t>(gameModule->ptrBase + 0x026C9828, { 0, 0x60, 0x10, 0x4B8, 0x0, 0xA8, 0x58, 0x5E0 }) + 0x10);
+			uintptr_t* rcx = reinterpret_cast<uintptr_t*>(mem.ReadPtr<uintptr_t>(gameModule->ptrBase + 0x026C9828, { 0, 0x60, 0x10, 0x4B8, 0x0, 0xA8, 0x58, 0x5E0 }) + 0x10); //1.11.0
 			C_ClientInstanceScreenModel* cli = reinterpret_cast<C_ClientInstanceScreenModel*>(rcx);
 			cli->sendChatMessage("      /\\");
 			Sleep(2300);
@@ -125,22 +125,28 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			Sleep(2300);
 			cli->sendChatMessage("  /_______\\");
 		}
-		/*
-		if (isKeyPressed('M')) {
-			using DestroyBlock = void(__fastcall*)(void*, void*,int);
+		
+		/*if (isKeyPressed('M')) {
+			using DestroyBlock = void(__fastcall*)(uintptr_t*, C_BlockPos*,int);
 			DestroyBlock destroyBlock = (DestroyBlock)0x00007FF7BB3E7740;
-			uintptr_t* test = (uintptr_t*)0x00000008A123FEF60;
-			CBlockPos* test2 = reinterpret_cast<CBlockPos*>(test);
-			destroyBlock((void*)0x000002A4F60CBE00, (void*)test2, 5);
-		}
-		*/
+			//uintptr_t* test = (uintptr_t*)0x00000008A123FEF60;
+			C_BlockPos* test2 = new C_BlockPos();
+			test2->x = 137;  // = reinterpret_cast<C_BlockPos*>(test);
+			test2->y = 68;
+			test2->z = 233;
+			destroyBlock((uintptr_t*)0x000001FF16916360,test2, 5);
+			logF("Function called");
+		}*/
+		
 		if (isKeyPressed('M')) {
+			logF("Function called");
 			localPlayer = clientInstance->getLocalPlayer();
-			C_BlockPos pos;
-			pos.x = 0;
-			pos.y = 5;
-			pos.z = 0;
-			localPlayer->getCGameMode()->_destroyBlockInternal(&pos, 2);
+			C_BlockPos* pos = new C_BlockPos();
+			pos->x = 137;
+			pos->y = 68;
+			pos->z = 234;
+
+			localPlayer->getCGameMode()->_destroyBlockInternal(pos, 1);
 		}
 
 		if (bKillAura)
@@ -166,7 +172,8 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	}
 	gameModule = mem.GetModule(L"Minecraft.Windows.exe"); // Get Module for Base Address
 
-	clientInstance = mem.ReadPtr<C_ClientInstance*>(gameModule->ptrBase + 0x26dc038, { 0x0, 0x10, 0xF0, 0x0 });
+	//clientInstance = mem.ReadPtr<C_ClientInstance*>(gameModule->ptrBase + 0x26dc038, { 0x0, 0x10, 0xF0, 0x0 }); //1.11.0
+	clientInstance = mem.ReadPtr<C_ClientInstance*>(gameModule->ptrBase + 0x26e1108, { 0x0, 0x10, 0xF0, 0x0 });   //1.11.1
 
 	logF("Starting threads...");
 

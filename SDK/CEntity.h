@@ -50,89 +50,89 @@ private:
 public:
 	_ptr1* ptrToPtrToEntList; //0x0008 
 private:
-	char pad_0x0010[0xC8]; //0x0010
+	char pad_0x0010[0xD0]; //0x0010
 public:
-	float pitch; //0x00D8 
-	float yaw; //0x00DC 
-	float pitch2; //0x00E0 
-	float yaw2; //0x00E4 
+	float pitch; //0x00E0
+	float yaw; //0x00E4
+	float pitch2; //0x00E8
+	float yaw2; //0x00EC
 private:
-	char pad_0x00E8[0x10]; //0x00E8
+	char pad_0x00F0[0x10]; //0x00F0
 public:
-	vec3_t eyePos0; //0x00F8 
+	vec3_t eyePos0; //0x0100 
 private:
-	char pad_0x0104[0xC]; //0x0104
+	char pad_0x010C[0xC]; //0x010C
 public:
-	_1ptr1* ptrToPtrToPtrToCGameMode; //0x0110 
+	_1ptr1* ptrToPtrToPtrToCGameMode; //0x0118
 private:
-	char pad_0x0118[0x34]; //0x0118
+	char pad_0x0120[0x34]; //0x0120
 public:
-	uint8_t onGround; //0x014C 
+	uint8_t onGround; //0x0154
 private:
-	char pad_0x014D[0x63]; //0x014D
+	char pad_0x0155[0x63]; //0x0155
 public:
-	int entityType1; //0x01B0 
+	int entityType1; //0x01B8 
 private:
-	char pad_0x01B4[0x33]; //0x01B4
+	char pad_0x01BC[0x33]; //0x01BC
 public:
-	char entityType2; //0x01E7 
+	char entityType2; //0x01EF
 private:
-	char pad_0x01E8[0x8]; //0x01E8
+	char pad_0x01F0[0x8]; //0x01F0
 public:
-	float stepHeight; //0x01F0 
+	float stepHeight; //0x01F8
 private:
-	char pad_0x01F4[0x64]; //0x01F4
+	char pad_0x01FC[0x64]; //0x01FC
 public:
-	uintptr_t ticksAlive; //0x0258 
+	uintptr_t ticksAlive; //0x0260 
 private:
-	char pad_0x0260[0xA98]; //0x0260
+	char pad_0x0268[0xA98]; //0x0268
 public:
-	PointingStruct* pointingAt; //0x0CF8 
+	PointingStruct* pointingAt; //0x0D00
 private:
-	char pad_0x0D00[0x2A8]; //0x0D00
+	char pad_0x0D08[0x2A8]; //0x0D08
 public:
-	AABB aabb; //0x0FA8 
+	AABB aabb; //0x0FB0 
 private:
-	char pad_0x0FC0[0x4]; //0x0FC0
+	char pad_0x0FC8[0x4]; //0x0FC8
 public:
-	float width; //0x0FC4 
-	float height; //0x0FC8 
-	vec3_t velocity; //0x0FCC 
-	vec3_t eyePos1; //0x0FD8 
-	vec3_t eyePos2; //0x0FE4 
+	float width; //0x0FCC
+	float height; //0x0FD0 
+	vec3_t velocity; //0x0FD4
+	vec3_t eyePos1; //0x0FE0
+	vec3_t eyePos2; //0x0FEC
 private:
-	char pad_0x0FF0[0x90]; //0x0FF0
+	char pad_0x0FF8[0x90]; //0x0FF8
 public:
-	TextHolder name; //0x1080 
+	TextHolder name; //0x1088
 private:
-	char pad_0x1094[0x2F4]; //0x1094
+	char pad_0x109C[0x2F4]; //0x109C
 public:
-	float bodyYaw; //0x1388 
-	float oldBodyYaw; //0x138C 
-	float yawUnused1; //0x1390 
-	float yawUnused2; //0x1394 
-	int damageTime; //0x1398 
+	float bodyYaw; //0x1390
+	float oldBodyYaw; //0x1394
+	float yawUnused1; //0x1398
+	float yawUnused2; //0x139C
+	int damageTime; //0x13A0 
 private:
-	char pad_0x139C[0x70]; //0x139C
+	char pad_0x13A4[0x70]; //0x13A4
 public:
-	int swing; //0x140C 
+	int swing; //0x1414 
 private:
-	char pad_0x1410[0x18]; //0x1410
+	char pad_0x1418[0x18]; //0x1418
 public:
-	int timeSinceDeath; //0x1428 
+	int timeSinceDeath; //0x1430
 private:
-	char pad_0x142C[0x604]; //0x142C
+	char pad_0x1434[0x604]; //0x1434
 public:
-	uint16_t itemData;//0x1A30 
+	uint16_t itemData;//0x1A38 
 	uint16_t itemId;
 private:
-	char pad_0x1A34[0x20C]; //0x1A34
+	char pad_0x1A3C[0x20C]; //0x1A3C
 public:
-	int gamemode; //0x1C40 
+	int gamemode; //0x1C48 
 private:
-	char pad_0x1C44[0x60]; //0x1C44
+	char pad_0x1C4C[0x60]; //0x1C4C
 public:
-	TextHolder uuid; //0x1CA4 
+	TextHolder uuid; //0x1CAC 
 };
 
 class C_LocalPlayer : public C_Entity {
