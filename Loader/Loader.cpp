@@ -1,5 +1,5 @@
 #include "Loader.h"
-
+#include "../SDK/CPacket.h"
 
 _Offsets Offsets = _Offsets();
 
@@ -136,31 +136,37 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			cli->sendChatMessage("  /_______\\");
 		}
 		
-		if (isKeyPressed('J')) {
-			uintptr_t* PacketSenderP = (uintptr_t*)(gameModule->ptrBase + 0x21CCD48);
-			using sendPacket = void(__fastcall*)(uintptr_t*, C_MovePlayerPacket*);
-			sendPacket Sender = (sendPacket)(*PacketSenderP);
+		if (isKeyPressed('M')) {
 			localPlayer = clientInstance->getLocalPlayer();
-			C_MovePlayerPacket* Packet = new C_MovePlayerPacket();
-			Packet->entityRuntimeID = localPlayer->entityRuntimeId;
-			Packet->Position.x = localPlayer->eyePos0.x;
-			Packet->Position.y = localPlayer->eyePos0.y;
-			Packet->Position.z = localPlayer->eyePos0.z;
-			Packet->ViewAngles.x = localPlayer->pitch;
-			Packet->ViewAngles.y = localPlayer->yaw;
-			Packet->ViewAngles.z = localPlayer->yaw;
-			Packet->onGround = true;
-			Packet->mode = 0;
 
-			Sender((uintptr_t*)clientInstance->loopbackPacketSender, Packet);
-			delete Packet;
-			logF("Function called");
+			if (localPlayer != 0x0) {
+				C_MovePlayerPacket* Packet = new C_MovePlayerPacket();
+			
+				Packet->entityRuntimeID = localPlayer->entityRuntimeId;
+				Packet->Position = localPlayer->eyePos0;
+				Packet->pitch = localPlayer->pitch;
+				Packet->yaw = localPlayer->yaw;
+				Packet->headYaw = localPlayer->yaw;
+				Packet->onGround = true;
+				Packet->mode = 0;
+
+				clientInstance->loopbackPacketSender->sendToServer(Packet);
+				delete Packet;
+			}
+			
 		}
 		
-		if (isKeyPressed('M')) {
-			logF("Function called");
-			zeHook = clientInstance->getLocalPlayer()->getCGameMode()->placeHook(clientInstance);
-		}
+		/*if (isKeyPressed('M')) {
+			/*logF("Function called");
+			localPlayer = clientInstance->getLocalPlayer();
+			C_BlockPos* pos = new C_BlockPos();
+			pos->x = (int) floorf(localPlayer->eyePos1.x);
+			pos->y = 3;
+			pos->z = (int)floorf(localPlayer->eyePos1.z);
+			logF("Function called2");
+			localPlayer->getCGameMode()->_destroyBlockInternal(pos, 2);*/
+			//zeHook = clientInstance->getLocalPlayer()->getCGameMode()->placeHook(clientInstance);
+		//}
 
 		if (bKillAura)
 		{

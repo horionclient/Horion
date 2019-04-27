@@ -1,11 +1,11 @@
 #pragma once
 
 #include "CEntity.h"
+#include "CLoopbackPacketSender.h"
 
 class MinecraftGame;
 class Minecraft;
 class LevelRenderer;
-class LoopbackPacketSender;
 class HitDetectSystem;
 
 class C_ClientInstance {
@@ -26,7 +26,7 @@ public:
 private:
 	char pad_0x0078[0x8]; //0x0078
 public:
-	LoopbackPacketSender* loopbackPacketSender; //0x0080 
+	C_LoopbackPacketSender* loopbackPacketSender; //0x0080 
 private:
 	char pad_0x0088[0x28]; //0x0088
 public:
