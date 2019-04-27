@@ -153,9 +153,6 @@ public:
 		using displayClientMessage = void(__fastcall*)(void*, char*);
 		//static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(Utils::FindSignature("40 53 48 83 EC 20 48 8B 89 ?? ?? ?? ?? 48 8B DA 48 8B 01 FF 90 ?? ?? ?? ?? 48 8B C8"));
 		static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(this->vTable[405]);
-		logF("vtabl1e=%llX", this->vTable);
-		logF("vtable=%llX", this->vTable[405]);
-		logF("func=%llX", displayMessageFunc);
 		displayMessageFunc(this, (char*)str.c_str());
 	}
 
