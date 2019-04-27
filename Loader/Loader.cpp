@@ -142,7 +142,6 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			sendPacket Sender = (sendPacket)(*PacketSenderP);
 			localPlayer = clientInstance->getLocalPlayer();
 			MovePlayerPacket* Packet = new MovePlayerPacket();
-			Packet->Vtable = reinterpret_cast<uintptr_t**>(gameModule->ptrBase + 0x21AF778);
 			Packet->entityRuntimeID = localPlayer->entityRuntimeId;
 			Packet->Position.x = localPlayer->eyePos0.x;
 			Packet->Position.y = localPlayer->eyePos0.y;
@@ -151,10 +150,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			Packet->ViewAngles.y = localPlayer->yaw;
 			Packet->ViewAngles.z = localPlayer->yaw;
 			Packet->onGround = true;
-			Packet->mode = 2;
-			Packet->int1 = 5;
-			Packet->int2 = 1337;
-			Packet->ridingEid = 1333337;
+			Packet->mode = 0;
 
 			Sender((uintptr_t*)clientInstance->loopbackPacketSender, Packet);
 			delete Packet;

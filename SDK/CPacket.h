@@ -7,7 +7,19 @@ __declspec(align(8))
 class MovePlayerPacket
 {
 public:
-	uintptr_t** Vtable;		// 0x0
+	MovePlayerPacket() {
+		static uintptr_t** movePlayerPacketVtable = 0x0;
+		if (movePlayerPacketVtable == 0x0) {
+			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 82 ?? ?? ?? ?? 48 89 41 ?? 48 8B 02 48 8B CA FF 50 60");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			movePlayerPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset  + offset + /*length of instruction*/ 7);
+		}
+		logF("vtable=%llX", movePlayerPacketVtable);
+		vTable = movePlayerPacketVtable;
+	}
+
+
+	uintptr_t** vTable;		// 0x0
 private:
 	char filler[0x18];		// 0x8
 public:
