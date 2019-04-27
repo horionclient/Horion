@@ -24,6 +24,9 @@
     <ClCompile Include="SDK\CBlockPos.h">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Memory\Hooks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils\Utils.h">
@@ -63,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Memory\MinHook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\Hooks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

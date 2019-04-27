@@ -56,7 +56,6 @@ public:
 
 	static unsigned int destroyBlockInternalHook(C_GameMode* _this, C_BlockPos* blockPos, uint8_t blockFace) {
 		if (_this->player == client->getLocalPlayer()) {
-			logF("hoook");
 			C_BlockPos yeet;
 			
 			int x = 0;
