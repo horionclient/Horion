@@ -46,9 +46,8 @@ struct _1ptr1 {
 
 class C_Entity
 {
-private:
-	char vtable[0x8]; //0x0000
 public:
+	uintptr_t** vTable; //0x0000
 	_ptr1* ptrToPtrToEntList; //0x0008 
 private:
 	char pad_0x0010[0xD0]; //0x0010
@@ -150,9 +149,13 @@ public:
 		return this->ptrToPtrToPtrToCGameMode->ptrToPtrToCGameMode->ptrToCGameMode->cGameMode;
 	}
 
-	void displayClientMessageStr(std::string str) {
+	void displayClientMessageStr(std::string str) { // vtable[405]
 		using displayClientMessage = void(__fastcall*)(void*, char*);
-		static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(Utils::FindSignature("40 53 48 83 EC 20 48 8B 89 ?? ?? ?? ?? 48 8B DA 48 8B 01 FF 90 ?? ?? ?? ?? 48 8B C8"));
+		//static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(Utils::FindSignature("40 53 48 83 EC 20 48 8B 89 ?? ?? ?? ?? 48 8B DA 48 8B 01 FF 90 ?? ?? ?? ?? 48 8B C8"));
+		static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(this->vTable[405]);
+		logF("vtabl1e=%llX", this->vTable);
+		logF("vtable=%llX", this->vTable[405]);
+		logF("func=%llX", displayMessageFunc);
 		displayMessageFunc(this, (char*)str.c_str());
 	}
 
