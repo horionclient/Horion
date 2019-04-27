@@ -18,6 +18,8 @@ C_ClientInstance* clientInstance = 0x0;
 #pragma comment(lib, "MinHook.x86.lib")
 #endif
 
+
+
 //Compare the distance when sorting the array of Target Enemies, it's called a "sort predicate"
 /*struct CompareTargetEnArray
 {
@@ -103,6 +105,7 @@ bool isKeyPressed(int key) {
 
 DWORD WINAPI keyThread(LPVOID lpParam)
 {
+	void* zeHook = 0x0;
 	logF("Key thread started");
 	while (isRunning) {
 		if (isKeyPressed('L')) { // Press L to uninject
@@ -145,14 +148,15 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		}*/
 		
 		if (isKeyPressed('M')) {
-			logF("Function called");
+			/*logF("Function called");
 			localPlayer = clientInstance->getLocalPlayer();
 			C_BlockPos* pos = new C_BlockPos();
 			pos->x = (int) floorf(localPlayer->eyePos1.x);
 			pos->y = 3;
 			pos->z = (int)floorf(localPlayer->eyePos1.z);
 			logF("Function called2");
-			localPlayer->getCGameMode()->_destroyBlockInternal(pos, 2);
+			localPlayer->getCGameMode()->_destroyBlockInternal(pos, 2);*/
+			zeHook = clientInstance->getLocalPlayer()->getCGameMode()->placeHook(clientInstance);
 		}
 
 		if (bKillAura)
@@ -164,6 +168,8 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		}
 		Sleep(50); // 1000 / 20 
 	}
+	MH_DisableHook(zeHook);
+
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1); // Uninject
 }
 
@@ -178,6 +184,8 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	}
 	gameModule = mem.GetModule(L"Minecraft.Windows.exe"); // Get Module for Base Address
 
+
+	logF("MH_Initialize %i", MH_Initialize());
 	//clientInstance = mem.ReadPtr<C_ClientInstance*>(gameModule->ptrBase + 0x26dc038, { 0x0, 0x10, 0xF0, 0x0 }); //1.11.0
 	clientInstance = mem.ReadPtr<C_ClientInstance*>(gameModule->ptrBase + 0x26e1108, { 0x0, 0x10, 0xF0, 0x0 });   //1.11.1
 

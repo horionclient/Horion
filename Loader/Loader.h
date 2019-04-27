@@ -14,5 +14,7 @@
 #include "../SDK/Offsets.h"
 #include "../Utils/HMath.h"
 #include "../SDK/CEntity.h"
+#include "../SDK/CGameMode.h"
 #include "../SDK/CClientInstance.h"
 #include "../SDK/CClientInstanceScreenModel.h"
+#include "../Memory/MinHook.h"

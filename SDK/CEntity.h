@@ -3,7 +3,8 @@
 #include "../Utils/HMath.h"
 #include "TextHolder.h"
 #include "CEntityList.h"
-#include "CGameMode.h"
+
+class C_GameMode;
 
 class PointingStruct
 {

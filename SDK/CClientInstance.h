@@ -8,7 +8,6 @@ class LevelRenderer;
 class LoopbackPacketSender;
 class HitDetectSystem;
 
-
 class C_ClientInstance {
 private:
 	char pad_0x0000[0x40]; //0x0000
@@ -36,11 +35,10 @@ private:
 	char pad_0x00B8[0x28]; //0x00B8
 public:
 	C_LocalPlayer* localPlayer; //0x00E0 
-
 public:
 	C_LocalPlayer* getLocalPlayer() {
 		return localPlayer;
-	}
+	};
 };
 
 /*
