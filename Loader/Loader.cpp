@@ -1,5 +1,5 @@
 #include "Loader.h"
-#include "../SDK/CPacket.h"
+
 
 _Offsets Offsets = _Offsets();
 
@@ -136,12 +136,12 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			cli->sendChatMessage("  /_______\\");
 		}
 		
-		if (isKeyPressed('M')) {
+		if (isKeyPressed('J')) {
 			uintptr_t* PacketSenderP = (uintptr_t*)(gameModule->ptrBase + 0x21CCD48);
-			using sendPacket = void(__fastcall*)(uintptr_t*, MovePlayerPacket*);
+			using sendPacket = void(__fastcall*)(uintptr_t*, C_MovePlayerPacket*);
 			sendPacket Sender = (sendPacket)(*PacketSenderP);
 			localPlayer = clientInstance->getLocalPlayer();
-			MovePlayerPacket* Packet = new MovePlayerPacket();
+			C_MovePlayerPacket* Packet = new C_MovePlayerPacket();
 			Packet->entityRuntimeID = localPlayer->entityRuntimeId;
 			Packet->Position.x = localPlayer->eyePos0.x;
 			Packet->Position.y = localPlayer->eyePos0.y;
@@ -157,17 +157,10 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			logF("Function called");
 		}
 		
-		/*if (isKeyPressed('M')) {
-			/*logF("Function called");
-			localPlayer = clientInstance->getLocalPlayer();
-			C_BlockPos* pos = new C_BlockPos();
-			pos->x = (int) floorf(localPlayer->eyePos1.x);
-			pos->y = 3;
-			pos->z = (int)floorf(localPlayer->eyePos1.z);
-			logF("Function called2");
-			localPlayer->getCGameMode()->_destroyBlockInternal(pos, 2);*/
-			//zeHook = clientInstance->getLocalPlayer()->getCGameMode()->placeHook(clientInstance);
-		//}
+		if (isKeyPressed('M')) {
+			logF("Function called");
+			zeHook = clientInstance->getLocalPlayer()->getCGameMode()->placeHook(clientInstance);
+		}
 
 		if (bKillAura)
 		{
