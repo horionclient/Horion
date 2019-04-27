@@ -10,6 +10,19 @@ private:
 public:
 	static void Init();
 	static void Restore();
+
+private:
+
+	std::unique_ptr<VMTHook> pGameModeHook;
+};
+
+class FuncHook
+{
+public:
+	FuncHook(void* func) {
+
+	};
+
 };
 
 class VMTHook

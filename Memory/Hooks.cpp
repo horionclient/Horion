@@ -2,6 +2,7 @@
 
 void Hooks::Init()
 {
+
 }
 
 void Hooks::Restore()
