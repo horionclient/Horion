@@ -38,7 +38,7 @@ using namespace Microsoft::WRL::Wrappers;
 
 static CRITICAL_SECTION loggerLock;
 
-std::wstring GetRoamingFolderPath()
+static std::wstring GetRoamingFolderPath()
 {
 	ComPtr<IApplicationDataStatics> appDataStatics;
 	auto hr = RoGetActivationFactory(HStringReference(L"Windows.Storage.ApplicationData").Get(), __uuidof(appDataStatics), &appDataStatics);
