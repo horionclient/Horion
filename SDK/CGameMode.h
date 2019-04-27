@@ -38,14 +38,19 @@ public:
 
 	}
 
-	void _destroyBlockInternal(C_BlockPos* block, uint8_t blockSide) {
+	__forceinline void _destroyBlockInternal(C_BlockPos* block, uint8_t blockSide) {
 
 		using destroyBlockInternal = void(__fastcall*)(void*, C_BlockPos*, uint8_t face);
-		static destroyBlockInternal destroyBlockFunc = reinterpret_cast<destroyBlockInternal>(Utils::FindSignature("40 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 D9 48 81 EC E0 00 00 00 48 C7 45 87 FE FF FF FF 48 89 9C 24 30 01 00 00"));
+		static destroyBlockInternal destroyBlockFunc = reinterpret_cast<destroyBlockInternal>(Utils::FindSignature("CC ?? ?? 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 D9 48 81 EC E0 00 00 00 48 C7 45 87 FE FF FF FF 48 89 9C 24 30 01 00 00") + 1);
+		destroyBlockFunc = reinterpret_cast < destroyBlockInternal>(0x7FF7978EA210);
 		if (destroyBlockFunc != 0x0) {
 			// 
+			//__debugbreak();
+			logF("Function called 3 %X", destroyBlockFunc);
 			destroyBlockFunc(this, block, blockSide);
 		}
+		else
+			logF("destroyBlockFunc == null");
 
 	}
 };

@@ -142,11 +142,11 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			logF("Function called");
 			localPlayer = clientInstance->getLocalPlayer();
 			C_BlockPos* pos = new C_BlockPos();
-			pos->x = 137;
-			pos->y = 68;
-			pos->z = 234;
-
-			localPlayer->getCGameMode()->_destroyBlockInternal(pos, 1);
+			pos->x = (int) floorf(localPlayer->eyePos1.x);
+			pos->y = 3;
+			pos->z = (int)floorf(localPlayer->eyePos1.z);
+			logF("Function called2");
+			localPlayer->getCGameMode()->_destroyBlockInternal(pos, 2);
 		}
 
 		if (bKillAura)
