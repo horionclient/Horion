@@ -4,10 +4,10 @@
 #pragma pack(push,8)
 
 __declspec(align(8))
-class MovePlayerPacket
+class C_MovePlayerPacket
 {
 public:
-	MovePlayerPacket() {
+	C_MovePlayerPacket() {
 		static uintptr_t** movePlayerPacketVtable = 0x0;
 		if (movePlayerPacketVtable == 0x0) {
 			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 82 ?? ?? ?? ?? 48 89 41 ?? 48 8B 02 48 8B CA FF 50 60");
