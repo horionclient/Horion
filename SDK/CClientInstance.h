@@ -9,13 +9,32 @@ class Minecraft;
 class LevelRenderer;
 class HitDetectSystem;
 
+struct ThisCantWork {
+	const char* strPtr;
+	size_t length1; 
+	size_t length2;
+};
+
 class C_GuiData {
 public:
-	__int64 displayClientMessage(char* a2) {
-		using displayClientMessage = __int64(__thiscall*)(void*, char*); // This signature actually exists 2 times but we got luck that our function is the first in memory
+	void displayClientMessageF(const char * fmt, ...) {
+		char bigboi[300];
+		va_list arg;
+		va_start(arg, fmt);
+		int numCharacters = vsprintf_s(bigboi, 300, fmt, arg);
+		va_end(arg);
+		displayClientMessage(&std::string(bigboi));
+	}
+	void displayClientMessage(std::string* a2) {
+		using displayClientMessage = void(__thiscall*)(void*, ThisCantWork); // This signature actually exists 2 times but we got luck that our function is the first in memory
 		static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(Utils::FindSignature("40 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 4C 8B FA 4C 8B E9 48 89 4C 24 ?? 48 C7 45 ?? 0F 00 00 00 33 C0 48 89 45 ?? 88 45"));
-		__debugbreak();
-		return displayMessageFunc(this, a2);
+		
+		ThisCantWork worker;
+		worker.strPtr = a2->c_str();
+		worker.length1 = a2->length();
+		worker.length2 = a2->length();
+		
+		displayMessageFunc(this, worker);
 	};
 };
 

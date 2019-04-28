@@ -4,7 +4,7 @@ char logPath[200];
 bool yeet = false;
 CRITICAL_SECTION loggerLock;
 CRITICAL_SECTION vecLock;
-std::vector<TextForPrint*> stringPrintVector = std::vector<TextForPrint*>();
+std::vector<TextForPrint> stringPrintVector = std::vector<TextForPrint>();
 
 std::wstring Logger::GetRoamingFolderPath()
 {
@@ -74,16 +74,17 @@ void Logger::WriteLogFileF(const char * fmt, ...)
 		va_start(arg, fmt);
 		int numCharacters = vsprintf_s(bigboi, 300, fmt, arg);
 		va_end(arg);
-		fprintf(pFile, "%s %s", smolBoi, bigboi);
+		fprintf(pFile, "%s%s", smolBoi, bigboi);
 		fprintf(pFile, "\n");
 
 		fclose(pFile);
 
-		if (numCharacters < 70) {
+		if (numCharacters < 100) {
 			TextForPrint boeing747;
-			boeing747.length = sprintf_s(boeing747.text, 70, "%s %s", smolBoi, bigboi) + 1;
+			strcpy_s(boeing747.text, 100, bigboi);
+			strcpy_s(boeing747.time, 20, smolBoi);
 			EnterCriticalSection(&vecLock);
-			stringPrintVector.push_back(&boeing747);
+			stringPrintVector.push_back(boeing747);
 			LeaveCriticalSection(&vecLock);
 		}
 	}
@@ -98,9 +99,9 @@ void Logger::WriteLogFileF(const char * fmt, ...)
 #endif
 }
 
-std::vector<TextForPrint*> Logger::GetTextToPrint()
+std::vector<TextForPrint>* Logger::GetTextToPrint()
 {
-	return stringPrintVector;
+	return &stringPrintVector;
 }
 
 CRITICAL_SECTION* Logger::GetTextToPrintSection()

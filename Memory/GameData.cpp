@@ -42,18 +42,16 @@ void GameData::updateGameData(C_GameMode * gameMode)
 			
 			if (TryEnterCriticalSection(vecLock)) {
 				
-				auto stringPrintVector = Logger::GetTextToPrint();
-				//__debugbreak();
-				for (std::vector<TextForPrint*>::iterator it = stringPrintVector.begin(); it != stringPrintVector.end(); ++it) {
+				auto* stringPrintVector = Logger::GetTextToPrint();
+				
+				for (std::vector<TextForPrint>::iterator it = stringPrintVector->begin(); it != stringPrintVector->end(); ++it) {
 					C_GuiData* guiData = g_Data.clientInstance->getGuiData();
-					//logF("Gui: %llX", guiData);
-					//static char* str = "yeet";
-					//str = std::string("yeet");
-					//guiData->displayClientMessage(str);
+				
+					guiData->displayClientMessageF("%s%s%s%s", GOLD, it->time, RESET, it->text);
 					//g_Data.localPlayer->displayClientMessageStr(std::string(yeetus)); //std::string(it->text, it->length)
 				}
 				
-				stringPrintVector.clear();
+				stringPrintVector->clear();
 				LeaveCriticalSection(vecLock);
 			}
 				

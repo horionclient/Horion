@@ -2,6 +2,7 @@
 
 #include "../SDK/CClientInstance.h"
 #include "../SDK/CGameMode.h"
+#include "../Utils/TextFormat.h"
 #include "SlimMem.h"
 
 

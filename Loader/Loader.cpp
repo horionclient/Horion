@@ -163,7 +163,8 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 DWORD WINAPI startCheat(LPVOID lpParam)
 {
 	logF("Starting cheat...");
-	
+	init();
+
 	DWORD procId = GetCurrentProcessId();
 	if (!mem.Open(procId, SlimUtils::ProcessAccess::Full))
 	{
@@ -206,6 +207,13 @@ DllMain(HMODULE hModule,
 		Logger::Disable();
 		Hooks::Restore();
 		MH_Uninitialize();
+
+		if (g_Data.getClientInstance()->getLocalPlayer() != nullptr) {
+			C_GuiData* guiData = g_Data.getClientInstance()->getGuiData();
+			if (guiData != nullptr)
+				guiData->displayClientMessageF("%sUninjected!", RED);
+		}
+
 		break;
 	}
 	return TRUE;

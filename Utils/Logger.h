@@ -33,9 +33,8 @@ using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
 
 struct TextForPrint {
-	char text[80];
-	char f = 0;
-	size_t length;
+	char time[20];
+	char text[100];
 };
 
 class Logger {
@@ -43,7 +42,7 @@ private:
 	static std::wstring GetRoamingFolderPath();
 public:
 	static void WriteLogFileF(const char* fmt, ...);
-	static std::vector<TextForPrint*> GetTextToPrint();
+	static std::vector<TextForPrint>* GetTextToPrint();
 	static CRITICAL_SECTION* GetTextToPrintSection();
 	//static std::vector<TextForPrint*> stringPrintVector;
 	static void Disable();
@@ -53,4 +52,4 @@ extern char logPath[200];
 extern bool yeet;
 extern CRITICAL_SECTION loggerLock;
 extern CRITICAL_SECTION vecLock;
-extern std::vector<TextForPrint*> stringPrintVector;
+extern std::vector<TextForPrint> stringPrintVector;

@@ -129,6 +129,7 @@
     <ClCompile Include="Memory\SlimMem.cpp" />
     <ClCompile Include="SDK\CBlockPos.h" />
     <ClCompile Include="Utils\Logger.cpp" />
+    <ClCompile Include="Utils\TextFormat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Loader\Loader.h" />
@@ -143,6 +144,7 @@
     <ClInclude Include="SDK\CPacket.h" />
     <ClInclude Include="SDK\CLoopbackPacketSender.h" />
     <ClInclude Include="Memory\Offsets.h" />
+    <ClInclude Include="Utils\TextFormat.h" />
     <ClInclude Include="SDK\TextHolder.h" />
     <ClInclude Include="Utils\HMath.h" />
     <ClInclude Include="Utils\Logger.h" />
