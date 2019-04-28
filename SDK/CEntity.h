@@ -150,15 +150,18 @@ public:
 		return this->ptrToPtrToPtrToCGameMode->ptrToPtrToCGameMode->ptrToCGameMode->cGameMode;
 	}
 
-	void displayClientMessageStr(const std::string str) { // vtable[405]
+	/*void displayClientMessageStr(const std::string str) { // vtable[405]
 		using displayClientMessage = void(__fastcall*)(void*, const std::string*);
 		//static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(Utils::FindSignature("40 53 48 83 EC 20 48 8B 89 ?? ?? ?? ?? 48 8B DA 48 8B 01 FF 90 ?? ?? ?? ?? 48 8B C8"));
 		static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(this->vTable[405]);
 		displayMessageFunc(this, &str);
-	}
+	}*/
 
-	void displayClientMessage(char* message) {
-		//displayClientMessageStr(std::wstring(message));
+	void unlockAchievments() { // MinecraftEventing::fireEventAwardAchievement
+		using fireEventAward = void(__fastcall*)(void*, int);
+		static fireEventAward fireEventAwardFunc = reinterpret_cast<fireEventAward>(Utils::FindSignature("48 85 C9 0F 84 ?? ?? ?? ?? 55 56 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 8B"));
+		for (int i = 0; i < 100; i++)
+			fireEventAwardFunc(this, i);
 	}
 
 	void swingArm() {

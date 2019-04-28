@@ -123,7 +123,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			cli->sendChatMessage("  /_______\\");
 		}
 		
-		if (GameData::isKeyPressed('J')) {
+		if (GameData::isKeyPressed('J') && localPlayer != 0x0) {
 			/*if (localPlayer != 0x0) {
 				C_MovePlayerPacket* Packet = new C_MovePlayerPacket();
 			
@@ -138,10 +138,6 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 				clientInstance->loopbackPacketSender->sendToServer(Packet);
 				delete Packet;
 			}*/
-			C_GameMode* _this = g_Data.getCGameMode();
-			void* ptr = malloc(0x1000);
-			logF("shit gamemode = %llX", ptr);
-			memcpy_s(ptr, 0x1000, _this, 0x1000);
 		}
 		
 		if (GameData::isKeyPressed('M')) {
