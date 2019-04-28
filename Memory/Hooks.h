@@ -16,10 +16,13 @@ public:
 
 private:
 	static void __fastcall GameMode_tick(C_GameMode* _this);
+	static void __fastcall ChatScreenController_sendChatMessage(uint8_t* _this);
 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
+	std::unique_ptr<FuncHook> chatScreen_sendMessageHook;
 
 	typedef void(__fastcall* GameMode_tick_t)(C_GameMode* _this);
+	typedef void(__fastcall* ChatScreen_sendChatMessage_t)(void* _this);
 };
 
 extern Hooks g_Hooks;
