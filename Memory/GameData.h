@@ -1,9 +1,9 @@
 #pragma once
 
 #include "../SDK/CClientInstance.h"
-#include "../SDK/CEntity.h"
 #include "../SDK/CGameMode.h"
 #include "SlimMem.h"
+
 
 class GameData {
 private:
@@ -13,6 +13,8 @@ private:
 	const SlimUtils::SlimModule* gameModule;
 	SlimUtils::SlimMem* slimMem;
 public:
+	static bool isKeyDown(int key);
+	static bool isKeyPressed(int key);
 	static void updateGameData(C_GameMode* gameMode);
 	static void initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem);
 
@@ -25,5 +27,6 @@ public:
 	};
 	C_GameMode* getCGameMode() { return gameMode; };
 };
+
 
 extern GameData g_Data;

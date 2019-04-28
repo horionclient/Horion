@@ -150,15 +150,15 @@ public:
 		return this->ptrToPtrToPtrToCGameMode->ptrToPtrToCGameMode->ptrToCGameMode->cGameMode;
 	}
 
-	void displayClientMessageStr(std::string str) { // vtable[405]
-		using displayClientMessage = void(__fastcall*)(void*, char*);
+	void displayClientMessageStr(const std::string str) { // vtable[405]
+		using displayClientMessage = void(__fastcall*)(void*, const std::string*);
 		//static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(Utils::FindSignature("40 53 48 83 EC 20 48 8B 89 ?? ?? ?? ?? 48 8B DA 48 8B 01 FF 90 ?? ?? ?? ?? 48 8B C8"));
 		static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(this->vTable[405]);
-		displayMessageFunc(this, (char*)str.c_str());
+		displayMessageFunc(this, &str);
 	}
 
 	void displayClientMessage(char* message) {
-		displayClientMessageStr(std::string(message));
+		//displayClientMessageStr(std::wstring(message));
 	}
 
 	void swingArm() {

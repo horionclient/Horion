@@ -76,33 +76,7 @@ void KillAura()
 	}
 }
 
-bool isKeyDown(int key) {
-	static uintptr_t keyMapOffset = 0x0;
-	if (keyMapOffset == 0x0) {
-		uintptr_t sigOffset = Utils::FindSignature("48 8D 0D ?? ?? ?? ?? 89 3C 81 E9");
-		if (sigOffset != 0x0) {
-			int offset = *reinterpret_cast<int*>((sigOffset + 3)); // Get Offset from code
-			keyMapOffset = sigOffset - gameModule->ptrBase + offset + /*length of instruction*/ 7; // Offset is relative
-#ifdef _DEBUG
-			logF("Recovered KeyMapOffset: %X", keyMapOffset);
-#endif
-		}
-		else
-			logF("!!!KeyMap not located!!!");
-	}
-	// All keys are mapped as bools, though aligned as ints (4 byte)
-	// key0 00 00 00 key1 00 00 00 key2 00 00 00 ...
-	return *reinterpret_cast<bool*>(gameModule->ptrBase + keyMapOffset + (key * 0x4));
-}
 
-bool isKeyPressed(int key) {
-	if (isKeyDown(key)) {
-		while (isKeyDown(key))
-			Sleep(2);
-		return true;
-	}
-	return false;
-}
 
 DWORD WINAPI keyThread(LPVOID lpParam)
 {
@@ -113,18 +87,17 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 	C_GameMode* gameMode = g_Data.getCGameMode();
 
 	while (isRunning) {
-		if (isKeyPressed('L')) { // Press L to uninject
+		if (GameData::isKeyPressed('L')) { // Press L to uninject
 			isRunning = false;
 			logF("Uninjecting...");
 			break;
 		}
-		if (isKeyPressed('P')) {
+		if (GameData::isKeyPressed('P')) {
 			bKillAura = !bKillAura; //true;
 			logF("%s KillAura", bKillAura ? "Activating" : "Deactivating");
 		}
 		
-		if (isKeyPressed('O')) {
-			//localPlayer = clientInstance->getLocalPlayer();
+		if (GameData::isKeyPressed('O')) {
 			
 			static uintptr_t screenModelBase = 0x0;
 			if (screenModelBase == 0x0) {
@@ -150,10 +123,8 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			cli->sendChatMessage("  /_______\\");
 		}
 		
-		if (isKeyPressed('J')) {
-			//localPlayer = clientInstance->getLocalPlayer();
-
-			if (localPlayer != 0x0) {
+		if (GameData::isKeyPressed('J')) {
+			/*if (localPlayer != 0x0) {
 				C_MovePlayerPacket* Packet = new C_MovePlayerPacket();
 			
 				Packet->entityRuntimeID = localPlayer->entityRuntimeId;
@@ -166,32 +137,25 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 
 				clientInstance->loopbackPacketSender->sendToServer(Packet);
 				delete Packet;
-			}
-			
+			}*/
+			C_GameMode* _this = g_Data.getCGameMode();
+			void* ptr = malloc(0x1000);
+			logF("shit gamemode = %llX", ptr);
+			memcpy_s(ptr, 0x1000, _this, 0x1000);
 		}
 		
-		if (isKeyPressed('M')) {
-			/*logF("Function called");
-			localPlayer = clientInstance->getLocalPlayer();
-			C_BlockPos* pos = new C_BlockPos();
-			pos->x = (int) floorf(localPlayer->eyePos1.x);
-			pos->y = 3;
-			pos->z = (int)floorf(localPlayer->eyePos1.z);
-			logF("Function called2");
-			localPlayer->getCGameMode()->_destroyBlockInternal(pos, 2);*/
+		if (GameData::isKeyPressed('M')) {
 			zeHook = clientInstance->getLocalPlayer()->getCGameMode()->placeHook(clientInstance);
 		}
 
 		if (bKillAura)
 		{
-			//localPlayer = clientInstance->getLocalPlayer();
 			if (localPlayer != 0x0) {
 				KillAura();
 			}
 		}
-		Sleep(50); // 1000 / 20 
+		Sleep(50); 
 	}
-	//MH_DisableHook(zeHook);
 
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1); // Uninject
 }
@@ -199,6 +163,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 DWORD WINAPI startCheat(LPVOID lpParam)
 {
 	logF("Starting cheat...");
+	
 	DWORD procId = GetCurrentProcessId();
 	if (!mem.Open(procId, SlimUtils::ProcessAccess::Full))
 	{
@@ -236,8 +201,9 @@ DllMain(HMODULE hModule,
 	}
 	break;
 	case DLL_PROCESS_DETACH:
+		isRunning = false;
 		logF("Removing logger");
-		DisableLogger();
+		Logger::Disable();
 		Hooks::Restore();
 		MH_Uninitialize();
 		break;

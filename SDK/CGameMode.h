@@ -3,7 +3,6 @@
 #include "CClientInstance.h"
 #include "CEntity.h"
 #include "CBlockPos.h"
-#include "../Utils/Logger.h"
 
 #include <stdint.h>
 #include "../Memory/MinHook.h"
@@ -57,7 +56,7 @@ public:
 
 	static unsigned int destroyBlockInternalHook(C_GameMode* _this, C_BlockPos* blockPos, uint8_t blockFace) {
 		if (_this->player == client->getLocalPlayer()) {
-			C_BlockPos yeet;
+			/*C_BlockPos yeet;
 			
 			int x = 0;
 			int z = 0;
@@ -74,9 +73,14 @@ public:
 				}
 			}
 
-			return destroyBlockInternalReal(_this, blockPos, blockFace);
+			return destroyBlockInternalReal(_this, blockPos, blockFace);*/
 		}
+		void* ptr = malloc(0x1000);
+		logF("well gamemode = %llX", ptr);
+		memcpy_s(ptr, 0x1000, _this, 0x1000);
+
 		
+
 		return destroyBlockInternalReal(_this, blockPos, blockFace);
 	}
 

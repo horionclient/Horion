@@ -1,7 +1,6 @@
 #pragma once
 
 #include "MinHook.h"
-#include "../Utils/Logger.h"
 #include "../SDK/CGameMode.h"
 #include "GameData.h"
 
@@ -11,6 +10,7 @@ class FuncHook;
 class Hooks {
 private:
 public:
+
 	static void Init();
 	static void Restore();
 

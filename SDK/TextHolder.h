@@ -13,6 +13,16 @@ private:
 
 	int textLength; //0x0010 
 public:
+	TextHolder(std::string str) {
+		memset(this, 0, sizeof(TextHolder));
+		if (str.size() < 16)
+			strcpy_s(inlineText, 16, str.c_str());
+		else {
+			size_t size = str.size();
+			char* ptr = reinterpret_cast<char*>(malloc(size));
+			strcpy_s(ptr, size, str.c_str());
+		}
+	}
 
 	char* getText() {
 		if (textLength < 16)
