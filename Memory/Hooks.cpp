@@ -16,6 +16,13 @@ void Hooks::Init()
 	// ^^ 
 	void* _sendChatMessage = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC 20 48 83 B9 ?? ?? ?? ?? 00 48 8B F9 0F 85"));
 	g_Hooks.chatScreen_sendMessageHook = std::make_unique<FuncHook>(_sendChatMessage, Hooks::ChatScreenController_sendChatMessage);
+
+	// IDXGISwapChain::present
+	// using vtable found with dummy thing
+	void** swapChainVtable = static_cast<void**>(getSwapChain());
+	void* presentFunc = swapChainVtable[8];
+	g_Hooks.d3d11_presentHook = std::make_unique<FuncHook>(presentFunc, Hooks::d3d11_present);
+
 	logF("Hooks hooked");
 }
 
@@ -23,6 +30,7 @@ void Hooks::Restore()
 {
 	g_Hooks.gameMode_tickHook->Restore();
 	g_Hooks.chatScreen_sendMessageHook->Restore();
+	g_Hooks.d3d11_presentHook->Restore();
 }
 
 void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
@@ -51,4 +59,11 @@ void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
 		}
 	}
 	oSendMessage(_this);
+}
+
+HRESULT __stdcall Hooks::d3d11_present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
+{
+	static auto oPresent = g_Hooks.d3d11_presentHook->GetOriginal<d3d11_present_t>();
+	logF("d3d11_present");
+	return oPresent(pSwapChain, SyncInterval, Flags);
 }

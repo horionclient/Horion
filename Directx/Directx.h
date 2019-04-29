@@ -6,4 +6,4 @@
 #include "../SDK/CGameMode.h"
 #include "../Utils/TextFormat.h"
 bool GetD3D11SwapchainDeviceContext(void ** pSwapchainTable, size_t Size_Swapchain, void ** pDeviceTable, size_t Size_Device, void ** pContextTable, size_t Size_Context);
-void DirectX_Yeet();
+void* getSwapChain();

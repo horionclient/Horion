@@ -61,7 +61,7 @@ bool GetD3D11SwapchainDeviceContext(void ** pSwapchainTable, size_t Size_Swapcha
 }
 
 
-void DirectX_Yeet()
+void* getSwapChain()
 {
 	if (GetD3D11SwapchainDeviceContext(SwapChain, sizeof(SwapChain), Device, sizeof(Device), Context, sizeof(Context)))
 	{
@@ -72,6 +72,8 @@ void DirectX_Yeet()
 		logF("Swap Chain Vtable = %llX", ptr);*/
 		
 		logF("YEET");
+		return SwapChain;
 		//hook stuff using the dumped addresses
 	}
+	return 0;
 }
