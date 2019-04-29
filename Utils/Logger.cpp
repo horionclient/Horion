@@ -2,6 +2,7 @@
 
 char logPath[200]; 
 bool yeet = false;
+bool loggerActive = true;
 CRITICAL_SECTION loggerLock;
 CRITICAL_SECTION vecLock;
 std::vector<TextForPrint> stringPrintVector = std::vector<TextForPrint>();
@@ -36,6 +37,8 @@ std::wstring Logger::GetRoamingFolderPath()
 
 void Logger::WriteLogFileF(const char * fmt, ...)
 {
+	if (!loggerActive)
+		return;
 #ifdef _DEBUG
 	//try {
 
@@ -111,6 +114,12 @@ CRITICAL_SECTION* Logger::GetTextToPrintSection()
 
 void Logger::Disable()
 {
+	loggerActive = false;
+	EnterCriticalSection(&loggerLock);
+	EnterCriticalSection(&vecLock);
+	LeaveCriticalSection(&vecLock);
+	LeaveCriticalSection(&vecLock);
+	Sleep(50);
 #ifdef _DEBUG
 	DeleteCriticalSection(&loggerLock);
 	DeleteCriticalSection(&vecLock);
