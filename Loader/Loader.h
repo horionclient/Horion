@@ -22,3 +22,4 @@
 #include "../Memory/Hooks.h"
 #include "../Memory/GameData.h"
 #include "../Utils/TextFormat.h"
+#include "../Directx/Directx.h"

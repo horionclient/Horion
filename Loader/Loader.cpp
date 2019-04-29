@@ -139,6 +139,10 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 				delete Packet;
 			}*/
 		}
+		if (GameData::isKeyPressed('H') ) {
+			DirectX_Yeet();
+		
+		}
 		
 		if (GameData::isKeyPressed('M')) {
 			zeHook = clientInstance->getLocalPlayer()->getCGameMode()->placeHook(clientInstance);
