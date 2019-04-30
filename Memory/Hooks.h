@@ -20,11 +20,14 @@ private:
 	static void __fastcall GameMode_tick(C_GameMode* _this);
 	static void __fastcall ChatScreenController_sendChatMessage(uint8_t* _this);
 	static HRESULT __stdcall d3d11_present(IDXGISwapChain * pSwapChain, UINT SyncInterval, UINT Flags);
+	static __int64 __fastcall renderText(__int64 yeet, __int64 yote);
 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> chatScreen_sendMessageHook;
 	std::unique_ptr<FuncHook> d3d11_presentHook;
+	std::unique_ptr<FuncHook> renderTextHook;
 
+	typedef __int64(__fastcall* renderText_t)(__int64, __int64);
 	typedef void(__fastcall* GameMode_tick_t)(C_GameMode* _this);
 	typedef void(__fastcall* ChatScreen_sendChatMessage_t)(void* _this);
 	typedef HRESULT(__stdcall* d3d11_present_t)(IDXGISwapChain * pSwapChain, UINT SyncInterval, UINT Flags);

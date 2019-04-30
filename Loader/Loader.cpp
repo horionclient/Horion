@@ -138,6 +138,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 				clientInstance->loopbackPacketSender->sendToServer(Packet);
 				delete Packet;
 			}*/
+			
 		}
 
 		if (GameData::isKeyPressed('M')) {
@@ -199,9 +200,10 @@ DllMain(HMODULE hModule,
 	break;
 	case DLL_PROCESS_DETACH:
 		isRunning = false;
+		Hooks::Restore();
 		logF("Removing logger");
 		Logger::Disable();
-		Hooks::Restore();
+		
 		MH_Uninitialize();
 
 		if (g_Data.getClientInstance()->getLocalPlayer() != nullptr) {

@@ -26,6 +26,9 @@ public:
 			gameMode = nullptr;
 		return localPlayer;
 	};
+	const SlimUtils::SlimModule* getModule() {
+		return gameModule;
+	}
 	C_GameMode* getCGameMode() { return gameMode; };
 };
 

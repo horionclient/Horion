@@ -23,6 +23,10 @@ void Hooks::Init()
 	void* presentFunc = swapChainVtable[8];
 	g_Hooks.d3d11_presentHook = std::make_unique<FuncHook>(presentFunc, Hooks::d3d11_present);
 
+
+	// 
+	void* _shit = reinterpret_cast<void*>(Utils::FindSignature("30 5F C3 CC 48 8B C4 55 56 57 41 54") + 4);
+	g_Hooks.renderTextHook = std::make_unique<FuncHook>(_shit, Hooks::renderText);
 	logF("Hooks hooked");
 }
 
@@ -52,18 +56,47 @@ void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
 
 		if (*message == '.') {
 			logF("Command: %s", message);
-			*message = 0x0; // Remove command in textbox
-			*v6 = 0x0;
-			*idk = 0x0;
+			logF("Yote %llX", message);
+			//*message = 0x0; // Remove command in textbox
+			//*v6 = 0x0;
+			//*idk = 0x0;
 			return;
 		}
 	}
 	oSendMessage(_this);
 }
 
+struct Meinecraft {
+	uintptr_t filler[20];
+};
+
 HRESULT __stdcall Hooks::d3d11_present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
 {
 	static auto oPresent = g_Hooks.d3d11_presentHook->GetOriginal<d3d11_present_t>();
-	logF("d3d11_present");
+	//logF("d3d11_present");
+	
+
 	return oPresent(pSwapChain, SyncInterval, Flags);
+}
+
+__int64 __fastcall Hooks::renderText(__int64 yeet, __int64 yote) // I have no idea what this function is, only thing i know is that screencontext is in yote
+{
+	static auto oText = g_Hooks.renderTextHook->GetOriginal<renderText_t>();
+	using fillRectangle = void(__fastcall*)(uintptr_t, const float* rect, const float* color, float a4);
+	static fillRectangle fill = reinterpret_cast<fillRectangle>(g_Data.getModule()->ptrBase + 0x085B390);
+
+	float* reee = new float[4]; // Absolute Screen coordinates
+	reee[0] = 50;    // startX
+	reee[1] = 100;   // startY
+	reee[2] = 50;    //   endX
+	reee[3] = 100;   //   endY
+
+	float* col = new float[4];
+	col[0] = 1;
+	col[1] = 0;
+	col[2] = 0;
+
+	fill(yote, reee, col, 0.5f); // alpha
+
+	return oText(yeet, yote);
 }
