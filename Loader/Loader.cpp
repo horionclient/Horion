@@ -201,7 +201,6 @@ DllMain(HMODULE hModule,
 		isRunning = false;
 		logF("Removing logger");
 		Logger::Disable();
-		Hooks::Restore();
 		MH_Uninitialize();
 
 		if (g_Data.getClientInstance()->getLocalPlayer() != nullptr) {
