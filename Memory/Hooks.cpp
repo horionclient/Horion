@@ -1,7 +1,8 @@
 #include "Hooks.h"
+#include "../Directx/Directx.h"
 
 Hooks    g_Hooks;
-
+bool firstTime = true;
 void Hooks::Init()
 {
 	logF("Initting Hooks");
@@ -17,7 +18,7 @@ void Hooks::Init()
 	void* _sendChatMessage = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC 20 48 83 B9 ?? ?? ?? ?? 00 48 8B F9 0F 85"));
 	g_Hooks.chatScreen_sendMessageHook = std::make_unique<FuncHook>(_sendChatMessage, Hooks::ChatScreenController_sendChatMessage);
 
-	// IDXGISwapChain::present
+	//IDXGISwapChain::present;
 	// using vtable found with dummy thing
 	void** swapChainVtable = static_cast<void**>(getSwapChain());
 	void* presentFunc = swapChainVtable[8];
@@ -74,8 +75,7 @@ HRESULT __stdcall Hooks::d3d11_present(IDXGISwapChain* pSwapChain, UINT SyncInte
 {
 	static auto oPresent = g_Hooks.d3d11_presentHook->GetOriginal<d3d11_present_t>();
 	//logF("d3d11_present");
-	
-
+	Draw();
 	return oPresent(pSwapChain, SyncInterval, Flags);
 }
 
