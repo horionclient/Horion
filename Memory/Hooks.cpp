@@ -11,23 +11,26 @@ void Hooks::Init()
 	//    ^^ Function starts here
 	void* func = reinterpret_cast<void*>(Utils::FindSignature("CC 8B 41 ?? 89 41 ?? C3") + 1);
 	g_Hooks.gameMode_tickHook = std::make_unique<FuncHook>(func, Hooks::GameMode_tick);
+	g_Hooks.gameMode_tickHook->init();
 
 	// ChatScreenController::_sendChatMessage
 	// 40 57 48 83 EC 20 48 83 B9 ?? ?? ?? ?? 00 48 8B F9 0F 85
 	// ^^ 
 	void* _sendChatMessage = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC 20 48 83 B9 ?? ?? ?? ?? 00 48 8B F9 0F 85"));
 	g_Hooks.chatScreen_sendMessageHook = std::make_unique<FuncHook>(_sendChatMessage, Hooks::ChatScreenController_sendChatMessage);
+	g_Hooks.chatScreen_sendMessageHook->init();
 
 	//IDXGISwapChain::present;
 	// using vtable found with dummy thing
 	void** swapChainVtable = static_cast<void**>(getSwapChain());
 	void* presentFunc = swapChainVtable[8];
 	g_Hooks.d3d11_presentHook = std::make_unique<FuncHook>(presentFunc, Hooks::d3d11_present);
-
+	g_Hooks.d3d11_presentHook->init();
 
 	// 
 	void* _shit = reinterpret_cast<void*>(Utils::FindSignature("30 5F C3 CC 48 8B C4 55 56 57 41 54") + 4);
 	g_Hooks.renderTextHook = std::make_unique<FuncHook>(_shit, Hooks::renderText);
+	g_Hooks.renderTextHook->init();
 	logF("Hooks hooked");
 }
 

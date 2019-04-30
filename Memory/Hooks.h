@@ -43,14 +43,19 @@ public:
 
 	FuncHook(void* func, void* hooked) {
 		funcPtr = func;
+		
 		int ret = MH_CreateHook(func, hooked, &funcReal);
 		if (ret == MH_OK) {
-			ret = MH_EnableHook(func);
-			if(ret != MH_OK)
-				logF("MH_EnableHook = %i", ret);
+			
 		}else
 			logF("MH_CreateHook = %i", ret);
 	};
+
+	void init() {
+		int ret = MH_EnableHook(funcPtr);
+		if (ret != MH_OK)
+			logF("MH_EnableHook = %i", ret);
+	}
 
 	~FuncHook() {
 		Restore();
@@ -63,6 +68,8 @@ public:
 	template<class Type>
 	Type GetOriginal()
 	{
+		if (this == nullptr)
+			return nullptr;
 		return reinterpret_cast<Type>(funcReal);
 	};
 };
