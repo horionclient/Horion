@@ -83,6 +83,14 @@ public:
 
 		return Utils::CallVFunc<75, void*>(this);
 	}
+
+	void grabMouse() {
+		Utils::CallVFunc<239, void>(this);
+	}
+
+	void releaseMouse() {
+		Utils::CallVFunc<240, void>(this);
+	}
 };
 
 /*

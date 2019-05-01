@@ -96,7 +96,15 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			bKillAura = !bKillAura; //true;
 			logF("%s KillAura", bKillAura ? "Activating" : "Deactivating");
 		}
-		
+
+		if (GameData::isKeyPressed('B')) {
+			clientInstance->grabMouse();
+		}
+
+		if (GameData::isKeyPressed('N')) {
+			clientInstance->releaseMouse();
+		}
+
 		if (GameData::isKeyPressed('O')) {
 			
 			static uintptr_t screenModelBase = 0x0;
