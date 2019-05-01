@@ -5,7 +5,7 @@
 class C_MinecraftUIRenderContext {
 public:
 	virtual ~C_MinecraftUIRenderContext();
-	virtual __int64 getLineLength(__int64 a1, __int64 a2, __int64 a3, __int64 a4, __int64 a5);
+	virtual __int64 getLineLength(uintptr_t font, TextHolder* str, float textSize, bool idk);
 	virtual float getTextAlpha();
 	virtual void setTextAlpha(float alpha);
 	virtual __int64 drawDebugText(const float* pos, TextHolder* text, float* color, float alpha, unsigned int textAlignment, const float* textMeasureData, const void* caretMeasureData);
