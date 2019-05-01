@@ -4,9 +4,9 @@ IDXGISwapChain     * pDummySwapChain = nullptr;
 ID3D11Device     * pDummyDevice = nullptr;
 ID3D11DeviceContext  * pDummyContext = nullptr;
 
-IDXGISwapChain     * pSwapChain = nullptr;
-ID3D11Device     * pDevice = nullptr;
-ID3D11DeviceContext  * pContext = nullptr;
+//IDXGISwapChain     * pSwapChain = nullptr;
+//ID3D11Device     * pDevice = nullptr;
+//ID3D11DeviceContext  * pContext = nullptr;
 
 
 
@@ -47,8 +47,8 @@ bool GetD3D11SwapchainDeviceContext(void ** pSwapchainTable, size_t Size_Swapcha
 	{
 		memcpy(pSwapchainTable, *reinterpret_cast<void***>(pDummySwapChain), Size_Swapchain);
 		//pSwapchainTable = *reinterpret_cast<void***>(pDummySwapChain);
-		//logF("Swap Chain ptr  = %llX", pDummySwapChain);
-		//logF("Swap Chain Table = %llX", pSwapchainTable);
+		logF("Swap Chain ptr  = %llX", pDummySwapChain);
+		logF("Swap Chain Table = %llX", pSwapchainTable);
 	}
 
 	if (pDeviceTable)
@@ -87,20 +87,20 @@ void* getSwapChain()
 		logF("Swap Chain Vtable = %llX", ptr);*/
 
 		logF("YEET");
-		pSwapChain = reinterpret_cast<IDXGISwapChain*>(0x231435A6A00);
-		if (FAILED(pSwapChain->GetDevice(__uuidof(ID3D11Device), (LPVOID*)&pDevice)))
+		//pSwapChain = reinterpret_cast<IDXGISwapChain*>(0x0000021841177C90);
+		//if (FAILED(pSwapChain->GetDevice(__uuidof(ID3D11Device), (LPVOID*)&pDevice)))
 		{
 			logF("Failed");
-			return false;
+			return SwapChain;
 		}
 		//pDevice2 = reinterpret_cast<ID3D11Device*>(0x23143AE6870);
 
-		pDevice->GetImmediateContext(&pContext);
+		//pDevice->GetImmediateContext(&pContext);
 
 		// Make sure this is done only one time!
-		logF("SwapChain ptr  = %llX", pSwapChain);
-		logF("pDevice ptr  = %llX", pDevice);
-		logF("Context ptr  = %llX", pContext);
+		//logF("SwapChain ptr  = %llX", pSwapChain);
+		//logF("pDevice ptr  = %llX", pDevice);
+		//logF("Context ptr  = %llX", pContext);
 		return SwapChain;
 
 
@@ -108,8 +108,13 @@ void* getSwapChain()
 	}
 	return 0;
 }
-void Draw()
+void Draw(IDXGISwapChain* swap)
 {
+	ID3D11Device     * pDevice = nullptr;
+	
+	swap->GetDevice(__uuidof(ID3D11Device), (LPVOID*)&pDevice);
+	ID3D11DeviceContext  * pContext = nullptr;
+	pDevice->GetImmediateContext(&pContext);
 
 	static ID3D11Buffer*			m_pVertexBuffer = 0;
 	//static ID3D11InputLayout*		m_pInputLayout = 0;
@@ -201,7 +206,7 @@ void Draw()
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
 
-	//for (UINT p = 0; p < techDesc.Passes; ++p)
+	//for (UINT p = 0; p < 2; ++p)
 	{
 
 

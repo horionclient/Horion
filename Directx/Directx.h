@@ -9,7 +9,8 @@
 
 bool GetD3D11SwapchainDeviceContext(void ** pSwapchainTable, size_t Size_Swapchain, void ** pDeviceTable, size_t Size_Device, void ** pContextTable, size_t Size_Context);
 void* getSwapChain();
-void Draw();
+
+void Draw(IDXGISwapChain * swap);
 
 #ifndef D3DXFLOAT16
 typedef struct D3DXFLOAT16

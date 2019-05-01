@@ -4,10 +4,12 @@
 #include "../SDK/CGameMode.h"
 #include "GameData.h"
 #include "../Directx/Directx.h"
+#include "../SDK/TextHolder.h"
 #include <dxgi.h>
 
 class VMTHook;
 class FuncHook;
+struct BigCantWork;
 
 class Hooks {
 private:
@@ -21,15 +23,21 @@ private:
 	static void __fastcall ChatScreenController_sendChatMessage(uint8_t* _this);
 	static HRESULT __stdcall d3d11_present(IDXGISwapChain * pSwapChain, UINT SyncInterval, UINT Flags);
 	static __int64 __fastcall renderText(__int64 yeet, __int64 yote);
+	static char* __fastcall I8n_get(void*, char*);
+	static TextHolder* __fastcall Options_getVersionString(void*, __int64);
 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> chatScreen_sendMessageHook;
 	std::unique_ptr<FuncHook> d3d11_presentHook;
 	std::unique_ptr<FuncHook> renderTextHook;
+	std::unique_ptr<FuncHook> I8n_getHook;
+	std::unique_ptr<FuncHook> Options_getVersionStringHook;
 
+	typedef char*(__fastcall* I8n_get_t)(void*, char*);
 	typedef __int64(__fastcall* renderText_t)(__int64, __int64);
 	typedef void(__fastcall* GameMode_tick_t)(C_GameMode* _this);
 	typedef void(__fastcall* ChatScreen_sendChatMessage_t)(void* _this);
+	typedef TextHolder*(__fastcall* Options_getVersionString_t)(void* _this, __int64);
 	typedef HRESULT(__stdcall* d3d11_present_t)(IDXGISwapChain * pSwapChain, UINT SyncInterval, UINT Flags);
 };
 
@@ -62,14 +70,13 @@ public:
 	}
 
 	void Restore() {
-		MH_DisableHook(funcPtr);
+		if(this != nullptr && funcPtr != nullptr)
+			MH_DisableHook(funcPtr);
 	}
 
 	template<class Type>
 	Type GetOriginal()
 	{
-		if (this == nullptr)
-			return nullptr;
 		return reinterpret_cast<Type>(funcReal);
 	};
 };

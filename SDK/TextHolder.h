@@ -4,7 +4,7 @@
 __declspec(align(4)) 
 class TextHolder
 {	
-private:
+public:
 
 	union {
 		char inlineText[16]; //0x0000 
@@ -12,7 +12,7 @@ private:
 	};
 
 	int textLength; //0x0010 
-public:
+
 	TextHolder(std::string str) {
 		memset(this, 0, sizeof(TextHolder));
 		if (str.size() < 16)

@@ -73,6 +73,16 @@ public:
 	C_GuiData* getGuiData() {
 		return Utils::CallVFunc<177, C_GuiData*>(this);
 	};
+
+	void* getFont() {
+		
+		return Utils::CallVFunc<73, void*>(this);
+	}
+
+	void* getUnicodeFont() {
+
+		return Utils::CallVFunc<75, void*>(this);
+	}
 };
 
 /*
