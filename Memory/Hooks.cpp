@@ -133,18 +133,14 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	pos[1] = 50;
 	pos[2] = 120;
 	pos[3] = 130;
-	
-	std::string textStr = std::string("My brain is big yes");
+
+
+
+	std::string textStr = std::string("Horion");
 	TextHolder* text = new TextHolder(textStr);
 
 	uintptr_t font = reinterpret_cast<uintptr_t>(g_Data.getClientInstance()->getFont());
 	static float eins = 1.f;
-	static bool dir = false;
-	if (eins <= 1)
-		dir = false;
-	else if (eins >= 1.2f)
-		dir = true;
-	eins += dir ? -0.005f : 0.005f;
 
 	uintptr_t oof = 0;
 	memset(&oof, 0xFF, 4);
