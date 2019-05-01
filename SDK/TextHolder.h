@@ -1,7 +1,5 @@
 #pragma once
 
-#pragma pack(push,4)
-__declspec(align(4)) 
 class TextHolder
 {	
 public:
@@ -11,16 +9,26 @@ public:
 		char *pText; //0x0000 
 	};
 
-	int textLength; //0x0010 
+	size_t textLength; //0x0010 
+	size_t alignedTextLength; //0x0018
 
 	TextHolder(std::string str) {
 		memset(this, 0, sizeof(TextHolder));
+		textLength = str.size();
+		alignedTextLength = textLength | 0xF;
 		if (str.size() < 16)
 			strcpy_s(inlineText, 16, str.c_str());
 		else {
 			size_t size = str.size();
-			char* ptr = reinterpret_cast<char*>(malloc(size));
-			strcpy_s(ptr, size, str.c_str());
+			char* ptr = reinterpret_cast<char*>(malloc(size + 1));
+			strcpy_s(ptr, size + 1, str.c_str());
+			pText = ptr;
+		}
+	}
+
+	~TextHolder() {
+		if (textLength >= 16 && pText != nullptr) {
+			free(pText);
 		}
 	}
 
@@ -31,9 +39,7 @@ public:
 			return this->pText;
 	}
 
-	int getTextLength() {
+	size_t getTextLength() {
 		return textLength;
 	}
 };
-
-#pragma pack(pop)

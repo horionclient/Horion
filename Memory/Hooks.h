@@ -5,6 +5,7 @@
 #include "GameData.h"
 #include "../Directx/Directx.h"
 #include "../SDK/TextHolder.h"
+#include "../SDK/CMinecraftUIRenderContext.h"
 #include <dxgi.h>
 
 class VMTHook;
@@ -22,7 +23,7 @@ private:
 	static void __fastcall GameMode_tick(C_GameMode* _this);
 	static void __fastcall ChatScreenController_sendChatMessage(uint8_t* _this);
 	static HRESULT __stdcall d3d11_present(IDXGISwapChain * pSwapChain, UINT SyncInterval, UINT Flags);
-	static __int64 __fastcall renderText(__int64 yeet, __int64 yote);
+	static __int64 __fastcall renderText(__int64 yeet, C_MinecraftUIRenderContext* yote);
 	static char* __fastcall I8n_get(void*, char*);
 	static TextHolder* __fastcall Options_getVersionString(void*, __int64);
 
@@ -34,7 +35,7 @@ private:
 	std::unique_ptr<FuncHook> Options_getVersionStringHook;
 
 	typedef char*(__fastcall* I8n_get_t)(void*, char*);
-	typedef __int64(__fastcall* renderText_t)(__int64, __int64);
+	typedef __int64(__fastcall* renderText_t)(__int64, C_MinecraftUIRenderContext*);
 	typedef void(__fastcall* GameMode_tick_t)(C_GameMode* _this);
 	typedef void(__fastcall* ChatScreen_sendChatMessage_t)(void* _this);
 	typedef TextHolder*(__fastcall* Options_getVersionString_t)(void* _this, __int64);

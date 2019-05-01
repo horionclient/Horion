@@ -103,18 +103,11 @@ struct BigCantWork {
 	size_t length2;
 };
 
-__int64 __fastcall Hooks::renderText(__int64 yeet, __int64 yote) // I have no idea what this function is, only thing i know is that screencontext is in yote
+__int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* renderCtx) // I have no idea what this function is, only thing i know is that screencontext is in yote
 {
 	static auto oText = g_Hooks.renderTextHook->GetOriginal<renderText_t>();
 
-	__int64 savedYote = yote;
-
-	__int64 retval = oText(yeet, yote);
-
-	yote = savedYote;
-
-	using fillRectangle = void(__fastcall*)(uintptr_t, const float* rect, const float* color, float a4);
-	static fillRectangle fill = reinterpret_cast<fillRectangle>(Utils::FindSignature("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 83 3D ?? ?? ?? ?? 00 49 8B F8 0F 29 74 24 ?? 48 8B DA 0F 28 F3 48 8B F1 75 2C B9 01 00 00 00 E8 ?? ?? ?? ?? 48 89 44 24 ?? 48 8B 0D ?? ?? ?? ?? 48 89 05 ?? ?? ?? ?? 48 85 C9 74 0A BA 01 00 00 00 E8 ?? ?? ?? ?? F3 0F 10 07 48"));
+	__int64 retval = oText(yeet, renderCtx);
 
 	float* reee = new float[4]; // Absolute Screen coordinates
 	reee[0] = 0;    // startX
@@ -122,52 +115,42 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, __int64 yote) // I have no id
 	reee[2] = 115;  // startY
 	reee[3] = 135;  //   endY
 
-	static float* col = new float[8];
+	float* col = new float[8];
 	col[0] = 0.f;
 	col[1] = 0.f;
 	col[2] = 0.f;
 	col[3] = 1;
 
-	fill(yote, reee, col, 0.5f); // alpha
+	renderCtx->fillRectangle(reee, col, 0.5f); // alpha
 
 	col[0] = 0.3f;
 	col[1] = 1;
 	col[2] = 0.3f;
 	col[3] = 1;
 
-	static float* pos = new float[4];
+	float* pos = new float[4];
 	pos[0] = 0;
 	pos[1] = 50;
 	pos[2] = 120;
 	pos[3] = 130;
 	
 	std::string textStr = std::string("My brain is big yes");
+	TextHolder* text = new TextHolder(textStr);
 
-	static BigCantWork text;
-	text.length1 = textStr.size();
-	text.length2 = text.length1 | 0xF;
-
-	if (textStr.size() >= 16) {
-		char* ptr = static_cast<char*>(malloc(textStr.size() + 1));
-		strcpy_s(ptr, textStr.size() + 1, textStr.c_str());
-		text.pText = ptr;
-	}
-	else {
-		strcpy_s(text.boiii, 16, textStr.c_str());
-	}
-
-	using drawText = void(__fastcall*)(uintptr_t, uintptr_t font, const float* pos, BigCantWork text, float* color, float alpha, DWORD textAlign, float* textMeasure, uintptr_t *caret);
-	static drawText drawT = reinterpret_cast<drawText>(Utils::FindSignature("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8D 59 ?? 4C 8B D2 48 8B 8C 24"));
-	static uintptr_t font = reinterpret_cast<uintptr_t>(g_Data.getClientInstance()->getFont());
+	uintptr_t font = reinterpret_cast<uintptr_t>(g_Data.getClientInstance()->getFont());
 	static float eins = 1.f;
-	static uintptr_t oof = 0;
+	static bool dir = false;
+	if (eins <= 1)
+		dir = false;
+	else if (eins >= 1.2f)
+		dir = true;
+	eins += dir ? -0.005f : 0.005f;
+
+	uintptr_t oof = 0;
 	memset(&oof, 0xFF, 4);
 	
-	drawT(yote, font, pos, text, col, 1, 0, &eins, &oof);
-
-	using flushText = void(__fastcall*)(uintptr_t, float tim);
-	flushText flushTextFunc = reinterpret_cast<flushText>(g_Data.getModule()->ptrBase + 0x858E70);
-	flushTextFunc(yote, 0);
+	renderCtx->drawText(font, pos, text, col, 1, 0, &eins, &oof);
+	renderCtx->flushText(0);
 
 	return retval;
 }

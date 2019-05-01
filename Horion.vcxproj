@@ -144,6 +144,7 @@
     <ClInclude Include="SDK\CEntity.h" />
     <ClInclude Include="SDK\CEntityList.h" />
     <ClInclude Include="SDK\CGameMode.h" />
+    <ClInclude Include="SDK\CMinecraftUIRenderContext.h" />
     <ClInclude Include="SDK\CPacket.h" />
     <ClInclude Include="SDK\CLoopbackPacketSender.h" />
     <ClInclude Include="Memory\Offsets.h" />

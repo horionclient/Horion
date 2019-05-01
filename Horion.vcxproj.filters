@@ -98,5 +98,8 @@
     <ClInclude Include="Directx\Directx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SDK\CMinecraftUIRenderContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
