@@ -126,7 +126,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Directx\Directx.cpp" />
-    <ClCompile Include="Loader\Loader.cpp" />
+    <ClCompile Include="Horion\Loader.cpp" />
     <ClCompile Include="Memory\GameData.cpp" />
     <ClCompile Include="Memory\Hooks.cpp" />
     <ClCompile Include="Memory\SlimMem.cpp" />
@@ -136,7 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Directx\Directx.h" />
-    <ClInclude Include="Loader\Loader.h" />
+    <ClInclude Include="Horion\Loader.h" />
     <ClInclude Include="Memory\GameData.h" />
     <ClInclude Include="Memory\Hooks.h" />
     <ClInclude Include="Memory\MinHook.h" />
