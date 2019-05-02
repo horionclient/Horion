@@ -18,3 +18,5 @@ void ModuleManager::onTick(C_GameMode * gameMode)
 			mod->onTick(gameMode);
 	}
 }
+
+ModuleManager* moduleMgr = new ModuleManager(&g_Data);

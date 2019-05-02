@@ -14,3 +14,5 @@ public:
 	void initModules();
 	void onTick(C_GameMode* gameMode);
 };
+
+extern ModuleManager* moduleMgr;
