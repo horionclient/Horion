@@ -109,9 +109,17 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	__int64 retval = oText(yeet, renderCtx);
 
+	std::string textStr = std::string("Horion");
+	TextHolder* text = new TextHolder(textStr);
+
+	uintptr_t font = reinterpret_cast<uintptr_t>(g_Data.getClientInstance()->getFont());
+	static float eins = 1.f;
+	
+	float textLeng = renderCtx->getLineLength(font, text, eins, false);
+
 	float* reee = new float[4]; // Absolute Screen coordinates
 	reee[0] = 0;    // startX
-	reee[1] = 35;  //   endX
+	reee[1] = textLeng + 2;  //   endX
 	reee[2] = 0;  // startY
 	reee[3] = 12;  //   endY
 
@@ -133,12 +141,6 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	pos[1] = 50;
 	pos[2] = 1;
 	pos[3] = 12;
-
-	std::string textStr = std::string("Horion");
-	TextHolder* text = new TextHolder(textStr);
-
-	uintptr_t font = reinterpret_cast<uintptr_t>(g_Data.getClientInstance()->getFont());
-	static float eins = 1.f;
 
 	uintptr_t oof = 0;
 	memset(&oof, 0xFF, 4);
