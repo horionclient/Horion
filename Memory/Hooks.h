@@ -6,6 +6,7 @@
 #include "../Directx/Directx.h"
 #include "../SDK/TextHolder.h"
 #include "../SDK/CMinecraftUIRenderContext.h"
+
 #include <dxgi.h>
 
 class VMTHook;
@@ -27,6 +28,7 @@ private:
 	static char* __fastcall I8n_get(void*, char*);
 	static TextHolder* __fastcall Options_getVersionString(void*, __int64);
 	static float* Dimension_getFogColor(__int64, float* color, float brightness);
+	static void GameMode_destroyBlock(void*, C_BlockPos*, uint8_t face);
 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> chatScreen_sendMessageHook;
@@ -35,7 +37,9 @@ private:
 	std::unique_ptr<FuncHook> I8n_getHook;
 	std::unique_ptr<FuncHook> Options_getVersionStringHook;
 	std::unique_ptr<FuncHook> Dimension_getFogColorHook;
+	std::unique_ptr<FuncHook> GameMode_destroyBlockHook;
 
+	typedef __int64(__fastcall* GameMode_destroyBlock_t)(void*, C_BlockPos*, uint8_t face);
 	typedef float*(__fastcall* Dimension_getFogColor_t)(__int64, float*, __int64);
 	typedef char*(__fastcall* I8n_get_t)(void*, char*);
 	typedef __int64(__fastcall* renderText_t)(__int64, C_MinecraftUIRenderContext*);

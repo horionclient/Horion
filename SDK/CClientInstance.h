@@ -9,12 +9,6 @@ class Minecraft;
 class LevelRenderer;
 class HitDetectSystem;
 
-struct ThisCantWork {
-	const char* strPtr;
-	size_t length1; 
-	size_t length2;
-};
-
 class C_GuiData {
 public:
 	void displayClientMessageF(const char * fmt, ...) {
@@ -26,15 +20,12 @@ public:
 		displayClientMessage(&std::string(bigboi));
 	}
 	void displayClientMessage(std::string* a2) {
-		using displayClientMessage = void(__thiscall*)(void*, ThisCantWork); // This signature actually exists 2 times but we got luck that our function is the first in memory
+		using displayClientMessage = void(__thiscall*)(void*, TextHolder); // This signature actually exists 2 times but we got luck that our function is the first in memory
 		static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(Utils::FindSignature("40 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 4C 8B FA 4C 8B E9 48 89 4C 24 ?? 48 C7 45 ?? 0F 00 00 00 33 C0 48 89 45 ?? 88 45"));
 		
-		ThisCantWork worker;
-		worker.strPtr = a2->c_str();
-		worker.length1 = a2->length();
-		worker.length2 = a2->length();
+		TextHolder* text = new TextHolder(*a2);
 		
-		displayMessageFunc(this, worker);
+		displayMessageFunc(this, *text);
 	};
 };
 
@@ -92,15 +83,3 @@ public:
 		Utils::CallVFunc<240, void>(this);
 	}
 };
-
-/*
-class unusued
-{
-public:
-	C_ClientInstance* clientInstance; //0x0000 
-private:
-	char pad_0x0008[0x10]; //0x0008
-public:
-	void* minecraftClientScriptEngine; //0x0018 
-
-}; //Size=0x0020*/

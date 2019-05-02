@@ -37,13 +37,18 @@ void Hooks::Init()
 	//g_Hooks.I8n_getHook = std::make_unique<FuncHook>(_shitshikt, Hooks::I8n_get);
 	//g_Hooks.I8n_getHook->init();
 
-	void *shat = reinterpret_cast<void*>(g_Data.getModule()->ptrBase + 0x6908A0);
-	g_Hooks.Options_getVersionStringHook = std::make_unique<FuncHook>(shat, Hooks::Options_getVersionString);
-	g_Hooks.Options_getVersionStringHook->init();
+	//void *shat = reinterpret_cast<void*>(g_Data.getModule()->ptrBase + 0x6908A0);
+	//g_Hooks.Options_getVersionStringHook = std::make_unique<FuncHook>(shat, Hooks::Options_getVersionString);
+	//g_Hooks.Options_getVersionStringHook->init();
 
 	void* boii = reinterpret_cast<void*>(Utils::FindSignature("0F 28 C2 C7 42 0C 00 00 80 3F F3"));
 	g_Hooks.Dimension_getFogColorHook = std::make_unique<FuncHook>(boii, Hooks::Dimension_getFogColor);
 	g_Hooks.Dimension_getFogColorHook->init();
+
+	void* destroyBlok = reinterpret_cast<void*>(Utils::FindSignature("55 57 41 56 48 8D 68 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 45 0F B6 F0") - 3);
+	g_Hooks.GameMode_destroyBlockHook = std::make_unique <FuncHook>(destroyBlok, Hooks::GameMode_destroyBlock);
+	g_Hooks.GameMode_destroyBlockHook->init();
+
 	logF("Hooks hooked");
 }
 
@@ -55,6 +60,7 @@ void Hooks::Restore()
 	g_Hooks.renderTextHook->Restore();
 	g_Hooks.Options_getVersionStringHook->Restore();
 	//g_Hooks.I8n_getHook->Restore();
+	g_Hooks.GameMode_destroyBlockHook->Restore();
 }
 
 void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
@@ -86,26 +92,11 @@ void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
 	oSendMessage(_this);
 }
 
-struct Meinecraft {
-	uintptr_t filler[20];
-};
-
 HRESULT __stdcall Hooks::d3d11_present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
 {
 	static auto oPresent = g_Hooks.d3d11_presentHook->GetOriginal<d3d11_present_t>();
-//	logF("swap %llX", pSwapChain);
-	//Draw(pSwapChain);
 	return oPresent(pSwapChain, SyncInterval, Flags);
 }
-
-struct BigCantWork {
-	union {
-		char boiii[16]; //0x0000 
-		char *pText; //0x0000 
-	};
-	size_t length1;
-	size_t length2;
-};
 
 __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* renderCtx) // I have no idea what this function is, only thing i know is that screencontext is in yote
 {
@@ -204,4 +195,11 @@ float * Hooks::Dimension_getFogColor(__int64 a1, float * color, float brightness
 	Utils::ColorConvertHSVtoRGB(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);
 
 	return rcolors;
+}
+
+void Hooks::GameMode_destroyBlock(void * _this, C_BlockPos * pos, uint8_t face)
+{
+	static auto oDestroyBlock = g_Hooks.GameMode_destroyBlockHook->GetOriginal<GameMode_destroyBlock_t>();
+
+	oDestroyBlock(_this, pos, face);
 }

@@ -149,10 +149,6 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			
 		}
 
-		if (GameData::isKeyPressed('M')) {
-			zeHook = clientInstance->getLocalPlayer()->getCGameMode()->placeHook(clientInstance);
-		}
-
 		if (bKillAura)
 		{
 			if (localPlayer != 0x0) {
