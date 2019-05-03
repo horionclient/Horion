@@ -142,15 +142,16 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	col[0] = 0.f;
 	col[1] = 0.5f;
 	col[2] = 0.f;
-	col[3] = 1;
-	//__debugbreak();
+	col[3] = 0.2f;
+	//
 	//renderCtx->fillRectangle(reee, col, 0.2f); // alpha
 
-	__int64 a2 = reinterpret_cast<uintptr_t*>(renderCtx)[2];
+	__int64 a2 = reinterpret_cast<__int64*>(renderCtx)[2];
 	__int64 tesselator = *reinterpret_cast<__int64*>(a2 + 0x78);
-	__int64* v9 = *reinterpret_cast<__int64**>(a2 + 0x30);
-	memcpy_s(v9, 16, col, 16);
 
+	float* v9 = *reinterpret_cast<float**>(a2 + 0x30);
+	memcpy_s(v9, 0x10, col, 0x10);
+	*reinterpret_cast<uint8_t*>(v9 + 4) = 1;
 
 	using tess_begin_t = void(__fastcall*)(__int64 _this, char one, int four, char zero, __int64 alsoZero);
 	static tess_begin_t tess_begin = reinterpret_cast<tess_begin_t>(Utils::FindSignature("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 80 B9 ?? ?? ?? ?? 00 41 0F"));
@@ -161,52 +162,43 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	using sub_1408410E0_t = void(__fastcall*)(__int64, __int64 tesselator, __int64*);
 	static sub_1408410E0_t sub_1408410E0 = reinterpret_cast<sub_1408410E0_t>(g_Data.getModule()->ptrBase + 0x8410E0);
 
-	//for (int i = 0; i < 10; i++) {
+	tess_begin(tesselator, 3, 0, 1, 0);
 	
-		tess_begin(tesselator, 3, 0, 1, 0);
-	
-		float startX = 50;
-		float startY = 50;
+	float startX = 50;
+	float startY = 50;
 
-		float endX = 150;
-		float endY = 150;
+	float endX = 150;
+	float endY = 150;
 
-		float newX = 0 - (startY - endY);
-		float newY = startX - endX;
+	float newX = 0 - (startY - endY);
+	float newY = startX - endX;
 
-		float len = sqrtf(newX * newX + newY * newY);
+	float len = sqrtf(newX * newX + newY * newY);
 
-		newX /= len;
-		newY /= len;
+	newX /= len;
+	newY /= len;
 
-		static float yote = 1;
-		static bool dir = false;
-		if (yote > 20)
-			dir = true;
-		else if (yote <= 1)
-			dir = false;
+	static float yote = 1;
+	static bool dir = false;
+	if (yote > 20)
+		dir = true;
+	else if (yote <= 1)
+		dir = false;
 
-		yote += dir ? -0.05f : 0.05f;
+	yote += dir ? -0.05f : 0.05f;
 
-		newX *= yote;
-		newY *= yote;
+	newX *= yote;
+	newY *= yote;
 
-		tess_vertex(tesselator, startX + newX, startY + newY, 0);
-		tess_vertex(tesselator, startX - newX, startY - newY, 0);
-		tess_vertex(tesselator, endX + newX, endX + newY, 0);
+	tess_vertex(tesselator, startX + newX, startY + newY, 0);
+	tess_vertex(tesselator, startX - newX, startY - newY, 0);
+	tess_vertex(tesselator, endX + newX, endX + newY, 0);
 
-		tess_vertex(tesselator, endX + newX, endX + newY, 0);
-		tess_vertex(tesselator, endX - newX, endX - newY, 0);
-		tess_vertex(tesselator, startX - newX, startY - newY, 0);
+	tess_vertex(tesselator, endX + newX, endX + newY, 0);
+	tess_vertex(tesselator, endX - newX, endX - newY, 0);
+	tess_vertex(tesselator, startX - newX, startY - newY, 0);
 
-		sub_1408410E0(a2, tesselator, reinterpret_cast<__int64*>(0x26CC310 + g_Data.getModule()->ptrBase));
-	//}
-	
-
-	//tess_vertex(tesselator, poo[0], poo[1], 0);
-	//tess_vertex(tesselator, poo[2], poo[3], 0);
-
-	
+	sub_1408410E0(a2, tesselator, reinterpret_cast<__int64*>(0x26CC310 + g_Data.getModule()->ptrBase));
 
 	col[0] = 0.3f;
 	col[1] = 1;
