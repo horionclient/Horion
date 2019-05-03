@@ -47,8 +47,8 @@ bool GetD3D11SwapchainDeviceContext(void ** pSwapchainTable, size_t Size_Swapcha
 	{
 		memcpy(pSwapchainTable, *reinterpret_cast<void***>(pDummySwapChain), Size_Swapchain);
 		//pSwapchainTable = *reinterpret_cast<void***>(pDummySwapChain);
-		logF("Swap Chain ptr  = %llX", pDummySwapChain);
-		logF("Swap Chain Table = %llX", pSwapchainTable);
+		//logF("Swap Chain ptr  = %llX", pDummySwapChain);
+		//logF("Swap Chain Table = %llX", pSwapchainTable);
 	}
 
 	if (pDeviceTable)
@@ -86,11 +86,10 @@ void* getSwapChain()
 
 		logF("Swap Chain Vtable = %llX", ptr);*/
 
-		logF("YEET");
 		//pSwapChain = reinterpret_cast<IDXGISwapChain*>(0x0000021841177C90);
 		//if (FAILED(pSwapChain->GetDevice(__uuidof(ID3D11Device), (LPVOID*)&pDevice)))
 		{
-			logF("Failed");
+			
 			return SwapChain;
 		}
 		//pDevice2 = reinterpret_cast<ID3D11Device*>(0x23143AE6870);

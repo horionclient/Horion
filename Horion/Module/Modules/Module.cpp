@@ -37,6 +37,7 @@ void IModule::onDisable()
 void IModule::setEnabled(bool enabled)
 {
 	this->enabled = enabled;
+	logF("%s %s", enabled ? "Enabled" : "Disabled", this->getModuleName().c_str());
 }
 
 void IModule::toggle()

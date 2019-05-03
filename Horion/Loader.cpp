@@ -89,11 +89,12 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		logF("!!!KeyMap not located!!!");
 
 	while (isRunning) {
-		/*if (GameData::isKeyPressed('L')) { // Press L to uninject
+		if (GameData::isKeyPressed('L')) { // Press L to uninject
 			isRunning = false;
 			logF("Uninjecting...");
 			break;
 		}
+		/*
 		if (GameData::isKeyPressed('P')) {
 			bKillAura = !bKillAura; //true;
 			logF("%s KillAura", bKillAura ? "Activating" : "Deactivating");
@@ -191,6 +192,7 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 
 	logF("Starting threads...");
 	Hooks::Init();
+	moduleMgr->initModules();
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL); // Checking Keypresses
 	logF("Started!");
 
