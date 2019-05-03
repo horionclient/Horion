@@ -39,10 +39,6 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			break;
 		}
 		/*
-		if (GameData::isKeyPressed('P')) {
-			bKillAura = !bKillAura; //true;
-			logF("%s KillAura", bKillAura ? "Activating" : "Deactivating");
-		}
 
 		if (GameData::isKeyPressed('B')) {
 			clientInstance->grabMouse();
@@ -95,13 +91,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			}/
 			
 		}
-
-		if (bKillAura)
-		{
-			if (localPlayer != 0x0) {
-				KillAura();
-			}
-		}*/
+*/
 		
 		for (int i = 0; i < 0xFF; i++) {
 			bool* newKey = keyMapAddr + (4 * i); 
