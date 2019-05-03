@@ -49,7 +49,7 @@ void Hooks::Init()
 	g_Hooks.GameMode_destroyBlockHook = std::make_unique <FuncHook>(destroyBlok, Hooks::GameMode_destroyBlock);
 	g_Hooks.GameMode_destroyBlockHook->init();
 
-	logF("Hooks hooked");
+	//logF("Hooks hooked");
 }
 
 void Hooks::Restore()

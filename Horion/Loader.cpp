@@ -81,9 +81,6 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 	if (sigOffset != 0x0) {
 		int offset = *reinterpret_cast<int*>((sigOffset + 3)); // Get Offset from code
 		keyMapAddr = reinterpret_cast<bool*>(sigOffset + offset + /*length of instruction*/ 7); // Offset is relative
-#ifdef _DEBUG
-		logF("Recovered KeyMapOffset: %X", keyMapAddr);
-#endif
 	}
 	else
 		logF("!!!KeyMap not located!!!");
@@ -176,7 +173,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 
 DWORD WINAPI startCheat(LPVOID lpParam)
 {
-	logF("Starting cheat...");
+	logF("Starting up...");
 	init();
 
 	DWORD procId = GetCurrentProcessId();
@@ -187,14 +184,13 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	}
 	gameModule = mem.GetModule(L"Minecraft.Windows.exe"); // Get Module for Base Address
 
-	logF("MH_Initialize %i", MH_Initialize());
+	MH_Initialize();
 	GameData::initGameData(gameModule, &mem);
 
 	logF("Starting threads...");
 	Hooks::Init();
 	moduleMgr->initModules();
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL); // Checking Keypresses
-	logF("Started!");
 
 	ExitThread(0);
 }
@@ -210,8 +206,6 @@ DllMain(HMODULE hModule,
 	{
 	case DLL_PROCESS_ATTACH: //When the injector is called.
 	{
-		logF("Starting cheat");
-
 		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)startCheat, hModule, NULL, NULL);
 		DisableThreadLibraryCalls(hModule);
 	}
