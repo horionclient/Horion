@@ -3,69 +3,16 @@
 
 _Offsets Offsets = _Offsets();
 
-//Entity offsets
-
 int bKillAura;
 SlimUtils::SlimMem mem;
 const SlimUtils::SlimModule* gameModule;
 static bool isRunning = true;
-
-
 
 #if defined _M_X64
 #pragma comment(lib, "MinHook.x64.lib")
 #elif defined _M_IX86
 #pragma comment(lib, "MinHook.x86.lib")
 #endif
-
-
-void KillAura()
-{
-	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
-	if (!bKillAura)
-		return;
-	//Declare our target list to define our victims through a dynamic array
-	C_EntityList* entList = localPlayer->getEntityList();
-	size_t listSize = entList->getListSize();
-
-	//Loop through all our players and retrieve their information
-	float maxDist = 10;
-	static std::vector <C_Entity*> targetList;
-	targetList.clear();
-	for (size_t i = 0; i < listSize; i++)
-	{
-		C_Entity* currentEntity = entList->get(i);
-
-		if (currentEntity == 0)
-			break;
-
-		if (currentEntity == localPlayer) // Skip Local player
-			continue;
-	
-		if ( localPlayer->entityType1 != currentEntity->entityType1 && localPlayer->entityType2 != currentEntity->entityType2) // Skip Invalid Entity
-			continue;
-		
-		float dist = currentEntity->eyePos1.dist(localPlayer->eyePos1);
-
-		if (dist < maxDist) {
-			targetList.push_back(currentEntity);
-		}
-	}
-
-	if(targetList.size() > 0)
-		localPlayer->swingArm();
-
-	C_GameMode* gameMode = localPlayer->getCGameMode();
-
-	// Attack all entitys in targetList 
-	for (int i = 0; i < targetList.size(); i++)
-	{
-		gameMode->attack(targetList[i]);
-		
-	}
-}
-
-
 
 DWORD WINAPI keyThread(LPVOID lpParam)
 {
@@ -187,10 +134,12 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	MH_Initialize();
 	GameData::initGameData(gameModule, &mem);
 
-	logF("Starting threads...");
 	Hooks::Init();
 	moduleMgr->initModules();
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL); // Checking Keypresses
+
+	logF("Starting threads...");
+	
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE) keyThread, lpParam, NULL, NULL); // Checking Keypresses
 
 	ExitThread(0);
 }

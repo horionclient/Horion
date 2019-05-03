@@ -6,6 +6,7 @@
 #include "../Directx/Directx.h"
 #include "../SDK/TextHolder.h"
 #include "../SDK/CMinecraftUIRenderContext.h"
+#include "../Horion/Module/ModuleManager.h"
 
 #include <dxgi.h>
 

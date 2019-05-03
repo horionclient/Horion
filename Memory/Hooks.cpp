@@ -5,7 +5,7 @@ Hooks    g_Hooks;
 bool firstTime = true;
 void Hooks::Init()
 {
-	logF("Initting Hooks");
+	logF("Setting up Hooks...");
 	// GameMode::tick Signature
 	// CC 8B 41 ?? 89 41 ?? C3
 	//    ^^ Function starts here
@@ -68,6 +68,7 @@ void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
 	static auto oTick = g_Hooks.gameMode_tickHook->GetOriginal<GameMode_tick_t>();
 	oTick(_this); // Call Original Func
 	GameData::updateGameData(_this);
+	moduleMgr->onTick(_this);
 }
 
 void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
