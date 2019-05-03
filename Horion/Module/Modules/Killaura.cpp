@@ -2,7 +2,7 @@
 
 
 
-Killaura::Killaura()
+Killaura::Killaura() : IModule('P') // <-- keybind
 {
 }
 

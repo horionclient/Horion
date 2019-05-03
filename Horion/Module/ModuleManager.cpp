@@ -19,4 +19,12 @@ void ModuleManager::onTick(C_GameMode * gameMode)
 	}
 }
 
+void ModuleManager::onKeyUpdate(int key, bool isDown)
+{
+	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
+		IModule* mod = *it;
+		mod->onKeyUpdate(key, isDown);
+	}
+}
+
 ModuleManager* moduleMgr = new ModuleManager(&g_Data);

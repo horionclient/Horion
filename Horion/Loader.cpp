@@ -19,17 +19,6 @@ static bool isRunning = true;
 #endif
 
 
-
-//Compare the distance when sorting the array of Target Enemies, it's called a "sort predicate"
-/*struct CompareTargetEnArray
-{
-	bool operator() (TargetList_t &lhs, TargetList_t &rhs)
-	{
-		return lhs.m_Distance < rhs.m_Distance;
-	}
-};*/
-
-
 void KillAura()
 {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
@@ -80,14 +69,27 @@ void KillAura()
 
 DWORD WINAPI keyThread(LPVOID lpParam)
 {
-	void* zeHook = 0x0;
 	logF("Key thread started");
 	C_ClientInstance* clientInstance = g_Data.getClientInstance();
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 	C_GameMode* gameMode = g_Data.getCGameMode();
 
+	bool* keyMap = static_cast<bool*>(malloc(0xFF * 4 + 0x4));
+
+	bool* keyMapAddr = 0x0;
+	uintptr_t sigOffset = Utils::FindSignature("48 8D 0D ?? ?? ?? ?? 89 3C 81 E9");
+	if (sigOffset != 0x0) {
+		int offset = *reinterpret_cast<int*>((sigOffset + 3)); // Get Offset from code
+		keyMapAddr = reinterpret_cast<bool*>(sigOffset + offset + /*length of instruction*/ 7); // Offset is relative
+#ifdef _DEBUG
+		logF("Recovered KeyMapOffset: %X", keyMapAddr);
+#endif
+	}
+	else
+		logF("!!!KeyMap not located!!!");
+
 	while (isRunning) {
-		if (GameData::isKeyPressed('L')) { // Press L to uninject
+		/*if (GameData::isKeyPressed('L')) { // Press L to uninject
 			isRunning = false;
 			logF("Uninjecting...");
 			break;
@@ -112,7 +114,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 				uintptr_t sigOffset = Utils::FindSignature("41 89 86 ?? ?? ?? ?? 48 8B 4C 24 ?? 48 89 0D ?? ?? ?? ?? 48 8B 4C 24 ?? 48 89 0D");
 				if (sigOffset != 0x0) {
 					int offset = *reinterpret_cast<int*>((sigOffset + 15)); // Get Offset from code
-					screenModelBase = sigOffset + offset + /*length of instruction*/ 7 + 12; // Offset is relative
+					screenModelBase = sigOffset + offset + /*length of instruction/ 7 + 12; // Offset is relative
 				}
 				else
 					logF("screenModelBase not found!!!");
@@ -145,7 +147,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 
 				clientInstance->loopbackPacketSender->sendToServer(Packet);
 				delete Packet;
-			}*/
+			}/
 			
 		}
 
@@ -154,8 +156,18 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			if (localPlayer != 0x0) {
 				KillAura();
 			}
+		}*/
+		
+		for (int i = 0; i < 0xFF; i++) {
+			bool* newKey = keyMapAddr + (4 * i); 
+			bool* oldKey = keyMap + (4 * i);
+			if (*newKey != *oldKey)
+				moduleMgr->onKeyUpdate(i, *newKey);
 		}
-		Sleep(50); 
+
+		memcpy_s(keyMap, 0xFF * 4, keyMapAddr, 0xFF * 4);
+		
+		Sleep(10); 
 	}
 
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1); // Uninject

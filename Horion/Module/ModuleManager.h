@@ -13,6 +13,7 @@ public:
 	ModuleManager(GameData* gameData);
 	void initModules();
 	void onTick(C_GameMode* gameMode);
+	void onKeyUpdate(int key, bool isDown);
 };
 
 extern ModuleManager* moduleMgr;
