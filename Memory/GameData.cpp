@@ -27,7 +27,6 @@ bool GameData::isKeyPressed(int key) {
 void GameData::updateGameData(C_GameMode * gameMode)
 {
 	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + 0x0250A2D0, { 0x0, 0x298, 0x8 }));
-	//logF("clientInstance = %llX", g_Data.clientInstance);
 	g_Data.localPlayer = g_Data.getLocalPlayer();
 	if (gameMode->player == g_Data.localPlayer) { // GameMode::tick might also be run on the local server
 		g_Data.gameMode = gameMode;
@@ -35,23 +34,17 @@ void GameData::updateGameData(C_GameMode * gameMode)
 			auto *vecLock = Logger::GetTextToPrintSection();
 			
 			if (TryEnterCriticalSection(vecLock)) {
-				
 				auto* stringPrintVector = Logger::GetTextToPrint();
 				
 				for (std::vector<TextForPrint>::iterator it = stringPrintVector->begin(); it != stringPrintVector->end(); ++it) {
 					C_GuiData* guiData = g_Data.clientInstance->getGuiData();
 				
 					guiData->displayClientMessageF("%s%s%s%s", GOLD, it->time, RESET, it->text);
-					//g_Data.localPlayer->displayClientMessageStr(std::string(yeetus)); //std::string(it->text, it->length)
 				}
-				
 				stringPrintVector->clear();
 				LeaveCriticalSection(vecLock);
 			}
-				
-			
 		}
-		
 	}
 }
 

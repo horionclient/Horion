@@ -23,6 +23,11 @@ void Killaura::onTick(C_GameMode * gm)
 	C_EntityList* entList = localPlayer->getEntityList();
 	size_t listSize = entList->getListSize();
 
+	if (listSize > 1000) {
+		logF("Big ent list wtf men %i", listSize);
+		return;
+	}
+
 	//Loop through all our players and retrieve their information
 	float maxDist = 6;
 	static std::vector <C_Entity*> targetList;
@@ -45,7 +50,8 @@ void Killaura::onTick(C_GameMode * gm)
 
 		float dist = currentEntity->eyePos1.dist(localPlayer->eyePos1);
 
-		if (dist < maxDist) {
+		if (dist < maxDist) 
+		{
 			targetList.push_back(currentEntity);
 		}
 	}
