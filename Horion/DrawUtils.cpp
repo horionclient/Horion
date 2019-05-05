@@ -72,7 +72,7 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth)
 }
 
 void DrawUtils::wirebox(AABB aabb){
-
+	/*
 	using tesselatorWirebox_t = void(_fastcall*)(__int64 _this, AABB aabb);
 	static tesselatorWirebox_t tesselateWirebox = reinterpret_cast<tesselatorWirebox_t>(Utils::FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B DA 48 C7 44 24 ?? 00 00 00 00 B2 04"));
 	
@@ -88,5 +88,5 @@ void DrawUtils::wirebox(AABB aabb){
 
 	v15[41] = 0;
 	v15[42] = 0;
-	v15[43] = 0;
+	v15[43] = 0;*/
 }

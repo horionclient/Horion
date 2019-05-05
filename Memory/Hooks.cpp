@@ -152,12 +152,6 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	//DrawUtils::drawLine(vec2_t(1, 1), vec2_t(536, 252), 2);
 
-	AABB b;
-	b.lower = vec3_t(1, 1, 1);
-	b.upper = vec3_t(10, 10, 10);
-
-	//DrawUtils::wirebox(b);
-
 	col[0] = 0.3f;
 	col[1] = 1;
 	col[2] = 0.3f;
