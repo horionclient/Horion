@@ -212,7 +212,11 @@ struct vec4_t
 
 struct glmatrixf
 {
-	float v[16];
+	union {
+		float v[16];
+		float v_nested[4][4];
+	};
+	
 
 	float operator[](int i) const { return v[i]; }
 	float &operator[](int i) { return v[i]; }
@@ -229,6 +233,38 @@ struct glmatrixf
 	}
 
 #undef MULMAT
+
+	glmatrixf* correct() {
+		glmatrixf* newMatPtr = new glmatrixf;
+
+		for (int i = 0; i < 4; i++) {
+			newMatPtr->v[i * 4 + 0] = v[0 + i];
+			newMatPtr->v[i * 4 + 1] = v[4 + i];
+			newMatPtr->v[i * 4 + 2] = v[8 + i];
+			newMatPtr->v[i * 4 + 3] = v[12 + i];
+		}
+		return newMatPtr;
+	};
+
+	bool OWorldToScreen(vec3_t origin, vec3_t pos, vec2_t &screen, vec2_t fov, vec2_t displaySize)
+	{
+		pos = pos.sub(origin);
+
+		float x = transformx(pos);
+		float y = transformy(pos);
+		float z = transformz(pos);
+
+		if (z > 0)
+			return false;
+
+		float mX = (float)displaySize.x / 2.0F;
+		float mY = (float)displaySize.y / 2.0F;
+
+		screen.x = mX + (mX * x / -z * fov.x);
+		screen.y = mY - (mY * y / -z * fov.y);
+
+		return true;
+	}
 
 	void mul(const glmatrixf &x, const glmatrixf &y)
 	{

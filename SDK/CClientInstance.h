@@ -5,7 +5,12 @@
 #include "TextHolder.h"
 
 class Minecraft;
-class LevelRenderer;
+class LevelRenderer {
+private:
+	char pad_0x0000[0x7D0]; //0x0000
+public:
+	vec3_t origin; //0x07D0 
+};
 class HitDetectSystem;
 
 class MinecraftGame {
@@ -20,7 +25,16 @@ public:
 };
 
 class C_GuiData {
+private:
+	char pad_0x0000[0x18]; //0x0000
 public:
+	float widthReal; //0x0018 
+	float heightReal; //0x001C 
+	float widthReal2; //0x0020 
+	float heightReal2; //0x0024 
+	float widthGame; //0x0028 
+	float heightGame; //0x002C 
+
 	void displayClientMessageF(const char * fmt, ...) {
 		char bigboi[300];
 		va_list arg;
@@ -41,7 +55,7 @@ public:
 
 class C_ClientInstance {
 private:
-	char pad_0x0000[0x48]; //0x0000
+	char firstPad[0x48]; //0x0000
 public:
 	MinecraftGame* minecraftGame; //0x0040 
 private:
@@ -70,6 +84,20 @@ public:
 	C_LocalPlayer* getLocalPlayer() {
 		return localPlayer;
 	};
+
+	glmatrixf* getRefDef() {
+		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
+
+		return reinterpret_cast<glmatrixf*>(_this + 0x258);
+	};
+
+	vec2_t getFov() {
+		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
+		vec2_t fov;
+		fov.x = *reinterpret_cast<float*>(_this + 0x5B8);
+		fov.y = *reinterpret_cast<float*>(_this + 0x5CC);
+		return fov;
+	}
 
 	C_GuiData* getGuiData() {
 		return Utils::CallVFunc<177, C_GuiData*>(this);

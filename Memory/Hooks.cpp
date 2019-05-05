@@ -130,7 +130,6 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	uintptr_t font = g_Data.getClientInstance()->minecraftGame->getTheGoodFontThankYou();
 
-
 	static float eins = 1.f;
 	
 	float textLeng = renderCtx->getLineLength(font, text, eins, false);
@@ -149,7 +148,31 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	renderCtx->fillRectangle(reee, col, 0.2f); // alpha
 
-	//DrawUtils::drawLine(vec2_t(1, 1), vec2_t(536, 252), 2);
+	glmatrixf* refdef = g_Data.getClientInstance()->getRefDef();
+	refdef = refdef->correct();
+	vec2_t fov = g_Data.getClientInstance()->getFov();
+	vec2_t screenSize;
+	C_GuiData* gui = g_Data.getClientInstance()->getGuiData();
+	screenSize.x = gui->widthGame;
+	screenSize.y = gui->heightGame;
+
+	vec2_t screen;
+	vec2_t screen2;
+
+	vec3_t origin = g_Data.getClientInstance()->levelRenderer->origin;
+
+	vec3_t bigYeet = vec3_t(origin);
+	bigYeet.add(vec3_t(2, 1, 2));
+
+	vec3_t bigYeet2 = vec3_t(origin);
+	bigYeet2.add(vec3_t(-2, 1, 2));
+
+	bool boi = refdef->OWorldToScreen(origin, bigYeet, screen, fov, screenSize);
+	boi = boi && refdef->OWorldToScreen(origin, bigYeet2, screen2, fov, screenSize);
+
+	if (boi) {
+		DrawUtils::drawLine(screen, screen2, 1);
+	}
 
 	col[0] = 0.3f;
 	col[1] = 1;

@@ -29,8 +29,9 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		int offset = *reinterpret_cast<int*>((sigOffset + 3)); // Get Offset from code
 		keyMapAddr = reinterpret_cast<bool*>(sigOffset + offset + /*length of instruction*/ 7); // Offset is relative
 	}
-	else
+	else {
 		logF("!!!KeyMap not located!!!");
+	}
 
 	while (isRunning) {
 		if (GameData::isKeyPressed('L')) { // Press L to uninject
@@ -140,7 +141,6 @@ DllMain(HMODULE hModule,
 	LPVOID
 )
 {
-
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH: //When the injector is called.

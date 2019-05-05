@@ -38,7 +38,7 @@ void GameData::updateGameData(C_GameMode * gameMode)
 				
 				for (std::vector<TextForPrint>::iterator it = stringPrintVector->begin(); it != stringPrintVector->end(); ++it) {
 					C_GuiData* guiData = g_Data.clientInstance->getGuiData();
-				
+					
 					guiData->displayClientMessageF("%s%s%s%s", GOLD, it->time, RESET, it->text);
 				}
 				stringPrintVector->clear();
@@ -53,4 +53,7 @@ void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::
 	g_Data.gameModule = gameModule;
 	g_Data.slimMem = slimMem;
 	g_Data.clientInstance = g_Data.slimMem->ReadPtr<C_ClientInstance*>(g_Data.gameModule->ptrBase + 0x0250A2D0, { 0x0, 0x298, 0x8 });
+#ifdef _DEBUG
+	logF("clientInstance %llX", g_Data.clientInstance);
+#endif
 }
