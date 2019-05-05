@@ -4,10 +4,20 @@
 #include "CLoopbackPacketSender.h"
 #include "TextHolder.h"
 
-class MinecraftGame;
 class Minecraft;
 class LevelRenderer;
 class HitDetectSystem;
+
+class MinecraftGame {
+private:
+	char filler[0xA0];
+	uintptr_t goodFont;
+public:
+	
+	uintptr_t getTheGoodFontThankYou() {
+		return goodFont;
+	}
+};
 
 class C_GuiData {
 public:
@@ -68,6 +78,11 @@ public:
 	void* getFont() {
 		
 		return Utils::CallVFunc<73, void*>(this);
+	}
+
+	void* getRuneFont() {
+
+		return Utils::CallVFunc<74, void*>(this);
 	}
 
 	void* getUnicodeFont() {

@@ -128,9 +128,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	std::string textStr = std::string("Horion");
 	TextHolder* text = new TextHolder(textStr);
 
-	//uintptr_t font = reinterpret_cast<uintptr_t>(g_Data.getClientInstance()->getFont());
-	
-	uintptr_t font = g_Data.getSlimMem()->ReadPtr<uintptr_t>(g_Data.getModule()->ptrBase + 0x26E7E20, { 0x0,0xA8,0x108,0x8,0x88});
+	uintptr_t font = g_Data.getClientInstance()->minecraftGame->getTheGoodFontThankYou();
+
 
 	static float eins = 1.f;
 	
