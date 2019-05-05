@@ -5,6 +5,10 @@ C_GuiData* guiData;
 __int64 a2;
 __int64 tesselator;
 float* colorHolder;
+glmatrixf* refdef;
+vec2_t fov;
+vec2_t screenSize;
+vec3_t origin;
 
 static __int64* tess_end_base = 0x0;
 
@@ -23,6 +27,13 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext * ctx, C_GuiData* gui)
 	a2 = reinterpret_cast<__int64*>(renderCtx)[2];
 	tesselator = *reinterpret_cast<__int64*>(a2 + 0x78);
 	colorHolder = *reinterpret_cast<float**>(a2 + 0x30);
+
+	glmatrixf* badrefdef = g_Data.getClientInstance()->getRefDef();
+	refdef = badrefdef->correct();
+	fov = g_Data.getClientInstance()->getFov();
+	screenSize.x = gui->widthGame;
+	screenSize.y = gui->heightGame;
+	origin = g_Data.getClientInstance()->levelRenderer->origin;
 
 	if (tess_end_base == 0x0) {
 		uintptr_t sigOffset = Utils::FindSignature("FF 50 08 4C 8D 05") + 3;
@@ -69,6 +80,68 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth)
 
 	tess_end(a2, tesselator, tess_end_base);
 
+}
+
+void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)
+{
+	vec3_t diff;
+	diff.x = upper.x - lower.x;
+	diff.y = upper.y - lower.y;
+	diff.z = upper.z - lower.z;
+
+	vec3_t cornerList[24];
+	cornerList[0] = vec3_t(lower.x, lower.y, lower.z);
+	cornerList[1] = vec3_t(lower.x + diff.x, lower.y, lower.z);
+
+	cornerList[2] = vec3_t(lower.x, lower.y, lower.z);
+	cornerList[3] = vec3_t(lower.x, lower.y, lower.z + diff.z);
+
+	cornerList[4] = vec3_t(lower.x + diff.x, lower.y, lower.z);
+	cornerList[5] = vec3_t(lower.x + diff.x, lower.y, lower.z + diff.z);
+
+	cornerList[6] = vec3_t(lower.x, lower.y, lower.z + diff.z);
+	cornerList[7] = vec3_t(lower.x + diff.x, lower.y, lower.z + diff.z);
+
+
+	cornerList[8] = vec3_t(lower.x, lower.y, lower.z);
+	cornerList[9] = vec3_t(lower.x, lower.y + diff.y, lower.z);
+
+	cornerList[10] = vec3_t(lower.x + diff.x, lower.y, lower.z);
+	cornerList[11] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z);
+
+	cornerList[12] = vec3_t(lower.x, lower.y, lower.z + diff.z);
+	cornerList[13] = vec3_t(lower.x, lower.y + diff.y, lower.z + diff.z);
+
+	cornerList[14] = vec3_t(lower.x + diff.x, lower.y, lower.z + diff.z);
+	cornerList[15] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z + diff.z);
+
+
+	cornerList[16] = vec3_t(lower.x, lower.y + diff.y, lower.z);
+	cornerList[17] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z);
+
+	cornerList[18] = vec3_t(lower.x, lower.y + diff.y, lower.z);
+	cornerList[19] = vec3_t(lower.x, lower.y + diff.y, lower.z + diff.z);
+
+	cornerList[20] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z);
+	cornerList[21] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z + diff.z);
+
+	cornerList[22] = vec3_t(lower.x, lower.y + diff.y, lower.z + diff.z);
+	cornerList[23] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z + diff.z);
+
+	vec2_t Screen1;
+	vec2_t Screen2;
+
+
+	for (int i = 0; i < 24; i += 2)
+		if (refdef->OWorldToScreen(origin, cornerList[i], Screen1, fov, screenSize) && refdef->OWorldToScreen(origin, cornerList[i + 1], Screen2, fov, screenSize)) {
+			//std::cout << Screen1.x << " : " << Screen1.y << std::endl;
+			drawLine(Screen1, Screen2, lineWidth);
+		}
+}
+
+void DrawUtils::drawEntityBox(C_Entity * ent, float lineWidth)
+{
+	drawBox(ent->aabb.lower, ent->aabb.upper, lineWidth);
 }
 
 void DrawUtils::wirebox(AABB aabb){

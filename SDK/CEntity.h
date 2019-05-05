@@ -99,8 +99,8 @@ public:
 	float width; //0x0FCC
 	float height; //0x0FD0 
 	vec3_t velocity; //0x0FD4
-	vec3_t eyePos1; //0x0FE0
-	vec3_t eyePos2; //0x0FEC
+	vec3_t eyePosInterp1; //0x0FE0
+	vec3_t eyePosInterp2; //0x0FEC
 private:
 	char pad_0x0FF0[0x58]; //0x0FF8
 public:

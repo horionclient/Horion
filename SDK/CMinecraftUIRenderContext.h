@@ -4,6 +4,8 @@
 
 class C_MinecraftUIRenderContext {
 public:
+	float idk[140];
+
 	virtual ~C_MinecraftUIRenderContext();
 	virtual float getLineLength(uintptr_t font, TextHolder* str, float textSize, bool idk);
 	virtual float getTextAlpha();

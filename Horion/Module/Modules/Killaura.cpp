@@ -48,7 +48,7 @@ void Killaura::onTick(C_GameMode * gm)
 //		if (localPlayer->entityType2 != currentEntity->entityType2)
 //			continue;
 
-		float dist = currentEntity->eyePos1.dist(localPlayer->eyePos1);
+		float dist = currentEntity->eyePos0.dist(localPlayer->eyePos0);
 
 		if (dist < maxDist) 
 		{

@@ -85,6 +85,14 @@ struct vec3_t
 
 	float squaredlen() const { return x * x + y * y + z * z; }
 
+	vec3_t lerp(const vec3_t other, float val) {
+		vec3_t ne;
+		ne.x = x + val * (other.x - x);
+		ne.y = y + val * (other.y - y);
+		ne.z = z + val * (other.z - z);
+		return ne;
+	}
+
 	float sqrxy() const { return x * x + y * y; }
 
 	float dot(const vec3_t &o) const { return x * o.x + y * o.y + z * o.z; }

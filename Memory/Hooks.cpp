@@ -148,31 +148,18 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	renderCtx->fillRectangle(reee, col, 0.2f); // alpha
 
-	glmatrixf* refdef = g_Data.getClientInstance()->getRefDef();
-	refdef = refdef->correct();
-	vec2_t fov = g_Data.getClientInstance()->getFov();
-	vec2_t screenSize;
-	C_GuiData* gui = g_Data.getClientInstance()->getGuiData();
-	screenSize.x = gui->widthGame;
-	screenSize.y = gui->heightGame;
+	C_EntityList* entList = g_Data.getLocalPlayer()->getEntityList();
+	size_t listSize = entList->getListSize();
 
-	vec2_t screen;
-	vec2_t screen2;
-
-	vec3_t origin = g_Data.getClientInstance()->levelRenderer->origin;
-
-	vec3_t bigYeet = vec3_t(origin);
-	bigYeet.add(vec3_t(2, 1, 2));
-
-	vec3_t bigYeet2 = vec3_t(origin);
-	bigYeet2.add(vec3_t(-2, 1, 2));
-
-	bool boi = refdef->OWorldToScreen(origin, bigYeet, screen, fov, screenSize);
-	boi = boi && refdef->OWorldToScreen(origin, bigYeet2, screen2, fov, screenSize);
-
-	if (boi) {
-		DrawUtils::drawLine(screen, screen2, 1);
+	if (listSize < 1000) {
+		DrawUtils::setColor(0.2f, 0.9f, 0.2f, 0.3f);
+		for (size_t i = 0; i < entList->getListSize(); i++) {
+			C_Entity* current = entList->get(i);
+			if(current != g_Data.getLocalPlayer())
+				DrawUtils::drawEntityBox(current, max(0.2f, 1 / max(1, g_Data.getLocalPlayer()->eyePos0.dist(current->eyePos0)))); // Fancy math to give an illusion of good esp
+		}
 	}
+	
 
 	col[0] = 0.3f;
 	col[1] = 1;
