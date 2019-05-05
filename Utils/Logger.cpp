@@ -118,7 +118,7 @@ void Logger::Disable()
 	EnterCriticalSection(&loggerLock);
 	EnterCriticalSection(&vecLock);
 	LeaveCriticalSection(&vecLock);
-	LeaveCriticalSection(&vecLock);
+	LeaveCriticalSection(&loggerLock);
 	Sleep(50);
 #ifdef _DEBUG
 	DeleteCriticalSection(&loggerLock);

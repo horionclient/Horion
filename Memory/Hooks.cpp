@@ -146,7 +146,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	col[1] = 0.1f;
 	col[2] = 0.1f;
 	col[3] = 0.1f;
-	//
+
 	renderCtx->fillRectangle(reee, col, 0.2f); // alpha
 
 	col[0] = 0.f;

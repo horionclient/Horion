@@ -23,7 +23,10 @@ public:
 		else {
 			size_t size = str.size();
 			char* ptr = reinterpret_cast<char*>(malloc(size + 1));
-			strcpy_s(ptr, size + 1, str.c_str());
+			if (ptr != 0x0) {
+				strcpy_s(ptr, size + 1, str.c_str());
+			}
+			
 			pText = ptr;
 		}
 	}
