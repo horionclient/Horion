@@ -127,7 +127,10 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	std::string textStr = std::string("Horion");
 	TextHolder* text = new TextHolder(textStr);
 
-	uintptr_t font = reinterpret_cast<uintptr_t>(g_Data.getClientInstance()->getFont());
+	//uintptr_t font = reinterpret_cast<uintptr_t>(g_Data.getClientInstance()->getFont());
+	
+	uintptr_t font = g_Data.getSlimMem()->ReadPtr<uintptr_t>(g_Data.getModule()->ptrBase + 0x26E7E20, { 0x0,0xA8,0x108,0x8,0x88});
+
 	static float eins = 1.f;
 	
 	float textLeng = renderCtx->getLineLength(font, text, eins, false);
@@ -164,11 +167,11 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	tess_begin(tesselator, 3, 0, 1, 0);
 	
-	float startX = 50;
-	float startY = 50;
+	float startX = 250;
+	float startY = 250;
 
-	float endX = 150;
-	float endY = 150;
+	float endX = 350;
+	float endY = 350;
 
 	float newX = 0 - (startY - endY);
 	float newY = startX - endX;
