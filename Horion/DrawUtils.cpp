@@ -68,7 +68,7 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth)
 	modX *= lineWidth;
 	modY *= lineWidth;
 
-	tess_begin(tesselator, 3, 0, 1, 0);
+	tess_begin(tesselator, 3, 0, 1, 0); 
 
 	tess_vertex(tesselator, start.x + modX, start.y + modY, 0);
 	tess_vertex(tesselator, start.x - modX, start.y - modY, 0);
@@ -141,7 +141,9 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)
 
 void DrawUtils::drawEntityBox(C_Entity * ent, float lineWidth)
 {
-	drawBox(ent->aabb.lower, ent->aabb.upper, lineWidth);
+	vec3_t upper = vec3_t(ent->aabb.upper);
+	upper.y += 0.1f; // more premium
+	drawBox(ent->aabb.lower, upper, lineWidth);
 }
 
 void DrawUtils::wirebox(AABB aabb){
