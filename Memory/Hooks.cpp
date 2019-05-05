@@ -168,7 +168,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	static tess_vertex_t tess_vertex = reinterpret_cast<tess_vertex_t>(Utils::FindSignature("4C 8B DC 55 53 49 8D 6B ?? 48 81 EC ?? ?? ?? ?? 41"));
 
 	using sub_1408410E0_t = void(__fastcall*)(__int64, __int64 tesselator, __int64*);
-	static sub_1408410E0_t sub_1408410E0 = reinterpret_cast<sub_1408410E0_t>(g_Data.getModule()->ptrBase + 0x8410E0);
+	static sub_1408410E0_t sub_1408410E0 = reinterpret_cast<sub_1408410E0_t>(Utils::FindSignature("40 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 49 8B D8 4C 8B E2 4C 8B F9 80"));
 
 	tess_begin(tesselator, 3, 0, 1, 0);
 	
@@ -206,7 +206,14 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	tess_vertex(tesselator, endX - newX, endX - newY, 0);
 	tess_vertex(tesselator, startX - newX, startY - newY, 0);
 
-	sub_1408410E0(a2, tesselator, reinterpret_cast<__int64*>(0x26CC310 + g_Data.getModule()->ptrBase));
+	static __int64* wierdBase = 0x0;
+	if (wierdBase == 0x0) {
+		uintptr_t sigOffset = Utils::FindSignature("FF 50 08 4C 8D 05") + 3;
+		int offset = *reinterpret_cast<int*>(sigOffset + 3);
+		wierdBase = reinterpret_cast<__int64*>(sigOffset + offset + 7);
+	}
+
+	sub_1408410E0(a2, tesselator, wierdBase);
 
 	col[0] = 0.3f;
 	col[1] = 1;

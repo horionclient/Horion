@@ -28,10 +28,10 @@ public:
 	};
 	const SlimUtils::SlimModule* getModule() {
 		return gameModule;
-	}
+	};
 	const SlimUtils::SlimMem* getSlimMem() {
 		return slimMem;
-	}
+	};
 	C_GameMode* getCGameMode() { return gameMode; };
 };
 

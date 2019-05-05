@@ -14,4 +14,5 @@ void DrawUtils::render()
 
 void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth, float * color)
 {
+
 }
