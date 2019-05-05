@@ -137,17 +137,22 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	float* reee = new float[4]; // Absolute Screen coordinates
 	reee[0] = 0;    // startX
-	reee[1] = textLeng + 2;  //   endX
+	reee[1] = textLeng + 3;  //   endX
 	reee[2] = 0;  // startY
-	reee[3] = 12;  //   endY
+	reee[3] = 11;  //   endY
 
 	float* col = new float[8];
+	col[0] = 0.f;
+	col[1] = 0.1f;
+	col[2] = 0.1f;
+	col[3] = 0.1f;
+	//
+	renderCtx->fillRectangle(reee, col, 0.2f); // alpha
+
 	col[0] = 0.f;
 	col[1] = 0.5f;
 	col[2] = 0.f;
 	col[3] = 0.2f;
-	//
-	//renderCtx->fillRectangle(reee, col, 0.2f); // alpha
 
 	__int64 a2 = reinterpret_cast<__int64*>(renderCtx)[2];
 	__int64 tesselator = *reinterpret_cast<__int64*>(a2 + 0x78);
@@ -210,8 +215,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	float* pos = new float[4];
 	pos[0] = 1;
-	pos[1] = 50;
-	pos[2] = 1;
+	pos[1] = 100;
+	pos[2] = 0;
 	pos[3] = 12;
 
 	uintptr_t oof = 0;
