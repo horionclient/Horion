@@ -102,7 +102,6 @@ void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
 
 		if (*message == '.') {
 			logF("Command: %s", message);
-			logF("Yote %llX", message);
 			//*message = 0x0; // Remove command in textbox
 			//*v6 = 0x0;
 			//*idk = 0x0;
@@ -123,38 +122,38 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	static auto oText = g_Hooks.renderTextHook->GetOriginal<renderText_t>();
 
 	DrawUtils::setCtx(renderCtx, g_Data.getClientInstance()->getGuiData());
-
-	C_EntityList* entList = g_Data.getLocalPlayer()->getEntityList();
-	size_t listSize = entList->getListSize();
-
-	if (listSize < 1000) {
-		static float rcolors[4];
-		if (rcolors[3] < 1) {
-			rcolors[0] = 0.2f;
-			rcolors[1] = 0.2f;
-			rcolors[2] = 1.f;
-			rcolors[3] = 1;
-		}
-
-		Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]); // premium code right here
-
-		rcolors[0] += 0.0015f;
-		if (rcolors[0] >= 1)
-			rcolors[0] = 0;
-
-		Utils::ColorConvertHSVtoRGB(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);
-
-		DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], 0.3f);
-		for (size_t i = 0; i < entList->getListSize(); i++) {
-			C_Entity* current = entList->get(i);
-			if (current != g_Data.getLocalPlayer())
-				DrawUtils::drawEntityBox(current, max(0.2f, 1 / max(1, g_Data.getLocalPlayer()->eyePos0.dist(current->eyePos0)))); // Fancy math to give an illusion of good esp
-		}
-	}
-
+	
 	__int64 retval = oText(yeet, renderCtx);
 
-	
+	if (g_Data.getLocalPlayer() != nullptr) {
+		C_EntityList* entList = g_Data.getLocalPlayer()->getEntityList();
+		size_t listSize = entList->getListSize();
+
+		if (listSize < 1000 && listSize > 1) {
+			static float rcolors[4];
+			if (rcolors[3] < 1) {
+				rcolors[0] = 0.2f;
+				rcolors[1] = 0.2f;
+				rcolors[2] = 1.f;
+				rcolors[3] = 1;
+			}
+
+			Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]); // premium code right here
+
+			rcolors[0] += 0.0015f;
+			if (rcolors[0] >= 1)
+				rcolors[0] = 0;
+
+			Utils::ColorConvertHSVtoRGB(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);
+
+			DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], 0.3f);
+			for (size_t i = 0; i < listSize; i++) {
+				C_Entity* current = entList->get(i);
+				if (current != g_Data.getLocalPlayer())
+					DrawUtils::drawEntityBox(current, max(0.2f, 1 / max(1, g_Data.getLocalPlayer()->eyePos0.dist(current->eyePos0)))); // Fancy math to give an illusion of good esp
+			}
+		}
+	}
 
 	std::string textStr = std::string("Horion");
 	TextHolder* text = new TextHolder(textStr);
@@ -178,9 +177,6 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	col[3] = 0.1f;
 
 	renderCtx->fillRectangle(reee, col, 0.2f); // alpha
-
-	
-	
 
 	col[0] = 0.3f;
 	col[1] = 1;

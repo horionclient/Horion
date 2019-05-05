@@ -33,7 +33,8 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext * ctx, C_GuiData* gui)
 	fov = g_Data.getClientInstance()->getFov();
 	screenSize.x = gui->widthGame;
 	screenSize.y = gui->heightGame;
-	origin = g_Data.getClientInstance()->levelRenderer->origin;
+	if(g_Data.getClientInstance()->levelRenderer != nullptr)	
+		origin = g_Data.getClientInstance()->levelRenderer->origin;
 
 	if (tess_end_base == 0x0) {
 		uintptr_t sigOffset = Utils::FindSignature("FF 50 08 4C 8D 05") + 3;
