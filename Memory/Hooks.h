@@ -7,12 +7,12 @@
 #include "../SDK/TextHolder.h"
 #include "../SDK/CMinecraftUIRenderContext.h"
 #include "../Horion/Module/ModuleManager.h"
+#include "../Horion/DrawUtils.h"
 
 #include <dxgi.h>
 
 class VMTHook;
 class FuncHook;
-struct BigCantWork;
 
 class Hooks {
 private:
