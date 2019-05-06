@@ -34,7 +34,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 	}
 
 	while (isRunning) {
-		if (GameData::isKeyPressed('L')) { // Press L to uninject
+		if (GameData::isKeyDown('L') && GameData::isKeyDown(VK_CONTROL)) { // Press L to uninject
 			isRunning = false;
 			logF("Uninjecting...");
 			break;
