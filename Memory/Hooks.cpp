@@ -29,9 +29,12 @@ void Hooks::Init()
 	//IDXGISwapChain::present;
 	// using vtable found with dummy thing
 	void** swapChainVtable = static_cast<void**>(getSwapChain());
-	void* presentFunc = swapChainVtable[8];
-	g_Hooks.d3d11_presentHook = std::make_unique<FuncHook>(presentFunc, Hooks::d3d11_present);
-	g_Hooks.d3d11_presentHook->init();
+	if (swapChainVtable != nullptr) {
+		void* presentFunc = swapChainVtable[8];
+		g_Hooks.d3d11_presentHook = std::make_unique<FuncHook>(presentFunc, Hooks::d3d11_present);
+		g_Hooks.d3d11_presentHook->init();
+	}
+	
 
 	// 
 	void* _shit = reinterpret_cast<void*>(Utils::FindSignature("30 5F C3 CC 48 8B C4 55 56 57 41 54") + 4);
@@ -87,6 +90,8 @@ void __fastcall Hooks::SurvivalMode_tick(C_GameMode * _this)
 	GameData::updateGameData(_this);
 	if (_this->player == g_Data.getLocalPlayer()) {
 		moduleMgr->onTick(_this);
+
+		_this->player->getEntityTypeId();
 	}
 }
 
@@ -127,27 +132,31 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	
 	__int64 retval = oText(yeet, renderCtx);
 
-	//DrawUtils::setCtx(renderCtx, g_Data.getClientInstance()->getGuiData());
-
 	moduleMgr->onPostRender();
 
+	float y = 0;
+
 	std::string textStr = std::string("Horion");
-
 	float leng = DrawUtils::getTextLength(&textStr);
+	DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.3f);
+	DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.3f, 1, 0.3f, 1));
 
-	DrawUtils::fillRectangle(vec4_t(0, 0, leng + 3, 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.3f);
-	DrawUtils::drawText(vec2_t(1, 1), &textStr, new MC_Color(0.3f, 1, 0.3f, 1));
+	y += 12;
+
+	textStr = std::string("Close (CTRL + L)");
+	leng = DrawUtils::getTextLength(&textStr);
+	DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.3f);
+	DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.5f, 0.5f, 0.5f, 1));
+
+	y += 12;
 
 	std::vector<IModule*> modules = moduleMgr->getModuleList();
-
-	float y = 12;
-
 	for (std::vector<IModule*>::iterator it = modules.begin(); it != modules.end(); ++it) {
 		std::string textStr = (*it)->getModuleName();
 
 		std::ostringstream strStream;
 		strStream << textStr;
-		strStream << "(" << (char) (*it)->getKeybind() << ")";
+		strStream << " (" << (char) (*it)->getKeybind() << ")";
 		textStr = strStream.str();
 
 		float leng = DrawUtils::getTextLength(&textStr);

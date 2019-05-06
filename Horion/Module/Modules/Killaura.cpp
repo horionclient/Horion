@@ -42,7 +42,7 @@ void Killaura::onTick(C_GameMode * gm)
 		if (currentEntity == localPlayer) // Skip Local player
 			continue;
 
-		if (localPlayer->entityType1 != currentEntity->entityType1) // Skip Invalid Entity
+		if (localPlayer->getEntityTypeId() != currentEntity->getEntityTypeId()) // Skip Invalid Entity
 			continue;
 		// i want to hit villagers ok
 //		if (localPlayer->entityType2 != currentEntity->entityType2)

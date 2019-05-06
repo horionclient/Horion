@@ -138,6 +138,10 @@ private:
 	char pad_0x1C4C[0x60]; //0x1C4C
 public:
 	TextHolder uuid; //0x1CAC 
+
+	int getEntityTypeId() {
+		return Utils::CallVFunc<154, int>(this);
+	}
 };
 
 class C_LocalPlayer : public C_Entity {
@@ -149,13 +153,6 @@ public:
 	C_GameMode* getCGameMode() {
 		return this->ptrToPtrToPtrToCGameMode->ptrToPtrToCGameMode->ptrToCGameMode->cGameMode;
 	}
-
-	/*void displayClientMessageStr(const std::string str) { // vtable[405]
-		using displayClientMessage = void(__fastcall*)(void*, const std::string*);
-		//static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(Utils::FindSignature("40 53 48 83 EC 20 48 8B 89 ?? ?? ?? ?? 48 8B DA 48 8B 01 FF 90 ?? ?? ?? ?? 48 8B C8"));
-		static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(this->vTable[405]);
-		displayMessageFunc(this, &str);
-	}*/
 
 	void unlockAchievments() { // MinecraftEventing::fireEventAwardAchievement
 		using fireEventAward = void(__fastcall*)(void*, int);
