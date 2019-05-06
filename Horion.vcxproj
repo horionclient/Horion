@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Directx\Directx.cpp" />
+    <ClCompile Include="Horion\Module\Modules\ESP.cpp" />
     <ClCompile Include="Horion\DrawUtils.cpp" />
     <ClCompile Include="Horion\Loader.cpp" />
     <ClCompile Include="Horion\Module\ModuleManager.cpp" />
@@ -142,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Directx\Directx.h" />
+    <ClInclude Include="Horion\Module\Modules\ESP.h" />
     <ClInclude Include="Horion\DrawUtils.h" />
     <ClInclude Include="Horion\Loader.h" />
     <ClInclude Include="Horion\Module\ModuleManager.h" />

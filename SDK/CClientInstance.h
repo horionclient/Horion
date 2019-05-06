@@ -103,19 +103,19 @@ public:
 		return Utils::CallVFunc<177, C_GuiData*>(this);
 	};
 
-	void* getFont() {
+	uintptr_t getFont() {
 		
-		return Utils::CallVFunc<73, void*>(this);
+		return Utils::CallVFunc<73, uintptr_t>(this);
 	}
 
-	void* getRuneFont() {
+	uintptr_t getRuneFont() {
 
-		return Utils::CallVFunc<74, void*>(this);
+		return Utils::CallVFunc<74, uintptr_t>(this);
 	}
 
-	void* getUnicodeFont() {
+	uintptr_t getUnicodeFont() {
 
-		return Utils::CallVFunc<75, void*>(this);
+		return Utils::CallVFunc<75, uintptr_t>(this);
 	}
 
 	void grabMouse() {

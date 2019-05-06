@@ -122,77 +122,44 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	static auto oText = g_Hooks.renderTextHook->GetOriginal<renderText_t>();
 
 	DrawUtils::setCtx(renderCtx, g_Data.getClientInstance()->getGuiData());
+	moduleMgr->onPreRender();
+	DrawUtils::flush();
 	
 	__int64 retval = oText(yeet, renderCtx);
 
-	if (g_Data.getLocalPlayer() != nullptr) {
-		C_EntityList* entList = g_Data.getLocalPlayer()->getEntityList();
-		size_t listSize = entList->getListSize();
+	//DrawUtils::setCtx(renderCtx, g_Data.getClientInstance()->getGuiData());
 
-		if (listSize < 1000 && listSize > 1) {
-			static float rcolors[4];
-			if (rcolors[3] < 1) {
-				rcolors[0] = 0.2f;
-				rcolors[1] = 0.2f;
-				rcolors[2] = 1.f;
-				rcolors[3] = 1;
-			}
-
-			Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]); // premium code right here
-
-			rcolors[0] += 0.0015f;
-			if (rcolors[0] >= 1)
-				rcolors[0] = 0;
-
-			Utils::ColorConvertHSVtoRGB(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);
-
-			DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], 0.3f);
-			for (size_t i = 0; i < listSize; i++) {
-				C_Entity* current = entList->get(i);
-				if (current != g_Data.getLocalPlayer())
-					DrawUtils::drawEntityBox(current, max(0.2f, 1 / max(1, g_Data.getLocalPlayer()->eyePos0.dist(current->eyePos0)))); // Fancy math to give an illusion of good esp
-			}
-		}
-	}
+	moduleMgr->onPostRender();
 
 	std::string textStr = std::string("Horion");
-	TextHolder* text = new TextHolder(textStr);
 
-	uintptr_t font = g_Data.getClientInstance()->minecraftGame->getTheGoodFontThankYou();
+	float leng = DrawUtils::getTextLength(&textStr);
 
-	static float eins = 1.f;
-	
-	float textLeng = renderCtx->getLineLength(font, text, eins, false);
+	DrawUtils::fillRectangle(vec4_t(0, 0, leng + 3, 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.3f);
+	DrawUtils::drawText(vec2_t(1, 1), &textStr, new MC_Color(0.3f, 1, 0.3f, 1));
 
-	float* reee = new float[4]; // Absolute Screen coordinates
-	reee[0] = 0;    // startX
-	reee[1] = textLeng + 3;  //   endX
-	reee[2] = 0;  // startY
-	reee[3] = 11;  //   endY
+	std::vector<IModule*> modules = moduleMgr->getModuleList();
 
-	float* col = new float[8];
-	col[0] = 0.f;
-	col[1] = 0.1f;
-	col[2] = 0.1f;
-	col[3] = 0.1f;
+	float y = 12;
 
-	renderCtx->fillRectangle(reee, col, 0.2f); // alpha
+	for (std::vector<IModule*>::iterator it = modules.begin(); it != modules.end(); ++it) {
+		std::string textStr = (*it)->getModuleName();
 
-	col[0] = 0.3f;
-	col[1] = 1;
-	col[2] = 0.3f;
-	col[3] = 1;
+		std::ostringstream strStream;
+		strStream << textStr;
+		strStream << "(" << (char) (*it)->getKeybind() << ")";
+		textStr = strStream.str();
 
-	float* pos = new float[4];
-	pos[0] = 1;
-	pos[1] = 100;
-	pos[2] = 0;
-	pos[3] = 12;
+		float leng = DrawUtils::getTextLength(&textStr);
 
-	uintptr_t oof = 0;
-	memset(&oof, 0xFF, 4);
-	
-	renderCtx->drawText(font, pos, text, col, 1, 0, &eins, &oof);
+		DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.3f);
+		if((*it)->isEnabled())
+			DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.3f, 1, 0.3f, 1));
+		else
+			DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.9f, 0.3f, 0.3f, 1));
+		y += 12;
+	}
+
 	DrawUtils::flush();
 
 	return retval; 

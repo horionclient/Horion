@@ -34,6 +34,14 @@ void IModule::onDisable()
 {
 }
 
+void IModule::onPreRender()
+{
+}
+
+void IModule::onPostRender()
+{
+}
+
 void IModule::setEnabled(bool enabled)
 {
 	this->enabled = enabled;

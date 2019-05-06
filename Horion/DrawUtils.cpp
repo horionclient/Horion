@@ -52,6 +52,37 @@ void DrawUtils::setColor(float r, float g, float b, float a)
 	*reinterpret_cast<uint8_t*>(colorHolder + 4) = 1;
 }
 
+uintptr_t DrawUtils::getFont(Fonts font)
+{
+	switch (font) {
+	case SMOOTH:
+		return g_Data.getClientInstance()->minecraftGame->getTheGoodFontThankYou();
+		break;
+	case UNICOD:
+		return g_Data.getClientInstance()->getUnicodeFont();
+		break;
+	case RUNE:
+		return g_Data.getClientInstance()->getRuneFont();
+		break;
+	case DEFAULT:
+	default:
+		return g_Data.getClientInstance()->getFont();
+		break;
+	}
+}
+
+float DrawUtils::getTextLength(std::string * textStr, float textSize, Fonts font)
+{
+	TextHolder* text = new TextHolder(*textStr);
+
+	uintptr_t fontPtr = getFont(font);
+
+	float ret = renderCtx->getLineLength(fontPtr, text, textSize, false);
+
+	delete text;
+	return ret;
+}
+
 void DrawUtils::flush()
 {
 	renderCtx->flushText(0);
@@ -81,6 +112,40 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth)
 
 	tess_end(a2, tesselator, tess_end_base);
 
+}
+
+void DrawUtils::fillRectangle(vec4_t pos, MC_Color * col, float alpha)
+{
+	float* posF = new float[4]; // vec4_t(startX, startY, endX, endY);
+	posF[0] = pos.x;
+	posF[1] = pos.z;
+	posF[2] = pos.y;
+	posF[3] = pos.w;
+
+	renderCtx->fillRectangle(posF, reinterpret_cast<float*>(col), alpha);
+
+	delete[] posF;
+}
+
+void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color * color, float textSize, Fonts font)
+{
+	static MC_Color* WHITE_COLOR = new MC_Color(1, 1, 1, 1);
+	if (color == nullptr)
+		color = WHITE_COLOR;
+	
+	TextHolder* text = new TextHolder(*textStr);
+	uintptr_t fontPtr = getFont(font);
+	static uintptr_t oof = 0xFFFFFFFF;
+
+	float* posF = new float[4]; // vec4_t(startX, startY, endX, endY);
+	posF[0] = pos.x;
+	posF[1] = pos.x + 1000;
+	posF[2] = pos.y;
+	posF[3] = pos.y + 1000;
+
+	static float size = 1;
+	size = textSize;
+	renderCtx->drawText(g_Data.getClientInstance()->minecraftGame->getTheGoodFontThankYou(), posF, text, color->arr, 1, 0, &size, &oof);
 }
 
 void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)

@@ -8,6 +8,7 @@ ModuleManager::ModuleManager(GameData * gameData)
 void ModuleManager::initModules()
 {
 	this->moduleList.push_back(new Killaura());
+	this->moduleList.push_back(new ESP());
 }
 
 void ModuleManager::onTick(C_GameMode * gameMode)
@@ -25,6 +26,29 @@ void ModuleManager::onKeyUpdate(int key, bool isDown)
 		IModule* mod = *it;
 		mod->onKeyUpdate(key, isDown);
 	}
+}
+
+void ModuleManager::onPreRender()
+{
+	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
+		IModule* mod = *it;
+		if (mod->isEnabled())
+			mod->onPreRender();
+	}
+}
+
+void ModuleManager::onPostRender()
+{
+	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
+		IModule* mod = *it;
+		if (mod->isEnabled())
+			mod->onPostRender();
+	}
+}
+
+std::vector<IModule*> ModuleManager::getModuleList()
+{
+	return moduleList;
 }
 
 ModuleManager* moduleMgr = new ModuleManager(&g_Data);

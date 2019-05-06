@@ -4,6 +4,7 @@
 #include "../../Memory/GameData.h"
 #include "Modules/Module.h"
 #include "Modules/Killaura.h"
+#include "Modules/ESP.h"
 
 class ModuleManager {
 private:
@@ -14,6 +15,9 @@ public:
 	void initModules();
 	void onTick(C_GameMode* gameMode);
 	void onKeyUpdate(int key, bool isDown);
+	void onPreRender();
+	void onPostRender();
+	std::vector<IModule*> getModuleList();
 };
 
 extern ModuleManager* moduleMgr;
