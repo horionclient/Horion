@@ -143,12 +143,12 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	y += 12;
 
-	textStr = std::string("Close (CTRL + L)");
+	/*textStr = std::string("Close (CTRL + L)");
 	leng = DrawUtils::getTextLength(&textStr);
 	DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.3f);
 	DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.5f, 0.5f, 0.5f, 1));
 
-	y += 12;
+	y += 12;*/
 
 	std::vector<IModule*> modules = moduleMgr->getModuleList();
 	for (std::vector<IModule*>::iterator it = modules.begin(); it != modules.end(); ++it) {
