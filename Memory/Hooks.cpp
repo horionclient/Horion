@@ -152,6 +152,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	std::vector<IModule*> modules = moduleMgr->getModuleList();
 	for (std::vector<IModule*>::iterator it = modules.begin(); it != modules.end(); ++it) {
+		if (!(*it)->isEnabled())
+			continue;
 		std::string textStr = (*it)->getModuleName();
 
 		std::ostringstream strStream;
@@ -162,10 +164,24 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		float leng = DrawUtils::getTextLength(&textStr);
 
 		DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.3f);
-		if((*it)->isEnabled())
-			DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.3f, 1, 0.3f, 1));
-		else
-			DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.9f, 0.3f, 0.3f, 1));
+		DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.3f, 1, 0.3f, 1));
+		y += 12;
+	}
+
+	for (std::vector<IModule*>::iterator it = modules.begin(); it != modules.end(); ++it) {
+		if ((*it)->isEnabled())
+			continue;
+		std::string textStr = (*it)->getModuleName();
+
+		std::ostringstream strStream;
+		strStream << textStr;
+		strStream << " (" << (char)(*it)->getKeybind() << ")";
+		textStr = strStream.str();
+
+		float leng = DrawUtils::getTextLength(&textStr);
+
+		DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
+		DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.5f, 0.2f, 0.2f, 0.1f));
 		y += 12;
 	}
 

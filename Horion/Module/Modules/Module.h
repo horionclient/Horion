@@ -25,6 +25,7 @@ public:
 	virtual void onPreRender();
 	virtual void onPostRender();
 
+	virtual bool isFlashMode();
 	virtual void setEnabled(bool enabled);
 	virtual void toggle();
 	virtual bool isEnabled();

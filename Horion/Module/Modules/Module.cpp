@@ -22,8 +22,13 @@ void IModule::onTick(C_GameMode*)
 
 void IModule::onKeyUpdate(int key, bool isDown)
 {
-	if (isDown && key == getKeybind())
-		toggle();
+	if (key == getKeybind()) {
+		if (isFlashMode())
+			setEnabled(isDown);
+		else if (isDown)
+			toggle();
+	}
+		
 }
 
 void IModule::onEnable()
@@ -42,10 +47,25 @@ void IModule::onPostRender()
 {
 }
 
+bool IModule::isFlashMode()
+{
+	return false;
+}
+
 void IModule::setEnabled(bool enabled)
 {
-	this->enabled = enabled;
-	logF("%s %s", enabled ? "Enabled" : "Disabled", this->getModuleName().c_str());
+	if (this->enabled != enabled) {
+		this->enabled = enabled;
+#ifndef _DEBUG
+		if(!isFlashMode()) // Only print jetpack stuff in debug mode
+#endif
+			logF("%s %s", enabled ? "Enabled" : "Disabled", this->getModuleName().c_str());
+
+		if (enabled)
+			this->onEnable();
+		else
+			this->onDisable();
+	}
 }
 
 void IModule::toggle()

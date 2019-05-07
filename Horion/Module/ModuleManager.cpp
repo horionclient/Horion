@@ -9,6 +9,7 @@ void ModuleManager::initModules()
 {
 	this->moduleList.push_back(new Killaura());
 	this->moduleList.push_back(new ESP());
+	this->moduleList.push_back(new Jetpack());
 }
 
 void ModuleManager::onTick(C_GameMode * gameMode)

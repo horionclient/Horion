@@ -142,6 +142,10 @@ public:
 	int getEntityTypeId() {
 		return Utils::CallVFunc<154, int>(this);
 	}
+
+	void setVelocity(vec3_t vel) {
+		this->velocity = vel;
+	}
 };
 
 class C_LocalPlayer : public C_Entity {

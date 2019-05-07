@@ -5,6 +5,7 @@
 #include "Modules/Module.h"
 #include "Modules/Killaura.h"
 #include "Modules/ESP.h"
+#include "Modules/Jetpack.h"
 
 class ModuleManager {
 private:
