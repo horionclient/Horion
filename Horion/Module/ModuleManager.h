@@ -5,6 +5,8 @@
 #include "Modules/Module.h"
 #include "Modules/Killaura.h"
 #include "Modules/ESP.h"
+#include "Modules/Aimbot.h"
+#include "Modules/TriggerBot.h"
 
 class ModuleManager {
 private:
@@ -17,6 +19,8 @@ public:
 	void onKeyUpdate(int key, bool isDown);
 	void onPreRender();
 	void onPostRender();
+	void onAimbot();
+	void onTrigger();
 	std::vector<IModule*> getModuleList();
 };
 

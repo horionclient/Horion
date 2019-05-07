@@ -19,7 +19,12 @@ int IModule::getKeybind()
 void IModule::onTick(C_GameMode*)
 {
 }
-
+void IModule::onAimbot()
+{
+}
+void IModule::onTrigger()
+{
+}
 void IModule::onKeyUpdate(int key, bool isDown)
 {
 	if (isDown && key == getKeybind())
@@ -41,6 +46,7 @@ void IModule::onPreRender()
 void IModule::onPostRender()
 {
 }
+
 
 void IModule::setEnabled(bool enabled)
 {

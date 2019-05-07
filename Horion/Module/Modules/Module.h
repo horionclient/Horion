@@ -23,6 +23,8 @@ public:
 	virtual void onEnable();
 	virtual void onDisable();
 	virtual void onPreRender();
+	virtual void onAimbot();
+	virtual void onTrigger();
 	virtual void onPostRender();
 
 	virtual void setEnabled(bool enabled);
