@@ -23,7 +23,7 @@ struct CompareTargetEnArray
 		return lhs->eyePos0.dist(localPlayer->eyePos0) < rhs->eyePos0.dist(localPlayer->eyePos0); 
 	}
 };
-void Aimbot::onAimbot()
+void Aimbot::onTick(C_GameMode* gm)
 {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
@@ -66,16 +66,18 @@ void Aimbot::onAimbot()
 	if (targetList.size() > 0)
 	{
 		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
-		vec3_t ghetto;
+		//vec3_t ghetto;
 		vec3_t yeet = localPlayer->eyePos0.CalcAngle(targetList[0]->eyePos0);
-		ghetto.x = localPlayer->yaw;
-		ghetto.y = localPlayer->pitch;
-		yeet = ghetto.DifferenceAngle(yeet);
+		//ghetto.x = localPlayer->yaw;
+		//ghetto.y = localPlayer->pitch;
+		//yeet = ghetto.DifferenceAngle(yeet);
 		//Premium code :)
-		yeet.x /= 4;
-		yeet.y /= 4;
-		localPlayer->yaw += yeet.x;
-		localPlayer->pitch += yeet.y;
+		//yeet.x /= 4;
+		//yeet.y /= 4;
+		//localPlayer->yaw += yeet.x;
+		//localPlayer->pitch += yeet.y;
+		localPlayer->yaw = yeet.x;
+		localPlayer->pitch = yeet.y;
 	}
 	
 }

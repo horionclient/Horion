@@ -9,6 +9,6 @@ public:
 
 	// Inherited via IModule
 	virtual std::string getModuleName() override;
-	virtual void onAimbot() override;
+	virtual void onTick(C_GameMode* gm) override;
 };
 

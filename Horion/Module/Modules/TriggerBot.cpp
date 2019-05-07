@@ -16,7 +16,7 @@ std::string TriggerBot::getModuleName()
 	return std::string("TriggerBot");
 }
 
-void TriggerBot::onTrigger()
+void TriggerBot::onTick(C_GameMode* gm)
 {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 	C_GameMode* gameMode = localPlayer->getCGameMode();
