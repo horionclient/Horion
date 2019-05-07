@@ -23,7 +23,7 @@ struct CompareTargetEnArray
 		return lhs->eyePos0.dist(localPlayer->eyePos0) < rhs->eyePos0.dist(localPlayer->eyePos0); 
 	}
 };
-void Aimbot::onTick(C_GameMode* gm)
+void Aimbot::onPostRender()
 {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
@@ -34,6 +34,8 @@ void Aimbot::onTick(C_GameMode* gm)
 		logF("Big ent list wtf men %i", listSize);
 		return;
 	}
+
+	vec3_t origin = g_Data.getClientInstance()->levelRenderer->origin;
 
 	//Loop through all our players and retrieve their information
 	float maxDist = 6;
@@ -67,7 +69,7 @@ void Aimbot::onTick(C_GameMode* gm)
 	{
 		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
 		//vec3_t ghetto;
-		vec3_t yeet = localPlayer->eyePos0.CalcAngle(targetList[0]->eyePos0);
+		vec3_t yeet = origin.CalcAngle(targetList[0]->eyePos0);
 		//ghetto.x = localPlayer->yaw;
 		//ghetto.y = localPlayer->pitch;
 		//yeet = ghetto.DifferenceAngle(yeet);

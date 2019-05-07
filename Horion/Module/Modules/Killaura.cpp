@@ -16,7 +16,7 @@ std::string Killaura::getModuleName()
 	return std::string("Killaura");
 }
 
-void Killaura::onTick(C_GameMode * gm)
+void Killaura::onTick(C_GameMode* gm)
 {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
@@ -62,7 +62,7 @@ void Killaura::onTick(C_GameMode * gm)
 	// Attack all entitys in targetList 
 	for (int i = 0; i < targetList.size(); i++)
 	{
-		gm->attack(targetList[i]);
+		g_Data.getCGameMode()->attack(targetList[i]);
 
 	}
 }
