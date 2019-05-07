@@ -114,24 +114,51 @@ struct vec3_t
 	vec3_t &cross(const vec3_t &a, const vec3_t &b) { x = a.y*b.z - a.z*b.y; y = a.z*b.x - a.x*b.z; z = a.x*b.y - a.y*b.x; return *this; }
 	float cxy(const vec3_t &a) { return x * a.y - y * a.x; }
 
-	vec2_t CalcAngle(vec3_t dst)
+	vec3_t CalcAngle(vec3_t dst)
 	{
-		/*
+		
 		vec3_t angles;
-		angles.x = (-(float)atan2(dst.x - x, dst.y - y)) / PI * 180.0f + 180.0f;
-		angles.y = (atan2(dst.z - z, this->dist(dst))) * 180.0f / PI;
-		angles.z = 0.0f;
-		return angles;*/
-		vec3_t diff = dst.sub(*this);
+		angles.x = (-(float)atan2(dst.x - this->x, dst.z - this->z)) * (180.0f / PI);
+		angles.y = (-atan2(dst.y - this->y, (this->dist(dst)))* (180.0f / PI));
+
+		return angles;
+		/*vec3_t diff = dst.sub(*this);
 
 		diff.y = diff.y / diff.magnitude();
 		vec2_t angles;
 		angles.x = asinf(diff.y) * -DEG_RAD;
 		angles.y = (float)-atan2f(diff.x, diff.z) * DEG_RAD;
-		//std::cout << angles.x << std::endl;
-		return angles;
+		//std::cout << angles.x << std::endl;*/
+		//return angles;
 	}
+	vec3_t DifferenceAngle(vec3_t to)
+	{
+		vec3_t add;
+		add.x = to.x - this->x;
+		add.y = to.y - this->y;
+		return add;
+	}
+	float DifferenceOfAngles(vec3_t to)
+	{
+		vec3_t from = *this;
+		vec3_t vdifference;
+		vdifference.y = from.y - to.y;
+		vdifference.x = from.x - to.x;
 
+		//normalize by making them positive values if they are negative
+		if (vdifference.y < 0)
+		{
+			vdifference.y *= -1;
+		}
+		if (vdifference.x < 0)
+		{
+			vdifference.x *= -1;
+		}
+
+		//add them together and divide by 2, gives an average of the 2 angles
+		float fDifference = (vdifference.y + vdifference.x) / 2;
+		return fDifference;
+	}
 	vec3_t scaleFixedPoint(float scalex, float scaley, vec3_t fixedPoint)
 	{
 		vec3_t newvec;

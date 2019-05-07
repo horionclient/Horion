@@ -10,6 +10,8 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Killaura());
 	this->moduleList.push_back(new ESP());
 	this->moduleList.push_back(new Jetpack());
+	this->moduleList.push_back(new Aimbot());
+	this->moduleList.push_back(new TriggerBot());
 }
 
 void ModuleManager::onTick(C_GameMode * gameMode)
@@ -18,6 +20,22 @@ void ModuleManager::onTick(C_GameMode * gameMode)
 		IModule* mod = *it;
 		if (mod->isEnabled())
 			mod->onTick(gameMode);
+	}
+}
+void ModuleManager::onTrigger()
+{
+	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
+		IModule* mod = *it;
+		if (mod->isEnabled())
+			mod->onTrigger();
+	}
+}
+void ModuleManager::onAimbot()
+{
+	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
+		IModule* mod = *it;
+		if (mod->isEnabled())
+			mod->onAimbot();
 	}
 }
 

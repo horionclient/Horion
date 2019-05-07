@@ -54,6 +54,12 @@
     <ClCompile Include="Horion\Module\Modules\ESP.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\Aimbot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\TriggerBot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Horion\Module\Modules\Jetpack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -132,9 +138,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Horion\Module\Modules\ESP.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\Jetpack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
