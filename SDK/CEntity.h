@@ -87,7 +87,7 @@ public:
 	uintptr_t ticksAlive; //0x0260 
 private:
 	char pad_0x0268[0xA98]; //0x0268
-public:
+
 	PointingStruct* pointingAt; //0x0D00
 private:
 	char pad_0x0D08[0x2A8]; //0x0D08
@@ -154,9 +154,9 @@ public:
 		return this->ptrToPtrToEntList->ptrToEntList->entityList;
 	}
 
-	C_GameMode* getCGameMode() {
-		return this->ptrToPtrToPtrToCGameMode->ptrToPtrToCGameMode->ptrToCGameMode->cGameMode;
-	}
+	//C_GameMode* getCGameMode() { // Dont use this, not version compatible
+	//	return this->ptrToPtrToPtrToCGameMode->ptrToPtrToCGameMode->ptrToCGameMode->cGameMode;
+	//}
 
 	void unlockAchievments() { // MinecraftEventing::fireEventAwardAchievement
 		using fireEventAward = void(__fastcall*)(void*, int);

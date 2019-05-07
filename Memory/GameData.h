@@ -13,6 +13,7 @@ private:
 	C_GameMode* gameMode;
 	const SlimUtils::SlimModule* gameModule;
 	SlimUtils::SlimMem* slimMem;
+	static void retrieveClientInstance();
 public:
 	static bool isKeyDown(int key);
 	static bool isKeyPressed(int key);

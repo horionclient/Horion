@@ -85,6 +85,10 @@ public:
 		return localPlayer;
 	};
 
+	PointingStruct* getPointerStruct() {
+		return Utils::CallVFunc<140, PointingStruct*>(this);
+	}
+
 	glmatrixf* getRefDef() {
 		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
 

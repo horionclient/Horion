@@ -59,12 +59,10 @@ void Killaura::onTick(C_GameMode * gm)
 	if (targetList.size() > 0)
 		localPlayer->swingArm();
 
-	C_GameMode* gameMode = localPlayer->getCGameMode();
-
 	// Attack all entitys in targetList 
 	for (int i = 0; i < targetList.size(); i++)
 	{
-		gameMode->attack(targetList[i]);
+		gm->attack(targetList[i]);
 
 	}
 }

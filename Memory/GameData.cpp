@@ -2,6 +2,22 @@
 
 GameData g_Data;
 
+void GameData::retrieveClientInstance()
+{
+	static uintptr_t clientInstanceOffset = 0x0;
+	if (clientInstanceOffset == 0x0) {
+		uintptr_t sigOffset = Utils::FindSignature("4C 8B F8 48 8B 0D ?? ?? ?? ?? 48 8B 11");
+		if (sigOffset != 0x0) {
+			int offset = *reinterpret_cast<int*>((sigOffset + 6)); // Get Offset from code
+			clientInstanceOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instruction*/ 7 + 3; // Offset is relative
+			logF("clinet: %llX", clientInstanceOffset);
+		} 
+	}
+	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + clientInstanceOffset, { 0x0, 0x298, 0x8 }));
+	// 4C 8B F8 48 8B 0D ?? ?? ?? ?? 48 8B 11
+	// 1.11.1 : 0x0250A2D0
+}
+
 bool GameData::isKeyDown(int key) {
 	static uintptr_t keyMapOffset = 0x0;
 	if (keyMapOffset == 0x0) {
@@ -26,7 +42,7 @@ bool GameData::isKeyPressed(int key) {
 
 void GameData::updateGameData(C_GameMode * gameMode)
 {
-	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + 0x0250A2D0, { 0x0, 0x298, 0x8 }));
+	retrieveClientInstance();
 	g_Data.localPlayer = g_Data.getLocalPlayer();
 	if (gameMode->player == g_Data.localPlayer) { // GameMode::tick might also be run on the local server
 		g_Data.gameMode = gameMode;
@@ -52,7 +68,7 @@ void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::
 {
 	g_Data.gameModule = gameModule;
 	g_Data.slimMem = slimMem;
-	g_Data.clientInstance = g_Data.slimMem->ReadPtr<C_ClientInstance*>(g_Data.gameModule->ptrBase + 0x0250A2D0, { 0x0, 0x298, 0x8 });
+	retrieveClientInstance();
 #ifdef _DEBUG
 	logF("clientInstance %llX", g_Data.clientInstance);
 #endif
