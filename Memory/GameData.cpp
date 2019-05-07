@@ -49,7 +49,7 @@ void GameData::updateGameData(C_GameMode * gameMode)
 		if (g_Data.localPlayer != 0x0) {
 			auto *vecLock = Logger::GetTextToPrintSection();
 			
-			if (TryEnterCriticalSection(vecLock)) {
+			if (vecLock == nullptr || TryEnterCriticalSection(vecLock)) {
 				auto* stringPrintVector = Logger::GetTextToPrint();
 				
 				for (std::vector<TextForPrint>::iterator it = stringPrintVector->begin(); it != stringPrintVector->end(); ++it) {
@@ -58,7 +58,8 @@ void GameData::updateGameData(C_GameMode * gameMode)
 					guiData->displayClientMessageF("%s%s%s%s", GOLD, it->time, RESET, it->text);
 				}
 				stringPrintVector->clear();
-				LeaveCriticalSection(vecLock);
+				if(vecLock != nullptr)
+					LeaveCriticalSection(vecLock);
 			}
 		}
 	}

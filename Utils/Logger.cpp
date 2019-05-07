@@ -114,13 +114,15 @@ CRITICAL_SECTION* Logger::GetTextToPrintSection()
 
 void Logger::Disable()
 {
+	
 	loggerActive = false;
+#ifdef _DEBUG
 	EnterCriticalSection(&loggerLock);
 	EnterCriticalSection(&vecLock);
 	LeaveCriticalSection(&vecLock);
 	LeaveCriticalSection(&loggerLock);
 	Sleep(50);
-#ifdef _DEBUG
+
 	DeleteCriticalSection(&loggerLock);
 	DeleteCriticalSection(&vecLock);
 #endif
