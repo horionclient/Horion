@@ -25,6 +25,21 @@ public:
 	void onPostRender();
 	std::vector<IModule*>* getModuleList();
 	
+
+	/*
+	 *	Use as follows: 
+	 *		IModule* mod = moduleMgr.getModule<NoKnockBack>(); 
+	 *	Check for nullptr directly after that call, as Hooks::init is called before ModuleManager::initModules !	
+	 */
+	template<typename TRet>
+	IModule* getModule() { 
+		for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
+			IModule* mod = *it;
+			if (typeid(*mod) == typeid(TRet) || typeid(mod) == typeid(TRet))
+				return mod;
+		}
+		return nullptr;
+	};
 };
 
 extern ModuleManager* moduleMgr;
