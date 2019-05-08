@@ -47,7 +47,13 @@ struct vec2_t
 
 struct vec3_t
 {
-	float x, y, z;
+	union {
+		struct {
+			float x, y, z;
+		};
+		float floatArr[3];
+	};
+	
 
 	vec3_t() { x = y = z = 0; }
 	vec3_t(float a, float b, float c) : x(a), y(b), z(c) {}
@@ -414,6 +420,15 @@ struct glmatrixf
 struct AABB {
 	vec3_t lower;
 	vec3_t upper;
+
+	AABB(const AABB &aabb) {
+		lower = vec3_t(aabb.lower);
+		upper = vec3_t(aabb.upper);
+	}
+
+	bool operator==(const AABB &rhs) const {
+		return lower == rhs.lower && upper == rhs.upper;
+	}
 };
 
 inline int random(int start, int end) {

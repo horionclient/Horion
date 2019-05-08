@@ -18,7 +18,8 @@ std::string ChestESP::getModuleName()
 
 void ChestESP::onPostRender() {
 
-
+	if (!g_Data.isInGame())
+		return;
 	//if (listSize < 1000 && listSize > 1) {
 	static float rcolors[4];
 	if (rcolors[3] < 1) {
@@ -37,12 +38,21 @@ void ChestESP::onPostRender() {
 	Utils::ColorConvertHSVtoRGB(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);
 
 
-	//for (size_t i = 0; i < listSize; i++) {
-	C_ChestBlockActor* Chest = g_Data.getCChestBlock();
-	if (Chest != 0) {
-		DrawUtils::setColor(0.4f, 0.4f, 0.4f, 0.2f);
-		//DrawUtils::drawEntityBox(current, max(0.2f, 1 / max(1, g_Data.getLocalPlayer()->eyePos0.dist(current->eyePos0)))); // Fancy math to give an illusion of good esp
+	std::set<std::shared_ptr<AABB>>* chestList = g_Data.getChestList();
+
+	for (auto iter = chestList->begin(); iter != chestList->end(); ++iter){
+		DrawUtils::setColor(1.f, 0.3f, 0.3f, 0.2f);
+		DrawUtils::drawBox((*iter)->lower, (*iter)->upper, max(0.2f, 1 / max(1, g_Data.getLocalPlayer()->eyePos0.dist((*iter)->lower)))); // Fancy math to give an illusion of good esp
 	}
 
+}
+
+void ChestESP::onTick(C_GameMode * gm)
+{
+	tickTimeout++;
+	if (tickTimeout > 60) {
+		tickTimeout = 0;
+		g_Data.getChestList()->clear();
+	}
 }
 

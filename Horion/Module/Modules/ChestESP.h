@@ -5,6 +5,8 @@
 
 class ChestESP : public IModule
 {
+private:
+	int tickTimeout = 0;
 public:
 	ChestESP();
 	~ChestESP();
@@ -12,5 +14,6 @@ public:
 	// Inherited via IModule
 	virtual std::string getModuleName() override;
 	virtual void onPostRender() override;
+	virtual void onTick(C_GameMode* gm) override;
 };
 

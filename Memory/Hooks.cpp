@@ -147,7 +147,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	std::string textStr = std::string("Horion");
 	float leng = DrawUtils::getTextLength(&textStr);
-	DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.3f);
+	DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
 	DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.3f, 1, 0.3f, 1));
 
 	y += 12;
@@ -159,8 +159,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	y += 12;*/
 
-	std::vector<IModule*> modules = moduleMgr->getModuleList();
-	for (std::vector<IModule*>::iterator it = modules.begin(); it != modules.end(); ++it) {
+	std::vector<IModule*>* modules = moduleMgr->getModuleList();
+	for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
 		if (!(*it)->isEnabled())
 			continue;
 		std::string textStr = (*it)->getModuleName();
@@ -172,12 +172,12 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 		float leng = DrawUtils::getTextLength(&textStr);
 
-		DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.3f);
+		DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
 		DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.3f, 1, 0.3f, 1));
 		y += 12;
 	}
 
-	for (std::vector<IModule*>::iterator it = modules.begin(); it != modules.end(); ++it) {
+	for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
 		if ((*it)->isEnabled())
 			continue;
 		std::string textStr = (*it)->getModuleName();

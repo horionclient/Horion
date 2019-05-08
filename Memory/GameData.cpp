@@ -64,9 +64,16 @@ void GameData::updateGameData(C_GameMode * gameMode)
 		}
 	}
 }
-void GameData::Chest_tick(C_ChestBlockActor * ChestBlock2)
+void GameData::Chest_tick(C_ChestBlockActor * chest)
 {
-	g_Data.ChestBlock = ChestBlock2;
+	std::set<std::shared_ptr<AABB>>::iterator it;
+
+	for (it = g_Data.chestList.begin(); it != g_Data.chestList.end(); ++it) 
+		if ((**it) == chest->aabb) 
+			return;
+
+	std::shared_ptr<AABB> toAdd = std::make_shared<AABB>(chest->aabb);
+	g_Data.chestList.insert(toAdd);
 }
 
 void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem)

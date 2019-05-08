@@ -12,6 +12,8 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Jetpack());
 	this->moduleList.push_back(new Aimbot());
 	this->moduleList.push_back(new TriggerBot());
+	this->moduleList.push_back(new ChestESP());
+	this->moduleList.push_back(new NoKnockBack());
 }
 
 void ModuleManager::onTick(C_GameMode * gameMode)
@@ -49,9 +51,9 @@ void ModuleManager::onPostRender()
 	}
 }
 
-std::vector<IModule*> ModuleManager::getModuleList()
+std::vector<IModule*>* ModuleManager::getModuleList()
 {
-	return moduleList;
+	return &moduleList;
 }
 
 ModuleManager* moduleMgr = new ModuleManager(&g_Data);

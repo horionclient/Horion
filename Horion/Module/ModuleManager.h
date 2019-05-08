@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <typeinfo>
 #include "../../Memory/GameData.h"
 #include "Modules/Module.h"
 #include "Modules/Killaura.h"
@@ -9,6 +10,7 @@
 #include "Modules/TriggerBot.h"
 #include "Modules/Jetpack.h"
 #include "Modules/ChestESP.h"
+#include "Modules/NoKnockBack.h"
 
 class ModuleManager {
 private:
@@ -21,7 +23,8 @@ public:
 	void onKeyUpdate(int key, bool isDown);
 	void onPreRender();
 	void onPostRender();
-	std::vector<IModule*> getModuleList();
+	std::vector<IModule*>* getModuleList();
+	
 };
 
 extern ModuleManager* moduleMgr;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <set>
 #include "../SDK/CClientInstance.h"
 #include "../SDK/CGameMode.h"
 #include "../SDK/CChestBlockActor.h"
@@ -12,7 +13,7 @@ private:
 	C_ClientInstance* clientInstance;
 	C_LocalPlayer* localPlayer;
 	C_GameMode* gameMode;
-	C_ChestBlockActor* ChestBlock;
+	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
 	const SlimUtils::SlimModule* gameModule;
 	SlimUtils::SlimMem* slimMem;
 	static void retrieveClientInstance();
@@ -30,6 +31,9 @@ public:
 			gameMode = nullptr;
 		return localPlayer;
 	};
+	bool isInGame() {
+		return localPlayer != nullptr;
+	}
 	const SlimUtils::SlimModule* getModule() {
 		return gameModule;
 	};
@@ -37,7 +41,7 @@ public:
 		return slimMem;
 	};
 	C_GameMode* getCGameMode() { return gameMode; };
-	C_ChestBlockActor* getCChestBlock() { return ChestBlock; };
+	std::set<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
 };
 
 
