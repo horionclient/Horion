@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClCompile Include="Directx\Directx.cpp" />
     <ClCompile Include="Horion\Module\Modules\Aimbot.cpp" />
+    <ClCompile Include="Horion\Module\Modules\ChestESP.cpp" />
     <ClCompile Include="Horion\Module\Modules\ESP.cpp" />
     <ClCompile Include="Horion\DrawUtils.cpp" />
     <ClCompile Include="Horion\Loader.cpp" />
@@ -149,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="Directx\Directx.h" />
     <ClInclude Include="Horion\Module\Modules\Aimbot.h" />
+    <ClInclude Include="Horion\Module\Modules\ChestESP.h" />
     <ClInclude Include="Horion\Module\Modules\ESP.h" />
     <ClInclude Include="Horion\DrawUtils.h" />
     <ClInclude Include="Horion\Loader.h" />
@@ -160,6 +162,7 @@
     <ClInclude Include="Memory\Hooks.h" />
     <ClInclude Include="Memory\MinHook.h" />
     <ClInclude Include="Horion\Module\Modules\Module.h" />
+    <ClInclude Include="SDK\CChestBlockActor.h" />
     <ClInclude Include="SDK\CClientInstance.h" />
     <ClInclude Include="SDK\CClientInstanceScreenModel.h" />
     <ClInclude Include="SDK\CEntity.h" />

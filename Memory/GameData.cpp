@@ -64,6 +64,10 @@ void GameData::updateGameData(C_GameMode * gameMode)
 		}
 	}
 }
+void GameData::Chest_tick(C_ChestBlockActor * ChestBlock2)
+{
+	g_Data.ChestBlock = ChestBlock2;
+}
 
 void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem)
 {

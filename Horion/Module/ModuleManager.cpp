@@ -22,22 +22,6 @@ void ModuleManager::onTick(C_GameMode * gameMode)
 			mod->onTick(gameMode);
 	}
 }
-void ModuleManager::onTrigger()
-{
-	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
-		IModule* mod = *it;
-		if (mod->isEnabled())
-			mod->onTrigger();
-	}
-}
-void ModuleManager::onAimbot()
-{
-	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
-		IModule* mod = *it;
-		if (mod->isEnabled())
-			mod->onAimbot();
-	}
-}
 
 void ModuleManager::onKeyUpdate(int key, bool isDown)
 {

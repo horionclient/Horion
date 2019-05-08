@@ -63,6 +63,9 @@
     <ClCompile Include="Horion\Module\Modules\Aimbot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\ChestESP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils\Utils.h">
@@ -147,6 +150,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Horion\Module\Modules\Aimbot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Module\Modules\ChestESP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\CChestBlockActor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -41,6 +41,7 @@ public:
 	static void drawText(vec2_t pos, std::string* text, MC_Color* color = nullptr, float textSize = 1, Fonts font = SMOOTH);
 	
 	static void drawBox(vec3_t lower, vec3_t upper, float lineWidth);
+	static void drawChestBox(C_ChestBlockActor * ent, float lineWidth);
 	static void drawEntityBox(C_Entity* ent, float lineWidth);
 	static void wirebox(AABB aabb);
 };

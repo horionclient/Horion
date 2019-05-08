@@ -23,10 +23,7 @@ public:
 	virtual void onEnable();
 	virtual void onDisable();
 	virtual void onPreRender();
-	virtual void onAimbot();
-	virtual void onTrigger();
 	virtual void onPostRender();
-
 	virtual bool isFlashMode();
 	virtual void setEnabled(bool enabled);
 	virtual void toggle();

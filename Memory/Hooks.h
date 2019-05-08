@@ -2,6 +2,7 @@
 
 #include "MinHook.h"
 #include "../SDK/CGameMode.h"
+#include "../SDK/CChestBlockActor.h"
 #include "GameData.h"
 #include "../Directx/Directx.h"
 #include "../SDK/TextHolder.h"
@@ -31,6 +32,7 @@ private:
 	static TextHolder* __fastcall Options_getVersionString(void*, __int64);
 	static float* Dimension_getFogColor(__int64, float* color, float brightness);
 	static void GameMode_destroyBlock(void*, C_BlockPos*, uint8_t face);
+	static void ChestBlockActor_tick(C_ChestBlockActor*, void* a);
 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
@@ -41,6 +43,7 @@ private:
 	std::unique_ptr<FuncHook> Options_getVersionStringHook;
 	std::unique_ptr<FuncHook> Dimension_getFogColorHook;
 	std::unique_ptr<FuncHook> GameMode_destroyBlockHook;
+	std::unique_ptr<FuncHook> ChestBlockActor_tickHook;
 
 	typedef __int64(__fastcall* GameMode_destroyBlock_t)(void*, C_BlockPos*, uint8_t face);
 	typedef float*(__fastcall* Dimension_getFogColor_t)(__int64, float*, __int64);
@@ -51,6 +54,7 @@ private:
 	typedef void(__fastcall* ChatScreen_sendChatMessage_t)(void* _this);
 	typedef TextHolder*(__fastcall* Options_getVersionString_t)(void* _this, __int64);
 	typedef HRESULT(__stdcall* d3d11_present_t)(IDXGISwapChain * pSwapChain, UINT SyncInterval, UINT Flags);
+	typedef void(__fastcall* ChestBlockActor_tick_t)(void* _this,void*);
 };
 
 extern Hooks g_Hooks;

@@ -19,6 +19,7 @@
 #include "../SDK/CClientInstanceScreenModel.h"
 #include "../Memory/MinHook.h"
 #include "../SDK/CPacket.h"
+#include "../SDK/CChestBlockActor.h"
 #include "../Memory/Hooks.h"
 #include "../Memory/GameData.h"
 #include "../Utils/TextFormat.h"

@@ -58,6 +58,9 @@ void Hooks::Init()
 	g_Hooks.GameMode_destroyBlockHook = std::make_unique <FuncHook>(destroyBlok, Hooks::GameMode_destroyBlock);
 	g_Hooks.GameMode_destroyBlockHook->init();
 
+	void* ChestTick = reinterpret_cast<void*>(Utils::FindSignature("40 53 57 48 83 EC ?? 48 8B 41 ?? 48 8B FA 48 89 6C 24 ?? 48 8B D9 4C 89 74 24 ?? 48 85 C0 75 10 48 8D 51 ?? 48 8B CF E8 ?? ?? ?? ?? 48 89 43 ?? FF 43 ?? 48 85 C0"));
+	g_Hooks.ChestBlockActor_tickHook = std::make_unique <FuncHook>(ChestTick, Hooks::ChestBlockActor_tick);
+	g_Hooks.ChestBlockActor_tickHook->init();
 	//logF("Hooks hooked");
 }
 
@@ -93,6 +96,12 @@ void __fastcall Hooks::SurvivalMode_tick(C_GameMode * _this)
 
 		_this->player->getEntityTypeId();
 	}
+}
+void __fastcall Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a)
+{
+	static auto oTick = g_Hooks.ChestBlockActor_tickHook->GetOriginal<ChestBlockActor_tick_t>();
+	oTick(_this,a); // Call Original Func
+	GameData::Chest_tick(_this);
 }
 
 void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
