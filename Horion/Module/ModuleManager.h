@@ -11,6 +11,7 @@
 #include "Modules/Jetpack.h"
 #include "Modules/ChestESP.h"
 #include "Modules/RainbowSky.h"
+#include "Modules/AirJump.h"
 #include "Modules/NoKnockBack.h"
 
 class ModuleManager {

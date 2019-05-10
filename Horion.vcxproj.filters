@@ -72,6 +72,9 @@
     <ClCompile Include="Horion\Module\Modules\RainbowSky.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\AirJump.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils\Utils.h">
@@ -168,6 +171,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Horion\Module\Modules\RainbowSky.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Module\Modules\AirJump.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

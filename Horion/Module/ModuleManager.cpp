@@ -15,6 +15,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new ChestESP());
 	this->moduleList.push_back(new NoKnockBack());
 	this->moduleList.push_back(new RainbowSky());
+	this->moduleList.push_back(new AirJump());
 
 	this->getModule<RainbowSky>()->setEnabled(true);
 }

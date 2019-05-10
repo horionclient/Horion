@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Horion\Module\Modules\AirJump.cpp" />
     <ClCompile Include="Directx\Directx.cpp" />
     <ClCompile Include="Horion\Module\Modules\Aimbot.cpp" />
     <ClCompile Include="Horion\Module\Modules\ChestESP.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="Utils\TextFormat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Horion\Module\Modules\AirJump.h" />
     <ClInclude Include="Directx\Directx.h" />
     <ClInclude Include="Horion\Module\Modules\Aimbot.h" />
     <ClInclude Include="Horion\Module\Modules\ChestESP.h" />
