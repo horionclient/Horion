@@ -144,6 +144,7 @@
     <ClCompile Include="Memory\Hooks.cpp" />
     <ClCompile Include="Memory\SlimMem.cpp" />
     <ClCompile Include="Horion\Module\Modules\Module.cpp" />
+    <ClCompile Include="Horion\Module\Modules\RainbowSky.cpp" />
     <ClCompile Include="SDK\CBlockPos.h" />
     <ClCompile Include="Utils\Logger.cpp" />
     <ClCompile Include="Utils\TextFormat.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="Memory\Hooks.h" />
     <ClInclude Include="Memory\MinHook.h" />
     <ClInclude Include="Horion\Module\Modules\Module.h" />
+    <ClInclude Include="Horion\Module\Modules\RainbowSky.h" />
     <ClInclude Include="SDK\CChestBlockActor.h" />
     <ClInclude Include="SDK\CClientInstance.h" />
     <ClInclude Include="SDK\CClientInstanceScreenModel.h" />

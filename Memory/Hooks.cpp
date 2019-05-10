@@ -230,24 +230,30 @@ float * Hooks::Dimension_getFogColor(__int64 a1, float * color, float brightness
 
 	static float rcolors[4];
 
-	//float* retval = oGetFogColor(a1, color, brightness);
+	static IModule* mod = moduleMgr->getModule<RainbowSky>();
+	if(mod == nullptr)
+		mod = moduleMgr->getModule<RainbowSky>();
+	else if(mod->isEnabled()){
+		if (rcolors[3] < 1) {
+			rcolors[0] = 1;
+			rcolors[1] = 0.2f;
+			rcolors[2] = 0.2f;
+			rcolors[3] = 1;
+		}
 
-	if (rcolors[3] < 1) {
-		rcolors[0] = 1;
-		rcolors[1] = 0.2f;
-		rcolors[2] = 0.2f;
-		rcolors[3] = 1;
+		Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]); // perfect code, dont question this
+
+		rcolors[0] += 0.001f;
+		if (rcolors[0] >= 1)
+			rcolors[0] = 0;
+
+		Utils::ColorConvertHSVtoRGB(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);
+
+		return rcolors;
 	}
+	return oGetFogColor(a1, color, brightness);
 
-	Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]); // perfect code, dont question this
-
-	rcolors[0] += 0.001f;
-	if (rcolors[0] >= 1)
-		rcolors[0] = 0;
-
-	Utils::ColorConvertHSVtoRGB(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);
-
-	return rcolors;
+	
 }
 
 void Hooks::GameMode_destroyBlock(void * _this, C_BlockPos * pos, uint8_t face)

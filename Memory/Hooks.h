@@ -46,7 +46,7 @@ private:
 	std::unique_ptr<FuncHook> ChestBlockActor_tickHook;
 
 	typedef __int64(__fastcall* GameMode_destroyBlock_t)(void*, C_BlockPos*, uint8_t face);
-	typedef float*(__fastcall* Dimension_getFogColor_t)(__int64, float*, __int64);
+	typedef float*(__fastcall* Dimension_getFogColor_t)(__int64, float*, float);
 	typedef char*(__fastcall* I8n_get_t)(void*, char*);
 	typedef __int64(__fastcall* renderText_t)(__int64, C_MinecraftUIRenderContext*);
 	typedef void(__fastcall* GameMode_tick_t)(C_GameMode* _this);

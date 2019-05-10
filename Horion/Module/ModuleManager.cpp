@@ -14,6 +14,9 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new TriggerBot());
 	this->moduleList.push_back(new ChestESP());
 	this->moduleList.push_back(new NoKnockBack());
+	this->moduleList.push_back(new RainbowSky());
+
+	this->getModule<RainbowSky>()->setEnabled(true);
 }
 
 void ModuleManager::onTick(C_GameMode * gameMode)

@@ -10,6 +10,7 @@
 #include "Modules/TriggerBot.h"
 #include "Modules/Jetpack.h"
 #include "Modules/ChestESP.h"
+#include "Modules/RainbowSky.h"
 #include "Modules/NoKnockBack.h"
 
 class ModuleManager {
