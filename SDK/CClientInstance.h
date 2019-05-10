@@ -17,11 +17,17 @@ class MinecraftGame {
 private:
 	char filler[0xA0];
 	uintptr_t goodFont;
+	char pad_0x00A8[0x80]; //0x00A8
+	bool canUseKeys;
 public:
 	
 	uintptr_t getTheGoodFontThankYou() {
 		return goodFont;
-	}
+	};
+
+	const bool canUseKeybinds() {
+		return canUseKeys;
+	};
 };
 
 class C_GuiData {

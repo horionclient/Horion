@@ -18,6 +18,7 @@ private:
 	SlimUtils::SlimMem* slimMem;
 	static void retrieveClientInstance();
 public:
+	static bool canUseMoveKeys();
 	static bool isKeyDown(int key);
 	static bool isKeyPressed(int key);
 	static void updateGameData(C_GameMode* gameMode);

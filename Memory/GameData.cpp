@@ -18,6 +18,14 @@ void GameData::retrieveClientInstance()
 	// 1.11.1 : 0x0250A2D0
 }
 
+bool GameData::canUseMoveKeys()
+{
+	MinecraftGame* mc = g_Data.clientInstance->minecraftGame;
+	if(mc == nullptr)
+		return false;
+	return mc->canUseKeybinds();
+}
+
 bool GameData::isKeyDown(int key) {
 	static uintptr_t keyMapOffset = 0x0;
 	if (keyMapOffset == 0x0) {
@@ -25,6 +33,9 @@ bool GameData::isKeyDown(int key) {
 		if (sigOffset != 0x0) {
 			int offset = *reinterpret_cast<int*>((sigOffset + 3)); // Get Offset from code
 			keyMapOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instruction*/ 7; // Offset is relative
+#ifdef _DEBUG
+			logF("KeyMap: %llX", keyMapOffset + g_Data.gameModule->ptrBase);
+#endif
 		}
 	}
 	// All keys are mapped as bools, though aligned as ints (4 byte)
@@ -83,5 +94,6 @@ void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::
 	retrieveClientInstance();
 #ifdef _DEBUG
 	logF("clientInstance %llX", g_Data.clientInstance);
+	logF("localPlayer %llX", g_Data.getLocalPlayer());
 #endif
 }
