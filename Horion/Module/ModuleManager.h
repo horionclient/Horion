@@ -14,6 +14,7 @@
 #include "Modules/AirJump.h"
 #include "Modules/NoKnockBack.h"
 #include "Modules/Step.h"
+#include "Modules/Glide.h"
 
 class ModuleManager {
 private:
