@@ -13,6 +13,7 @@
 #include "Modules/RainbowSky.h"
 #include "Modules/AirJump.h"
 #include "Modules/NoKnockBack.h"
+#include "Modules/Step.h"
 
 class ModuleManager {
 private:

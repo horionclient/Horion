@@ -26,6 +26,7 @@ public:
 
 	C_ClientInstance* getClientInstance() { return clientInstance; };
 	C_LocalPlayer* getLocalPlayer() {
+		
 		localPlayer = clientInstance->getLocalPlayer();
 		if (localPlayer == nullptr)
 			gameMode = nullptr;

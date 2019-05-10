@@ -16,6 +16,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new NoKnockBack());
 	this->moduleList.push_back(new RainbowSky());
 	this->moduleList.push_back(new AirJump());
+	this->moduleList.push_back(new Step());
 
 	this->getModule<RainbowSky>()->setEnabled(true);
 }

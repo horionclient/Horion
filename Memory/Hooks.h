@@ -33,6 +33,7 @@ private:
 	static float* Dimension_getFogColor(__int64, float* color, float brightness);
 	static void GameMode_destroyBlock(void*, C_BlockPos*, uint8_t face);
 	static void ChestBlockActor_tick(C_ChestBlockActor*, void* a);
+	static void Actor_lerpMotion(C_Entity* _this, vec3_t);
 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
@@ -44,7 +45,9 @@ private:
 	std::unique_ptr<FuncHook> Dimension_getFogColorHook;
 	std::unique_ptr<FuncHook> GameMode_destroyBlockHook;
 	std::unique_ptr<FuncHook> ChestBlockActor_tickHook;
+	std::unique_ptr<FuncHook> Actor_lerpMotionHook;
 
+	typedef void(__fastcall* Actor_lerpMotion_t)(C_Entity*, vec3_t);
 	typedef __int64(__fastcall* GameMode_destroyBlock_t)(void*, C_BlockPos*, uint8_t face);
 	typedef float*(__fastcall* Dimension_getFogColor_t)(__int64, float*, float);
 	typedef char*(__fastcall* I8n_get_t)(void*, char*);

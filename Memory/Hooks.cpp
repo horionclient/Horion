@@ -61,6 +61,10 @@ void Hooks::Init()
 	void* ChestTick = reinterpret_cast<void*>(Utils::FindSignature("40 53 57 48 83 EC ?? 48 8B 41 ?? 48 8B FA 48 89 6C 24 ?? 48 8B D9 4C 89 74 24 ?? 48 85 C0 75 10 48 8D 51 ?? 48 8B CF E8 ?? ?? ?? ?? 48 89 43 ?? FF 43 ?? 48 85 C0"));
 	g_Hooks.ChestBlockActor_tickHook = std::make_unique <FuncHook>(ChestTick, Hooks::ChestBlockActor_tick);
 	g_Hooks.ChestBlockActor_tickHook->init();
+
+	void* lerpFunc = reinterpret_cast<void*>(Utils::FindSignature("8B 02 89 81 ?? 0F ?? ?? 8B 42 04 89 81 ?? ?? ?? ?? 8B 42 08 89 81 ?? ?? ?? ?? C3"));
+	g_Hooks.Actor_lerpMotionHook = std::make_unique <FuncHook>(lerpFunc, Hooks::Actor_lerpMotion);
+	g_Hooks.Actor_lerpMotionHook->init();
 	//logF("Hooks hooked");
 }
 
@@ -102,6 +106,25 @@ void __fastcall Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a)
 	static auto oTick = g_Hooks.ChestBlockActor_tickHook->GetOriginal<ChestBlockActor_tick_t>();
 	oTick(_this,a); // Call Original Func
 	GameData::Chest_tick(_this);
+}
+
+void Hooks::Actor_lerpMotion(C_Entity * _this, vec3_t motVec)
+{
+	static auto oLerp = g_Hooks.Actor_lerpMotionHook->GetOriginal<Actor_lerpMotion_t>();
+
+	if (g_Data.getLocalPlayer() != _this)
+		return oLerp(_this, motVec);
+
+	static IModule* mod = moduleMgr->getModule<NoKnockBack>();
+	if (mod == nullptr)
+		mod = moduleMgr->getModule<NoKnockBack>();
+	else if (mod->isEnabled()) {
+		// Do nothing i guess
+		// Do some stuff with modifiers here maybe
+		return; // Dont call lerpMotion
+	}
+
+	oLerp(_this, motVec);
 }
 
 void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
