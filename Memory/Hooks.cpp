@@ -158,35 +158,42 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 	static auto oAutoComplete = g_Hooks.autoComplete_Hook->GetOriginal<autoComplete_t>();
 	char* tx = text->getText();
 	if (tx != nullptr && text->getTextLength() > 1 && tx[0] == '.') {
-		std::string search = tx + 1;
+		std::string search = tx + 1; // Dont include the '.'
 		std::transform(search.begin(), search.end(), search.begin(), ::tolower); // make the search text lowercase
 
 		std::vector<ICommand*>* commandList = cmdMgr->getCommandList();
 		for (std::vector<ICommand*>::iterator it = commandList->begin(); it != commandList->end(); ++it) { // Loop through commands
 			ICommand* c = *it;
 			auto* aliasList = c->getAliasList();
-			for (std::vector<std::string>::iterator it = aliasList->begin(); it != aliasList->end(); ++it) {
+			for (std::vector<std::string>::iterator it = aliasList->begin(); it != aliasList->end(); ++it) { // Loop through aliases
 				std::string cmd = *it;
 				if (search.size() >= cmd.size()) // if the search is longer than the command, abort
 					continue;
 
-				for (size_t i = 0; i < search.size(); i++) { // Loop through search
+				for (size_t i = 0; i < search.size(); i++) { // Loop through search string
 					char car = search.at(i);
 					if (car != cmd.at(i)) // and compare
 						goto nope;
 				}
 				// Not at nope? Then we got a good result!
+				cmd.insert(0, 1, '.'); // Prepend the '.'
 				
-				text->setText(cmd);
-				break;
+				text->setText(cmd); // Set text
+				// now sync with the UI thread that shows the cursor
+				// If we loose this sig we are kinda fucked
+				using syncShit = void(__fastcall*)(TextHolder*, TextHolder*);
+				static syncShit sync = reinterpret_cast<syncShit>(Utils::FindSignature("40 53 48 83 EC ?? 8B 0D ?? ?? ?? ?? 48 8B DA FF 15 ?? ?? ?? ?? 48 85 C0 74 ?? 48 83 38 00 74 ?? E8 ?? ?? ?? ?? 48 8B D3 48 8B 08 48 8B 01"));
+				sync(text, text);
+
+				return;
 			nope:
 				continue;
 			}
 		
 		}
 	}
-
 	oAutoComplete(a1, a2, text, a4);
+	
 }
 
 void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)

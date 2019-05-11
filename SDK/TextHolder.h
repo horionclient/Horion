@@ -22,7 +22,7 @@ public:
 			strcpy_s(inlineText, 16, str.c_str());
 		else {
 			size_t size = str.size();
-			char* ptr = reinterpret_cast<char*>(malloc(size + 1));
+			char* ptr = reinterpret_cast<char*>(malloc(alignedTextLength + 1));
 			if (ptr != 0x0) {
 				strcpy_s(ptr, size + 1, str.c_str());
 			}
@@ -38,7 +38,7 @@ public:
 	}
 
 	char* getText() {
-		if (textLength < 16)
+		if (alignedTextLength < 16)
 			return this->inlineText;
 		else
 			return this->pText;
@@ -56,7 +56,7 @@ public:
 			strcpy_s(inlineText, 16, str.c_str());
 		else {
 			size_t size = str.size();
-			char* ptr = reinterpret_cast<char*>(malloc(size + 1));
+			char* ptr = reinterpret_cast<char*>(malloc(alignedTextLength + 1));
 			if (ptr != 0x0) {
 				strcpy_s(ptr, size + 1, str.c_str());
 			}
