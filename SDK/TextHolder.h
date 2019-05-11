@@ -47,4 +47,21 @@ public:
 	size_t getTextLength() {
 		return textLength;
 	}
+
+	void setText(std::string str) {
+		memset(this, 0, sizeof(TextHolder));
+		textLength = str.size();
+		alignedTextLength = textLength | 0xF;
+		if (str.size() < 16)
+			strcpy_s(inlineText, 16, str.c_str());
+		else {
+			size_t size = str.size();
+			char* ptr = reinterpret_cast<char*>(malloc(size + 1));
+			if (ptr != 0x0) {
+				strcpy_s(ptr, size + 1, str.c_str());
+			}
+
+			pText = ptr;
+		}
+	}
 };

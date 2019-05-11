@@ -40,19 +40,28 @@ void CommandMgr::execute(char * message)
 		std::string cmd = ((*args)[0]);
 		std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
 
+		
 		for (std::vector<ICommand*>::iterator it = this->commandList.begin(); it != this->commandList.end(); ++it) {
 			ICommand* c = *it;
-			if (c->getCommandStr() == cmd) {
-				try {
-					if (!c->execute(args))
+			auto* aliases = c->getAliasList();
+			for (std::vector<std::string>::iterator it = aliases->begin(); it != aliases->end(); ++it) {
+				if (*it == cmd) {
+					try {
+						if (!c->execute(args))
+							g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s.%s %s", RED, BOLD, RESET, c->getCommand(), c->getUsage());
+					}
+					catch (...) {
 						g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s.%s %s", RED, BOLD, RESET, c->getCommand(), c->getUsage());
+					}
+					goto done;
 				}
-				catch (...) {
-					g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s.%s %s", RED, BOLD, RESET, c->getCommand(), c->getUsage());
-				}
-				
 			}
+			
 		}
+
+		g_Data.getClientInstance()->getGuiData()->displayClientMessageF("[%sHorion%s] %sCommand '%s' could not be found!", GOLD, WHITE, RED, cmd.c_str());
+
+	done:
 
 		delete args;
 	}

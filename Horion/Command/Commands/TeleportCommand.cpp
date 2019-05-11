@@ -4,6 +4,8 @@
 
 TeleportCommand::TeleportCommand() : ICommand("tp", "Teleports to coordinates", "<X> <Y> <Z>")
 {
+	registerAlias("teleport");
+	registerAlias("setpos");
 }
 
 
@@ -23,6 +25,6 @@ bool TeleportCommand::execute(std::vector<std::string>* args)
 	pos.z = assertFloat(args->at(3));
 
 	g_Data.getLocalPlayer()->setPos(pos);
-	g_Data.getGuiData()->displayClientMessageF("%sTeleported!", GREEN);
+	clientMessageF("%sTeleported!", GREEN);
 	return true;
 }

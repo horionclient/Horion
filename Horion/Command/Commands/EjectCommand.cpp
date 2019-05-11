@@ -4,6 +4,7 @@
 
 EjectCommand::EjectCommand() : ICommand("eject", "Removes the cheat from the game.", "")
 {
+	registerAlias("uninject");
 }
 
 

@@ -41,13 +41,17 @@ public:
 	float widthGame; //0x0028 
 	float heightGame; //0x002C 
 
-	void displayClientMessageF(const char * fmt, ...) {
+	void displayClientMessageVA(const char * fmt, va_list lis) {
 		char bigboi[300];
+		int numCharacters = vsprintf_s(bigboi, 300, fmt, lis);
+		displayClientMessage(&std::string(bigboi));
+	}
+
+	void displayClientMessageF(const char * fmt, ...) {
 		va_list arg;
 		va_start(arg, fmt);
-		int numCharacters = vsprintf_s(bigboi, 300, fmt, arg);
+		displayClientMessageVA(fmt, arg);
 		va_end(arg);
-		displayClientMessage(&std::string(bigboi));
 	}
 	void displayClientMessage(std::string* a2) {
 		using displayClientMessage = void(__thiscall*)(void*, TextHolder); // This signature actually exists 2 times but we got luck that our function is the first in memory

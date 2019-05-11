@@ -69,6 +69,10 @@ void Hooks::Init()
 	void* getGameEdition = reinterpret_cast<void*>(Utils::FindSignature("8B 91 ?? ?? ?? ?? 85 D2 74 1C 83 EA 01"));
 	g_Hooks.AppPlatform_getGameEditionHook = std::make_unique <FuncHook>(getGameEdition, Hooks::AppPlatform_getGameEdition);
 	g_Hooks.AppPlatform_getGameEditionHook->init();
+
+	void* autoComplete = reinterpret_cast<void*>(Utils::FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 44 89 4C 24 ?? 4D 8B F8"));
+	g_Hooks.autoComplete_Hook = std::make_unique <FuncHook>(autoComplete, Hooks::pleaseAutoComplete);
+	g_Hooks.autoComplete_Hook->init();
 	//logF("Hooks hooked");
 }
 
@@ -82,6 +86,7 @@ void Hooks::Restore()
 	//g_Hooks.I8n_getHook->Restore();
 	g_Hooks.GameMode_destroyBlockHook->Restore();
 	g_Hooks.AppPlatform_getGameEditionHook->Restore();
+	g_Hooks.autoComplete_Hook->Restore();
 }
 
 void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
@@ -146,6 +151,42 @@ __int64 Hooks::AppPlatform_getGameEdition(__int64 _this)
 	}
 
 	return oGetEditon(_this);
+}
+
+void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4)
+{
+	static auto oAutoComplete = g_Hooks.autoComplete_Hook->GetOriginal<autoComplete_t>();
+	char* tx = text->getText();
+	if (tx != nullptr && text->getTextLength() > 1 && tx[0] == '.') {
+		std::string search = tx + 1;
+		std::transform(search.begin(), search.end(), search.begin(), ::tolower); // make the search text lowercase
+
+		std::vector<ICommand*>* commandList = cmdMgr->getCommandList();
+		for (std::vector<ICommand*>::iterator it = commandList->begin(); it != commandList->end(); ++it) { // Loop through commands
+			ICommand* c = *it;
+			auto* aliasList = c->getAliasList();
+			for (std::vector<std::string>::iterator it = aliasList->begin(); it != aliasList->end(); ++it) {
+				std::string cmd = *it;
+				if (search.size() >= cmd.size()) // if the search is longer than the command, abort
+					continue;
+
+				for (size_t i = 0; i < search.size(); i++) { // Loop through search
+					char car = search.at(i);
+					if (car != cmd.at(i)) // and compare
+						goto nope;
+				}
+				// Not at nope? Then we got a good result!
+				
+				text->setText(cmd);
+				break;
+			nope:
+				continue;
+			}
+		
+		}
+	}
+
+	oAutoComplete(a1, a2, text, a4);
 }
 
 void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
