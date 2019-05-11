@@ -67,7 +67,8 @@ void Hooks::Init()
 	g_Hooks.Actor_lerpMotionHook->init();
 
 	void* getGameEdition = reinterpret_cast<void*>(Utils::FindSignature("8B 91 ?? ?? ?? ?? 85 D2 74 1C 83 EA 01"));
-
+	g_Hooks.AppPlatform_getGameEditionHook = std::make_unique <FuncHook>(getGameEdition, Hooks::AppPlatform_getGameEdition);
+	g_Hooks.AppPlatform_getGameEditionHook->init();
 	//logF("Hooks hooked");
 }
 
@@ -80,6 +81,7 @@ void Hooks::Restore()
 	g_Hooks.Options_getVersionStringHook->Restore();
 	//g_Hooks.I8n_getHook->Restore();
 	g_Hooks.GameMode_destroyBlockHook->Restore();
+	g_Hooks.AppPlatform_getGameEditionHook->Restore();
 }
 
 void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
