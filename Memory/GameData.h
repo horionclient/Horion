@@ -27,7 +27,10 @@ public:
 	static void initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem);
 	static void addChestToList(C_ChestBlockActor * ChestBlock2);
 
+	
+
 	C_ClientInstance* getClientInstance() { return clientInstance; };
+	C_GuiData* getGuiData() { return clientInstance->getGuiData(); };
 	C_LocalPlayer* getLocalPlayer() {
 		
 		localPlayer = clientInstance->getLocalPlayer();

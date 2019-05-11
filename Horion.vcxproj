@@ -153,6 +153,7 @@
     <ClCompile Include="Horion\Module\Modules\RainbowSky.cpp" />
     <ClCompile Include="SDK\CBlockPos.h" />
     <ClCompile Include="Horion\Module\Modules\Step.cpp" />
+    <ClCompile Include="Horion\Command\Commands\TeleportCommand.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />
     <ClCompile Include="Utils\TextFormat.cpp" />
   </ItemGroup>
@@ -190,6 +191,7 @@
     <ClInclude Include="SDK\CLoopbackPacketSender.h" />
     <ClInclude Include="Memory\Offsets.h" />
     <ClInclude Include="Horion\Module\Modules\Step.h" />
+    <ClInclude Include="Horion\Command\Commands\TeleportCommand.h" />
     <ClInclude Include="Utils\TextFormat.h" />
     <ClInclude Include="SDK\TextHolder.h" />
     <ClInclude Include="Utils\HMath.h" />

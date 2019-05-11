@@ -1,11 +1,11 @@
 #pragma once
 #include "ICommand.h"
-class EjectCommand :
+class TeleportCommand :
 	public ICommand
 {
 public:
-	EjectCommand();
-	~EjectCommand();
+	TeleportCommand();
+	~TeleportCommand();
 
 	// Inherited via ICommand
 	virtual bool execute(std::vector<std::string>* args) override;

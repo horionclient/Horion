@@ -11,6 +11,7 @@ CommandMgr::~CommandMgr()
 
 void CommandMgr::initCommands() {
 	commandList.push_back(new EjectCommand());
+	commandList.push_back(new TeleportCommand());
 }
 
 void CommandMgr::disable() {
@@ -42,7 +43,14 @@ void CommandMgr::execute(char * message)
 		for (std::vector<ICommand*>::iterator it = this->commandList.begin(); it != this->commandList.end(); ++it) {
 			ICommand* c = *it;
 			if (c->getCommandStr() == cmd) {
-				c->execute(args);
+				try {
+					if (!c->execute(args))
+						g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s.%s %s", RED, BOLD, RESET, c->getCommand(), c->getUsage());
+				}
+				catch (...) {
+					g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s.%s %s", RED, BOLD, RESET, c->getCommand(), c->getUsage());
+				}
+				
 			}
 		}
 

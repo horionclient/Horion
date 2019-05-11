@@ -4,6 +4,7 @@
 
 #include "Commands/ICommand.h"
 #include "Commands/EjectCommand.h"
+#include "Commands/TeleportCommand.h"
 
 #include <string>
 #include <vector>

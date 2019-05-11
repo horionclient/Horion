@@ -12,7 +12,8 @@ EjectCommand::~EjectCommand()
 }
 
 
-void EjectCommand::execute(std::vector<std::string>* args)
+bool EjectCommand::execute(std::vector<std::string>* args)
 {
 	GameData::terminate();
+	return true;
 }

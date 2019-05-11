@@ -139,6 +139,25 @@ private:
 public:
 	TextHolder uuid; //0x1CAC 
 
+
+private:
+	virtual __int64 sub_140F5DA80(char a2);
+	virtual __int64 sub_140F2C1A0();
+public:
+	virtual void initializeComponents(__int64 a2, const __int64 &a3);
+	virtual void reloadComponents(__int64 a2, const __int64 &a3);
+	virtual bool hasComponent(__int64 a2);
+	virtual bool hasInventory();
+	virtual __int64 getInventory();
+private:
+	virtual __int64 sub_140F5D870(char a2);
+public:
+	virtual void reset();
+	virtual __int64 getOwnerEntityType();
+	virtual __int64 remove();
+	virtual void setPos(const vec3_t &pos);
+	virtual vec3_t* getPos();
+
 	int getEntityTypeId() {
 		return Utils::CallVFunc<154, int>(this);
 	}

@@ -93,6 +93,9 @@
     <ClCompile Include="Horion\Command\Commands\EjectCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Horion\Command\Commands\TeleportCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils\Utils.h">
@@ -210,6 +213,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Horion\Command\Commands\EjectCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Command\Commands\TeleportCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -67,15 +67,15 @@ void GameData::updateGameData(C_GameMode * gameMode)
 	g_Data.localPlayer = g_Data.getLocalPlayer();
 	if (gameMode->player == g_Data.localPlayer) { // GameMode::tick might also be run on the local server
 		g_Data.gameMode = gameMode;
-		if (g_Data.localPlayer != 0x0) {
+		
+		if (g_Data.localPlayer != nullptr ) {
+			C_GuiData* guiData = g_Data.clientInstance->getGuiData();
 			auto *vecLock = Logger::GetTextToPrintSection();
 			
-			if (vecLock == nullptr || TryEnterCriticalSection(vecLock)) {
+			if (guiData != nullptr && (vecLock == nullptr || TryEnterCriticalSection(vecLock))) {
 				auto* stringPrintVector = Logger::GetTextToPrint();
 				
 				for (std::vector<TextForPrint>::iterator it = stringPrintVector->begin(); it != stringPrintVector->end(); ++it) {
-					C_GuiData* guiData = g_Data.clientInstance->getGuiData();
-					
 					guiData->displayClientMessageF("%s%s%s%s", GOLD, it->time, RESET, it->text);
 				}
 				stringPrintVector->clear();

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <sstream>
 #include <chrono>
+#include <algorithm>
 
 #define INRANGE(x,a,b)   (x >= a && x <= b)
 #define GET_BYTE( x )    (GET_BITS(x[0]) << 4 | GET_BITS(x[1]))
@@ -23,7 +24,6 @@ template<typename T> static inline void ImSwap(T& a, T& b) { T tmp = a; a = b; b
 class Utils
 {
 public:
-
 
 	// Convert rgb floats ([0-1],[0-1],[0-1]) to hsv floats ([0-1],[0-1],[0-1]), from Foley & van Dam p592
 	// Optimized http://lolengine.net/blog/2013/01/13/fast-rgb-to-hsv
