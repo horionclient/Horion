@@ -37,6 +37,7 @@ void CommandMgr::execute(char * message)
 		args->push_back(msgStr.substr(initialPos, min(pos, msgStr.size()) - initialPos + 1));
 
 		std::string cmd = ((*args)[0]);
+		std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
 
 		for (std::vector<ICommand*>::iterator it = this->commandList.begin(); it != this->commandList.end(); ++it) {
 			ICommand* c = *it;

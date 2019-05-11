@@ -162,9 +162,9 @@ void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
 			logF("Command: %s", message);
 			cmdMgr->execute(message);
 			//logF("CommandAddr: %llX", message);
-			//*message = 0x0; // Remove command in textbox
-			//*v6 = 0x0;
-			//*idk = 0x0;
+			*message = 0x0; // Remove command in textbox
+			*v6 = 0x0;
+			*idk = 0x0;
 			return;
 		}
 	}
