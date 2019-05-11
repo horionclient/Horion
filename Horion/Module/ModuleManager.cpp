@@ -18,8 +18,18 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new AirJump());
 	this->moduleList.push_back(new Step());
 	this->moduleList.push_back(new Glide());
+	this->moduleList.push_back(new EditionFaker());
 
 	this->getModule<RainbowSky>()->setEnabled(true);
+}
+
+void ModuleManager::disable()
+{
+	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
+		IModule* mod = *it;
+		if (mod->isEnabled())
+			mod->setEnabled(false);
+	}
 }
 
 void ModuleManager::onTick(C_GameMode * gameMode)

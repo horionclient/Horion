@@ -15,6 +15,7 @@
 #include "Modules/NoKnockBack.h"
 #include "Modules/Step.h"
 #include "Modules/Glide.h"
+#include "Modules/EditionFaker.h"
 
 class ModuleManager {
 private:
@@ -23,6 +24,7 @@ private:
 public:
 	ModuleManager(GameData* gameData);
 	void initModules();
+	void disable();
 	void onTick(C_GameMode* gameMode);
 	void onKeyUpdate(int key, bool isDown);
 	void onPreRender();

@@ -65,6 +65,9 @@ void Hooks::Init()
 	void* lerpFunc = reinterpret_cast<void*>(Utils::FindSignature("8B 02 89 81 ?? 0F ?? ?? 8B 42 04 89 81 ?? ?? ?? ?? 8B 42 08 89 81 ?? ?? ?? ?? C3"));
 	g_Hooks.Actor_lerpMotionHook = std::make_unique <FuncHook>(lerpFunc, Hooks::Actor_lerpMotion);
 	g_Hooks.Actor_lerpMotionHook->init();
+
+	void* getGameEdition = reinterpret_cast<void*>(Utils::FindSignature("8B 91 ?? ?? ?? ?? 85 D2 74 1C 83 EA 01"));
+
 	//logF("Hooks hooked");
 }
 
@@ -127,6 +130,22 @@ void Hooks::Actor_lerpMotion(C_Entity * _this, vec3_t motVec)
 	oLerp(_this, motVec);
 }
 
+__int64 Hooks::AppPlatform_getGameEdition(__int64 _this)
+{
+	static auto oGetEditon = g_Hooks.AppPlatform_getGameEditionHook->GetOriginal<AppPlatform_getGameEdition_t>();
+
+	static EditionFaker* mod = static_cast<EditionFaker*>(moduleMgr->getModule<EditionFaker>());
+	if (mod == nullptr)
+		mod = static_cast<EditionFaker*>(moduleMgr->getModule<EditionFaker>());
+	else if (mod->isEnabled()) {
+		// Do nothing i guess
+		// Do some stuff with modifiers here maybe
+		return mod->getFakedEditon(); // Dont call lerpMotion
+	}
+
+	return oGetEditon(_this);
+}
+
 void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
 {
 	static auto oSendMessage = g_Hooks.chatScreen_sendMessageHook->GetOriginal<ChatScreen_sendChatMessage_t>();
@@ -139,6 +158,7 @@ void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
 
 		if (*message == '.') {
 			logF("Command: %s", message);
+			logF("CommandAddr: %llX", message);
 			//*message = 0x0; // Remove command in textbox
 			//*v6 = 0x0;
 			//*idk = 0x0;

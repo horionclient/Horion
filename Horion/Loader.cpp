@@ -96,7 +96,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		
 		for (int i = 0; i < 0xFF; i++) {
 			bool* newKey = keyMapAddr + (4 * i); 
-			bool newKeyPressed = (*newKey) && GameData::canUseMoveKeys(); // Disable Keybinds when in chat or inventory
+			bool newKeyPressed = (*newKey) && (GameData::canUseMoveKeys() || clientInstance->localPlayer == nullptr); // Disable Keybinds when in chat or inventory
 			bool* oldKey = keyMap + (4 * i);
 			if (newKeyPressed != *oldKey)
 				moduleMgr->onKeyUpdate(i, newKeyPressed);
@@ -152,6 +152,7 @@ DllMain(HMODULE hModule,
 	break;
 	case DLL_PROCESS_DETACH:
 		isRunning = false;
+		moduleMgr->disable();
 		Hooks::Restore();
 		logF("Removing logger");
 		Logger::Disable();
