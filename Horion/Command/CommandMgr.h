@@ -5,6 +5,7 @@
 #include "Commands/ICommand.h"
 #include "Commands/EjectCommand.h"
 #include "Commands/TeleportCommand.h"
+#include "Commands/BindCommand.h"
 
 #include <string>
 #include <vector>

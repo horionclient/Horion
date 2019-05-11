@@ -16,6 +16,10 @@ int IModule::getKeybind()
 	return this->keybind;
 }
 
+void IModule::setKeybind(int key) {
+	this->keybind = key;
+}
+
 void IModule::onTick(C_GameMode*)
 {
 }

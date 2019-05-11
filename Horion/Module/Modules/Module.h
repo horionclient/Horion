@@ -17,6 +17,7 @@ public:
 
 	virtual std::string getModuleName() = 0;
 	virtual int getKeybind();
+	virtual void setKeybind(int key);
 
 	virtual void onTick(C_GameMode*);
 	virtual void onKeyUpdate(int key, bool isDown);

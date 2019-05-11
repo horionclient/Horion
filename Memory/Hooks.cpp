@@ -179,9 +179,6 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 			auto* aliasList = c->getAliasList();
 			for (std::vector<std::string>::iterator it = aliasList->begin(); it != aliasList->end(); ++it) { // Loop through aliases
 				std::string cmd = *it;
-				//if (search.size() >= cmd.size()) // if the search is longer than the command, abort
-					//continue;
-
 				LilPlump plump;
 
 				for (size_t i = 0; i < search.size(); i++) { // Loop through search string
@@ -204,7 +201,6 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 					plump.command = c;
 					searchResults.emplace(plump);
 				}
-				
 
 			nope:
 				continue;
@@ -226,12 +222,12 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 				if(firstResult.command->getUsage()[0] == 0x0)
 					g_Data.getGuiData()->displayClientMessageF("%s%s %s- %s", WHITE, firstResult.cmdAlias.c_str(), GRAY, firstResult.command->getDescription());
 				else
-					g_Data.getGuiData()->displayClientMessageF("%s%s %s", WHITE, firstResult.cmdAlias.c_str(), firstResult.command->getUsage());
+					g_Data.getGuiData()->displayClientMessageF("%s%s %s %s- %s", WHITE, firstResult.cmdAlias.c_str(), firstResult.command->getUsage(), GRAY, firstResult.command->getDescription());
 			}
 			
 			if (firstResult.shouldReplace) {
 				text->setText(firstResult.cmdAlias); // Set text
-				// now sync with the UI thread that shows the cursor
+				// now sync with the UI thread that shows the cursor n stuff
 				// If we loose this sig we are kinda fucked
 				using syncShit = void(__fastcall*)(TextHolder*, TextHolder*);
 				static syncShit sync = reinterpret_cast<syncShit>(Utils::FindSignature("40 53 48 83 EC ?? 8B 0D ?? ?? ?? ?? 48 8B DA FF 15 ?? ?? ?? ?? 48 85 C0 74 ?? 48 83 38 00 74 ?? E8 ?? ?? ?? ?? 48 8B D3 48 8B 08 48 8B 01"));

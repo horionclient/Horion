@@ -12,6 +12,7 @@ CommandMgr::~CommandMgr()
 void CommandMgr::initCommands() {
 	commandList.push_back(new EjectCommand());
 	commandList.push_back(new TeleportCommand());
+	commandList.push_back(new BindCommand());
 }
 
 void CommandMgr::disable() {

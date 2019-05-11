@@ -163,7 +163,7 @@ public:
 	}
 
 	void setVelocity(vec3_t vel) {
-		this->velocity = vel;
+		Utils::CallVFunc<34, void, vec3_t>(this, vel);
 	}
 };
 
