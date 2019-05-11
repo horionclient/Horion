@@ -51,6 +51,16 @@ bool GameData::isKeyPressed(int key) {
 	return false;
 }
 
+bool GameData::shouldTerminate()
+{
+	return g_Data.shouldTerminateB;
+}
+
+void GameData::terminate()
+{
+	g_Data.shouldTerminateB = true;
+}
+
 void GameData::updateGameData(C_GameMode * gameMode)
 {
 	retrieveClientInstance();
@@ -75,7 +85,7 @@ void GameData::updateGameData(C_GameMode * gameMode)
 		}
 	}
 }
-void GameData::Chest_tick(C_ChestBlockActor * chest)
+void GameData::addChestToList(C_ChestBlockActor * chest)
 {
 	std::set<std::shared_ptr<AABB>>::iterator it;
 

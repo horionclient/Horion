@@ -7,7 +7,6 @@
 #include "../Utils/TextFormat.h"
 #include "SlimMem.h"
 
-
 class GameData {
 private:
 	C_ClientInstance* clientInstance;
@@ -16,14 +15,17 @@ private:
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
 	const SlimUtils::SlimModule* gameModule;
 	SlimUtils::SlimMem* slimMem;
+	bool shouldTerminateB = false;
 	static void retrieveClientInstance();
 public:
 	static bool canUseMoveKeys();
 	static bool isKeyDown(int key);
 	static bool isKeyPressed(int key);
+	static bool shouldTerminate();
+	static void terminate();
 	static void updateGameData(C_GameMode* gameMode);
 	static void initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem);
-	static void Chest_tick(C_ChestBlockActor * ChestBlock2);
+	static void addChestToList(C_ChestBlockActor * ChestBlock2);
 
 	C_ClientInstance* getClientInstance() { return clientInstance; };
 	C_LocalPlayer* getLocalPlayer() {

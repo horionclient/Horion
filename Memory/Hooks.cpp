@@ -110,7 +110,7 @@ void __fastcall Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a)
 {
 	static auto oTick = g_Hooks.ChestBlockActor_tickHook->GetOriginal<ChestBlockActor_tick_t>();
 	oTick(_this,a); // Call Original Func
-	GameData::Chest_tick(_this);
+	GameData::addChestToList(_this);
 }
 
 void Hooks::Actor_lerpMotion(C_Entity * _this, vec3_t motVec)
@@ -160,7 +160,8 @@ void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
 
 		if (*message == '.') {
 			logF("Command: %s", message);
-			logF("CommandAddr: %llX", message);
+			cmdMgr->execute(message);
+			//logF("CommandAddr: %llX", message);
 			//*message = 0x0; // Remove command in textbox
 			//*v6 = 0x0;
 			//*idk = 0x0;

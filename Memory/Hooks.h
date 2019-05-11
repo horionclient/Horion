@@ -9,6 +9,7 @@
 #include "../SDK/CMinecraftUIRenderContext.h"
 #include "../Horion/Module/ModuleManager.h"
 #include "../Horion/DrawUtils.h"
+#include "../Horion/Command/CommandMgr.h"
 
 #include <dxgi.h>
 

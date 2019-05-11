@@ -6,7 +6,7 @@ _Offsets Offsets = _Offsets();
 int bKillAura;
 SlimUtils::SlimMem mem;
 const SlimUtils::SlimModule* gameModule;
-static bool isRunning = true;
+bool isRunning = true;
 
 #if defined _M_X64
 #pragma comment(lib, "MinHook.x64.lib")
@@ -34,9 +34,9 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 	}
 
 	while (isRunning) {
-		if (GameData::isKeyDown('L') && GameData::isKeyDown(VK_CONTROL)) { // Press L to uninject
+		if (GameData::isKeyDown('L') && GameData::isKeyDown(VK_CONTROL) || GameData::shouldTerminate()) { // Press L to uninject
 			isRunning = false;
-			logF("Uninjecting...");
+			
 			break;
 		}
 		/*
@@ -106,6 +106,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		
 		Sleep(10); 
 	}
+	logF("Uninjecting...");
 
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1); // Uninject
 }
