@@ -10,6 +10,7 @@
 #include "../Horion/Module/ModuleManager.h"
 #include "../Horion/DrawUtils.h"
 #include "../Horion/Command/CommandMgr.h"
+#include "../Utils/TextFormat.h"
 
 #include <dxgi.h>
 
