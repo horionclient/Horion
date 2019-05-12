@@ -32,7 +32,7 @@ bool BindCommand::execute(std::vector<std::string>* args)
 	if (keyCode >= 0x41 && keyCode <= 0x5A) {
 		IModule* mod = moduleMgr->getModuleByName(moduleName);
 		if (mod == nullptr) {
-			clientMessageF("%sCould not find Module with name: %X", RED, moduleName.c_str());
+			clientMessageF("%sCould not find Module with name: %s", RED, moduleName.c_str());
 		}
 		else {
 			mod->setKeybind(keyCode);

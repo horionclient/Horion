@@ -132,6 +132,8 @@ void Hooks::Actor_lerpMotion(C_Entity * _this, vec3_t motVec)
 		// Do nothing i guess
 		// Do some stuff with modifiers here maybe
 		static void* networkSender = reinterpret_cast<void*>(Utils::FindSignature("EB ?? 4C 8B 64 24 ?? 49 8B 44 24 ?? 48 8B"));
+		if (networkSender == 0x0)
+			logF("Network Sender not Found!!!");
 		if (networkSender == _ReturnAddress()) // Check if we are being called from the network receiver
 			return;
 	}
@@ -171,7 +173,7 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 			bool operator<(const LilPlump &o) const {
 				return cmdAlias < o.cmdAlias;
 			}
-		};
+		}; // This is needed so the std::set sorts it alphabetically
 
 		std::set<LilPlump> searchResults;
 
@@ -185,7 +187,7 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 
 				for (size_t i = 0; i < search.size(); i++) { // Loop through search string
 					char car = search.at(i);
-					if (car == ' ') {
+					if (car == ' ' && i == cmd.size()) {
 						plump.shouldReplace = false;
 						break;
 					}
@@ -198,7 +200,7 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 				// Not at nope? Then we got a good result!
 				{
 					cmd.insert(0, 1, '.'); // Prepend the '.'
-					
+
 					plump.cmdAlias = cmd;
 					plump.command = c;
 					searchResults.emplace(plump);
@@ -228,6 +230,8 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 			}
 			
 			if (firstResult.shouldReplace) {
+				if (search.size() == firstResult.cmdAlias.size() - 1 && searchResults.size() == 1)
+					firstResult.cmdAlias.append(" ");
 				text->setText(firstResult.cmdAlias); // Set text
 				// now sync with the UI thread that shows the cursor n stuff
 				// If we loose this sig we are kinda fucked
