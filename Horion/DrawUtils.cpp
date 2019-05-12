@@ -204,7 +204,23 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)
 			drawLine(Screen1, Screen2, lineWidth);
 		}
 }
+void DrawUtils::rainbow(float* rcolors)
+{
+	if (rcolors[3] < 1) {
+		rcolors[0] = 1;
+		rcolors[1] = 0.2f;
+		rcolors[2] = 0.2f;
+		rcolors[3] = 1;
+	}
 
+	Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]); // perfect code, dont question this
+
+	rcolors[0] += 0.001f;
+	if (rcolors[0] >= 1)
+		rcolors[0] = 0;
+
+	Utils::ColorConvertHSVtoRGB(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);
+}
 void DrawUtils::drawEntityBox(C_Entity * ent, float lineWidth)
 {
 	vec3_t upper = vec3_t(ent->aabb.upper);

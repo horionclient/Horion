@@ -292,8 +292,10 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	int a = 0;
 	std::string textStr = std::string("Horion");
 	float leng = DrawUtils::getTextLength(&textStr);
+	static float rcolors[4];
+	DrawUtils::rainbow(rcolors);
 	DrawUtils::fillRectangle(vec4_t(lol-a-leng-1, y, lol, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-	DrawUtils::drawText(vec2_t((lol - a - 1-leng), y + 1), &textStr, new MC_Color(0.3f, 1, 0.3f, 1));
+	DrawUtils::drawText(vec2_t((lol - a - 1-leng), y + 1), &textStr, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
 
 	y += 12;
 
@@ -318,9 +320,10 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		textStr = strStream.str();
 
 		float leng = DrawUtils::getTextLength(&textStr);
-
+		static float rcolors[4];
+		DrawUtils::rainbow(rcolors);
 		DrawUtils::fillRectangle(vec4_t(lol - a - leng-1, y, lol, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-		DrawUtils::drawText(vec2_t((lol - a - leng), y + 1), &textStr, new MC_Color(0.3f, 1, 0.3f, 1));
+		DrawUtils::drawText(vec2_t((lol - a - leng), y + 1), &textStr, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
 		y += 12;
 	}
 	if (showShit) {

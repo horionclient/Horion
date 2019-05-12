@@ -14,8 +14,6 @@ struct MC_Color {
 		struct { float r, g, b, a; };
 		float arr[4];
 	};
-	
-
 	MC_Color(float r, float g, float b, float a) {
 		this->r = r;
 		this->g = g;
@@ -39,7 +37,7 @@ public:
 	//static void Begin(char one, int four, char zero, __int64 alsoZero);
 	//static void End();
 	static void drawText(vec2_t pos, std::string* text, MC_Color* color = nullptr, float textSize = 1, Fonts font = SMOOTH);
-	
+	static void rainbow(float* rcolors);
 	static void drawBox(vec3_t lower, vec3_t upper, float lineWidth);
 	static void drawChestBox(C_ChestBlockActor * ent, float lineWidth);
 	static void drawEntityBox(C_Entity* ent, float lineWidth);
