@@ -48,7 +48,7 @@ struct _1ptr1 {
 class C_Entity
 {
 public:
-	uintptr_t** vTable; //0x0000
+	//uintptr_t** vTable; //0x0000
 	_ptr1* ptrToPtrToEntList; //0x0008 
 private:
 	char pad_0x0010[0xD0]; //0x0010

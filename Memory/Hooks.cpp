@@ -131,7 +131,9 @@ void Hooks::Actor_lerpMotion(C_Entity * _this, vec3_t motVec)
 	else if (mod->isEnabled()) {
 		// Do nothing i guess
 		// Do some stuff with modifiers here maybe
-		return; // Dont call lerpMotion
+		static void* networkSender = reinterpret_cast<void*>(Utils::FindSignature("EB ?? 4C 8B 64 24 ?? 49 8B 44 24 ?? 48 8B"));
+		if (networkSender == _ReturnAddress()) // Check if we are being called from the network receiver
+			return;
 	}
 
 	oLerp(_this, motVec);
@@ -297,6 +299,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	y += 12;*/
 
+	bool showShit = g_Data.getLocalPlayer() == nullptr ? true : (GameData::canUseMoveKeys() ? true : false);
+
 	std::vector<IModule*>* modules = moduleMgr->getModuleList();
 	for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
 		if (!(*it)->isEnabled())
@@ -314,23 +318,25 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.3f, 1, 0.3f, 1));
 		y += 12;
 	}
+	if (showShit) {
+		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
+			if ((*it)->isEnabled())
+				continue;
+			std::string textStr = (*it)->getModuleName();
 
-	for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
-		if ((*it)->isEnabled())
-			continue;
-		std::string textStr = (*it)->getModuleName();
+			std::ostringstream strStream;
+			strStream << textStr;
+			strStream << " (" << (char)(*it)->getKeybind() << ")";
+			textStr = strStream.str();
 
-		std::ostringstream strStream;
-		strStream << textStr;
-		strStream << " (" << (char)(*it)->getKeybind() << ")";
-		textStr = strStream.str();
+			float leng = DrawUtils::getTextLength(&textStr);
 
-		float leng = DrawUtils::getTextLength(&textStr);
-
-		DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
-		DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.5f, 0.2f, 0.2f, 0.1f));
-		y += 12;
+			DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
+			DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.5f, 0.2f, 0.2f, 0.1f));
+			y += 12;
+		}
 	}
+	
 
 	DrawUtils::flush();
 
