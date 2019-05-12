@@ -32,7 +32,7 @@ std::wstring Logger::GetRoamingFolderPath()
 	uint32_t pathLength;
 	auto roamingPathCStr = roamingPathHString.GetRawBuffer(&pathLength);
 	return std::wstring(roamingPathCStr, pathLength);
-	
+
 }
 
 void Logger::WriteLogFileF(const char * fmt, ...)
@@ -40,10 +40,7 @@ void Logger::WriteLogFileF(const char * fmt, ...)
 	if (!loggerActive)
 		return;
 #ifdef _DEBUG
-	//try {
-
 	FILE* pFile;
-
 
 	if (!yeet) {
 		yeet = true;
@@ -63,7 +60,7 @@ void Logger::WriteLogFileF(const char * fmt, ...)
 	}
 	else EnterCriticalSection(&loggerLock);
 
-	pFile = _fsopen(logPath, "a", _SH_DENYWR);
+	pFile = _fsopen(logPath, "a", _SH_DENYWR); // Open File with DENY_WRITE so other programs can only read stuff from log
 	if (pFile != nullptr)
 	{
 		std::stringstream ssTime;
@@ -91,13 +88,6 @@ void Logger::WriteLogFileF(const char * fmt, ...)
 			LeaveCriticalSection(&vecLock);
 		}
 	}
-
-	//}
-	//catch (std::exception e) {
-	//	throw e;
-		// This throws an error when we cant acquire a lock on the logfile
-		// That can happen when another process opens the file, or my code is shit and the mutex isnt doing what its supposed to
-	//}
 	LeaveCriticalSection(&loggerLock);
 #endif
 }

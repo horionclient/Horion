@@ -26,3 +26,4 @@
 #include "../Directx/Directx.h"
 #include "Module/ModuleManager.h"
 #include "Command/CommandMgr.h"
+#include "Config/ConfigManager.h"

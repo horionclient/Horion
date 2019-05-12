@@ -16,6 +16,9 @@
 #include "Modules/Step.h"
 #include "Modules/Glide.h"
 #include "Modules/EditionFaker.h"
+#include "../../Utils/Json.hpp"
+
+using json = nlohmann::json;
 
 class ModuleManager {
 private:
@@ -25,6 +28,8 @@ public:
 	ModuleManager(GameData* gameData);
 	void initModules();
 	void disable();
+	void onLoadConfig(json* conf);
+	void onSaveConfig(json* conf);
 	void onTick(C_GameMode* gameMode);
 	void onKeyUpdate(int key, bool isDown);
 	void onPreRender();

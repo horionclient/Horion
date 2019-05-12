@@ -5,6 +5,8 @@
 class Jetpack :
 	public IModule
 {
+private:
+	float speedMod = 1;
 public:
 	Jetpack();
 	~Jetpack();

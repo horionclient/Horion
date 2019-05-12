@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Horion\Config\ConfigObj.cpp" />
     <ClCompile Include="Horion\Config\ConfigManager.cpp" />
     <ClCompile Include="Horion\Command\Commands\BindCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\EjectCommand.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="Utils\TextFormat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Horion\Config\ConfigObj.h" />
     <ClInclude Include="Horion\Config\ConfigManager.h" />
     <ClInclude Include="Horion\Command\Commands\BindCommand.h" />
     <ClInclude Include="Horion\Command\Commands\EjectCommand.h" />
@@ -196,6 +198,7 @@
     <ClInclude Include="Memory\Offsets.h" />
     <ClInclude Include="Horion\Module\Modules\Step.h" />
     <ClInclude Include="Horion\Command\Commands\TeleportCommand.h" />
+    <ClInclude Include="Utils\Json.hpp" />
     <ClInclude Include="Utils\TextFormat.h" />
     <ClInclude Include="SDK\TextHolder.h" />
     <ClInclude Include="Utils\HMath.h" />

@@ -32,6 +32,22 @@ void ModuleManager::disable()
 	}
 }
 
+void ModuleManager::onLoadConfig(json * conf)
+{
+	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
+		IModule* mod = *it;
+		mod->onLoadConfig(conf);
+	}
+}
+
+void ModuleManager::onSaveConfig(json * conf)
+{
+	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
+		IModule* mod = *it;
+		mod->onSaveConfig(conf);
+	}
+}
+
 void ModuleManager::onTick(C_GameMode * gameMode)
 {
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {

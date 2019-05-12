@@ -4,6 +4,7 @@
 
 Jetpack::Jetpack() : IModule('F')
 {
+	registerFloatSetting("speed", &this->speedMod, 1);
 }
 
 
@@ -27,8 +28,8 @@ void Jetpack::onTick(C_GameMode * gm)
 	float calcPitch = (gm->player->pitch)  * -(PI / 180);
 
 	vec3_t moveVec;
-	moveVec.x = cos(calcYaw) * cos(calcPitch);
-	moveVec.y = sin(calcPitch)				 ;
-	moveVec.z = sin(calcYaw) * cos(calcPitch);
+	moveVec.x = cos(calcYaw) * cos(calcPitch) * speedMod;
+	moveVec.y = sin(calcPitch)				  * speedMod;
+	moveVec.z = sin(calcYaw) * cos(calcPitch) * speedMod;
 	gm->player->setVelocity(moveVec);
 }

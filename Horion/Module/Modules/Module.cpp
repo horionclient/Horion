@@ -7,8 +7,29 @@ IModule::IModule(int key)
 	this->keybind = key;
 }
 
+void IModule::registerFloatSetting(std::string name, float* floatPtr, float defaultValue)
+{
+	SettingEntry* setting = new SettingEntry();
+	setting->valueType = FLOAT_T;
+	
+	setting->value = reinterpret_cast<SettingValue*>(floatPtr);
+
+	SettingValue* defaultVal = new SettingValue(); // Default Value
+	defaultVal->_float = defaultValue;
+	setting->defaultValue = defaultVal;
+
+	strcpy_s(setting->name, 19, name.c_str()); // Name
+
+	settings.push_back(setting); // Add to list
+}
+
 IModule::~IModule()
 {
+}
+
+std::string IModule::getRawModuleName()
+{
+	return getModuleName();
 }
 
 int IModule::getKeybind()
@@ -49,6 +70,73 @@ void IModule::onPreRender()
 
 void IModule::onPostRender()
 {
+}
+
+void IModule::onLoadConfig(json * conf)
+{
+	if (conf->contains(this->getRawModuleName())) {
+		auto obj = conf->at(this->getRawModuleName());
+		if (obj.is_null())
+			return;
+		for (auto it = this->settings.begin(); it != this->settings.end(); ++it) {
+			SettingEntry* sett = *it;
+			if (obj.contains(sett->name)) {
+				auto value = obj.at(sett->name);
+				if (value.is_null())
+					continue;
+				switch (sett->valueType) {
+				case FLOAT_T:
+					sett->value->_float = value.get<float>();
+					continue;
+				case DOUBLE_T:
+					sett->value->_double = value.get<double>();
+					continue;
+				case INT64_T:
+					sett->value->int64 = value.get<__int64>();
+					continue;
+				case INT_T:
+					sett->value->_int = value.get<int>();
+					continue;
+				case TEXT_T:
+					sett->value->text = &value.get<std::string>();
+					continue;
+				}
+			}
+		}
+	}
+	
+}
+
+void IModule::onSaveConfig(json * conf)
+{
+	std::string modName = getRawModuleName();
+	if (conf->contains(modName.c_str()))
+		conf->erase(modName.c_str());
+	
+	json obj = {};
+	//auto obj = conf->at(modName);
+	for (auto it = this->settings.begin(); it != this->settings.end(); ++it) {
+		SettingEntry* sett = *it;
+		switch (sett->valueType) {
+		case FLOAT_T:
+			obj.emplace(sett->name, sett->value->_float);
+			break;
+		case DOUBLE_T:
+			obj.emplace(sett->name, sett->value->_double);
+			break;
+		case INT64_T:
+			obj.emplace(sett->name, sett->value->int64);
+			break;
+		case INT_T:
+			obj.emplace(sett->name, sett->value->_int);
+			break;
+		case TEXT_T:
+			obj.emplace(sett->name, *sett->value->text);
+			break;
+		}
+	}
+	
+	conf->emplace(modName.c_str(), obj);
 }
 
 bool IModule::isFlashMode()

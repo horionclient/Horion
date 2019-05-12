@@ -130,6 +130,7 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	Hooks::Init();
 	cmdMgr->initCommands();
 	moduleMgr->initModules();
+	configMgr->init();
 
 	logF("Starting threads...");
 	
@@ -156,6 +157,7 @@ DllMain(HMODULE hModule,
 		isRunning = false;
 		moduleMgr->disable();
 		cmdMgr->disable();
+		configMgr->saveConfig();
 		Hooks::Restore();
 		logF("Removing logger");
 		Logger::Disable();
