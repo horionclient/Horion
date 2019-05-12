@@ -38,6 +38,7 @@ private:
 	static void Actor_lerpMotion(C_Entity* _this, vec3_t);
 	static __int64 AppPlatform_getGameEdition(__int64 _this);
 	static void pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4);
+	static void sendToServer(C_LoopbackPacketSender* a, C_Packet* packet);
 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
@@ -52,6 +53,8 @@ private:
 	std::unique_ptr<FuncHook> Actor_lerpMotionHook;
 	std::unique_ptr<FuncHook> AppPlatform_getGameEditionHook;
 	std::unique_ptr<FuncHook> autoComplete_Hook;
+	std::unique_ptr<FuncHook> sendToServerHook;
+
 
 	typedef void(__fastcall* autoComplete_t)(__int64 a1, __int64 a2, TextHolder* text, int a4);
 	typedef __int64(__fastcall* AppPlatform_getGameEdition_t)(__int64);
@@ -66,6 +69,8 @@ private:
 	typedef TextHolder*(__fastcall* Options_getVersionString_t)(void* _this, __int64);
 	typedef HRESULT(__stdcall* d3d11_present_t)(IDXGISwapChain * pSwapChain, UINT SyncInterval, UINT Flags);
 	typedef void(__fastcall* ChestBlockActor_tick_t)(void* _this,void*);
+	typedef void(__fastcall* ChestBlockActor_tick_t)(void* _this, void*);
+	typedef void(__fastcall* sendToServer_tick_t)(C_LoopbackPacketSender* a, C_Packet* packet);
 };
 
 extern Hooks g_Hooks;

@@ -73,6 +73,10 @@ void Hooks::Init()
 	void* autoComplete = reinterpret_cast<void*>(Utils::FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 44 89 4C 24 ?? 4D 8B F8"));
 	g_Hooks.autoComplete_Hook = std::make_unique <FuncHook>(autoComplete, Hooks::pleaseAutoComplete);
 	g_Hooks.autoComplete_Hook->init();
+
+	void* sendtoServer = reinterpret_cast<void*>(Utils::FindSignature("48 89 5C 24 08 57 48 ?? ?? ?? ?? ?? ?? 0F B6 41 ?? 48 8B FA 88 42 ?? 48 8D 54 24 ?? 48 8B 59 ?? 48 8B CB E8 ?? ?? ?? ?? 48 8B D0 45 33 C9")); 
+	g_Hooks.sendToServerHook = std::make_unique <FuncHook>(sendtoServer, Hooks::sendToServer);
+	g_Hooks.sendToServerHook->init();
 	//logF("Hooks hooked");
 }
 
@@ -155,6 +159,23 @@ __int64 Hooks::AppPlatform_getGameEdition(__int64 _this)
 	}
 
 	return oGetEditon(_this);
+}
+void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
+{
+	static auto oFunc = g_Hooks.sendToServerHook->GetOriginal<sendToServer_tick_t>();
+
+	static Freecam* mod = static_cast<Freecam*>(moduleMgr->getModule<Freecam>());
+	if (mod == nullptr)
+		mod = static_cast<Freecam*>(moduleMgr->getModule<Freecam>());
+	else if (mod->isEnabled()) {
+		// Do nothing i guess
+		// Do some stuff with modifiers here maybe
+		C_MovePlayerPacket* frenchBoy = new C_MovePlayerPacket();
+		if(frenchBoy->vTable == packet->vTable)
+		return; // Dont call sendToServer
+	}
+
+	oFunc(a,packet);
 }
 
 void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4)
@@ -290,14 +311,6 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	float y = 0;
 	int a = 0;
-	std::string textStr = std::string("Horion");
-	float leng = DrawUtils::getTextLength(&textStr);
-	static float rcolors[4];
-	DrawUtils::rainbow(rcolors);
-	DrawUtils::fillRectangle(vec4_t(lol-a-leng-1, y, lol, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-	DrawUtils::drawText(vec2_t((lol - a - 1-leng), y + 1), &textStr, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
-
-	y += 12;
 
 	/*textStr = std::string("Close (CTRL + L)");
 	leng = DrawUtils::getTextLength(&textStr);
@@ -307,11 +320,26 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	y += 12;*/
 
 	bool showShit = g_Data.getLocalPlayer() == nullptr ? true : (GameData::canUseMoveKeys() ? true : false);
-
+	bool firstTime = true;
 	std::vector<IModule*>* modules = moduleMgr->getModuleList();
 	for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
 		if (!(*it)->isEnabled())
 			continue;
+		//if (yep)
+		{
+			std::string textStr1 = std::string("Horion");
+			float leng1 = DrawUtils::getTextLength(&textStr1);
+			static float rcolors[4];
+			DrawUtils::rainbow(rcolors);
+			DrawUtils::fillRectangle(vec4_t(lol - a - leng1 - 1, 0, lol, 0 + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+			DrawUtils::drawText(vec2_t((lol - a - 1 - leng1), 0 + 1), &textStr1, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
+			
+		}
+		if (firstTime)
+		{
+			y += 12;
+		}
+		firstTime = false;
 		std::string textStr = (*it)->getModuleName();
 
 		std::ostringstream strStream;

@@ -19,6 +19,8 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Step());
 	this->moduleList.push_back(new Glide());
 	this->moduleList.push_back(new EditionFaker());
+	this->moduleList.push_back(new Phase());
+	this->moduleList.push_back(new Freecam());
 
 	this->getModule<RainbowSky>()->setEnabled(true);
 }

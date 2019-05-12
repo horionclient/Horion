@@ -3,7 +3,8 @@
 #include "../Utils/Logger.h"
 
 class C_Packet {
-
+public:
+	uintptr_t** vTable; //0x0000
 };
 
 

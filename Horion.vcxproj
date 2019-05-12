@@ -136,6 +136,7 @@
     <ClCompile Include="Horion\Command\CommandMgr.cpp" />
     <ClCompile Include="Horion\Command\Commands\ICommand.cpp" />
     <ClCompile Include="Horion\Module\Modules\EditionFaker.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Freecam.cpp" />
     <ClCompile Include="Horion\Module\Modules\Glide.cpp" />
     <ClCompile Include="Horion\Module\Modules\AirJump.cpp" />
     <ClCompile Include="Directx\Directx.cpp" />
@@ -148,6 +149,7 @@
     <ClCompile Include="Horion\Module\Modules\Killaura.cpp" />
     <ClCompile Include="Horion\Module\Modules\Jetpack.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoKnockBack.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Phase.cpp" />
     <ClCompile Include="Horion\Module\Modules\TriggerBot.cpp" />
     <ClCompile Include="Memory\GameData.cpp" />
     <ClCompile Include="Memory\Hooks.cpp" />
@@ -168,6 +170,7 @@
     <ClInclude Include="Horion\Command\CommandMgr.h" />
     <ClInclude Include="Horion\Command\Commands\ICommand.h" />
     <ClInclude Include="Horion\Module\Modules\EditionFaker.h" />
+    <ClInclude Include="Horion\Module\Modules\Freecam.h" />
     <ClInclude Include="Horion\Module\Modules\Glide.h" />
     <ClInclude Include="Horion\Module\Modules\AirJump.h" />
     <ClInclude Include="Directx\Directx.h" />
@@ -180,6 +183,7 @@
     <ClInclude Include="Horion\Module\Modules\Killaura.h" />
     <ClInclude Include="Horion\Module\Modules\Jetpack.h" />
     <ClInclude Include="Horion\Module\Modules\NoKnockBack.h" />
+    <ClInclude Include="Horion\Module\Modules\Phase.h" />
     <ClInclude Include="Horion\Module\Modules\TriggerBot.h" />
     <ClInclude Include="Memory\GameData.h" />
     <ClInclude Include="Memory\Hooks.h" />

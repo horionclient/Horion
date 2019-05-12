@@ -16,6 +16,8 @@
 #include "Modules/Step.h"
 #include "Modules/Glide.h"
 #include "Modules/EditionFaker.h"
+#include "Modules/Phase.h"
+#include "Modules/Freecam.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;
