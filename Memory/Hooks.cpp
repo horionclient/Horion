@@ -280,6 +280,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	static auto oText = g_Hooks.renderTextHook->GetOriginal<renderText_t>();
 
 	DrawUtils::setCtx(renderCtx, g_Data.getClientInstance()->getGuiData());
+	float lol = g_Data.getClientInstance()->getGuiData()->widthGame;
 	moduleMgr->onPreRender();
 	DrawUtils::flush();
 	
@@ -288,11 +289,11 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	moduleMgr->onPostRender();
 
 	float y = 0;
-
+	int a = 0;
 	std::string textStr = std::string("Horion");
 	float leng = DrawUtils::getTextLength(&textStr);
-	DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-	DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.3f, 1, 0.3f, 1));
+	DrawUtils::fillRectangle(vec4_t(lol-a-leng-1, y, lol, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+	DrawUtils::drawText(vec2_t((lol - a - 1-leng), y + 1), &textStr, new MC_Color(0.3f, 1, 0.3f, 1));
 
 	y += 12;
 
@@ -318,8 +319,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 		float leng = DrawUtils::getTextLength(&textStr);
 
-		DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-		DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.3f, 1, 0.3f, 1));
+		DrawUtils::fillRectangle(vec4_t(lol - a - leng-1, y, lol, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+		DrawUtils::drawText(vec2_t((lol - a - leng), y + 1), &textStr, new MC_Color(0.3f, 1, 0.3f, 1));
 		y += 12;
 	}
 	if (showShit) {
@@ -335,8 +336,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 			float leng = DrawUtils::getTextLength(&textStr);
 
-			DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
-			DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.5f, 0.2f, 0.2f, 0.1f));
+			DrawUtils::fillRectangle(vec4_t(lol - a-1 - leng-1, y, lol, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
+			DrawUtils::drawText(vec2_t((lol - a - 1-leng), y + 1), &textStr, new MC_Color(0.5f, 0.2f, 0.2f, 0.1f));
 			y += 12;
 		}
 	}
