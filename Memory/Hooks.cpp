@@ -1,8 +1,10 @@
 #include "Hooks.h"
 #include "../Directx/Directx.h"
+#include <cmath>
 
 Hooks    g_Hooks;
 bool firstTime = true;
+
 void Hooks::Init()
 {
 	logF("Setting up Hooks...");
@@ -34,7 +36,7 @@ void Hooks::Init()
 		g_Hooks.d3d11_presentHook = std::make_unique<FuncHook>(presentFunc, Hooks::d3d11_present);
 		g_Hooks.d3d11_presentHook->init();
 	}
-	
+
 
 	// 
 	void* _shit = reinterpret_cast<void*>(Utils::FindSignature("30 5F C3 CC 48 8B C4 55 56 57 41 54") + 4);
@@ -74,7 +76,7 @@ void Hooks::Init()
 	g_Hooks.autoComplete_Hook = std::make_unique <FuncHook>(autoComplete, Hooks::pleaseAutoComplete);
 	g_Hooks.autoComplete_Hook->init();
 
-	void* sendtoServer = reinterpret_cast<void*>(Utils::FindSignature("48 89 5C 24 08 57 48 ?? ?? ?? ?? ?? ?? 0F B6 41 ?? 48 8B FA 88 42 ?? 48 8D 54 24 ?? 48 8B 59 ?? 48 8B CB E8 ?? ?? ?? ?? 48 8B D0 45 33 C9")); 
+	void* sendtoServer = reinterpret_cast<void*>(Utils::FindSignature("48 89 5C 24 08 57 48 ?? ?? ?? ?? ?? ?? 0F B6 41 ?? 48 8B FA 88 42 ?? 48 8D 54 24 ?? 48 8B 59 ?? 48 8B CB E8 ?? ?? ?? ?? 48 8B D0 45 33 C9"));
 	g_Hooks.sendToServerHook = std::make_unique <FuncHook>(sendtoServer, Hooks::sendToServer);
 	g_Hooks.sendToServerHook->init();
 	//logF("Hooks hooked");
@@ -118,7 +120,7 @@ void __fastcall Hooks::SurvivalMode_tick(C_GameMode * _this)
 void __fastcall Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a)
 {
 	static auto oTick = g_Hooks.ChestBlockActor_tickHook->GetOriginal<ChestBlockActor_tick_t>();
-	oTick(_this,a); // Call Original Func
+	oTick(_this, a); // Call Original Func
 	GameData::addChestToList(_this);
 }
 
@@ -171,11 +173,11 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 		// Do nothing i guess
 		// Do some stuff with modifiers here maybe
 		C_MovePlayerPacket* frenchBoy = new C_MovePlayerPacket();
-		if(frenchBoy->vTable == packet->vTable)
-		return; // Dont call sendToServer
+		if (frenchBoy->vTable == packet->vTable)
+			return; // Dont call sendToServer
 	}
 
-	oFunc(a,packet);
+	oFunc(a, packet);
 }
 
 void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4)
@@ -214,7 +216,7 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 					}
 					else if (i >= cmd.size())
 						goto nope;
-						
+
 					if (car != cmd.at(i)) // and compare
 						goto nope;
 				}
@@ -244,12 +246,12 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 			}
 			else {
 				g_Data.getGuiData()->displayClientMessageF("==========");
-				if(firstResult.command->getUsage()[0] == 0x0)
+				if (firstResult.command->getUsage()[0] == 0x0)
 					g_Data.getGuiData()->displayClientMessageF("%s%s %s- %s", WHITE, firstResult.cmdAlias.c_str(), GRAY, firstResult.command->getDescription());
 				else
 					g_Data.getGuiData()->displayClientMessageF("%s%s %s %s- %s", WHITE, firstResult.cmdAlias.c_str(), firstResult.command->getUsage(), GRAY, firstResult.command->getDescription());
 			}
-			
+
 			if (firstResult.shouldReplace) {
 				if (search.size() == firstResult.cmdAlias.size() - 1 && searchResults.size() == 1)
 					firstResult.cmdAlias.append(" ");
@@ -260,13 +262,13 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 				static syncShit sync = reinterpret_cast<syncShit>(Utils::FindSignature("40 53 48 83 EC ?? 8B 0D ?? ?? ?? ?? 48 8B DA FF 15 ?? ?? ?? ?? 48 85 C0 74 ?? 48 83 38 00 74 ?? E8 ?? ?? ?? ?? 48 8B D3 48 8B 08 48 8B 01"));
 				sync(text, text);
 			}
-			
+
 		}
 
 		return;
 	}
 	oAutoComplete(a1, a2, text, a4);
-	
+
 }
 
 void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
@@ -304,13 +306,44 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	float lol = g_Data.getClientInstance()->getGuiData()->widthGame;
 	moduleMgr->onPreRender();
 	DrawUtils::flush();
-	
+
 	__int64 retval = oText(yeet, renderCtx);
 
 	moduleMgr->onPostRender();
 
 	float y = 0;
-	int a = 0;
+	AABB pos;
+	if (g_Data.getLocalPlayer() != nullptr)
+	{
+		pos = g_Data.getLocalPlayer()->aabb;
+		pos.lower.x = (1. / 10.) * floor(pos.lower.x * 10.);
+		pos.lower.y = (1. / 10.) * floor(pos.lower.y * 10.);
+		pos.lower.z = (1. / 10.) * floor(pos.lower.z * 10.);
+		pos.upper.x = (1. / 10.) * floor(pos.upper.x * 10.);
+		pos.upper.y = (1. / 10.) * floor(pos.upper.y * 10.);
+		pos.upper.z = (1. / 10.) * floor(pos.upper.z * 10.);
+	}
+	
+	std::ostringstream showCoords;
+	std::ostringstream showOriCoords;
+	std::string textStr1 = std::string("Horion");
+	std::string Origin = std::string("Origin: ");
+	std::string x_text = "X: ";
+	std::string y_text = "Y: ";
+	std::string z_text = "Z: ";
+	std::string Ox_text = "X: ";
+	std::string Oy_text = "Y: ";
+	std::string Oz_text = "Z: ";
+
+	showCoords << x_text << pos.lower.x << " " << y_text << pos.lower.y << " " << z_text << pos.lower.z;
+	showOriCoords << Origin << x_text << pos.upper.x << " " << y_text << pos.upper.y << " " << z_text << pos.upper.z;
+	x_text = showCoords.str();
+	Ox_text = showOriCoords.str();
+	float leng1 = DrawUtils::getTextLength(&textStr1);
+	float leng_text;
+	float leng_Ori;
+	leng_text = DrawUtils::getTextLength(&x_text);
+	leng_Ori = DrawUtils::getTextLength(&Ox_text);
 
 	/*textStr = std::string("Close (CTRL + L)");
 	leng = DrawUtils::getTextLength(&textStr);
@@ -318,65 +351,76 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.5f, 0.5f, 0.5f, 1));
 
 	y += 12;*/
-
 	bool showShit = g_Data.getLocalPlayer() == nullptr ? true : (GameData::canUseMoveKeys() ? true : false);
-	bool firstTime = true;
+
 	std::vector<IModule*>* modules = moduleMgr->getModuleList();
+	static float rcolors[4];
 	for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
 		if (!(*it)->isEnabled())
+		{
+			if ((it + 1) == modules->end())
+			{
+				DrawUtils::rainbow(rcolors);
+				DrawUtils::fillRectangle(vec4_t(lol - leng1 - 1, 0, lol, 0 + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+				DrawUtils::drawText(vec2_t((lol - 1 - leng1), 0 + 1), &textStr1, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
+				DrawUtils::fillRectangle(vec4_t(lol - leng_text - 1, 12, lol, 24), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+				DrawUtils::drawText(vec2_t((lol - 1 - leng_text), 12 + 1), &x_text, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
+				DrawUtils::fillRectangle(vec4_t(lol - leng_Ori - 1, 12+12, lol, 24+12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+				DrawUtils::drawText(vec2_t((lol - 1 - leng_Ori), 24 + 1), &Ox_text, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
+				y += 12*3;
+			}
 			continue;
-		//if (yep)
-		{
-			std::string textStr1 = std::string("Horion");
-			float leng1 = DrawUtils::getTextLength(&textStr1);
-			static float rcolors[4];
-			DrawUtils::rainbow(rcolors);
-			DrawUtils::fillRectangle(vec4_t(lol - a - leng1 - 1, 0, lol, 0 + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-			DrawUtils::drawText(vec2_t((lol - a - 1 - leng1), 0 + 1), &textStr1, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
-			
 		}
-		if (firstTime)
-		{
-			y += 12;
-		}
+
+		DrawUtils::rainbow(rcolors);
+		DrawUtils::fillRectangle(vec4_t(lol - leng1 - 1, 0, lol, 0 + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+		DrawUtils::drawText(vec2_t((lol - 1 - leng1), 0 + 1), &textStr1, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
+		DrawUtils::fillRectangle(vec4_t(lol - leng_text - 1, 12, lol, 24), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+		DrawUtils::drawText(vec2_t((lol - 1 - leng_text), 12 + 1), &x_text, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
+		DrawUtils::fillRectangle(vec4_t(lol - leng_Ori - 1, 12 + 12, lol, 24 + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+		DrawUtils::drawText(vec2_t((lol - 1 - leng_Ori), 24 + 1), &Ox_text, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
+
+		y += 24+12;
+
 		firstTime = false;
 		std::string textStr = (*it)->getModuleName();
 
 		std::ostringstream strStream;
 		strStream << textStr;
-		strStream << " (" << (char) (*it)->getKeybind() << ")";
+		strStream << " [" << (char)(*it)->getKeybind() << "]";
 		textStr = strStream.str();
 
 		float leng = DrawUtils::getTextLength(&textStr);
-		static float rcolors[4];
+		//		static float rcolors[4];
 		DrawUtils::rainbow(rcolors);
-		DrawUtils::fillRectangle(vec4_t(lol - a - leng-1, y, lol, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-		DrawUtils::drawText(vec2_t((lol - a - leng), y + 1), &textStr, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
-		y += 12;
+		DrawUtils::fillRectangle(vec4_t(lol - leng - 1, y, lol, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+		DrawUtils::drawText(vec2_t((lol - leng), y + 1), &textStr, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
+		y -= 24;
 	}
 	if (showShit) {
 		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
 			if ((*it)->isEnabled())
 				continue;
+
 			std::string textStr = (*it)->getModuleName();
 
 			std::ostringstream strStream;
 			strStream << textStr;
-			strStream << " (" << (char)(*it)->getKeybind() << ")";
+			strStream << " [" << (char)(*it)->getKeybind() << "]";
 			textStr = strStream.str();
 
 			float leng = DrawUtils::getTextLength(&textStr);
 
-			DrawUtils::fillRectangle(vec4_t(lol - a-1 - leng-1, y, lol, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
-			DrawUtils::drawText(vec2_t((lol - a - 1-leng), y + 1), &textStr, new MC_Color(0.5f, 0.2f, 0.2f, 0.1f));
+			DrawUtils::fillRectangle(vec4_t(lol - 1 - leng - 1, y, lol, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
+			DrawUtils::drawText(vec2_t((lol - 1 - leng), y + 1), &textStr, new MC_Color(0.5f, 0.2f, 0.2f, 0.1f));
 			y += 12;
 		}
 	}
-	
+
 
 	DrawUtils::flush();
 
-	return retval; 
+	return retval;
 }
 
 char* __fastcall Hooks::I8n_get(void* f, char* str)
@@ -411,9 +455,9 @@ float * Hooks::Dimension_getFogColor(__int64 a1, float * color, float brightness
 	static float rcolors[4];
 
 	static IModule* mod = moduleMgr->getModule<RainbowSky>();
-	if(mod == nullptr)
+	if (mod == nullptr)
 		mod = moduleMgr->getModule<RainbowSky>();
-	else if(mod->isEnabled()){
+	else if (mod->isEnabled()) {
 		if (rcolors[3] < 1) {
 			rcolors[0] = 1;
 			rcolors[1] = 0.2f;
@@ -433,7 +477,7 @@ float * Hooks::Dimension_getFogColor(__int64 a1, float * color, float brightness
 	}
 	return oGetFogColor(a1, color, brightness);
 
-	
+
 }
 
 void Hooks::GameMode_destroyBlock(void * _this, C_BlockPos * pos, uint8_t face)

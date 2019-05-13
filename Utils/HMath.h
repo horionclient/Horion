@@ -420,7 +420,7 @@ struct glmatrixf
 struct AABB {
 	vec3_t lower;
 	vec3_t upper;
-
+	AABB() {}
 	AABB(const AABB &aabb) {
 		lower = vec3_t(aabb.lower);
 		upper = vec3_t(aabb.upper);
