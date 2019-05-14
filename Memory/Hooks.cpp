@@ -359,7 +359,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 			float leng = DrawUtils::getTextLength(&textStr);
 			//DrawUtils::rainbow(rcolors);
-			DrawUtils::fillRectangle(vec4_t(widthGame - leng - 1, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+			DrawUtils::fillRectangle(vec4_t(widthGame - leng - 2, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
 			DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(rcolors));
 			y += 12;
 		}
@@ -377,7 +377,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 				float leng = DrawUtils::getTextLength(&textStr);
 
-				DrawUtils::fillRectangle(vec4_t(widthGame - leng - 1, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
+				DrawUtils::fillRectangle(vec4_t(widthGame - leng - 2, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
 				DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(0.5f, 0.2f, 0.2f, 0.1f));
 				y += 12;
 			}
