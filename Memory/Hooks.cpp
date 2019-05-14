@@ -354,7 +354,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 			std::ostringstream strStream;
 			strStream << textStr;
-			strStream << " [" << (char)(*it)->getKeybind() << "]";
+			strStream << " [" << Utils::getKeybindName((*it)->getKeybind()) << "]";
 			textStr = strStream.str();
 
 			float leng = DrawUtils::getTextLength(&textStr);
@@ -372,7 +372,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 				std::ostringstream strStream;
 				strStream << textStr;
-				strStream << " [" << (char)(*it)->getKeybind() << "]";
+				strStream << " [" << Utils::getKeybindName((*it)->getKeybind()) << "]";
 				textStr = strStream.str();
 
 				float leng = DrawUtils::getTextLength(&textStr);
