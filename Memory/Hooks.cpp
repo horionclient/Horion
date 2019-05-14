@@ -337,8 +337,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		static std::string textStr1 = std::string("Horion");
 		static float leng1 = DrawUtils::getTextLength(&textStr1);
 		
-		DrawUtils::fillRectangle(vec4_t(widthGame - leng1 - 1, 0, widthGame, 0 + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
-		DrawUtils::drawText(vec2_t((widthGame - leng1 - 1), 0 + 1), &textStr1, new MC_Color(rcolors));
+		DrawUtils::fillRectangle(vec4_t(widthGame - leng1 - 2, 0, widthGame, y + 12), MC_Color(0.1f, 0.1f, 0.1f, 0.1f), 0.7f);
+		DrawUtils::drawText(vec2_t((widthGame - leng1 - 1), 0 + 1), &textStr1, new MC_Color(1, 1, 1, 1));
 		y += 12;
 	}
 	
