@@ -23,6 +23,8 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Freecam());
 
 	this->getModule<RainbowSky>()->setEnabled(true);
+
+	initialized = true;
 }
 
 void ModuleManager::disable()

@@ -315,7 +315,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	float leng1 = DrawUtils::getTextLength(&textStr1);
 	static float rcolors[4];
 	DrawUtils::rainbow(rcolors);
-	DrawUtils::fillRectangle(vec4_t(widthGame - leng1 - 1, 0, widthGame, 0 + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+	DrawUtils::fillRectangle(vec4_t(widthGame - leng1 - 1, 0, widthGame, 0 + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
 	DrawUtils::drawText(vec2_t((widthGame - leng1 - 1), 0 + 1), &textStr1, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
 	y += 12;
 	DrawUtils::drawCoords(widthGame, y , rcolors);
@@ -327,32 +327,13 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	y += 12;*/
 
 	bool showShit = g_Data.getLocalPlayer() == nullptr ? true : (GameData::canUseMoveKeys() ? true : false);
-	bool firstTime = true;
-	std::vector<IModule*>* modules = moduleMgr->getModuleList();
-	y += 24;
-	for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
-		if (!(*it)->isEnabled())
-			continue;
-
-
-		std::string textStr = (*it)->getModuleName();
-
-		std::ostringstream strStream;
-		strStream << textStr;
-		strStream << " [" << (char)(*it)->getKeybind() << "]";
-		textStr = strStream.str();
-
-		float leng = DrawUtils::getTextLength(&textStr);
-		//DrawUtils::rainbow(rcolors);
-		DrawUtils::fillRectangle(vec4_t(widthGame - leng - 1, y, widthGame, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-		DrawUtils::drawText(vec2_t((widthGame- leng-1), y + 1), &textStr, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
-		y += 12;
-	}
-	if (showShit) {
+	if (moduleMgr->isInitialized()) {
+		std::vector<IModule*>* modules = moduleMgr->getModuleList();
+		y += 24;
 		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
-			if ((*it)->isEnabled())
+			if (!(*it)->isEnabled())
 				continue;
-			
+
 			std::string textStr = (*it)->getModuleName();
 
 			std::ostringstream strStream;
@@ -361,13 +342,31 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 			textStr = strStream.str();
 
 			float leng = DrawUtils::getTextLength(&textStr);
-
-			DrawUtils::fillRectangle(vec4_t(widthGame - leng - 1, y, widthGame, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
-			DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(0.5f, 0.2f, 0.2f, 0.1f));
+			//DrawUtils::rainbow(rcolors);
+			DrawUtils::fillRectangle(vec4_t(widthGame - leng - 1, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+			DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
 			y += 12;
 		}
-	}
+		if (showShit) {
+			for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
+				if ((*it)->isEnabled())
+					continue;
 
+				std::string textStr = (*it)->getModuleName();
+
+				std::ostringstream strStream;
+				strStream << textStr;
+				strStream << " [" << (char)(*it)->getKeybind() << "]";
+				textStr = strStream.str();
+
+				float leng = DrawUtils::getTextLength(&textStr);
+
+				DrawUtils::fillRectangle(vec4_t(widthGame - leng - 1, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
+				DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(0.5f, 0.2f, 0.2f, 0.1f));
+				y += 12;
+			}
+		}
+	}
 
 	DrawUtils::flush();
 
@@ -377,14 +376,6 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 char* __fastcall Hooks::I8n_get(void* f, char* str)
 {
 	static auto oGet = g_Hooks.renderTextHook->GetOriginal<I8n_get_t>();
-
-	//static char* shit = "yeet";
-
-	//BigCantWork yote;
-	//strcpy_s(yote.boiii, 16, shit);
-	//yote.length1 = 4;
-	//yote.length2 = 4;
-	//yote.length3 = 4;
 
 	//if (strcmp(str, "menu.play") == 0)
 		//return &yote;

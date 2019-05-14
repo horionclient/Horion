@@ -14,6 +14,14 @@ struct MC_Color {
 		struct { float r, g, b, a; };
 		float arr[4];
 	};
+
+	MC_Color(MC_Color& other) {
+		this->r = other.r;
+		this->g = other.g;
+		this->b = other.b;
+		this->a = other.a;
+	}
+
 	MC_Color(float r, float g, float b, float a) {
 		this->r = r;
 		this->g = g;
@@ -33,10 +41,10 @@ public:
 	static float getTextLength(std::string* textStr, float textSize = 1, Fonts font = SMOOTH);
 	
 	static void drawLine(vec2_t start, vec2_t end, float lineWidth); // rgba
-	static void fillRectangle(vec4_t pos, MC_Color* col, float alpha);
+	static void fillRectangle(vec4_t pos, MC_Color col, float alpha);
 	//static void Begin(char one, int four, char zero, __int64 alsoZero);
 	//static void End();
-	static void drawText(vec2_t pos, std::string* text, MC_Color* color = nullptr, float textSize = 1, Fonts font = SMOOTH);
+	static void drawText(vec2_t pos, std::string* text, MC_Color *color = nullptr, float textSize = 1, Fonts font = SMOOTH);
 	static void rainbow(float* rcolors);
 	static void drawBox(vec3_t lower, vec3_t upper, float lineWidth);
 	static void drawChestBox(C_ChestBlockActor * ent, float lineWidth);

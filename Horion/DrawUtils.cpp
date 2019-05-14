@@ -115,7 +115,7 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth)
 
 }
 
-void DrawUtils::fillRectangle(vec4_t pos, MC_Color * col, float alpha)
+void DrawUtils::fillRectangle(vec4_t pos, MC_Color col, float alpha)
 {
 	float* posF = new float[4]; // vec4_t(startX, startY, endX, endY);
 	posF[0] = pos.x;
@@ -123,12 +123,15 @@ void DrawUtils::fillRectangle(vec4_t pos, MC_Color * col, float alpha)
 	posF[2] = pos.y;
 	posF[3] = pos.w;
 
-	renderCtx->fillRectangle(posF, reinterpret_cast<float*>(col), alpha);
+	MC_Color* c = new MC_Color(col);
+
+	renderCtx->fillRectangle(posF, reinterpret_cast<float*>(c), alpha);
+	delete c;
 
 	delete[] posF;
 }
 
-void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color * color, float textSize, Fonts font)
+void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color *color, float textSize, Fonts font)
 {
 	static MC_Color* WHITE_COLOR = new MC_Color(1, 1, 1, 1);
 	if (color == nullptr)
@@ -147,6 +150,8 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color * color, flo
 	static float size = 1;
 	size = textSize;
 	renderCtx->drawText(g_Data.getClientInstance()->minecraftGame->getTheGoodFontThankYou(), posF, text, color->arr, 1, 0, &size, &oof);
+
+	delete text;
 }
 
 void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)
@@ -280,7 +285,7 @@ void DrawUtils::drawCoords(float width, float y, float *hcolors)
 	show = showCoords.str();
 	float leng = DrawUtils::getTextLength(&show);
 	
-	DrawUtils::fillRectangle(vec4_t(width - leng - 1, y, width, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+	DrawUtils::fillRectangle(vec4_t(width - leng - 1, y, width, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
 	DrawUtils::drawText(vec2_t((width - leng-1), y + 1), &show, new MC_Color(hcolors[0], hcolors[1], hcolors[2], hcolors[3]));
 
 	showCoords.str(std::string());
@@ -288,7 +293,7 @@ void DrawUtils::drawCoords(float width, float y, float *hcolors)
 	show = showCoords.str();
 	leng = DrawUtils::getTextLength(&show);
 
-	DrawUtils::fillRectangle(vec4_t(width - leng - 1, y + 12, width, y + 24), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+	DrawUtils::fillRectangle(vec4_t(width - leng - 1, y + 12, width, y + 24), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
 	DrawUtils::drawText(vec2_t((width - leng-1), 24 + 1), &show, new MC_Color(hcolors[0], hcolors[1], hcolors[2], hcolors[3]));
 }
 

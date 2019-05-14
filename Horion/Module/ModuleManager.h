@@ -26,6 +26,7 @@ class ModuleManager {
 private:
 	GameData* gameData;
 	std::vector<IModule*> moduleList;
+	bool initialized = false;
 public:
 	ModuleManager(GameData* gameData);
 	void initModules();
@@ -36,6 +37,8 @@ public:
 	void onKeyUpdate(int key, bool isDown);
 	void onPreRender();
 	void onPostRender();
+
+	bool isInitialized() { return initialized; };
 	std::vector<IModule*>* getModuleList();
 
 	/*
