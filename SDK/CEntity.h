@@ -160,11 +160,15 @@ public:
 
 	int getEntityTypeId() {
 		return Utils::CallVFunc<154, int>(this);
-	}
+	};
 
 	void setVelocity(vec3_t vel) {
 		Utils::CallVFunc<34, void, vec3_t>(this, vel);
-	}
+	};
+
+	void setSprinting(bool sprint) {
+		Utils::CallVFunc<257, void, bool>(this, sprint);
+	};
 };
 
 class C_LocalPlayer : public C_Entity {

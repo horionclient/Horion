@@ -18,6 +18,7 @@
 #include "Modules/EditionFaker.h"
 #include "Modules/Phase.h"
 #include "Modules/Freecam.h"
+#include "Modules/AutoSprint.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

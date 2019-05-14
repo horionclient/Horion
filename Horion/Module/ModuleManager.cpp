@@ -21,6 +21,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new EditionFaker());
 	this->moduleList.push_back(new Phase());
 	this->moduleList.push_back(new Freecam());
+	this->moduleList.push_back(new AutoSprint());
 
 	initialized = true;
 

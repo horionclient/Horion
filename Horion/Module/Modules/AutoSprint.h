@@ -1,13 +1,13 @@
 #pragma once
 #include "Module.h"
-class Freecam :
+class AutoSprint :
 	public IModule
 {
 public:
-	Freecam();
-	~Freecam();
-
-	// Inherited via IModule
+	AutoSprint();
+	~AutoSprint();
+	
+	virtual void onTick(C_GameMode* gm) override;
 	virtual std::string getModuleName() override;
 };
 
