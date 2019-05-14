@@ -6,7 +6,7 @@
 #include "../Utils/HMath.h"
 #include "../Utils/Utils.h"
 #include "../Utils/Logger.h"
-
+#include "../Utils/HMath.h"
 enum Fonts { DEFAULT, UNICOD, SMOOTH, RUNE };
 
 struct MC_Color {
@@ -41,5 +41,7 @@ public:
 	static void drawBox(vec3_t lower, vec3_t upper, float lineWidth);
 	static void drawChestBox(C_ChestBlockActor * ent, float lineWidth);
 	static void drawEntityBox(C_Entity* ent, float lineWidth);
+	static void drawCoords(float x, float y , float* hcolors);
 	static void wirebox(AABB aabb);
+	static std::string isEnt(float a);
 };

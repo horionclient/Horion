@@ -1,5 +1,6 @@
 #include "DrawUtils.h"
 
+
 C_MinecraftUIRenderContext* renderCtx;
 C_GuiData* guiData;
 __int64 a2;
@@ -253,4 +254,53 @@ void DrawUtils::wirebox(AABB aabb){
 	v15[41] = 0;
 	v15[42] = 0;
 	v15[43] = 0;*/
+}
+void DrawUtils::drawCoords(float width, float y, float *hcolors)
+{
+	AABB pos;
+	if (g_Data.getLocalPlayer() != nullptr)
+	{
+		pos = g_Data.getLocalPlayer()->aabb;
+		pos.lower.x = (float)((1. / 10) * floorf(pos.lower.x * 10));
+		pos.lower.y = (float)((1. / 10) * floorf(pos.lower.y * 10));
+		pos.lower.z = (float)((1. / 10) * floorf(pos.lower.z * 10));
+		pos.upper.x = (float)((1. / 10) * floorf(pos.upper.x * 10));
+		pos.upper.y = (float)((1. / 10) * floorf(pos.upper.y * 10));
+		pos.upper.z = (float)((1. / 10) * floorf(pos.upper.z * 10));
+	}
+	std::stringstream showCoords;
+	std::string Origin = std::string("Origin: ");
+	std::string show;
+	std::string x_text = "X: ";
+	std::string y_text = "Y: ";
+	std::string z_text = "Z: ";
+
+	showCoords << x_text << pos.lower.x << DrawUtils::isEnt(pos.lower.x) << " " << y_text   << pos.lower.y << DrawUtils::isEnt(pos.lower.y)  << " " << z_text  << pos.lower.z << DrawUtils::isEnt(pos.lower.z);
+	//showOriCoords << Origin << x_text  <<pos.upper.x << DrawUtils::isEnt(pos.upper.x) << " " << y_text << pos.upper.y << DrawUtils::isEnt(pos.upper.y) << " " << z_text  << pos.upper.z << DrawUtils::isEnt(pos.upper.z);
+	show = showCoords.str();
+	float leng = DrawUtils::getTextLength(&show);
+	
+	DrawUtils::fillRectangle(vec4_t(width - leng - 1, y, width, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+	DrawUtils::drawText(vec2_t((width - leng-1), y + 1), &show, new MC_Color(hcolors[0], hcolors[1], hcolors[2], hcolors[3]));
+
+	showCoords.str(std::string());
+	showCoords << Origin << x_text << pos.upper.x << DrawUtils::isEnt(pos.upper.x) << " " << y_text << pos.upper.y << DrawUtils::isEnt(pos.upper.y) << " " << z_text << pos.upper.z << DrawUtils::isEnt(pos.upper.z);
+	show = showCoords.str();
+	leng = DrawUtils::getTextLength(&show);
+
+	DrawUtils::fillRectangle(vec4_t(width - leng - 1, y + 12, width, y + 24), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+	DrawUtils::drawText(vec2_t((width - leng-1), 24 + 1), &show, new MC_Color(hcolors[0], hcolors[1], hcolors[2], hcolors[3]));
+}
+
+//i know its ghetto code 
+std::string DrawUtils::isEnt(float a)
+{
+	if (int(a) == a)
+	{
+		return ".0";
+	}
+	else
+	{
+		return "";
+	}
 }

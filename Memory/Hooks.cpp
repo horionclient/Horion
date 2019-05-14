@@ -1,10 +1,8 @@
 #include "Hooks.h"
 #include "../Directx/Directx.h"
-#include <cmath>
 
 Hooks    g_Hooks;
 bool firstTime = true;
-
 void Hooks::Init()
 {
 	logF("Setting up Hooks...");
@@ -303,7 +301,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	static auto oText = g_Hooks.renderTextHook->GetOriginal<renderText_t>();
 
 	DrawUtils::setCtx(renderCtx, g_Data.getClientInstance()->getGuiData());
-	float lol = g_Data.getClientInstance()->getGuiData()->widthGame;
+	float widthGame = g_Data.getClientInstance()->getGuiData()->widthGame;
 	moduleMgr->onPreRender();
 	DrawUtils::flush();
 
@@ -312,77 +310,31 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	moduleMgr->onPostRender();
 
 	float y = 0;
-	AABB pos;
-	if (g_Data.getLocalPlayer() != nullptr)
-	{
-		pos = g_Data.getLocalPlayer()->aabb;
-		pos.lower.x = (1. / 10.) * floor(pos.lower.x * 10.);
-		pos.lower.y = (1. / 10.) * floor(pos.lower.y * 10.);
-		pos.lower.z = (1. / 10.) * floor(pos.lower.z * 10.);
-		pos.upper.x = (1. / 10.) * floor(pos.upper.x * 10.);
-		pos.upper.y = (1. / 10.) * floor(pos.upper.y * 10.);
-		pos.upper.z = (1. / 10.) * floor(pos.upper.z * 10.);
-	}
-	
-	std::ostringstream showCoords;
-	std::ostringstream showOriCoords;
+	int a = 0;
 	std::string textStr1 = std::string("Horion");
-	std::string Origin = std::string("Origin: ");
-	std::string x_text = "X: ";
-	std::string y_text = "Y: ";
-	std::string z_text = "Z: ";
-	std::string Ox_text = "X: ";
-	std::string Oy_text = "Y: ";
-	std::string Oz_text = "Z: ";
-
-	showCoords << x_text << pos.lower.x << " " << y_text << pos.lower.y << " " << z_text << pos.lower.z;
-	showOriCoords << Origin << x_text << pos.upper.x << " " << y_text << pos.upper.y << " " << z_text << pos.upper.z;
-	x_text = showCoords.str();
-	Ox_text = showOriCoords.str();
 	float leng1 = DrawUtils::getTextLength(&textStr1);
-	float leng_text;
-	float leng_Ori;
-	leng_text = DrawUtils::getTextLength(&x_text);
-	leng_Ori = DrawUtils::getTextLength(&Ox_text);
-
+	static float rcolors[4];
+	DrawUtils::rainbow(rcolors);
+	DrawUtils::fillRectangle(vec4_t(widthGame - leng1 - 1, 0, widthGame, 0 + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+	DrawUtils::drawText(vec2_t((widthGame - leng1 - 1), 0 + 1), &textStr1, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
+	y += 12;
+	DrawUtils::drawCoords(widthGame, y , rcolors);
 	/*textStr = std::string("Close (CTRL + L)");
 	leng = DrawUtils::getTextLength(&textStr);
 	DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.3f);
 	DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.5f, 0.5f, 0.5f, 1));
 
 	y += 12;*/
-	bool showShit = g_Data.getLocalPlayer() == nullptr ? true : (GameData::canUseMoveKeys() ? true : false);
 
+	bool showShit = g_Data.getLocalPlayer() == nullptr ? true : (GameData::canUseMoveKeys() ? true : false);
+	bool firstTime = true;
 	std::vector<IModule*>* modules = moduleMgr->getModuleList();
-	static float rcolors[4];
+	y += 24;
 	for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
 		if (!(*it)->isEnabled())
-		{
-			if ((it + 1) == modules->end())
-			{
-				DrawUtils::rainbow(rcolors);
-				DrawUtils::fillRectangle(vec4_t(lol - leng1 - 1, 0, lol, 0 + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-				DrawUtils::drawText(vec2_t((lol - 1 - leng1), 0 + 1), &textStr1, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
-				DrawUtils::fillRectangle(vec4_t(lol - leng_text - 1, 12, lol, 24), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-				DrawUtils::drawText(vec2_t((lol - 1 - leng_text), 12 + 1), &x_text, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
-				DrawUtils::fillRectangle(vec4_t(lol - leng_Ori - 1, 12+12, lol, 24+12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-				DrawUtils::drawText(vec2_t((lol - 1 - leng_Ori), 24 + 1), &Ox_text, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
-				y += 12*3;
-			}
 			continue;
-		}
 
-		DrawUtils::rainbow(rcolors);
-		DrawUtils::fillRectangle(vec4_t(lol - leng1 - 1, 0, lol, 0 + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-		DrawUtils::drawText(vec2_t((lol - 1 - leng1), 0 + 1), &textStr1, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
-		DrawUtils::fillRectangle(vec4_t(lol - leng_text - 1, 12, lol, 24), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-		DrawUtils::drawText(vec2_t((lol - 1 - leng_text), 12 + 1), &x_text, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
-		DrawUtils::fillRectangle(vec4_t(lol - leng_Ori - 1, 12 + 12, lol, 24 + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-		DrawUtils::drawText(vec2_t((lol - 1 - leng_Ori), 24 + 1), &Ox_text, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
 
-		y += 24+12;
-
-		firstTime = false;
 		std::string textStr = (*it)->getModuleName();
 
 		std::ostringstream strStream;
@@ -391,17 +343,16 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		textStr = strStream.str();
 
 		float leng = DrawUtils::getTextLength(&textStr);
-		//		static float rcolors[4];
-		DrawUtils::rainbow(rcolors);
-		DrawUtils::fillRectangle(vec4_t(lol - leng - 1, y, lol, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-		DrawUtils::drawText(vec2_t((lol - leng), y + 1), &textStr, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
-		y -= 24;
+		//DrawUtils::rainbow(rcolors);
+		DrawUtils::fillRectangle(vec4_t(widthGame - leng - 1, y, widthGame, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+		DrawUtils::drawText(vec2_t((widthGame- leng-1), y + 1), &textStr, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
+		y += 12;
 	}
 	if (showShit) {
 		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
 			if ((*it)->isEnabled())
 				continue;
-
+			
 			std::string textStr = (*it)->getModuleName();
 
 			std::ostringstream strStream;
@@ -411,8 +362,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 			float leng = DrawUtils::getTextLength(&textStr);
 
-			DrawUtils::fillRectangle(vec4_t(lol - 1 - leng - 1, y, lol, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
-			DrawUtils::drawText(vec2_t((lol - 1 - leng), y + 1), &textStr, new MC_Color(0.5f, 0.2f, 0.2f, 0.1f));
+			DrawUtils::fillRectangle(vec4_t(widthGame - leng - 1, y, widthGame, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
+			DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(0.5f, 0.2f, 0.2f, 0.1f));
 			y += 12;
 		}
 	}
