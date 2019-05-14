@@ -14,12 +14,14 @@ struct MC_Color {
 		struct { float r, g, b, a; };
 		float arr[4];
 	};
+	bool shouldDelete = true;
 
 	MC_Color(MC_Color& other) {
 		this->r = other.r;
 		this->g = other.g;
 		this->b = other.b;
 		this->a = other.a;
+		this->shouldDelete = other.shouldDelete;
 	}
 
 	MC_Color(float r, float g, float b, float a) {
@@ -27,6 +29,14 @@ struct MC_Color {
 		this->g = g;
 		this->b = b;
 		this->a = a;
+	};
+
+	MC_Color(float r, float g, float b, float a, bool shouldDelete) {
+		this->r = r;
+		this->g = g;
+		this->b = b;
+		this->a = a;
+		this->shouldDelete = shouldDelete;
 	};
 };
 

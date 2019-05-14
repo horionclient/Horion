@@ -133,7 +133,7 @@ void DrawUtils::fillRectangle(vec4_t pos, MC_Color col, float alpha)
 
 void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color *color, float textSize, Fonts font)
 {
-	static MC_Color* WHITE_COLOR = new MC_Color(1, 1, 1, 1);
+	static MC_Color* WHITE_COLOR = new MC_Color(1, 1, 1, 1, false);
 	if (color == nullptr)
 		color = WHITE_COLOR;
 	
@@ -151,7 +151,10 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color *color, floa
 	size = textSize;
 	renderCtx->drawText(g_Data.getClientInstance()->minecraftGame->getTheGoodFontThankYou(), posF, text, color->arr, 1, 0, &size, &oof);
 
+	if (color->shouldDelete)
+		delete color;
 	delete text;
+	
 }
 
 void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)
