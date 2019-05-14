@@ -18,7 +18,7 @@ std::string ChestESP::getModuleName()
 
 void ChestESP::onPostRender() {
 
-	if (!g_Data.isInGame())
+	if (!g_Data.isInGame() || !GameData::canUseMoveKeys())
 		return;
 	//if (listSize < 1000 && listSize > 1) {
 	static float rcolors[4];
