@@ -337,7 +337,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		static std::string textStr1 = std::string("Horion");
 		static float leng1 = DrawUtils::getTextLength(&textStr1);
 		
-		DrawUtils::fillRectangle(vec4_t(widthGame - leng1 - 1, 0, widthGame, 0 + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+		DrawUtils::fillRectangle(vec4_t(widthGame - leng1 - 1, 0, widthGame, 0 + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
 		DrawUtils::drawText(vec2_t((widthGame - leng1 - 1), 0 + 1), &textStr1, new MC_Color(rcolors));
 		y += 12;
 	}
@@ -377,7 +377,6 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 					if (o.enabled) // They are enabled
 						return false;
 				}
-				
 
 				if (leng1 == leng2)
 					return moduleName < o.moduleName;
@@ -385,27 +384,29 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 			}
 		};
 		std::set<LilYeet> mods;
-		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
-
+		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) 
 			mods.emplace(LilYeet(*it));
-		}
+
+		float disabledRcolors[4];
+		disabledRcolors[0] = min(1, rcolors[0] * 0.4f + 0.2f);
+		disabledRcolors[1] = min(1, rcolors[1] * 0.4f + 0.2f);
+		disabledRcolors[2] = min(1, rcolors[2] * 0.4f + 0.2f);
+		disabledRcolors[3] = 1;
 
 		for (std::set<LilYeet>::iterator it = mods.begin(); it != mods.end(); ++it) {
-			
 			std::string textStr = it->moduleName;
+
 			float leng = DrawUtils::getTextLength(&textStr);
 			if (it->enabled) {
-				DrawUtils::fillRectangle(vec4_t(widthGame - leng - 2, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+				DrawUtils::fillRectangle(vec4_t(widthGame - leng - 2, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
 				DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(rcolors));
 				y += 12;
 			}
 			else if(showShit) {
 				DrawUtils::fillRectangle(vec4_t(widthGame - leng - 2, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
-				DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(0.5f, 0.4f, 0.4f, 0.1f));
+				DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(disabledRcolors));
 				y += 12;
 			}
-			
-			
 		}
 
 		mods.clear();

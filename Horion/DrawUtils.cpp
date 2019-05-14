@@ -218,8 +218,8 @@ void DrawUtils::rainbow(float* rcolors)
 {
 	if (rcolors[3] < 1) {
 		rcolors[0] = 1;
-		rcolors[1] = 0.2f;
-		rcolors[2] = 0.2f;
+		rcolors[1] = 0.4f;
+		rcolors[2] = 0.4f;
 		rcolors[3] = 1;
 	}
 
