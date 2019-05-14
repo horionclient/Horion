@@ -5,6 +5,7 @@
 IModule::IModule(int key)
 {
 	this->keybind = key;
+	this->registerIntSetting(std::string("keybind"), &this->keybind, this->keybind);
 }
 
 void IModule::registerFloatSetting(std::string name, float* floatPtr, float defaultValue)
@@ -16,6 +17,22 @@ void IModule::registerFloatSetting(std::string name, float* floatPtr, float defa
 
 	SettingValue* defaultVal = new SettingValue(); // Default Value
 	defaultVal->_float = defaultValue;
+	setting->defaultValue = defaultVal;
+
+	strcpy_s(setting->name, 19, name.c_str()); // Name
+
+	settings.push_back(setting); // Add to list
+}
+
+void IModule::registerIntSetting(std::string name, int * intPtr, int defaultValue)
+{
+	SettingEntry* setting = new SettingEntry();
+	setting->valueType = INT_T;
+
+	setting->value = reinterpret_cast<SettingValue*>(intPtr); // Actual value
+
+	SettingValue* defaultVal = new SettingValue(); // Default Value
+	defaultVal->_int = defaultValue;
 	setting->defaultValue = defaultVal;
 
 	strcpy_s(setting->name, 19, name.c_str()); // Name
@@ -84,23 +101,29 @@ void IModule::onLoadConfig(json * conf)
 				auto value = obj.at(sett->name);
 				if (value.is_null())
 					continue;
-				switch (sett->valueType) {
-				case FLOAT_T:
-					sett->value->_float = value.get<float>();
-					continue;
-				case DOUBLE_T:
-					sett->value->_double = value.get<double>();
-					continue;
-				case INT64_T:
-					sett->value->int64 = value.get<__int64>();
-					continue;
-				case INT_T:
-					sett->value->_int = value.get<int>();
-					continue;
-				case TEXT_T:
-					sett->value->text = &value.get<std::string>();
-					continue;
+				try {
+					switch (sett->valueType) {
+					case FLOAT_T:
+						sett->value->_float = value.get<float>();
+						continue;
+					case DOUBLE_T:
+						sett->value->_double = value.get<double>();
+						continue;
+					case INT64_T:
+						sett->value->int64 = value.get<__int64>();
+						continue;
+					case INT_T:
+						sett->value->_int = value.get<int>();
+						continue;
+					case TEXT_T:
+						sett->value->text = &value.get<std::string>();
+						continue;
+					}
 				}
+				catch (std::exception e) {
+					logF("Config Load Error (%s): %s", this->getRawModuleName().c_str(), e.what());
+				}
+				
 			}
 		}
 	}

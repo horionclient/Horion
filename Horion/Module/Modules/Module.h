@@ -43,7 +43,7 @@ protected:
 	IModule(int key);
 
 	void registerFloatSetting(std::string name, float* floatPtr, float defaultValue);
-
+	void registerIntSetting(std::string name, int* intpTr, int defaultValue);
 public:
 	~IModule();
 
