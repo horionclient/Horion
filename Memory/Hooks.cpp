@@ -1,5 +1,7 @@
 #include "Hooks.h"
 #include "../Directx/Directx.h"
+#include <deque>
+#include <string>
 
 Hooks    g_Hooks;
 bool firstTime = true;
@@ -272,17 +274,38 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
 {
 	static auto oSendMessage = g_Hooks.chatScreen_sendMessageHook->GetOriginal<ChatScreen_sendChatMessage_t>();
+
+	using dequeuePushback_t = void(__fastcall*)(__int64*, __int64);
+	static dequeuePushback_t dequeuePushBack = reinterpret_cast<dequeuePushback_t>(Utils::FindSignature("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B D9 48 8B F2 48 8B 49 ?? 48 8B 43 ?? 48 FF C0 48 3B C8 77 ?? 48 8B CB E8 ?? ?? ?? ?? 48 8B 4B ?? 48 8D 41 ?? 48 21 43 ?? 48 8B 53 ?? 48 03 53 ?? 48 8B 43 ?? 48 8B 4B ?? 48 FF C8 48 23 D0 48 83 3C D1 00 48 8D 3C D5 00 00 00 00 75 ?? B9 20"));
+
+	using sub_140074FA0_t = void(__fastcall*)(__int64);
+	static sub_140074FA0_t sub_140074FA0 = reinterpret_cast<sub_140074FA0_t>(Utils::FindSignature("40 53 48 83 EC ?? 48 8B 51 ?? 48 8B D9 48 83 FA 10 72 ?? 48 8B 09 48 FF C2 48 81 FA 00 10 00 00 72 ?? 4C 8B 41 ?? 48 83 C2 ?? 49 2B C8 48 8D 41 ?? 48 83 F8 ?? 77 ?? 49 8B C8 E8 ?? ?? ?? ?? 48 C7 43 ?? 00 00 00 00"));
+
 	uintptr_t* idk = reinterpret_cast<uintptr_t*>(_this + 0x688);
 	if (*idk) {
 		char* message = reinterpret_cast<char*>(_this + 0x678);
 		if (*reinterpret_cast<__int64*>(_this + 0x690) >= 0x10)
 			message = *reinterpret_cast<char**>(message);
-		__int64* v6 = reinterpret_cast<__int64*>(_this + 0x690);
 
 		if (*message == '.') {
 			cmdMgr->execute(message);
+			
+			__int64* i = 0;
+			for (i = *reinterpret_cast<__int64**>(_this + 0x6A0); i[4] > 0x64ui64; i = *reinterpret_cast<__int64**>(_this + 0x6A0))
+			{
+				sub_140074FA0(*reinterpret_cast<__int64*>(i[1] + 8 * (i[3] & (i[2] - 1i64))));
+				bool v15 = i[4]-- == 1i64;
+				if (v15)
+					i[3] = 0i64;
+				else
+					++i[3];
+			}
+
+			dequeuePushBack(i, reinterpret_cast<__int64>(_this + 0x678)); // This will put the command in the chat history (Arrow up/down)
+			*reinterpret_cast<__int64*>(_this + 0x6A8) = *reinterpret_cast<__int64*>(*reinterpret_cast<__int64*>(_this + 0x6A0) + 0x20);
+			
+			*reinterpret_cast<__int64*>(_this + 0x688) = 0i64;
 			*message = 0x0; // Remove command in textbox
-			*v6 = 0x0; // text length
 			*idk = 0x0; // text length
 			return;
 		}
