@@ -170,8 +170,8 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 	else if (mod->isEnabled()) {
 		// Do nothing i guess
 		// Do some stuff with modifiers here maybe
-		C_MovePlayerPacket* frenchBoy = new C_MovePlayerPacket();
-		if (frenchBoy->vTable == packet->vTable)
+		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
+		if (frenchBoy.vTable == packet->vTable)
 			return; // Dont call sendToServer
 	}
 
@@ -319,12 +319,6 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	DrawUtils::drawText(vec2_t((widthGame - leng1 - 1), 0 + 1), &textStr1, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
 	y += 12;
 	DrawUtils::drawCoords(widthGame, y , rcolors);
-	/*textStr = std::string("Close (CTRL + L)");
-	leng = DrawUtils::getTextLength(&textStr);
-	DrawUtils::fillRectangle(vec4_t(0, y, leng + 3, y + 12), new MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.3f);
-	DrawUtils::drawText(vec2_t(1, y + 1), &textStr, new MC_Color(0.5f, 0.5f, 0.5f, 1));
-
-	y += 12;*/
 
 	bool showShit = g_Data.getLocalPlayer() == nullptr ? true : (GameData::canUseMoveKeys() ? true : false);
 	if (moduleMgr->isInitialized()) {

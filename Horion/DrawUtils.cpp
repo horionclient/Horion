@@ -126,8 +126,8 @@ void DrawUtils::fillRectangle(vec4_t pos, MC_Color col, float alpha)
 	MC_Color* c = new MC_Color(col);
 
 	renderCtx->fillRectangle(posF, reinterpret_cast<float*>(c), alpha);
+	
 	delete c;
-
 	delete[] posF;
 }
 
@@ -153,6 +153,7 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color *color, floa
 
 	if (color->shouldDelete)
 		delete color;
+	delete[] posF;
 	delete text;
 	
 }
