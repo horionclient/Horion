@@ -346,42 +346,69 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	bool showShit = g_Data.getLocalPlayer() == nullptr ? true : (GameData::canUseMoveKeys() ? true : false);
 	if (moduleMgr->isInitialized()) {
 		std::vector<IModule*>* modules = moduleMgr->getModuleList();
-		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
-			if (!(*it)->isEnabled())
-				continue;
+		
+		struct LilYeet {
+			std::string moduleName;
+			bool enabled;
+			int keybind;
 
-			std::string textStr = (*it)->getModuleName();
-
-			std::ostringstream strStream;
-			strStream << textStr;
-			strStream << " [" << Utils::getKeybindName((*it)->getKeybind()) << "]";
-			textStr = strStream.str();
-
-			float leng = DrawUtils::getTextLength(&textStr);
-			//DrawUtils::rainbow(rcolors);
-			DrawUtils::fillRectangle(vec4_t(widthGame - leng - 2, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-			DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(rcolors));
-			y += 12;
-		}
-		if (showShit) {
-			for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
-				if ((*it)->isEnabled())
-					continue;
-
-				std::string textStr = (*it)->getModuleName();
+			LilYeet(IModule* mod) {
+				this->moduleName = mod->getModuleName();
+				this->enabled = mod->isEnabled();
+				this->keybind = mod->getKeybind();
 
 				std::ostringstream strStream;
-				strStream << textStr;
-				strStream << " [" << Utils::getKeybindName((*it)->getKeybind()) << "]";
-				textStr = strStream.str();
+				strStream << moduleName;
+				strStream << " [" << Utils::getKeybindName(keybind) << "]";
+				moduleName = strStream.str();
+			}
 
-				float leng = DrawUtils::getTextLength(&textStr);
+			bool operator<(const LilYeet &o) const {
+				std::string temp = moduleName;
+				float leng1 = DrawUtils::getTextLength(&temp);
+				temp = o.moduleName;
+				float leng2 = DrawUtils::getTextLength(&temp);
 
-				DrawUtils::fillRectangle(vec4_t(widthGame - leng - 2, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
-				DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(0.5f, 0.2f, 0.2f, 0.1f));
+				if (enabled) {
+					if (!o.enabled) // We are enabled
+						return true;
+				}
+				else {
+					if (o.enabled) // They are enabled
+						return false;
+				}
+				
+
+				if (leng1 == leng2)
+					return moduleName < o.moduleName;
+				return leng1 < leng2;
+			}
+		};
+		std::set<LilYeet> mods;
+		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
+
+			mods.emplace(LilYeet(*it));
+		}
+
+		for (std::set<LilYeet>::iterator it = mods.begin(); it != mods.end(); ++it) {
+			
+			std::string textStr = it->moduleName;
+			float leng = DrawUtils::getTextLength(&textStr);
+			if (it->enabled) {
+				DrawUtils::fillRectangle(vec4_t(widthGame - leng - 2, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+				DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(rcolors));
 				y += 12;
 			}
+			else if(showShit) {
+				DrawUtils::fillRectangle(vec4_t(widthGame - leng - 2, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
+				DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(0.5f, 0.4f, 0.4f, 0.1f));
+				y += 12;
+			}
+			
+			
 		}
+
+		mods.clear();
 	}
 
 	DrawUtils::flush();
