@@ -26,12 +26,17 @@ struct CompareTargetEnArray
 void Aimbot::onPostRender()
 {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
-
+	if (localPlayer == nullptr)
+		return;
 	C_EntityList* entList = localPlayer->getEntityList();
+	if (entList == nullptr)
+		return;
 	size_t listSize = entList->getListSize();
 
 	if (listSize > 1000) {
+#ifdef _DEBUG
 		logF("Big ent list wtf men %i", listSize);
+#endif
 		return;
 	}
 

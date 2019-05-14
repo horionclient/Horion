@@ -48,6 +48,8 @@ public:
 	 */
 	template<typename TRet>
 	IModule* getModule() { 
+		if (!isInitialized())
+			return nullptr;
 		for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
 			IModule* mod = *it;
 			if (typeid(*mod) == typeid(TRet) || typeid(mod) == typeid(TRet))
@@ -58,6 +60,8 @@ public:
 
 	// Dont Use this functions unless you absolutely need to. The function above this one works in 99% of cases
 	IModule* getModuleByName(const std::string name) {
+		if (!isInitialized())
+			return nullptr;
 		std::string nameCopy = name;
 		std::transform(nameCopy.begin(), nameCopy.end(), nameCopy.begin(), ::tolower);
 

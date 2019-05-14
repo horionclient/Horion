@@ -22,9 +22,9 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Phase());
 	this->moduleList.push_back(new Freecam());
 
-	this->getModule<RainbowSky>()->setEnabled(true);
-
 	initialized = true;
+
+	this->getModule<RainbowSky>()->setEnabled(true);
 }
 
 void ModuleManager::disable()
@@ -38,6 +38,8 @@ void ModuleManager::disable()
 
 void ModuleManager::onLoadConfig(json * conf)
 {
+	if (!isInitialized())
+		return;
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
 		IModule* mod = *it;
 		mod->onLoadConfig(conf);
@@ -46,6 +48,8 @@ void ModuleManager::onLoadConfig(json * conf)
 
 void ModuleManager::onSaveConfig(json * conf)
 {
+	if (!isInitialized())
+		return;
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
 		IModule* mod = *it;
 		mod->onSaveConfig(conf);
@@ -54,6 +58,8 @@ void ModuleManager::onSaveConfig(json * conf)
 
 void ModuleManager::onTick(C_GameMode * gameMode)
 {
+	if (!isInitialized())
+		return;
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
 		IModule* mod = *it;
 		if (mod->isEnabled())
@@ -63,6 +69,8 @@ void ModuleManager::onTick(C_GameMode * gameMode)
 
 void ModuleManager::onKeyUpdate(int key, bool isDown)
 {
+	if (!isInitialized())
+		return;
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
 		IModule* mod = *it;
 		mod->onKeyUpdate(key, isDown);
@@ -71,6 +79,8 @@ void ModuleManager::onKeyUpdate(int key, bool isDown)
 
 void ModuleManager::onPreRender()
 {
+	if (!isInitialized())
+		return;
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
 		IModule* mod = *it;
 		if (mod->isEnabled())
@@ -80,6 +90,8 @@ void ModuleManager::onPreRender()
 
 void ModuleManager::onPostRender()
 {
+	if (!isInitialized())
+		return;
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
 		IModule* mod = *it;
 		if (mod->isEnabled())

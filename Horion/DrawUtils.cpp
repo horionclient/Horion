@@ -237,13 +237,6 @@ void DrawUtils::drawEntityBox(C_Entity * ent, float lineWidth)
 	upper.y += 0.1f; // more premium
 	drawBox(ent->aabb.lower, upper, lineWidth);
 }
-void DrawUtils::drawChestBox(C_ChestBlockActor * ent, float lineWidth)
-{
-	// Not finish yet
-	//vec3_t upper = vec3_t(ent->aabb.upper);
-	/*upper.y += 0.1f; // more premium
-	drawBox(ent->aabb.lower, upper, lineWidth);*/
-}
 
 void DrawUtils::wirebox(AABB aabb){
 	/*
@@ -263,4 +256,5 @@ void DrawUtils::wirebox(AABB aabb){
 	v15[41] = 0;
 	v15[42] = 0;
 	v15[43] = 0;*/
+	throw std::exception("not implemented");
 }

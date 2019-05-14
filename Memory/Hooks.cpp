@@ -310,20 +310,21 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	moduleMgr->onPostRender();
 
 	float y = 0;
-	int a = 0;
-	std::string textStr1 = std::string("Horion");
-	float leng1 = DrawUtils::getTextLength(&textStr1);
 	static float rcolors[4];
 	DrawUtils::rainbow(rcolors);
-	DrawUtils::fillRectangle(vec4_t(widthGame - leng1 - 1, 0, widthGame, 0 + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-	DrawUtils::drawText(vec2_t((widthGame - leng1 - 1), 0 + 1), &textStr1, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
-	y += 12;
-	DrawUtils::drawCoords(widthGame, y , rcolors);
+	{
+		static std::string textStr1 = std::string("Horion");
+		static float leng1 = DrawUtils::getTextLength(&textStr1);
+		
+		DrawUtils::fillRectangle(vec4_t(widthGame - leng1 - 1, 0, widthGame, 0 + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
+		DrawUtils::drawText(vec2_t((widthGame - leng1 - 1), 0 + 1), &textStr1, new MC_Color(rcolors));
+		y += 12;
+	}
+	
 
 	bool showShit = g_Data.getLocalPlayer() == nullptr ? true : (GameData::canUseMoveKeys() ? true : false);
 	if (moduleMgr->isInitialized()) {
 		std::vector<IModule*>* modules = moduleMgr->getModuleList();
-		y += 24;
 		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
 			if (!(*it)->isEnabled())
 				continue;
@@ -338,7 +339,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 			float leng = DrawUtils::getTextLength(&textStr);
 			//DrawUtils::rainbow(rcolors);
 			DrawUtils::fillRectangle(vec4_t(widthGame - leng - 1, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.5f);
-			DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(rcolors[0], rcolors[1], rcolors[2], rcolors[3]));
+			DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(rcolors));
 			y += 12;
 		}
 		if (showShit) {
