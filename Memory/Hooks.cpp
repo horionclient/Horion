@@ -1,7 +1,5 @@
 #include "Hooks.h"
 #include "../Directx/Directx.h"
-#include <deque>
-#include <string>
 
 Hooks    g_Hooks;
 bool firstTime = true;
