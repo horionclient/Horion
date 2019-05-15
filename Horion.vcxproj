@@ -151,6 +151,7 @@
     <ClCompile Include="Horion\Module\Modules\Jetpack.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoKnockBack.cpp" />
     <ClCompile Include="Horion\Module\Modules\Phase.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Tracer.cpp" />
     <ClCompile Include="Horion\Module\Modules\TriggerBot.cpp" />
     <ClCompile Include="Memory\GameData.cpp" />
     <ClCompile Include="Memory\Hooks.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Horion\Module\Modules\Jetpack.h" />
     <ClInclude Include="Horion\Module\Modules\NoKnockBack.h" />
     <ClInclude Include="Horion\Module\Modules\Phase.h" />
+    <ClInclude Include="Horion\Module\Modules\Tracer.h" />
     <ClInclude Include="Horion\Module\Modules\TriggerBot.h" />
     <ClInclude Include="Memory\GameData.h" />
     <ClInclude Include="Memory\Hooks.h" />

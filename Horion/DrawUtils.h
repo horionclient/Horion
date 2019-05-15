@@ -3,6 +3,7 @@
 #include "../SDK/CMinecraftUIRenderContext.h"
 #include "../SDK/CClientInstance.h"
 #include "../Memory/GameData.h"
+#include "../Horion/Module/ModuleManager.h"
 #include "../Utils/HMath.h"
 #include "../Utils/Utils.h"
 #include "../Utils/Logger.h"

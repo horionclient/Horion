@@ -214,8 +214,14 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)
 			drawLine(Screen1, Screen2, lineWidth);
 			
 		}
-	vec2_t yeet(((g_Data.getClientInstance()->getGuiData()->widthGame) / 2), ((g_Data.getClientInstance()->getGuiData()->heightGame) / 2));
-	DrawUtils::drawLine(yeet, Screen2, lineWidth);
+	
+	static Tracer* mod = static_cast<Tracer*>(moduleMgr->getModule<Tracer>());
+	if (mod == nullptr)
+		mod = static_cast<Tracer*>(moduleMgr->getModule<Tracer>());
+	else if (mod->isEnabled()) {
+		vec2_t yeet(((g_Data.getClientInstance()->getGuiData()->widthGame) / 2), ((g_Data.getClientInstance()->getGuiData()->heightGame) / 2));
+		DrawUtils::drawLine(yeet, Screen2, lineWidth);
+	}
 }
 void DrawUtils::rainbow(float* rcolors)
 {
