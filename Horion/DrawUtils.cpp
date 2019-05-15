@@ -212,7 +212,10 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)
 		if (refdef->OWorldToScreen(origin, cornerList[i], Screen1, fov, screenSize) && refdef->OWorldToScreen(origin, cornerList[i + 1], Screen2, fov, screenSize)) {
 			//std::cout << Screen1.x << " : " << Screen1.y << std::endl;
 			drawLine(Screen1, Screen2, lineWidth);
+			
 		}
+	vec2_t yeet(((g_Data.getClientInstance()->getGuiData()->widthGame) / 2), ((g_Data.getClientInstance()->getGuiData()->heightGame) / 2));
+	DrawUtils::drawLine(yeet, Screen2, lineWidth);
 }
 void DrawUtils::rainbow(float* rcolors)
 {

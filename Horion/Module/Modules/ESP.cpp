@@ -51,6 +51,7 @@ void ESP::onPostRender() {
 					else
 						DrawUtils::setColor(0.4f, 0.4f, 0.4f, 0.2f);
 					DrawUtils::drawEntityBox(current, max(0.2f, 1 / max(1, g_Data.getLocalPlayer()->eyePos0.dist(current->eyePos0)))); // Fancy math to give an illusion of good esp
+					
 				}
 					
 			}
