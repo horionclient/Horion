@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Horion\Module\Modules\BowAimbot.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSprint.cpp" />
     <ClCompile Include="Horion\Config\ConfigObj.cpp" />
     <ClCompile Include="Horion\Config\ConfigManager.cpp" />
@@ -165,6 +166,7 @@
     <ClCompile Include="Utils\TextFormat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Horion\Module\Modules\BowAimbot.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSprint.h" />
     <ClInclude Include="Horion\Config\ConfigObj.h" />
     <ClInclude Include="Horion\Config\ConfigManager.h" />

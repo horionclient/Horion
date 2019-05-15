@@ -53,8 +53,14 @@ public:
 private:
 	char pad_0x0010[0xD0]; //0x0010
 public:
-	float pitch; //0x00E0
-	float yaw; //0x00E4
+	union {
+		struct {
+			float pitch; //0x00E0
+			float yaw; //0x00E4
+		};
+		vec2_t viewAngles;
+	};
+	
 	float pitch2; //0x00E8
 	float yaw2; //0x00EC
 private:

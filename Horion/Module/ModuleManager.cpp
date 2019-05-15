@@ -23,6 +23,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Freecam());
 	this->moduleList.push_back(new AutoSprint());
 	this->moduleList.push_back(new Tracer());
+	this->moduleList.push_back(new BowAimbot());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);
