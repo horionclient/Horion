@@ -199,4 +199,16 @@ public:
 		static SwingArm swingFunc = reinterpret_cast<SwingArm>(Utils::FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B D9 80 B9"));
 		swingFunc(this);
 	}
+	void Turn(vec2_t* idk) {
+		using Turn = void(__thiscall*)(void*,vec2_t*);
+		static Turn TurnFunc = reinterpret_cast<Turn>(Utils::FindSignature("4C 8B DC 55 57 ?? ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? 45 ?? ?? ?? ?? ?? ?? ?? 48 8B 05 D6 D4 A5 01 48 33 C4 48 89 45 ?? 49 89 5B ?? 48 8B F9 ?? ?? ?? ?? ?? ?? ?? 48 8B DA 4D 89 73 E8 41 0F 29 73 D8 41 0F 29 7B C8 48 8B 01 FF 90 ?? ?? ?? ?? F2 0F 10 03"));
+		//static Turn TurnFunc = reinterpret_cast<Turn>(Utils::FindSignature("4C 8B DC 55 57 49 8D AB 38 FF FF FF 48 81 EC B8 01 00 00 45 0F 29 AB 68 FF FF FF 48 8B 05 D6 D4 A5 01 48 33 C4 48 89 45 20 49 89 5B 18 48 8B F9 48 8B 89 48 1D 00 00 48 8B DA 4D 89 73 E8 41 0F 29 73 D8 41 0F 29 7B C8 48 8B 01 FF 90 90 04 00 00 F2 0F 10 03"));
+		TurnFunc(this,idk);
+	}
+	void applyTurnDelta(float* a)
+	{
+		using applyTurnDelta = void(__thiscall*)(void*,float*);
+		static applyTurnDelta TurnDelta = reinterpret_cast<applyTurnDelta>(Utils::FindSignature("48 89 5C 24 10 57 48 83 EC ?? 0F 29 74 24 ?? 48 8B FA F3 0F 10 35 16 AA 35 01 48 8B D9 0F 29 7C 24 ?? 0F 28 CE F3 0F 10 7A ?? 0F 28 C7 44 0F 29 44 24 ?? F3 ?? ?? ?? ?? ?? ?? ?? F3 44 0F 10 05 88 A9 35 01 44 0F 29 4C 24 ?? F3 41 0F 58 C0"));
+		TurnDelta(this,a);
+	}
 };
