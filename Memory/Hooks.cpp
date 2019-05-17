@@ -77,6 +77,10 @@ void Hooks::Init()
 	void* sendtoServer = reinterpret_cast<void*>(Utils::FindSignature("48 89 5C 24 08 57 48 ?? ?? ?? ?? ?? ?? 0F B6 41 ?? 48 8B FA 88 42 ?? 48 8D 54 24 ?? 48 8B 59 ?? 48 8B CB E8 ?? ?? ?? ?? 48 8B D0 45 33 C9"));
 	g_Hooks.sendToServerHook = std::make_unique <FuncHook>(sendtoServer, Hooks::sendToServer);
 	g_Hooks.sendToServerHook->init();
+
+	void* getFov = reinterpret_cast<void*>(Utils::FindSignature("40 53 48 83 EC ?? 0F 29 74 24 ?? 0F 29 7C 24 ?? 44 0F 29 4C 24 ?? 48 8B 05"));
+	g_Hooks.levelRendererPlayer_getFovHook = std::make_unique<FuncHook>(getFov, Hooks::LevelRendererPlayer_getFov);
+	g_Hooks.levelRendererPlayer_getFovHook->init();
 	//logF("Hooks hooked");
 }
 
@@ -91,6 +95,7 @@ void Hooks::Restore()
 	g_Hooks.GameMode_destroyBlockHook->Restore();
 	g_Hooks.AppPlatform_getGameEditionHook->Restore();
 	g_Hooks.autoComplete_Hook->Restore();
+	g_Hooks.levelRendererPlayer_getFovHook->Restore();
 }
 
 void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
@@ -176,6 +181,28 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 	}
 
 	oFunc(a, packet);
+}
+
+float Hooks::LevelRendererPlayer_getFov(__int64 a1, char a2, float a3, float a4)
+{
+	static auto oGetFov = g_Hooks.levelRendererPlayer_getFovHook->GetOriginal<getFov_t>();
+
+	static void* renderItemInHand = reinterpret_cast<void*>(Utils::FindSignature("F3 44 0F 10 2D ?? ?? ?? ?? F3 41 0F 59 C5 0F 28 DE F3"));
+	static void* setupCamera = reinterpret_cast<void*>(Utils::FindSignature("48 8B 8E ?? ?? ?? ?? 44 0F 28 C0"));
+
+	if (_ReturnAddress() == renderItemInHand) {
+		//static float yess = 0;
+		//yess += 0.03f;
+		//return 60 + 40 + sinf(yess) * 50;
+		return oGetFov(a1, a2, a3, a4);
+	}
+	if (_ReturnAddress() == setupCamera) {
+		return oGetFov(a1, a2, a3, a4);
+	}
+#ifdef _DEBUG
+	__debugbreak(); // IF we reach here, a sig is broken
+#endif
+	return oGetFov(a1, a2, a3, a4);
 }
 
 void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4)

@@ -44,8 +44,6 @@ struct vec2_t
 	float magnitude() const { return sqrtf(squaredlen()); }
 };
 
-
-
 struct vec3_t
 {
 	union {
@@ -78,14 +76,21 @@ struct vec3_t
 
 	bool iszero() const { return x == 0 && y == 0 && z == 0; }
 
-	bool operator==(const vec3_t &o) const { return x == o.x && y == o.y && z == o.z; }
-	bool operator!=(const vec3_t &o) const { return x != o.x || y != o.y || z != o.z; }
-	vec3_t operator-() const { return vec3_t(-x, -y, -z); }
+	bool operator==(const vec3_t &o) const { return x == o.x && y == o.y && z == o.z; };
+	bool operator!=(const vec3_t &o) const { return x != o.x || y != o.y || z != o.z; };
+	vec3_t operator-() const { return vec3_t(-x, -y, -z); };
 
-	vec3_t &mul(float f) { x *= f; y *= f; z *= f; return *this; }
-	vec3_t &div(float f) { x /= f; y /= f; z /= f; return *this; }
-	vec3_t &add(float f) { x += f; y += f; z += f; return *this; }
-	vec3_t &sub(float f) { x -= f; y -= f; z -= f; return *this; }
+	vec3_t &mul(float f) { x *= f; y *= f; z *= f; return *this; };
+	vec3_t &div(float f) { x /= f; y /= f; z /= f; return *this; };
+	vec3_t &add(float f) { x += f; y += f; z += f; return *this; };
+	vec3_t &sub(float f) { x -= f; y -= f; z -= f; return *this; };
+
+	vec3_t &floor() {
+		x = floorf(x);
+		y = floorf(y);
+		z = floorf(z);
+		return *this;
+	};
 
 	vec3_t &add(const vec3_t &o) { x += o.x; y += o.y; z += o.z; return *this; }
 	vec3_t &sub(const vec3_t &o) { x -= o.x; y -= o.y; z -= o.z; return *this; }
@@ -223,11 +228,11 @@ struct vec3_ti {
 
 	vec3_ti &add(int f) { x += f; y += f; z += f; return *this; }
 
-	vec3_t* toFloatVector(vec3_t *vec) {
-
-		vec->x = (float)x;
-		vec->y = (float)y;
-		vec->z = (float)z;
+	vec3_t toFloatVector() {
+		vec3_t vec;
+		vec.x = (float)x;
+		vec.y = (float)y;
+		vec.z = (float)z;
 		return vec;
 	}
 };

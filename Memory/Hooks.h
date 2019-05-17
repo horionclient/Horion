@@ -39,6 +39,7 @@ private:
 	static __int64 AppPlatform_getGameEdition(__int64 _this);
 	static void pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4);
 	static void sendToServer(C_LoopbackPacketSender* a, C_Packet* packet);
+	static float LevelRendererPlayer_getFov(__int64 a1, char a2, float a3, float a4);
 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
@@ -54,8 +55,9 @@ private:
 	std::unique_ptr<FuncHook> AppPlatform_getGameEditionHook;
 	std::unique_ptr<FuncHook> autoComplete_Hook;
 	std::unique_ptr<FuncHook> sendToServerHook;
+	std::unique_ptr<FuncHook> levelRendererPlayer_getFovHook;
 
-
+	typedef float(__fastcall* getFov_t)(__int64 a1, char a2, float a3, float a4);
 	typedef void(__fastcall* autoComplete_t)(__int64 a1, __int64 a2, TextHolder* text, int a4);
 	typedef __int64(__fastcall* AppPlatform_getGameEdition_t)(__int64);
 	typedef void(__fastcall* Actor_lerpMotion_t)(C_Entity*, vec3_t);
