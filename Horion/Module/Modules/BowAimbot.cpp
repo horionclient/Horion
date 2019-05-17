@@ -19,8 +19,10 @@ void BowAimbot::onPostRender() {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 	if (localPlayer == nullptr)
 		return;
+
 	if (localPlayer->itemId != 261) // Bow in hand?
 		return;
+
 	C_EntityList* entList = localPlayer->getEntityList();
 	if (entList == nullptr)
 		return;
@@ -51,9 +53,6 @@ void BowAimbot::onPostRender() {
 
 		if (localPlayer->getEntityTypeId() != currentEntity->getEntityTypeId()) // Skip Invalid Entity
 			continue;
-		// i want to hit villagers ok
-//		if (localPlayer->entityType2 != currentEntity->entityType2)
-//			continue;
 
 		float dist = currentEntity->eyePos0.dist(localPlayer->eyePos0);
 
@@ -72,9 +71,9 @@ void BowAimbot::onPostRender() {
 		pos = pos.sub(origin);
 
 		float yaw = (atan2f(pos.z, pos.x) * DEG_RAD) - 90;
-		float len = sqrtf(pos.x * pos.x + pos.z * pos.z);
+		float len = pos.magnitudexz();
 		float g = 0.006f; // nukkit = 0.012, some servers use different calculus
-		float tmp = (1 - g * (g * (len * len) + 2 * pos.y));
+		float tmp = 1 - g * (g * (len * len) + 2 * pos.y);
 		float pitch = DEG_RAD * -(atanf((1 - sqrtf(tmp)) / (g * len)));
 		if (pitch < 89 && pitch > -89) {
 			vec2_t angles = vec2_t(pitch, yaw);
