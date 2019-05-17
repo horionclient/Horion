@@ -65,23 +65,26 @@ void BowAimbot::onPostRender() {
 
 	if (targetList.size() > 0)
 	{
-		vec3_t origin = g_Data.getClientInstance()->levelRenderer->origin;
-	//	std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
+		vec3_t origin = g_Data.getClientInstance()->levelRenderer->origin; // TODO: sort list
 		C_Entity* entity = targetList[0];
-		//vec2_t widP = mem->Read<vec2_t>(gameData.playerPointer + offsets.entityWidth);
 		vec3_t pos = entity->eyePos0;
 
 		pos = pos.sub(origin);
 
 		float yaw = (atan2f(pos.z, pos.x) * DEG_RAD) - 90;
 		float len = sqrtf(pos.x * pos.x + pos.z * pos.z);
-		float g = 0.006f; // nukkit = 0.012
-		//g = 0.001f;
+		float g = 0.006f; // nukkit = 0.012, some servers use different calculus
 		float tmp = (1 - g * (g * (len * len) + 2 * pos.y));
 		float pitch = DEG_RAD * -(atanf((1 - sqrtf(tmp)) / (g * len)));
 		if (pitch < 89 && pitch > -89) {
 			vec2_t angles = vec2_t(pitch, yaw);
-			localPlayer->viewAngles = angles;
+
+			vec2_t appl = angles.sub(localPlayer->viewAngles).normAngles();
+			appl.x = -appl.x;
+
+			appl.div(7); // Smooth dat boi
+
+			localPlayer->applyTurnDelta(&appl);
 		}
 	}
 }

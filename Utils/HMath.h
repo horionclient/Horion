@@ -4,8 +4,8 @@
 #include <iostream>
 #include <math.h>
 
-static float DEG_RAD2 = PI / 360.0f;
-static float DEG_RAD = 180.0f / PI;
+static constexpr float DEG_RAD2 = PI / 360.0f;
+static constexpr float DEG_RAD = 180.0f / PI;
 
 struct vec2_t
 {
