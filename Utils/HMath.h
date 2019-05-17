@@ -27,7 +27,7 @@ struct vec2_t
 	vec2_t &add(const vec2_t &o) { x += o.x; y += o.y; return *this; }
 
 
-	void normAngles() {
+	vec2_t &normAngles() {
 		while (x > 89.9f)
 			x -= 180.0f;
 		while (x < -89.9f)
@@ -37,6 +37,7 @@ struct vec2_t
 			y -= 360.0f;
 		while (y < -180.0f)
 			y += 360.0f;
+		return *this;
 	}
 
 	float squaredlen() const { return x * x + y * y; }
@@ -120,22 +121,16 @@ struct vec3_t
 	vec3_t &cross(const vec3_t &a, const vec3_t &b) { x = a.y*b.z - a.z*b.y; y = a.z*b.x - a.x*b.z; z = a.x*b.y - a.y*b.x; return *this; }
 	float cxy(const vec3_t &a) { return x * a.y - y * a.x; }
 
-	vec3_t CalcAngle(vec3_t dst)
+	vec2_t CalcAngle(vec3_t dst)
 	{
-		
-		vec3_t angles;
-		angles.x = (-(float)atan2(dst.x - this->x, dst.z - this->z)) * (180.0f / PI);
-		angles.y = (-atan2(dst.y - this->y, (this->dist(dst)))* (180.0f / PI));
-
-		return angles;
-		/*vec3_t diff = dst.sub(*this);
+		vec3_t diff = dst.sub(*this);
 
 		diff.y = diff.y / diff.magnitude();
 		vec2_t angles;
 		angles.x = asinf(diff.y) * -DEG_RAD;
 		angles.y = (float)-atan2f(diff.x, diff.z) * DEG_RAD;
-		//std::cout << angles.x << std::endl;*/
-		//return angles;
+
+		return angles;
 	}
 	vec3_t DifferenceAngle(vec3_t to)
 	{

@@ -73,18 +73,14 @@ void Aimbot::onPostRender()
 	if (targetList.size() > 0)
 	{
 		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
-		//vec3_t ghetto;
-		vec3_t yeet = origin.CalcAngle(targetList[0]->eyePos0);
-		//ghetto.x = localPlayer->yaw;
-		//ghetto.y = localPlayer->pitch;
-		//yeet = ghetto.DifferenceAngle(yeet);
-		//Premium code :)
-		//yeet.x /= 4;
-		//yeet.y /= 4;
-		//localPlayer->yaw += yeet.x;
-		//localPlayer->pitch += yeet.y;
-		localPlayer->yaw = yeet.x;
-		localPlayer->pitch = yeet.y;
+		vec2_t angle = origin.CalcAngle(targetList[0]->eyePos0);
+
+		vec2_t appl = angle.sub(localPlayer->viewAngles).normAngles();
+		appl.x = -appl.x;
+		
+		appl.div(7); // Smooth dat boi
+
+		localPlayer->applyTurnDelta(&appl);
 	}
 	
 }
