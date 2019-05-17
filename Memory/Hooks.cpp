@@ -493,7 +493,7 @@ float * Hooks::Dimension_getFogColor(__int64 a1, float * color, float brightness
 
 }
 
-void Hooks::GameMode_destroyBlock(void * _this, C_BlockPos * pos, uint8_t face)
+void Hooks::GameMode_destroyBlock(void * _this, vec3_ti * pos, uint8_t face)
 {
 	static auto oDestroyBlock = g_Hooks.GameMode_destroyBlockHook->GetOriginal<GameMode_destroyBlock_t>();
 

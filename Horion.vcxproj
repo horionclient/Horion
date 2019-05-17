@@ -160,7 +160,6 @@
     <ClCompile Include="Memory\SlimMem.cpp" />
     <ClCompile Include="Horion\Module\Modules\Module.cpp" />
     <ClCompile Include="Horion\Module\Modules\RainbowSky.cpp" />
-    <ClCompile Include="SDK\CBlockPos.h" />
     <ClCompile Include="Horion\Module\Modules\Step.cpp" />
     <ClCompile Include="Horion\Command\Commands\TeleportCommand.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />

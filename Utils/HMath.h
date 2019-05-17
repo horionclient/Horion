@@ -210,6 +210,12 @@ struct vec3_ti {
 		z = copy.z;
 	}
 
+	vec3_ti(const vec3_t &copy) {
+		x = (int) copy.x;
+		y = (int) copy.y;
+		z = (int) copy.z;
+	}
+
 	vec3_ti& operator=(const vec3_ti &copy) {
 		x = copy.x;
 		y = copy.y;

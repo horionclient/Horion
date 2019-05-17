@@ -18,9 +18,6 @@
     <ClCompile Include="Memory\SlimMem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SDK\CBlockPos.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Memory\Hooks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
