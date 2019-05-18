@@ -81,6 +81,10 @@ void Hooks::Init()
 	void* getFov = reinterpret_cast<void*>(Utils::FindSignature("40 53 48 83 EC ?? 0F 29 74 24 ?? 0F 29 7C 24 ?? 44 0F 29 4C 24 ?? 48 8B 05"));
 	g_Hooks.levelRendererPlayer_getFovHook = std::make_unique<FuncHook>(getFov, Hooks::LevelRendererPlayer_getFov);
 	g_Hooks.levelRendererPlayer_getFovHook->init();
+
+	void* mob_isAlive = reinterpret_cast<void*>(Utils::FindSignature("48 83 EC ?? 80 B9 ?? ?? ?? ?? 00 75 ?? 48 8B 01 48 8D"));
+	g_Hooks.mob_isAliveHook = std::make_unique<FuncHook>(mob_isAlive, Hooks::Mob_isAlive);
+	g_Hooks.mob_isAliveHook->init();
 	//logF("Hooks hooked");
 }
 
@@ -203,6 +207,16 @@ float Hooks::LevelRendererPlayer_getFov(__int64 a1, char a2, float a3, float a4)
 	__debugbreak(); // IF we reach here, a sig is broken
 #endif
 	return oGetFov(a1, a2, a3, a4);
+}
+
+bool Hooks::Mob_isAlive(C_Entity* a1)
+{
+	static auto oIsAlive = g_Hooks.mob_isAliveHook->GetOriginal<mob_isAlive_T>();
+
+	if (a1 == g_Data.getLocalPlayer())
+		return true;
+
+	return oIsAlive(a1);
 }
 
 void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4)

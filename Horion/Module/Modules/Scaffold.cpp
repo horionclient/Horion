@@ -41,7 +41,40 @@ void Scaffold::onPostRender()
 		DrawUtils::setColor(0.2f, 0.2f, 0.8f, 1);
 		DrawUtils::drawBox(blockBelow, vec3_t(blockBelow).add(1), 0.4f);
 		vec3_ti* blok = new vec3_ti(blockBelow);
-		g_Data.getCGameMode()->buildBlock(blok, 0);
+
+		// Find neighbour
+		static std::vector<vec3_ti*> checklist;
+		if (checklist.size() == 0) {
+			checklist.push_back(new vec3_ti(0, -1, 0)); 
+			checklist.push_back(new vec3_ti(0, 1, 0));
+
+			checklist.push_back(new vec3_ti(0, 0, -1));
+			checklist.push_back(new vec3_ti(0, 0, 1));
+
+
+			checklist.push_back(new vec3_ti(-1, 0, 0));
+			checklist.push_back(new vec3_ti(1, 0, 0));
+		}
+		bool foundCandidate = false;
+		int i = 0;
+		for (auto it = checklist.begin(); it != checklist.end(); ++it) {
+			vec3_ti* current = *it;
+
+			vec3_ti* calc = blok->subAndReturn(*current);
+			if (!(*(uint8_t *)(*(uintptr_t *)(**(uintptr_t **)(yeetBoi(g_Data.getLocalPlayer()->region, *calc) + 16) + 120i64) + 7i64))){
+				// Not replaceable
+				foundCandidate = true;
+				blok->set(calc);
+				delete calc;
+				break;
+			}
+			delete calc;
+			i++;
+		}
+		if (foundCandidate) {
+			g_Data.getCGameMode()->buildBlock(blok, i);
+		}
+		
 		delete blok;
 		// Block is replaceable (Air, Water ....)
 	}

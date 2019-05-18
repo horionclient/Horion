@@ -224,6 +224,14 @@ struct vec3_ti {
 		return *this;
 	}
 
+	vec3_ti* operator=(const vec3_ti *copy) {
+		x = copy->x;
+		y = copy->y;
+		z = copy->z;
+
+		return this;
+	}
+
 
 	vec3_ti(int *v) : x(v[0]), y(v[1]), z(v[2]) {}
 
@@ -233,6 +241,28 @@ struct vec3_ti {
 	bool operator!=(const vec3_ti &o) const { return x != o.x || y != o.y || z != o.z; }
 
 	vec3_ti &add(int f) { x += f; y += f; z += f; return *this; }
+
+	vec3_ti &add(int a, int b, int c) {
+		x += a;
+		y += b;
+		z += c;
+
+		return *this;
+	};
+
+	vec3_ti* addAndReturn(const vec3_ti o) {
+		return new vec3_ti(x + o.x, y + o.y, z + o.z);
+	}
+
+	vec3_ti* subAndReturn(const vec3_ti o) {
+		return new vec3_ti(x - o.x, y - o.y, z - o.z);
+	}
+
+	void set(vec3_ti* o) {
+		x = o->x;
+		y = o->y;
+		z = o->z; 
+	};
 
 	vec3_t toFloatVector() {
 		vec3_t vec;

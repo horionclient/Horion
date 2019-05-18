@@ -12,8 +12,7 @@
 #include <iosfwd>
 #endif
 
-#include <windows.storage.h>
-#include <wrl.h>
+
 #include <mutex>
 #include <string>
 #include <ctime>
@@ -22,15 +21,18 @@
 #include "Utils.h"
 #include <vector>
 
-#pragma comment(lib,"runtimeobject")
+#include <windows.storage.h>
+#include <wrl.h>
 
-#ifndef logF 
-#define logF Logger::WriteLogFileF
-#endif
+#pragma comment(lib,"runtimeobject")
 
 using namespace ABI::Windows::Storage;
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
+
+#ifndef logF 
+#define logF Logger::WriteLogFileF
+#endif
 
 struct TextForPrint {
 	char time[20];
