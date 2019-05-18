@@ -22,6 +22,7 @@
 #include "Modules/Tracer.h"
 #include "Modules/BowAimbot.h"
 #include "Modules/Scaffold.h"
+#include "Modules/Speed.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

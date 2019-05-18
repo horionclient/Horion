@@ -181,6 +181,14 @@ public:
 	bool isSprinting() {
 		return Utils::CallVFunc<256, bool>(this);
 	};
+
+	float getSpeed() {
+		return Utils::CallVFunc<263, float>(this);
+	};
+
+	void setSpeed(float speed) {
+		Utils::CallVFunc<264, void, float>(this, speed);
+	};
 };
 
 class C_LocalPlayer : public C_Entity {

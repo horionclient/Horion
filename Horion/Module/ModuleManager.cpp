@@ -25,6 +25,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Tracer());
 	this->moduleList.push_back(new BowAimbot());
 	this->moduleList.push_back(new Scaffold());
+	//this->moduleList.push_back(new Speed());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);

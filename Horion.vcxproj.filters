@@ -39,46 +39,7 @@
     <ClCompile Include="Horion\Module\ModuleManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\Module.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\Killaura.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Horion\DrawUtils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\ESP.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\Jetpack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\TriggerBot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\Aimbot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\ChestESP.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\NoKnockBack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\RainbowSky.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\AirJump.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\Step.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\Glide.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\EditionFaker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Horion\Command\CommandMgr.cpp">
@@ -102,28 +63,70 @@
     <ClCompile Include="Horion\Config\ConfigObj.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\Phase.cpp">
+    <ClCompile Include="Horion\Command\Commands\RelativeTeleportCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\Freecam.cpp">
+    <ClCompile Include="Horion\Command\Commands\ToggleCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\Aimbot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\AirJump.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Horion\Module\Modules\AutoSprint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\Tracer.cpp">
+    <ClCompile Include="Horion\Module\Modules\BowAimbot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\BowAimbot.cpp">
+    <ClCompile Include="Horion\Module\Modules\ChestESP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\EditionFaker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\ESP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\Freecam.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\Glide.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\Jetpack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\Killaura.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\Module.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\NoKnockBack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\Phase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\RainbowSky.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Horion\Module\Modules\Scaffold.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Horion\Command\Commands\RelativeTeleportCommand.cpp">
+    <ClCompile Include="Horion\Module\Modules\Step.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Horion\Command\Commands\ToggleCommand.cpp">
+    <ClCompile Include="Horion\Module\Modules\Tracer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\TriggerBot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Module\Modules\Speed.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -191,49 +194,10 @@
     <ClInclude Include="Horion\Module\ModuleManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\Module.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\Killaura.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Horion\DrawUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\ESP.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\Jetpack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\TriggerBot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\Aimbot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\ChestESP.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SDK\CChestBlockActor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\NoKnockBack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\RainbowSky.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\AirJump.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\Step.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\Glide.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\EditionFaker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Horion\Command\CommandMgr.h">
@@ -260,28 +224,70 @@
     <ClInclude Include="Utils\Json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\Phase.h">
+    <ClInclude Include="Horion\Command\Commands\RelativeTeleportCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\Freecam.h">
+    <ClInclude Include="Horion\Command\Commands\ToggleCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Module\Modules\TriggerBot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Module\Modules\Aimbot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Module\Modules\AirJump.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Horion\Module\Modules\AutoSprint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\Tracer.h">
+    <ClInclude Include="Horion\Module\Modules\BowAimbot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\BowAimbot.h">
+    <ClInclude Include="Horion\Module\Modules\ChestESP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Module\Modules\EditionFaker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Module\Modules\ESP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Module\Modules\Freecam.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Module\Modules\Glide.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Module\Modules\Jetpack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Module\Modules\Killaura.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Module\Modules\Module.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Module\Modules\NoKnockBack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Module\Modules\Phase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Module\Modules\RainbowSky.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Horion\Module\Modules\Scaffold.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Horion\Command\Commands\RelativeTeleportCommand.h">
+    <ClInclude Include="Horion\Module\Modules\Step.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Horion\Command\Commands\ToggleCommand.h">
+    <ClInclude Include="Horion\Module\Modules\Tracer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Module\Modules\Speed.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
