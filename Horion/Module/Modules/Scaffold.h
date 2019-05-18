@@ -4,6 +4,8 @@
 class Scaffold :
 	public IModule
 {
+private:
+	bool tryScaffold(vec3_t blockBelow);
 public:
 	Scaffold();
 	~Scaffold();

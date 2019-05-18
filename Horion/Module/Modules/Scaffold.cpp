@@ -2,6 +2,8 @@
 
 
 
+
+
 Scaffold::Scaffold() : IModule(VK_NUMPAD1)
 {
 }
@@ -16,41 +18,29 @@ std::string Scaffold::getModuleName()
 	return std::string("Scaffold");
 }
 
-void Scaffold::onPostRender()
+bool Scaffold::tryScaffold(vec3_t blockBelow)
 {
-	if (g_Data.getLocalPlayer() == nullptr)
-		return;
-	if (!g_Data.canUseMoveKeys())
-		return;
-	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
-	blockBelow.y -= g_Data.getLocalPlayer()->height + 0.3f;
-
-	/*
-	* float calcYaw = (gm->player->yaw + 90) *  (PI / 180);
-	* x = cos(calcYaw);
-	* z = sin(calcYaw);
-	* // Maybe use advanced stuff from jetpack to enhance the chosen block
-	*/
-
 	blockBelow = blockBelow.floor();
 
 	using yeetBoi_t = __int64(__fastcall*)(uintptr_t, const vec3_ti&);
 	static yeetBoi_t yeetBoi = reinterpret_cast<yeetBoi_t>(Utils::FindSignature("40 53 48 83 EC ?? 48 8B DA 8B 52 ?? 85 D2"));
 	// BlockSource::getBlock()::getMaterial()::isReplaceable()
+
+	
+	DrawUtils::drawBox(blockBelow, vec3_t(blockBelow).add(1), 0.4f);
+
 	if ((*(uint8_t *)(*(uintptr_t *)(**(uintptr_t **)(yeetBoi(g_Data.getLocalPlayer()->region, vec3_ti(blockBelow)) + 16) + 120i64) + 7i64))) {
-		DrawUtils::setColor(0.2f, 0.2f, 0.8f, 1);
-		DrawUtils::drawBox(blockBelow, vec3_t(blockBelow).add(1), 0.4f);
+		
 		vec3_ti* blok = new vec3_ti(blockBelow);
 
 		// Find neighbour
 		static std::vector<vec3_ti*> checklist;
 		if (checklist.size() == 0) {
-			checklist.push_back(new vec3_ti(0, -1, 0)); 
+			checklist.push_back(new vec3_ti(0, -1, 0));
 			checklist.push_back(new vec3_ti(0, 1, 0));
 
 			checklist.push_back(new vec3_ti(0, 0, -1));
 			checklist.push_back(new vec3_ti(0, 0, 1));
-
 
 			checklist.push_back(new vec3_ti(-1, 0, 0));
 			checklist.push_back(new vec3_ti(1, 0, 0));
@@ -61,8 +51,8 @@ void Scaffold::onPostRender()
 			vec3_ti* current = *it;
 
 			vec3_ti* calc = blok->subAndReturn(*current);
-			if (!(*(uint8_t *)(*(uintptr_t *)(**(uintptr_t **)(yeetBoi(g_Data.getLocalPlayer()->region, *calc) + 16) + 120i64) + 7i64))){
-				// Not replaceable
+			if (!(*(uint8_t *)(*(uintptr_t *)(**(uintptr_t **)(yeetBoi(g_Data.getLocalPlayer()->region, *calc) + 16) + 120i64) + 7i64))) {
+				// Found a solid block to click
 				foundCandidate = true;
 				blok->set(calc);
 				delete calc;
@@ -73,11 +63,41 @@ void Scaffold::onPostRender()
 		}
 		if (foundCandidate) {
 			g_Data.getCGameMode()->buildBlock(blok, i);
+			delete blok;
+			return true;
+		}
+		delete blok;
+	}
+	return false;
+}
+
+void Scaffold::onPostRender()
+{
+	if (g_Data.getLocalPlayer() == nullptr)
+		return;
+	if (!g_Data.canUseMoveKeys())
+		return;
+
+	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
+	blockBelow.y -= g_Data.getLocalPlayer()->height;
+	blockBelow.y -= 0.5f;
+
+	// Adjustment by velocity
+	vec3_t vel = g_Data.getLocalPlayer()->velocity;
+	vel.normalize();
+	
+	DrawUtils::setColor(0.3f, 0.2f, 0.8f, 1);
+	if (!tryScaffold(blockBelow)) {
+		if (g_Data.getLocalPlayer()->velocity.magnitudexz() > 0.05f) {
+			DrawUtils::setColor(0.8f, 0.8f, 0.2f, 1);
+			blockBelow.z -= vel.z * 0.4f;
+			if (!tryScaffold(blockBelow)) {
+				blockBelow.x -= vel.x * 0.4f;
+				if (!tryScaffold(blockBelow)) {
+
+				}
+			}
 		}
 		
-		delete blok;
-		// Block is replaceable (Air, Water ....)
 	}
-	
-	
 }
