@@ -86,12 +86,13 @@ void Scaffold::onPostRender()
 
 
 	// Adjustment by velocity
+	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
 	vec3_t vel = g_Data.getLocalPlayer()->velocity;
 	vel.normalize(); // Only use values from 0 - 1
 	
 	DrawUtils::setColor(0.3f, 0.2f, 0.8f, 1);
 	if (!tryScaffold(blockBelow)) {
-		if (g_Data.getLocalPlayer()->velocity.magnitudexz() > 0.05f) { // Are we actually walking?
+		if (speed > 0.05f) { // Are we actually walking?
 			DrawUtils::setColor(0.8f, 0.8f, 0.2f, 1);
 			blockBelow.z -= vel.z * 0.4f;
 			if (!tryScaffold(blockBelow)) {

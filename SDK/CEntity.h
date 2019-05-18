@@ -177,6 +177,10 @@ public:
 	void setSprinting(bool sprint) {
 		Utils::CallVFunc<257, void, bool>(this, sprint);
 	};
+
+	bool isSprinting() {
+		return Utils::CallVFunc<256, bool>(this);
+	};
 };
 
 class C_LocalPlayer : public C_Entity {
