@@ -13,6 +13,8 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new EjectCommand());
 	commandList.push_back(new TeleportCommand());
 	commandList.push_back(new BindCommand());
+	commandList.push_back(new RelativeTeleportCommand());
+	commandList.push_back(new ToggleCommand());
 }
 
 void CommandMgr::disable() {

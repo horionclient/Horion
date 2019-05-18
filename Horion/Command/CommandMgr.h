@@ -6,6 +6,8 @@
 #include "Commands/EjectCommand.h"
 #include "Commands/TeleportCommand.h"
 #include "Commands/BindCommand.h"
+#include "Commands/RelativeTeleportCommand.h"
+#include "Commands/ToggleCommand.h"
 
 #include <string>
 #include <vector>

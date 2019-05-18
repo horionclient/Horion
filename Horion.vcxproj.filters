@@ -120,6 +120,12 @@
     <ClCompile Include="Horion\Module\Modules\Scaffold.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Horion\Command\Commands\RelativeTeleportCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Command\Commands\ToggleCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils\Utils.h">
@@ -270,6 +276,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Horion\Module\Modules\Scaffold.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Command\Commands\RelativeTeleportCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Command\Commands\ToggleCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

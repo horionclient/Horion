@@ -129,6 +129,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Horion\Command\Commands\RelativeTeleportCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\ToggleCommand.cpp" />
     <ClCompile Include="Horion\Module\Modules\BowAimbot.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSprint.cpp" />
     <ClCompile Include="Horion\Config\ConfigObj.cpp" />
@@ -166,6 +168,8 @@
     <ClCompile Include="Utils\TextFormat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Horion\Command\Commands\RelativeTeleportCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\ToggleCommand.h" />
     <ClInclude Include="Horion\Module\Modules\BowAimbot.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSprint.h" />
     <ClInclude Include="Horion\Config\ConfigObj.h" />

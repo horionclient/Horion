@@ -81,7 +81,7 @@ void Scaffold::onPostRender()
 		return;
 
 	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0; // Block below the player
-	blockBelow.y -= g_Data.getLocalPlayer()->height;
+	blockBelow.y -= g_Data.getLocalPlayer()->height;     
 	blockBelow.y -= 0.5f;
 
 
