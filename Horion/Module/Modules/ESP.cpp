@@ -19,7 +19,7 @@ std::string ESP::getModuleName()
 void ESP::onPostRender() {
 	if (g_Data.getLocalPlayer() != nullptr && GameData::canUseMoveKeys()) {
 		int ourent = g_Data.getLocalPlayer()->getEntityTypeId();
-		C_EntityList* entList = g_Data.getLocalPlayer()->getEntityList();
+		C_EntityList* entList = g_Data.getEntityList();
 		size_t listSize = entList->getListSize();
 
 		if (listSize < 1000 && listSize > 1) {

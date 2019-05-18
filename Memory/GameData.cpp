@@ -85,6 +85,10 @@ void GameData::updateGameData(C_GameMode * gameMode)
 		}
 	}
 }
+void GameData::EntityList_tick(C_EntityList * list)
+{
+	g_Data.entityList = list;
+}
 void GameData::addChestToList(C_ChestBlockActor * chest)
 {
 	std::set<std::shared_ptr<AABB>>::iterator it;

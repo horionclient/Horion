@@ -20,7 +20,7 @@ void Killaura::onTick(C_GameMode* gm)
 {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
-	C_EntityList* entList = localPlayer->getEntityList();
+	C_EntityList* entList = g_Data.getEntityList();
 	size_t listSize = entList->getListSize();
 
 	if (listSize > 1000) {

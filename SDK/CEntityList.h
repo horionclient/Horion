@@ -7,7 +7,7 @@ class C_EntityList
 {
 public:
 private:
-	char pad_0x0000[0x38]; //0x0000
+	char pad_0x0000[0x40]; //0x0000
 public:
 	uintptr_t firstEntity; //0x0038 
 	uintptr_t lastEntity; //0x0040 

@@ -85,6 +85,10 @@ void Hooks::Init()
 	void* mob_isAlive = reinterpret_cast<void*>(Utils::FindSignature("48 83 EC ?? 80 B9 ?? ?? ?? ?? 00 75 ?? 48 8B 01 48 8D"));
 	g_Hooks.mob_isAliveHook = std::make_unique<FuncHook>(mob_isAlive, Hooks::Mob_isAlive);
 	g_Hooks.mob_isAliveHook->init();
+
+	void* tick_entityList = reinterpret_cast<void*>(Utils::FindSignature("40 53 48 83 EC ?? 48 8B D9 E8 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 49 8B C8 4D 85 C0 75 07 ?? ?? ?? ?? ?? ?? ?? 4C 8B 49 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 49 ?? 49 2B C9 48 F7 E9 48 C1 FA 03 48 8B C2 48 C1 E8 3F 48 03 D0 83 FA 01 7E 36 49 8D 41 ?? 48 85 C0 74 2D 80 78 ?? 00 74 27 ?? ?? ?? ?? ?? ?? ?? 49 8B C0 4D 85 C0 75 03 48 8B C1 8B ?? ?? ?? ?? ?? 4D 85 C0"));
+	g_Hooks.MultiLevelPlayerHook = std::make_unique<FuncHook>(tick_entityList, Hooks::MultiLevelPlayer_tick);
+	g_Hooks.MultiLevelPlayerHook->init();
 	//logF("Hooks hooked");
 }
 
@@ -100,6 +104,10 @@ void Hooks::Restore()
 	g_Hooks.AppPlatform_getGameEditionHook->Restore();
 	g_Hooks.autoComplete_Hook->Restore();
 	g_Hooks.levelRendererPlayer_getFovHook->Restore();
+	g_Hooks.ChestBlockActor_tickHook->Restore();
+	g_Hooks.sendToServerHook->Restore();
+	g_Hooks.MultiLevelPlayerHook->Restore();
+	g_Hooks.mob_isAliveHook->Restore();
 }
 
 void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
@@ -123,6 +131,12 @@ void __fastcall Hooks::SurvivalMode_tick(C_GameMode * _this)
 
 		_this->player->getEntityTypeId();
 	}
+}
+void __fastcall Hooks::MultiLevelPlayer_tick(C_EntityList * _this)
+{
+	static auto oTick = g_Hooks.MultiLevelPlayerHook->GetOriginal<MultiLevelPlayer_tick_t>();
+	oTick(_this); // Call Original Func
+	GameData::EntityList_tick(_this);
 }
 void __fastcall Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a)
 {

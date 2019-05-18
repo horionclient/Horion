@@ -12,6 +12,7 @@ private:
 	C_ClientInstance* clientInstance;
 	C_LocalPlayer* localPlayer;
 	C_GameMode* gameMode;
+	C_EntityList* entityList;
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
 	const SlimUtils::SlimModule* gameModule;
 	SlimUtils::SlimMem* slimMem;
@@ -26,6 +27,7 @@ public:
 	static void updateGameData(C_GameMode* gameMode);
 	static void initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem);
 	static void addChestToList(C_ChestBlockActor * ChestBlock2);
+	static void EntityList_tick(C_EntityList * list);
 
 	
 
@@ -48,6 +50,7 @@ public:
 		return slimMem;
 	};
 	C_GameMode* getCGameMode() { return gameMode; };
+	C_EntityList* getEntityList() { return entityList; };
 	std::set<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
 };
 

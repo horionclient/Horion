@@ -41,6 +41,7 @@ private:
 	static void sendToServer(C_LoopbackPacketSender* a, C_Packet* packet);
 	static float LevelRendererPlayer_getFov(__int64 a1, char a2, float a3, float a4);
 	static bool Mob_isAlive(C_Entity* a1);
+	static void MultiLevelPlayer_tick(C_EntityList* entityList);
 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
@@ -58,6 +59,7 @@ private:
 	std::unique_ptr<FuncHook> sendToServerHook;
 	std::unique_ptr<FuncHook> levelRendererPlayer_getFovHook;
 	std::unique_ptr<FuncHook> mob_isAliveHook;
+	std::unique_ptr<FuncHook> MultiLevelPlayerHook;
 
 	typedef bool(__fastcall* mob_isAlive_T)(C_Entity* a1);
 	typedef float(__fastcall* getFov_t)(__int64 a1, char a2, float a3, float a4);
@@ -74,8 +76,9 @@ private:
 	typedef TextHolder*(__fastcall* Options_getVersionString_t)(void* _this, __int64);
 	typedef HRESULT(__stdcall* d3d11_present_t)(IDXGISwapChain * pSwapChain, UINT SyncInterval, UINT Flags);
 	typedef void(__fastcall* ChestBlockActor_tick_t)(void* _this,void*);
-	typedef void(__fastcall* ChestBlockActor_tick_t)(void* _this, void*);
 	typedef void(__fastcall* sendToServer_tick_t)(C_LoopbackPacketSender* a, C_Packet* packet);
+	typedef void(__fastcall* MultiLevelPlayer_tick_t)(C_EntityList* entityList);
+
 };
 
 extern Hooks g_Hooks;

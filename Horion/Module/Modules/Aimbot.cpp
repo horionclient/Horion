@@ -28,7 +28,7 @@ void Aimbot::onPostRender()
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 	if (localPlayer == nullptr)
 		return;
-	C_EntityList* entList = localPlayer->getEntityList();
+	C_EntityList* entList = g_Data.getEntityList();
 	if (entList == nullptr)
 		return;
 	size_t listSize = entList->getListSize();

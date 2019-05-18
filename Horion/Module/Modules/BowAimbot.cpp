@@ -23,7 +23,7 @@ void BowAimbot::onPostRender() {
 	if (localPlayer->itemId != 261) // Bow in hand?
 		return;
 
-	C_EntityList* entList = localPlayer->getEntityList();
+	C_EntityList* entList = g_Data.getEntityList();
 	if (entList == nullptr)
 		return;
 	size_t listSize = entList->getListSize();
