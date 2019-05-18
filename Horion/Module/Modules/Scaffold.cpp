@@ -77,18 +77,21 @@ void Scaffold::onPostRender()
 		return;
 	if (!g_Data.canUseMoveKeys())
 		return;
+	if (g_Data.getLocalPlayer()->itemId == 0 || g_Data.getLocalPlayer()->itemId > 255) // Block in hand?
+		return;
 
-	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
+	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0; // Block below the player
 	blockBelow.y -= g_Data.getLocalPlayer()->height;
 	blockBelow.y -= 0.5f;
 
+
 	// Adjustment by velocity
 	vec3_t vel = g_Data.getLocalPlayer()->velocity;
-	vel.normalize();
+	vel.normalize(); // Only use values from 0 - 1
 	
 	DrawUtils::setColor(0.3f, 0.2f, 0.8f, 1);
 	if (!tryScaffold(blockBelow)) {
-		if (g_Data.getLocalPlayer()->velocity.magnitudexz() > 0.05f) {
+		if (g_Data.getLocalPlayer()->velocity.magnitudexz() > 0.05f) { // Are we actually walking?
 			DrawUtils::setColor(0.8f, 0.8f, 0.2f, 1);
 			blockBelow.z -= vel.z * 0.4f;
 			if (!tryScaffold(blockBelow)) {
