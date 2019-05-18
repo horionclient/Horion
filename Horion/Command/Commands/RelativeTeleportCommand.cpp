@@ -6,6 +6,7 @@ RelativeTeleportCommand::RelativeTeleportCommand() : ICommand("relativeteleport"
 {
 	registerAlias("reltp");
 	registerAlias("rtp");
+	registerAlias("vclip");
 }
 
 
