@@ -36,6 +36,7 @@ void Scaffold::onPostRender()
 
 	using yeetBoi_t = __int64(__fastcall*)(uintptr_t, const vec3_ti&);
 	static yeetBoi_t yeetBoi = reinterpret_cast<yeetBoi_t>(Utils::FindSignature("40 53 48 83 EC ?? 48 8B DA 8B 52 ?? 85 D2"));
+	// BlockSource::getBlock()::getMaterial()::isReplaceable()
 	if ((*(uint8_t *)(*(uintptr_t *)(**(uintptr_t **)(yeetBoi(g_Data.getLocalPlayer()->region, vec3_ti(blockBelow)) + 16) + 120i64) + 7i64))) {
 		DrawUtils::setColor(0.2f, 0.2f, 0.8f, 1);
 		DrawUtils::drawBox(blockBelow, vec3_t(blockBelow).add(1), 0.4f);
