@@ -108,6 +108,7 @@ void Hooks::Restore()
 	g_Hooks.sendToServerHook->Restore();
 	g_Hooks.MultiLevelPlayerHook->Restore();
 	g_Hooks.mob_isAliveHook->Restore();
+	
 }
 
 void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
@@ -201,10 +202,9 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 	oFunc(a, packet);
 }
 
-float Hooks::LevelRendererPlayer_getFov(__int64 a1, char a2, float a3, float a4)
+float Hooks::LevelRendererPlayer_getFov(__int64 a1, float a2, bool a3)
 {
 	static auto oGetFov = g_Hooks.levelRendererPlayer_getFovHook->GetOriginal<getFov_t>();
-
 	static void* renderItemInHand = reinterpret_cast<void*>(Utils::FindSignature("F3 44 0F 10 2D ?? ?? ?? ?? F3 41 0F 59 C5 0F 28 DE F3"));
 	static void* setupCamera = reinterpret_cast<void*>(Utils::FindSignature("48 8B 8E ?? ?? ?? ?? 44 0F 28 C0"));
 
@@ -212,23 +212,23 @@ float Hooks::LevelRendererPlayer_getFov(__int64 a1, char a2, float a3, float a4)
 		//static float yess = 0;
 		//yess += 0.03f;
 		//return 60 + 40 + sinf(yess) * 50;
-		return oGetFov(a1, a2, a3, a4);
+		return oGetFov(a1, a2, a3);
 	}
 	if (_ReturnAddress() == setupCamera) {
-		return oGetFov(a1, a2, a3, a4);
+		return oGetFov(a1, a2, a3);
 	}
 #ifdef _DEBUG
 	__debugbreak(); // IF we reach here, a sig is broken
 #endif
-	return oGetFov(a1, a2, a3, a4);
+	return oGetFov(a1, a2, a3);
 }
 
 bool Hooks::Mob_isAlive(C_Entity* a1)
 {
 	static auto oIsAlive = g_Hooks.mob_isAliveHook->GetOriginal<mob_isAlive_T>();
 
-	if (a1 == g_Data.getLocalPlayer())
-		return true;
+	//if (a1 == g_Data.getLocalPlayer())
+		//return true;
 
 	return oIsAlive(a1);
 }

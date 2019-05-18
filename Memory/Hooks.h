@@ -39,7 +39,7 @@ private:
 	static __int64 AppPlatform_getGameEdition(__int64 _this);
 	static void pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4);
 	static void sendToServer(C_LoopbackPacketSender* a, C_Packet* packet);
-	static float LevelRendererPlayer_getFov(__int64 a1, char a2, float a3, float a4);
+	static float LevelRendererPlayer_getFov(__int64 a1, float a2, bool a3);
 	static bool Mob_isAlive(C_Entity* a1);
 	static void MultiLevelPlayer_tick(C_EntityList* entityList);
 
@@ -62,7 +62,7 @@ private:
 	std::unique_ptr<FuncHook> MultiLevelPlayerHook;
 
 	typedef bool(__fastcall* mob_isAlive_T)(C_Entity* a1);
-	typedef float(__fastcall* getFov_t)(__int64 a1, char a2, float a3, float a4);
+	typedef float(__fastcall* getFov_t)(__int64 a1, float a2, bool a3);
 	typedef void(__fastcall* autoComplete_t)(__int64 a1, __int64 a2, TextHolder* text, int a4);
 	typedef __int64(__fastcall* AppPlatform_getGameEdition_t)(__int64);
 	typedef void(__fastcall* Actor_lerpMotion_t)(C_Entity*, vec3_t);
