@@ -44,6 +44,15 @@ struct _1ptr1 {
 	char pad_0x0000[0x238]; //0x0000
 	_1ptr2* ptrToPtrToCGameMode; //0x0238 
 };
+struct Name_struct
+{
+	char pad_0x0000[0x470];
+	char name[16];
+};
+struct ptrName_struct
+{
+	Name_struct* yeet_name;
+};
 
 class C_Entity
 {
@@ -60,7 +69,7 @@ public:
 		};
 		vec2_t viewAngles;
 	};
-	
+
 	float pitch2; //0x00E8
 	float yaw2; //0x00EC
 private:
@@ -118,7 +127,11 @@ private:
 public:
 	TextHolder name; //0x1088
 private:
-	char pad_0x109C[0x2E8]; //0x109C
+	char pad_0x109C[0xB4]; //0x109C
+public:
+	ptrName_struct* pointToname; //0x1160
+private:
+	char pad_0x1168[0x228]; //0x1168
 public:
 	float bodyYaw; //0x1390
 	float oldBodyYaw; //0x1394
@@ -214,14 +227,14 @@ public:
 		swingFunc(this);
 	}
 	void localPlayerTurn(vec2_t* idk) {
-		using Turn = void(__thiscall*)(void*,vec2_t*);
+		using Turn = void(__thiscall*)(void*, vec2_t*);
 		static Turn TurnFunc = reinterpret_cast<Turn>(Utils::FindSignature("4C 8B DC 55 57 ?? ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? 45 ?? ?? ?? ?? ?? ?? ?? 48 8B 05 D6 D4 A5 01 48 33 C4 48 89 45 ?? 49 89 5B ?? 48 8B F9 ?? ?? ?? ?? ?? ?? ?? 48 8B DA 4D 89 73 E8 41 0F 29 73 D8 41 0F 29 7B C8 48 8B 01 FF 90 ?? ?? ?? ?? F2 0F 10 03"));
-		TurnFunc(this,idk);
+		TurnFunc(this, idk);
 	}
 	void applyTurnDelta(vec2_t* a)
 	{
 		using applyTurnDelta = void(__thiscall*)(void*, vec2_t*);
-	//	static applyTurnDelta TurnDelta = reinterpret_cast<applyTurnDelta>(Utils::FindSignature("48 89 5C 24 10 57 48 83 EC ?? 0F 29 74 24 ?? 48 8B FA F3 0F 10 35 16 AA 35 01 48 8B D9 0F 29 7C 24 ?? 0F 28 CE F3 0F 10 7A ?? 0F 28 C7 44 0F 29 44 24 ?? F3 ?? ?? ?? ?? ?? ?? ?? F3 44 0F 10 05 88 A9 35 01 44 0F 29 4C 24 ?? F3 41 0F 58 C0"));
+		//	static applyTurnDelta TurnDelta = reinterpret_cast<applyTurnDelta>(Utils::FindSignature("48 89 5C 24 10 57 48 83 EC ?? 0F 29 74 24 ?? 48 8B FA F3 0F 10 35 16 AA 35 01 48 8B D9 0F 29 7C 24 ?? 0F 28 CE F3 0F 10 7A ?? 0F 28 C7 44 0F 29 44 24 ?? F3 ?? ?? ?? ?? ?? ?? ?? F3 44 0F 10 05 88 A9 35 01 44 0F 29 4C 24 ?? F3 41 0F 58 C0"));
 		static applyTurnDelta TurnDelta = reinterpret_cast<applyTurnDelta>(Utils::FindSignature("48 89 5C 24 10 57 48 83 EC ?? 0F 29 74 24 ?? 48 8B FA F3 ?? ?? ?? ?? ?? ?? ?? 48 8B D9 0F 29 7C 24 ?? 0F 28 CE F3 0F 10 7A ?? 0F 28 C7 44 0F 29 44 24 ?? F3 ?? ?? ?? ?? ?? ?? ?? F3 ?? ?? ?? ?? ?? ?? ?? ?? 44 0F 29 4C 24 ?? F3 41 0F 58 C0"));
 		TurnDelta(this, a);
 	}

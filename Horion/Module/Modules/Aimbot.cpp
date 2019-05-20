@@ -58,6 +58,9 @@ void Aimbot::onPostRender()
 
 		if (localPlayer->getEntityTypeId() != currentEntity->getEntityTypeId()) // Skip Invalid Entity
 			continue;
+
+		if (!(strlen(currentEntity->pointToname->yeet_name->name) > 0))
+			continue;
 		// i want to hit villagers ok
 //		if (localPlayer->entityType2 != currentEntity->entityType2)
 //			continue;
