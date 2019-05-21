@@ -7,6 +7,16 @@ public:
 	uintptr_t** vTable; //0x0000
 };
 
+class C_InteractPacket : public C_Packet
+{
+private:
+	char filler[0x18]; //x0x00008
+public:
+	int idk; //0x20
+	int l;//0x24
+	int entityRuntimeID; //0x28
+	vec3_t pos; //0x30
+};
 
 #pragma pack(push,8)
 
@@ -28,7 +38,7 @@ public:
 	}
 
 
-	uintptr_t** vTable;		// 0x0
+	//uintptr_t** vTable;		// 0x0
 private:
 	char filler[0x18];		// 0x8
 public:
@@ -45,3 +55,4 @@ public:
 };
 
 #pragma pack(pop)
+

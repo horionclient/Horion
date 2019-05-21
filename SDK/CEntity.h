@@ -127,7 +127,7 @@ private:
 public:
 	TextHolder name; //0x1088
 private:
-	char pad_0x109C[0xB4]; //0x109C
+	char pad_0x109C[0xB4]; //0x10AC
 public:
 	ptrName_struct* pointToname; //0x1160
 private:

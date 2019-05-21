@@ -189,14 +189,24 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 	static auto oFunc = g_Hooks.sendToServerHook->GetOriginal<sendToServer_tick_t>();
 
 	static Freecam* mod = static_cast<Freecam*>(moduleMgr->getModule<Freecam>());
-	if (mod == nullptr)
+	static NoFall* mod2 = static_cast<NoFall*>(moduleMgr->getModule<NoFall>());
+	if (mod == nullptr && mod2 == nullptr) {
 		mod = static_cast<Freecam*>(moduleMgr->getModule<Freecam>());
+		mod2 = static_cast<NoFall*>(moduleMgr->getModule<NoFall>());
+	}
 	else if (mod->isEnabled()) {
 		// Do nothing i guess
 		// Do some stuff with modifiers here maybe
 		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
 		if (frenchBoy.vTable == packet->vTable)
 			return; // Dont call sendToServer
+	}
+	else if (mod2->isEnabled()) {
+		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
+		if (frenchBoy.vTable == packet->vTable) {
+			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
+			p->onGround = true;
+		}
 	}
 
 	oFunc(a, packet);

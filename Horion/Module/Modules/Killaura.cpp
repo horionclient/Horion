@@ -1,6 +1,6 @@
 #include "Killaura.h"
 
-
+bool f = true;
 
 Killaura::Killaura() : IModule('P') // <-- keybind
 {
