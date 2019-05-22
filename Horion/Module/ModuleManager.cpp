@@ -26,6 +26,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new BowAimbot());
 	this->moduleList.push_back(new Scaffold());
 	this->moduleList.push_back(new NoFall());
+	this->moduleList.push_back(new Blink());
 	//this->moduleList.push_back(new Speed());
 	initialized = true;
 
