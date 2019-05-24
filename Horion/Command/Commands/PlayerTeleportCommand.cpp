@@ -20,7 +20,10 @@ bool PlayerTeleportCommand::execute(std::vector<std::string>* args)
 	std::string nameOfPlayer = args->at(1);
 	assertTrue(nameOfPlayer.size() > 0);
 
+	std::transform(nameOfPlayer.begin(), nameOfPlayer.end(), nameOfPlayer.begin(), ::tolower);
+
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
+	C_Entity* currentEntity;
 
 	C_EntityList* entList = g_Data.getEntityList();
 	size_t listSize = entList->getListSize();
@@ -34,28 +37,25 @@ bool PlayerTeleportCommand::execute(std::vector<std::string>* args)
 	//Loop through all our players and retrieve their information
 	for (size_t i = 0; i < listSize; i++)
 	{
-		C_Entity* currentEntity = entList->get(i);
+		currentEntity = entList->get(i);
 
-		if (currentEntity == 0)
-			break;
+		std::string name(currentEntity->name2.getText());
 
-		if (currentEntity == localPlayer) // Skip Local player
+		std::transform(name.begin(), name.end(), name.begin(), ::tolower);
+		
+		if (name.find(nameOfPlayer) == std::string::npos)
 			continue;
 
-		if (localPlayer->getEntityTypeId() != currentEntity->getEntityTypeId()) // Skip Invalid Entity
-			continue;
-
-		if (strcmp(currentEntity->name2.getText(), nameOfPlayer.c_str()) != 0)
-			continue;
 		pos = currentEntity->eyePos0;
+		break;
 
 	}
 	if (pos.iszero())
 	{
-		clientMessageF("%sPlayer not found !", GREEN);
+		clientMessageF("[%sHorion%s] %sCouldn't find player : %s !",GOLD,WHITE,GREEN,nameOfPlayer.c_str());
 		return true;
 	}
 	g_Data.getLocalPlayer()->setPos(pos);
-	clientMessageF("%sTeleported!", GREEN);
+	clientMessageF("[%sHorion%s] %sTeleported to %s",GOLD,WHITE,GREEN,currentEntity->name2.getText());
 	return true;
 }
