@@ -184,22 +184,22 @@ __int64 Hooks::AppPlatform_getGameEdition(__int64 _this)
 
 	return oGetEditon(_this);
 }
+
 void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 {
 	static auto oFunc = g_Hooks.sendToServerHook->GetOriginal<sendToServer_tick_t>();
 
-	static Freecam* mod = static_cast<Freecam*>(moduleMgr->getModule<Freecam>());
-	static NoFall* mod2 = static_cast<NoFall*>(moduleMgr->getModule<NoFall>());
-	static Blink* mod3 = static_cast<Blink*>(moduleMgr->getModule<Blink>());
+	static IModule* mod = moduleMgr->getModule<Freecam>();
+	static IModule* mod2 = moduleMgr->getModule<NoFall>();
+	static Blink* mod3 = reinterpret_cast<Blink*>(moduleMgr->getModule<Blink>());
 
 	if (mod == nullptr  || mod2 == nullptr || mod3 == nullptr) {
-		mod = static_cast<Freecam*>(moduleMgr->getModule<Freecam>());
-		mod2 = static_cast<NoFall*>(moduleMgr->getModule<NoFall>());
-		mod3 = static_cast<Blink*>(moduleMgr->getModule<Blink>());
+		mod = moduleMgr->getModule<Freecam>();
+		mod2 = moduleMgr->getModule<NoFall>();
+		mod3 = reinterpret_cast<Blink*>(moduleMgr->getModule<Blink>());
 	}
 	else if (mod->isEnabled() || mod3->isEnabled()) {
-		// Do nothing i guess
-		// Do some stuff with modifiers here maybe
+
 		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
 		if (frenchBoy.vTable == packet->vTable)
 		{
@@ -207,10 +207,20 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 			{
 				C_MovePlayerPacket* meme = reinterpret_cast<C_MovePlayerPacket*>(packet);
 				meme->onGround = true; //Don't take Fall Damages when turned off
-				mod3->AddPackets(meme); // Saving the packets
+				mod3->PacketMeme.push_back(new C_MovePlayerPacket(*meme)); // Saving the packets
 			}
 			return; // Dont call sendToServer
 		}
+	}
+	else if (!mod3->isEnabled() && mod3->PacketMeme.size() > 0) {
+
+		for (std::vector<C_MovePlayerPacket*>::iterator it = mod3->PacketMeme.begin(); it != mod3->PacketMeme.end(); ++it)
+		{
+			oFunc(a, (*it));
+			delete *it;
+			*it = nullptr;
+		}
+		mod3->PacketMeme.clear();
 	}
 	else if (mod2->isEnabled()) {
 		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
@@ -219,7 +229,6 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 			p->onGround = true;
 		}
 	}
-	mod3->sendPackets();
 	oFunc(a, packet);
 }
 

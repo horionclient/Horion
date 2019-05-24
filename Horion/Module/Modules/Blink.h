@@ -3,16 +3,12 @@
 class Blink :
 	public IModule
 {
-private:
-	std::vector<C_MovePlayerPacket> PacketMeme;
 public:
-	
+	std::vector<C_MovePlayerPacket*> PacketMeme;
 	Blink();
 	~Blink();
 
 	// Inherited via IModule
 	virtual std::string getModuleName() override;
-	void AddPackets(C_MovePlayerPacket* a);
-	void sendPackets();
 };
 
