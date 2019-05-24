@@ -466,8 +466,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 				}
 
 				if (leng1 == leng2)
-					return moduleName > o.moduleName;
-				return leng1 > leng2;
+					return moduleName < o.moduleName;
+				return leng1 < leng2;
 			}
 		};
 		std::set<LilYeet> mods;
