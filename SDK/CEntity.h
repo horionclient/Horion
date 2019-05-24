@@ -47,7 +47,7 @@ struct _1ptr1 {
 struct Name_struct
 {
 	char pad_0x0000[0x470];
-	char name[16];
+	TextHolder name;
 };
 struct ptrName_struct
 {
@@ -147,18 +147,22 @@ private:
 public:
 	int timeSinceDeath; //0x1430
 private:
-	char pad_0x1434[0x604]; //0x1434
+	char pad_0x1434[0x19C]; //0x1434
+public:
+	TextHolder name2; //0x15D0
+private:
+	char pad_0x15DC[0x444]; //0x15F4
 public:
 	uint16_t itemData;//0x1A38 
 	uint16_t itemId;
 private:
-	char pad_0x1A3C[0x20C]; //0x1A3C
+	char pad_0x1A3C[0x210]; //0x1A3C
 public:
-	int gamemode; //0x1C48 
+	int gamemode; //0x1C4C
 private:
-	char pad_0x1C4C[0x60]; //0x1C4C
+	char pad_0x1C4C[0x60]; //0x1C50
 public:
-	TextHolder uuid; //0x1CAC 
+	TextHolder uuid; //0x1CB0
 
 
 private:

@@ -8,6 +8,7 @@
 #include "Commands/BindCommand.h"
 #include "Commands/RelativeTeleportCommand.h"
 #include "Commands/ToggleCommand.h"
+#include "Commands/PlayerTeleportCommand.h"
 
 #include <string>
 #include <vector>

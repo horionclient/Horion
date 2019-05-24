@@ -15,6 +15,7 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new BindCommand());
 	commandList.push_back(new RelativeTeleportCommand());
 	commandList.push_back(new ToggleCommand());
+	commandList.push_back(new PlayerTeleportCommand());
 }
 
 void CommandMgr::disable() {

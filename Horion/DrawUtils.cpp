@@ -220,7 +220,8 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)
 		mod = static_cast<Tracer*>(moduleMgr->getModule<Tracer>());
 	else if (mod->isEnabled()) {
 		vec2_t yeet(((g_Data.getClientInstance()->getGuiData()->widthGame) / 2), ((g_Data.getClientInstance()->getGuiData()->heightGame) / 2));
-		DrawUtils::drawLine(yeet, Screen2, lineWidth);
+		if(Screen2.y > 0)
+			DrawUtils::drawLine(yeet, Screen2, lineWidth);
 	}
 }
 void DrawUtils::rainbow(float* rcolors)

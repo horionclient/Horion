@@ -189,47 +189,37 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 	static auto oFunc = g_Hooks.sendToServerHook->GetOriginal<sendToServer_tick_t>();
 
 	static Freecam* mod = static_cast<Freecam*>(moduleMgr->getModule<Freecam>());
-	static Blink* mod2 = static_cast<Blink*>(moduleMgr->getModule<Blink>());
-	static NoFall* mod3 = static_cast<NoFall*>(moduleMgr->getModule<NoFall>());
+	static NoFall* mod2 = static_cast<NoFall*>(moduleMgr->getModule<NoFall>());
+	static Blink* mod3 = static_cast<Blink*>(moduleMgr->getModule<Blink>());
 
-	if (mod == nullptr || mod2 == nullptr || mod3 == nullptr) {
+	if (mod == nullptr  || mod2 == nullptr || mod3 == nullptr) {
 		mod = static_cast<Freecam*>(moduleMgr->getModule<Freecam>());
-		mod2 = static_cast<Blink*>(moduleMgr->getModule<Blink>());
-		mod3 = static_cast<NoFall*>(moduleMgr->getModule<NoFall>());
+		mod2 = static_cast<NoFall*>(moduleMgr->getModule<NoFall>());
+		mod3 = static_cast<Blink*>(moduleMgr->getModule<Blink>());
 	}
-	else if (mod->isEnabled() || mod2->isEnabled()) {
+	else if (mod->isEnabled() || mod3->isEnabled()) {
 		// Do nothing i guess
 		// Do some stuff with modifiers here maybe
 		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
 		if (frenchBoy.vTable == packet->vTable)
 		{
-			if (mod2->isEnabled())
+			if (mod3->isEnabled())
 			{
 				C_MovePlayerPacket* meme = reinterpret_cast<C_MovePlayerPacket*>(packet);
 				meme->onGround = true; //Don't take Fall Damages when turned off
-				mod2->PacketMeme.push_back(*meme); // Saving the packets
+				mod3->AddPackets(meme); // Saving the packets
 			}
 			return; // Dont call sendToServer
 		}
 	}
-
-	if (!mod2->isEnabled() && mod2->PacketMeme.size() > 0)
-	{
-		for (std::vector<C_MovePlayerPacket>::iterator it = mod2->PacketMeme.begin(); it != mod2->PacketMeme.end(); ++it) {
-			oFunc(a, &(*it));
-		}
-		mod2->PacketMeme.clear();
-	}
-
-	if (mod3->isEnabled() && !mod2->isEnabled() && !mod->isEnabled()) {
+	else if (mod2->isEnabled()) {
 		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
 		if (frenchBoy.vTable == packet->vTable) {
 			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
 			p->onGround = true;
 		}
 	}
-	
-
+	mod3->sendPackets();
 	oFunc(a, packet);
 }
 
@@ -423,9 +413,11 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		static std::string textStr1 = std::string("Horion");
 		static float leng1 = DrawUtils::getTextLength(&textStr1);
 		
-		DrawUtils::fillRectangle(vec4_t(widthGame - leng1 - 2, 0, widthGame, y + 12), MC_Color(0.1f, 0.1f, 0.1f, 0.1f), 0.7f);
-		DrawUtils::drawText(vec2_t((widthGame - leng1 - 1), y + 1), &textStr1, new MC_Color(1, 1, 1, 1));
-		y += 12;
+		//DrawUtils::fillRectangle(vec4_t(widthGame - leng1 - 2, 0, widthGame, y + 12), MC_Color(0.1f, 0.1f, 0.1f, 0.1f), 0.7f);
+		//DrawUtils::drawText(vec2_t((widthGame - leng1 - 1), y + 1), &textStr1, new MC_Color(1, 1, 1, 1));
+		DrawUtils::fillRectangle(vec4_t(0, 0, leng1 + 2, y + 12), MC_Color(0.1f, 0.1f, 0.1f, 0.1f), 0.7f);
+		DrawUtils::drawText(vec2_t((0), y + 1), &textStr1, new MC_Color(rcolors));
+		//y += 12;
 	}
 	
 
@@ -465,8 +457,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 				}
 
 				if (leng1 == leng2)
-					return moduleName < o.moduleName;
-				return leng1 < leng2;
+					return moduleName > o.moduleName;
+				return leng1 > leng2;
 			}
 		};
 		std::set<LilYeet> mods;

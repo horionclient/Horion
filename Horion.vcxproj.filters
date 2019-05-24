@@ -135,6 +135,9 @@
     <ClCompile Include="Horion\Module\Modules\Blink.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Horion\Command\Commands\PlayerTeleportCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils\Utils.h">
@@ -300,6 +303,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Horion\Module\Modules\Blink.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Command\Commands\PlayerTeleportCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
