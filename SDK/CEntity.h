@@ -44,15 +44,6 @@ struct _1ptr1 {
 	char pad_0x0000[0x238]; //0x0000
 	_1ptr2* ptrToPtrToCGameMode; //0x0238 
 };
-struct Name_struct
-{
-	char pad_0x0000[0x470];
-	TextHolder name;
-};
-struct ptrName_struct
-{
-	Name_struct* yeet_name;
-};
 
 class C_Entity
 {
@@ -127,11 +118,7 @@ private:
 public:
 	TextHolder name; //0x1088
 private:
-	char pad_0x109C[0xB4]; //0x10AC
-public:
-	ptrName_struct* pointToname; //0x1160
-private:
-	char pad_0x1168[0x228]; //0x1168
+	char pad_0x109C[0x2E8]; //0x109C
 public:
 	float bodyYaw; //0x1390
 	float oldBodyYaw; //0x1394
@@ -151,7 +138,7 @@ private:
 public:
 	TextHolder name2; //0x15D0
 private:
-	char pad_0x15DC[0x444]; //0x15F4
+	char pad_0x15DC[0x448]; //0x15F0
 public:
 	uint16_t itemData;//0x1A38 
 	uint16_t itemId;

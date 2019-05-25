@@ -45,7 +45,7 @@ void ESP::onPostRender() {
 				if (current != g_Data.getLocalPlayer()) {
 					if (current->timeSinceDeath > 0)
 						continue;
-					if(ourent == current->getEntityTypeId())
+					if(ourent == current->getEntityTypeId() && current->name2.getTextLength() > 0)
 						DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], max(0.1f, min(1.f, 15 / (current->damageTime + 1) )));
 					else
 						DrawUtils::setColor(0.4f, 0.4f, 0.4f, 0.2f);
