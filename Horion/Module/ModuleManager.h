@@ -25,6 +25,7 @@
 #include "Modules/Speed.h"
 #include "Modules/NoFall.h"
 #include "Modules/Blink.h"
+#include "Modules/GameMode.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

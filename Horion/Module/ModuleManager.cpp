@@ -27,6 +27,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Scaffold());
 	this->moduleList.push_back(new NoFall());
 	this->moduleList.push_back(new Blink());
+	this->moduleList.push_back(new GameMode());
 	//this->moduleList.push_back(new Speed());
 	initialized = true;
 

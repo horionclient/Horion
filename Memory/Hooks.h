@@ -42,6 +42,7 @@ private:
 	static float LevelRendererPlayer_getFov(__int64 a1, float a2, bool a3);
 	static bool Mob_isAlive(C_Entity* a1);
 	static void MultiLevelPlayer_tick(C_EntityList* entityList);
+	static void LocalPlayer_CheckFallDamage(C_LocalPlayer* a, float* a2, void*a3);
 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
@@ -60,6 +61,7 @@ private:
 	std::unique_ptr<FuncHook> levelRendererPlayer_getFovHook;
 	std::unique_ptr<FuncHook> mob_isAliveHook;
 	std::unique_ptr<FuncHook> MultiLevelPlayerHook;
+	std::unique_ptr<FuncHook> LocalPlayer_CheckFallDamageHook;
 
 	typedef bool(__fastcall* mob_isAlive_T)(C_Entity* a1);
 	typedef float(__fastcall* getFov_t)(__int64 a1, float a2, bool a3);
@@ -78,6 +80,7 @@ private:
 	typedef void(__fastcall* ChestBlockActor_tick_t)(void* _this,void*);
 	typedef void(__fastcall* sendToServer_tick_t)(C_LoopbackPacketSender* a, C_Packet* packet);
 	typedef void(__fastcall* MultiLevelPlayer_tick_t)(C_EntityList* entityList);
+	typedef void(__fastcall* LocalPlayer_CheckFallDamage_t)(C_LocalPlayer* a, float* a2, void*a3);
 
 };
 

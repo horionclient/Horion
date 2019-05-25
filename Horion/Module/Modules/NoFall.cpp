@@ -16,3 +16,9 @@ std::string NoFall::getModuleName()
 	return std::string("NoFall");
 }
 
+void NoFall::onTick(C_GameMode* gm) {
+	if (gm->player != nullptr) {
+		gm->player->isFalling = 0;
+	}
+}
+

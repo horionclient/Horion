@@ -89,6 +89,10 @@ void Hooks::Init()
 	void* tick_entityList = reinterpret_cast<void*>(Utils::FindSignature("40 53 48 83 EC ?? 48 8B D9 E8 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 49 8B C8 4D 85 C0 75 07 ?? ?? ?? ?? ?? ?? ?? 4C 8B 49 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 49 ?? 49 2B C9 48 F7 E9 48 C1 FA 03 48 8B C2 48 C1 E8 3F 48 03 D0 83 FA 01 7E 36 49 8D 41 ?? 48 85 C0 74 2D 80 78 ?? 00 74 27 ?? ?? ?? ?? ?? ?? ?? 49 8B C0 4D 85 C0 75 03 48 8B C1 8B ?? ?? ?? ?? ?? 4D 85 C0"));
 	g_Hooks.MultiLevelPlayerHook = std::make_unique<FuncHook>(tick_entityList, Hooks::MultiLevelPlayer_tick);
 	g_Hooks.MultiLevelPlayerHook->init();
+
+	void* CheckFallDamage = reinterpret_cast<void*>(Utils::FindSignature("48 83 EC 38 ?? ?? ?? ?? ?? ?? ?? 4D 8B D8 49 8B 0A ?? ?? ?? ?? ?? ?? 49 8B 42 ?? 48 2B C1 48 C1 F8 03 66 44 3B C0 73 39 ?? ?? ?? ?? ?? ?? ?? 48 85 C0 74 2D 80 78 ?? 08 75 27 F2 0F 10 40 ?? 8B 40 ?? 0F 28 C8 89 44 24 ?? F3 0F 10 54 24 ?? F2 0F 11 44 24 ?? F3 0F 10 5C 24 ?? 0F C6 C9 55 EB 09"));
+	g_Hooks.LocalPlayer_CheckFallDamageHook = std::make_unique<FuncHook>(CheckFallDamage, Hooks::LocalPlayer_CheckFallDamage);
+	g_Hooks.LocalPlayer_CheckFallDamageHook->init();
 	//logF("Hooks hooked");
 }
 
@@ -108,6 +112,7 @@ void Hooks::Restore()
 	g_Hooks.sendToServerHook->Restore();
 	g_Hooks.MultiLevelPlayerHook->Restore();
 	g_Hooks.mob_isAliveHook->Restore();
+	g_Hooks.LocalPlayer_CheckFallDamageHook->Restore();
 	
 }
 
@@ -144,6 +149,21 @@ void __fastcall Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a)
 	static auto oTick = g_Hooks.ChestBlockActor_tickHook->GetOriginal<ChestBlockActor_tick_t>();
 	oTick(_this, a); // Call Original Func
 	GameData::addChestToList(_this);
+}
+
+void Hooks::LocalPlayer_CheckFallDamage(C_LocalPlayer* a, float* a2, void* a3)
+{
+	static auto oFunc = g_Hooks.LocalPlayer_CheckFallDamageHook->GetOriginal<LocalPlayer_CheckFallDamage_t>();
+
+
+	static IModule* mod = moduleMgr->getModule<NoFall>();
+	if (mod == nullptr)
+		mod = moduleMgr->getModule<NoFall>();
+	else if (mod->isEnabled()) {
+		return;
+	}
+
+	oFunc(a, a2, a3);
 }
 
 void Hooks::Actor_lerpMotion(C_Entity * _this, vec3_t motVec)
@@ -221,6 +241,7 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 			*it = nullptr;
 		}
 		mod3->PacketMeme.clear();
+		return;
 	}
 	else if (mod2->isEnabled()) {
 		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
