@@ -9,6 +9,8 @@
 #include "Commands/RelativeTeleportCommand.h"
 #include "Commands/ToggleCommand.h"
 #include "Commands/PlayerTeleportCommand.h"
+#include "Commands/GameModeCommand.h"
+#include "Commands/ArrayListCommand.h"
 
 #include <string>
 #include <vector>

@@ -1,14 +1,14 @@
 #pragma once
 #include "Module.h"
 
-class GameMode : public IModule
+class ForceCreative : public IModule
 {
 private:
 	bool oneTime = true;
 	int oldGameMode;
 public:
-	GameMode();
-	~GameMode();
+	ForceCreative();
+	~ForceCreative();
 
 	virtual std::string getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;

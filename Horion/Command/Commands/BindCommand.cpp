@@ -25,7 +25,7 @@ BindCommand::~BindCommand()
 bool BindCommand::execute(std::vector<std::string>* args)
 {
 	assertTrue(args->size() >= 3);
-	std::string moduleName = args->at(1);
+	std::string moduleName = args->at(1); 
 	std::string key = args->at(2);
 
 	assertTrue(moduleName.size() > 0);

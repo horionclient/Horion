@@ -1,38 +1,36 @@
-#include "GameMode.h"
+#include "ForceCreative.h"
 
 
 
-GameMode::GameMode() : IModule(VK_NUMPAD2)
+ForceCreative::ForceCreative() : IModule(VK_NUMPAD2)
 {
 }
 
 
-GameMode::~GameMode()
+ForceCreative::~ForceCreative()
 {
 }
 
-std::string GameMode::getModuleName()
+std::string ForceCreative::getModuleName()
 {
-	return std::string("GameMode");
+	return std::string("ForceCreative");
 }
 
-void GameMode::onTick(C_GameMode* gm) {
+void ForceCreative::onTick(C_GameMode* gm) {
 	if(gm->player != nullptr && oneTime){
 
 		C_LocalPlayer* myPlayer = reinterpret_cast<C_LocalPlayer*>(gm->player);
 		oldGameMode = myPlayer->gamemode;
 		myPlayer->setGameModeType(1);
-		myPlayer->gamemode = 1;
 		oneTime = false;
 	}
 
 }
 
-void GameMode::onDisable() {
+void ForceCreative::onDisable() {
 	if (g_Data.getLocalPlayer() != nullptr) {
 
 		g_Data.getLocalPlayer()->setGameModeType(oldGameMode);
-		g_Data.getLocalPlayer()->gamemode = oldGameMode;
 		oneTime = true;
 	}
 		

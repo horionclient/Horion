@@ -113,7 +113,7 @@ void Hooks::Restore()
 	g_Hooks.MultiLevelPlayerHook->Restore();
 	g_Hooks.mob_isAliveHook->Restore();
 	g_Hooks.LocalPlayer_CheckFallDamageHook->Restore();
-	
+
 }
 
 void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
@@ -213,7 +213,7 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 	static IModule* mod2 = moduleMgr->getModule<NoFall>();
 	static Blink* mod3 = reinterpret_cast<Blink*>(moduleMgr->getModule<Blink>());
 
-	if (mod == nullptr  || mod2 == nullptr || mod3 == nullptr) {
+	if (mod == nullptr || mod2 == nullptr || mod3 == nullptr) {
 		mod = moduleMgr->getModule<Freecam>();
 		mod2 = moduleMgr->getModule<NoFall>();
 		mod3 = reinterpret_cast<Blink*>(moduleMgr->getModule<Blink>());
@@ -250,6 +250,7 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 			p->onGround = true;
 		}
 	}
+
 	oFunc(a, packet);
 }
 
@@ -393,7 +394,7 @@ void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
 
 		if (*message == '.') {
 			cmdMgr->execute(message);
-			
+
 			__int64* i = 0;
 			for (i = *reinterpret_cast<__int64**>(_this + 0x6A0); i[4] > 0x64ui64; i = *reinterpret_cast<__int64**>(_this + 0x6A0))
 			{
@@ -407,7 +408,7 @@ void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
 
 			dequeuePushBack(i, reinterpret_cast<__int64>(_this + 0x678)); // This will put the command in the chat history (Arrow up/down)
 			*reinterpret_cast<__int64*>(_this + 0x6A8) = *reinterpret_cast<__int64*>(*reinterpret_cast<__int64*>(_this + 0x6A0) + 0x20);
-			
+
 			*reinterpret_cast<__int64*>(_this + 0x688) = 0i64;
 			*message = 0x0; // Remove command in textbox
 			*idk = 0x0; // text length
@@ -439,22 +440,25 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	float y = 0;
 	static float rcolors[4];
 	DrawUtils::rainbow(rcolors);
+
+	static std::string textStr1 = std::string("Horion");
+	static float leng1 = DrawUtils::getTextLength(&textStr1);
+
+	if (GameData::shouldOnTheRight() && !GameData::ShouldHide())
 	{
-		static std::string textStr1 = std::string("Horion");
-		static float leng1 = DrawUtils::getTextLength(&textStr1);
-		
-		//DrawUtils::fillRectangle(vec4_t(widthGame - leng1 - 2, 0, widthGame, y + 12), MC_Color(0.1f, 0.1f, 0.1f, 0.1f), 0.7f);
-		//DrawUtils::drawText(vec2_t((widthGame - leng1 - 1), y + 1), &textStr1, new MC_Color(1, 1, 1, 1));
-		DrawUtils::fillRectangle(vec4_t(0, 0, leng1 + 2, y + 12), MC_Color(0.1f, 0.1f, 0.1f, 0.1f), 0.7f);
+		//DrawUtils::fillRectangle(vec4_t(0, 0, leng1 + 2, y + 12), MC_Color(0.1f, 0.1f, 0.1f, 0.1f), 0.7f);
 		DrawUtils::drawText(vec2_t((0), y + 1), &textStr1, new MC_Color(rcolors));
-		//y += 12;
 	}
-	
+	else if(!GameData::shouldOnTheRight() && !GameData::ShouldHide())
+	{
+		//DrawUtils::fillRectangle(vec4_t(widthGame - leng1 - 2, 0, widthGame, y + 12), MC_Color(0.1f, 0.1f, 0.1f, 0.1f), 0.7f);
+		DrawUtils::drawText(vec2_t((widthGame - leng1 - 1), y + 1), &textStr1, new MC_Color(rcolors));
+	}
 
 	bool showShit = g_Data.getLocalPlayer() == nullptr ? true : (GameData::canUseMoveKeys() ? true : false);
 	if (moduleMgr->isInitialized()) {
 		std::vector<IModule*>* modules = moduleMgr->getModuleList();
-		
+
 		struct LilYeet {
 			std::string moduleName;
 			bool enabled;
@@ -492,7 +496,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 			}
 		};
 		std::set<LilYeet> mods;
-		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) 
+		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it)
 			mods.emplace(LilYeet(*it));
 
 		float disabledRcolors[4];
@@ -501,18 +505,30 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		disabledRcolors[2] = min(1, rcolors[2] * 0.4f + 0.2f);
 		disabledRcolors[3] = 1;
 
-		for (std::set<LilYeet>::iterator it = mods.begin(); it != mods.end(); ++it) {
+		for (std::set<LilYeet>::iterator it = mods.begin(); it != mods.end() && !GameData::ShouldHide(); ++it) {
 			std::string textStr = it->moduleName;
 
 			float leng = DrawUtils::getTextLength(&textStr);
-			if (it->enabled) {
+			if (it->enabled && GameData::shouldOnTheRight()) {
 				DrawUtils::fillRectangle(vec4_t(widthGame - leng - 2, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
 				DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(rcolors));
 				y += 12;
 			}
-			else if(showShit) {
+			else if (it->enabled && !GameData::shouldOnTheRight())
+			{
+				DrawUtils::fillRectangle(vec4_t(0, y, leng + 2, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
+				DrawUtils::drawText(vec2_t(0, y + 1), &textStr, new MC_Color(rcolors));
+				y += 12;
+			}
+			else if (showShit && GameData::shouldOnTheRight()) {
 				DrawUtils::fillRectangle(vec4_t(widthGame - leng - 2, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
 				DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(disabledRcolors));
+				y += 12;
+			}
+			else if (showShit && !GameData::shouldOnTheRight())
+			{
+				DrawUtils::fillRectangle(vec4_t(0, y, leng + 2, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
+				DrawUtils::drawText(vec2_t(0, y + 1), &textStr, new MC_Color(disabledRcolors));
 				y += 12;
 			}
 		}

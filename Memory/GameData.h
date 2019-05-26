@@ -17,9 +17,18 @@ private:
 	const SlimUtils::SlimModule* gameModule;
 	SlimUtils::SlimMem* slimMem;
 	bool shouldTerminateB = false;
+	bool shouldHide = false;
+	bool onTheRight = true;
+	bool LockKeyBind = false;
 	static void retrieveClientInstance();
 public:
 	static bool canUseMoveKeys();
+	static bool shouldLock();
+	static void Lock();
+	static bool shouldOnTheRight();
+	static void OnTheRight();
+	static bool ShouldHide();
+	static void Hide();
 	static bool isKeyDown(int key);
 	static bool isKeyPressed(int key);
 	static bool shouldTerminate();

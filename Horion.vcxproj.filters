@@ -138,7 +138,13 @@
     <ClCompile Include="Horion\Command\Commands\PlayerTeleportCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\GameMode.cpp">
+    <ClCompile Include="Horion\Module\Modules\ForceCreative.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Command\Commands\GameModeCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Horion\Command\Commands\ArrayListCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -311,7 +317,13 @@
     <ClInclude Include="Horion\Command\Commands\PlayerTeleportCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\GameMode.h">
+    <ClInclude Include="Horion\Module\Modules\ForceCreative.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Command\Commands\GameModeCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\Command\Commands\ArrayListCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

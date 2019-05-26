@@ -129,6 +129,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Horion\Command\Commands\ArrayListCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\GameModeCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\PlayerTeleportCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\RelativeTeleportCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ToggleCommand.cpp" />
@@ -145,7 +147,7 @@
     <ClCompile Include="Horion\Module\Modules\Aimbot.cpp" />
     <ClCompile Include="Horion\Module\Modules\AirJump.cpp" />
     <ClCompile Include="Horion\Module\Modules\Blink.cpp" />
-    <ClCompile Include="Horion\Module\Modules\GameMode.cpp" />
+    <ClCompile Include="Horion\Module\Modules\ForceCreative.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoFall.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSprint.cpp" />
     <ClCompile Include="Horion\Module\Modules\BowAimbot.cpp" />
@@ -173,6 +175,8 @@
     <ClCompile Include="Utils\TextFormat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Horion\Command\Commands\ArrayListCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\GameModeCommand.h" />
     <ClInclude Include="Horion\Command\Commands\PlayerTeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\RelativeTeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\ToggleCommand.h" />
@@ -189,7 +193,7 @@
     <ClInclude Include="Horion\Module\Modules\Aimbot.h" />
     <ClInclude Include="Horion\Module\Modules\AirJump.h" />
     <ClInclude Include="Horion\Module\Modules\Blink.h" />
-    <ClInclude Include="Horion\Module\Modules\GameMode.h" />
+    <ClInclude Include="Horion\Module\Modules\ForceCreative.h" />
     <ClInclude Include="Horion\Module\Modules\NoFall.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSprint.h" />
     <ClInclude Include="Horion\Module\Modules\BowAimbot.h" />

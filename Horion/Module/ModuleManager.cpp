@@ -27,7 +27,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Scaffold());
 	this->moduleList.push_back(new NoFall());
 	this->moduleList.push_back(new Blink());
-	this->moduleList.push_back(new GameMode());
+	this->moduleList.push_back(new ForceCreative());
 	//this->moduleList.push_back(new Speed());
 	initialized = true;
 
@@ -76,7 +76,7 @@ void ModuleManager::onTick(C_GameMode * gameMode)
 
 void ModuleManager::onKeyUpdate(int key, bool isDown)
 {
-	if (!isInitialized())
+	if (!isInitialized() || GameData::shouldLock())
 		return;
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
 		IModule* mod = *it;

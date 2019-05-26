@@ -16,6 +16,8 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new RelativeTeleportCommand());
 	commandList.push_back(new ToggleCommand());
 	commandList.push_back(new PlayerTeleportCommand());
+	commandList.push_back(new GameModeCommand());
+	commandList.push_back(new ArrayListCommand());
 }
 
 void CommandMgr::disable() {

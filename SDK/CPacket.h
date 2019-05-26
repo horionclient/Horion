@@ -10,10 +10,8 @@ public:
 class C_InteractPacket : public C_Packet
 {
 private:
-	char filler[0x18]; //x0x00008
+	char filler[0x20]; //x0x00008
 public:
-	int idk; //0x20
-	int l;//0x24
 	int entityRuntimeID; //0x28
 	vec3_t pos; //0x30
 };
@@ -35,6 +33,25 @@ public:
 		}
 		memset(this, 0, sizeof(C_MovePlayerPacket)); // Avoid overwriting vtable
 		vTable = movePlayerPacketVtable;
+	}
+	C_MovePlayerPacket(C_LocalPlayer* player,vec3_t pos) {
+		static uintptr_t** movePlayerPacketVtable = 0x0;
+		if (movePlayerPacketVtable == 0x0) {
+			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 82 ?? ?? ?? ?? 48 89 41 ?? 48 8B 02 48 8B CA FF 50 60");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			movePlayerPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+			if (movePlayerPacketVtable == 0x0 || sigOffset == 0x0)
+				logF("C_MovePlayerPacket signature not working!!!");
+		}
+		memset(this, 0, sizeof(C_MovePlayerPacket)); // Avoid overwriting vtable
+		vTable = movePlayerPacketVtable;
+		entityRuntimeID = player->entityRuntimeId;
+		Position = pos;
+		pitch = player->pitch;
+		yaw = player->yaw;
+		headYaw = player->yaw;
+		onGround = true;
+		mode = 0;
 	}
 
 

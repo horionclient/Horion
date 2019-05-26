@@ -1,6 +1,6 @@
 #include "Killaura.h"
 
-bool f = true;
+
 
 Killaura::Killaura() : IModule('P') // <-- keybind
 {
@@ -29,7 +29,7 @@ void Killaura::onTick(C_GameMode* gm)
 	}
 
 	//Loop through all our players and retrieve their information
-	float maxDist = 6;
+	float maxDist = 10;
 	static std::vector <C_Entity*> targetList;
 	targetList.clear();
 	for (size_t i = 0; i < listSize; i++)
@@ -51,7 +51,7 @@ void Killaura::onTick(C_GameMode* gm)
 
 		float dist = currentEntity->eyePos0.dist(localPlayer->eyePos0);
 
-		if (dist < maxDist) 
+		if (dist > maxDist) 
 		{
 			targetList.push_back(currentEntity);
 		}
@@ -64,7 +64,17 @@ void Killaura::onTick(C_GameMode* gm)
 	for (int i = 0; i < targetList.size(); i++)
 	{
 		g_Data.getCGameMode()->attack(targetList[i]);
-
+		//copy = targetList[i];
+		//delay = 0;
 	}
+}
+
+void Killaura::onEnable()
+{
+	if (g_Data.getLocalPlayer() == nullptr) {
+		this->setEnabled(false);
+		return;
+	}
+	delay = 100;
 }
 
