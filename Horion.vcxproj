@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Horion\Command\Commands\ArrayListCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\FriendListCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\GameModeCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\PlayerTeleportCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\RelativeTeleportCommand.cpp" />
@@ -142,12 +143,14 @@
     <ClCompile Include="Horion\Command\Commands\ICommand.cpp" />
     <ClCompile Include="Directx\Directx.cpp" />
     <ClCompile Include="Horion\DrawUtils.cpp" />
+    <ClCompile Include="Horion\FriendList\FriendList.cpp" />
     <ClCompile Include="Horion\Loader.cpp" />
     <ClCompile Include="Horion\Module\ModuleManager.cpp" />
     <ClCompile Include="Horion\Module\Modules\Aimbot.cpp" />
     <ClCompile Include="Horion\Module\Modules\AirJump.cpp" />
     <ClCompile Include="Horion\Module\Modules\Blink.cpp" />
     <ClCompile Include="Horion\Module\Modules\ForceCreative.cpp" />
+    <ClCompile Include="Horion\Module\Modules\InstaBreak.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoFall.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSprint.cpp" />
     <ClCompile Include="Horion\Module\Modules\BowAimbot.cpp" />
@@ -160,6 +163,7 @@
     <ClCompile Include="Horion\Module\Modules\Killaura.cpp" />
     <ClCompile Include="Horion\Module\Modules\Module.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoKnockBack.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Nuker.cpp" />
     <ClCompile Include="Horion\Module\Modules\Phase.cpp" />
     <ClCompile Include="Horion\Module\Modules\RainbowSky.cpp" />
     <ClCompile Include="Horion\Module\Modules\Scaffold.cpp" />
@@ -176,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Command\Commands\ArrayListCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\FriendListCommand.h" />
     <ClInclude Include="Horion\Command\Commands\GameModeCommand.h" />
     <ClInclude Include="Horion\Command\Commands\PlayerTeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\RelativeTeleportCommand.h" />
@@ -188,12 +193,14 @@
     <ClInclude Include="Horion\Command\Commands\ICommand.h" />
     <ClInclude Include="Directx\Directx.h" />
     <ClInclude Include="Horion\DrawUtils.h" />
+    <ClInclude Include="Horion\FriendList\FriendList.h" />
     <ClInclude Include="Horion\Loader.h" />
     <ClInclude Include="Horion\Module\ModuleManager.h" />
     <ClInclude Include="Horion\Module\Modules\Aimbot.h" />
     <ClInclude Include="Horion\Module\Modules\AirJump.h" />
     <ClInclude Include="Horion\Module\Modules\Blink.h" />
     <ClInclude Include="Horion\Module\Modules\ForceCreative.h" />
+    <ClInclude Include="Horion\Module\Modules\InstaBreak.h" />
     <ClInclude Include="Horion\Module\Modules\NoFall.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSprint.h" />
     <ClInclude Include="Horion\Module\Modules\BowAimbot.h" />
@@ -206,6 +213,7 @@
     <ClInclude Include="Horion\Module\Modules\Killaura.h" />
     <ClInclude Include="Horion\Module\Modules\Module.h" />
     <ClInclude Include="Horion\Module\Modules\NoKnockBack.h" />
+    <ClInclude Include="Horion\Module\Modules\Nuker.h" />
     <ClInclude Include="Horion\Module\Modules\Phase.h" />
     <ClInclude Include="Horion\Module\Modules\RainbowSky.h" />
     <ClInclude Include="Horion\Module\Modules\Scaffold.h" />

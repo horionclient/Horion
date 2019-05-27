@@ -2,7 +2,7 @@
 #include "../Directx/Directx.h"
 
 Hooks    g_Hooks;
-bool firstTime = true;
+
 void Hooks::Init()
 {
 	logF("Setting up Hooks...");
@@ -90,9 +90,14 @@ void Hooks::Init()
 	g_Hooks.MultiLevelPlayerHook = std::make_unique<FuncHook>(tick_entityList, Hooks::MultiLevelPlayer_tick);
 	g_Hooks.MultiLevelPlayerHook->init();
 
-	void* CheckFallDamage = reinterpret_cast<void*>(Utils::FindSignature("48 83 EC 38 ?? ?? ?? ?? ?? ?? ?? 4D 8B D8 49 8B 0A ?? ?? ?? ?? ?? ?? 49 8B 42 ?? 48 2B C1 48 C1 F8 03 66 44 3B C0 73 39 ?? ?? ?? ?? ?? ?? ?? 48 85 C0 74 2D 80 78 ?? 08 75 27 F2 0F 10 40 ?? 8B 40 ?? 0F 28 C8 89 44 24 ?? F3 0F 10 54 24 ?? F2 0F 11 44 24 ?? F3 0F 10 5C 24 ?? 0F C6 C9 55 EB 09"));
+	/*void* CheckFallDamage = reinterpret_cast<void*>(Utils::FindSignature("48 83 EC 38 ?? ?? ?? ?? ?? ?? ?? 4D 8B D8 49 8B 0A ?? ?? ?? ?? ?? ?? 49 8B 42 ?? 48 2B C1 48 C1 F8 03 66 44 3B C0 73 39 ?? ?? ?? ?? ?? ?? ?? 48 85 C0 74 2D 80 78 ?? 08 75 27 F2 0F 10 40 ?? 8B 40 ?? 0F 28 C8 89 44 24 ?? F3 0F 10 54 24 ?? F2 0F 11 44 24 ?? F3 0F 10 5C 24 ?? 0F C6 C9 55 EB 09"));
 	g_Hooks.LocalPlayer_CheckFallDamageHook = std::make_unique<FuncHook>(CheckFallDamage, Hooks::LocalPlayer_CheckFallDamage);
-	g_Hooks.LocalPlayer_CheckFallDamageHook->init();
+	g_Hooks.LocalPlayer_CheckFallDamageHook->init();*/
+
+	void* startDestroyBlockFunc = reinterpret_cast<void*>(Utils::FindSignature("40 55 53 56 57 41 56 41 57 48 8D 6C 24 D1 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 0F 29 ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 4D 8B F9 48 8B F2 48 8B F9 44 88 45 BF E8 ?? ?? ?? ?? 41 C6 07 00 84 C0 75 07 32 C0 E9 ?? ?? ?? ?? 48 8B 4F ?? 48 8B 01 FF 90 ?? ?? ?? ?? 84 C0"));
+	g_Hooks.GameMode_startDestroyHook = std::make_unique<FuncHook>(startDestroyBlockFunc, Hooks::GameMode_startDestroyBlock);
+	g_Hooks.GameMode_startDestroyHook->init();
+	
 	//logF("Hooks hooked");
 }
 
@@ -113,6 +118,7 @@ void Hooks::Restore()
 	g_Hooks.MultiLevelPlayerHook->Restore();
 	g_Hooks.mob_isAliveHook->Restore();
 	g_Hooks.LocalPlayer_CheckFallDamageHook->Restore();
+	g_Hooks.GameMode_startDestroyHook->Restore();
 
 }
 
@@ -138,6 +144,46 @@ void __fastcall Hooks::SurvivalMode_tick(C_GameMode * _this)
 		_this->player->getEntityTypeId();
 	}
 }
+
+void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face, void* a4, void* a5)
+{
+	static auto oFunc = g_Hooks.GameMode_startDestroyHook->GetOriginal<GameMode_startDestroyBlock_t>();
+	static auto oDestroyBlock = g_Hooks.GameMode_destroyBlockHook->GetOriginal<GameMode_destroyBlock_t>();
+
+	static IModule* mod = moduleMgr->getModule<Nuker>();
+	static IModule* mod2 = moduleMgr->getModule<InstaBreak>();
+	if (mod == nullptr)
+	{
+		mod = moduleMgr->getModule<Nuker>();
+		mod2 = moduleMgr->getModule<InstaBreak>();
+	}
+	else if (mod->isEnabled()) {
+
+		vec3_ti yeet;
+		int x = 0;
+		int z = 0;
+
+		for (int x = -4; x < 4; x++) {
+			for (int y = -4; y < 4; y++) {
+				for (int z = -4; z < 4; z++) {
+					yeet.x = a2->x + x;
+					yeet.y = a2->y + y;
+					yeet.z = a2->z + z;
+					if (yeet.y > 0)
+						oDestroyBlock(a, &yeet, face);
+						
+				}
+			}
+		}
+	}
+	else if (mod2->isEnabled()) {
+
+		oDestroyBlock(a, a2, face);
+		return;
+	}
+	oFunc(a, a2, face,a4,a5);
+}
+
 void __fastcall Hooks::MultiLevelPlayer_tick(C_EntityList * _this)
 {
 	static auto oTick = g_Hooks.MultiLevelPlayerHook->GetOriginal<MultiLevelPlayer_tick_t>();

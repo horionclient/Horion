@@ -26,6 +26,8 @@
 #include "Modules/NoFall.h"
 #include "Modules/Blink.h"
 #include "Modules/ForceCreative.h"
+#include "Modules/Nuker.h"
+#include "Modules/InstaBreak.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

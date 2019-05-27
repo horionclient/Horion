@@ -4,6 +4,7 @@
 #include <string>
 #include "../../Module/ModuleManager.h"
 #include "../../../Memory/GameData.h"
+#include "../../FriendList/FriendList.h"
 
 #ifndef ASSERT_T
 #define ASSERT_T(x) if(!(x)) return false;

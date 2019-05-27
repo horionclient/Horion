@@ -33,6 +33,7 @@ bool GameModeCommand::execute(std::vector<std::string>* args)
 	{
 		
 		g_Data.getLocalPlayer()->setGameModeType(Mode);
+		g_Data.getLocalPlayer()->gamemode = Mode;
 		clientMessageF("[%sHorion%s] %sGameMode changed !", GOLD, WHITE, GREEN);
 		return true;
 	}

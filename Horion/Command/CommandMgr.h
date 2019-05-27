@@ -11,6 +11,7 @@
 #include "Commands/PlayerTeleportCommand.h"
 #include "Commands/GameModeCommand.h"
 #include "Commands/ArrayListCommand.h"
+#include "Commands/FriendListCommand.h"
 
 #include <string>
 #include <vector>

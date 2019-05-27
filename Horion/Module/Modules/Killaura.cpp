@@ -38,11 +38,20 @@ void Killaura::onTick(C_GameMode* gm)
 
 		if (currentEntity == 0)
 			break;
-
+		
 		if (currentEntity == localPlayer) // Skip Local player
 			continue;
 
+		if (FriendList::findPlayer(currentEntity->name2.getText())) // Skip Friend
+			continue;
+
 		if (localPlayer->getEntityTypeId() != currentEntity->getEntityTypeId()) // Skip Invalid Entity
+			continue;
+
+		if (!(currentEntity->name2.getTextLength() > 0))
+			continue;
+
+		if (currentEntity->aabb.upper.y - currentEntity->aabb.lower.y < 1 || currentEntity->aabb.upper.y - currentEntity->aabb.lower.y > 2)
 			continue;
 
 		// i want to hit villagers ok
@@ -51,7 +60,7 @@ void Killaura::onTick(C_GameMode* gm)
 
 		float dist = currentEntity->eyePos0.dist(localPlayer->eyePos0);
 
-		if (dist > maxDist) 
+		if (dist < maxDist) 
 		{
 			targetList.push_back(currentEntity);
 		}

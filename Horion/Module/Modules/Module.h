@@ -2,6 +2,7 @@
 
 #include "../../../Memory/GameData.h"
 #include "../../../Utils/Json.hpp"
+#include "../../FriendList/FriendList.h"
 #include <string>
 
 using json = nlohmann::json;

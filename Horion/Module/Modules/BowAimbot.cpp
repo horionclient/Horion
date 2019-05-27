@@ -51,7 +51,16 @@ void BowAimbot::onPostRender() {
 		if (currentEntity == localPlayer) // Skip Local player
 			continue;
 
+		if (FriendList::findPlayer(currentEntity->name2.getText())) //Skip Friend
+			continue;
+
 		if (localPlayer->getEntityTypeId() != currentEntity->getEntityTypeId()) // Skip Invalid Entity
+			continue;
+
+		if (!(currentEntity->name2.getTextLength() > 0))
+			continue;
+
+		if (currentEntity->aabb.upper.y - currentEntity->aabb.lower.y < 1 || currentEntity->aabb.upper.y - currentEntity->aabb.lower.y > 2)
 			continue;
 
 		float dist = currentEntity->eyePos0.dist(localPlayer->eyePos0);
