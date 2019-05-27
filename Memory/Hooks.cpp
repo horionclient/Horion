@@ -175,6 +175,7 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face,
 				}
 			}
 		}
+		return;
 	}
 	else if (mod2->isEnabled()) {
 

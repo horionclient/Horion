@@ -45,7 +45,7 @@ void ESP::onPostRender() {
 				if (current != g_Data.getLocalPlayer()) {
 					if (current->timeSinceDeath > 0)
 						continue;
-					if(ourent == current->getEntityTypeId() && current->name2.getTextLength() > 0 && current->aabb.upper.y - current->aabb.lower.y > 1 ||
+					if(ourent == current->getEntityTypeId() && current->name2.getTextLength() > 0 && current->aabb.upper.y - current->aabb.lower.y > 1 &&
 						current->aabb.upper.y - current->aabb.lower.y < 2)
 						DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], max(0.1f, min(1.f, 15 / (current->damageTime + 1) )));
 					else
@@ -53,6 +53,8 @@ void ESP::onPostRender() {
 					DrawUtils::drawEntityBox(current, max(0.2f, 1 / max(1, g_Data.getLocalPlayer()->eyePos0.dist(current->eyePos0)))); // Fancy math to give an illusion of good esp
 					
 				}
+
+
 					
 			}
 		}
