@@ -19,6 +19,7 @@ private:
 protected:
 	inline void assertTrue(bool condition) { if (!condition) { throw std::exception(); } };
 	inline float assertFloat(std::string string) { return std::stof(string); };
+	inline int assertInt(std::string string) { return std::stoi(string); };
 
 	inline void registerAlias(const char* str) { 
 		std::string ss = str;
