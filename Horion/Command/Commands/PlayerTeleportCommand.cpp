@@ -19,7 +19,7 @@ bool PlayerTeleportCommand::execute(std::vector<std::string>* args)
 	assertTrue(args->size() > 1); // .playertp <player>
 	std::string nameOfPlayer = args->at(1);
 	assertTrue(nameOfPlayer.size() > 0);
-	std::string nameOfPlayerLower = nameOfPlayer;
+	std::string nameOfPlayerLower = std::string(nameOfPlayer);
 	std::transform(nameOfPlayerLower.begin(), nameOfPlayerLower.end(), nameOfPlayerLower.begin(), ::tolower);
 
 	
