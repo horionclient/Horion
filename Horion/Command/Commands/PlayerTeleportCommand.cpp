@@ -46,7 +46,7 @@ bool PlayerTeleportCommand::execute(std::vector<std::string>* args)
 			continue;
 
 		pos = currentEntity->eyePos0;
-		playerName = name;
+		playerName = currentEntity->name2.getText();
 		break;
 
 	}
