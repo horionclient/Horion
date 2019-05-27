@@ -2,7 +2,7 @@
 
 
 
-ArrayListCommand::ArrayListCommand() : ICommand("arraylist", "customize the arraylist", "<right/left/hide/lock>")
+ArrayListCommand::ArrayListCommand() : ICommand("arraylist", "Customize the arraylist", "<right/left/hide/lock>")
 {
 	registerAlias("array");
 }
@@ -15,7 +15,6 @@ ArrayListCommand::~ArrayListCommand()
 
 bool ArrayListCommand::execute(std::vector<std::string>* args)
 {
-	assertTrue(args->size() >= 1);
 	assertTrue(args->size() >= 2);
 	std::string side = args->at(1);
 
@@ -46,9 +45,9 @@ bool ArrayListCommand::execute(std::vector<std::string>* args)
 	}
 	else if (side == "show" && GameData::ShouldHide())
 	{
-	GameData::Hide();
-	clientMessageF("[%sHorion%s] %sArrayList showed !", GOLD, WHITE, GREEN);
-	return true;
+		GameData::Hide();
+		clientMessageF("[%sHorion%s] %sArrayList showed !", GOLD, WHITE, GREEN);
+		return true;
 	}
 	else if (side == "hide" && !GameData::ShouldHide())
 	{
@@ -56,7 +55,7 @@ bool ArrayListCommand::execute(std::vector<std::string>* args)
 		clientMessageF("[%sHorion%s] %sArrayList hided", GOLD, WHITE, GREEN);
 		return true;
 	}
-	clientMessageF("[%sHorion%s] %sUnknow Command !", GOLD, WHITE, GREEN);
-	return true;
+	
+	return false;
 }
 
