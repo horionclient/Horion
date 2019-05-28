@@ -261,8 +261,7 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 	static Blink* mod3 = reinterpret_cast<Blink*>(moduleMgr->getModule<Blink>());
 	static NoPacket* No_Packet = reinterpret_cast<NoPacket*>(moduleMgr->getModule<NoPacket>());
 
-
-	if (mod == nullptr || mod2 == nullptr || mod3 == nullptr) {
+	if (mod == nullptr || mod2 == nullptr || mod3 == nullptr || No_Packet == nullptr) {
 		mod = moduleMgr->getModule<Freecam>();
 		mod2 = moduleMgr->getModule<NoFall>();
 		mod3 = reinterpret_cast<Blink*>(moduleMgr->getModule<Blink>());
