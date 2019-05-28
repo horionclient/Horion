@@ -1,7 +1,7 @@
 #pragma once
 #include "Module.h"
-class Speed :
-	public IModule
+
+class Speed : public IModule
 {
 private:
 	float origSpeed = 0;

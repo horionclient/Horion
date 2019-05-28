@@ -18,10 +18,16 @@ std::string Speed::getModuleName()
 
 void Speed::onTick(C_GameMode * gm)
 {
-	if (g_Data.getLocalPlayer() == nullptr)
+
+	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
+	
+	if (localPlayer == nullptr)
 		return;
 
-	if (g_Data.getLocalPlayer()->onGround == true) {
+	if (localPlayer->onGround == true) {
+		localPlayer->velocity.x *= 1.39;
+		localPlayer->velocity.z *= 1.39;
+		localPlayer->velocity.y = 0.035;
 	}
 }
 
@@ -31,7 +37,7 @@ void Speed::onEnable()
 		this->setEnabled(false);
 		return;
 	}
-	origSpeed = g_Data.getLocalPlayer()->getSpeed();
+	
 }
 
 void Speed::onDisable()
