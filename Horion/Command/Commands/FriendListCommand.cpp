@@ -29,7 +29,7 @@ bool FriendListCommand::execute(std::vector<std::string>* args)
 		return true;
 	}
 
-	std::string playerName = nullptr;
+	std::string playerName;
 	//Loop through all our players and retrieve their information
 	for (size_t i = 0; i < listSize; i++)
 	{
@@ -42,14 +42,14 @@ bool FriendListCommand::execute(std::vector<std::string>* args)
 		if (currentEntityName.find(searchedName) == std::string::npos) // Continue if name not found
 			continue;
 
-		playerName = currentEntityName;
+		playerName = currentEntity->name2.getText();
 		break;
 
 	}
 	if (subcommand == "add")
 	{
 		FriendList::addPlayerToList(playerName);
-		clientMessageF("[%sHorion%s] %s%s is now your friend!", GOLD, WHITE, GREEN, playerName);
+		clientMessageF("[%sHorion%s] %s%s is now your friend!", GOLD, WHITE, GREEN, playerName.c_str());
 		return true;
 
 	}

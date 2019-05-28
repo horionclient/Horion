@@ -30,6 +30,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new ForceCreative());
 	this->moduleList.push_back(new Nuker());
 	this->moduleList.push_back(new InstaBreak());
+	this->moduleList.push_back(new NoPacket());
 	//this->moduleList.push_back(new Speed());
 	initialized = true;
 
