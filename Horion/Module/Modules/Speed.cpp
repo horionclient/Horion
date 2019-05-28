@@ -22,8 +22,6 @@ void Speed::onTick(C_GameMode * gm)
 		return;
 
 	if (g_Data.getLocalPlayer()->onGround == true) {
-		g_Data.getLocalPlayer()->velocity.x *= 1.2;
-		g_Data.getLocalPlayer()->velocity.z *= 1.2;
 	}
 }
 
