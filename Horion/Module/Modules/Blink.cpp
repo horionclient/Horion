@@ -2,7 +2,7 @@
 
 
 
-Blink::Blink() : IModule('W')
+Blink::Blink() : IModule('L')
 {
 }
 
@@ -14,7 +14,7 @@ Blink::~Blink()
 
 std::string Blink::getModuleName()
 {
-	return std::string("Blink");
+	return std::string("BlinK");
 }
 
 
