@@ -7,6 +7,7 @@
 #include "../Directx/Directx.h"
 #include "../SDK/TextHolder.h"
 #include "../SDK/CMinecraftUIRenderContext.h"
+#include "../SDK/CWindowsUI.h"
 #include "../Horion/Module/ModuleManager.h"
 #include "../Horion/DrawUtils.h"
 #include "../Horion/Command/CommandMgr.h"
@@ -44,6 +45,8 @@ private:
 	static void MultiLevelPlayer_tick(C_EntityList* entityList);
 	static void LocalPlayer_CheckFallDamage(C_LocalPlayer* a, float* a2, void*a3);
 	static void GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face,void* a4,void* a5);
+	static void sub_180085110(C_WindowsUI *Src, unsigned int *a2, __int64 a3, unsigned int a4, __int64 Srca, __int64 a6,
+		__int64 a7, __int64 a8, __int64 a9, __int64 a10, __int64 a11, __int64 a12, int a13, __int64 a14);
 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
@@ -64,6 +67,7 @@ private:
 	std::unique_ptr<FuncHook> MultiLevelPlayerHook;
 	std::unique_ptr<FuncHook> LocalPlayer_CheckFallDamageHook;
 	std::unique_ptr<FuncHook> GameMode_startDestroyHook;
+	std::unique_ptr<FuncHook> CantWorkHook;
 
 	typedef bool(__fastcall* mob_isAlive_T)(C_Entity* a1);
 	typedef float(__fastcall* getFov_t)(__int64 a1, float a2, bool a3);
@@ -84,6 +88,8 @@ private:
 	typedef void(__fastcall* MultiLevelPlayer_tick_t)(C_EntityList* entityList);
 	typedef void(__fastcall* LocalPlayer_CheckFallDamage_t)(C_LocalPlayer* a, float* a2, void*a3);
 	typedef void(__fastcall* GameMode_startDestroyBlock_t)(C_GameMode* a, vec3_ti* a2, uint8_t face, void* a4, void* a5);
+	typedef void(__fastcall* CantWork_t)(C_WindowsUI *Src, unsigned int *a2, __int64 a3, unsigned int a4, __int64 Srca, __int64 a6,
+		__int64 a7, __int64 a8, __int64 a9, __int64 a10, __int64 a11, __int64 a12, int a13, __int64 a14);
 
 };
 

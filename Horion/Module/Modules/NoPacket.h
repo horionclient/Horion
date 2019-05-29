@@ -4,7 +4,6 @@ class NoPacket :
 	public IModule
 {
 public:
-	std::vector<C_MovePlayerPacket*> PacketMeme;
 	NoPacket();
 	~NoPacket();
 

@@ -97,7 +97,12 @@ void Hooks::Init()
 	void* startDestroyBlockFunc = reinterpret_cast<void*>(Utils::FindSignature("40 55 53 56 57 41 56 41 57 48 8D 6C 24 D1 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 0F 29 ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 4D 8B F9 48 8B F2 48 8B F9 44 88 45 BF E8 ?? ?? ?? ?? 41 C6 07 00 84 C0 75 07 32 C0 E9 ?? ?? ?? ?? 48 8B 4F ?? 48 8B 01 FF 90 ?? ?? ?? ?? 84 C0"));
 	g_Hooks.GameMode_startDestroyHook = std::make_unique<FuncHook>(startDestroyBlockFunc, Hooks::GameMode_startDestroyBlock);
 	g_Hooks.GameMode_startDestroyHook->init();
-	
+
+	// No fucking idea what this function is lmao
+	void* lmao = reinterpret_cast<void*>(Utils::FindSignatureModule("Windows.UI.dll","40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 F9 48 ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 EF 48 83 65 9F 00 4D 8B F0 ?? ?? ?? ?? ?? ?? ?? 4C 8B FA 4C 8B 65 ?? 48 8B F9 ?? ?? ?? ?? ?? ?? ?? 41 8B F1 48 89 45 AF 48 85 D2"));
+	g_Hooks.CantWorkHook = std::make_unique<FuncHook>(lmao, Hooks::sub_180085110);
+	g_Hooks.CantWorkHook->init();
+
 	//logF("Hooks hooked");
 }
 
@@ -119,6 +124,7 @@ void Hooks::Restore()
 	g_Hooks.mob_isAliveHook->Restore();
 	g_Hooks.LocalPlayer_CheckFallDamageHook->Restore();
 	g_Hooks.GameMode_startDestroyHook->Restore();
+	g_Hooks.CantWorkHook->Restore();
 
 }
 
@@ -143,6 +149,16 @@ void __fastcall Hooks::SurvivalMode_tick(C_GameMode * _this)
 
 		_this->player->getEntityTypeId();
 	}
+}
+
+void Hooks::sub_180085110(C_WindowsUI* Src, unsigned int *a2, __int64 a3, unsigned int a4, __int64 Srca, __int64 a6,
+	__int64 a7, __int64 a8, __int64 a9, __int64 a10, __int64 a11, __int64 a12, int a13, __int64 a14) {
+
+	static auto oFunc = g_Hooks.CantWorkHook->GetOriginal<CantWork_t>();
+
+	oFunc(Src, a2, a3, a4, Srca, a6, a7, a8, a9, a10, a11, a12, a13, a14);
+
+	GameData::addWindowsUi(Src);
 }
 
 void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face, void* a4, void* a5)

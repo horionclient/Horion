@@ -138,9 +138,6 @@
     <ClCompile Include="Horion\Command\Commands\PlayerTeleportCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Horion\Module\Modules\ForceCreative.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Horion\Command\Commands\GameModeCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -332,9 +329,6 @@
     <ClInclude Include="Horion\Command\Commands\PlayerTeleportCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Horion\Module\Modules\ForceCreative.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Horion\Command\Commands\GameModeCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -354,6 +348,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Horion\Module\Modules\NoPacket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\CWindowsUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

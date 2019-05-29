@@ -9,7 +9,7 @@ NoPacket::NoPacket() : IModule(VK_NUMPAD7)
 
 NoPacket::~NoPacket()
 {
-	this->PacketMeme.clear();
+
 }
 
 std::string NoPacket::getModuleName()
