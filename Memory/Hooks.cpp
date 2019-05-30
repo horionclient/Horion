@@ -150,38 +150,38 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face,
 	static auto oFunc = g_Hooks.GameMode_startDestroyHook->GetOriginal<GameMode_startDestroyBlock_t>();
 	static auto oDestroyBlock = g_Hooks.GameMode_destroyBlockHook->GetOriginal<GameMode_destroyBlock_t>();
 
-	static IModule* mod = moduleMgr->getModule<Nuker>();
-	static IModule* mod2 = moduleMgr->getModule<InstaBreak>();
-	if (mod == nullptr)
+	static IModule* nukerModule = moduleMgr->getModule<Nuker>();
+	static IModule* instaBreakModule = moduleMgr->getModule<InstaBreak>();
+	if (nukerModule == nullptr || instaBreakModule == nullptr)
 	{
-		mod = moduleMgr->getModule<Nuker>();
-		mod2 = moduleMgr->getModule<InstaBreak>();
+		nukerModule = moduleMgr->getModule<Nuker>();
+		instaBreakModule = moduleMgr->getModule<InstaBreak>();
 	}
-	else if (mod->isEnabled()) {
+	else {
+		if (nukerModule->isEnabled()) {
+			vec3_ti tempPos;
+			int x = 0;
+			int z = 0;
 
-		vec3_ti yeet;
-		int x = 0;
-		int z = 0;
-
-		for (int x = -4; x < 4; x++) {
-			for (int y = -4; y < 4; y++) {
-				for (int z = -4; z < 4; z++) {
-					yeet.x = a2->x + x;
-					yeet.y = a2->y + y;
-					yeet.z = a2->z + z;
-					if (yeet.y > 0)
-						oDestroyBlock(a, &yeet, face);
-						
+			for (int x = -4; x < 4; x++) {
+				for (int y = -4; y < 4; y++) {
+					for (int z = -4; z < 4; z++) {
+						tempPos.x = a2->x + x;
+						tempPos.y = a2->y + y;
+						tempPos.z = a2->z + z;
+						if (tempPos.y > 0)
+							oDestroyBlock(a, &tempPos, face);
+					}
 				}
 			}
+			return;
 		}
-		return;
+		if (instaBreakModule->isEnabled()) {
+			oDestroyBlock(a, a2, face);
+			return;
+		}
 	}
-	else if (mod2->isEnabled()) {
-
-		oDestroyBlock(a, a2, face);
-		return;
-	}
+	
 	oFunc(a, a2, face,a4,a5);
 }
 
