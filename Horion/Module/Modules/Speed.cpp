@@ -25,9 +25,9 @@ void Speed::onTick(C_GameMode * gm)
 		return;
 
 	if (localPlayer->onGround == true) {
-		localPlayer->velocity.x *= 1.39;
-		localPlayer->velocity.z *= 1.39;
-		localPlayer->velocity.y = 0.035;
+		localPlayer->velocity.x *= 1.39f;
+		localPlayer->velocity.z *= 1.39f;
+		localPlayer->velocity.y = 0.035f;
 	}
 }
 

@@ -74,7 +74,7 @@ public:
 private:
 	char pad_0x0120[0x34]; //0x0120
 public:
-	uint8_t onGround; //0x0154
+	bool onGround; //0x0154
 private:
 	char pad_0x0155[0x13]; //0x0155
 public:
