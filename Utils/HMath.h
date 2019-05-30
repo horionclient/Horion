@@ -96,6 +96,7 @@ struct vec3_t
 	vec3_t &sub(const vec3_t &o) { x -= o.x; y -= o.y; z -= o.z; return *this; }
 
 	float squaredlen() const { return x * x + y * y + z * z; }
+	float squaredxzlen() const { return x * x + z * z; }
 
 	vec3_t lerp(const vec3_t other, float val) {
 		vec3_t ne;
