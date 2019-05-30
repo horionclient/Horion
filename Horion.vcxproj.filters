@@ -159,6 +159,9 @@
     <ClCompile Include="Horion\Module\Modules\NoPacket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Horion\GuiUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils\Utils.h">
@@ -348,6 +351,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Horion\Module\Modules\NoPacket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Horion\GuiUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
