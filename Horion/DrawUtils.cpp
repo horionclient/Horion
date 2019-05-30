@@ -65,7 +65,6 @@ uintptr_t DrawUtils::getFont(Fonts font)
 	case RUNE:
 		return g_Data.getClientInstance()->getRuneFont();
 		break;
-	case DEFAULT:
 	default:
 		return g_Data.getClientInstance()->getFont();
 		break;
@@ -124,11 +123,20 @@ void DrawUtils::fillRectangle(vec4_t pos, MC_Color col, float alpha)
 	posF[3] = pos.w;
 
 	MC_Color* c = new MC_Color(col);
-
+	
 	renderCtx->fillRectangle(posF, reinterpret_cast<float*>(c), alpha);
 	
 	delete c;
 	delete[] posF;
+}
+
+void DrawUtils::drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineWidth)
+{
+	lineWidth /= 2;
+	fillRectangle(vec4_t(pos.x            , pos.y - lineWidth, pos.z            , pos.y + lineWidth), col, alpha);
+	fillRectangle(vec4_t(pos.x - lineWidth, pos.y            , pos.x + lineWidth, pos.w            ), col, alpha);
+	fillRectangle(vec4_t(pos.z - lineWidth, pos.y            , pos.z + lineWidth, pos.w            ), col, alpha);
+	fillRectangle(vec4_t(pos.x            , pos.w - lineWidth, pos.z            , pos.w + lineWidth), col, alpha);
 }
 
 void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color *color, float textSize, Fonts font)
@@ -149,7 +157,7 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color *color, floa
 
 	static float size = 1;
 	size = textSize;
-	renderCtx->drawText(g_Data.getClientInstance()->minecraftGame->getTheGoodFontThankYou(), posF, text, color->arr, 1, 0, &size, &oof);
+	renderCtx->drawText(fontPtr, posF, text, color->arr, 1, 0, &size, &oof);
 
 	if (color->shouldDelete)
 		delete color;

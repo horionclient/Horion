@@ -98,8 +98,11 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			bool* newKey = keyMapAddr + (4 * i); 
 			bool newKeyPressed = (*newKey) && (GameData::canUseMoveKeys() || clientInstance->localPlayer == nullptr); // Disable Keybinds when in chat or inventory
 			bool* oldKey = keyMap + (4 * i);
-			if (newKeyPressed != *oldKey)
+			if (newKeyPressed != *oldKey) {
 				moduleMgr->onKeyUpdate(i, newKeyPressed);
+				TabGui::onKeyUpdate(i, newKeyPressed);
+			}
+				
 		}
 
 		memcpy_s(keyMap, 0xFF * 4, keyMapAddr, 0xFF * 4);
@@ -127,6 +130,7 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	MH_Initialize();
 	GameData::initGameData(gameModule, &mem);
 
+	TabGui::init();
 	Hooks::Init();
 	cmdMgr->initCommands();
 	moduleMgr->initModules();

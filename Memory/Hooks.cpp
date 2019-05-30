@@ -483,6 +483,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	DrawUtils::setCtx(renderCtx, g_Data.getClientInstance()->getGuiData());
 	float widthGame = g_Data.getClientInstance()->getGuiData()->widthGame;
 	moduleMgr->onPreRender();
+	TabGui::render();
 	DrawUtils::flush();
 
 	__int64 retval = oText(yeet, renderCtx);

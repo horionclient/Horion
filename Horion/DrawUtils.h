@@ -60,6 +60,7 @@ public:
 	
 	static void drawLine(vec2_t start, vec2_t end, float lineWidth); // rgba
 	static void fillRectangle(vec4_t pos, MC_Color col, float alpha);
+	static void drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineWidth = 1.0f);
 
 	static void drawText(vec2_t pos, std::string* text, MC_Color *color = nullptr, float textSize = 1, Fonts font = SMOOTH);
 	static void rainbow(float* rcolors);

@@ -11,6 +11,7 @@
 #include "../Horion/DrawUtils.h"
 #include "../Horion/Command/CommandMgr.h"
 #include "../Utils/TextFormat.h"
+#include "../Horion/Menu/TabGui.h"
 
 #include <dxgi.h>
 

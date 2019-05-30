@@ -147,6 +147,7 @@
     <ClCompile Include="Horion\FriendList\FriendList.cpp" />
     <ClCompile Include="Horion\GuiUtils.cpp" />
     <ClCompile Include="Horion\Loader.cpp" />
+    <ClCompile Include="Horion\Menu\TabGui.cpp" />
     <ClCompile Include="Horion\Module\ModuleManager.cpp" />
     <ClCompile Include="Horion\Module\Modules\Aimbot.cpp" />
     <ClCompile Include="Horion\Module\Modules\AirJump.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Horion\FriendList\FriendList.h" />
     <ClInclude Include="Horion\GuiUtils.h" />
     <ClInclude Include="Horion\Loader.h" />
+    <ClInclude Include="Horion\Menu\TabGui.h" />
     <ClInclude Include="Horion\Module\ModuleManager.h" />
     <ClInclude Include="Horion\Module\Modules\Aimbot.h" />
     <ClInclude Include="Horion\Module\Modules\AirJump.h" />
