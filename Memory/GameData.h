@@ -4,7 +4,6 @@
 #include "../SDK/CClientInstance.h"
 #include "../SDK/CGameMode.h"
 #include "../SDK/CChestBlockActor.h"
-#include "../SDK/CWindowsUI.h"
 #include "../Utils/TextFormat.h"
 #include "SlimMem.h"
 
@@ -14,7 +13,6 @@ private:
 	C_LocalPlayer* localPlayer;
 	C_GameMode* gameMode;
 	C_EntityList* entityList;
-	C_WindowsUI* windowsUi;
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
 	const SlimUtils::SlimModule* gameModule;
 	SlimUtils::SlimMem* slimMem;
@@ -39,7 +37,6 @@ public:
 	static void initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem);
 	static void addChestToList(C_ChestBlockActor * ChestBlock2);
 	static void EntityList_tick(C_EntityList * list);
-	static void addWindowsUi(C_WindowsUI * ui);
 
 	
 
@@ -63,7 +60,6 @@ public:
 	};
 	C_GameMode* getCGameMode() { return gameMode; };
 	C_EntityList* getEntityList() { return entityList; };
-	C_WindowsUI* getWindowsUI() { return windowsUi; };
 	std::set<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
 };
 

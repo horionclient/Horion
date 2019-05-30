@@ -350,8 +350,5 @@
     <ClInclude Include="Horion\Module\Modules\NoPacket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\CWindowsUI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
