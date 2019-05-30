@@ -2,7 +2,7 @@
 
 
 
-ESP::ESP() : IModule('O')
+ESP::ESP() : IModule('O', VISUAL)
 {
 }
 

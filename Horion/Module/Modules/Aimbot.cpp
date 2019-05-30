@@ -2,7 +2,7 @@
 
 
 
-Aimbot::Aimbot() : IModule('M') // <-- keybind
+Aimbot::Aimbot() : IModule('M', COMBAT) // <-- keybind
 {
 }
 

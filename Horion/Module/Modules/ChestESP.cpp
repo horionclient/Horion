@@ -2,7 +2,7 @@
 
 
 
-ChestESP::ChestESP() : IModule('H')
+ChestESP::ChestESP() : IModule('H', VISUAL)
 {
 }
 

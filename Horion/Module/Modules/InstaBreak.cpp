@@ -2,7 +2,7 @@
 
 
 
-InstaBreak::InstaBreak() : IModule(VK_NUMPAD4)
+InstaBreak::InstaBreak() : IModule(VK_NUMPAD4, BUILD)
 {
 }
 

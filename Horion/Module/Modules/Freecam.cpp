@@ -2,7 +2,7 @@
 
 
 
-Freecam::Freecam() : IModule('V')
+Freecam::Freecam() : IModule('V', EXPLOITS)
 {
 }
 

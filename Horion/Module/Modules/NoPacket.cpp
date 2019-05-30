@@ -2,7 +2,7 @@
 
 
 
-NoPacket::NoPacket() : IModule(VK_NUMPAD7)
+NoPacket::NoPacket() : IModule(VK_NUMPAD7, EXPLOITS)
 {
 }
 

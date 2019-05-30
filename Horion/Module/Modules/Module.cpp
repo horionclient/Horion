@@ -2,10 +2,12 @@
 
 
 
-IModule::IModule(int key)
+IModule::IModule(int key, Category c)
 {
 	this->keybind = key;
+	this->category = c;
 	this->registerIntSetting(std::string("keybind"), &this->keybind, this->keybind);
+	this->registerBoolSetting(std::string("enabled"), &this->enabled, this->enabled);
 }
 
 void IModule::registerFloatSetting(std::string name, float* floatPtr, float defaultValue)
@@ -33,6 +35,22 @@ void IModule::registerIntSetting(std::string name, int * intPtr, int defaultValu
 
 	SettingValue* defaultVal = new SettingValue(); // Default Value
 	defaultVal->_int = defaultValue;
+	setting->defaultValue = defaultVal;
+
+	strcpy_s(setting->name, 19, name.c_str()); // Name
+
+	settings.push_back(setting); // Add to list
+}
+
+void IModule::registerBoolSetting(std::string name, bool * boolPtr, bool defaultValue)
+{
+	SettingEntry* setting = new SettingEntry();
+	setting->valueType = BOOL_T;
+
+	setting->value = reinterpret_cast<SettingValue*>(boolPtr); // Actual value
+
+	SettingValue* defaultVal = new SettingValue(); // Default Value
+	defaultVal->_bool = defaultValue;
 	setting->defaultValue = defaultVal;
 
 	strcpy_s(setting->name, 19, name.c_str()); // Name
@@ -115,6 +133,9 @@ void IModule::onLoadConfig(json * conf)
 					case INT_T:
 						sett->value->_int = value.get<int>();
 						continue;
+					case BOOL_T:
+						sett->value->_bool = value.get<bool>();
+						continue;
 					case TEXT_T:
 						sett->value->text = &value.get<std::string>();
 						continue;
@@ -152,6 +173,9 @@ void IModule::onSaveConfig(json * conf)
 			break;
 		case INT_T:
 			obj.emplace(sett->name, sett->value->_int);
+			break;
+		case BOOL_T:
+			obj.emplace(sett->name, sett->value->_bool);
 			break;
 		case TEXT_T:
 			obj.emplace(sett->name, *sett->value->text);

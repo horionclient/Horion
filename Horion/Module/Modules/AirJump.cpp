@@ -2,7 +2,7 @@
 
 
 
-AirJump::AirJump() : IModule('G')
+AirJump::AirJump() : IModule('G', MOVEMENT)
 {
 }
 

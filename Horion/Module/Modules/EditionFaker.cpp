@@ -2,7 +2,7 @@
 
 
 
-EditionFaker::EditionFaker() : IModule('X')
+EditionFaker::EditionFaker() : IModule('X', EXPLOITS)
 {
 }
 

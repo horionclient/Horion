@@ -2,7 +2,7 @@
 
 
 
-TriggerBot::TriggerBot() : IModule('K') // <-- keybind
+TriggerBot::TriggerBot() : IModule('K', COMBAT) // <-- keybind
 {
 }
 

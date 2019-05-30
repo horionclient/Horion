@@ -7,11 +7,20 @@
 
 using json = nlohmann::json;
 
+enum Category {
+	COMBAT,
+	VISUAL,
+	MOVEMENT,
+	BUILD,
+	EXPLOITS
+};
+
 enum ValueType {
 	FLOAT_T,
 	DOUBLE_T,
 	INT64_T,
 	INT_T,
+	BOOL_T,
 	TEXT_T
 };
 
@@ -21,6 +30,7 @@ struct SettingValue {
 		double _double;
 		__int64 int64;
 		int _int;
+		bool _bool;
 		std::string* text;
 	};
 };
@@ -38,15 +48,19 @@ private:
 	bool enabled = false;
 	int keybind = 0x0;
 	char rawModuleName[30];
+	Category category;
 
 	std::vector<SettingEntry*> settings;
 protected:
-	IModule(int key);
+	IModule(int key, Category c);
 
 	void registerFloatSetting(std::string name, float* floatPtr, float defaultValue);
 	void registerIntSetting(std::string name, int* intpTr, int defaultValue);
+	void registerBoolSetting(std::string name, bool* boolPtr, bool defaultValue);
 public:
 	~IModule();
+
+	const Category getCategory() { return category; };
 
 	virtual std::string getModuleName() = 0;
 	virtual std::string getRawModuleName();

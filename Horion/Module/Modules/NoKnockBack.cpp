@@ -1,6 +1,6 @@
 #include "NoKnockBack.h"
 
-NoKnockBack::NoKnockBack() : IModule('J')
+NoKnockBack::NoKnockBack() : IModule('J', MOVEMENT)
 {
 }
 

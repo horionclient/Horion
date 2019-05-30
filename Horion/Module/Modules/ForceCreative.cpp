@@ -2,7 +2,7 @@
 
 
 
-ForceCreative::ForceCreative() : IModule(VK_NUMPAD2)
+ForceCreative::ForceCreative() : IModule(VK_NUMPAD2, EXPLOITS)
 {
 }
 

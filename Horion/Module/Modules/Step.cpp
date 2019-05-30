@@ -2,7 +2,7 @@
 
 
 
-Step::Step() : IModule('B')
+Step::Step() : IModule('B', MOVEMENT)
 {
 }
 

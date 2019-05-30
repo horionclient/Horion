@@ -2,7 +2,7 @@
 
 
 
-Killaura::Killaura() : IModule('P') // <-- keybind
+Killaura::Killaura() : IModule('P', COMBAT) // <-- keybind
 {
 }
 

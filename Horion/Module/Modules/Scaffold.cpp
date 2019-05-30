@@ -4,7 +4,7 @@
 
 
 
-Scaffold::Scaffold() : IModule(VK_NUMPAD1)
+Scaffold::Scaffold() : IModule(VK_NUMPAD1, BUILD)
 {
 }
 

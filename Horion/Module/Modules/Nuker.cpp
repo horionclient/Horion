@@ -2,7 +2,7 @@
 
 
 
-Nuker::Nuker() : IModule(VK_NUMPAD5)
+Nuker::Nuker() : IModule(VK_NUMPAD5, BUILD)
 {
 }
 

@@ -2,7 +2,7 @@
 
 
 
-Speed::Speed() : IModule(VK_NUMPAD2)
+Speed::Speed() : IModule(VK_NUMPAD2, MOVEMENT)
 {
 }
 
@@ -42,7 +42,4 @@ void Speed::onEnable()
 
 void Speed::onDisable()
 {
-	if (g_Data.getLocalPlayer() == nullptr)
-		return;
-	
 }

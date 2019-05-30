@@ -2,7 +2,7 @@
 
 
 
-Phase::Phase() : IModule('I')
+Phase::Phase() : IModule('I', MOVEMENT)
 {
 }
 

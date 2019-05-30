@@ -2,7 +2,7 @@
 
 
 
-NoFall::NoFall() : IModule(VK_NUMPAD3)
+NoFall::NoFall() : IModule(VK_NUMPAD3, MOVEMENT)
 {
 }
 

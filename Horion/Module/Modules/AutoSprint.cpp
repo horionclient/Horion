@@ -1,6 +1,6 @@
 #include "AutoSprint.h"
 
-AutoSprint::AutoSprint() : IModule(VK_SHIFT)
+AutoSprint::AutoSprint() : IModule(VK_SHIFT, MOVEMENT)
 {
 }
 

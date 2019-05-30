@@ -2,7 +2,7 @@
 
 
 
-Tracer::Tracer() : IModule('R')
+Tracer::Tracer() : IModule('R', VISUAL)
 {
 }
 

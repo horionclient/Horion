@@ -2,7 +2,7 @@
 
 
 
-RainbowSky::RainbowSky() : IModule('N')
+RainbowSky::RainbowSky() : IModule('N', VISUAL)
 {
 }
 

@@ -2,7 +2,7 @@
 
 
 
-Glide::Glide() : IModule('U')
+Glide::Glide() : IModule('U', MOVEMENT)
 {
 }
 

@@ -2,7 +2,7 @@
 
 
 
-Blink::Blink() : IModule('L')
+Blink::Blink() : IModule('L', EXPLOITS)
 {
 }
 

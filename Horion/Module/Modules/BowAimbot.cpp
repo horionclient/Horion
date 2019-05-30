@@ -2,7 +2,7 @@
 
 
 
-BowAimbot::BowAimbot() : IModule('C')
+BowAimbot::BowAimbot() : IModule('C', COMBAT)
 {
 }
 
