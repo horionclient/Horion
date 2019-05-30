@@ -37,8 +37,10 @@ void TabGui::renderLevel()
 		selected[renderedLevel] = labelListLength + selected[renderedLevel];
 	if (selected[renderedLevel] >= labelListLength)
 		selected[renderedLevel] -= labelListLength;
+
 	// Second loop: Render everything
 	int i = 0;
+	float selectedYOffset = yOffset;
 	for (std::vector<const char*>::iterator it = labelList.begin(); it != labelList.end(); ++it) {
 		const char* label = *it;
 		std::string text = label;
@@ -48,11 +50,17 @@ void TabGui::renderLevel()
 			xOffset + maxLength + 4.f,
 			yOffset + textHeight);
 		
-		if(selected[renderedLevel] == i)
-			DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.8f, 0.3f, 1.0f), 0.5f);
+		if (selected[renderedLevel] == i) {
+			// If selected, show in green
+			if(renderedLevel != level) // Are we actually in the menu we are drawing right now?
+				DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.3f, 0.3f, 1.0f), 0.15f); // No we are not
+			else 
+				DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.8f, 0.3f, 1.0f), 0.5f); // Yes we are!
+			selectedYOffset = yOffset;
+		}
 		else
 			DrawUtils::fillRectangle(rectPos, MC_Color(0.8f, 0.8f, 0.8f, 1.0f), 0.1f);
-		DrawUtils::drawRectangle(rectPos, MC_Color(0.0f, 0.0f, 0.0f, 1.0f), 1.0f);
+		DrawUtils::drawRectangle(rectPos, MC_Color(0.0f, 0.0f, 0.0f, 1.0f), 1.0f); // Border around Text
 
 		DrawUtils::drawText(vec2_t(xOffset + 0.5f, yOffset), &text, /* White Color*/ nullptr, textSize, SMOOTH);
 
@@ -61,7 +69,8 @@ void TabGui::renderLevel()
 	}
 	// Cleanup
 	labelList.clear();
-	xOffset += maxLength + 3;
+	xOffset += maxLength + 4.5f;
+	yOffset = selectedYOffset;
 	renderedLevel++;
 }
 
@@ -81,6 +90,28 @@ void TabGui::render()
 	renderLabel("Yeeeet");
 	renderLabel("Yeehawt");
 	renderLevel();
+
+	bool couldFindLevel = true;
+	switch (selected[0]) {
+	case 0:
+		renderLabel("Yikes:");
+		renderLabel("Thanks for the Yikes!");
+		break;
+	case 1:
+		renderLabel("Yeeeet:");
+		renderLabel("Yeeeet!");
+		break;
+	case 2:
+		renderLabel("Yeehawt:");
+		renderLabel("Hell yea brother!");
+		break;
+	default:
+		couldFindLevel = false;
+		if (level > 0)
+			level = 0;
+	}
+	if (couldFindLevel)
+		renderLevel();
 	/*std::vector<IModule*>* modules = moduleMgr->getModuleList();
 	for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
 		IModule* 
@@ -103,6 +134,13 @@ void TabGui::onKeyUpdate(int key, bool isDown)
 	case VK_LEFT: // Leave menus
 		if (level > 0)
 			level--;
+		break;
+	case VK_RIGHT:
+		if (level < 3) {
+			level++;
+			selected[level] = 0;
+		}
+			
 		break;
 	case VK_UP:
 		selected[level]--;
