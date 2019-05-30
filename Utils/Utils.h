@@ -335,6 +335,12 @@ public:
 				firstMatch = 0;
 			}
 		}
+#ifdef _DEBUG
+		const char* sig = szSignature; // Put sig in here to access it in debugger
+		// This will not get optimized away because we are in debug
+		// Leave this in here to quickly find bad signatures in case of updates
+		throw std::exception("Signature not found");
+#endif
 		return 0u;
 	}
 
