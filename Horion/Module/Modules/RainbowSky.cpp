@@ -13,5 +13,5 @@ RainbowSky::~RainbowSky()
 
 std::string RainbowSky::getModuleName()
 {
-	return std::string("Rainbow Sky");
+	return std::string("RainbowSky");
 }

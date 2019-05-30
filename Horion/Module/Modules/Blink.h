@@ -10,5 +10,6 @@ public:
 
 	// Inherited via IModule
 	virtual std::string getModuleName() override;
+	virtual std::string getRawModuleName() override;
 };
 

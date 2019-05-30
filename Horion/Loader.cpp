@@ -155,9 +155,9 @@ DllMain(HMODULE hModule,
 	break;
 	case DLL_PROCESS_DETACH:
 		isRunning = false;
+		configMgr->saveConfig();
 		moduleMgr->disable();
 		cmdMgr->disable();
-		configMgr->saveConfig();
 		Hooks::Restore();
 		logF("Removing logger");
 		Logger::Disable();

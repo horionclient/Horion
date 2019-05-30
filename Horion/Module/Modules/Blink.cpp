@@ -14,7 +14,10 @@ Blink::~Blink()
 
 std::string Blink::getModuleName()
 {
-	return std::string("BlinK");
+	return std::string("Blink");
 }
 
-
+std::string Blink::getRawModuleName()
+{
+	return std::string("Blink_");
+}

@@ -7,7 +7,7 @@ IModule::IModule(int key, Category c)
 	this->keybind = key;
 	this->category = c;
 	this->registerIntSetting(std::string("keybind"), &this->keybind, this->keybind);
-	this->registerBoolSetting(std::string("enabled"), &this->enabled, this->enabled);
+	this->registerBoolSetting(std::string("enabled"), &this->enabled, false);
 }
 
 void IModule::registerFloatSetting(std::string name, float* floatPtr, float defaultValue)
