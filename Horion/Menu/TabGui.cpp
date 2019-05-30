@@ -25,11 +25,18 @@ void TabGui::renderLevel()
 
 	// First loop: Get the maximum text length 
 	float maxLength = 1;
+	int labelListLength = 0;
 	for (std::vector<const char*>::iterator it = labelList.begin(); it != labelList.end(); ++it) {
+		labelListLength++;
 		const char* label = *it;
 		std::string text = label;
 		maxLength = max(maxLength, DrawUtils::getTextLength(&text, textSize, SMOOTH));
 	}
+
+	if (selected[renderedLevel] < 0)
+		selected[renderedLevel] = labelListLength + selected[renderedLevel];
+	if (selected[renderedLevel] >= labelListLength)
+		selected[renderedLevel] -= labelListLength;
 	// Second loop: Render everything
 	int i = 0;
 	for (std::vector<const char*>::iterator it = labelList.begin(); it != labelList.end(); ++it) {
