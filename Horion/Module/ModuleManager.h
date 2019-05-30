@@ -25,7 +25,6 @@
 #include "Modules/Speed.h"
 #include "Modules/NoFall.h"
 #include "Modules/Blink.h"
-#include "Modules/ForceCreative.h"
 #include "Modules/Nuker.h"
 #include "Modules/InstaBreak.h"
 #include "Modules/NoPacket.h"

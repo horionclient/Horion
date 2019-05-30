@@ -12,7 +12,7 @@ class C_InteractPacket : public C_Packet
 private:
 	char filler[0x20]; //x0x00008
 public:
-	int entityRuntimeID; //0x28
+	__int64 entityRuntimeID; //0x28
 	vec3_t pos; //0x30
 };
 
@@ -50,7 +50,7 @@ public:
 		pitch = player->pitch;
 		yaw = player->yaw;
 		headYaw = player->yaw;
-		onGround = true;
+		onGround = false;
 		mode = 0;
 	}
 
