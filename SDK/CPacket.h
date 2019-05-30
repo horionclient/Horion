@@ -50,7 +50,7 @@ public:
 		pitch = player->pitch;
 		yaw = player->yaw;
 		headYaw = player->yaw;
-		onGround = true;
+		onGround = false;
 		mode = 0;
 	}
 

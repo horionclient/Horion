@@ -99,9 +99,9 @@ void Hooks::Init()
 	g_Hooks.GameMode_startDestroyHook->init();
 
 	// No fucking idea what this function is lmao
-	void* lmao = reinterpret_cast<void*>(Utils::FindSignatureModule("Windows.UI.dll","40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 F9 48 ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 EF 48 83 65 9F 00 4D 8B F0 ?? ?? ?? ?? ?? ?? ?? 4C 8B FA 4C 8B 65 ?? 48 8B F9 ?? ?? ?? ?? ?? ?? ?? 41 8B F1 48 89 45 AF 48 85 D2"));
-	g_Hooks.CantWorkHook = std::make_unique<FuncHook>(lmao, Hooks::sub_180085110);
-	g_Hooks.CantWorkHook->init();
+	//void* lmao = reinterpret_cast<void*>(Utils::FindSignatureModule("Windows.UI.dll","40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 F9 48 ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 EF 48 83 65 9F 00 4D 8B F0 ?? ?? ?? ?? ?? ?? ?? 4C 8B FA 4C 8B 65 ?? 48 8B F9 ?? ?? ?? ?? ?? ?? ?? 41 8B F1 48 89 45 AF 48 85 D2"));
+	//g_Hooks.CantWorkHook = std::make_unique<FuncHook>(lmao, Hooks::sub_180085110);
+	//g_Hooks.CantWorkHook->init();
 
 	//logF("Hooks hooked");
 }
@@ -124,7 +124,7 @@ void Hooks::Restore()
 	g_Hooks.mob_isAliveHook->Restore();
 	g_Hooks.LocalPlayer_CheckFallDamageHook->Restore();
 	g_Hooks.GameMode_startDestroyHook->Restore();
-	g_Hooks.CantWorkHook->Restore();
+	//g_Hooks.CantWorkHook->Restore();
 
 }
 
@@ -168,7 +168,7 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face,
 
 	static IModule* mod = moduleMgr->getModule<Nuker>();
 	static IModule* mod2 = moduleMgr->getModule<InstaBreak>();
-	if (mod == nullptr)
+	if (mod == nullptr || mod2 == nullptr)
 	{
 		mod = moduleMgr->getModule<Nuker>();
 		mod2 = moduleMgr->getModule<InstaBreak>();
@@ -207,6 +207,7 @@ void __fastcall Hooks::MultiLevelPlayer_tick(C_EntityList * _this)
 	oTick(_this); // Call Original Func
 	GameData::EntityList_tick(_this);
 }
+
 void __fastcall Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a)
 {
 	static auto oTick = g_Hooks.ChestBlockActor_tickHook->GetOriginal<ChestBlockActor_tick_t>();
@@ -275,16 +276,13 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 	static IModule* mod = moduleMgr->getModule<Freecam>();
 	static IModule* mod2 = moduleMgr->getModule<NoFall>();
 	static Blink* mod3 = reinterpret_cast<Blink*>(moduleMgr->getModule<Blink>());
-	static NoPacket* No_Packet = reinterpret_cast<NoPacket*>(moduleMgr->getModule<NoPacket>());
+	//static NoPacket* No_Packet = reinterpret_cast<NoPacket*>(moduleMgr->getModule<NoPacket>());
 
-	if (mod == nullptr || mod2 == nullptr || mod3 == nullptr || No_Packet == nullptr) {
+	if (mod == nullptr || mod2 == nullptr || mod3 == nullptr){// || No_Packet == nullptr) {
 		mod = moduleMgr->getModule<Freecam>();
 		mod2 = moduleMgr->getModule<NoFall>();
 		mod3 = reinterpret_cast<Blink*>(moduleMgr->getModule<Blink>());
-		No_Packet = reinterpret_cast<NoPacket*>(moduleMgr->getModule<NoPacket>());
-	}
-	else if (No_Packet->isEnabled()) {
-		return;
+		//No_Packet = reinterpret_cast<NoPacket*>(moduleMgr->getModule<NoPacket>());
 	}
 	else if (mod->isEnabled() || mod3->isEnabled()) {
 
@@ -294,7 +292,7 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 			if (mod3->isEnabled())
 			{
 				C_MovePlayerPacket* meme = reinterpret_cast<C_MovePlayerPacket*>(packet);
-				meme->onGround = true; //Don't take Fall Damages when turned off
+				meme->onGround = false; //Don't take Fall Damages when turned off
 				mod3->PacketMeme.push_back(new C_MovePlayerPacket(*meme)); // Saving the packets
 			}
 			return; // Dont call sendToServer
@@ -315,7 +313,7 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
 		if (frenchBoy.vTable == packet->vTable) {
 			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
-			p->onGround = true;
+			p->onGround = false;
 		}
 	}
 

@@ -122,8 +122,8 @@ void GameData::EntityList_tick(C_EntityList * list)
 
 void GameData::addWindowsUi(C_WindowsUI* ui)
 {
-	if (ui->MouseX < 0 || ui->MouseY < 0 || ui->MouseX > 3000 || ui->MouseY > 3000)// there are 4 instances of this class only one is good 
-		return;
+	//if (ui->MouseX < 0 || ui->MouseY < 0 || ui->MouseX > 3000 || ui->MouseY > 3000)// there are 4 instances of this class only one is good 
+	//	return;
 	g_Data.windowsUi = ui;
 	//logF("%d", g_Data.windowsUi->MouseX);
 }
