@@ -32,7 +32,6 @@ private:
 	static HRESULT __stdcall d3d11_present(IDXGISwapChain * pSwapChain, UINT SyncInterval, UINT Flags);
 	static __int64 __fastcall renderText(__int64 yeet, C_MinecraftUIRenderContext* yote);
 	static char* __fastcall I8n_get(void*, char*);
-	static TextHolder* __fastcall Options_getVersionString(void*, __int64);
 	static float* Dimension_getFogColor(__int64, float* color, float brightness);
 	static void GameMode_destroyBlock(void*, vec3_ti*, uint8_t face);
 	static void ChestBlockActor_tick(C_ChestBlockActor*, void* a);
@@ -53,7 +52,6 @@ private:
 	std::unique_ptr<FuncHook> d3d11_presentHook;
 	std::unique_ptr<FuncHook> renderTextHook;
 	std::unique_ptr<FuncHook> I8n_getHook;
-	std::unique_ptr<FuncHook> Options_getVersionStringHook;
 	std::unique_ptr<FuncHook> Dimension_getFogColorHook;
 	std::unique_ptr<FuncHook> GameMode_destroyBlockHook;
 	std::unique_ptr<FuncHook> ChestBlockActor_tickHook;
@@ -80,7 +78,6 @@ private:
 	typedef void(__fastcall* GameMode_tick_t)(C_GameMode* _this);
 	typedef void(__fastcall* SurvivalMode_tick_t)(C_GameMode* _this);
 	typedef void(__fastcall* ChatScreen_sendChatMessage_t)(void* _this);
-	typedef TextHolder*(__fastcall* Options_getVersionString_t)(void* _this, __int64);
 	typedef HRESULT(__stdcall* d3d11_present_t)(IDXGISwapChain * pSwapChain, UINT SyncInterval, UINT Flags);
 	typedef void(__fastcall* ChestBlockActor_tick_t)(void* _this,void*);
 	typedef void(__fastcall* sendToServer_tick_t)(C_LoopbackPacketSender* a, C_Packet* packet);

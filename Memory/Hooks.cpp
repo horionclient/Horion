@@ -58,10 +58,6 @@ void Hooks::Init()
 	//g_Hooks.I8n_getHook = std::make_unique<FuncHook>(_shitshikt, Hooks::I8n_get);
 	//g_Hooks.I8n_getHook->init();
 
-	//void *shat = reinterpret_cast<void*>(g_Data.getModule()->ptrBase + 0x6908A0);
-	//g_Hooks.Options_getVersionStringHook = std::make_unique<FuncHook>(shat, Hooks::Options_getVersionString);
-	//g_Hooks.Options_getVersionStringHook->init();
-
 	void* boii = reinterpret_cast<void*>(Utils::FindSignature("0F 28 C2 C7 42 0C 00 00 80 3F F3"));
 	g_Hooks.Dimension_getFogColorHook = std::make_unique<FuncHook>(boii, Hooks::Dimension_getFogColor);
 	g_Hooks.Dimension_getFogColorHook->init();
@@ -125,7 +121,6 @@ void Hooks::Restore()
 	g_Hooks.chatScreen_sendMessageHook->Restore();
 	g_Hooks.d3d11_presentHook->Restore();
 	g_Hooks.renderTextHook->Restore();
-	g_Hooks.Options_getVersionStringHook->Restore();
 	//g_Hooks.I8n_getHook->Restore();
 	g_Hooks.GameMode_destroyBlockHook->Restore();
 	g_Hooks.AppPlatform_getGameEditionHook->Restore();
@@ -653,14 +648,6 @@ char* __fastcall Hooks::I8n_get(void* f, char* str)
 	//if (strcmp(str, "menu.play") == 0)
 		//return &yote;
 	return oGet(f, str);
-}
-
-TextHolder * __fastcall Hooks::Options_getVersionString(void * ya, __int64 idk)
-{
-	static auto oGetVer = g_Hooks.Options_getVersionStringHook->GetOriginal<Options_getVersionString_t>();
-	TextHolder* version = oGetVer(ya, idk);
-	version->inlineText[0] = 'E';
-	return version;
 }
 
 float * Hooks::Dimension_getFogColor(__int64 a1, float * color, float brightness)
