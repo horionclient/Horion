@@ -518,21 +518,34 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	
 	__int64 retval = oText(yeet, renderCtx);
 	moduleMgr->onPostRender();
+
+	if (GameData::ShouldHide()) {
+		DrawUtils::flush();
+		return;
+	}
+
 	float y = 0;
 	static float rcolors[4];
 	DrawUtils::rainbow(rcolors);
 	static std::string textStr1 = std::string("Horion");
 	static float leng1 = DrawUtils::getTextLength(&textStr1);
 
-	if (GameData::shouldOnTheRight() && !GameData::ShouldHide())
+	vec2_t* mousPos = g_Data.getClientInstance()->getMousePos();
+	char mousePosText[30];
+	sprintf_s(mousePosText, 30, "X: %.0f Y: %.0f", mousPos->x, mousPos->y);
+	std::string mousePosStr = mousePosText;
+
+	if (GameData::shouldOnTheRight())
 	{
 		//DrawUtils::fillRectangle(vec4_t(0, 0, leng1 + 2, y + 12), MC_Color(0.1f, 0.1f, 0.1f, 0.1f), 0.7f);
 		DrawUtils::drawText(vec2_t((0), y + 1), &textStr1, new MC_Color(rcolors));
+		DrawUtils::drawText(vec2_t((0), y + 13), &mousePosStr, new MC_Color(rcolors));
 	}
-	else if(!GameData::shouldOnTheRight() && !GameData::ShouldHide())
+	else if(!GameData::shouldOnTheRight())
 	{
 		//DrawUtils::fillRectangle(vec4_t(widthGame - leng1 - 2, 0, widthGame, y + 12), MC_Color(0.1f, 0.1f, 0.1f, 0.1f), 0.7f);
 		DrawUtils::drawText(vec2_t((widthGame - leng1 - 1), y + 1), &textStr1, new MC_Color(rcolors));
+		DrawUtils::drawText(vec2_t((widthGame - leng1 - 1), y + 13), &mousePosStr, new MC_Color(rcolors));
 	}
 	
 	bool showShit = g_Data.getLocalPlayer() == nullptr ? true : (GameData::canUseMoveKeys() ? true : false);
@@ -586,18 +599,22 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		disabledRcolors[2] = min(1, rcolors[2] * 0.4f + 0.2f);
 		disabledRcolors[3] = 1;
 
-		for (std::set<LilYeet>::iterator it = mods.begin(); it != mods.end() && !GameData::ShouldHide(); ++it) {
+		for (std::set<LilYeet>::iterator it = mods.begin(); it != mods.end(); ++it) {
 			std::string textStr = it->moduleName;
 
 			float leng = DrawUtils::getTextLength(&textStr);
 			if (it->enabled && GameData::shouldOnTheRight()) {
 				DrawUtils::fillRectangle(vec4_t(widthGame - leng - 2, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
 				DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(rcolors));
+				
+				/*
 				vec2_t* h = g_Data.getClientInstance()->getMousePos();
 				if ((h->x/2) >= (widthGame - leng - 2) && (h->x / 2) <= widthGame)
 				{
+					
 					if ((h->y / 2) >= y && (h->y / 2) <= y + 12)
 					{
+						
 						CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)lol, NULL, NULL, NULL);
 						//a = *reinterpret_cast<int*>(g_Data.getHIDController() + 0x50);
 							if (firstTime)
@@ -605,7 +622,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 						
 							
 					}
-				}
+				}*/
 				y += 12;
 			}
 			else if (it->enabled && !GameData::shouldOnTheRight())
