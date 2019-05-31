@@ -621,7 +621,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 			std::string textStr = it->moduleName;
 			float textWidth = DrawUtils::getTextWidth(&textStr);
 
-			float xOffset = isOnRightSide ? windowSize.x - textWidth - (textPadding * 2): 0;
+			float xOffset = isOnRightSide ? windowSize.x - textWidth - (textPadding * 2) : 0;
 			vec2_t textPos = vec2_t(
 				xOffset + textPadding, 
 				yOffset + textPadding
