@@ -556,8 +556,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 			DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth - 1, 1), &horionStr, new MC_Color(rcolors));
 	}
 	
-	// Show full ArrayList
-	const bool extendedArraylist = g_Data.getLocalPlayer() == nullptr ? /* not ingame */ true : /* ingame */(GameData::canUseMoveKeys() ? true : false); 
+	// Draw ArrayList
 	if (moduleMgr->isInitialized()) {
 		struct IModuleContainer {
 			// Struct used to Sort IModules in a std::set
@@ -596,43 +595,48 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 				return thisWidth < otherWidth;
 			}
 		};
+
+		// Parameters
+		static constexpr float textPadding = 1.0f;
+		static constexpr float textSize = 1.0f;
+		static constexpr float textHeight = textSize * 10.0f;
+
+		// Show disabled Modules?
+		const bool extendedArraylist = g_Data.getLocalPlayer() == nullptr ? /* not ingame */ true : /* ingame */(GameData::canUseMoveKeys() ? true : false);
+		const bool isOnRightSide = GameData::shouldOnTheRight();
 		std::set<IModuleContainer> modContainerList;
-		// Fill modContainerList
+		// Fill modContainerList with Modules
 		{
 			std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
 
 			for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it)
 				modContainerList.emplace(IModuleContainer(*it));
 		}
-		
 
 		for (std::set<IModuleContainer>::iterator it = modContainerList.begin(); it != modContainerList.end(); ++it) {
+
+			if (!extendedArraylist && !it->enabled)
+				continue;
+
 			std::string textStr = it->moduleName;
 			float textWidth = DrawUtils::getTextWidth(&textStr);
 
-			if (it->enabled) {
-				if (GameData::shouldOnTheRight()) {
-					DrawUtils::fillRectangle(vec4_t(windowSize.x - textWidth - 2, yOffset, windowSize.x, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
-					DrawUtils::drawText(vec2_t((windowSize.x - textWidth - 1), yOffset + 1), &textStr, new MC_Color(rcolors));
-				}
-				else
-				{
-					DrawUtils::fillRectangle(vec4_t(0, yOffset, textWidth + 2, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
-					DrawUtils::drawText(vec2_t(0, yOffset + 1), &textStr, new MC_Color(rcolors));
-				}
-			}
-			else if(extendedArraylist) {
-				if (GameData::shouldOnTheRight()) {
-					DrawUtils::fillRectangle(vec4_t(windowSize.x - textWidth - 2, yOffset, windowSize.x, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
-					DrawUtils::drawText(vec2_t((windowSize.x - textWidth - 1), yOffset + 1), &textStr, new MC_Color(disabledRcolors));
-				}
-				else
-				{
-					DrawUtils::fillRectangle(vec4_t(0, yOffset, textWidth + 2, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
-					DrawUtils::drawText(vec2_t(0, yOffset + 1), &textStr, new MC_Color(disabledRcolors));
-				}
-			}
-			yOffset += 12;
+			float xOffset = isOnRightSide ? windowSize.x - textWidth - (textPadding * 2): 0;
+			vec2_t textPos = vec2_t(
+				xOffset + textPadding, 
+				yOffset + textPadding
+			);
+			vec4_t rectPos = vec4_t(
+				xOffset, 
+				yOffset, 
+				isOnRightSide ? windowSize.x : textWidth + (textPadding * 2), 
+				yOffset + textPadding * 2 + textHeight
+			);
+
+			DrawUtils::drawText(textPos, &textStr, new MC_Color(it->enabled ? rcolors : disabledRcolors), textSize);
+			DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), it->enabled ? 0.4f : 0.15f);		
+			
+			yOffset += textHeight + (textPadding * 2);
 		}
 		modContainerList.clear();
 	}
