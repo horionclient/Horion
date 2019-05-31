@@ -527,17 +527,26 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	// Should we hide the arraylist?
 	if (GameData::ShouldHide()) {
 		DrawUtils::flush();
-		return;
+		return retval;
 	}
 	
 	static float rcolors[4]; // Rainbow color array RGBA
+	static float disabledRcolors[4]; // Rainbow Colors, but for disabled modules
 	static std::string horionStr = std::string("Horion");					 // Static Horion logo / text
 	static float       horionStrWidth = DrawUtils::getTextWidth(&horionStr); // Graphical Width of Horion logo / text
 
 	float yOffset = 0; // Offset of next Text
-	DrawUtils::rainbow(rcolors); // Increase Hue of rainbow color array
 	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize; 
 	vec2_t* mousePos = g_Data.getClientInstance()->getMousePos();
+
+	// Rainbow color updates
+	{
+		DrawUtils::rainbow(rcolors); // Increase Hue of rainbow color array
+		disabledRcolors[0] = min(1, rcolors[0] * 0.4f + 0.2f);
+		disabledRcolors[1] = min(1, rcolors[1] * 0.4f + 0.2f);
+		disabledRcolors[2] = min(1, rcolors[2] * 0.4f + 0.2f);
+		disabledRcolors[3] = 1;
+	}
 
 	// Draw Horion logo
 	{
@@ -550,15 +559,14 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	// Show full ArrayList
 	const bool extendedArraylist = g_Data.getLocalPlayer() == nullptr ? /* not ingame */ true : /* ingame */(GameData::canUseMoveKeys() ? true : false); 
 	if (moduleMgr->isInitialized()) {
-		std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
-
-		struct LilYeet {
+		struct IModuleContainer {
+			// Struct used to Sort IModules in a std::set
 			IModule* backingModule;
 			std::string moduleName;
 			bool enabled;
 			int keybind;
 
-			LilYeet(IModule* mod) {
+			IModuleContainer(IModule* mod) {
 				this->moduleName = mod->getModuleName();
 				this->enabled = mod->isEnabled();
 				this->keybind = mod->getKeybind();
@@ -570,7 +578,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 				moduleName = strStream.str();
 			}
 
-			bool operator<(const LilYeet &other) const {
+			bool operator<(const IModuleContainer &other) const {
 				std::string temp = moduleName;
 				float thisWidth = DrawUtils::getTextWidth(&temp);
 				temp = other.moduleName;
@@ -580,55 +588,48 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 					if (!other.enabled) // We are enabled
 						return true;
 				}
-				else {
-					if (other.enabled) // They are enabled
+				else if (other.enabled) // They are enabled
 						return false;
-				}
 
 				if (thisWidth == otherWidth)
 					return moduleName < other.moduleName;
 				return thisWidth < otherWidth;
 			}
 		};
-		std::set<LilYeet> mods;
+		std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
+		std::set<IModuleContainer> modList;
 		for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it)
-			mods.emplace(LilYeet(*it));
-		float disabledRcolors[4];
-		disabledRcolors[0] = min(1, rcolors[0] * 0.4f + 0.2f);
-		disabledRcolors[1] = min(1, rcolors[1] * 0.4f + 0.2f);
-		disabledRcolors[2] = min(1, rcolors[2] * 0.4f + 0.2f);
-		disabledRcolors[3] = 1;
+			modList.emplace(IModuleContainer(*it));
 
-		for (std::set<LilYeet>::iterator it = mods.begin(); it != mods.end(); ++it) {
+		for (std::set<IModuleContainer>::iterator it = modList.begin(); it != modList.end(); ++it) {
 			std::string textStr = it->moduleName;
 
-			float leng = DrawUtils::getTextWidth(&textStr);
+			float textWidth = DrawUtils::getTextWidth(&textStr);
 			if (it->enabled && GameData::shouldOnTheRight()) {
-				DrawUtils::fillRectangle(vec4_t(windowSize.x - leng - 2, yOffset, windowSize.x, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
-				DrawUtils::drawText(vec2_t((windowSize.x - leng - 1), yOffset + 1), &textStr, new MC_Color(rcolors));
-				
+				DrawUtils::fillRectangle(vec4_t(windowSize.x - textWidth - 2, yOffset, windowSize.x, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
+				DrawUtils::drawText(vec2_t((windowSize.x - textWidth - 1), yOffset + 1), &textStr, new MC_Color(rcolors));
 				yOffset += 12;
 			}
 			else if (it->enabled && !GameData::shouldOnTheRight())
 			{
-				DrawUtils::fillRectangle(vec4_t(0, yOffset, leng + 2, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
+				DrawUtils::fillRectangle(vec4_t(0, yOffset, textWidth + 2, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
 				DrawUtils::drawText(vec2_t(0, yOffset + 1), &textStr, new MC_Color(rcolors));
 				yOffset += 12;
 			}
 			else if (extendedArraylist && GameData::shouldOnTheRight()) {
-				DrawUtils::fillRectangle(vec4_t(windowSize.x - leng - 2, yOffset, windowSize.x, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
-				DrawUtils::drawText(vec2_t((windowSize.x - leng - 1), yOffset + 1), &textStr, new MC_Color(disabledRcolors));
+				DrawUtils::fillRectangle(vec4_t(windowSize.x - textWidth - 2, yOffset, windowSize.x, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
+				DrawUtils::drawText(vec2_t((windowSize.x - textWidth - 1), yOffset + 1), &textStr, new MC_Color(disabledRcolors));
 				yOffset += 12;
 			}
 			else if (extendedArraylist && !GameData::shouldOnTheRight())
 			{
-				DrawUtils::fillRectangle(vec4_t(0, yOffset, leng + 2, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
+				DrawUtils::fillRectangle(vec4_t(0, yOffset, textWidth + 2, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
 				DrawUtils::drawText(vec2_t(0, yOffset + 1), &textStr, new MC_Color(disabledRcolors));
 				yOffset += 12;
 			}
 			
 		}
-		mods.clear();
+		modList.clear();
 	}
 
 	DrawUtils::flush();
