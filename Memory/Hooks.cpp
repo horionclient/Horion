@@ -505,7 +505,7 @@ HRESULT __stdcall Hooks::d3d11_present(IDXGISwapChain* pSwapChain, UINT SyncInte
 	return oPresent(pSwapChain, SyncInterval, Flags);
 }
 
-__int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* renderCtx) // I have no idea what this function is, only thing i know is that screencontext is in yote
+__int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* renderCtx)
 {
 	static auto oText = g_Hooks.renderTextHook->GetOriginal<renderText_t>();
 
@@ -514,7 +514,6 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	moduleMgr->onPreRender();
 	TabGui::render();
 	DrawUtils::flush();
-
 	
 	__int64 retval = oText(yeet, renderCtx);
 	moduleMgr->onPostRender();
@@ -607,22 +606,6 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 				DrawUtils::fillRectangle(vec4_t(widthGame - leng - 2, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
 				DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(rcolors));
 				
-				/*
-				vec2_t* h = g_Data.getClientInstance()->getMousePos();
-				if ((h->x/2) >= (widthGame - leng - 2) && (h->x / 2) <= widthGame)
-				{
-					
-					if ((h->y / 2) >= y && (h->y / 2) <= y + 12)
-					{
-						
-						CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)lol, NULL, NULL, NULL);
-						//a = *reinterpret_cast<int*>(g_Data.getHIDController() + 0x50);
-							if (firstTime)
-								it->lol->setEnabled(false);
-						
-							
-					}
-				}*/
 				y += 12;
 			}
 			else if (it->enabled && !GameData::shouldOnTheRight())
