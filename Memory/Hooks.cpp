@@ -13,7 +13,6 @@ void lol() {
 	{
 		firstTime = false;
 	}
-	logF("yeet");
 }
 
 void Hooks::Init()
