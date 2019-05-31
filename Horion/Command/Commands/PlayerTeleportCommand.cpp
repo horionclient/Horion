@@ -41,6 +41,12 @@ bool PlayerTeleportCommand::execute(std::vector<std::string>* args)
 		std::string name(currentEntity->name2.getText());
 
 		std::transform(name.begin(), name.end(), name.begin(), ::tolower);
+
+		if (currentEntity == 0)
+			break;
+
+		if (currentEntity == g_Data.getLocalPlayer()) // Skip Local player
+			continue;
 		
 		if (name.find(nameOfPlayerLower) == std::string::npos)
 			continue;

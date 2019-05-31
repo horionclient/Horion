@@ -51,6 +51,16 @@ bool GameData::isKeyPressed(int key) {
 	return false;
 }
 
+bool GameData::isRightButtonPressed() {
+	int* a = reinterpret_cast<int*>(g_Data.hid + 0x50);
+	if (*a==1) {
+		while (*a == 1)
+			Sleep(1);
+		return true;
+	}
+	return false;
+}
+
 bool GameData::shouldTerminate()
 {
 	return g_Data.shouldTerminateB;
@@ -118,6 +128,11 @@ void GameData::updateGameData(C_GameMode * gameMode)
 void GameData::EntityList_tick(C_EntityList * list)
 {
 	g_Data.entityList = list;
+}
+
+void GameData::addHIDController(void*  Hid)
+{
+	g_Data.hid = reinterpret_cast<uintptr_t>(Hid);
 }
 
 void GameData::addChestToList(C_ChestBlockActor * chest)

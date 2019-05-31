@@ -2,6 +2,19 @@
 #include "../Directx/Directx.h"
 
 Hooks    g_Hooks;
+bool firstTime = false;
+
+void lol() {
+	if (GameData::isRightButtonPressed())
+	{
+		firstTime = true;
+	}
+	else
+	{
+		firstTime = false;
+	}
+	logF("yeet");
+}
 
 void Hooks::Init()
 {
@@ -98,6 +111,11 @@ void Hooks::Init()
 	g_Hooks.GameMode_startDestroyHook = std::make_unique<FuncHook>(startDestroyBlockFunc, Hooks::GameMode_startDestroyBlock);
 	g_Hooks.GameMode_startDestroyHook->init();
 
+	void* keyMouseFunc = reinterpret_cast<void*>(Utils::FindSignature("40 55 56 57 41 54 41 55 41 56 41 57 48 8B EC 48 83 EC 70 48 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 F0 49 8B F0 48 8B F9 45 33 ED 41 8B DD 89 5D EC 49 8B C8"));
+	g_Hooks.HIDController_keyMouseHook = std::make_unique<FuncHook>(keyMouseFunc, Hooks::HIDController_keyMouse);
+	g_Hooks.HIDController_keyMouseHook->init();
+
+
 
 	//logF("Hooks hooked");
 }
@@ -120,6 +138,7 @@ void Hooks::Restore()
 	g_Hooks.mob_isAliveHook->Restore();
 	g_Hooks.LocalPlayer_CheckFallDamageHook->Restore();
 	g_Hooks.GameMode_startDestroyHook->Restore();
+	g_Hooks.HIDController_keyMouseHook->Restore();
 
 
 }
@@ -145,6 +164,14 @@ void __fastcall Hooks::SurvivalMode_tick(C_GameMode * _this)
 
 		_this->player->getEntityTypeId();
 	}
+}
+
+void Hooks::HIDController_keyMouse(void* a1, void* a2, void* a3)
+{
+	static auto oFunc = g_Hooks.HIDController_keyMouseHook->GetOriginal<HIDController_keyMouse_t>();
+	GameData::addHIDController(a1);
+	oFunc(a1,a2,a3); // Call Original Func
+	
 }
 
 void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face, void* a4, void* a5)
@@ -262,13 +289,16 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 	static IModule* mod = moduleMgr->getModule<Freecam>();
 	static IModule* mod2 = moduleMgr->getModule<NoFall>();
 	static Blink* mod3 = reinterpret_cast<Blink*>(moduleMgr->getModule<Blink>());
-	//static NoPacket* No_Packet = reinterpret_cast<NoPacket*>(moduleMgr->getModule<NoPacket>());
+	static NoPacket* No_Packet = reinterpret_cast<NoPacket*>(moduleMgr->getModule<NoPacket>());
 
-	if (mod == nullptr || mod2 == nullptr || mod3 == nullptr){// || No_Packet == nullptr) {
+	if (mod == nullptr || mod2 == nullptr || mod3 == nullptr || No_Packet == nullptr) {
 		mod = moduleMgr->getModule<Freecam>();
 		mod2 = moduleMgr->getModule<NoFall>();
 		mod3 = reinterpret_cast<Blink*>(moduleMgr->getModule<Blink>());
-		//No_Packet = reinterpret_cast<NoPacket*>(moduleMgr->getModule<NoPacket>());
+		No_Packet = reinterpret_cast<NoPacket*>(moduleMgr->getModule<NoPacket>());
+	}
+	else if (No_Packet->isEnabled()) {
+		return;
 	}
 	else if (mod->isEnabled() || mod3->isEnabled()) {
 
@@ -486,14 +516,12 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	TabGui::render();
 	DrawUtils::flush();
 
+	
 	__int64 retval = oText(yeet, renderCtx);
-
 	moduleMgr->onPostRender();
-
 	float y = 0;
 	static float rcolors[4];
 	DrawUtils::rainbow(rcolors);
-
 	static std::string textStr1 = std::string("Horion");
 	static float leng1 = DrawUtils::getTextLength(&textStr1);
 
@@ -507,12 +535,13 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		//DrawUtils::fillRectangle(vec4_t(widthGame - leng1 - 2, 0, widthGame, y + 12), MC_Color(0.1f, 0.1f, 0.1f, 0.1f), 0.7f);
 		DrawUtils::drawText(vec2_t((widthGame - leng1 - 1), y + 1), &textStr1, new MC_Color(rcolors));
 	}
-
+	
 	bool showShit = g_Data.getLocalPlayer() == nullptr ? true : (GameData::canUseMoveKeys() ? true : false);
 	if (moduleMgr->isInitialized()) {
 		std::vector<IModule*>* modules = moduleMgr->getModuleList();
 
 		struct LilYeet {
+			IModule* lol;
 			std::string moduleName;
 			bool enabled;
 			int keybind;
@@ -521,6 +550,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 				this->moduleName = mod->getModuleName();
 				this->enabled = mod->isEnabled();
 				this->keybind = mod->getKeybind();
+				this->lol = mod;
 
 				std::ostringstream strStream;
 				strStream << moduleName;
@@ -551,7 +581,6 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		std::set<LilYeet> mods;
 		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it)
 			mods.emplace(LilYeet(*it));
-
 		float disabledRcolors[4];
 		disabledRcolors[0] = min(1, rcolors[0] * 0.4f + 0.2f);
 		disabledRcolors[1] = min(1, rcolors[1] * 0.4f + 0.2f);
@@ -565,6 +594,19 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 			if (it->enabled && GameData::shouldOnTheRight()) {
 				DrawUtils::fillRectangle(vec4_t(widthGame - leng - 2, y, widthGame, y + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
 				DrawUtils::drawText(vec2_t((widthGame - leng - 1), y + 1), &textStr, new MC_Color(rcolors));
+				vec2_t* h = g_Data.getClientInstance()->getMousePos();
+				if ((h->x/2) >= (widthGame - leng - 2) && (h->x / 2) <= widthGame)
+				{
+					if ((h->y / 2) >= y && (h->y / 2) <= y + 12)
+					{
+						CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)lol, NULL, NULL, NULL);
+						//a = *reinterpret_cast<int*>(g_Data.getHIDController() + 0x50);
+							if (firstTime)
+								it->lol->setEnabled(false);
+						
+							
+					}
+				}
 				y += 12;
 			}
 			else if (it->enabled && !GameData::shouldOnTheRight())
@@ -584,8 +626,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 				DrawUtils::drawText(vec2_t(0, y + 1), &textStr, new MC_Color(disabledRcolors));
 				y += 12;
 			}
+			
 		}
-
 		mods.clear();
 	}
 

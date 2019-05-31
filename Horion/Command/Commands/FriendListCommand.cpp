@@ -39,12 +39,23 @@ bool FriendListCommand::execute(std::vector<std::string>* args)
 
 		std::transform(currentEntityName.begin(), currentEntityName.end(), currentEntityName.begin(), ::tolower); // tolower
 
+		if (currentEntity == 0)
+			break;
+
+		if (currentEntity == g_Data.getLocalPlayer()) // Skip Local player
+			continue;
+
 		if (currentEntityName.find(searchedName) == std::string::npos) // Continue if name not found
 			continue;
 
 		playerName = currentEntity->name2.getText();
 		break;
 
+	}
+	if (playerName.size() <= 1) 
+	{
+		clientMessageF("[%sHorion%s] %sCouldn't find player: %s!", GOLD, WHITE, RED, searchedName.c_str());
+		return true;
 	}
 	if (subcommand == "add")
 	{
@@ -64,8 +75,6 @@ bool FriendListCommand::execute(std::vector<std::string>* args)
 			return true;
 		}
 	}
-
-	
-	return false;
+	return true;
 }
 

@@ -13,6 +13,7 @@ private:
 	C_LocalPlayer* localPlayer;
 	C_GameMode* gameMode;
 	C_EntityList* entityList;
+	uintptr_t hid;
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
 	const SlimUtils::SlimModule* gameModule;
 	SlimUtils::SlimMem* slimMem;
@@ -31,12 +32,14 @@ public:
 	static void Hide();
 	static bool isKeyDown(int key);
 	static bool isKeyPressed(int key);
+	static bool isRightButtonPressed();
 	static bool shouldTerminate();
 	static void terminate();
 	static void updateGameData(C_GameMode* gameMode);
 	static void initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem);
 	static void addChestToList(C_ChestBlockActor * ChestBlock2);
 	static void EntityList_tick(C_EntityList * list);
+	static void addHIDController(void* Hid);
 
 	
 
@@ -60,6 +63,7 @@ public:
 	};
 	C_GameMode* getCGameMode() { return gameMode; };
 	C_EntityList* getEntityList() { return entityList; };
+	uintptr_t getHIDController() { return hid; };
 	std::set<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
 };
 

@@ -105,10 +105,10 @@ public:
 		return reinterpret_cast<glmatrixf*>(_this + 0x258);
 	};
 
-	vec2_t getMousePos(){
+	vec2_t* getMousePos(){
 		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
-		vec2_t MousePos;
-		MousePos = *reinterpret_cast<vec2_t*>(_this + 0x3C0);
+		vec2_t* MousePos;
+		MousePos = reinterpret_cast<vec2_t*>(_this + 0x3C0);
 		return MousePos;
 	}
 
