@@ -8,11 +8,11 @@
 using json = nlohmann::json;
 
 enum Category {
-	COMBAT,
-	VISUAL,
-	MOVEMENT,
-	BUILD,
-	EXPLOITS
+	COMBAT = 0,
+	VISUAL = 1,
+	MOVEMENT = 2,
+	BUILD = 3,
+	EXPLOITS = 4
 };
 
 enum ValueType {

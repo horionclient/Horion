@@ -14,7 +14,10 @@ std::vector<const char*> labelList;
 
 void TabGui::renderLabel(const char * text)
 {
-	labelList.push_back(text);
+	size_t strlength = strlen(text) + 1;
+	char* alloc = new char[strlength];
+	strcpy_s(alloc, strlength, text);
+	labelList.push_back(alloc);
 }
 
 void TabGui::renderLevel()
@@ -62,12 +65,17 @@ void TabGui::renderLevel()
 			DrawUtils::fillRectangle(rectPos, MC_Color(0.8f, 0.8f, 0.8f, 1.0f), 0.1f);
 		DrawUtils::drawRectangle(rectPos, MC_Color(0.0f, 0.0f, 0.0f, 1.0f), 1.0f); // Border around Text
 
-		DrawUtils::drawText(vec2_t(xOffset + 0.5f, yOffset), &text, /* White Color*/ nullptr, textSize, SMOOTH);
+		DrawUtils::drawText(vec2_t(xOffset + 1.f, yOffset), &text, /* White Color*/ nullptr, textSize, SMOOTH);
 
 		yOffset += textHeight;
 		i++;
 	}
 	// Cleanup
+	DrawUtils::flush();
+	for (std::vector<const char*>::iterator it = labelList.begin(); it != labelList.end(); ++it) {
+		const char* label = *it;
+		delete[] label;
+	}
 	labelList.clear();
 	xOffset += maxLength + 4.5f;
 	yOffset = selectedYOffset;
@@ -78,44 +86,31 @@ void TabGui::render()
 {
 	if (!moduleMgr->isInitialized())
 		return;
+	else
+		return;
 	renderedLevel = 0;
 	yOffset = 15;
 	xOffset = 3;
 
 	// Render all categorys
-	renderLabel("Yikes");
-	renderLabel("Yeeeet");
-	renderLabel("Yeehawt");
-	renderLabel("Yikes");
-	renderLabel("Yeeeet");
-	renderLabel("Yeehawt");
+	renderLabel("Combat");
+	renderLabel("Visual");
+	renderLabel("Movement");
+	renderLabel("Build");
+	renderLabel("Exploits");
 	renderLevel();
-
-	bool couldFindLevel = true;
-	switch (selected[0]) {
-	case 0:
-		renderLabel("Yikes:");
-		renderLabel("Thanks for the Yikes!");
-		break;
-	case 1:
-		renderLabel("Yeeeet:");
-		renderLabel("Yeeeet!");
-		break;
-	case 2:
-		renderLabel("Yeehawt:");
-		renderLabel("Hell yea brother!");
-		break;
-	default:
-		couldFindLevel = false;
-		if (level > 0)
-			level = 0;
-	}
-	if (couldFindLevel)
-		renderLevel();
-	/*std::vector<IModule*>* modules = moduleMgr->getModuleList();
+	
+	std::vector<IModule*>* modules = moduleMgr->getModuleList();
 	for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
-		IModule* 
-	}*/
+		IModule* mod = *it;
+		if (selected[0] == mod->getCategory()) {
+			//std::string yikes = mod->getModuleName();
+			for(int i = 0; i < 10; i++)
+				renderLabel("Not too bad");
+		}
+	}
+	renderLevel();
+	
 }
 
 void TabGui::init() {
@@ -132,16 +127,17 @@ void TabGui::onKeyUpdate(int key, bool isDown)
 
 	switch (key) {
 	case VK_LEFT: // Leave menus
-		if (level > 0)
+		if (level > 0) {
 			level--;
-		break;
+		}
+		return;
 	case VK_RIGHT:
 		if (level < 3) {
 			level++;
 			selected[level] = 0;
 		}
 			
-		break;
+		return;
 	case VK_UP:
 		selected[level]--;
 		break;
@@ -149,4 +145,7 @@ void TabGui::onKeyUpdate(int key, bool isDown)
 		selected[level]++;
 		break;
 	};
+
+	if(level < 3)
+		selected[level + 1] = 0;
 }
