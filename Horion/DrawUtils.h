@@ -56,7 +56,7 @@ public:
 	static void flush();
 	static void setColor(float r, float g, float b, float a); // rgba, values from 0 to 1
 	static uintptr_t getFont(Fonts font);
-	static float getTextLength(std::string* textStr, float textSize = 1, Fonts font = SMOOTH);
+	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = SMOOTH);
 	
 	static void drawLine(vec2_t start, vec2_t end, float lineWidth); // rgba
 	static void fillRectangle(vec4_t pos, MC_Color col, float alpha);

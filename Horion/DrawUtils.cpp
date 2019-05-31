@@ -71,7 +71,7 @@ uintptr_t DrawUtils::getFont(Fonts font)
 	}
 }
 
-float DrawUtils::getTextLength(std::string * textStr, float textSize, Fonts font)
+float DrawUtils::getTextWidth(std::string * textStr, float textSize, Fonts font)
 {
 	TextHolder* text = new TextHolder(*textStr);
 

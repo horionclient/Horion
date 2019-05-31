@@ -38,8 +38,14 @@ public:
 	float heightReal; //0x001C 
 	float widthReal2; //0x0020 
 	float heightReal2; //0x0024 
-	float widthGame; //0x0028 
-	float heightGame; //0x002C 
+	union {
+		struct {
+			float widthGame; //0x0028 
+			float heightGame; //0x002C 
+		};
+		vec2_t windowSize;  //0x0028 
+	};
+	
 
 	void displayClientMessageVA(const char * fmt, va_list lis) {
 		char bigboi[300];

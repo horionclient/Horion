@@ -33,7 +33,7 @@ void TabGui::renderLevel()
 		labelListLength++;
 		const char* label = *it;
 		std::string text = label;
-		maxLength = max(maxLength, DrawUtils::getTextLength(&text, textSize, SMOOTH));
+		maxLength = max(maxLength, DrawUtils::getTextWidth(&text, textSize, SMOOTH));
 	}
 
 	if (selected[renderedLevel] < 0)
