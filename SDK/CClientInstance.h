@@ -34,8 +34,14 @@ class C_GuiData {
 private:
 	char pad_0x0000[0x18]; //0x0000
 public:
-	float widthReal; //0x0018 
-	float heightReal; //0x001C 
+	union {
+		struct {
+			float widthReal; //0x0018 
+			float heightReal; //0x001C 
+		};
+		vec2_t windowSizeReal; //0x0018
+	};
+	
 	float widthReal2; //0x0020 
 	float heightReal2; //0x0024 
 	union {

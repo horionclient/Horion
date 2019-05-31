@@ -23,6 +23,9 @@ struct vec2_t
 	vec2_t &sub(float f) { x -= f; y -= f; return *this; }
 	vec2_t &div(float f) { x /= f; y /= f; return *this; }
 
+	vec2_t &div(const vec2_t &o) { x /= o.x; y /= o.y; return *this; }
+	vec2_t &mul(const vec2_t &o) { x *= o.x; y *= o.y; return *this; }
+
 	vec2_t &sub(const vec2_t &o) { x -= o.x; y -= o.y; return *this; }
 	vec2_t &add(const vec2_t &o) { x += o.x; y += o.y; return *this; }
 
@@ -281,10 +284,29 @@ struct vec4_t
 		float v[4];
 	};
 	vec4_t() {}
-	explicit vec4_t(const vec3_t &p, float w = 0) : x(p.x), y(p.y), z(p.z), w(w) {}
-	vec4_t(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
-	float &operator[](int i) { return v[i]; }
-	float  operator[](int i) const { return v[i]; }
+	explicit vec4_t(const vec3_t &p, float w = 0) : x(p.x), y(p.y), z(p.z), w(w) {};
+	vec4_t(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {};
+	float &operator[](int i) { return v[i]; };
+	float  operator[](int i) const { return v[i]; };
+
+	inline bool contains(vec2_t *point) { 
+		/*
+		Assumes:
+			start: vec2_t(x, y)
+			end:   vec2_t(z, w)
+
+			start < end
+		*/
+		vec2_t start = vec2_t(x, y);
+		vec2_t end = vec2_t(z, w);
+
+		if (point->x < start.x || point->y < start.y)
+			return false;
+
+		if (point->x > end.x || point->y > end.y)
+			return false;
+		return true;
+	};
 };
 
 

@@ -51,14 +51,10 @@ bool GameData::isKeyPressed(int key) {
 	return false;
 }
 
-bool GameData::isRightButtonPressed() {
-	int* a = reinterpret_cast<int*>(g_Data.hid + 0x50);
-	if (*a==1) {
-		while (*a == 1)
-			Sleep(1);
-		return true;
-	}
-	return false;
+bool GameData::isLeftClickDown() {
+	if (g_Data.hid == 0)
+		return false;
+	return *reinterpret_cast<bool*>(g_Data.hid + 0x50);
 }
 
 bool GameData::shouldTerminate()

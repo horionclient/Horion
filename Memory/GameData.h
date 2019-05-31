@@ -32,7 +32,7 @@ public:
 	static void Hide();
 	static bool isKeyDown(int key);
 	static bool isKeyPressed(int key);
-	static bool isRightButtonPressed();
+	static bool isLeftClickDown();
 	static bool shouldTerminate();
 	static void terminate();
 	static void updateGameData(C_GameMode* gameMode);

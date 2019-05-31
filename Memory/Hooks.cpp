@@ -5,7 +5,7 @@ Hooks    g_Hooks;
 bool firstTime = false;
 
 void lol() {
-	if (GameData::isRightButtonPressed())
+	if (GameData::isLeftClickDown())
 	{
 		firstTime = true;
 	}
@@ -110,8 +110,6 @@ void Hooks::Init()
 	g_Hooks.HIDController_keyMouseHook = std::make_unique<FuncHook>(keyMouseFunc, Hooks::HIDController_keyMouse);
 	g_Hooks.HIDController_keyMouseHook->init();
 
-
-
 	//logF("Hooks hooked");
 }
 
@@ -133,8 +131,6 @@ void Hooks::Restore()
 	g_Hooks.LocalPlayer_CheckFallDamageHook->Restore();
 	g_Hooks.GameMode_startDestroyHook->Restore();
 	g_Hooks.HIDController_keyMouseHook->Restore();
-
-
 }
 
 void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
@@ -532,7 +528,11 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	float yOffset = 0; // Offset of next Text
 	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize; 
-	vec2_t* mousePos = g_Data.getClientInstance()->getMousePos();
+	vec2_t windowSizeReal = g_Data.getClientInstance()->getGuiData()->windowSizeReal;
+	
+	vec2_t mousePos = *g_Data.getClientInstance()->getMousePos();
+	mousePos.div(windowSizeReal);
+	mousePos.mul(windowSize);
 
 	// Rainbow color updates
 	{
@@ -546,7 +546,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	// Draw Horion logo
 	{
 		if (GameData::shouldOnTheRight())
-			DrawUtils::drawText(vec2_t(0, 1), &horionStr, new MC_Color(rcolors));
+			DrawUtils::drawText(vec2_t(1, 1), &horionStr, new MC_Color(rcolors));
 		else
 			DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth - 1, 1), &horionStr, new MC_Color(rcolors));
 	}
@@ -596,8 +596,16 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		static constexpr float textSize = 1.0f;
 		static constexpr float textHeight = textSize * 10.0f;
 
+		// Mouse click detector
+		static bool wasLeftMouseDown = GameData::isLeftClickDown(); // Last isDown value
+		bool leftMouseDown = GameData::isLeftClickDown(); // current isDown value
+
+		bool executeClick = leftMouseDown && leftMouseDown != wasLeftMouseDown; // isDown == true AND (current state IS NOT last state)
+		wasLeftMouseDown = leftMouseDown; // Set last isDown value
+
 		// Show disabled Modules?
-		const bool extendedArraylist = g_Data.getLocalPlayer() == nullptr ? /* not ingame */ true : /* ingame */(GameData::canUseMoveKeys() ? true : false);
+		const bool extendedArraylist = g_Data.getLocalPlayer() == nullptr ? /* not ingame */ true : /* ingame */(GameData::canUseMoveKeys() ? true : true);
+		// Display ArrayList on the Right?
 		const bool isOnRightSide = GameData::shouldOnTheRight();
 		std::set<IModuleContainer> modContainerList;
 		// Fill modContainerList with Modules
@@ -629,7 +637,16 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 			);
 
 			DrawUtils::drawText(textPos, &textStr, new MC_Color(it->enabled ? rcolors : disabledRcolors), textSize);
-			DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), it->enabled ? 0.4f : 0.15f);		
+			if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos)) {
+				
+				if (leftMouseDown) {
+					DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 0.1f), it->enabled ? 0.6f : 0.6f);
+					if (executeClick)
+						it->backingModule->toggle();
+				}else
+					DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.7f, 0.3f, 0.1f), it->enabled ? 0.4f : 0.15f);
+			}else
+				DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), it->enabled ? 0.4f : 0.15f);
 			
 			yOffset += textHeight + (textPadding * 2);
 		}
