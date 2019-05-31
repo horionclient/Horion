@@ -508,44 +508,41 @@ HRESULT __stdcall Hooks::d3d11_present(IDXGISwapChain* pSwapChain, UINT SyncInte
 __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* renderCtx)
 {
 	static auto oText = g_Hooks.renderTextHook->GetOriginal<renderText_t>();
-
 	DrawUtils::setCtx(renderCtx, g_Data.getClientInstance()->getGuiData());
-	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
-	moduleMgr->onPreRender();
-	TabGui::render();
-	DrawUtils::flush();
+	
+	// Call PreRender() functions
+	{
+		moduleMgr->onPreRender();
+		TabGui::render();
+		DrawUtils::flush();
+	}
 	
 	__int64 retval = oText(yeet, renderCtx);
-	moduleMgr->onPostRender();
 
+	// Call PostRender() functions
+	{
+		moduleMgr->onPostRender();
+	}
+	
+	// Should we hide the arraylist?
 	if (GameData::ShouldHide()) {
 		DrawUtils::flush();
 		return;
 	}
-
-	float yOffset = 0;
+	
 	static float rcolors[4];
-	DrawUtils::rainbow(rcolors);
 	static std::string horionStr = std::string("Horion");
 	static float horionStrWidth = DrawUtils::getTextWidth(&horionStr);
 
-	vec2_t* mousPos = g_Data.getClientInstance()->getMousePos();
-	char mousePosText[30];
-	sprintf_s(mousePosText, 30, "X: %.0f Y: %.0f", mousPos->x, mousPos->y);
-	std::string mousePosStr = mousePosText;
+	float yOffset = 0;
+	DrawUtils::rainbow(rcolors);
+	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+	vec2_t* mousePos = g_Data.getClientInstance()->getMousePos();
 
 	if (GameData::shouldOnTheRight())
-	{
-		//DrawUtils::fillRectangle(vec4_t(0, 0, horionStrWidth + 2, yOffset + 12), MC_Color(0.1f, 0.1f, 0.1f, 0.1f), 0.7f);
-		DrawUtils::drawText(vec2_t((0), yOffset + 1), &horionStr, new MC_Color(rcolors));
-		DrawUtils::drawText(vec2_t((0), yOffset + 13), &mousePosStr, new MC_Color(rcolors));
-	}
-	else if(!GameData::shouldOnTheRight())
-	{
-		//DrawUtils::fillRectangle(vec4_t(widthGame - horionStrWidth - 2, 0, widthGame, yOffset + 12), MC_Color(0.1f, 0.1f, 0.1f, 0.1f), 0.7f);
-		DrawUtils::drawText(vec2_t((widthGame - horionStrWidth - 1), yOffset + 1), &horionStr, new MC_Color(rcolors));
-		DrawUtils::drawText(vec2_t((widthGame - horionStrWidth - 1), yOffset + 13), &mousePosStr, new MC_Color(rcolors));
-	}
+		DrawUtils::drawText(vec2_t(0                                , yOffset + 1), &horionStr, new MC_Color(rcolors));
+	else
+		DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth - 1, yOffset + 1), &horionStr, new MC_Color(rcolors));
 	
 	bool showShit = g_Data.getLocalPlayer() == nullptr ? true : (GameData::canUseMoveKeys() ? true : false);
 	if (moduleMgr->isInitialized()) {
