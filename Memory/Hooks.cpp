@@ -608,25 +608,29 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 		for (std::set<IModuleContainer>::iterator it = modContainerList.begin(); it != modContainerList.end(); ++it) {
 			std::string textStr = it->moduleName;
-
 			float textWidth = DrawUtils::getTextWidth(&textStr);
-			if (it->enabled && GameData::shouldOnTheRight()) {
-				DrawUtils::fillRectangle(vec4_t(windowSize.x - textWidth - 2, yOffset, windowSize.x, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
-				DrawUtils::drawText(vec2_t((windowSize.x - textWidth - 1), yOffset + 1), &textStr, new MC_Color(rcolors));
+
+			if (it->enabled) {
+				if (GameData::shouldOnTheRight()) {
+					DrawUtils::fillRectangle(vec4_t(windowSize.x - textWidth - 2, yOffset, windowSize.x, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
+					DrawUtils::drawText(vec2_t((windowSize.x - textWidth - 1), yOffset + 1), &textStr, new MC_Color(rcolors));
+				}
+				else
+				{
+					DrawUtils::fillRectangle(vec4_t(0, yOffset, textWidth + 2, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
+					DrawUtils::drawText(vec2_t(0, yOffset + 1), &textStr, new MC_Color(rcolors));
+				}
 			}
-			else if (it->enabled && !GameData::shouldOnTheRight())
-			{
-				DrawUtils::fillRectangle(vec4_t(0, yOffset, textWidth + 2, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
-				DrawUtils::drawText(vec2_t(0, yOffset + 1), &textStr, new MC_Color(rcolors));
-			}
-			else if (extendedArraylist && GameData::shouldOnTheRight()) {
-				DrawUtils::fillRectangle(vec4_t(windowSize.x - textWidth - 2, yOffset, windowSize.x, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
-				DrawUtils::drawText(vec2_t((windowSize.x - textWidth - 1), yOffset + 1), &textStr, new MC_Color(disabledRcolors));
-			}
-			else if (extendedArraylist && !GameData::shouldOnTheRight())
-			{
-				DrawUtils::fillRectangle(vec4_t(0, yOffset, textWidth + 2, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
-				DrawUtils::drawText(vec2_t(0, yOffset + 1), &textStr, new MC_Color(disabledRcolors));
+			else if(extendedArraylist) {
+				if (GameData::shouldOnTheRight()) {
+					DrawUtils::fillRectangle(vec4_t(windowSize.x - textWidth - 2, yOffset, windowSize.x, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
+					DrawUtils::drawText(vec2_t((windowSize.x - textWidth - 1), yOffset + 1), &textStr, new MC_Color(disabledRcolors));
+				}
+				else
+				{
+					DrawUtils::fillRectangle(vec4_t(0, yOffset, textWidth + 2, yOffset + 12), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.15f);
+					DrawUtils::drawText(vec2_t(0, yOffset + 1), &textStr, new MC_Color(disabledRcolors));
+				}
 			}
 			yOffset += 12;
 		}
