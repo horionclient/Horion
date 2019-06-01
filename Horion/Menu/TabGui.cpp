@@ -4,20 +4,34 @@
 // State
 int level;
 int selected[4];
+bool toggleCurrentSelection = false;
 
 // Render
 float yOffset;
 float xOffset;
 int renderedLevel;
 
-std::vector<const char*> labelList;
+struct LabelContainer {
+	const char* text;
+	bool enabled = false;
+	IModule* mod = 0;
+};
 
-void TabGui::renderLabel(const char * text)
+std::vector<LabelContainer> labelList;
+
+void TabGui::renderLabel(const char * text, IModule* mod)
 {
-	size_t strlength = strlen(text) + 1;
-	char* alloc = new char[strlength];
-	strcpy_s(alloc, strlength, text);
-	labelList.push_back(alloc);
+	//size_t strlength = strlen(text) + 1;
+	//char* alloc = new char[strlength];
+	//strcpy_s(alloc, strlength, text);
+	LabelContainer yikes;
+	yikes.text = text;
+	if (mod != 0) {
+		yikes.enabled = mod->isEnabled();
+		yikes.mod = mod;
+	}
+	
+	labelList.push_back(yikes);
 }
 
 void TabGui::renderLevel()
@@ -29,11 +43,10 @@ void TabGui::renderLevel()
 	// First loop: Get the maximum text length 
 	float maxLength = 1;
 	int labelListLength = 0;
-	for (std::vector<const char*>::iterator it = labelList.begin(); it != labelList.end(); ++it) {
+	for (auto it = labelList.begin(); it != labelList.end(); ++it) {
 		labelListLength++;
-		const char* label = *it;
-		std::string text = label;
-		maxLength = max(maxLength, DrawUtils::getTextWidth(&text, textSize, SMOOTH));
+		std::string label = it->text;
+		maxLength = max(maxLength, DrawUtils::getTextWidth(&label, textSize, SMOOTH));
 	}
 
 	if (selected[renderedLevel] < 0)
@@ -44,38 +57,73 @@ void TabGui::renderLevel()
 	// Second loop: Render everything
 	int i = 0;
 	float selectedYOffset = yOffset;
-	for (std::vector<const char*>::iterator it = labelList.begin(); it != labelList.end(); ++it) {
-		const char* label = *it;
-		std::string text = label;
+	for (auto it = labelList.begin(); it != labelList.end(); ++it) {
+		auto label = *it;
 		vec4_t rectPos = vec4_t(
 			xOffset - 0.5f,  // Off screen / Left border not visible
 			yOffset,
 			xOffset + maxLength + 4.f,
 			yOffset + textHeight);
 		
-		if (selected[renderedLevel] == i) {
-			// If selected, show in green
-			if(renderedLevel != level) // Are we actually in the menu we are drawing right now?
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.3f, 0.3f, 1.0f), 0.15f); // No we are not
-			else 
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.8f, 0.3f, 1.0f), 0.5f); // Yes we are!
+		if (selected[renderedLevel] == i && level >= renderedLevel) { // We are selected
+			if (renderedLevel == level) { // Are we actually in the menu we are drawing right now?
+				// We are selected in the current menu
+
+				if (label.mod == 0) {
+					// Category
+					DrawUtils::fillRectangle(rectPos, MC_Color(0.1f, 0.1f, 0.1f, 1.0f), 0.3f);
+				}
+				else {
+					// Modules
+					if(label.enabled)
+						DrawUtils::fillRectangle(rectPos, MC_Color(0.1f, 0.4f, 0.1f, 1.0f), 0.3f);
+					else
+						DrawUtils::fillRectangle(rectPos, MC_Color(0.15f, 0.1f, 0.1f, 1.0f), 0.3f);
+
+					static bool lastVal = toggleCurrentSelection;
+
+					if (toggleCurrentSelection) {
+						if (label.mod->isFlashMode()) {
+							label.mod->setEnabled(true);
+						}
+						else {
+							toggleCurrentSelection = false;
+							label.mod->toggle();
+						}
+					}
+					else if (toggleCurrentSelection != lastVal && label.mod->isFlashMode())
+						label.mod->setEnabled(false);
+					lastVal = toggleCurrentSelection;
+				}
+			}
+			else {
+				// We are selected but we are not in the current menu
+				DrawUtils::fillRectangle(rectPos, MC_Color(0.1f, 0.1f, 0.1f, 1.0f), 0.15f);
+			}
 			selectedYOffset = yOffset;
 		}
-		else
-			DrawUtils::fillRectangle(rectPos, MC_Color(0.8f, 0.8f, 0.8f, 1.0f), 0.1f);
+		else { // We are not selected
+			if (label.enabled && renderedLevel > 0)
+				DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.8f, 0.4f, 1.0f), 0.2f);
+			else if(renderedLevel > 0)
+				DrawUtils::fillRectangle(rectPos, MC_Color(0.7f, 0.4f, 0.4f, 1.0f), 0.2f);
+			else
+				DrawUtils::fillRectangle(rectPos, MC_Color(0.8f, 0.8f, 0.8f, 1.0f), 0.1f);
+		}
+			
 		DrawUtils::drawRectangle(rectPos, MC_Color(0.0f, 0.0f, 0.0f, 1.0f), 1.0f); // Border around Text
 
-		DrawUtils::drawText(vec2_t(xOffset + 1.f, yOffset), &text, /* White Color*/ nullptr, textSize, SMOOTH);
+		DrawUtils::drawText(vec2_t(xOffset + 1.f, yOffset), &std::string(label.text), /* White Color*/ nullptr, textSize, SMOOTH);
 
 		yOffset += textHeight;
 		i++;
 	}
 	// Cleanup
 	DrawUtils::flush();
-	for (std::vector<const char*>::iterator it = labelList.begin(); it != labelList.end(); ++it) {
-		const char* label = *it;
+	/*for (auto it = labelList.begin(); it != labelList.end(); ++it) {
+		auto label = *it;
 		delete[] label;
-	}
+	}*/
 	labelList.clear();
 	xOffset += maxLength + 4.5f;
 	yOffset = selectedYOffset;
@@ -85,8 +133,6 @@ void TabGui::renderLevel()
 void TabGui::render()
 {
 	if (!moduleMgr->isInitialized())
-		return;
-	else
 		return;
 	renderedLevel = 0;
 	yOffset = 15;
@@ -104,9 +150,8 @@ void TabGui::render()
 	for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
 		IModule* mod = *it;
 		if (selected[0] == mod->getCategory()) {
-			//std::string yikes = mod->getModuleName();
-			for(int i = 0; i < 10; i++)
-				renderLabel("Not too bad");
+			auto yikes = mod->getModuleName();
+			renderLabel(yikes, mod);
 		}
 	}
 	renderLevel();
@@ -122,8 +167,12 @@ void TabGui::init() {
 
 void TabGui::onKeyUpdate(int key, bool isDown)
 {
-	if (!isDown)
+	if (!isDown) {
+		if(key == VK_RIGHT)
+			toggleCurrentSelection = false;
 		return;
+	}
+		
 
 	switch (key) {
 	case VK_LEFT: // Leave menus
@@ -132,10 +181,13 @@ void TabGui::onKeyUpdate(int key, bool isDown)
 		}
 		return;
 	case VK_RIGHT:
-		if (level < 3) {
+		if (level < 1) {
 			level++;
 			selected[level] = 0;
 		}
+		else
+			toggleCurrentSelection = true;
+		
 			
 		return;
 	case VK_UP:

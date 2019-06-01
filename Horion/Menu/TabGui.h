@@ -9,7 +9,7 @@ class TabGui
 private:
 
 	
-	static void renderLabel(const char* text);
+	static void renderLabel(const char* text, IModule* mod = 0);
 	static void renderLevel();
 public:
 	static void init();
