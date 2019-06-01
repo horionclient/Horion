@@ -18,18 +18,9 @@ private:
 	const SlimUtils::SlimModule* gameModule;
 	SlimUtils::SlimMem* slimMem;
 	bool shouldTerminateB = false;
-	bool shouldHide = false;
-	bool onTheRight = true;
-	bool LockKeyBind = false;
 	static void retrieveClientInstance();
 public:
 	static bool canUseMoveKeys();
-	static bool shouldLock();
-	static void Lock();
-	static bool shouldOnTheRight();
-	static void OnTheRight();
-	static bool ShouldHide();
-	static void Hide();
 	static bool isKeyDown(int key);
 	static bool isKeyPressed(int key);
 	static bool isLeftClickDown();
@@ -40,8 +31,6 @@ public:
 	static void addChestToList(C_ChestBlockActor * ChestBlock2);
 	static void EntityList_tick(C_EntityList * list);
 	static void addHIDController(void* Hid);
-
-	
 
 	C_ClientInstance* getClientInstance() { return clientInstance; };
 	C_GuiData* getGuiData() { return clientInstance->getGuiData(); };

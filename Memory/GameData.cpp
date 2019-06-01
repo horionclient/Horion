@@ -67,35 +67,6 @@ void GameData::terminate()
 	g_Data.shouldTerminateB = true;
 }
 
-void GameData::OnTheRight()
-{
-	g_Data.onTheRight = !g_Data.onTheRight;
-}
-
-bool GameData::shouldOnTheRight()
-{
-	return g_Data.onTheRight;
-}
-
-bool GameData::shouldLock()
-{
-	return g_Data.LockKeyBind;
-}
-void GameData::Lock()
-{
-	g_Data.LockKeyBind = !g_Data.LockKeyBind;
-}
-
-void GameData::Hide()
-{
-	g_Data.shouldHide = !g_Data.shouldHide;
-}
-
-bool GameData::ShouldHide()
-{
-	return g_Data.shouldHide;
-}
-
 void GameData::updateGameData(C_GameMode * gameMode)
 {
 	retrieveClientInstance();

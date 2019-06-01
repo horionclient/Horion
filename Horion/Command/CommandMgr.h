@@ -10,7 +10,6 @@
 #include "Commands/ToggleCommand.h"
 #include "Commands/PlayerTeleportCommand.h"
 #include "Commands/GameModeCommand.h"
-#include "Commands/ArrayListCommand.h"
 #include "Commands/FriendListCommand.h"
 
 #include <string>
@@ -24,7 +23,6 @@ private:
 public:
 	CommandMgr(GameData* gm);
 	~CommandMgr();
-
 	
 	void initCommands();
 	void disable();

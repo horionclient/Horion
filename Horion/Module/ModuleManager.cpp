@@ -79,7 +79,7 @@ void ModuleManager::onTick(C_GameMode * gameMode)
 
 void ModuleManager::onKeyUpdate(int key, bool isDown)
 {
-	if (!isInitialized() || GameData::shouldLock())
+	if (!isInitialized())
 		return;
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
 		IModule* mod = *it;

@@ -507,12 +507,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		moduleMgr->onPostRender();
 	}
 	
-	// Should we hide the gui? Then stop execution here
-	if (GameData::ShouldHide()) {
-		DrawUtils::flush();
-		return retval;
-	}
-	
+	// Display ArrayList on the Right?
+	static constexpr bool isOnRightSide = true;
 	static float rcolors[4]; // Rainbow color array RGBA
 	static float disabledRcolors[4]; // Rainbow Colors, but for disabled modules
 	static std::string horionStr = std::string("Horion");					 // Static Horion logo / text
@@ -537,7 +533,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	// Draw Horion logo
 	{
-		if (GameData::shouldOnTheRight())
+		if (isOnRightSide)
 			DrawUtils::drawText(vec2_t(1, 1), &horionStr, new MC_Color(rcolors));
 		else
 			DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth - 1, 1), &horionStr, new MC_Color(rcolors));
@@ -596,8 +592,6 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		// Show disabled Modules?
 		//const bool extendedArraylist = g_Data.getLocalPlayer() == nullptr ? /* not ingame */ true : /* ingame */(GameData::canUseMoveKeys() ? false : true);
 		constexpr bool extendedArraylist = false;
-		// Display ArrayList on the Right?
-		const bool isOnRightSide = GameData::shouldOnTheRight();
 		std::set<IModuleContainer> modContainerList;
 		// Fill modContainerList with Modules
 		{

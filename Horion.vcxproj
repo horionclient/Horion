@@ -130,7 +130,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Horion\Command\Commands\ArrayListCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\FriendListCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\GameModeCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\PlayerTeleportCommand.cpp" />
@@ -182,7 +181,6 @@
     <ClCompile Include="Utils\TextFormat.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Horion\Command\Commands\ArrayListCommand.h" />
     <ClInclude Include="Horion\Command\Commands\FriendListCommand.h" />
     <ClInclude Include="Horion\Command\Commands\GameModeCommand.h" />
     <ClInclude Include="Horion\Command\Commands\PlayerTeleportCommand.h" />
