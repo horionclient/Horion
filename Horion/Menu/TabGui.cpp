@@ -146,16 +146,18 @@ void TabGui::render()
 	renderLabel("Exploits");
 	renderLevel();
 	
-	std::vector<IModule*>* modules = moduleMgr->getModuleList();
-	for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
-		IModule* mod = *it;
-		if (selected[0] == mod->getCategory()) {
-			auto yikes = mod->getModuleName();
-			renderLabel(yikes, mod);
+	// Render all modules
+	if (level >= 0) {
+		std::vector<IModule*>* modules = moduleMgr->getModuleList();
+		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
+			IModule* mod = *it;
+			if (selected[0] == mod->getCategory()) {
+				auto yikes = mod->getModuleName();
+				renderLabel(yikes, mod);
+			}
 		}
+		renderLevel();
 	}
-	renderLevel();
-	
 }
 
 void TabGui::init() {
@@ -176,7 +178,7 @@ void TabGui::onKeyUpdate(int key, bool isDown)
 
 	switch (key) {
 	case VK_LEFT: // Leave menus
-		if (level > 0) {
+		if (level > -1) {
 			level--;
 		}
 		return;
@@ -187,14 +189,18 @@ void TabGui::onKeyUpdate(int key, bool isDown)
 		}
 		else
 			toggleCurrentSelection = true;
-		
-			
 		return;
 	case VK_UP:
-		selected[level]--;
+		if (level >= 0)
+			selected[level]--;
+		else
+			level = 0;
 		break;
 	case VK_DOWN:
-		selected[level]++;
+		if (level >= 0)
+			selected[level]++;
+		else
+			level = 0;
 		break;
 	};
 

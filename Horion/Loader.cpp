@@ -105,9 +105,9 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			bool* oldKey = keyMap + (4 * i);
 			if (newKeyPressed != *oldKey) {
 				moduleMgr->onKeyUpdate((int) i, newKeyPressed);
-				TabGui::onKeyUpdate((int) i, newKeyPressed);
 			}
-				
+			if(*newKey != *oldKey) // Skip Chat or inventory checks
+				TabGui::onKeyUpdate((int)i, *newKey);
 		}
 
 		memcpy_s(keyMap, 0xFF * 4, keyMapAddr, 0xFF * 4);
