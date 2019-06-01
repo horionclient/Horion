@@ -2,18 +2,6 @@
 #include "../Directx/Directx.h"
 
 Hooks    g_Hooks;
-bool firstTime = false;
-
-void lol() {
-	if (GameData::isLeftClickDown())
-	{
-		firstTime = true;
-	}
-	else
-	{
-		firstTime = false;
-	}
-}
 
 void Hooks::Init()
 {
