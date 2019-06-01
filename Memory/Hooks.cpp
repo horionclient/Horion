@@ -577,7 +577,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 				if (this->textWidth == other.textWidth)
 					return moduleName < other.moduleName;
-				return this->textWidth < other.textWidth;
+				return this->textWidth > other.textWidth;
 			}
 		};
 
@@ -594,7 +594,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		wasLeftMouseDown = leftMouseDown; // Set last isDown value
 
 		// Show disabled Modules?
-		const bool extendedArraylist = g_Data.getLocalPlayer() == nullptr ? /* not ingame */ true : /* ingame */(GameData::canUseMoveKeys() ? true : true);
+		//const bool extendedArraylist = g_Data.getLocalPlayer() == nullptr ? /* not ingame */ true : /* ingame */(GameData::canUseMoveKeys() ? false : true);
+		constexpr bool extendedArraylist = false;
 		// Display ArrayList on the Right?
 		const bool isOnRightSide = GameData::shouldOnTheRight();
 		std::set<IModuleContainer> modContainerList;
@@ -603,7 +604,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 			std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
 
 			for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
-				modContainerList.emplace(IModuleContainer(*it));
+				if(extendedArraylist || (*it)->isEnabled())
+					modContainerList.emplace(IModuleContainer(*it));
 			}
 		}
 		

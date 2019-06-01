@@ -36,8 +36,6 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		throw std::exception("Keymap not located");
 	}
 
-	
-
 	while (isRunning) {
 		if (GameData::isKeyDown('L') && GameData::isKeyDown(VK_CONTROL) || GameData::shouldTerminate()) { // Press L to uninject
 			isRunning = false;
