@@ -136,7 +136,6 @@
     <ClCompile Include="Horion\Command\Commands\PlayerTeleportCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\RelativeTeleportCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ToggleCommand.cpp" />
-    <ClCompile Include="Horion\Config\ConfigObj.cpp" />
     <ClCompile Include="Horion\Config\ConfigManager.cpp" />
     <ClCompile Include="Horion\Command\Commands\BindCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\EjectCommand.cpp" />
@@ -189,7 +188,6 @@
     <ClInclude Include="Horion\Command\Commands\PlayerTeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\RelativeTeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\ToggleCommand.h" />
-    <ClInclude Include="Horion\Config\ConfigObj.h" />
     <ClInclude Include="Horion\Config\ConfigManager.h" />
     <ClInclude Include="Horion\Command\Commands\BindCommand.h" />
     <ClInclude Include="Horion\Command\Commands\EjectCommand.h" />
