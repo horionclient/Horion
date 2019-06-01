@@ -18,7 +18,7 @@ int EditionFaker::getFakedEditon() {
 }
 
 
-std::string EditionFaker::getModuleName()
+const char* EditionFaker::getModuleName()
 {
-	return std::string("EditionFaker");
+	return ("EditionFaker");
 }

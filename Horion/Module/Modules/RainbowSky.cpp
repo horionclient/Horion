@@ -11,7 +11,7 @@ RainbowSky::~RainbowSky()
 {
 }
 
-std::string RainbowSky::getModuleName()
+const char* RainbowSky::getModuleName()
 {
-	return std::string("RainbowSky");
+	return ("RainbowSky");
 }

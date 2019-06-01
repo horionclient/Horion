@@ -7,7 +7,7 @@ public:
 	BowAimbot();
 	~BowAimbot();
 
-	virtual std::string getModuleName() override;
+	virtual const char* getModuleName() override;
 	virtual void onPostRender() override;
 };
 

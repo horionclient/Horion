@@ -11,7 +11,7 @@ Nuker::~Nuker()
 {
 }
 
-std::string Nuker::getModuleName()
+const char* Nuker::getModuleName()
 {
-	return std::string("Nuker");
+	return ("Nuker");
 }

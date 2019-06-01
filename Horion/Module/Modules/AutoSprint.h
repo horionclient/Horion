@@ -8,6 +8,6 @@ public:
 	~AutoSprint();
 	
 	virtual void onTick(C_GameMode* gm) override;
-	virtual std::string getModuleName() override;
+	virtual const char* getModuleName() override;
 };
 

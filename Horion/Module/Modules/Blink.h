@@ -9,7 +9,7 @@ public:
 	~Blink();
 
 	// Inherited via IModule
-	virtual std::string getModuleName() override;
-	virtual std::string getRawModuleName() override;
+	virtual const char* getModuleName() override;
+	virtual const char* getRawModuleName() override;
 };
 

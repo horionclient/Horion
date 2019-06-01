@@ -8,7 +8,7 @@ NoKnockBack::~NoKnockBack()
 {
 }
 
-std::string NoKnockBack::getModuleName()
+const char* NoKnockBack::getModuleName()
 {
-	return std::string("NoKnockBack");
+	return ("NoKnockBack");
 }

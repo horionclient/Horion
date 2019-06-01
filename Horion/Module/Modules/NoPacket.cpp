@@ -12,9 +12,9 @@ NoPacket::~NoPacket()
 
 }
 
-std::string NoPacket::getModuleName()
+const char* NoPacket::getModuleName()
 {
-	return std::string("NoPacket");
+	return ("NoPacket");
 }
 
 

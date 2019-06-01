@@ -10,6 +10,6 @@ public:
 	int getFakedEditon();
 
 	// Inherited via IModule
-	virtual std::string getModuleName() override;
+	virtual const char* getModuleName() override;
 };
 

@@ -11,9 +11,9 @@ ESP::~ESP()
 {
 }
 
-std::string ESP::getModuleName()
+const char* ESP::getModuleName()
 {
-	return std::string("ESP");
+	return ("ESP");
 }
 
 void ESP::onPostRender() {

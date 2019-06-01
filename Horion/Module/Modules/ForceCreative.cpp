@@ -11,9 +11,9 @@ ForceCreative::~ForceCreative()
 {
 }
 
-std::string ForceCreative::getModuleName()
+const char* ForceCreative::getModuleName()
 {
-	return std::string("ForceCreative");
+	return ("ForceCreative");
 }
 
 void ForceCreative::onTick(C_GameMode* gm) {

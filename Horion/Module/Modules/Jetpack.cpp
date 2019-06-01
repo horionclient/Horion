@@ -16,9 +16,9 @@ bool Jetpack::isFlashMode() {
 	return true;
 }
 
-std::string Jetpack::getModuleName()
+const char* Jetpack::getModuleName()
 {
-	return std::string("Jetpack");
+	return ("Jetpack");
 }
 
 

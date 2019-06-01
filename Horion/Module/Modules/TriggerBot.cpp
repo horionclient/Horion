@@ -11,9 +11,9 @@ TriggerBot::~TriggerBot()
 {
 }
 
-std::string TriggerBot::getModuleName()
+const char* TriggerBot::getModuleName()
 {
-	return std::string("TriggerBot");
+	return ("TriggerBot");
 }
 
 void TriggerBot::onTick(C_GameMode* gm)

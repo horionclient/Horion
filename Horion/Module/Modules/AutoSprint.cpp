@@ -9,9 +9,9 @@ AutoSprint::~AutoSprint()
 {
 }
 
-std::string AutoSprint::getModuleName()
+const char* AutoSprint::getModuleName()
 {
-	return std::string("AutoSprint");
+	return ("AutoSprint");
 }
 
 void AutoSprint::onTick(C_GameMode* gm) {

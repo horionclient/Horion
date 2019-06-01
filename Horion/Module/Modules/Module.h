@@ -62,8 +62,8 @@ public:
 
 	const Category getCategory() { return category; };
 
-	virtual std::string getModuleName() = 0;
-	virtual std::string getRawModuleName();
+	virtual const char* getModuleName() = 0;
+	virtual const char* getRawModuleName();
 	virtual int getKeybind();
 	virtual void setKeybind(int key);
 

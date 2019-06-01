@@ -40,7 +40,7 @@ bool GameData::isKeyDown(int key) {
 	}
 	// All keys are mapped as bools, though aligned as ints (4 byte)
 	// key0 00 00 00 key1 00 00 00 key2 00 00 00 ...
-	return *reinterpret_cast<bool*>(g_Data.gameModule->ptrBase + keyMapOffset + (key * 0x4));
+	return *reinterpret_cast<bool*>(g_Data.gameModule->ptrBase + keyMapOffset + ((uintptr_t) key * 0x4));
 }
 bool GameData::isKeyPressed(int key) {
 	if (isKeyDown(key)) {

@@ -11,16 +11,15 @@ Glide::~Glide()
 {
 }
 
-std::string Glide::getModuleName()
+const char* Glide::getModuleName()
 {
 	if (isEnabled()) {
-		char yeet[30]; // This is kinda ghetto rn, there should be a better way to make this...
+		static char yeet[30]; // This is kinda ghetto rn, there should be a better way to make this...
 		sprintf_s(yeet, 30, "Glide [%.2f]", glideModEffective);
-		std::string s = yeet;
-		return s;
+		return yeet;
 	}
 	else
-		return std::string("Glide");
+		return ("Glide");
 	
 }
 

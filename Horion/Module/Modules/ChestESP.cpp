@@ -11,9 +11,9 @@ ChestESP::~ChestESP()
 {
 }
 
-std::string ChestESP::getModuleName()
+const char* ChestESP::getModuleName()
 {
-	return std::string("ChestESP");
+	return ("ChestESP");
 }
 
 void ChestESP::onPostRender() {

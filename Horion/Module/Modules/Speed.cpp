@@ -11,9 +11,9 @@ Speed::~Speed()
 {
 }
 
-std::string Speed::getModuleName()
+const char* Speed::getModuleName()
 {
-	return std::string("Speed"); // 48 8D 15 ?? ?? ?? ?? 48 8B CB FF 90 ?? ?? ?? ?? 48 8B D8
+	return ("Speed"); // 48 8D 15 ?? ?? ?? ?? 48 8B CB FF 90 ?? ?? ?? ?? 48 8B D8
 }
 
 void Speed::onTick(C_GameMode * gm)

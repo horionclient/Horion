@@ -12,12 +12,12 @@ Blink::~Blink()
 	this->PacketMeme.clear();
 }
 
-std::string Blink::getModuleName()
+const char* Blink::getModuleName()
 {
-	return std::string("Blink");
+	return ("Blink");
 }
 
-std::string Blink::getRawModuleName()
+const char* Blink::getRawModuleName()
 {
-	return std::string("Blink_");
+	return ("Blink_");
 }

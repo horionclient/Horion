@@ -11,8 +11,8 @@ BowAimbot::~BowAimbot()
 {
 }
 
-std::string BowAimbot::getModuleName() {
-	return std::string("BowAimbot");
+const char* BowAimbot::getModuleName() {
+	return ("BowAimbot");
 }
 
 void BowAimbot::onPostRender() {

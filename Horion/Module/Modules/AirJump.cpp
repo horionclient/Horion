@@ -11,9 +11,9 @@ AirJump::~AirJump()
 {
 }
 
-std::string AirJump::getModuleName()
+const char* AirJump::getModuleName()
 {
-	return std::string("AirJump");
+	return ("AirJump");
 }
 
 void AirJump::onTick(C_GameMode* gm) {

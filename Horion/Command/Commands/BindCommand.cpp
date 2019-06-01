@@ -44,7 +44,7 @@ bool BindCommand::execute(std::vector<std::string>* args)
 				}
 				else {
 					mod->setKeybind( it->second);
-					clientMessageF("%sThe Keybind of %s is now '%s'", GREEN, mod->getModuleName().c_str(),it->first.c_str());
+					clientMessageF("%sThe Keybind of %s is now '%s'", GREEN, mod->getModuleName(),it->first.c_str());
 				}
 				return true;
 			}
@@ -64,7 +64,7 @@ bool BindCommand::execute(std::vector<std::string>* args)
 		}
 		else {
 			mod->setKeybind(keyCode);
-			clientMessageF("%sThe Keybind of %s is now '%c'", GREEN, mod->getModuleName().c_str(), keyCode);
+			clientMessageF("%sThe Keybind of %s is now '%c'", GREEN, mod->getModuleName(), keyCode);
 		}
 	}
 	else {

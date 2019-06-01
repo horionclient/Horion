@@ -31,7 +31,10 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 	}
 	else {
 		logF("!!!KeyMap not located!!!");
+		throw std::exception("Keymap not located");
 	}
+
+	
 
 	while (isRunning) {
 		if (GameData::isKeyDown('L') && GameData::isKeyDown(VK_CONTROL) || GameData::shouldTerminate()) { // Press L to uninject
@@ -94,7 +97,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		}
 */
 		
-		for (int i = 0; i < 0xFF; i++) {
+		for (uintptr_t i = 0; i < 0xFF; i++) {
 			bool* newKey = keyMapAddr + (4 * i); 
 			bool newKeyPressed = (*newKey) && (GameData::canUseMoveKeys() || clientInstance->localPlayer == nullptr); // Disable Keybinds when in chat or inventory
 			bool* oldKey = keyMap + (4 * i);

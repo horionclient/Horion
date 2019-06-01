@@ -11,7 +11,7 @@ InstaBreak::~InstaBreak()
 {
 }
 
-std::string InstaBreak::getModuleName()
+const char* InstaBreak::getModuleName()
 {
-	return std::string("InstaBreak");
+	return ("InstaBreak");
 }

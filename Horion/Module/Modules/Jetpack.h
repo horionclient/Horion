@@ -15,6 +15,6 @@ public:
 	virtual bool isFlashMode() override;
 
 	// Inherited via IModule
-	virtual std::string getModuleName() override;
+	virtual const char* getModuleName() override;
 };
 

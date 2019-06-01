@@ -11,7 +11,7 @@ public:
 	~NoFall();
 
 	// Inherited via IModule
-	virtual std::string getModuleName() override;
+	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
 };
 

@@ -11,7 +11,7 @@ Freecam::~Freecam()
 {
 }
 
-std::string Freecam::getModuleName()
+const char* Freecam::getModuleName()
 {
-	return std::string("Freecam");
+	return ("Freecam");
 }

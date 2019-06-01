@@ -11,9 +11,9 @@ Killaura::~Killaura()
 {
 }
 
-std::string Killaura::getModuleName()
+const char* Killaura::getModuleName()
 {
-	return std::string("Killaura");
+	return ("Killaura");
 }
 
 void Killaura::onTick(C_GameMode* gm)

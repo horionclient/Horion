@@ -11,7 +11,7 @@ Tracer::~Tracer()
 {
 }
 
-std::string Tracer::getModuleName()
+const char* Tracer::getModuleName()
 {
-	return std::string("Tracer");
+	return ("Tracer");
 }

@@ -11,9 +11,9 @@ Phase::~Phase()
 {
 }
 
-std::string Phase::getModuleName()
+const char* Phase::getModuleName()
 {
-	return std::string("Phase");
+	return ("Phase");
 }
 
 void Phase::onTick(C_GameMode* gm) {

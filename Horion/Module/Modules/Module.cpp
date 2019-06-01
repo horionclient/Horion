@@ -62,7 +62,7 @@ IModule::~IModule()
 {
 }
 
-std::string IModule::getRawModuleName()
+const char* IModule::getRawModuleName()
 {
 	return getModuleName();
 }
@@ -142,7 +142,7 @@ void IModule::onLoadConfig(json * conf)
 					}
 				}
 				catch (std::exception e) {
-					logF("Config Load Error (%s): %s", this->getRawModuleName().c_str(), e.what());
+					logF("Config Load Error (%s): %s", this->getRawModuleName(), e.what());
 				}
 				
 			}
@@ -199,7 +199,7 @@ void IModule::setEnabled(bool enabled)
 #ifndef _DEBUG
 		if(!isFlashMode()) // Only print jetpack stuff in debug mode
 #endif
-			logF("%s %s", enabled ? "Enabled" : "Disabled", this->getModuleName().c_str());
+			logF("%s %s", enabled ? "Enabled" : "Disabled", this->getModuleName());
 
 		if (enabled)
 			this->onEnable();

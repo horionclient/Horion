@@ -12,7 +12,7 @@ public:
 	~ChestESP();
 
 	// Inherited via IModule
-	virtual std::string getModuleName() override;
+	virtual const char* getModuleName() override;
 	virtual void onPostRender() override;
 	virtual void onTick(C_GameMode* gm) override;
 };

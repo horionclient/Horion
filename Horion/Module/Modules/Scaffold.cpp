@@ -13,9 +13,9 @@ Scaffold::~Scaffold()
 {
 }
 
-std::string Scaffold::getModuleName()
+const char* Scaffold::getModuleName()
 {
-	return std::string("Scaffold");
+	return ("Scaffold");
 }
 
 bool Scaffold::tryScaffold(vec3_t blockBelow)

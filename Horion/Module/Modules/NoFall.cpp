@@ -11,9 +11,9 @@ NoFall::~NoFall()
 {
 }
 
-std::string NoFall::getModuleName()
+const char* NoFall::getModuleName()
 {
-	return std::string("NoFall");
+	return ("NoFall");
 }
 
 void NoFall::onTick(C_GameMode* gm) {

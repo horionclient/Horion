@@ -11,9 +11,9 @@ Step::~Step()
 {
 }
 
-std::string Step::getModuleName()
+const char* Step::getModuleName()
 {
-	return std::string("Step");
+	return ("Step");
 }
 
 void Step::onTick(C_GameMode* gm) {
@@ -22,6 +22,5 @@ void Step::onTick(C_GameMode* gm) {
 }
 void Step::onDisable() {
 	if (g_Data.getLocalPlayer() != nullptr) 
-		g_Data.getLocalPlayer()->stepHeight = 0.5625f;
-	
+		g_Data.getLocalPlayer()->stepHeight = 0.5625f;	
 }

@@ -11,9 +11,9 @@ Aimbot::~Aimbot()
 {
 }
 
-std::string Aimbot::getModuleName()
+const char* Aimbot::getModuleName()
 {
-	return std::string("Aimbot");
+	return ("Aimbot");
 }
 struct CompareTargetEnArray
 {

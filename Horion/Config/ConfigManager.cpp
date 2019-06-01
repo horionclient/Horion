@@ -69,7 +69,7 @@ void ConfigManager::loadConfig(std::string name, bool create)
 		}
 	}
 
-	delete fullPath;
+	delete[] fullPath;
 }
 
 void ConfigManager::saveConfig()
@@ -85,7 +85,7 @@ void ConfigManager::saveConfig()
 	o.flush();
 	o.close();
 
-	delete fullPath;
+	delete[] fullPath;
 }
 
 void ConfigManager::init()

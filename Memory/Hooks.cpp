@@ -558,10 +558,12 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 				this->enabled = mod->isEnabled();
 				this->keybind = mod->getKeybind();
 				this->backingModule = mod;
+				
+				char yikes[50];
+				sprintf_s(yikes, 50, "%s [%s]", moduleName.c_str(), Utils::getKeybindName(keybind));
+				moduleName = std::string(yikes);
+
 				this->textWidth = DrawUtils::getTextWidth(&moduleName);
-				//char yikes[50];
-				//sprintf_s(yikes, 50, "%s [%s]", moduleName.c_str(), Utils::getKeybindName(keybind));
-				//moduleName = std::string(yikes);
 			}
 
 			bool operator<(const IModuleContainer &other) const {

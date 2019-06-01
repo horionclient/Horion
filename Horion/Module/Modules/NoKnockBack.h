@@ -8,5 +8,5 @@ public:
 	~NoKnockBack();
 
 	// Inherited via IModule
-	virtual std::string getModuleName() override;
+	virtual const char* getModuleName() override;
 };
