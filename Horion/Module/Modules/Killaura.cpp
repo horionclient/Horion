@@ -80,10 +80,7 @@ void Killaura::onTick(C_GameMode* gm)
 
 void Killaura::onEnable()
 {
-	if (g_Data.getLocalPlayer() == nullptr) {
+	if (g_Data.getLocalPlayer() == nullptr) 
 		this->setEnabled(false);
-		return;
-	}
-	delay = 100;
 }
 

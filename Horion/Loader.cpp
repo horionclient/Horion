@@ -102,8 +102,8 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			bool newKeyPressed = (*newKey) && (GameData::canUseMoveKeys() || clientInstance->localPlayer == nullptr); // Disable Keybinds when in chat or inventory
 			bool* oldKey = keyMap + (4 * i);
 			if (newKeyPressed != *oldKey) {
-				moduleMgr->onKeyUpdate(i, newKeyPressed);
-				TabGui::onKeyUpdate(i, newKeyPressed);
+				moduleMgr->onKeyUpdate((int) i, newKeyPressed);
+				TabGui::onKeyUpdate((int) i, newKeyPressed);
 			}
 				
 		}

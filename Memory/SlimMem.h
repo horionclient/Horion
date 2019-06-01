@@ -70,7 +70,7 @@ namespace SlimUtils {
 	*/
 	struct SigScanResult {
 		bool m_Success;
-		BYTE *m_Data;
+		BYTE *m_Data = 0;
 		DWORD m_DataLength;
 		DWORD m_Offset;
 

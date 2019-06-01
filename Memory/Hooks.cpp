@@ -355,7 +355,7 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 
 		struct LilPlump {
 			std::string cmdAlias;
-			ICommand* command;
+			ICommand* command = 0;
 			bool shouldReplace = true;
 
 			bool operator<(const LilPlump &o) const {

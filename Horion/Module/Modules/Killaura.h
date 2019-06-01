@@ -3,8 +3,6 @@
 
 class Killaura : public IModule
 {
-private:
-	int delay;
 public:
 	Killaura();
 	~Killaura();

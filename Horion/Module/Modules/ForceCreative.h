@@ -4,8 +4,7 @@
 class ForceCreative : public IModule
 {
 private:
-	bool oneTime = true;
-	int oldGameMode;
+	int oldGameMode = 0;
 public:
 	ForceCreative();
 	~ForceCreative();

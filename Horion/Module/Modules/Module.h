@@ -47,7 +47,6 @@ class IModule
 private:
 	bool enabled = false;
 	int keybind = 0x0;
-	char rawModuleName[30];
 	Category category;
 
 	std::vector<SettingEntry*> settings;

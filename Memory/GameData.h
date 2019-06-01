@@ -9,7 +9,7 @@
 
 class GameData {
 private:
-	C_ClientInstance* clientInstance;
+	C_ClientInstance* clientInstance = 0;
 	C_LocalPlayer* localPlayer;
 	C_GameMode* gameMode;
 	C_EntityList* entityList;
