@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef PERFORMANCE_TEST
+//#define PERFORMANCE_TEST
+#endif
+
 #include "MinHook.h"
 #include "../SDK/CGameMode.h"
 #include "../SDK/CChestBlockActor.h"
@@ -12,6 +16,10 @@
 #include "../Horion/Command/CommandMgr.h"
 #include "../Utils/TextFormat.h"
 #include "../Horion/Menu/TabGui.h"
+
+#ifdef PERFORMANCE_TEST
+#include <chrono>
+#endif
 
 #include <dxgi.h>
 

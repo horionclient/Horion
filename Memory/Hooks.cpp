@@ -488,7 +488,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 {
 	static auto oText = g_Hooks.renderTextHook->GetOriginal<renderText_t>();
 	DrawUtils::setCtx(renderCtx, g_Data.getClientInstance()->getGuiData());
-	
+
 	// Call PreRender() functions
 	{
 		moduleMgr->onPreRender();
@@ -497,6 +497,10 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	}
 	
 	__int64 retval = oText(yeet, renderCtx);
+
+#ifdef PERFORMANCE_TEST
+	std::chrono::steady_clock::time_point beginPostRender = std::chrono::steady_clock::now();
+#endif
 
 	// Call PostRender() functions
 	{
@@ -538,7 +542,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		else
 			DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth - 1, 1), &horionStr, new MC_Color(rcolors));
 	}
-	
+
 	// Draw ArrayList
 	if (moduleMgr->isInitialized()) {
 		struct IModuleContainer {
@@ -547,24 +551,20 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 			std::string moduleName;
 			bool enabled;
 			int keybind;
+			float textWidth;
 
 			IModuleContainer(IModule* mod) {
 				this->moduleName = mod->getModuleName();
 				this->enabled = mod->isEnabled();
 				this->keybind = mod->getKeybind();
 				this->backingModule = mod;
-
-				std::ostringstream strStream;
-				strStream << moduleName;
-				strStream << " [" << Utils::getKeybindName(keybind) << "]";
-				moduleName = strStream.str();
+				this->textWidth = DrawUtils::getTextWidth(&moduleName);
+				//char yikes[50];
+				//sprintf_s(yikes, 50, "%s [%s]", moduleName.c_str(), Utils::getKeybindName(keybind));
+				//moduleName = std::string(yikes);
 			}
 
 			bool operator<(const IModuleContainer &other) const {
-				std::string temp = moduleName;
-				float thisWidth = DrawUtils::getTextWidth(&temp);
-				temp = other.moduleName;
-				float otherWidth = DrawUtils::getTextWidth(&temp);
 
 				if (enabled) {
 					if (!other.enabled) // We are enabled
@@ -573,9 +573,9 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 				else if (other.enabled) // They are enabled
 						return false;
 
-				if (thisWidth == otherWidth)
+				if (this->textWidth == other.textWidth)
 					return moduleName < other.moduleName;
-				return thisWidth < otherWidth;
+				return this->textWidth < other.textWidth;
 			}
 		};
 
@@ -600,17 +600,19 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		{
 			std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
 
-			for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it)
+			for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
 				modContainerList.emplace(IModuleContainer(*it));
+			}
 		}
-
+		
+		// Loop through mods to display Labels
 		for (std::set<IModuleContainer>::iterator it = modContainerList.begin(); it != modContainerList.end(); ++it) {
 
 			if (!extendedArraylist && !it->enabled)
 				continue;
 
 			std::string textStr = it->moduleName;
-			float textWidth = DrawUtils::getTextWidth(&textStr);
+			float textWidth = it->textWidth;
 
 			float xOffset = isOnRightSide ? windowSize.x - textWidth - (textPadding * 2) : 0;
 			vec2_t textPos = vec2_t(
@@ -642,6 +644,14 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	}
 
 	DrawUtils::flush();
+
+#ifdef PERFORMANCE_TEST
+	std::chrono::steady_clock::time_point endRender = std::chrono::steady_clock::now();
+
+
+	//logF("PreRender: %.1f", std::chrono::duration_cast<std::chrono::microseconds>(endPreRender - beginPreRender).count() / 1000.f);
+	logF("Render: %.2fms", std::chrono::duration_cast<std::chrono::microseconds>(endRender - beginPostRender).count() / 1000.f);
+#endif
 
 	return retval;
 }
