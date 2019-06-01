@@ -151,6 +151,8 @@ void IModule::onLoadConfig(json * conf)
 	
 }
 
+#pragma warning( push )
+#pragma warning( disable : 26444 )
 void IModule::onSaveConfig(json * conf)
 {
 	std::string modName = getRawModuleName();
@@ -185,6 +187,8 @@ void IModule::onSaveConfig(json * conf)
 	
 	conf->emplace(modName.c_str(), obj);
 }
+
+#pragma warning( pop ) 
 
 bool IModule::isFlashMode()
 {

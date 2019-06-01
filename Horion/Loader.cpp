@@ -22,6 +22,8 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 	C_GameMode* gameMode = g_Data.getCGameMode();
 
 	bool* keyMap = static_cast<bool*>(malloc(0xFF * 4 + 0x4));
+	if(keyMap == 0)
+		throw std::exception("Keymap 1 not located");
 
 	bool* keyMapAddr = 0x0;
 	uintptr_t sigOffset = Utils::FindSignature("48 8D 0D ?? ?? ?? ?? 89 3C 81 E9");

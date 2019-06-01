@@ -169,7 +169,7 @@ void Draw(IDXGISwapChain* swap)
 
 	D3D11_MAPPED_SUBRESOURCE mapData;
 
-	if (FAILED(pContext->Map(m_pVertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mapData)))
+	if (m_pVertexBuffer == 0 || FAILED(pContext->Map(m_pVertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mapData)))
 		logF("pContext->Map failed");
 	//return;
 
@@ -192,7 +192,8 @@ void Draw(IDXGISwapChain* swap)
 	v[1].Color.b = ((FLOAT)b / 255.0f);
 	v[1].Color.a = ((FLOAT)a / 255.0f);
 
-	pContext->Unmap(m_pVertexBuffer, NULL);
+	if(m_pVertexBuffer != 0)
+		pContext->Unmap(m_pVertexBuffer, NULL);
 
 	//pContext->IASetInputLayout(0);
 

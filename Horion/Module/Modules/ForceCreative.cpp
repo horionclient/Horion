@@ -32,5 +32,4 @@ void ForceCreative::onDisable() {
 		g_Data.getLocalPlayer()->setGameModeType(oldGameMode);
 		g_Data.getLocalPlayer()->gamemode = oldGameMode;
 	}
-		
 }

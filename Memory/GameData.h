@@ -12,7 +12,7 @@ private:
 	C_ClientInstance* clientInstance = 0;
 	C_LocalPlayer* localPlayer;
 	C_GameMode* gameMode;
-	C_EntityList* entityList;
+	C_EntityList* entityList = 0;
 	uintptr_t hid;
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
 	const SlimUtils::SlimModule* gameModule;
