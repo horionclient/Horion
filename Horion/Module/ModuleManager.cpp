@@ -31,7 +31,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new InstaBreak());
 	this->moduleList.push_back(new NoPacket());
 	this->moduleList.push_back(new ForceCreative());
-	//this->moduleList.push_back(new Speed());
+	this->moduleList.push_back(new Speed());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);
