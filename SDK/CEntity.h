@@ -122,7 +122,7 @@ private:
 public:
 	TextHolder name; //0x1088
 private:
-	char pad_0x109C[0x2E8]; //0x109C
+	char pad_0x109C[0x2E8]; //0x10A8
 public:
 	float bodyYaw; //0x1390
 	float oldBodyYaw; //0x1394

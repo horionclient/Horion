@@ -98,6 +98,14 @@ void Hooks::Init()
 	g_Hooks.HIDController_keyMouseHook = std::make_unique<FuncHook>(keyMouseFunc, Hooks::HIDController_keyMouse);
 	g_Hooks.HIDController_keyMouseHook->init();
 
+	void* getVisualShapeInWorld = reinterpret_cast<void*>(Utils::FindSignature("48 8B 01 45 33 C9 4C 8B 44 24 ?? 48"));
+	g_Hooks.BlockLegacy_getVisualShapeInWorldHook = std::make_unique<FuncHook>(getVisualShapeInWorld, Hooks::BlockLegacy_getVisualShapeInWorld);
+	g_Hooks.BlockLegacy_getVisualShapeInWorldHook->init();
+
+	/*void* getColor = reinterpret_cast<void*>(Utils::FindSignature("0F 5B C0 F3 0F 11 4A ?? F3 0F 11 42 ??") + 0x12);
+	g_Hooks.BlockLegacy_getColorHook = std::make_unique<FuncHook>(getColor, Hooks::BlockLegacy_getColor);
+	g_Hooks.BlockLegacy_getColorHook->init();*/
+
 	//logF("Hooks hooked");
 }
 
@@ -119,6 +127,8 @@ void Hooks::Restore()
 	g_Hooks.LocalPlayer_CheckFallDamageHook->Restore();
 	g_Hooks.GameMode_startDestroyHook->Restore();
 	g_Hooks.HIDController_keyMouseHook->Restore();
+	g_Hooks.BlockLegacy_getVisualShapeInWorldHook->Restore();
+	//g_Hooks.BlockLegacy_getColorHook->Restore();
 }
 
 void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
@@ -144,12 +154,48 @@ void __fastcall Hooks::SurvivalMode_tick(C_GameMode * _this)
 	}
 }
 
+__int64 __fastcall Hooks::BlockLegacy_getVisualShapeInWorld(C_BlockLegacy* a1, __int64 a2, __int64 a3, __int64 a4, __int64 a5)
+{
+	static auto oFunc = g_Hooks.BlockLegacy_getVisualShapeInWorldHook->GetOriginal<BlockLegacy_getVisualShapeInWorld_t>();
+	static IModule* XrayModule = moduleMgr->getModule<Xray>();
+
+	if (XrayModule == nullptr)
+		XrayModule = moduleMgr->getModule<Xray>();
+	else if (XrayModule->isEnabled()) {
+		char* find = strstr(a1->name,"ore");
+		if (find == NULL)
+		{
+			AABB* yeet = new AABB();
+			return reinterpret_cast<__int64>(yeet);
+		}
+
+	}
+	return oFunc(a1, a2, a3, a4, a5);
+}
+
+uint32_t __fastcall Hooks::BlockLegacy_getColor(C_BlockLegacy* a1)
+{
+	static auto oFunc = g_Hooks.BlockLegacy_getColorHook->GetOriginal<BlockLegacy_getColor_t>();
+
+	static IModule* XrayModule = moduleMgr->getModule<Xray>();
+	if (XrayModule == nullptr)
+		XrayModule = moduleMgr->getModule<Xray>();
+	else if (XrayModule->isEnabled()) {
+		char* find = strstr(a1->name,"ore");
+		if (find != NULL)
+		{
+			return 0xFF000000;
+		}
+	}
+	return oFunc(a1);
+}
+
 void Hooks::HIDController_keyMouse(void* a1, void* a2, void* a3)
 {
 	static auto oFunc = g_Hooks.HIDController_keyMouseHook->GetOriginal<HIDController_keyMouse_t>();
 	GameData::addHIDController(a1);
-	oFunc(a1,a2,a3); // Call Original Func
-	
+	oFunc(a1, a2, a3); // Call Original Func
+
 }
 
 void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face, void* a4, void* a5)
@@ -188,8 +234,8 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face,
 			return;
 		}
 	}
-	
-	oFunc(a, a2, face,a4,a5);
+
+	oFunc(a, a2, face, a4, a5);
 }
 
 void __fastcall Hooks::MultiLevelPlayer_tick(C_EntityList * _this)
@@ -300,7 +346,7 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 			delete *it;
 			*it = nullptr;
 		}
-		mod3->PacketMeme.clear(); 
+		mod3->PacketMeme.clear();
 		return;
 	}
 	else if (mod2->isEnabled()) {
@@ -495,7 +541,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		TabGui::render();
 		DrawUtils::flush();
 	}
-	
+
 	__int64 retval = oText(yeet, renderCtx);
 
 #ifdef PERFORMANCE_TEST
@@ -506,7 +552,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	{
 		moduleMgr->onPostRender();
 	}
-	
+
 	// Display ArrayList on the Right?
 	static constexpr bool isOnRightSide = true;
 	static float rcolors[4]; // Rainbow color array RGBA
@@ -515,9 +561,9 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	static float       horionStrWidth = DrawUtils::getTextWidth(&horionStr); // Graphical Width of Horion logo / text
 
 	float yOffset = 0; // Offset of next Text
-	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize; 
+	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
 	vec2_t windowSizeReal = g_Data.getClientInstance()->getGuiData()->windowSizeReal;
-	
+
 	vec2_t mousePos = *g_Data.getClientInstance()->getMousePos();
 	mousePos.div(windowSizeReal);
 	mousePos.mul(windowSize);
@@ -554,7 +600,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 				this->enabled = mod->isEnabled();
 				this->keybind = mod->getKeybind();
 				this->backingModule = mod;
-				
+
 				char yikes[50];
 				sprintf_s(yikes, 50, "%s [%s]", moduleNameChr, Utils::getKeybindName(keybind));
 				moduleName = yikes;
@@ -569,7 +615,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 						return true;
 				}
 				else if (other.enabled) // They are enabled
-						return false;
+					return false;
 
 				if (this->textWidth == other.textWidth)
 					return moduleName < other.moduleName;
@@ -598,11 +644,11 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 			std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
 
 			for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
-				if(extendedArraylist || (*it)->isEnabled())
+				if (extendedArraylist || (*it)->isEnabled())
 					modContainerList.emplace(IModuleContainer(*it));
 			}
 		}
-		
+
 		// Loop through mods to display Labels
 		for (std::set<IModuleContainer>::iterator it = modContainerList.begin(); it != modContainerList.end(); ++it) {
 
@@ -614,28 +660,30 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 			float xOffset = isOnRightSide ? windowSize.x - textWidth - (textPadding * 2) : 0;
 			vec2_t textPos = vec2_t(
-				xOffset + textPadding, 
+				xOffset + textPadding,
 				yOffset + textPadding
 			);
 			vec4_t rectPos = vec4_t(
-				xOffset, 
-				yOffset, 
-				isOnRightSide ? windowSize.x : textWidth + (textPadding * 2), 
+				xOffset,
+				yOffset,
+				isOnRightSide ? windowSize.x : textWidth + (textPadding * 2),
 				yOffset + textPadding * 2 + textHeight
 			);
 
 			DrawUtils::drawText(textPos, &textStr, new MC_Color(it->enabled ? rcolors : disabledRcolors), textSize);
 			if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos)) {
-				
+
 				if (leftMouseDown) {
 					DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 0.1f), it->enabled ? 0.6f : 0.6f);
 					if (executeClick)
 						it->backingModule->toggle();
-				}else
+				}
+				else
 					DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.7f, 0.3f, 0.1f), it->enabled ? 0.4f : 0.15f);
-			}else
+			}
+			else
 				DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), it->enabled ? 0.4f : 0.15f);
-			
+
 			yOffset += textHeight + (textPadding * 2);
 		}
 		modContainerList.clear();

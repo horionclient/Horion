@@ -50,6 +50,7 @@
     <ClCompile Include="Horion\Command\Commands\TeleportCommand.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />
     <ClCompile Include="Utils\TextFormat.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Xray.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Command\Commands\FriendListCommand.h" />
@@ -116,5 +117,7 @@
     <ClInclude Include="Utils\Logger.h" />
     <ClInclude Include="Memory\SlimMem.h" />
     <ClInclude Include="Utils\Utils.h" />
+    <ClInclude Include="SDK\CBlockLegacy.h" />
+    <ClInclude Include="Horion\Module\Modules\Xray.h" />
   </ItemGroup>
 </Project>

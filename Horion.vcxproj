@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -173,6 +173,7 @@
     <ClCompile Include="Horion\Module\Modules\Step.cpp" />
     <ClCompile Include="Horion\Module\Modules\Tracer.cpp" />
     <ClCompile Include="Horion\Module\Modules\TriggerBot.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Xray.cpp" />
     <ClCompile Include="Memory\GameData.cpp" />
     <ClCompile Include="Memory\Hooks.cpp" />
     <ClCompile Include="Memory\SlimMem.cpp" />
@@ -224,9 +225,11 @@
     <ClInclude Include="Horion\Module\Modules\Step.h" />
     <ClInclude Include="Horion\Module\Modules\Tracer.h" />
     <ClInclude Include="Horion\Module\Modules\TriggerBot.h" />
+    <ClInclude Include="Horion\Module\Modules\Xray.h" />
     <ClInclude Include="Memory\GameData.h" />
     <ClInclude Include="Memory\Hooks.h" />
     <ClInclude Include="Memory\MinHook.h" />
+    <ClInclude Include="SDK\CBlockLegacy.h" />
     <ClInclude Include="SDK\CChestBlockActor.h" />
     <ClInclude Include="SDK\CClientInstance.h" />
     <ClInclude Include="SDK\CClientInstanceScreenModel.h" />

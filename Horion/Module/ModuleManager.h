@@ -29,6 +29,7 @@
 #include "Modules/InstaBreak.h"
 #include "Modules/NoPacket.h"
 #include "Modules/ForceCreative.h"
+#include "Modules/Xray.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;
