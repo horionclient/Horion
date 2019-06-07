@@ -162,7 +162,7 @@ __int64 __fastcall Hooks::BlockLegacy_getVisualShapeInWorld(C_BlockLegacy* a1, _
 	if (XrayModule == nullptr)
 		XrayModule = moduleMgr->getModule<Xray>();
 	else if (XrayModule->isEnabled()) {
-		char* find = strstr(a1->name,"ore");
+		char* find = strstr(a1->name.getText(),"ore");
 		if (find == NULL)
 		{
 			AABB* yeet = new AABB();
@@ -181,7 +181,7 @@ uint32_t __fastcall Hooks::BlockLegacy_getColor(C_BlockLegacy* a1)
 	if (XrayModule == nullptr)
 		XrayModule = moduleMgr->getModule<Xray>();
 	else if (XrayModule->isEnabled()) {
-		char* find = strstr(a1->name,"ore");
+		char* find = strstr(a1->name.getText(),"ore");
 		if (find != NULL)
 		{
 			return 0xFF000000;
