@@ -21,7 +21,6 @@
     <ClCompile Include="Horion\Module\Modules\Aimbot.cpp" />
     <ClCompile Include="Horion\Module\Modules\AirJump.cpp" />
     <ClCompile Include="Horion\Module\Modules\Blink.cpp" />
-    <ClCompile Include="Horion\Module\Modules\ForceCreative.cpp" />
     <ClCompile Include="Horion\Module\Modules\InstaBreak.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoFall.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSprint.cpp" />
@@ -73,7 +72,6 @@
     <ClInclude Include="Horion\Module\Modules\Aimbot.h" />
     <ClInclude Include="Horion\Module\Modules\AirJump.h" />
     <ClInclude Include="Horion\Module\Modules\Blink.h" />
-    <ClInclude Include="Horion\Module\Modules\ForceCreative.h" />
     <ClInclude Include="Horion\Module\Modules\InstaBreak.h" />
     <ClInclude Include="Horion\Module\Modules\NoFall.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSprint.h" />
