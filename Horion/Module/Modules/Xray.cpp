@@ -2,7 +2,7 @@
 
 
 
-Xray::Xray() : IModule('A', VISUAL)
+Xray::Xray() : IModule(VK_NUMPAD6, VISUAL)
 {
 }
 
