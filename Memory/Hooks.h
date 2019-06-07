@@ -54,8 +54,7 @@ private:
 	static void LocalPlayer_CheckFallDamage(C_LocalPlayer* a, float* a2, void*a3);
 	static void GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face,void* a4,void* a5);
 	static void HIDController_keyMouse(void* a1, void* a2, void* a3);
-	static __int64 __fastcall BlockLegacy_getVisualShapeInWorld(C_BlockLegacy* a1, __int64 a2, __int64 a3, __int64 a4, __int64 a5);
-	static uint32_t __fastcall BlockLegacy_getColor(C_BlockLegacy* a1);
+	static int __fastcall BlockLegacy_getRenderLayer(C_BlockLegacy* a1);
 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
@@ -76,8 +75,7 @@ private:
 	std::unique_ptr<FuncHook> LocalPlayer_CheckFallDamageHook;
 	std::unique_ptr<FuncHook> GameMode_startDestroyHook;
 	std::unique_ptr<FuncHook> HIDController_keyMouseHook;
-	std::unique_ptr<FuncHook> BlockLegacy_getVisualShapeInWorldHook;
-	std::unique_ptr<FuncHook> BlockLegacy_getColorHook;
+	std::unique_ptr<FuncHook> BlockLegacy_getRenderLayerHook;
 
 	typedef bool(__fastcall* mob_isAlive_T)(C_Entity* a1);
 	typedef float(__fastcall* getFov_t)(__int64 a1, float a2, bool a3);
@@ -98,8 +96,7 @@ private:
 	typedef void(__fastcall* LocalPlayer_CheckFallDamage_t)(C_LocalPlayer* a, float* a2, void*a3);
 	typedef void(__fastcall* GameMode_startDestroyBlock_t)(C_GameMode* a, vec3_ti* a2, uint8_t face, void* a4, void* a5);
 	typedef __int64(__fastcall* HIDController_keyMouse_t)(void* a1,void* a2, void* a3);
-	typedef __int64(__fastcall* BlockLegacy_getVisualShapeInWorld_t)(C_BlockLegacy* a1, __int64 a2, __int64 a3, __int64 a4, __int64 a5);
-	typedef uint32_t(__fastcall *BlockLegacy_getColor_t)(C_BlockLegacy* a1);
+	typedef int(__fastcall *BlockLegacy_getRenderLayer_t)(C_BlockLegacy* a1);
 
 
 };

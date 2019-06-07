@@ -98,13 +98,9 @@ void Hooks::Init()
 	g_Hooks.HIDController_keyMouseHook = std::make_unique<FuncHook>(keyMouseFunc, Hooks::HIDController_keyMouse);
 	g_Hooks.HIDController_keyMouseHook->init();
 
-	void* getVisualShapeInWorld = reinterpret_cast<void*>(Utils::FindSignature("48 8B 01 45 33 C9 4C 8B 44 24 ?? 48"));
-	g_Hooks.BlockLegacy_getVisualShapeInWorldHook = std::make_unique<FuncHook>(getVisualShapeInWorld, Hooks::BlockLegacy_getVisualShapeInWorld);
-	g_Hooks.BlockLegacy_getVisualShapeInWorldHook->init();
-
-	/*void* getColor = reinterpret_cast<void*>(Utils::FindSignature("0F 5B C0 F3 0F 11 4A ?? F3 0F 11 42 ??") + 0x12);
-	g_Hooks.BlockLegacy_getColorHook = std::make_unique<FuncHook>(getColor, Hooks::BlockLegacy_getColor);
-	g_Hooks.BlockLegacy_getColorHook->init();*/
+	void* getRenderLayer = reinterpret_cast<void*>(Utils::FindSignature("0F 57 C0 0F 2F ?? ?? ?? ?? ?? 0F 92 C0") + 0x10);
+	g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(getRenderLayer, Hooks::BlockLegacy_getRenderLayer);
+	g_Hooks.BlockLegacy_getRenderLayerHook->init();
 
 	//logF("Hooks hooked");
 }
@@ -127,8 +123,7 @@ void Hooks::Restore()
 	g_Hooks.LocalPlayer_CheckFallDamageHook->Restore();
 	g_Hooks.GameMode_startDestroyHook->Restore();
 	g_Hooks.HIDController_keyMouseHook->Restore();
-	g_Hooks.BlockLegacy_getVisualShapeInWorldHook->Restore();
-	//g_Hooks.BlockLegacy_getColorHook->Restore();
+	g_Hooks.BlockLegacy_getRenderLayerHook->Restore();
 }
 
 void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
@@ -154,37 +149,18 @@ void __fastcall Hooks::SurvivalMode_tick(C_GameMode * _this)
 	}
 }
 
-__int64 __fastcall Hooks::BlockLegacy_getVisualShapeInWorld(C_BlockLegacy* a1, __int64 a2, __int64 a3, __int64 a4, __int64 a5)
+int __fastcall Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1)
 {
-	static auto oFunc = g_Hooks.BlockLegacy_getVisualShapeInWorldHook->GetOriginal<BlockLegacy_getVisualShapeInWorld_t>();
-	static IModule* XrayModule = moduleMgr->getModule<Xray>();
+	static auto oFunc = g_Hooks.BlockLegacy_getRenderLayerHook->GetOriginal<BlockLegacy_getRenderLayer_t>();
 
+	static IModule* XrayModule = moduleMgr->getModule<Xray>();
 	if (XrayModule == nullptr)
 		XrayModule = moduleMgr->getModule<Xray>();
 	else if (XrayModule->isEnabled()) {
 		char* find = strstr(a1->name.getText(),"ore");
 		if (find == NULL)
 		{
-			AABB* yeet = new AABB();
-			return reinterpret_cast<__int64>(yeet);
-		}
-
-	}
-	return oFunc(a1, a2, a3, a4, a5);
-}
-
-uint32_t __fastcall Hooks::BlockLegacy_getColor(C_BlockLegacy* a1)
-{
-	static auto oFunc = g_Hooks.BlockLegacy_getColorHook->GetOriginal<BlockLegacy_getColor_t>();
-
-	static IModule* XrayModule = moduleMgr->getModule<Xray>();
-	if (XrayModule == nullptr)
-		XrayModule = moduleMgr->getModule<Xray>();
-	else if (XrayModule->isEnabled()) {
-		char* find = strstr(a1->name.getText(),"ore");
-		if (find != NULL)
-		{
-			return 0xFF000000;
+			return 9;
 		}
 	}
 	return oFunc(a1);
