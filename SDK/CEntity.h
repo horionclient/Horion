@@ -4,6 +4,7 @@
 #include "../Utils/Utils.h"
 #include "TextHolder.h"
 #include "CEntityList.h"
+#include "CBlockLegacy.h"
 
 class C_GameMode;
 
@@ -98,7 +99,7 @@ public:
 private:
 	char pad_0x0268[0xA88]; //0x0268
 public:
-	uintptr_t region;
+	C_BlockSource* region;
 	uintptr_t* dimension;
 	PointingStruct* pointingAt; //0x0D00
 private:

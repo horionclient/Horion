@@ -22,14 +22,10 @@ bool Scaffold::tryScaffold(vec3_t blockBelow)
 {
 	blockBelow = blockBelow.floor();
 
-	using yeetBoi_t = __int64(__fastcall*)(uintptr_t, const vec3_ti&);
-	static yeetBoi_t yeetBoi = reinterpret_cast<yeetBoi_t>(Utils::FindSignature("40 53 48 83 EC ?? 48 8B DA 8B 52 ?? 85 D2"));
-	
-
-	
 	DrawUtils::drawBox(blockBelow, vec3_t(blockBelow).add(1), 0.4f);
+
 	// BlockSource::getBlock()::getMaterial()::isReplaceable()
-	if ((*(uint8_t *)(*(uintptr_t *)(**(uintptr_t **)(yeetBoi(g_Data.getLocalPlayer()->region, vec3_ti(blockBelow)) + 16) + 120i64) + 7i64))) {
+	if ((*(g_Data.getLocalPlayer()->region->getBlock(vec3_ti(blockBelow))->blockLegacy))->material->isReplaceable) {
 		
 		vec3_ti* blok = new vec3_ti(blockBelow);
 
@@ -51,7 +47,8 @@ bool Scaffold::tryScaffold(vec3_t blockBelow)
 			vec3_ti* current = *it;
 
 			vec3_ti* calc = blok->subAndReturn(*current);
-			if (!(*(uint8_t *)(*(uintptr_t *)(**(uintptr_t **)(yeetBoi(g_Data.getLocalPlayer()->region, *calc) + 16) + 120i64) + 7i64))) {
+			if (!(*(g_Data.getLocalPlayer()->region->getBlock(*calc)->blockLegacy))->material->isReplaceable)
+			{
 				// Found a solid block to click
 				foundCandidate = true;
 				blok->set(calc);
@@ -64,6 +61,7 @@ bool Scaffold::tryScaffold(vec3_t blockBelow)
 		if (foundCandidate) {
 			g_Data.getCGameMode()->buildBlock(blok, i);
 			delete blok;
+			
 			return true;
 		}
 		delete blok;

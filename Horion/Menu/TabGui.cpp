@@ -38,7 +38,7 @@ void TabGui::renderLevel()
 {
 	// Parameters
 	static constexpr float textSize = 1.f;
-	static constexpr float textHeight = 10.f * textSize;
+	static constexpr float textHeight = 11.f * textSize;
 
 	// First loop: Get the maximum text length 
 	float maxLength = 1;
@@ -111,7 +111,7 @@ void TabGui::renderLevel()
 				DrawUtils::fillRectangle(rectPos, MC_Color(0.8f, 0.8f, 0.8f, 1.0f), 0.1f);
 		}
 			
-		//DrawUtils::drawRectangle(rectPos, MC_Color(0.0f, 0.0f, 0.0f, 1.0f), 1.0f); // Border around Text
+		DrawUtils::drawRectangle(rectPos, MC_Color(0.0f, 0.0f, 0.0f, 1.0f), 1, 0.5f); // Border around Text
 
 		DrawUtils::drawText(vec2_t(xOffset + 1.f, yOffset), &std::string(label.text), /* White Color*/ nullptr, textSize, SMOOTH);
 
