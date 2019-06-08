@@ -39,6 +39,7 @@ void TabGui::renderLevel()
 	// Parameters
 	static constexpr float textSize = 1.f;
 	static constexpr float textHeight = 11.f * textSize;
+	static constexpr float alphaVal = 0.8f;
 
 	// First loop: Get the maximum text length 
 	float maxLength = 1;
@@ -71,14 +72,14 @@ void TabGui::renderLevel()
 
 				if (label.mod == 0) {
 					// Category
-					DrawUtils::fillRectangle(rectPos, MC_Color(0.1f, 0.1f, 0.1f, 1.0f), 0.3f);
+					DrawUtils::fillRectangle(rectPos, MC_Color(0.1f, 0.1f, 0.1f, 1.0f), alphaVal);
 				}
 				else {
 					// Modules
 					if(label.enabled)
-						DrawUtils::fillRectangle(rectPos, MC_Color(0.1f, 0.4f, 0.1f, 1.0f), 0.3f);
+						DrawUtils::fillRectangle(rectPos, MC_Color(0.1f, 0.4f, 0.1f, 1.0f), alphaVal);
 					else
-						DrawUtils::fillRectangle(rectPos, MC_Color(0.15f, 0.1f, 0.1f, 1.0f), 0.3f);
+						DrawUtils::fillRectangle(rectPos, MC_Color(0.15f, 0.1f, 0.1f, 1.0f), alphaVal);
 
 					static bool lastVal = toggleCurrentSelection;
 
@@ -98,20 +99,20 @@ void TabGui::renderLevel()
 			}
 			else {
 				// We are selected but we are not in the current menu
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.1f, 0.1f, 0.1f, 1.0f), 0.15f);
+				DrawUtils::fillRectangle(rectPos, MC_Color(0.1f, 0.1f, 0.1f, 1.0f), alphaVal * 0.5f);
 			}
 			selectedYOffset = yOffset;
 		}
 		else { // We are not selected
 			if (label.enabled && renderedLevel > 0)
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.8f, 0.4f, 1.0f), 0.2f);
+				DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.8f, 0.4f, 1.0f), alphaVal * 0.6f);
 			else if(renderedLevel > 0)
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.7f, 0.4f, 0.4f, 1.0f), 0.2f);
+				DrawUtils::fillRectangle(rectPos, MC_Color(0.7f, 0.4f, 0.4f, 1.0f), alphaVal * 0.6f);
 			else
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.8f, 0.8f, 0.8f, 1.0f), 0.1f);
+				DrawUtils::fillRectangle(rectPos, MC_Color(0.8f, 0.8f, 0.8f, 1.0f), alphaVal * 0.3f);
 		}
 			
-		DrawUtils::drawRectangle(rectPos, MC_Color(0.0f, 0.0f, 0.0f, 1.0f), 1, 0.5f); // Border around Text
+		//DrawUtils::drawRectangle(rectPos, MC_Color(0.0f, 0.0f, 0.0f, 1.0f), 1, 0.5f); // Border around Text
 
 		DrawUtils::drawText(vec2_t(xOffset + 1.f, yOffset), &std::string(label.text), /* White Color*/ nullptr, textSize, SMOOTH);
 

@@ -54,6 +54,8 @@ public:
 	C_EntityList* getEntityList() { return entityList; };
 	uintptr_t getHIDController() { return hid; };
 	std::set<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
+
+	void forEachEntity(void(*callback) (C_Entity*));
 };
 
 

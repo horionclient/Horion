@@ -17,7 +17,7 @@ public:
 	short blockSide; //0x0574 
 	vec3_ti block; //0x0578 
 	vec3_t rayHitVec; //0x0584 
-	uint64_t entityPtr; //0x0590 
+	C_Entity* entityPtr; //0x0590 
 
 }; //Size=0x0598
 

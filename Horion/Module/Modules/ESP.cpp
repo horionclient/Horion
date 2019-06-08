@@ -16,14 +16,31 @@ const char* ESP::getModuleName()
 	return ("ESP");
 }
 
-void ESP::onPostRender() {
-	if (g_Data.getLocalPlayer() != nullptr && GameData::canUseMoveKeys()) {
-		int ourent = g_Data.getLocalPlayer()->getEntityTypeId();
-		C_EntityList* entList = g_Data.getEntityList();
-		size_t listSize = entList->getListSize();
+static float rcolors[4];
 
-		if (listSize < 1000 && listSize > 1) {
-			static float rcolors[4];
+void doRenderStuff(C_Entity* ent) {
+	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
+	if (ent != localPlayer) {
+		if (ent->timeSinceDeath > 0)
+			return;
+		if (ent->name2.getTextLength() > 1 && 
+			ent->height > 1.5f && ent->width > 0.5f
+			&& ent->height < 2.1f && ent->width < 0.9f
+			)
+			DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
+		else
+			DrawUtils::setColor(0.4f, 0.4f, 0.4f, 0.2f);
+
+		DrawUtils::drawEntityBox(ent, max(0.2f, 1 / max(1, localPlayer->eyePos0.dist(ent->eyePos0)))); // Fancy math to give an illusion of good esp
+	}
+}
+
+void ESP::onPostRender() {
+	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
+	if (localPlayer != nullptr && GameData::canUseMoveKeys()) {
+
+		// Rainbow colors
+		{
 			if (rcolors[3] < 1) {
 				rcolors[0] = 0.2f;
 				rcolors[1] = 0.2f;
@@ -38,25 +55,8 @@ void ESP::onPostRender() {
 				rcolors[0] = 0;
 
 			Utils::ColorConvertHSVtoRGB(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);
-
-			
-			for (size_t i = 0; i < listSize; i++) {
-				C_Entity* current = entList->get(i);
-				if (current != g_Data.getLocalPlayer()) {
-					if (current->timeSinceDeath > 0)
-						continue;
-					if(ourent == current->getEntityTypeId() && current->name2.getTextLength() > 0 && current->aabb.upper.y - current->aabb.lower.y > 1 &&
-						current->aabb.upper.y - current->aabb.lower.y < 2)
-						DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], max(0.1f, min(1.f, 15 / (current->damageTime + 1) )));
-					else
-						DrawUtils::setColor(0.4f, 0.4f, 0.4f, 0.2f);
-					DrawUtils::drawEntityBox(current, max(0.2f, 1 / max(1, g_Data.getLocalPlayer()->eyePos0.dist(current->eyePos0)))); // Fancy math to give an illusion of good esp
-					
-				}
-
-
-					
-			}
 		}
+
+		g_Data.forEachEntity(doRenderStuff);
 	}
 }

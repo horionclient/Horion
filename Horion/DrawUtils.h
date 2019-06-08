@@ -67,4 +67,6 @@ public:
 	static void drawBox(vec3_t lower, vec3_t upper, float lineWidth);
 	static void drawEntityBox(C_Entity* ent, float lineWidth);
 	static void wirebox(AABB aabb);
+
+	static vec2_t worldToScreen(vec3_t world);
 };

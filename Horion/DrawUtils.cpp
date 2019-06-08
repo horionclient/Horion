@@ -276,3 +276,10 @@ void DrawUtils::wirebox(AABB aabb){
 	v15[43] = 0;*/
 	throw std::exception("not implemented");
 }
+
+vec2_t DrawUtils::worldToScreen(vec3_t world)
+{
+	vec2_t ret;
+	bool success = refdef->OWorldToScreen(origin, world, ret, fov, screenSize);
+	return ret;
+}
