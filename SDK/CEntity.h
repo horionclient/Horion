@@ -5,6 +5,7 @@
 #include "TextHolder.h"
 #include "CEntityList.h"
 #include "CBlockLegacy.h"
+#include "CInventory.h"
 
 class C_GameMode;
 
@@ -204,7 +205,14 @@ public:
 	};
 };
 
-class C_LocalPlayer : public C_Entity {
+class C_Player : public C_Entity {
+public:
+	C_PlayerInventoryProxy* getSupplies() {
+		return *reinterpret_cast<C_PlayerInventoryProxy**>(reinterpret_cast<__int64>(this) + 0x18D8);
+	};
+};
+
+class C_LocalPlayer : public C_Player {
 public:
 	C_EntityList* getEntityList() {
 		return this->ptrToPtrToEntList->ptrToEntList->entityList;

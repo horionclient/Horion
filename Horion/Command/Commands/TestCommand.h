@@ -6,5 +6,8 @@ class TestCommand :
 public:
 	TestCommand();
 	~TestCommand();
+
+	// Inherited via ICommand
+	virtual bool execute(std::vector<std::string>* args) override;
 };
 

@@ -123,5 +123,6 @@
     <ClInclude Include="Horion\Command\Commands\RelativeTeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\TeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\TestCommand.h" />
+    <ClInclude Include="SDK\CInventory.h" />
   </ItemGroup>
 </Project>
