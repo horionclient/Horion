@@ -29,12 +29,12 @@ void BedFucker::onTick(C_GameMode* gm) {
 	int y = g_Data.getLocalPlayer()->aabb.lower.y;
 	int z = g_Data.getLocalPlayer()->aabb.lower.z;
 
-	if (this->delay >= 30) {
-		for (int px = x - 8; px < x + 8; px++)
+	if (this->delay >= 5) {
+		for (int px = x - 5; px < x + 5; px++)
 		{
-			for (int py = y - 8; py < y + 8; py++)
+			for (int py = y - 3; py < y + 3; py++)
 			{
-				for (int pz = z - 8; pz < z + 8; pz++)
+				for (int pz = z - 5; pz < z + 5; pz++)
 				{
 					vec3_ti* bedPos = new vec3_ti(px, py, pz);
 
