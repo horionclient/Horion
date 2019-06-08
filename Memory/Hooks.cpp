@@ -50,10 +50,6 @@ void Hooks::Init()
 	g_Hooks.Dimension_getFogColorHook = std::make_unique<FuncHook>(boii, Hooks::Dimension_getFogColor);
 	g_Hooks.Dimension_getFogColorHook->init();
 
-	void* destroyBlok = reinterpret_cast<void*>(Utils::FindSignature("55 57 41 56 48 8D 68 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 45 0F B6 F0") - 3);
-	g_Hooks.GameMode_destroyBlockHook = std::make_unique <FuncHook>(destroyBlok, Hooks::GameMode_destroyBlock);
-	g_Hooks.GameMode_destroyBlockHook->init();
-
 	void* ChestTick = reinterpret_cast<void*>(Utils::FindSignature("40 53 57 48 83 EC ?? 48 8B 41 ?? 48 8B FA 48 89 6C 24 ?? 48 8B D9 4C 89 74 24 ?? 48 85 C0 75 10 48 8D 51 ?? 48 8B CF E8 ?? ?? ?? ?? 48 89 43 ?? FF 43 ?? 48 85 C0"));
 	g_Hooks.ChestBlockActor_tickHook = std::make_unique <FuncHook>(ChestTick, Hooks::ChestBlockActor_tick);
 	g_Hooks.ChestBlockActor_tickHook->init();
@@ -112,7 +108,6 @@ void Hooks::Restore()
 	g_Hooks.d3d11_presentHook->Restore();
 	g_Hooks.renderTextHook->Restore();
 	//g_Hooks.I8n_getHook->Restore();
-	g_Hooks.GameMode_destroyBlockHook->Restore();
 	g_Hooks.AppPlatform_getGameEditionHook->Restore();
 	g_Hooks.autoComplete_Hook->Restore();
 	g_Hooks.levelRendererPlayer_getFovHook->Restore();
@@ -177,7 +172,6 @@ void Hooks::HIDController_keyMouse(void* a1, void* a2, void* a3)
 void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face, void* a4, void* a5)
 {
 	static auto oFunc = g_Hooks.GameMode_startDestroyHook->GetOriginal<GameMode_startDestroyBlock_t>();
-	static auto oDestroyBlock = g_Hooks.GameMode_destroyBlockHook->GetOriginal<GameMode_destroyBlock_t>();
 
 	static IModule* nukerModule = moduleMgr->getModule<Nuker>();
 	static IModule* instaBreakModule = moduleMgr->getModule<InstaBreak>();
@@ -199,14 +193,14 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face,
 						tempPos.y = a2->y + y;
 						tempPos.z = a2->z + z;
 						if (tempPos.y > 0)
-							oDestroyBlock(a, &tempPos, face);
+							a->destroyBlock(&tempPos, face);
 					}
 				}
 			}
 			return;
 		}
 		if (instaBreakModule->isEnabled()) {
-			oDestroyBlock(a, a2, face);
+			a->destroyBlock(a2, face);
 			return;
 		}
 	}
@@ -715,13 +709,4 @@ float * Hooks::Dimension_getFogColor(__int64 a1, float * color, float brightness
 		return rcolors;
 	}
 	return oGetFogColor(a1, color, brightness);
-
-
-}
-
-void Hooks::GameMode_destroyBlock(void * _this, vec3_ti * pos, uint8_t face)
-{
-	static auto oDestroyBlock = g_Hooks.GameMode_destroyBlockHook->GetOriginal<GameMode_destroyBlock_t>();
-
-	oDestroyBlock(_this, pos, face);
 }

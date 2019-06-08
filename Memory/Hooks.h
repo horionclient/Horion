@@ -42,7 +42,6 @@ private:
 	static __int64 __fastcall renderText(__int64 yeet, C_MinecraftUIRenderContext* yote);
 	static char* __fastcall I8n_get(void*, char*);
 	static float* Dimension_getFogColor(__int64, float* color, float brightness);
-	static void GameMode_destroyBlock(void*, vec3_ti*, uint8_t face);
 	static void ChestBlockActor_tick(C_ChestBlockActor*, void* a);
 	static void Actor_lerpMotion(C_Entity* _this, vec3_t);
 	static __int64 AppPlatform_getGameEdition(__int64 _this);
@@ -63,7 +62,6 @@ private:
 	std::unique_ptr<FuncHook> renderTextHook;
 	std::unique_ptr<FuncHook> I8n_getHook;
 	std::unique_ptr<FuncHook> Dimension_getFogColorHook;
-	std::unique_ptr<FuncHook> GameMode_destroyBlockHook;
 	std::unique_ptr<FuncHook> ChestBlockActor_tickHook;
 	std::unique_ptr<FuncHook> Actor_lerpMotionHook;
 	std::unique_ptr<FuncHook> AppPlatform_getGameEditionHook;
@@ -82,7 +80,6 @@ private:
 	typedef void(__fastcall* autoComplete_t)(__int64 a1, __int64 a2, TextHolder* text, int a4);
 	typedef __int64(__fastcall* AppPlatform_getGameEdition_t)(__int64);
 	typedef void(__fastcall* Actor_lerpMotion_t)(C_Entity*, vec3_t);
-	typedef __int64(__fastcall* GameMode_destroyBlock_t)(void*, vec3_ti*, uint8_t face);
 	typedef float*(__fastcall* Dimension_getFogColor_t)(__int64, float*, float);
 	typedef char*(__fastcall* I8n_get_t)(void*, char*);
 	typedef __int64(__fastcall* renderText_t)(__int64, C_MinecraftUIRenderContext*);
