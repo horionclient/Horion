@@ -44,13 +44,13 @@ bool TestCommand::execute(std::vector<std::string>* args)
 	if (addEnchant(alloc, 0x7FF000000009)) {
 		logF("Successful enchant add");
 		saveEnchantsToUserData(item, alloc);
-		__int64 proxy =
-			reinterpret_cast<__int64>(g_Data.getLocalPlayer()->getSupplies());
+		__int64 proxy = reinterpret_cast<__int64>(g_Data.getLocalPlayer()->getSupplies()); 
 		if (!*(uint8_t *)(proxy + 160))
 			(*(void(__fastcall **)(unsigned long long, unsigned long long, C_Item *))(**(unsigned long long **)(proxy + 168) + 56i64))(
 				*(unsigned long long *)(proxy + 168),
 				*(unsigned int *)(proxy + 16),
-				item);
+				item);// Player::selectItem
+		g_Data.getLocalPlayer()->sendInventory();
 	}else
 		logF("Unsuccessful enchant add");
 
