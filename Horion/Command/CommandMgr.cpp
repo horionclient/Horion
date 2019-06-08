@@ -18,6 +18,9 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new PlayerTeleportCommand());
 	commandList.push_back(new GameModeCommand());
 	commandList.push_back(new FriendListCommand());
+#ifdef _DEBUG
+	commandList.push_back(new TestCommand());
+#endif
 }
 
 void CommandMgr::disable() {

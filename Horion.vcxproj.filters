@@ -1,16 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Horion\Command\Commands\FriendListCommand.cpp" />
-    <ClCompile Include="Horion\Command\Commands\GameModeCommand.cpp" />
-    <ClCompile Include="Horion\Command\Commands\PlayerTeleportCommand.cpp" />
-    <ClCompile Include="Horion\Command\Commands\RelativeTeleportCommand.cpp" />
-    <ClCompile Include="Horion\Command\Commands\ToggleCommand.cpp" />
     <ClCompile Include="Horion\Config\ConfigManager.cpp" />
-    <ClCompile Include="Horion\Command\Commands\BindCommand.cpp" />
-    <ClCompile Include="Horion\Command\Commands\EjectCommand.cpp" />
     <ClCompile Include="Horion\Command\CommandMgr.cpp" />
-    <ClCompile Include="Horion\Command\Commands\ICommand.cpp" />
     <ClCompile Include="Directx\Directx.cpp" />
     <ClCompile Include="Horion\DrawUtils.cpp" />
     <ClCompile Include="Horion\FriendList\FriendList.cpp" />
@@ -46,24 +38,25 @@
     <ClCompile Include="Memory\GameData.cpp" />
     <ClCompile Include="Memory\Hooks.cpp" />
     <ClCompile Include="Memory\SlimMem.cpp" />
-    <ClCompile Include="Horion\Command\Commands\TeleportCommand.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />
     <ClCompile Include="Utils\TextFormat.cpp" />
     <ClCompile Include="Horion\Module\Modules\Xray.cpp" />
     <ClCompile Include="Horion\Module\Modules\BedFucker.cpp" />
     <ClCompile Include="Utils\Target.cpp" />
+    <ClCompile Include="Horion\Command\Commands\BindCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\EjectCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\FriendListCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\GameModeCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\ICommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\PlayerTeleportCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\RelativeTeleportCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\TeleportCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\TestCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\ToggleCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Horion\Command\Commands\FriendListCommand.h" />
-    <ClInclude Include="Horion\Command\Commands\GameModeCommand.h" />
-    <ClInclude Include="Horion\Command\Commands\PlayerTeleportCommand.h" />
-    <ClInclude Include="Horion\Command\Commands\RelativeTeleportCommand.h" />
-    <ClInclude Include="Horion\Command\Commands\ToggleCommand.h" />
     <ClInclude Include="Horion\Config\ConfigManager.h" />
-    <ClInclude Include="Horion\Command\Commands\BindCommand.h" />
-    <ClInclude Include="Horion\Command\Commands\EjectCommand.h" />
     <ClInclude Include="Horion\Command\CommandMgr.h" />
-    <ClInclude Include="Horion\Command\Commands\ICommand.h" />
     <ClInclude Include="Directx\Directx.h" />
     <ClInclude Include="Horion\DrawUtils.h" />
     <ClInclude Include="Horion\FriendList\FriendList.h" />
@@ -109,7 +102,6 @@
     <ClInclude Include="SDK\CPacket.h" />
     <ClInclude Include="SDK\CLoopbackPacketSender.h" />
     <ClInclude Include="Memory\Offsets.h" />
-    <ClInclude Include="Horion\Command\Commands\TeleportCommand.h" />
     <ClInclude Include="Utils\Json.hpp" />
     <ClInclude Include="Utils\TextFormat.h" />
     <ClInclude Include="SDK\TextHolder.h" />
@@ -121,5 +113,15 @@
     <ClInclude Include="Horion\Module\Modules\Xray.h" />
     <ClInclude Include="Horion\Module\Modules\BedFucker.h" />
     <ClInclude Include="Utils\Target.h" />
+    <ClInclude Include="Horion\Command\Commands\ToggleCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\BindCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\EjectCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\FriendListCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\GameModeCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\ICommand.h" />
+    <ClInclude Include="Horion\Command\Commands\PlayerTeleportCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\RelativeTeleportCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\TeleportCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\TestCommand.h" />
   </ItemGroup>
 </Project>

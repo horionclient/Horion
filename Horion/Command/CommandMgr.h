@@ -11,6 +11,9 @@
 #include "Commands/PlayerTeleportCommand.h"
 #include "Commands/GameModeCommand.h"
 #include "Commands/FriendListCommand.h"
+#ifdef _DEBUG
+#include "Commands/TestCommand.h"
+#endif
 
 #include <string>
 #include <vector>
