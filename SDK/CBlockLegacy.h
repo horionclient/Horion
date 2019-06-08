@@ -6,9 +6,22 @@
 
 class C_Material {
 private:
-	char pad[0x7];
+	char pad[0x4];
 public:
+	bool isFlammable;
+	bool isNeverBuildable;
+	bool isAlwaysDestroyable;
 	bool isReplaceable;
+	bool isLiquid; // 0x0008
+private:
+	//char pad2[0x3]; // 0x009
+public:
+	float translucency; // 0x00C
+	bool isBlockingMotion;
+	bool isBlockingPrecipitation;
+	bool isSolid;
+	bool isSuperHot;
+	float color[4];
 };
 
 class C_BlockLegacy
@@ -26,6 +39,8 @@ private:
 public:
 	int blockId; // 0x00C4
 	AABB aabb; //0x00C8
+
+	
 };
 
 class C_Block
@@ -34,6 +49,8 @@ private:
 	char pad[0x10];
 public:
 	C_BlockLegacy** blockLegacy;
+
+	inline C_BlockLegacy* toLegacy() { return *blockLegacy; }
 };
 
 class C_BlockSource
