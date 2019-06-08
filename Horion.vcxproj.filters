@@ -50,6 +50,7 @@
     <ClCompile Include="Utils\Logger.cpp" />
     <ClCompile Include="Utils\TextFormat.cpp" />
     <ClCompile Include="Horion\Module\Modules\Xray.cpp" />
+    <ClCompile Include="Horion\Module\Modules\BedFucker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Command\Commands\FriendListCommand.h" />
@@ -117,5 +118,6 @@
     <ClInclude Include="Utils\Utils.h" />
     <ClInclude Include="SDK\CBlockLegacy.h" />
     <ClInclude Include="Horion\Module\Modules\Xray.h" />
+    <ClInclude Include="Horion\Module\Modules\BedFucker.h" />
   </ItemGroup>
 </Project>
