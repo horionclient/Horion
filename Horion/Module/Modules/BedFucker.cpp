@@ -45,6 +45,7 @@ void BedFucker::onTick(C_GameMode* gm) {
 						this->delay = 0;
 						delete bedPos;
 						return;
+						
 					}
 					delete bedPos;
 				}
