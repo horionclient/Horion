@@ -18,6 +18,8 @@ const char* Killaura::getModuleName()
 
 void Killaura::onTick(C_GameMode* gm)
 {
+	if (!g_Data.isInGame())
+		return;
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
 	C_EntityList* entList = g_Data.getEntityList();
@@ -29,7 +31,7 @@ void Killaura::onTick(C_GameMode* gm)
 	}
 
 	//Loop through all our players and retrieve their information
-	float maxDist = 10;
+	float maxDist = 8;
 	static std::vector <C_Entity*> targetList;
 	targetList.clear();
 	for (size_t i = 0; i < listSize; i++)
@@ -42,13 +44,16 @@ void Killaura::onTick(C_GameMode* gm)
 		if (currentEntity == localPlayer) // Skip Local player
 			continue;
 
+		if (currentEntity->timeSinceDeath > 0 || currentEntity->damageTime >= 7)
+			continue;
+
 		if (FriendList::findPlayer(currentEntity->name2.getText())) // Skip Friend
 			continue;
 
 		if (localPlayer->getEntityTypeId() != currentEntity->getEntityTypeId()) // Skip Invalid Entity
 			continue;
 
-		if (!(currentEntity->name2.getTextLength() > 0))
+		if (!(currentEntity->name2.getTextLength() > 1))
 			continue;
 
 		if (currentEntity->aabb.upper.y - currentEntity->aabb.lower.y < 1 || currentEntity->aabb.upper.y - currentEntity->aabb.lower.y > 2)
@@ -71,11 +76,8 @@ void Killaura::onTick(C_GameMode* gm)
 
 	// Attack all entitys in targetList 
 	for (int i = 0; i < targetList.size(); i++)
-	{
 		g_Data.getCGameMode()->attack(targetList[i]);
-		//copy = targetList[i];
-		//delay = 0;
-	}
+	
 }
 
 void Killaura::onEnable()
