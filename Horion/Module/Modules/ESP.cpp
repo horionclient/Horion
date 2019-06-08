@@ -23,10 +23,7 @@ void doRenderStuff(C_Entity* ent) {
 	if (ent != localPlayer) {
 		if (ent->timeSinceDeath > 0)
 			return;
-		if (ent->name2.getTextLength() > 1 && 
-			ent->height > 1.5f && ent->width > 0.5f
-			&& ent->height < 2.1f && ent->width < 0.9f
-			)
+		if (Target::isValidTarget(ent))
 			DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
 		else
 			DrawUtils::setColor(0.4f, 0.4f, 0.4f, 0.2f);

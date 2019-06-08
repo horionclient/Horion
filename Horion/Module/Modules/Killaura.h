@@ -1,5 +1,6 @@
 #pragma once
 #include "Module.h"
+#include "../../../Utils/Target.h"
 
 class Killaura : public IModule
 {

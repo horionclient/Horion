@@ -34,7 +34,7 @@ public:
 
 	C_ClientInstance* getClientInstance() { return clientInstance; };
 	C_GuiData* getGuiData() { return clientInstance->getGuiData(); };
-	C_LocalPlayer* getLocalPlayer() {
+	inline C_LocalPlayer* getLocalPlayer() {
 		
 		localPlayer = clientInstance->getLocalPlayer();
 		if (localPlayer == nullptr)

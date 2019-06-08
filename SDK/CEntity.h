@@ -179,6 +179,10 @@ public:
 		return Utils::CallVFunc<154, int>(this);
 	};
 
+	bool isInvisible() {
+		return Utils::CallVFunc<49, bool>(this);
+	};
+
 	void setVelocity(vec3_t vel) {
 		Utils::CallVFunc<34, void, vec3_t>(this, vel);
 	};
