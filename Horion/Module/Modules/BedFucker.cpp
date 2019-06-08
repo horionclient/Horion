@@ -25,19 +25,18 @@ void BedFucker::onEnable(){
 void BedFucker::onTick(C_GameMode* gm) {
 
 	this->delay++;
+	int x = g_Data.getLocalPlayer()->aabb.lower.x;
+	int y = g_Data.getLocalPlayer()->aabb.lower.y;
+	int z = g_Data.getLocalPlayer()->aabb.lower.z;
 
-		int x = g_Data.getLocalPlayer()->aabb.lower.x;
-		int y = g_Data.getLocalPlayer()->aabb.lower.y;
-		int z = g_Data.getLocalPlayer()->aabb.lower.z;
-
-		for (int px = x - 8; px < x + 8; px++)
+	for (int px = x - 8; px < x + 8; px++)
+	{
+		for (int py = y - 8; py < y + 8; py++)
 		{
-			for (int py = y - 8; py < y + 8; py++)
+			for (int pz = z - 8; pz < z + 8; pz++)
 			{
-				for (int pz = z - 8; pz < z + 8; pz++)
-				{
-					vec3_ti* bedPos = new vec3_ti(px, py, pz);
-					if (this->delay >= 30) {
+				vec3_ti* bedPos = new vec3_ti(px, py, pz);
+				if (this->delay >= 30) {
 					if ((*(g_Data.getLocalPlayer()->region->getBlock(vec3_ti(*bedPos))->blockLegacy))->blockId == 26) {
 
 						//g_Data.getCGameMode()->destroyBlock(bedPos, 0);
