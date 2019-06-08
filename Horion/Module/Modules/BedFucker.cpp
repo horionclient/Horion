@@ -42,7 +42,7 @@ void BedFucker::onTick(C_GameMode* gm) {
 						//g_Data.getCGameMode()->destroyBlock(bedPos, 0);
 						g_Data.getLocalPlayer()->swingArm();
 						this->delay = 0;
-
+						delete bedPos;
 					}
 				}
 			}
