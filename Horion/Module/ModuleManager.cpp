@@ -32,6 +32,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new NoPacket());
 	this->moduleList.push_back(new Speed());
 	this->moduleList.push_back(new Xray());
+	this->moduleList.push_back(new BedFucker());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);
