@@ -39,7 +39,7 @@ void BedFucker::onTick(C_GameMode* gm) {
 				{
 					vec3_ti* bedPos = new vec3_ti(px, py, pz);
 
-					if (g_Data.getLocalPlayer()->region->getBlock(vec3_ti(*bedPos))->toLegacy()->blockId == 26) {
+					if (g_Data.getLocalPlayer()->region->getBlock(vec3_ti(*bedPos))->toLegacy()->blockId == 26 || g_Data.getLocalPlayer()->region->getBlock(vec3_ti(*bedPos))->toLegacy()->blockId == 122 || g_Data.getLocalPlayer()->region->getBlock(vec3_ti(*bedPos))->toLegacy()->blockId == 92) {
 						g_Data.getCGameMode()->destroyBlock(bedPos, 0);
 						g_Data.getLocalPlayer()->swingArm();
 						delete bedPos;
