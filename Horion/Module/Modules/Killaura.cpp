@@ -56,7 +56,7 @@ void Killaura::onTick(C_GameMode* gm)
 		if (!(currentEntity->name2.getTextLength() > 1))
 			continue;
 
-		if (currentEntity->aabb.upper.y - currentEntity->aabb.lower.y < 1 || currentEntity->aabb.upper.y - currentEntity->aabb.lower.y > 2)
+		if (currentEntity->height < 1 || currentEntity->height > 2)
 			continue;
 
 		// i want to hit villagers ok
