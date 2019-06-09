@@ -1,5 +1,8 @@
 
-class C_Item;
+class C_Item {
+private:
+	char pad[0x88];
+};
 
 class C_Inventory {
 private:

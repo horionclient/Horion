@@ -184,6 +184,14 @@ public:
 		return Utils::CallVFunc<49, bool>(this);
 	};
 
+	bool isInLava() {
+		return Utils::CallVFunc<64, bool>(this);
+	};
+
+	bool isInWater() {
+		return Utils::CallVFunc<60, bool>(this);
+	};
+
 	void setVelocity(vec3_t vel) {
 		Utils::CallVFunc<34, void, vec3_t>(this, vel);
 	};
@@ -205,21 +213,32 @@ public:
 	};
 };
 
+class C_ServerPlayer;
+
 class C_Player : public C_Entity {
 public:
 	C_PlayerInventoryProxy* getSupplies() {
 		return *reinterpret_cast<C_PlayerInventoryProxy**>(reinterpret_cast<__int64>(this) + 0x18D8);
 	};
+
+	C_ServerPlayer* getServerPlayer() {
+		return *reinterpret_cast<C_ServerPlayer**>(reinterpret_cast<__int64>(this) + 0x1BC0);
+	};
+};
+
+class C_ServerPlayer : public C_Player {
+public:
+	void sendInventory() {
+		//using sendInventory_t = void(__fastcall*)(C_Player*, bool);
+		//static sendInventory_t sendInventory = reinterpret_cast<sendInventory_t>(Utils::FindSignature("48 8B C4 55 48 8D A8 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 58 ?? 48 89 70 ?? 48 89 78 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 0F B6 DA 48 8B F1"));
+		//sendInventory(this, true);
+		Utils::CallVFunc<315, void>(this);
+	}
 };
 
 class C_LocalPlayer : public C_Player {
 public:
-	void sendInventory() {
-		using sendInventory_t = void(__fastcall*)(C_Player*, bool);
-		static sendInventory_t sendInventory = reinterpret_cast<sendInventory_t>(Utils::FindSignature("48 8B C4 55 48 8D A8 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 58 ?? 48 89 70 ?? 48 89 78 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 0F B6 DA 48 8B F1"));
-		sendInventory(this, true);
-		//Utils::CallVFunc<315, void>(this);
-	}
+	
 	
 	C_EntityList* getEntityList() {
 		return this->ptrToPtrToEntList->ptrToEntList->entityList;
