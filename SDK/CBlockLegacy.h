@@ -35,12 +35,14 @@ private:
 public:
 	C_Material* material;
 private:
-	char pad_0x0080[0x44]; //0x0080
+	char pad_0x0080[0x35]; //0x0080
+public:
+	BYTE lightEmission; //0x00B5
+private:
+	char pad_0x00B6[0xE];//0x00B6
 public:
 	int blockId; // 0x00C4
 	AABB aabb; //0x00C8
-
-	
 };
 
 class C_Block
