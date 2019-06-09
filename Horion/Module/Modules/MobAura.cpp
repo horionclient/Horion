@@ -45,7 +45,7 @@ void MobAura::onTick(C_GameMode* gm)
 		if (localPlayer->getEntityTypeId() == currentEntity->getEntityTypeId()) // Skip Invalid Entity
 			continue;
 
-		if ((currentEntity->name2.getTextLength() > 0))
+		if (!(currentEntity->name2.getTextLength() > 0))
 			continue;
 
 
