@@ -53,6 +53,8 @@
     <ClCompile Include="Horion\Command\Commands\TeleportCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\TestCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ToggleCommand.cpp" />
+    <ClCompile Include="Horion\Module\Modules\MobEsp.cpp" />
+    <ClCompile Include="Horion\Module\Modules\MobAura.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -124,5 +126,7 @@
     <ClInclude Include="Horion\Command\Commands\TeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\TestCommand.h" />
     <ClInclude Include="SDK\CInventory.h" />
+    <ClInclude Include="Horion\Module\Modules\MobEsp.h" />
+    <ClInclude Include="Horion\Module\Modules\MobAura.h" />
   </ItemGroup>
 </Project>

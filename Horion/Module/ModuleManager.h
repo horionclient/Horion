@@ -30,6 +30,8 @@
 #include "Modules/NoPacket.h"
 #include "Modules/Xray.h"
 #include "Modules/BedFucker.h"
+#include "Modules/MobEsp.h"
+#include "Modules/MobAura.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

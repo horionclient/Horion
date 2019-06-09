@@ -33,6 +33,8 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Speed());
 	this->moduleList.push_back(new Xray());
 	this->moduleList.push_back(new BedFucker());
+	this->moduleList.push_back(new MobESP());
+	this->moduleList.push_back(new MobAura());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);

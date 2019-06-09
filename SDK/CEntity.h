@@ -25,6 +25,8 @@ public:
 struct _ptr2 {
 	char pad_0x0000[0x10]; //0x0000
 	C_EntityList* entityList; //0x0010 
+	char pad_0x0018[0x50]; //0x0018
+	C_MobEntityList* MobList; //0x0068
 };
 
 struct _ptr1 {
@@ -223,6 +225,10 @@ public:
 	
 	C_EntityList* getEntityList() {
 		return this->ptrToPtrToEntList->ptrToEntList->entityList;
+	}
+
+	C_MobEntityList* getMobList() {
+		return this->ptrToPtrToEntList->ptrToEntList->MobList;
 	}
 
 	//C_GameMode* getCGameMode() { // Dont use this, not version compatible
