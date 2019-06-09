@@ -41,6 +41,9 @@ public:
 			gameMode = nullptr;
 		return localPlayer;
 	};
+	C_LocalPlayer** getPtrLocalPlayer() {
+		return &localPlayer;
+	};
 	bool isInGame() {
 		return localPlayer != nullptr;
 	}

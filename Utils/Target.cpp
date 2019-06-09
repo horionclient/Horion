@@ -1,5 +1,11 @@
 #include "Target.h"
 
+C_LocalPlayer** localPlayer;
+
+void Target::init(C_LocalPlayer** cl) {
+	localPlayer = cl;
+}
+
 bool Target::isValidTarget(C_Entity * ent)
 {
 	if (ent == 0)
@@ -13,5 +19,8 @@ bool Target::isValidTarget(C_Entity * ent)
 		return false;
 	if (ent->isInvisible() && ent->getEntityTypeId() != 33) // Exception for kitmap.sylphhcf.net they use a creeper as hitbox
 		return false;
+	if (!(*localPlayer)->canAttack(ent))
+		return false;
+	
 	return true;
 }

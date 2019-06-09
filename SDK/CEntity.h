@@ -213,6 +213,10 @@ public:
 	void setSpeed(float speed) {
 		Utils::CallVFunc<264, void, float>(this, speed);
 	};
+
+	bool canAttack(C_Entity* other) {
+		return Utils::CallVFunc<100, bool, C_Entity*>(this, other);
+	};
 };
 
 class C_ServerPlayer;

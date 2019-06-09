@@ -3,7 +3,8 @@
 #include "../SDK/CEntity.h"
 
 class Target {
-private:
+
 public:
+	static void init(C_LocalPlayer** lc);
 	static bool isValidTarget(C_Entity* ent);
 };

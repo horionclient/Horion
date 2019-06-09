@@ -132,6 +132,7 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 
 	MH_Initialize();
 	GameData::initGameData(gameModule, &mem);
+	Target::init(g_Data.getPtrLocalPlayer());
 
 	TabGui::init();
 	Hooks::Init();
