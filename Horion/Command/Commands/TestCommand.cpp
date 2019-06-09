@@ -38,10 +38,10 @@ bool TestCommand::execute(std::vector<std::string>* args)
 
 
 	void* alloc = malloc(0x50);
-	memset(alloc, 0xF0, 0x50);
+	memset(alloc, 0x0, 0x50);
 
 	getEnchantsFromUserData(item, alloc);
-	if (addEnchant(alloc, 0x7FF000000009)) {
+	if (addEnchant(alloc, 0x7FF000000009)) { // Upper 4 bytes = level, lower 4 bytes = enchant type
 		logF("Successful enchant add");
 		saveEnchantsToUserData(item, alloc);
 		__int64 proxy = reinterpret_cast<__int64>(g_Data.getLocalPlayer()->getSupplies()); 
