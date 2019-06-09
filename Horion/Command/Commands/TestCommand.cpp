@@ -28,7 +28,6 @@ bool TestCommand::execute(std::vector<std::string>* args)
 		int offset = *reinterpret_cast<int*>(sig);
 		getEnchantsFromUserData = reinterpret_cast<getEnchantsFromUserData_t>(sig + offset + 4);
 	}
-	
 
 	using addEnchant_t = bool(__fastcall*)(void*, __int64);
 	static addEnchant_t addEnchant = reinterpret_cast<addEnchant_t>(Utils::FindSignature("48 89 5C 24 ?? 48 89 54 24 ?? 57 48 83 EC ?? 48 8B DA 4C 8B C2"));
@@ -36,17 +35,13 @@ bool TestCommand::execute(std::vector<std::string>* args)
 	using saveEnchantsToUserData_t = void(__fastcall*)(C_Item*, void*);
 	saveEnchantsToUserData_t saveEnchantsToUserData = reinterpret_cast<saveEnchantsToUserData_t>(Utils::FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 8B FA 4C 8B C1 48 8B 01 48 85 C0"));
 
-	struct InventoryAction {
-		uint32_t action;
-		uint32_t window;
-	};
-
 	void* alloc = malloc(0x50);
 	memset(alloc, 0x0, 0x50);
 
 	getEnchantsFromUserData(item, alloc);
 	if (addEnchant(alloc, 0x7FF000000009)) { // Upper 4 bytes = level, lower 4 bytes = enchant type
 		logF("Successful enchant add");
+
 		saveEnchantsToUserData(item, alloc);
 		__int64 proxy = reinterpret_cast<__int64>(g_Data.getLocalPlayer()->getSupplies()); 
 		if (!*(uint8_t *)(proxy + 160))
@@ -54,6 +49,8 @@ bool TestCommand::execute(std::vector<std::string>* args)
 				*(unsigned long long *)(proxy + 168),
 				*(unsigned int *)(proxy + 16),
 				item);// Player::selectItem
+
+
 		g_Data.getLocalPlayer()->getServerPlayer()->sendInventory();
 	}else
 		logF("Unsuccessful enchant add");
