@@ -19,7 +19,7 @@ bool Target::isValidTarget(C_Entity * ent)
 		return false;
 	if (ent->isInvisible() && ent->getEntityTypeId() != 33) // Exception for kitmap.sylphhcf.net they use a creeper as hitbox
 		return false;
-	if (!(*localPlayer)->canAttack(ent))
+	if (!(*localPlayer)->canAttack(ent, false))
 		return false;
 	
 	return true;

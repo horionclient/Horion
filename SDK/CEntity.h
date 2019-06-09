@@ -49,6 +49,8 @@ struct _1ptr1 {
 	_1ptr2* ptrToPtrToCGameMode; //0x0238 
 };
 
+class C_Player;
+
 class C_Entity
 {
 public:
@@ -136,7 +138,7 @@ public:
 private:
 	char pad_0x13A4[0x70]; //0x13A4
 public:
-	int swing; //0x1414 
+	int swingInt; //0x1414 
 private:
 	char pad_0x1418[0x18]; //0x1418
 public:
@@ -161,42 +163,318 @@ public:
 
 
 private:
-	virtual __int64 sub_140F5DA80(char a2);
-	virtual __int64 sub_140F2C1A0();
+	virtual __int64 reloadHardcoded();
+	virtual __int64 reloadHardcodedClient();
+	virtual __int64 initializeComponents();
+	virtual __int64 reloadComponents();
 public:
-	virtual void initializeComponents(__int64 a2, const __int64 &a3);
-	virtual void reloadComponents(__int64 a2, const __int64 &a3);
-	virtual bool hasComponent(__int64 a2);
-	virtual bool hasInventory();
-	virtual __int64 getInventory();
+	virtual bool hasComponent()const;
+	virtual bool hasInventory(void)const;
 private:
-	virtual __int64 sub_140F5D870(char a2);
+	virtual __int64 getInventory(void);
+	virtual __int64 destructor(void);
+	// Duplicate destructor
+	virtual __int64 reset(void);
+	virtual __int64 getOwnerEntityType(void);
+	virtual __int64 remove(void);
 public:
-	virtual void reset();
-	virtual __int64 getOwnerEntityType();
-	virtual __int64 remove();
-	virtual void setPos(const vec3_t &pos);
-	virtual vec3_t* getPos();
+	virtual void setPos(vec3_t const&);
+	virtual vec3_t* getPos(void)const;
+	virtual vec3_t* getPosOld(void)const;
+	virtual vec3_t* getPosExtrapolated(float)const;
+private:
+	virtual __int64 getAttachPos(AABB, float)const;
+	virtual __int64 getFiringPos(void)const;
+public:
+	virtual void setRot(vec2_t const&);
+private:
+	virtual __int64 move(vec3_t const&);
+	virtual __int64 getInterpolatedRidingPosition(float)const;
+	virtual __int64 getInterpolatedBodyRot(float)const;
+	virtual __int64 getInterpolatedHeadRot(float)const;
+	virtual __int64 getInterpolatedBodyYaw(float)const;
+	virtual __int64 getYawSpeedInDegreesPerSecond(void)const;
+	virtual __int64 getInterpolatedWalkAnimSpeed(float)const;
+	virtual __int64 getInterpolatedRidingOffset(float)const;
+	virtual __int64 checkBlockCollisions(AABB const&);
+	virtual __int64 checkBlockCollisions(void);
+	virtual __int64 breaksFallingBlocks(void)const;
+	virtual __int64 blockedByShield(__int64 const&, C_Entity&);
+	virtual __int64 moveRelative(float, float, float, float);
+	virtual __int64 teleportTo(vec3_t const&, bool, int, int);
+	virtual __int64 tryTeleportTo(vec3_t const&, bool, bool, int, int);
+	virtual __int64 lerpTo(vec3_t const&, vec2_t const&, int);
+public:
+	virtual void lerpMotion(vec3_t const&);
+private:
+	virtual __int64 getAddPacket(void);
+	virtual __int64 normalTick(void);
+	virtual __int64 baseTick(void);
+	virtual __int64 rideTick(void);
+	virtual __int64 positionRider(C_Entity&, float)const;
+	virtual __int64 getRidingHeight(void);
+	virtual __int64 startRiding(C_Entity&);
+	virtual __int64 addRider(C_Entity&);
+	virtual __int64 flagRiderToRemove(C_Entity&);
+	virtual __int64 getExitTip(std::string const&, __int64)const;
+	virtual __int64 intersects(vec3_t const&, vec3_t const&)const;
+public:
+	virtual bool isFree(vec3_t const&, float);
+	virtual bool isFree(vec3_t const&);
+	virtual bool isInWall(void)const;
+	virtual bool isInvisible(void)const;
+	virtual bool canShowNameTag(void)const;
+	virtual bool canExistInPeaceful(void)const;
+	virtual void setNameTagVisible(bool);
+private:
+	virtual __int64 getNameTag(void)const;
+	virtual __int64 getFormattedNameTag(void)const;
+	virtual __int64 filterFormattedNameTag(__int64 const&);
+public:
+	virtual void setNameTag(std::string const&);
+private:
+	virtual __int64 getAlwaysShowNameTag(void)const;
+public:
+	virtual void setScoreTag(std::string const&);
+private:
+	virtual __int64 getScoreTag(void)const;
+public:
+	virtual bool isInWater(void)const;
+	virtual bool hasEnteredWater(void)const;
+	virtual bool isImmersedInWater(void)const;
+	virtual bool isInWaterOrRain(void)const;
+	virtual bool isInLava(void)const;
+	virtual bool isUnderLiquid(__int64)const;
+	virtual bool isOverWater(void)const;
+private:
+	virtual __int64 makeStuckInBlock(float);
+	virtual __int64 getCameraOffset(void)const;
+	virtual __int64 getShadowHeightOffs(void);
+	virtual __int64 getShadowRadius(void)const;
+	virtual __int64 getHeadLookVector(float);
+public:
+	virtual bool canSeeInvisible(void)const;
+	virtual bool canSee(C_Entity const&)const;
+	virtual bool canSee(vec3_t const&)const;
+	virtual bool isSkyLit(float);
+private:
+	virtual __int64 getBrightness(float)const;
+	virtual __int64 interactPreventDefault(void);
+	virtual __int64 playerTouch(C_Player &);
+	virtual __int64 push(C_Entity&, bool);
+	virtual __int64 push(vec3_t const&);
+	virtual __int64 onAboveBubbleColumn(bool);
+	virtual __int64 onInsideBubbleColumn(bool);
+	virtual __int64 partialPush(vec3_t const&);
+public:
+	virtual bool isImmobile(void)const;
+	virtual bool isSilent(void);
+	virtual bool isPickable(void);
+	virtual bool isFishable(void)const;
+	virtual bool isPushable(void)const;
+	virtual bool isPushableByPiston(void)const;
+	virtual bool isShootable(void);
+	virtual bool isSneaking(void)const;
+	virtual bool isBlocking(void)const;
+	virtual bool isDamageBlocked(__int64 const&)const;
+	virtual bool isAlive(void)const;
+	virtual bool isOnFire(void)const;
+	virtual bool isOnHotBlock(void)const;
+	virtual bool isCreativeModeAllowed(void);
+	virtual bool isSurfaceMob(void)const;
+	virtual bool isTargetable(void)const;
+	virtual bool canAttack(C_Entity*, bool)const;
+	virtual void setTarget(C_Entity*);
+private:
+	virtual __int64 findAttackTarget(void);
+public:
+	virtual bool isValidTarget(C_Entity*)const;
+private:
+	virtual __int64 attack(C_Entity&);
+	virtual __int64 adjustDamageAmount(int &)const;
+	virtual __int64 onRiderUseItem(__int64 &, C_Player &);
+public:
+	virtual void setOwner(__int64);
+	virtual void setSitting(bool);
+private:
+	virtual __int64 onTame(void);
+	virtual __int64 onFailedTame(void);
+	virtual __int64 getInventorySize(void)const;
+	virtual __int64 getEquipSlots(void)const;
+	virtual __int64 getChestSlots(void)const;
+public:
+	virtual void setStanding(bool);
+	virtual bool canPowerJump(void)const;
+	virtual void setCanPowerJump(bool);
+	virtual bool isJumping(void)const;
+	virtual bool isEnchanted(void)const;
+private:
+	virtual __int64 rideJumped(void);
+	virtual __int64 rideLanded(vec3_t const&, vec3_t const&);
+	virtual __int64 shouldRender(void)const;
+public:
+	virtual bool isInvulnerableTo(__int64 const&)const;
+private:
+	virtual __int64 animateHurt(void);
+	virtual __int64 doFireHurt(int);
+	virtual __int64 onLightningHit(void);
+	virtual __int64 onBounceStarted(vec3_ti const&, __int64 const&);
+	virtual __int64 feed(int);
+	virtual __int64 handleEntityEvent(__int64, int);
+	virtual __int64 getPickRadius(void);
+	virtual __int64 spawnAtLocation(int, int);
+	virtual __int64 spawnAtLocation(int, int, float);
+	virtual __int64 spawnAtLocation(__int64 const&, int);
+	virtual __int64 spawnAtLocation(__int64 const&, int, float);
+	virtual __int64 spawnAtLocation(__int64 const&, float);
+	virtual __int64 despawn(void);
+	virtual __int64 killed(C_Entity&);
+	virtual __int64 awardKillScore(C_Entity&, int);
+public:
+	virtual void setArmor(__int64, __int64 const&);
+private:
+	virtual __int64 getArmor(__int64)const;
+	virtual __int64 getArmorMaterialTypeInSlot(__int64)const;
+	virtual __int64 getArmorMaterialTextureTypeInSlot(__int64)const;
+	virtual __int64 getArmorColorInSlot(__int64, int)const;
+public:
+	virtual void setEquippedSlot(__int64, int, int);
+	virtual void setEquippedSlot(__int64, __int64 const&);
+private:
+	virtual __int64 getCarriedItem(void)const;
+public:
+	virtual void setCarriedItem(__int64 const&);
+	virtual void setOffhandSlot(__int64 const&);
+private:
+	virtual __int64 getEquippedTotem(void)const;
+	virtual __int64 consumeTotem(void);
+	virtual __int64 save(__int64 &);
+	virtual __int64 saveWithoutId(__int64 &);
+	virtual __int64 load(__int64 const&, __int64 &);
+	virtual __int64 loadLinks(__int64 const&, __int64 &, __int64 &);
+public:
+	virtual int getEntityTypeId(void)const;
+private:
+	virtual __int64 queryEntityRenderer(void);
+	virtual __int64 getSourceUniqueID(void)const;
+public:
+	virtual void setOnFire(int);
+private:
+	virtual __int64 getHandleWaterAABB(void)const;
+	virtual __int64 handleInsidePortal(vec3_ti const&);
+	virtual __int64 getPortalCooldown(void)const;
+	virtual __int64 getPortalWaitTime(void)const;
+	virtual __int64 getDimensionId(void)const;
+public:
+	virtual bool canChangeDimensions(void)const;
+private:
+	virtual __int64 changeDimension(__int64, bool);
+	virtual __int64 changeDimension(__int64 const&);
+	virtual __int64 getControllingC_Player(void)const;
+	virtual __int64 checkFallDamage(float, bool);
+	virtual __int64 causeFallDamage(float);
+	virtual __int64 handleFallDistanceOnServer(float, bool);
+	virtual __int64 playSynchronizedSound(__int64, vec3_t const&, __int64 const&, bool);
+	virtual __int64 playSynchronizedSound(__int64, vec3_t const&, int, bool);
+	virtual __int64 onSynchedDataUpdate(int);
+public:
+	virtual bool canAddRider(C_Entity&)const;
+	virtual bool canBePulledIntoVehicle(void)const;
+private:
+	virtual __int64 inCaravan(void)const;
+public:
+	virtual bool isLeashableType(void);
+private:
+	virtual __int64 tickLeash(void);
+	virtual __int64 sendMotionPacketIfNeeded(void);
+public:
+	virtual bool canSynchronizeNewEntity(void)const;
+private:
+	virtual __int64 stopRiding(bool, bool, bool);
+	virtual __int64 startSwimming(void);
+	virtual __int64 stopSwimming(void);
+	virtual __int64 buildDebugInfo(std::string &)const;
+	virtual __int64 getCommandPermissionLevel(void)const;
+	virtual __int64 getMutableAttribute(__int64 const&);
+	virtual __int64 getAttribute(__int64 const&)const;
+	virtual __int64 getDeathTime(void)const;
+	virtual __int64 heal(int);
+public:
+	virtual bool isInvertedHealAndHarm(void)const;
+	virtual bool canBeAffected(int)const;
+	virtual bool canBeAffected(__int64 const&)const;
+	virtual bool canBeAffectedByArrow(__int64 const&)const;
+private:
+	virtual __int64 onEffectAdded(__int64 &);
+	virtual __int64 onEffectUpdated(__int64 const&);
+	virtual __int64 onEffectRemoved(__int64 &);
+	virtual __int64 openContainerComponent(C_Player &);
+	virtual __int64 swing(void);
+	virtual __int64 useItem(__int64 &);
+public:
+	virtual bool hasOutputSignal(unsigned char)const;
+private:
+	virtual __int64 getOutputSignal(void)const;
+	virtual __int64 getDebugText(__int64 &);
+	virtual __int64 startSeenByC_Player(C_Player &);
+	virtual __int64 stopSeenByC_Player(C_Player &);
+	virtual __int64 getMapDecorationRotation(void)const;
+	virtual __int64 getRiderYRotation(C_Entity const&)const;
+	virtual __int64 getYHeadRot(void)const;
+public:
+	virtual bool isWorldBuilder(void);
+	virtual bool isCreative(void)const;
+	virtual bool isAdventure(void)const;
+private:
+	virtual __int64 add(__int64 &);
+	virtual __int64 drop(__int64 const&, bool);
+	virtual __int64 getInteraction(C_Player &, __int64 &, vec3_t const&);
+public:
+	virtual bool canDestroyBlock(__int64 const&)const;
+	virtual void setAuxValue(int);
+	virtual void setSize(float, float);
+private:
+	virtual __int64 onOrphan(void);
+	virtual __int64 wobble(void);
+	virtual __int64 wasHurt(void);
+	virtual __int64 startSpinAttack(void);
+	virtual __int64 stopSpinAttack(void);
+public:
+	virtual void setDamageNearbyMobs(bool);
+private:
+	virtual __int64 renderDebugServerState(__int64 const&);
+	virtual __int64 reloadLootTable(void);
+	virtual __int64 reloadLootTable(__int64 const*);
+	virtual __int64 getDeletionDelayTimeSeconds(void)const;
+	virtual __int64 kill(void);
+	virtual __int64 die(__int64 const&);
+	virtual __int64 shouldTick(void)const;
+	virtual __int64 updateEntitySpecificMolangVariables(__int64 &);
+public:
+	virtual bool canMakeStepSound(void)const;
+private:
+	virtual __int64 outOfWorld(void);
+	virtual __int64 _hurt(__int64 const&, int, bool, bool);
+	virtual __int64 markHurt(void);
+	virtual __int64 lavaHurt(void);
+	virtual __int64 readAdditionalSaveData(__int64 const&, __int64 &);
+	virtual __int64 addAdditionalSaveData(__int64 &);
+	virtual __int64 _playStepSound(vec3_ti const&, __int64 const&);
+	virtual __int64 _playFlySound(vec3_ti const&, __int64 const&);
+	virtual __int64 _makeFlySound(void)const;
+	virtual __int64 checkInsideBlocks(float);
+	virtual __int64 pushOutOfBlocks(vec3_t const&);
+	virtual __int64 updateWaterState(void);
+	virtual __int64 doWaterSplashEffect(void);
+	virtual __int64 spawnTrailBubbles(void);
+	virtual __int64 updateInsideBlock(void);
+	virtual __int64 getLootTable(void);
+	virtual __int64 getDefaultLootTable(void);
+	virtual __int64 _removeRider(__int64 const&, bool, bool);
+	virtual __int64 onSizeUpdated(void);
+	virtual __int64 _doAutoAttackOnTouch(C_Entity&);
+public:
 
-	int getEntityTypeId() {
-		return Utils::CallVFunc<154, int>(this);
-	};
-
-	bool isInvisible() {
-		return Utils::CallVFunc<49, bool>(this);
-	};
-
-	bool isInLava() {
-		return Utils::CallVFunc<64, bool>(this);
-	};
-
-	bool isInWater() {
-		return Utils::CallVFunc<60, bool>(this);
-	};
-
-	void setVelocity(vec3_t vel) {
-		Utils::CallVFunc<34, void, vec3_t>(this, vel);
-	};
 
 	void setSprinting(bool sprint) {
 		Utils::CallVFunc<257, void, bool>(this, sprint);
@@ -204,18 +482,6 @@ public:
 
 	bool isSprinting() {
 		return Utils::CallVFunc<256, bool>(this);
-	};
-
-	float getSpeed() {
-		return Utils::CallVFunc<263, float>(this);
-	};
-
-	void setSpeed(float speed) {
-		Utils::CallVFunc<264, void, float>(this, speed);
-	};
-
-	bool canAttack(C_Entity* other) {
-		return Utils::CallVFunc<100, bool, C_Entity*>(this, other);
 	};
 };
 

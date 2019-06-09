@@ -31,5 +31,5 @@ void Jetpack::onTick(C_GameMode * gm)
 	moveVec.x = cos(calcYaw) * cos(calcPitch) * speedMod;
 	moveVec.y = sin(calcPitch)				  * speedMod;
 	moveVec.z = sin(calcYaw) * cos(calcPitch) * speedMod;
-	gm->player->setVelocity(moveVec);
+	gm->player->lerpMotion(moveVec);
 }
