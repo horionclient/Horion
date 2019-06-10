@@ -54,6 +54,7 @@ private:
 	static void GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face,void* a4,void* a5);
 	static void HIDController_keyMouse(void* a1, void* a2, void* a3);
 	static int __fastcall BlockLegacy_getRenderLayer(C_BlockLegacy* a1);
+	static __int64 LevelRenderer_renderLevel(__int64 a1, __int64 a2, __int64 a3);
 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
@@ -74,7 +75,9 @@ private:
 	std::unique_ptr<FuncHook> GameMode_startDestroyHook;
 	std::unique_ptr<FuncHook> HIDController_keyMouseHook;
 	std::unique_ptr<FuncHook> BlockLegacy_getRenderLayerHook;
+	std::unique_ptr<FuncHook> LevelRenderer_renderLevelHook;
 
+	typedef __int64(__fastcall* LevelRenderer_renderLevel_t)(__int64 a1, __int64 a2, __int64 a3);
 	typedef bool(__fastcall* mob_isAlive_T)(C_Entity* a1);
 	typedef float(__fastcall* getFov_t)(__int64 a1, float a2, bool a3);
 	typedef void(__fastcall* autoComplete_t)(__int64 a1, __int64 a2, TextHolder* text, int a4);

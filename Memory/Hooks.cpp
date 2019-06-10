@@ -98,6 +98,9 @@ void Hooks::Init()
 	g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(getRenderLayer, Hooks::BlockLegacy_getRenderLayer);
 	g_Hooks.BlockLegacy_getRenderLayerHook->init();
 
+	void* renderLevel = reinterpret_cast<void*>(Utils::FindSignature("40 53 56 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B D8 48 8B FA 48 8B F1 33 D2"));
+	g_Hooks.LevelRenderer_renderLevelHook = std::make_unique<FuncHook>(renderLevel, Hooks::LevelRenderer_renderLevel);
+	g_Hooks.LevelRenderer_renderLevelHook->init();
 	//logF("Hooks hooked");
 }
 
@@ -119,6 +122,7 @@ void Hooks::Restore()
 	g_Hooks.GameMode_startDestroyHook->Restore();
 	g_Hooks.HIDController_keyMouseHook->Restore();
 	g_Hooks.BlockLegacy_getRenderLayerHook->Restore();
+	g_Hooks.LevelRenderer_renderLevelHook->Restore();
 }
 
 void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
@@ -148,6 +152,8 @@ int __fastcall Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1)
 {
 	static auto oFunc = g_Hooks.BlockLegacy_getRenderLayerHook->GetOriginal<BlockLegacy_getRenderLayer_t>();
 
+	
+
 	static IModule* XrayModule = moduleMgr->getModule<Xray>();
 	if (XrayModule == nullptr)
 		XrayModule = moduleMgr->getModule<Xray>();
@@ -159,6 +165,35 @@ int __fastcall Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1)
 		}
 	}
 	return oFunc(a1);
+}
+
+__int64 Hooks::LevelRenderer_renderLevel(__int64 a1, __int64 a2, __int64 a3)
+{
+	static auto oFunc = g_Hooks.LevelRenderer_renderLevelHook->GetOriginal<LevelRenderer_renderLevel_t>();
+
+	using reloadShit_t = void(__fastcall*)(__int64);
+	static reloadShit_t reloadShit = reinterpret_cast<reloadShit_t>(Utils::FindSignature("48 8B C4 56 57 41 54 41 56 41 57 48 83 EC ?? 48 C7 40 ?? FE FF FF FF 48 89 58 ?? 48 89 68 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B F9 4C"));
+
+	static IModule* xray = moduleMgr->getModule<Xray>();
+	if (xray == nullptr) {
+		xray = moduleMgr->getModule<Xray>();
+	}
+	else {
+		static bool lastState = false;
+		if (lastState != xray->isEnabled()) {
+			lastState = xray->isEnabled();
+			unsigned long long *v5; // rdi
+			unsigned long long *i; // rbx
+
+			v5 = *(unsigned long long **)(a1 + 32);
+			for (i = (unsigned long long *)*v5; i != v5; i = (unsigned long long *)*i)
+				reloadShit(i[3]);
+		}
+	}
+
+	
+
+	return oFunc(a1, a2, a3);
 }
 
 void Hooks::HIDController_keyMouse(void* a1, void* a2, void* a3)
