@@ -29,8 +29,6 @@ public:
 }; //Size=0x0050
 
 
-class C_Entity;
-
 class C_MobEntityList
 {
 public:

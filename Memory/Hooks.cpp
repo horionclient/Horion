@@ -101,6 +101,11 @@ void Hooks::Init()
 	void* renderLevel = reinterpret_cast<void*>(Utils::FindSignature("40 53 56 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B D8 48 8B FA 48 8B F1 33 D2"));
 	g_Hooks.LevelRenderer_renderLevelHook = std::make_unique<FuncHook>(renderLevel, Hooks::LevelRenderer_renderLevel);
 	g_Hooks.LevelRenderer_renderLevelHook->init();
+
+	void* getLightEmission = reinterpret_cast<void*>(Utils::FindSignature("0F B6 ?? ?? ?? ?? ?? 88 02 48 8B C2 C3"));
+	g_Hooks.BlockLegacy_getLightEmissionHook = std::make_unique<FuncHook>(getLightEmission, Hooks::BlockLegacy_getLightEmission);
+	g_Hooks.BlockLegacy_getLightEmissionHook->init();
+
 	//logF("Hooks hooked");
 }
 
@@ -123,6 +128,7 @@ void Hooks::Restore()
 	g_Hooks.HIDController_keyMouseHook->Restore();
 	g_Hooks.BlockLegacy_getRenderLayerHook->Restore();
 	g_Hooks.LevelRenderer_renderLevelHook->Restore();
+	g_Hooks.BlockLegacy_getLightEmissionHook->Restore();
 }
 
 void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
@@ -165,6 +171,21 @@ int __fastcall Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1)
 		}
 	}
 	return oFunc(a1);
+}
+
+BYTE* __fastcall Hooks::BlockLegacy_getLightEmission(C_BlockLegacy* a1,BYTE* a2)
+{
+	static auto oFunc = g_Hooks.BlockLegacy_getLightEmissionHook->GetOriginal<BlockLegacy_getLightEmission_t>();
+
+	static IModule* XrayModule = moduleMgr->getModule<Xray>();
+	if (XrayModule == nullptr)
+		XrayModule = moduleMgr->getModule<Xray>();
+	else if (XrayModule->isEnabled()) {
+		//BYTE yikes = 15;
+		*a2 = 15;
+		return a2;
+	}
+	return oFunc(a1,a2);
 }
 
 __int64 Hooks::LevelRenderer_renderLevel(__int64 a1, __int64 a2, __int64 a3)
