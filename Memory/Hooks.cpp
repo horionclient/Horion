@@ -604,6 +604,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	// Draw Horion logo
 	{
+		
 		if (isOnRightSide)
 			DrawUtils::drawText(vec2_t(4, 2), &horionStr/*, new MC_Color(rcolors)*/);
 		else

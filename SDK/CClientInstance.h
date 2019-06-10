@@ -464,14 +464,14 @@ private:
 	virtual __int64 addTTSMessage(std::string const&, __int64, bool, bool, bool);
 	virtual __int64 initCommands(void);
 	virtual __int64 getUserId(void)const;
-	virtual __int64 getServerConnectionTime(void)const;
+public:
+	virtual double getServerConnectionTime(void)const;
+private:
 	virtual __int64 getHMDState(void);
 	virtual __int64 getHMDState(void)const;
 public:
 	virtual void setServerPingTime(unsigned int);
-private:
-	virtual __int64 getServerPingTime(void)const;
-public:
+	virtual unsigned int getServerPingTime(void)const; // Doesnt work
 	virtual void setDefaultPlayscreenTab(__int64);
 	virtual void setClientInstanceState(__int64 const&);
 	virtual void setUIEventCoordinator(__int64);
