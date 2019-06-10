@@ -157,6 +157,8 @@ DllMain(HMODULE hModule,
 	{
 	case DLL_PROCESS_ATTACH: //When the injector is called.
 	{
+		
+		
 		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)startCheat, hModule, NULL, NULL);
 		DisableThreadLibraryCalls(hModule);
 	}
@@ -173,6 +175,7 @@ DllMain(HMODULE hModule,
 		MH_Uninitialize();
 
 		if (g_Data.getClientInstance()->getLocalPlayer() != nullptr) {
+			
 			C_GuiData* guiData = g_Data.getClientInstance()->getGuiData();
 			if (guiData != nullptr)
 				guiData->displayClientMessageF("%sUninjected!", RED);
