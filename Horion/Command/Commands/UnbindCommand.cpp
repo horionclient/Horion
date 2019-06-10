@@ -4,7 +4,6 @@
 
 UnbindCommand::UnbindCommand() : ICommand("unbind", "unbind modules", "<module>")
 {
-	registerAlias("b");
 }
 
 
