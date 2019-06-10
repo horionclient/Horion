@@ -158,17 +158,16 @@ int __fastcall Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1)
 {
 	static auto oFunc = g_Hooks.BlockLegacy_getRenderLayerHook->GetOriginal<BlockLegacy_getRenderLayer_t>();
 
-	
-
 	static IModule* XrayModule = moduleMgr->getModule<Xray>();
 	if (XrayModule == nullptr)
 		XrayModule = moduleMgr->getModule<Xray>();
 	else if (XrayModule->isEnabled()) {
-		char* find = strstr(a1->name.getText(),"ore");
-		if (find == NULL)
-		{
-			return 9;
-		}
+		char* text = a1->name.getText();
+		if (strstr(text, "ore") == NULL)
+			if(strcmp(text, "lava") != NULL)
+				if (strcmp(text, "water") != NULL)
+					return 9;
+		
 	}
 	return oFunc(a1);
 }
@@ -606,9 +605,9 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	// Draw Horion logo
 	{
 		if (isOnRightSide)
-			DrawUtils::drawText(vec2_t(1, 1), &horionStr, new MC_Color(rcolors));
+			DrawUtils::drawText(vec2_t(4, 2), &horionStr/*, new MC_Color(rcolors)*/);
 		else
-			DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth - 1, 1), &horionStr, new MC_Color(rcolors));
+			DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth - 1, 1), &horionStr/*, new MC_Color(rcolors)*/);
 	}
 
 	// Draw ArrayList

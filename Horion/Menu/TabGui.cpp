@@ -72,14 +72,14 @@ void TabGui::renderLevel()
 
 				if (label.mod == 0) {
 					// Category
-					DrawUtils::fillRectangle(rectPos, MC_Color(0.1f, 0.1f, 0.1f, 1.0f), alphaVal);
+					DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.3f, 0.3f, 1.0f), alphaVal);
 				}
 				else {
 					// Modules
 					if(label.enabled)
-						DrawUtils::fillRectangle(rectPos, MC_Color(0.1f, 0.4f, 0.1f, 1.0f), alphaVal);
+						DrawUtils::fillRectangle(rectPos, MC_Color(0.45f, 0.575f, 0.45f, 1.0f), alphaVal);
 					else
-						DrawUtils::fillRectangle(rectPos, MC_Color(0.15f, 0.1f, 0.1f, 1.0f), alphaVal);
+						DrawUtils::fillRectangle(rectPos, MC_Color(0.45f, 0.45f, 0.45f, 1.0f), alphaVal);
 
 					static bool lastVal = toggleCurrentSelection;
 
@@ -99,17 +99,17 @@ void TabGui::renderLevel()
 			}
 			else {
 				// We are selected but we are not in the current menu
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.1f, 0.1f, 0.1f, 1.0f), alphaVal * 0.5f);
+				DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.3f, 0.3f, 1.0f), alphaVal);
 			}
 			selectedYOffset = yOffset;
 		}
 		else { // We are not selected
 			if (label.enabled && renderedLevel > 0)
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.8f, 0.4f, 1.0f), alphaVal * 0.6f);
+				DrawUtils::fillRectangle(rectPos, MC_Color(0.5f, 0.7f, 0.5f, 1.0f), alphaVal);
 			else if(renderedLevel > 0)
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.7f, 0.4f, 0.4f, 1.0f), alphaVal * 0.6f);
+				DrawUtils::fillRectangle(rectPos, MC_Color(0.7f, 0.45f, 0.45f, 1.0f), alphaVal);
 			else
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.8f, 0.8f, 0.8f, 1.0f), alphaVal * 0.3f);
+				DrawUtils::fillRectangle(rectPos, MC_Color(0.2f, 0.2f, 0.2f, 1.0f), alphaVal);
 		}
 			
 		//DrawUtils::drawRectangle(rectPos, MC_Color(0.0f, 0.0f, 0.0f, 1.0f), 1, 0.5f); // Border around Text
@@ -136,7 +136,7 @@ void TabGui::render()
 	if (!moduleMgr->isInitialized())
 		return;
 	renderedLevel = 0;
-	yOffset = 15;
+	yOffset = 13;
 	xOffset = 3;
 
 	// Render all categorys
