@@ -228,22 +228,22 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face,
 {
 	static auto oFunc = g_Hooks.GameMode_startDestroyHook->GetOriginal<GameMode_startDestroyBlock_t>();
 
-	static IModule* nukerModule = moduleMgr->getModule<Nuker>();
+	static Nuker* nukerModule = reinterpret_cast<Nuker*>(moduleMgr->getModule<Nuker>());
 	static IModule* instaBreakModule = moduleMgr->getModule<InstaBreak>();
 	if (nukerModule == nullptr || instaBreakModule == nullptr)
 	{
-		nukerModule = moduleMgr->getModule<Nuker>();
+		nukerModule = reinterpret_cast<Nuker*>(moduleMgr->getModule<Nuker>());
 		instaBreakModule = moduleMgr->getModule<InstaBreak>();
 	}
 	else {
 		if (nukerModule->isEnabled()) {
 			vec3_ti tempPos;
-			int x = 0;
-			int z = 0;
 
-			for (int x = -4; x < 4; x++) {
-				for (int y = -4; y < 4; y++) {
-					for (int z = -4; z < 4; z++) {
+			const int range = nukerModule->getNukerRadius();
+
+			for (int x = -range; x < range; x++) {
+				for (int y = -range; y < range; y++) {
+					for (int z = -range; z < range; z++) {
 						tempPos.x = a2->x + x;
 						tempPos.y = a2->y + y;
 						tempPos.z = a2->z + z;
