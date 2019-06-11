@@ -45,8 +45,10 @@
     <ClCompile Include="Utils\Target.cpp" />
     <ClCompile Include="Horion\Command\Commands\BindCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\EjectCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\EnchantCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\FriendListCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\GameModeCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\HelpCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ICommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\PlayerTeleportCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\RelativeTeleportCommand.cpp" />
@@ -54,7 +56,6 @@
     <ClCompile Include="Horion\Command\Commands\TestCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ToggleCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\UnbindCommand.cpp" />
-    <ClCompile Include="Horion\Command\Commands\EnchantCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -114,18 +115,19 @@
     <ClInclude Include="Horion\Module\Modules\Xray.h" />
     <ClInclude Include="Horion\Module\Modules\BedFucker.h" />
     <ClInclude Include="Utils\Target.h" />
-    <ClInclude Include="Horion\Command\Commands\ToggleCommand.h" />
+    <ClInclude Include="SDK\CInventory.h" />
     <ClInclude Include="Horion\Command\Commands\BindCommand.h" />
     <ClInclude Include="Horion\Command\Commands\EjectCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\EnchantCommand.h" />
     <ClInclude Include="Horion\Command\Commands\FriendListCommand.h" />
     <ClInclude Include="Horion\Command\Commands\GameModeCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\HelpCommand.h" />
     <ClInclude Include="Horion\Command\Commands\ICommand.h" />
     <ClInclude Include="Horion\Command\Commands\PlayerTeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\RelativeTeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\TeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\TestCommand.h" />
-    <ClInclude Include="SDK\CInventory.h" />
+    <ClInclude Include="Horion\Command\Commands\ToggleCommand.h" />
     <ClInclude Include="Horion\Command\Commands\UnbindCommand.h" />
-    <ClInclude Include="Horion\Command\Commands\EnchantCommand.h" />
   </ItemGroup>
 </Project>

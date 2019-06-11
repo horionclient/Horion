@@ -141,6 +141,7 @@
     <ClCompile Include="Horion\Command\Commands\EnchantCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\FriendListCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\GameModeCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\HelpCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ICommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\PlayerTeleportCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\RelativeTeleportCommand.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="Horion\Command\Commands\EnchantCommand.h" />
     <ClInclude Include="Horion\Command\Commands\FriendListCommand.h" />
     <ClInclude Include="Horion\Command\Commands\GameModeCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\HelpCommand.h" />
     <ClInclude Include="Horion\Command\Commands\ICommand.h" />
     <ClInclude Include="Horion\Command\Commands\PlayerTeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\RelativeTeleportCommand.h" />

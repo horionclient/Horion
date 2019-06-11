@@ -20,6 +20,7 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new FriendListCommand());
 	commandList.push_back(new UnbindCommand());
 	commandList.push_back(new EnchantCommand());
+	commandList.push_back(new HelpCommand());
 #ifdef _DEBUG
 	commandList.push_back(new TestCommand());
 #endif
@@ -50,7 +51,6 @@ void CommandMgr::execute(char * message)
 
 		std::string cmd = ((*args)[0]);
 		std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
-
 		
 		for (std::vector<ICommand*>::iterator it = this->commandList.begin(); it != this->commandList.end(); ++it) {
 			ICommand* c = *it;
