@@ -99,7 +99,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		
 		for (uintptr_t i = 0; i < 0xFF; i++) {
 			bool* newKey = keyMapAddr + (4 * i); 
-			bool newKeyPressed = (*newKey) && (GameData::canUseMoveKeys() || clientInstance->localPlayer == nullptr); // Disable Keybinds when in chat or inventory
+			bool newKeyPressed = (*newKey) && GameData::canUseMoveKeys(); // Disable Keybinds when in chat or inventory
 			bool* oldKey = keyMap + (4 * i);
 			if (newKeyPressed != *oldKey) {
 				moduleMgr->onKeyUpdate((int) i, newKeyPressed);
@@ -157,8 +157,6 @@ DllMain(HMODULE hModule,
 	{
 	case DLL_PROCESS_ATTACH: //When the injector is called.
 	{
-		
-		
 		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)startCheat, hModule, NULL, NULL);
 		DisableThreadLibraryCalls(hModule);
 	}
