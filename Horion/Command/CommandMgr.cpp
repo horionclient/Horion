@@ -22,6 +22,7 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new EnchantCommand());
 	commandList.push_back(new HelpCommand());
 	commandList.push_back(new ModulesCommand());
+	commandList.push_back(new PanicCommand());
 #ifdef _DEBUG
 	commandList.push_back(new TestCommand());
 #endif

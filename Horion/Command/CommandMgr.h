@@ -15,6 +15,7 @@
 #include "Commands/EnchantCommand.h"
 #include "Commands/HelpCommand.h"
 #include "Commands/ModulesCommand.h"
+#include "Commands/PanicCommand.h"
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"
 #endif
