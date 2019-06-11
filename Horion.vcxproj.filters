@@ -56,6 +56,7 @@
     <ClCompile Include="Horion\Command\Commands\TestCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ToggleCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\UnbindCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\ModulesCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -129,5 +130,6 @@
     <ClInclude Include="Horion\Command\Commands\TestCommand.h" />
     <ClInclude Include="Horion\Command\Commands\ToggleCommand.h" />
     <ClInclude Include="Horion\Command\Commands\UnbindCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\ModulesCommand.h" />
   </ItemGroup>
 </Project>

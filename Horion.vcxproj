@@ -143,6 +143,7 @@
     <ClCompile Include="Horion\Command\Commands\GameModeCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\HelpCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ICommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\ModulesCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\PlayerTeleportCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\RelativeTeleportCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\TeleportCommand.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="Horion\Command\Commands\GameModeCommand.h" />
     <ClInclude Include="Horion\Command\Commands\HelpCommand.h" />
     <ClInclude Include="Horion\Command\Commands\ICommand.h" />
+    <ClInclude Include="Horion\Command\Commands\ModulesCommand.h" />
     <ClInclude Include="Horion\Command\Commands\PlayerTeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\RelativeTeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\TeleportCommand.h" />

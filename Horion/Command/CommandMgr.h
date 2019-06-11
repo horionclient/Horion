@@ -14,6 +14,7 @@
 #include "Commands/UnbindCommand.h"
 #include "Commands/EnchantCommand.h"
 #include "Commands/HelpCommand.h"
+#include "Commands/ModulesCommand.h"
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"
 #endif
