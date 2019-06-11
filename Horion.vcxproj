@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClCompile Include="Horion\Command\Commands\BindCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\EjectCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\EnchantCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\FriendListCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\GameModeCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ICommand.cpp" />
@@ -161,8 +162,6 @@
     <ClCompile Include="Horion\Module\Modules\BedFucker.cpp" />
     <ClCompile Include="Horion\Module\Modules\Blink.cpp" />
     <ClCompile Include="Horion\Module\Modules\InstaBreak.cpp" />
-    <ClCompile Include="Horion\Module\Modules\MobAura.cpp" />
-    <ClCompile Include="Horion\Module\Modules\MobEsp.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoFall.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSprint.cpp" />
     <ClCompile Include="Horion\Module\Modules\BowAimbot.cpp" />
@@ -195,6 +194,7 @@
   <ItemGroup>
     <ClInclude Include="Horion\Command\Commands\BindCommand.h" />
     <ClInclude Include="Horion\Command\Commands\EjectCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\EnchantCommand.h" />
     <ClInclude Include="Horion\Command\Commands\FriendListCommand.h" />
     <ClInclude Include="Horion\Command\Commands\GameModeCommand.h" />
     <ClInclude Include="Horion\Command\Commands\ICommand.h" />
@@ -218,8 +218,6 @@
     <ClInclude Include="Horion\Module\Modules\BedFucker.h" />
     <ClInclude Include="Horion\Module\Modules\Blink.h" />
     <ClInclude Include="Horion\Module\Modules\InstaBreak.h" />
-    <ClInclude Include="Horion\Module\Modules\MobAura.h" />
-    <ClInclude Include="Horion\Module\Modules\MobEsp.h" />
     <ClInclude Include="Horion\Module\Modules\NoFall.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSprint.h" />
     <ClInclude Include="Horion\Module\Modules\BowAimbot.h" />

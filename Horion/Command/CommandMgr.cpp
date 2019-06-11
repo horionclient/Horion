@@ -19,6 +19,7 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new GameModeCommand());
 	commandList.push_back(new FriendListCommand());
 	commandList.push_back(new UnbindCommand());
+	commandList.push_back(new EnchantCommand());
 #ifdef _DEBUG
 	commandList.push_back(new TestCommand());
 #endif

@@ -12,6 +12,7 @@
 #include "Commands/GameModeCommand.h"
 #include "Commands/FriendListCommand.h"
 #include "Commands/UnbindCommand.h"
+#include "Commands/EnchantCommand.h"
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"
 #endif
