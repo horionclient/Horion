@@ -9,9 +9,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "../Memory/SlimMem.h"
 #include "../Utils/Utils.h"
-#include "../Memory/Offsets.h"
 #include "../Utils/HMath.h"
 #include "../SDK/CEntity.h"
 #include "../SDK/CGameMode.h"

@@ -255,7 +255,6 @@
     <ClInclude Include="SDK\CMinecraftUIRenderContext.h" />
     <ClInclude Include="SDK\CPacket.h" />
     <ClInclude Include="SDK\CLoopbackPacketSender.h" />
-    <ClInclude Include="Memory\Offsets.h" />
     <ClInclude Include="Utils\Json.hpp" />
     <ClInclude Include="Utils\Target.h" />
     <ClInclude Include="Utils\TextFormat.h" />
