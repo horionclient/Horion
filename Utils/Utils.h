@@ -290,10 +290,14 @@ public:
 	{
 		const char* pattern = szSignature;
 		uintptr_t firstMatch = 0;
-		uintptr_t rangeStart = (uintptr_t)GetModuleHandleA(szModule);
-		MODULEINFO miModInfo;
-		GetModuleInformation(GetCurrentProcess(), (HMODULE)rangeStart, &miModInfo, sizeof(MODULEINFO));
-		uintptr_t rangeEnd = rangeStart + miModInfo.SizeOfImage;
+		static const uintptr_t rangeStart = (uintptr_t)GetModuleHandleA(szModule);
+		static MODULEINFO miModInfo;
+		static bool init = false;
+		if (!init) {
+			init = true;
+			GetModuleInformation(GetCurrentProcess(), (HMODULE)rangeStart, &miModInfo, sizeof(MODULEINFO));
+		}
+		static const uintptr_t rangeEnd = rangeStart + miModInfo.SizeOfImage;
 
 		BYTE patByte = GET_BYTE(pattern);
 		const char* oldPat = pattern;
