@@ -14,9 +14,6 @@ bool isRunning = true;
 DWORD WINAPI keyThread(LPVOID lpParam)
 {
 	logF("Key thread started");
-	C_ClientInstance* clientInstance = g_Data.getClientInstance();
-	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
-	C_GameMode* gameMode = g_Data.getCGameMode();
 
 	bool* keyMap = static_cast<bool*>(malloc(0xFF * 4 + 0x4));
 	if(keyMap == 0)
