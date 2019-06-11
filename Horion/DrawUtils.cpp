@@ -133,10 +133,10 @@ void DrawUtils::fillRectangle(vec4_t pos, MC_Color col, float alpha)
 void DrawUtils::drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineWidth)
 {
 	lineWidth /= 2;
-	fillRectangle(vec4_t(pos.x            , pos.y - lineWidth, pos.z            , pos.y + lineWidth), col, alpha);
-	fillRectangle(vec4_t(pos.x - lineWidth, pos.y            , pos.x + lineWidth, pos.w            ), col, alpha);
-	fillRectangle(vec4_t(pos.z - lineWidth, pos.y            , pos.z + lineWidth, pos.w            ), col, alpha);
-	fillRectangle(vec4_t(pos.x            , pos.w - lineWidth, pos.z            , pos.w + lineWidth), col, alpha);
+	fillRectangle(vec4_t(pos.x - lineWidth, pos.y - lineWidth, pos.z + lineWidth, pos.y + lineWidth), col, alpha); // TOP
+	fillRectangle(vec4_t(pos.x - lineWidth, pos.y            , pos.x + lineWidth, pos.w            ), col, alpha); // LEFT
+	fillRectangle(vec4_t(pos.z - lineWidth, pos.y            , pos.z + lineWidth, pos.w            ), col, alpha); // 
+	fillRectangle(vec4_t(pos.x - lineWidth, pos.w - lineWidth, pos.z + lineWidth, pos.w + lineWidth), col, alpha);
 }
 
 void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color *color, float textSize, Fonts font)
