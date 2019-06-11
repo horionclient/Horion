@@ -33,7 +33,6 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 	while (isRunning) {
 		if (GameData::isKeyDown('L') && GameData::isKeyDown(VK_CONTROL) || GameData::shouldTerminate()) { // Press L to uninject
 			isRunning = false;
-			
 			break;
 		}
 		
@@ -113,7 +112,6 @@ DllMain(HMODULE hModule,
 		MH_Uninitialize();
 
 		if (g_Data.getClientInstance()->getLocalPlayer() != nullptr) {
-			
 			C_GuiData* guiData = g_Data.getClientInstance()->getGuiData();
 			if (guiData != nullptr)
 				guiData->displayClientMessageF("%sUninjected!", RED);
