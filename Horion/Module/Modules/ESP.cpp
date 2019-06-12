@@ -28,7 +28,7 @@ void doRenderStuff(C_Entity* ent) {
 		else
 			DrawUtils::setColor(0.4f, 0.4f, 0.4f, 0.2f);
 
-		DrawUtils::drawEntityBox(ent, max(0.2f, 1 / max(1, localPlayer->eyePos0.dist(ent->eyePos0)))); // Fancy math to give an illusion of good esp
+		DrawUtils::drawEntityBox(ent, max(0.2f, 1 / max(1, (*localPlayer->getPos()).dist(*ent->getPos())))); // Fancy math to give an illusion of good esp
 	}
 }
 

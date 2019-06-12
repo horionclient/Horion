@@ -35,7 +35,7 @@ void findEntity(C_Entity* currentEntity) {
 	if (!Target::isValidTarget(currentEntity))
 		return;
 
-	float dist = currentEntity->eyePos0.dist(g_Data.getLocalPlayer()->eyePos0);
+	float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
 
 	if (dist < maxDist)
 	{

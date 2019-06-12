@@ -251,9 +251,9 @@ void DrawUtils::rainbow(float* rcolors)
 }
 void DrawUtils::drawEntityBox(C_Entity * ent, float lineWidth)
 {
-	vec3_t upper = vec3_t(ent->aabb.upper);
+	vec3_t upper = vec3_t((*ent->getAABB()).upper);
 	upper.y += 0.1f; // more premium
-	drawBox(ent->aabb.lower, upper, lineWidth);
+	drawBox((*ent->getAABB()).lower, upper, lineWidth);
 }
 
 void DrawUtils::wirebox(AABB aabb){

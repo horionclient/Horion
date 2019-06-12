@@ -20,7 +20,7 @@ struct CompareTargetEnArray
 	bool operator() (C_Entity *lhs, C_Entity *rhs)
 	{
 		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
-		return lhs->eyePos0.dist(localPlayer->eyePos0) < rhs->eyePos0.dist(localPlayer->eyePos0); 
+		return (*lhs->getPos()).dist(*localPlayer->getPos()) < (*rhs->getPos()).dist(*localPlayer->getPos());
 	}
 };
 void Aimbot::onPostRender()
@@ -65,14 +65,14 @@ void Aimbot::onPostRender()
 		if (!(currentEntity->name2.getTextLength() > 0))
 			continue;
 		
-		if (currentEntity->aabb.upper.y - currentEntity->aabb.lower.y < 1 || currentEntity->aabb.upper.y - currentEntity->aabb.lower.y > 2)
+		if (currentEntity->height < 1.5f || currentEntity->width < 0.5f || currentEntity->height > 2.1f || currentEntity->width > 0.9f)
 			continue;
 
 		// i want to hit villagers ok
 //		if (localPlayer->entityType2 != currentEntity->entityType2)
 //			continue;
 
-		float dist = currentEntity->eyePos0.dist(localPlayer->eyePos0);
+		float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());;
 
 		if (dist < maxDist) 
 		{
@@ -83,7 +83,7 @@ void Aimbot::onPostRender()
 	if (targetList.size() > 0)
 	{
 		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
-		vec2_t angle = origin.CalcAngle(targetList[0]->eyePos0);
+		vec2_t angle = origin.CalcAngle(*targetList[0]->getPos());
 
 
 		vec2_t appl = angle.sub(localPlayer->viewAngles).normAngles();

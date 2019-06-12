@@ -163,8 +163,8 @@ public:
 
 
 private:
-	virtual __int64 reloadHardcoded();
-	virtual __int64 reloadHardcodedClient();
+	virtual __int64 reloadHardcoded(); 
+	virtual __int64 reloadHardcodedClient(); 
 	virtual __int64 initializeComponents();
 	virtual __int64 reloadComponents();
 public:
@@ -475,6 +475,19 @@ private:
 	virtual __int64 _doAutoAttackOnTouch(C_Entity&);
 public:
 
+	AABB* getAABB() {
+		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
+		static int AABBOffset = 0x0;
+		if (AABBOffset == 0x0) {
+			uintptr_t sigOffset = Utils::FindSignature("F3 ?? ?? ?? ?? ?? ?? ?? 41 0F 2F 00 F3 0F 10 2A");
+			if (sigOffset != 0x0) {
+				AABBOffset = *reinterpret_cast<int*>((sigOffset + 4)); // Get Offset from code
+			}
+		}
+		AABB* aabb;
+		aabb = reinterpret_cast<AABB*>(_this + AABBOffset);
+		return aabb;
+	}
 
 	void setSprinting(bool sprint) {
 		Utils::CallVFunc<257, void, bool>(this, sprint);
