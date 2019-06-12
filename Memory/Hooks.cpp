@@ -106,6 +106,10 @@ void Hooks::Init()
 	g_Hooks.BlockLegacy_getLightEmissionHook = std::make_unique<FuncHook>(getLightEmission, Hooks::BlockLegacy_getLightEmission);
 	g_Hooks.BlockLegacy_getLightEmissionHook->init();
 
+	void* isUsingItem = reinterpret_cast<void*>(Utils::FindSignature("80 79 ?? 00 74 5E 48 8B 11 45 33 C0 48 85 D2 74 05 4C 8B 0A"));
+	g_Hooks.Player_isUsingItemHook = std::make_unique<FuncHook>(isUsingItem, Hooks::Player_isUsingItem);
+	g_Hooks.Player_isUsingItemHook->init();
+
 	//logF("Hooks hooked");
 }
 
@@ -129,6 +133,7 @@ void Hooks::Restore()
 	g_Hooks.BlockLegacy_getRenderLayerHook->Restore();
 	g_Hooks.LevelRenderer_renderLevelHook->Restore();
 	g_Hooks.BlockLegacy_getLightEmissionHook->Restore();
+	g_Hooks.Player_isUsingItemHook->Restore();
 }
 
 void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
@@ -168,6 +173,19 @@ int __fastcall Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1)
 				if (strcmp(text, "water") != NULL)
 					return 9;
 		
+	}
+	return oFunc(a1);
+}
+
+bool __fastcall Hooks::Player_isUsingItem(void* a1 , void* rdx)
+{
+	static auto oFunc = g_Hooks.Player_isUsingItemHook->GetOriginal<Player_isUsingItem_t>();
+	static IModule* NoSlowModule = moduleMgr->getModule<NoSlowDown>();
+	if (NoSlowModule == nullptr)
+		NoSlowModule = moduleMgr->getModule<NoSlowDown>();
+	else if (NoSlowModule->isEnabled()) {
+		if (rdx == NULL)
+			return true;
 	}
 	return oFunc(a1);
 }

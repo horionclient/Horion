@@ -58,6 +58,7 @@
     <ClCompile Include="Horion\Command\Commands\UnbindCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ModulesCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\PanicCommand.cpp" />
+    <ClCompile Include="Horion\Module\Modules\NoSlowDown.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -133,5 +134,6 @@
     <ClInclude Include="Horion\Command\Commands\UnbindCommand.h" />
     <ClInclude Include="Horion\Command\Commands\ModulesCommand.h" />
     <ClInclude Include="Horion\Command\Commands\PanicCommand.h" />
+    <ClInclude Include="Horion\Module\Modules\NoSlowDown.h" />
   </ItemGroup>
 </Project>
