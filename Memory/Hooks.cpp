@@ -109,7 +109,6 @@ void Hooks::Init()
 	void* isUsingItem = reinterpret_cast<void*>(Utils::FindSignature("80 79 ?? 00 74 5E 48 8B 11 45 33 C0 48 85 D2 74 05 4C 8B 0A"));
 	g_Hooks.Player_isUsingItemHook = std::make_unique<FuncHook>(isUsingItem, Hooks::Player_isUsingItem);
 	g_Hooks.Player_isUsingItemHook->init();
-
 	//logF("Hooks hooked");
 }
 
@@ -177,14 +176,15 @@ int __fastcall Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1)
 	return oFunc(a1);
 }
 
-bool __fastcall Hooks::Player_isUsingItem(void* a1 , void* rdx)
+bool __fastcall Hooks::Player_isUsingItem(uintptr_t a1, uintptr_t rdx , uintptr_t r8, uintptr_t r9)
 {
 	static auto oFunc = g_Hooks.Player_isUsingItemHook->GetOriginal<Player_isUsingItem_t>();
 	static IModule* NoSlowModule = moduleMgr->getModule<NoSlowDown>();
 	if (NoSlowModule == nullptr)
 		NoSlowModule = moduleMgr->getModule<NoSlowDown>();
 	else if (NoSlowModule->isEnabled()) {
-		if (rdx == NULL)
+		uintptr_t _this = reinterpret_cast<uintptr_t>(g_Data.getLocalPlayer());
+		if(_this + 0x1998 == a1 && rdx == NULL)// && r8 == NULL && r9 == NULL)
 			return true;
 	}
 	return oFunc(a1);

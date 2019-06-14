@@ -13,7 +13,5 @@ TestCommand::~TestCommand()
 
 bool TestCommand::execute(std::vector<std::string>* args)
 {
-	
-	
 	return true;
 }

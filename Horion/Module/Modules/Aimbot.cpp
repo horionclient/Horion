@@ -56,13 +56,13 @@ void Aimbot::onPostRender()
 		if (currentEntity == localPlayer) // Skip Local player
 			continue;
 
-		if (FriendList::findPlayer(currentEntity->name2.getText())) //Skip Friend
+		if (FriendList::findPlayer(currentEntity->getNameTag()->getText())) //Skip Friend
 			continue;
 
 		if (localPlayer->getEntityTypeId() != currentEntity->getEntityTypeId()) // Skip Invalid Entity
 			continue;
 
-		if (!(currentEntity->name2.getTextLength() > 0))
+		if (!(currentEntity->getNameTag()->getTextLength() > 0))
 			continue;
 		
 		if (currentEntity->height < 1.5f || currentEntity->width < 0.5f || currentEntity->height > 2.1f || currentEntity->width > 0.9f)
@@ -83,9 +83,8 @@ void Aimbot::onPostRender()
 	if (targetList.size() > 0)
 	{
 		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
+
 		vec2_t angle = origin.CalcAngle(*targetList[0]->getPos());
-
-
 		vec2_t appl = angle.sub(localPlayer->viewAngles).normAngles();
 		appl.x = -appl.x;
 		

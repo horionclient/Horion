@@ -219,16 +219,16 @@ private:
 	virtual __int64 getExitTip(std::string const&, __int64)const;
 	virtual __int64 intersects(vec3_t const&, vec3_t const&)const;
 public:
-	virtual bool isFree(vec3_t const&, float);
 	virtual bool isFree(vec3_t const&);
+	virtual bool isFree(vec3_t const&, float);
 	virtual bool isInWall(void)const;
 	virtual bool isInvisible(void)const;
 	virtual bool canShowNameTag(void)const;
 	virtual bool canExistInPeaceful(void)const;
 	virtual void setNameTagVisible(bool);
-private:
-	virtual __int64 getNameTag(void)const;
-	virtual __int64 getFormattedNameTag(void)const;
+public:
+	virtual TextHolder* getNameTag(void)const;
+	virtual TextHolder* getFormattedNameTag()const;
 	virtual __int64 filterFormattedNameTag(__int64 const&);
 public:
 	virtual void setNameTag(std::string const&);

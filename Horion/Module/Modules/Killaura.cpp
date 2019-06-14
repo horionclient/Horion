@@ -29,7 +29,7 @@ void findEntity(C_Entity* currentEntity) {
 	if (currentEntity->timeSinceDeath > 0 || currentEntity->damageTime >= 7)
 		return;
 
-	if (FriendList::findPlayer(currentEntity->name.getText())) // Skip Friend
+	if (FriendList::findPlayer(currentEntity->getNameTag()->getText())) // Skip Friend
 		return;
 
 	if (!Target::isValidTarget(currentEntity))

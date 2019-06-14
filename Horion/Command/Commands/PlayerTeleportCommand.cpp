@@ -38,7 +38,7 @@ bool PlayerTeleportCommand::execute(std::vector<std::string>* args)
 	{
 		C_Entity* currentEntity = entList->get(i);
 
-		std::string name(currentEntity->name2.getText());
+		std::string name(currentEntity->getNameTag()->getText());
 
 		std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 
@@ -52,7 +52,7 @@ bool PlayerTeleportCommand::execute(std::vector<std::string>* args)
 			continue;
 
 		pos = currentEntity->eyePos0;
-		playerName = currentEntity->name2.getText();
+		playerName = currentEntity->getNameTag()->getText();
 		break;
 
 	}

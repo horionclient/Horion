@@ -35,7 +35,7 @@ bool FriendListCommand::execute(std::vector<std::string>* args)
 	{
 		C_Entity* currentEntity = entList->get(i);
 
-		std::string currentEntityName(currentEntity->name2.getText());
+		std::string currentEntityName(currentEntity->getNameTag()->getText());
 
 		std::transform(currentEntityName.begin(), currentEntityName.end(), currentEntityName.begin(), ::tolower); // tolower
 
@@ -48,7 +48,7 @@ bool FriendListCommand::execute(std::vector<std::string>* args)
 		if (currentEntityName.find(searchedName) == std::string::npos) // Continue if name not found
 			continue;
 
-		playerName = currentEntity->name2.getText();
+		playerName = currentEntity->getNameTag()->getText();
 		break;
 
 	}
