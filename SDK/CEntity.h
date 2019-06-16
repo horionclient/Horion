@@ -229,6 +229,7 @@ public:
 public:
 	virtual TextHolder* getNameTag(void)const;
 	virtual TextHolder* getFormattedNameTag()const;
+private:
 	virtual __int64 filterFormattedNameTag(__int64 const&);
 public:
 	virtual void setNameTag(std::string const&);
