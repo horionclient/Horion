@@ -95,7 +95,7 @@ void TabGui::renderLevel()
 					reee.y += 0.5f;
 					reee.z -= 0.5f;
 					reee.w -= 0.5f;
-					DrawUtils::drawRectangle(reee, MC_Color(0.0f, 0.0f, 0.0f, 1.0f), 1, 1.f); // Border around Text
+					DrawUtils::drawRectangle(reee, MC_Color(48.f / 255.f, 211.f / 255.f, 195.f / 255.f, 1.0f), 1, 1.f); // Border around Text
 
 					static bool lastVal = toggleCurrentSelection;
 
