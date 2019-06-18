@@ -31,6 +31,8 @@
 #include "Modules/Xray.h"
 #include "Modules/BedFucker.h"
 #include "Modules/NoSlowDown.h"
+#include "Modules/InfiniteReach.h"
+#include "Modules/AutoTotem.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

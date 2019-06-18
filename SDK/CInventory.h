@@ -1,7 +1,19 @@
-
 class C_Item {
 private:
-	char pad[0x88];
+	uintptr_t** Vtable;//0x0
+	char pad_0x0008[0x68];//0x8
+public:
+	uint16_t itemId;//0x70
+private:
+	char pad_0x00072[0x6];//0x72
+public:
+	TextHolder tileName;//0x78
+	TextHolder name;//0x98
+};
+
+class C_ItemStack {
+public:
+	C_Item** item;//0x0
 };
 
 class C_Inventory {
@@ -10,7 +22,7 @@ private:
 public:
 	virtual __int64 addContentChangeListener(__int64 a2);
 	virtual __int64 removeContentChangeListener(__int64 a2);
-	virtual C_Item* getItem(int slot);
+	virtual C_ItemStack* getItemStack(int slot);
 };
 
 class C_PlayerInventoryProxy {

@@ -17,7 +17,7 @@ const char* Killaura::getModuleName()
 }
 
 static std::vector <C_Entity*> targetList;
-static constexpr float maxDist = 8;
+static constexpr float maxDist = 20;
 
 void findEntity(C_Entity* currentEntity) {
 	if (currentEntity == g_Data.getLocalPlayer()) // Skip Local player
@@ -61,7 +61,6 @@ void Killaura::onTick(C_GameMode* gm)
 	// Attack all entitys in targetList 
 	for (int i = 0; i < targetList.size(); i++)
 		g_Data.getCGameMode()->attack(targetList[i]);
-	
 }
 
 void Killaura::onEnable()

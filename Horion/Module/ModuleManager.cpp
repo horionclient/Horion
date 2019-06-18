@@ -34,6 +34,8 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Xray());
 	this->moduleList.push_back(new BedFucker());
 	this->moduleList.push_back(new NoSlowDown());
+	this->moduleList.push_back(new AutoTotem());
+	//this->moduleList.push_back(new InfiniteReach());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);

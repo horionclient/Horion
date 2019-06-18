@@ -59,6 +59,8 @@
     <ClCompile Include="Horion\Command\Commands\ModulesCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\PanicCommand.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoSlowDown.cpp" />
+    <ClCompile Include="Horion\Module\Modules\InfiniteReach.cpp" />
+    <ClCompile Include="Horion\Module\Modules\AutoTotem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -135,5 +137,7 @@
     <ClInclude Include="Horion\Command\Commands\ModulesCommand.h" />
     <ClInclude Include="Horion\Command\Commands\PanicCommand.h" />
     <ClInclude Include="Horion\Module\Modules\NoSlowDown.h" />
+    <ClInclude Include="Horion\Module\Modules\InfiniteReach.h" />
+    <ClInclude Include="Horion\Module\Modules\AutoTotem.h" />
   </ItemGroup>
 </Project>

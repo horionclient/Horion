@@ -289,7 +289,7 @@ public:
 private:
 	virtual __int64 findAttackTarget(void);
 public:
-	virtual bool isValidTarget(C_Entity*)const;
+	virtual bool isValidTarget(C_Entity*)const;//50
 private:
 	virtual __int64 attack(C_Entity&);
 	virtual __int64 adjustDamageAmount(int &)const;
@@ -345,7 +345,7 @@ private:
 	virtual __int64 getCarriedItem(void)const;
 public:
 	virtual void setCarriedItem(__int64 const&);
-	virtual void setOffhandSlot(__int64 const&);
+	virtual void setOffhandSlot(C_ItemStack*);
 private:
 	virtual __int64 getEquippedTotem(void)const;
 	virtual __int64 consumeTotem(void);
