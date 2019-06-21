@@ -17,6 +17,7 @@
 #include "../Horion/Command/CommandMgr.h"
 #include "../Utils/TextFormat.h"
 #include "../Horion/Menu/TabGui.h"
+#include "../Horion/Menu/ClickGui.h"
 
 #ifdef PERFORMANCE_TEST
 #include <chrono>

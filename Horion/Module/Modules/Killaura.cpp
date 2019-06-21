@@ -17,7 +17,7 @@ const char* Killaura::getModuleName()
 }
 
 static std::vector <C_Entity*> targetList;
-static constexpr float maxDist = 20;
+static constexpr float maxDist = 8;
 
 void findEntity(C_Entity* currentEntity) {
 	if (currentEntity == g_Data.getLocalPlayer()) // Skip Local player

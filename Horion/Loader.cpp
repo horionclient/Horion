@@ -74,6 +74,7 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	Target::init(g_Data.getPtrLocalPlayer());
 
 	TabGui::init();
+	ClickGui::init();
 	Hooks::Init();
 	cmdMgr->initCommands();
 	moduleMgr->initModules();

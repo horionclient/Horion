@@ -410,8 +410,9 @@ private:
 	virtual __int64 onEffectUpdated(__int64 const&);
 	virtual __int64 onEffectRemoved(__int64 &);
 	virtual __int64 openContainerComponent(C_Player &);
+public:
 	virtual __int64 swing(void);
-	virtual __int64 useItem(__int64 &);
+	virtual __int64 useItem(C_ItemStack*);
 public:
 	virtual bool hasOutputSignal(unsigned char)const;
 private:

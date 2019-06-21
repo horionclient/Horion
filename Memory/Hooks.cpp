@@ -168,15 +168,15 @@ int __fastcall Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1)
 	else if (XrayModule->isEnabled()) {
 		char* text = a1->name.getText();
 		if (strstr(text, "ore") == NULL)
-			if(strcmp(text, "lava") != NULL)
+			if (strcmp(text, "lava") != NULL)
 				if (strcmp(text, "water") != NULL)
 					return 9;
-		
+
 	}
 	return oFunc(a1);
 }
 
-bool __fastcall Hooks::Player_isUsingItem(uintptr_t a1, uintptr_t rdx , uintptr_t r8, uintptr_t r9)
+bool __fastcall Hooks::Player_isUsingItem(uintptr_t a1, uintptr_t rdx, uintptr_t r8, uintptr_t r9)
 {
 	static auto oFunc = g_Hooks.Player_isUsingItemHook->GetOriginal<Player_isUsingItem_t>();
 	static IModule* NoSlowModule = moduleMgr->getModule<NoSlowDown>();
@@ -184,13 +184,13 @@ bool __fastcall Hooks::Player_isUsingItem(uintptr_t a1, uintptr_t rdx , uintptr_
 		NoSlowModule = moduleMgr->getModule<NoSlowDown>();
 	else if (NoSlowModule->isEnabled()) {
 		uintptr_t _this = reinterpret_cast<uintptr_t>(g_Data.getLocalPlayer());
-		if(_this + 0x1998 == a1 && rdx == NULL)// && r8 == NULL && r9 == NULL)
+		if (_this + 0x1998 == a1 && rdx == NULL)// && r8 == NULL && r9 == NULL)
 			return true;
 	}
 	return oFunc(a1);
 }
 
-BYTE* __fastcall Hooks::BlockLegacy_getLightEmission(C_BlockLegacy* a1,BYTE* a2)
+BYTE* __fastcall Hooks::BlockLegacy_getLightEmission(C_BlockLegacy* a1, BYTE* a2)
 {
 	static auto oFunc = g_Hooks.BlockLegacy_getLightEmissionHook->GetOriginal<BlockLegacy_getLightEmission_t>();
 
@@ -198,11 +198,10 @@ BYTE* __fastcall Hooks::BlockLegacy_getLightEmission(C_BlockLegacy* a1,BYTE* a2)
 	if (XrayModule == nullptr)
 		XrayModule = moduleMgr->getModule<Xray>();
 	else if (XrayModule->isEnabled()) {
-		//BYTE yikes = 15;
 		*a2 = 15;
 		return a2;
 	}
-	return oFunc(a1,a2);
+	return oFunc(a1, a2);
 }
 
 __int64 Hooks::LevelRenderer_renderLevel(__int64 a1, __int64 a2, __int64 a3)
@@ -229,7 +228,7 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 a1, __int64 a2, __int64 a3)
 		}
 	}
 
-	
+
 
 	return oFunc(a1, a2, a3);
 }
@@ -238,8 +237,14 @@ void Hooks::HIDController_keyMouse(void* a1, void* a2, void* a3)
 {
 	static auto oFunc = g_Hooks.HIDController_keyMouseHook->GetOriginal<HIDController_keyMouse_t>();
 	GameData::addHIDController(a1);
+	static IModule* ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
+	if (ClickGuiModule == nullptr)
+		ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
+	else if (ClickGuiModule->isEnabled()) {
+		ClickGui::onMouseClickUpdate(true);
+		return;
+	}
 	oFunc(a1, a2, a3); // Call Original Func
-
 }
 
 void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face, void* a4, void* a5)
@@ -578,12 +583,18 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	static auto oText = g_Hooks.renderTextHook->GetOriginal<renderText_t>();
 	DrawUtils::setCtx(renderCtx, g_Data.getClientInstance()->getGuiData());
 
+	
 	// Call PreRender() functions
-	{
-		moduleMgr->onPreRender();
-		TabGui::render();
-		DrawUtils::flush();
+	moduleMgr->onPreRender();
+	TabGui::render();
+	static IModule* ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
+	if (ClickGuiModule == nullptr)
+		ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
+	else if (ClickGuiModule->isEnabled()) {
+		ClickGui::render();
 	}
+
+	DrawUtils::flush();
 
 	__int64 retval = oText(yeet, renderCtx);
 
@@ -622,7 +633,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	// Draw Horion logo
 	{
-		
+
 		if (isOnRightSide)
 			DrawUtils::drawText(vec2_t(4, 2), &horionStr/*, new MC_Color(rcolors)*/);
 		else

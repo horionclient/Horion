@@ -61,6 +61,8 @@
     <ClCompile Include="Horion\Module\Modules\NoSlowDown.cpp" />
     <ClCompile Include="Horion\Module\Modules\InfiniteReach.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoTotem.cpp" />
+    <ClCompile Include="Horion\Menu\ClickGui.cpp" />
+    <ClCompile Include="Horion\Module\Modules\ClickGuiMod.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -139,5 +141,7 @@
     <ClInclude Include="Horion\Module\Modules\NoSlowDown.h" />
     <ClInclude Include="Horion\Module\Modules\InfiniteReach.h" />
     <ClInclude Include="Horion\Module\Modules\AutoTotem.h" />
+    <ClInclude Include="Horion\Menu\ClickGui.h" />
+    <ClInclude Include="Horion\Module\Modules\ClickGuiMod.h" />
   </ItemGroup>
 </Project>

@@ -178,7 +178,7 @@ void InfiniteReach::onPostRender()
 		//Attack if my fakePos is near of the target
 		if ((*targetList[0]->getPos()).dist(h) < 3.0f)
 		{
-			localPlayer->swingArm();
+			localPlayer->swing();
 			g_Data.getCGameMode()->attack(targetList[0]);
 			fakeX = 0;
 			fakeZ = 0;
