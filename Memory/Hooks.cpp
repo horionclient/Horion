@@ -628,13 +628,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	// Call PreRender() functions
 	moduleMgr->onPreRender();
-	TabGui::render();
-	static IModule* ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
-	if (ClickGuiModule == nullptr)
-		ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
-	else if (ClickGuiModule->isEnabled()) {
-		ClickGui::render();
-	}
+	
 
 	DrawUtils::flush();
 
@@ -646,6 +640,13 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 	// Call PostRender() functions
 	{
+		TabGui::render();
+		static IModule* ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
+		if (ClickGuiModule == nullptr)
+			ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
+		else if (ClickGuiModule->isEnabled()) {
+			ClickGui::render();
+		}
 		moduleMgr->onPostRender();
 	}
 

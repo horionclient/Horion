@@ -1,13 +1,11 @@
 #include "ClickGui.h"
 
-
-std::map<int, std::shared_ptr<ClickWindow>> windowMap;
-
 bool isLeftClickDown = false;
 bool shouldToggle = false;
 bool isRightClickDown = false;
 
 bool isDragging = false;
+unsigned int draggedWindow = -1;
 vec2_t dragStart = vec2_t();
 
 void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>* modList) {
@@ -23,7 +21,7 @@ void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>*
 unsigned int ClickGui::getCrcHash(const char * str)
 {
 	static unsigned int crc32_lut[256] = { 0 };
-	static int seed = 0;
+	int seed = 0;
 	if (!crc32_lut[1])
 	{
 		const unsigned int polynomial = 0xEDB88320;
@@ -55,17 +53,24 @@ unsigned int ClickGui::getCrcHash(const char * str)
 	return ~crc;
 }
 
+unsigned int ClickGui::getWindowHash(const char* name) {
+	return getCrcHash(name);
+}
+
 std::shared_ptr<ClickWindow> ClickGui::getWindow(const char * name)
 {
-	int id = getCrcHash(name);
-	auto search = windowMap.find(id);
-	if (search != windowMap.end()) { // Window exists already
+	unsigned int id = getWindowHash(name);
+	auto* windowMap = g_Data.getWindowMap();
+
+	auto search = windowMap->find(id);
+	if (search != windowMap->end()) { // Window exists already
 		return search->second;
 	}
 	else { // Create window
 		// TODO: restore settings for position etc
 		std::shared_ptr<ClickWindow> newWindow = std::make_shared<ClickWindow>();
-		windowMap[id] = newWindow;
+
+		windowMap->insert(std::make_pair(id, newWindow));
 		return newWindow;
 	}
 }
@@ -141,10 +146,9 @@ void ClickGui::renderCategory(Category category)
 			currentYOffset + textHeight
 		);
 
-		if (isDragging) {
+		if (isDragging && getWindowHash(categoryName) == draggedWindow) {
 			if (isLeftClickDown) { // Still dragging
 				vec2_t diff = vec2_t(mousePos).sub(dragStart);
-				diff.mul(2);
 				ourWindow->pos.add(diff);
 				dragStart = mousePos;
 			}
@@ -155,6 +159,7 @@ void ClickGui::renderCategory(Category category)
 		} else if (rectPos.contains(&mousePos) && shouldToggle) {
 			logF("started dragging");
 			isDragging = true;
+			draggedWindow = getWindowHash(categoryName);
 			shouldToggle = false;
 			dragStart = mousePos;
 		}
@@ -232,11 +237,15 @@ void ClickGui::init() {
 
 void ClickGui::onMouseClickUpdate(int key, bool isDown)
 {
+	//logF("onMouseClickUpdate(%i, %s)", key, isDown ? "true" : "false");
 	switch (key) {
 	case 0: // Left Click
 		isLeftClickDown = isDown;
 		if (isDown)
 			shouldToggle = true;
+		break;
+	case 1: // Right Click
+		isRightClickDown = isDown;
 		break;
 	}
 	

@@ -7,7 +7,11 @@
 #include "../SDK/CHIDController.h"
 #include "../Utils/TextFormat.h"
 #include "SlimMem.h"
+#include <map>
 
+struct ClickWindow {
+	vec2_t pos;
+};
 class GameData {
 private:
 	C_ClientInstance* clientInstance = 0;
@@ -16,6 +20,7 @@ private:
 	C_EntityList* entityList = 0;
 	C_HIDController* hidController;
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
+	std::map<unsigned int, std::shared_ptr<ClickWindow>> windowMap;
 	const SlimUtils::SlimModule* gameModule;
 	SlimUtils::SlimMem* slimMem;
 	bool shouldTerminateB = false;
@@ -32,9 +37,10 @@ public:
 	static void addChestToList(C_ChestBlockActor * ChestBlock2);
 	static void EntityList_tick(C_EntityList * list);
 	static void setHIDController(C_HIDController* Hid);
+	inline std::map<unsigned int, std::shared_ptr<ClickWindow>>* getWindowMap() { return &windowMap; };
 
-	C_ClientInstance* getClientInstance() { return clientInstance; };
-	C_GuiData* getGuiData() { return clientInstance->getGuiData(); };
+	inline C_ClientInstance* getClientInstance() { return clientInstance; };
+	inline C_GuiData* getGuiData() { return clientInstance->getGuiData(); };
 	inline C_LocalPlayer* getLocalPlayer() {
 		
 		localPlayer = clientInstance->getLocalPlayer();

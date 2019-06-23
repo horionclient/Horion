@@ -4,11 +4,10 @@
 #include <map>
 #include "../DrawUtils.h"
 #include "../GuiUtils.h"
+#include "../../Memory/GameData.h"
 #include "../Module/ModuleManager.h"
 
-struct ClickWindow {
-	vec2_t pos;
-};
+
 
 
 class ClickGui
@@ -20,6 +19,7 @@ private:
 	static void renderCategory(Category category);
 	static void getModuleListByCategory(Category category, std::vector<IModule*>* modList);
 	static unsigned int getCrcHash(const char* str);
+	static unsigned int getWindowHash(const char * name);
 public:
 	static void init();
 	static void render();
