@@ -25,74 +25,86 @@ void ClickGui::renderCategory(Category category)
 	float xOffset = 150;
 
 	const char* categoryName;
-	switch (category) {
-	case COMBAT:
-		categoryName = "Combat";
-		break;
-	case VISUAL:
-		categoryName = "Visual";
-		break;
-	case MOVEMENT:
-		categoryName = "Movement";
-		break;
-	case BUILD:
-		categoryName = "Build";
-		break;
-	case EXPLOITS:
-		categoryName = "Exploits";
-		break;
+	// Get Category Name
+	{
+		switch (category) {
+		case COMBAT:
+			categoryName = "Combat";
+			break;
+		case VISUAL:
+			categoryName = "Visual";
+			break;
+		case MOVEMENT:
+			categoryName = "Movement";
+			break;
+		case BUILD:
+			categoryName = "Build";
+			break;
+		case EXPLOITS:
+			categoryName = "Exploits";
+			break;
+		}
 	}
 	
 	std::vector<IModule*> moduleList;
 	getModuleListByCategory(category, &moduleList);
 
 	float maxLength = 1;
-
-	for (auto it = moduleList.begin(); it != moduleList.end(); ++it) {
-		std::string label = (*it)->getModuleName();
-		maxLength = max(maxLength, DrawUtils::getTextWidth(&label, textSize, SMOOTH));
+	// Get max width of all text
+	{
+		for (auto it = moduleList.begin(); it != moduleList.end(); ++it) {
+			std::string label = (*it)->getModuleName();
+			maxLength = max(maxLength, DrawUtils::getTextWidth(&label, textSize, SMOOTH));
+		}
 	}
 
-	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
-	vec2_t windowSizeReal = g_Data.getClientInstance()->getGuiData()->windowSizeReal;
-
 	vec2_t mousePos = *g_Data.getClientInstance()->getMousePos();
-	mousePos.div(windowSizeReal);
-	mousePos.mul(windowSize);
+	// Convert mousePos to visual Pos
+	{
+		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+		vec2_t windowSizeReal = g_Data.getClientInstance()->getGuiData()->windowSizeReal;
+		mousePos.div(windowSizeReal);
+		mousePos.mul(windowSize);
+	}
+	
+	// Fill Background
+	DrawUtils::fillRectangle(vec4_t(
+		0, 
+		0, 
+		g_Data.getClientInstance()->getGuiData()->widthGame,
+		g_Data.getClientInstance()->getGuiData()->heightGame
+	), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.025f);
 
-	DrawUtils::fillRectangle(vec4_t(0, 0, g_Data.getClientInstance()->getGuiData()->widthGame,
-		g_Data.getClientInstance()->getGuiData()->heightGame), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.025f);
-
-	std::string textStr = categoryName;
-	float textWidth = DrawUtils::getTextWidth(&textStr);
-
-	vec2_t textPos = vec2_t(
-		xOffset + textPadding,
-		yOffset + textPadding
-	);
-	vec4_t rectPos = vec4_t(
-		xOffset,
-		yOffset,
-		xOffset + maxLength + 10.5f,
-		yOffset + textHeight
-	);
-
-	DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
-	DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), 1.0f);
-	GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(1.0f, 0.2f, 0, 1.0f), 0.5f, false);
-	yOffset += textHeight + (textPadding * 2);
-
-	// Loop through mods to display Labels
-	for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it) {
-
-		textStr = (*it)->getModuleName();
-		textWidth = DrawUtils::getTextWidth(&textStr);
-
-		textPos = vec2_t(
+	// Render Category Name
+	{
+		vec2_t textPos = vec2_t(
 			xOffset + textPadding,
 			yOffset + textPadding
 		);
-		rectPos = vec4_t(
+		vec4_t rectPos = vec4_t(
+			xOffset,
+			yOffset,
+			xOffset + maxLength + 10.5f,
+			yOffset + textHeight
+		);
+
+		std::string textStr = categoryName;
+		DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
+		DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), 1.0f);
+		// Draw Dash
+		GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(1.0f, 0.2f, 0, 1.0f), 0.5f, false);
+		yOffset += textHeight + (textPadding * 2);
+	}
+	
+	// Loop through mods to display Labels
+	for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it) {
+		std::string textStr = (*it)->getModuleName();
+
+		vec2_t textPos = vec2_t(
+			xOffset + textPadding,
+			yOffset + textPadding
+		);
+		vec4_t rectPos = vec4_t(
 			xOffset,
 			yOffset,
 			xOffset + maxLength + 10.5f,
@@ -111,7 +123,11 @@ void ClickGui::renderCategory(Category category)
 
 		yOffset += textHeight + (textPadding * 2);
 	}
-	DrawUtils::fillRectangle(vec4_t(xOffset, 4, rectPos.z,yOffset), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
+	DrawUtils::fillRectangle(vec4_t(
+		xOffset, 
+		4, 
+		xOffset + maxLength + 10.5f,
+		yOffset), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
 	DrawUtils::flush();
 	moduleList.clear();
 	
