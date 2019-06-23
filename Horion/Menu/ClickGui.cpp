@@ -10,6 +10,15 @@ std::vector<IModule*> CmoduleList;
 
 bool isdown;
 
+void ClickGui::getModuleListByCategory(Category category) {
+	std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
+
+	for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
+		if ((*it)->getCategory() == category)
+			CmoduleList.push_back(*it);
+	}
+}
+
 void ClickGui::renderLabel(const char * text)
 {
 	static constexpr float textPadding = 1.0f;
@@ -27,8 +36,6 @@ void ClickGui::renderLabel(const char * text)
 		cat = BUILD;
 	else if (i == 4)
 		cat = EXPLOITS;
-
-
 
 	getModuleListByCategory(cat);
 
@@ -125,17 +132,6 @@ void ClickGui::init() {
 	yOffset1 = 4;
 	xOffset1 = 100;
 }
-
-void getModuleListByCategory(Category category) {
-	std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
-
-	for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) { 
-		if ((*it)->getCategory() == category)
-			CmoduleList.push_back(*it);
-	}
-}
-
-
 
 void ClickGui::onMouseClickUpdate(bool isDown)
 {
