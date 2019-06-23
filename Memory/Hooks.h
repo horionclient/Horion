@@ -18,6 +18,7 @@
 #include "../Utils/TextFormat.h"
 #include "../Horion/Menu/TabGui.h"
 #include "../Horion/Menu/ClickGui.h"
+#include "../SDK/CUIScene.h"
 
 #ifdef PERFORMANCE_TEST
 #include <chrono>
@@ -30,8 +31,9 @@ class FuncHook;
 
 class Hooks {
 private:
+	bool shouldRender = true;
 public:
-
+	
 	static void Init();
 	static void Restore();
 
@@ -40,6 +42,8 @@ private:
 	static void __fastcall SurvivalMode_tick(C_GameMode* _this);
 	static void __fastcall ChatScreenController_sendChatMessage(uint8_t* _this);
 	static HRESULT __stdcall d3d11_present(IDXGISwapChain * pSwapChain, UINT SyncInterval, UINT Flags);
+	static __int64 __fastcall setupAndRender(C_UIScene* uiscene, __int64 screencontext);
+	static __int64 __fastcall uiscene_render(C_UIScene* uiscene, __int64 screencontext);
 	static __int64 __fastcall renderText(__int64 yeet, C_MinecraftUIRenderContext* yote);
 	static char* __fastcall I8n_get(void*, char*);
 	static float* Dimension_getFogColor(__int64, float* color, float brightness);
@@ -64,6 +68,8 @@ private:
 	std::unique_ptr<FuncHook> chatScreen_sendMessageHook;
 	std::unique_ptr<FuncHook> d3d11_presentHook;
 	std::unique_ptr<FuncHook> renderTextHook;
+	std::unique_ptr<FuncHook> setupRenderHook;
+	std::unique_ptr<FuncHook> uiscene_RenderHook;
 	std::unique_ptr<FuncHook> I8n_getHook;
 	std::unique_ptr<FuncHook> Dimension_getFogColorHook;
 	std::unique_ptr<FuncHook> ChestBlockActor_tickHook;
@@ -91,6 +97,8 @@ private:
 	typedef void(__fastcall* Actor_lerpMotion_t)(C_Entity*, vec3_t);
 	typedef float*(__fastcall* Dimension_getFogColor_t)(__int64, float*, float);
 	typedef char*(__fastcall* I8n_get_t)(void*, char*);
+	typedef __int64(__fastcall* uirender_t)(C_UIScene*, __int64);
+	typedef __int64(__fastcall* setupRender_t)(C_UIScene*, __int64);
 	typedef __int64(__fastcall* renderText_t)(__int64, C_MinecraftUIRenderContext*);
 	typedef void(__fastcall* GameMode_tick_t)(C_GameMode* _this);
 	typedef void(__fastcall* SurvivalMode_tick_t)(C_GameMode* _this);
@@ -121,7 +129,7 @@ public:
 		funcPtr = func;
 		
 		int ret = MH_CreateHook(func, hooked, &funcReal);
-		if (ret == MH_OK) {
+		if (ret == MH_OK && (__int64)func > 10) {
 			
 		}else
 			logF("MH_CreateHook = %i", ret);

@@ -37,7 +37,7 @@ public:
 
 	~TextHolder() {
 		if (textLength >= 16 && pText != nullptr) {
-			free(pText);
+			//free(pText);
 		}
 	}
 

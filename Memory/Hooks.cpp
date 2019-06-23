@@ -3,6 +3,7 @@
 
 Hooks    g_Hooks;
 
+
 void Hooks::Init()
 {
 	logF("Setting up Hooks...");
@@ -40,6 +41,14 @@ void Hooks::Init()
 	void* _shit = reinterpret_cast<void*>(Utils::FindSignature("30 5F C3 CC 48 8B C4 55 56 57 41 54") + 4);
 	g_Hooks.renderTextHook = std::make_unique<FuncHook>(_shit, Hooks::renderText);
 	g_Hooks.renderTextHook->init();
+
+	void* setupRenderIdk = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 81 EC ?? ?? ??  ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B DA 48 8B F9 33 D2 41 B8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 4C 8B C3"));
+	g_Hooks.setupRenderHook = std::make_unique<FuncHook>(setupRenderIdk, setupAndRender);
+	g_Hooks.setupRenderHook->init();
+
+	void* render = reinterpret_cast<void*>(Utils::FindSignature("40 56 57 41 56 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B DA 48 8B F9 41"));
+	g_Hooks.uiscene_RenderHook = std::make_unique<FuncHook>(render, uiscene_render);
+	g_Hooks.uiscene_RenderHook->init();
 
 	// I8n::get doesnt want to work
 	//void *_shitshikt = reinterpret_cast<void*>(g_Data.getModule()->ptrBase + 0xB577C0);
@@ -581,12 +590,42 @@ HRESULT __stdcall Hooks::d3d11_present(IDXGISwapChain* pSwapChain, UINT SyncInte
 	return oPresent(pSwapChain, SyncInterval, Flags);
 }
 
+__int64 __fastcall Hooks::setupAndRender(C_UIScene* uiscene, __int64 screencontext)
+{
+	static auto oSetup = g_Hooks.setupRenderHook->GetOriginal<setupRender_t>();
+	
+	g_Hooks.shouldRender = uiscene->isPlayScreen();
+	logF("setupAndRender");
+	
+	return oSetup(uiscene, screencontext);
+}
+
+__int64 __fastcall Hooks::uiscene_render(C_UIScene * uiscene, __int64 screencontext)
+{
+	static auto oRender = g_Hooks.uiscene_RenderHook->GetOriginal<uirender_t>();
+
+	g_Hooks.shouldRender = uiscene->isPlayScreen();
+	if (!g_Hooks.shouldRender) {
+		TextHolder* alloc = new TextHolder();
+
+		uiscene->getScreenName(alloc);
+
+		if (strcmp(alloc->getText(), "hud_screen") == 0 || strcmp(alloc->getText(), "start_screen") == 0 || (alloc->getTextLength() >= 11 && strncmp(alloc->getText(), "play_screen", 11)) == 0)
+			g_Hooks.shouldRender = true;
+		
+		delete alloc;
+	}
+
+	return oRender(uiscene, screencontext);
+}
+
 __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* renderCtx)
 {
 	static auto oText = g_Hooks.renderTextHook->GetOriginal<renderText_t>();
 	DrawUtils::setCtx(renderCtx, g_Data.getClientInstance()->getGuiData());
+	if (g_Hooks.shouldRender == false)
+		return oText(yeet, renderCtx);
 
-	
 	// Call PreRender() functions
 	moduleMgr->onPreRender();
 	TabGui::render();
@@ -760,7 +799,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	//logF("PreRender: %.1f", std::chrono::duration_cast<std::chrono::microseconds>(endPreRender - beginPreRender).count() / 1000.f);
 	logF("Render: %.2fms", std::chrono::duration_cast<std::chrono::microseconds>(endRender - beginPostRender).count() / 1000.f);
 #endif
-
+	
 	return retval;
 }
 
