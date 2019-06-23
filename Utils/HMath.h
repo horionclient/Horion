@@ -25,6 +25,7 @@ struct vec2_t
 
 	vec2_t &div(const vec2_t &o) { x /= o.x; y /= o.y; return *this; }
 	vec2_t &mul(const vec2_t &o) { x *= o.x; y *= o.y; return *this; }
+	vec2_t &mul(float f) { x *= f; y *= f; return *this; }
 
 	vec2_t &sub(const vec2_t &o) { x -= o.x; y -= o.y; return *this; }
 	vec2_t &add(const vec2_t &o) { x += o.x; y += o.y; return *this; }

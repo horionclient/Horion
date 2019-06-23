@@ -144,6 +144,7 @@ void ClickGui::renderCategory(Category category)
 		if (isDragging) {
 			if (isLeftClickDown) { // Still dragging
 				vec2_t diff = vec2_t(mousePos).sub(dragStart);
+				diff.mul(2);
 				ourWindow->pos.add(diff);
 				dragStart = mousePos;
 			}
