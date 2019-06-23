@@ -29,8 +29,9 @@ void ClickGui::renderLabel(const char * text)
 		cat = EXPLOITS;
 
 
+
 	getModuleListByCategory(cat);
-	
+
 	float maxLenght = 1;
 
 	for (auto it = CmoduleList.begin(); it != CmoduleList.end(); ++it) {
@@ -45,23 +46,41 @@ void ClickGui::renderLabel(const char * text)
 	mousePos.div(windowSizeReal);
 	mousePos.mul(windowSize);
 
+	std::string textStr = text;
+	float textWidth0 = DrawUtils::getTextWidth(&textStr);
+
+	vec2_t textPos = vec2_t(
+		xOffset1 + textPadding,
+		yOffset1 + textPadding
+	);
+	vec4_t rectPos = vec4_t(
+		xOffset1,
+		yOffset1,
+		xOffset1 + maxLenght + 10.5f,
+		yOffset1 + textHeight
+	);
+	DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
+	DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), 1.0f);
+	GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(0.1f, 0.8f, 0.1f, 1.0f), 0.5f);
+	yOffset1 += textHeight + (textPadding * 2);
+
 	// Loop through mods to display Labels
 	for (std::vector<IModule*>::iterator it = CmoduleList.begin(); it != CmoduleList.end(); ++it) {
 
-		std::string textStr = (*it)->getModuleName();
+		textStr = (*it)->getModuleName();
 		float textWidth = DrawUtils::getTextWidth(&textStr);
 
-		vec2_t textPos = vec2_t(
+		textPos = vec2_t(
 			xOffset1 + textPadding,
 			yOffset1 + textPadding
 		);
-		vec4_t rectPos = vec4_t(
+		rectPos = vec4_t(
 			xOffset1,
 			yOffset1,
-			xOffset1 + maxLenght + 4.5f,
+			xOffset1 + maxLenght + 10.5f,
 			yOffset1 + textHeight
 		);
-		DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f,1.0f,1.0f,1.0f), textSize);
+		DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 		if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos)) {
 
 			if (isdown) {
@@ -74,9 +93,13 @@ void ClickGui::renderLabel(const char * text)
 		}
 		else
 			DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), (*it)->isEnabled() ? 0.4f : 0.15f);
+		GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(0.1f, 0.8f, 0.1f, 1.0f),0.5f);
 
 		yOffset1 += textHeight + (textPadding * 2);
 	}
+	DrawUtils::fillRectangle(vec4_t(0, 0, g_Data.getClientInstance()->getGuiData()->widthGame,
+		g_Data.getClientInstance()->getGuiData()->heightGame), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.025f);
+
 	DrawUtils::flush();
 	CmoduleList.clear();
 	yOffset1 = 4;
@@ -109,7 +132,7 @@ void ClickGui::init() {
 void getModuleListByCategory(Category category) {
 	std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
 
-	for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
+	for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) { 
 		if ((*it)->getCategory() == category)
 			CmoduleList.push_back(*it);
 	}

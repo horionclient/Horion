@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "../DrawUtils.h"
+#include "../GuiUtils.h"
 #include "../Module/ModuleManager.h"
 
 

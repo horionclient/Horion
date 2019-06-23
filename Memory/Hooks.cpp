@@ -245,6 +245,7 @@ void Hooks::HIDController_keyMouse(void* a1, void* a2, void* a3)
 		return;
 	}
 	oFunc(a1, a2, a3); // Call Original Func
+	return;
 }
 
 void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face, void* a4, void* a5)
@@ -740,8 +741,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 				else
 					DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.7f, 0.3f, 0.1f), it->enabled ? 0.4f : 0.15f);
 			}
-			else
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), it->enabled ? 0.4f : 0.15f);
+			/*else
+				DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), it->enabled ? 0.4f : 0.15f);*/
 
 			yOffset += textHeight + (textPadding * 2);
 		}
