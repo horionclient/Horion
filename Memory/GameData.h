@@ -20,7 +20,7 @@ private:
 	C_EntityList* entityList = 0;
 	C_HIDController* hidController;
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
-	std::map<unsigned int, std::shared_ptr<ClickWindow>> windowMap;
+	
 	const SlimUtils::SlimModule* gameModule;
 	SlimUtils::SlimMem* slimMem;
 	bool shouldTerminateB = false;
@@ -37,7 +37,6 @@ public:
 	static void addChestToList(C_ChestBlockActor * ChestBlock2);
 	static void EntityList_tick(C_EntityList * list);
 	static void setHIDController(C_HIDController* Hid);
-	inline std::map<unsigned int, std::shared_ptr<ClickWindow>>* getWindowMap() { return &windowMap; };
 
 	inline C_ClientInstance* getClientInstance() { return clientInstance; };
 	inline C_GuiData* getGuiData() { return clientInstance->getGuiData(); };

@@ -4,6 +4,8 @@ bool isLeftClickDown = false;
 bool shouldToggle = false;
 bool isRightClickDown = false;
 
+std::map<unsigned int, std::shared_ptr<ClickWindow>> windowMap;
+
 bool isDragging = false;
 unsigned int draggedWindow = -1;
 vec2_t dragStart = vec2_t();
@@ -60,17 +62,16 @@ unsigned int ClickGui::getWindowHash(const char* name) {
 std::shared_ptr<ClickWindow> ClickGui::getWindow(const char * name)
 {
 	unsigned int id = getWindowHash(name);
-	auto* windowMap = g_Data.getWindowMap();
 
-	auto search = windowMap->find(id);
-	if (search != windowMap->end()) { // Window exists already
+	auto search = windowMap.find(id);
+	if (search != windowMap.end()) { // Window exists already
 		return search->second;
 	}
 	else { // Create window
 		// TODO: restore settings for position etc
 		std::shared_ptr<ClickWindow> newWindow = std::make_shared<ClickWindow>();
 
-		windowMap->insert(std::make_pair(id, newWindow));
+		windowMap.insert(std::make_pair(id, newWindow));
 		return newWindow;
 	}
 }
