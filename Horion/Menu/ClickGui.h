@@ -9,7 +9,7 @@ class ClickGui
 {
 private:
 	static void renderCategory(Category category);
-	static void getModuleListByCategory(Category category);
+	static void getModuleListByCategory(Category category, std::vector<IModule*>* modList);
 public:
 	static void init();
 	static void render();

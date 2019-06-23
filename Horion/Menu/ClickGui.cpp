@@ -3,16 +3,15 @@
 // Render
 float yOffset1;
 float xOffset1;
-std::vector<IModule*> CmoduleList;
 
 bool isdown;
 
-void ClickGui::getModuleListByCategory(Category category) {
+void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>* modList) {
 	std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
 
 	for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
 		if ((*it)->getCategory() == category)
-			CmoduleList.push_back(*it);
+			modList->push_back(*it);
 	}
 }
 
@@ -40,12 +39,13 @@ void ClickGui::renderCategory(Category category)
 		categoryName = "Exploits";
 		break;
 	}
-
-	getModuleListByCategory(category);
+	
+	std::vector<IModule*> moduleList;
+	getModuleListByCategory(category, &moduleList);
 
 	float maxLength = 1;
 
-	for (auto it = CmoduleList.begin(); it != CmoduleList.end(); ++it) {
+	for (auto it = moduleList.begin(); it != moduleList.end(); ++it) {
 		std::string label = (*it)->getModuleName();
 		maxLength = max(maxLength, DrawUtils::getTextWidth(&label, textSize, SMOOTH));
 	}
@@ -80,7 +80,7 @@ void ClickGui::renderCategory(Category category)
 	yOffset1 += textHeight + (textPadding * 2);
 
 	// Loop through mods to display Labels
-	for (std::vector<IModule*>::iterator it = CmoduleList.begin(); it != CmoduleList.end(); ++it) {
+	for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it) {
 
 		textStr = (*it)->getModuleName();
 		textWidth = DrawUtils::getTextWidth(&textStr);
@@ -110,7 +110,7 @@ void ClickGui::renderCategory(Category category)
 	}
 	DrawUtils::fillRectangle(vec4_t(xOffset1, 4, rectPos.z,yOffset1), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
 	DrawUtils::flush();
-	CmoduleList.clear();
+	moduleList.clear();
 	yOffset1 = 4;
 	xOffset1 += 100;
 }
