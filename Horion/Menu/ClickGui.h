@@ -8,7 +8,7 @@
 class ClickGui
 {
 private:
-	static void renderLabel(const char* text);
+	static void renderCategory(Category category);
 	static void getModuleListByCategory(Category category);
 public:
 	static void init();
