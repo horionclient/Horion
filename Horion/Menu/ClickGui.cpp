@@ -7,6 +7,8 @@ bool isLeftClickDown = false;
 bool shouldToggle = false;
 bool isRightClickDown = false;
 
+bool isDragging = false;
+
 void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>* modList) {
 	std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
 
@@ -26,7 +28,6 @@ void ClickGui::renderCategory(Category category)
 	float currentYOffset = yOffset;
 	const float xOffset = 150;
 	
-
 	const char* categoryName;
 	// Get Category Name
 	{
@@ -49,6 +50,7 @@ void ClickGui::renderCategory(Category category)
 		}
 	}
 	
+	// Get All Modules in our category
 	std::vector<IModule*> moduleList;
 	getModuleListByCategory(category, &moduleList);
 
@@ -71,16 +73,8 @@ void ClickGui::renderCategory(Category category)
 		mousePos.div(windowSizeReal);
 		mousePos.mul(windowSize);
 	}
-	
-	// Fill Background
-	DrawUtils::fillRectangle(vec4_t(
-		0, 
-		0, 
-		g_Data.getClientInstance()->getGuiData()->widthGame,
-		g_Data.getClientInstance()->getGuiData()->heightGame
-	), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.025f);
 
-	// Render Category Name
+	// Draw Category Name
 	{
 		vec2_t textPos = vec2_t(
 			xOffset + textPadding,
@@ -115,23 +109,23 @@ void ClickGui::renderCategory(Category category)
 			xEnd,
 			currentYOffset + textHeight
 		);
-		DrawUtils::drawText(textPos, &textStr, (*it)->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
+		
 		if (rectPos.contains(&mousePos)) { // Is the Mouse hovering above us?
-			DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 0.1f),1.0f);
+			DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 0.1f), 1.0f);
 			if (shouldToggle) { // Are we being clicked?
 				(*it)->toggle();
 				shouldToggle = false;
 			}
 		}
+		else {
+			DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.f, 0.f, 1.f), 1.0f);
+		}
+		DrawUtils::drawText(textPos, &textStr, (*it)->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 		GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(1.0f, 0.2f, 0, 1.0f), 0.5f, true);
 
 		currentYOffset += textHeight + (textPadding * 2);
 	}
-	DrawUtils::fillRectangle(vec4_t(
-		xOffset, 
-		yOffset, 
-		xEnd,
-		currentYOffset), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
+	
 	DrawUtils::flush();
 	moduleList.clear();
 }
@@ -140,6 +134,17 @@ void ClickGui::render()
 {
 	if (!moduleMgr->isInitialized())
 		return;
+
+	// Fill Background
+	{
+		DrawUtils::fillRectangle(vec4_t(
+			0,
+			0,
+			g_Data.getClientInstance()->getGuiData()->widthGame,
+			g_Data.getClientInstance()->getGuiData()->heightGame
+		), MC_Color(0.8f, 0.8f, 0.8f, 0.1f), 0.1f);
+	}
+
 	// Render all categorys
 	renderCategory(COMBAT);
 	renderCategory(VISUAL);
