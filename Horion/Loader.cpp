@@ -54,7 +54,6 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		}
 
 		if (*hidController != 0) {
-			
 			for (uintptr_t key = 0; key < 5; key++) {
 				bool newKey = (*hidController)->clickMap[key];
 				bool* oldKey = reinterpret_cast<bool*>(clickMap + key);

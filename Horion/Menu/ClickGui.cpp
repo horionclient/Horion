@@ -4,6 +4,7 @@
 
 
 bool isLeftClickDown = false;
+bool shouldToggle = false;
 bool isRightClickDown = false;
 
 void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>* modList) {
@@ -21,8 +22,10 @@ void ClickGui::renderCategory(Category category)
 	static constexpr float textSize = 1.0f;
 	static constexpr float textHeight = textSize * 10.0f;
 
-	float yOffset = 4;
-	float xOffset = 150;
+	const float yOffset = 4;
+	float currentYOffset = yOffset;
+	const float xOffset = 150;
+	
 
 	const char* categoryName;
 	// Get Category Name
@@ -58,6 +61,8 @@ void ClickGui::renderCategory(Category category)
 		}
 	}
 
+	const float xEnd = xOffset + maxLength + 10.5f;
+
 	vec2_t mousePos = *g_Data.getClientInstance()->getMousePos();
 	// Convert mousePos to visual Pos
 	{
@@ -79,13 +84,13 @@ void ClickGui::renderCategory(Category category)
 	{
 		vec2_t textPos = vec2_t(
 			xOffset + textPadding,
-			yOffset + textPadding
+			currentYOffset + textPadding
 		);
 		vec4_t rectPos = vec4_t(
 			xOffset,
-			yOffset,
+			currentYOffset,
 			xOffset + maxLength + 10.5f,
-			yOffset + textHeight
+			currentYOffset + textHeight
 		);
 
 		std::string textStr = categoryName;
@@ -93,7 +98,7 @@ void ClickGui::renderCategory(Category category)
 		DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), 1.0f);
 		// Draw Dash
 		GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(1.0f, 0.2f, 0, 1.0f), 0.5f, false);
-		yOffset += textHeight + (textPadding * 2);
+		currentYOffset += textHeight + (textPadding * 2);
 	}
 	
 	// Loop through mods to display Labels
@@ -102,36 +107,33 @@ void ClickGui::renderCategory(Category category)
 
 		vec2_t textPos = vec2_t(
 			xOffset + textPadding,
-			yOffset + textPadding
+			currentYOffset + textPadding
 		);
 		vec4_t rectPos = vec4_t(
 			xOffset,
-			yOffset,
-			xOffset + maxLength + 10.5f,
-			yOffset + textHeight
+			currentYOffset,
+			xEnd,
+			currentYOffset + textHeight
 		);
 		DrawUtils::drawText(textPos, &textStr, (*it)->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
-		if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos)) {
-
+		if (rectPos.contains(&mousePos)) { // Is the Mouse hovering above us?
 			DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 0.1f),1.0f);
-			if (isLeftClickDown) {
+			if (shouldToggle) { // Are we being clicked?
 				(*it)->toggle();
-				isLeftClickDown = false;
+				shouldToggle = false;
 			}
 		}
 		GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(1.0f, 0.2f, 0, 1.0f), 0.5f, true);
 
-		yOffset += textHeight + (textPadding * 2);
+		currentYOffset += textHeight + (textPadding * 2);
 	}
 	DrawUtils::fillRectangle(vec4_t(
 		xOffset, 
-		4, 
-		xOffset + maxLength + 10.5f,
-		yOffset), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
+		yOffset, 
+		xEnd,
+		currentYOffset), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
 	DrawUtils::flush();
 	moduleList.clear();
-	
-	xOffset += 100;
 }
 
 void ClickGui::render()
@@ -147,6 +149,7 @@ void ClickGui::render()
 
 	isLeftClickDown = false;
 	isRightClickDown = false;
+	shouldToggle = false;
 }
 
 void ClickGui::init() {
@@ -157,6 +160,8 @@ void ClickGui::onMouseClickUpdate(int key, bool isDown)
 	switch (key) {
 	case 0: // Left Click
 		isLeftClickDown = isDown;
+		if (isDown)
+			shouldToggle = true;
 		break;
 	}
 	
