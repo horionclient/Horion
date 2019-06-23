@@ -57,8 +57,6 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			
 			for (uintptr_t key = 0; key < 5; key++) {
 				bool newKey = (*hidController)->clickMap[key];
-				if (newKey)
-					logF("key down=%i", key);
 				bool* oldKey = reinterpret_cast<bool*>(clickMap + key);
 				if (newKey != *oldKey) {
 					ClickGui::onMouseClickUpdate((int)key, newKey);

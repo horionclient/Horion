@@ -154,7 +154,6 @@ void ClickGui::init() {
 
 void ClickGui::onMouseClickUpdate(int key, bool isDown)
 {
-	logF("Click key=%i isDown=%s", key, isDown ? "true" : "false");
 	switch (key) {
 	case 0: // Left Click
 		isLeftClickDown = isDown;
