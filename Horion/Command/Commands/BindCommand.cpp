@@ -5,16 +5,6 @@
 BindCommand::BindCommand() : ICommand("bind", "Binds Modules to specific keys", "<module> <key>")
 {
 	registerAlias("b");
-	num["NUMPAD0"] = 0x60;
-	num["NUMPAD1"] = 0x61;
-	num["NUMPAD2"] = 0x62;
-	num["NUMPAD3"] = 0x63;
-	num["NUMPAD4"] = 0x64;
-	num["NUMPAD5"] = 0x65;
-	num["NUMPAD6"] = 0x66;
-	num["NUMPAD7"] = 0x67;
-	num["NUMPAD8"] = 0x68;
-	num["NUMPAD9"] = 0x69;
 }
 
 
@@ -32,22 +22,33 @@ bool BindCommand::execute(std::vector<std::string>* args)
 	assertTrue(key.size() > 0);
 
 	if (key.size() > 1) {
-		std::transform(key.begin(), key.end(), key.begin(), ::toupper);
-		for (std::map<std::string,int>::iterator it = num.begin(); it != num.end(); ++it)
+		std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+		const char* needle = key.c_str();
+
+		for(int i = 0; i < 190; i++)
 		{
-			std::size_t found = it->first.find(key);
-			if (found != std::string::npos)
+			const char* haystack = KeyNames[i];
+			size_t len = strlen(needle) + 1;
+			char* haystackLowercase = new char[len];
+			for (int i = 0; i < len; i++)
+				haystackLowercase[i] = tolower(haystack[i]);
+
+			//clientMessageF("%s", needleLowercase);
+
+			if(strcmp(needle, haystackLowercase) == 0)
 			{
 				IModule* mod = moduleMgr->getModuleByName(moduleName);
 				if (mod == nullptr) {
 					clientMessageF("%sCould not find Module with name: %s", RED, moduleName.c_str());
 				}
 				else {
-					mod->setKeybind( it->second);
-					clientMessageF("%sThe Keybind of %s is now '%s'", GREEN, mod->getModuleName(),it->first.c_str());
+					mod->setKeybind(i);
+					clientMessageF("%sThe Keybind of %s is now '%s'", GREEN, mod->getModuleName(), haystack);
 				}
+				delete[] haystackLowercase;
 				return true;
 			}
+			delete[] haystackLowercase;
 		}
 		clientMessageF("%sInvalid Key!", RED);
 		return true;
