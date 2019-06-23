@@ -233,18 +233,34 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 a1, __int64 a2, __int64 a3)
 	return oFunc(a1, a2, a3);
 }
 
-void Hooks::HIDController_keyMouse(void* a1, void* a2, void* a3)
+void Hooks::HIDController_keyMouse(C_HIDController* a1, void* a2, void* a3)
 {
 	static auto oFunc = g_Hooks.HIDController_keyMouseHook->GetOriginal<HIDController_keyMouse_t>();
-	GameData::addHIDController(a1);
-	static IModule* ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
-	if (ClickGuiModule == nullptr)
-		ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
-	else if (ClickGuiModule->isEnabled()) {
-		ClickGui::onMouseClickUpdate(true);
-		return;
+	static IModule* clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
+	bool callOriginalFunc = true;
+
+	GameData::setHIDController(a1);
+
+	static bool* clickMap = static_cast<bool*>(malloc(0x5));
+	
+	if (clickGuiModule == nullptr)
+		clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
+	else if (clickGuiModule->isEnabled()) {
+		for (uintptr_t key = 0; key < 5; key++) {
+			bool* newKey = (&a1->leftClickDown) + key;
+			bool* oldKey = clickMap + key;
+			if (*newKey != *oldKey) {
+				ClickGui::onMouseClickUpdate((int)key, *newKey);
+			}
+		}
+		
+		callOriginalFunc = false;
 	}
-	oFunc(a1, a2, a3); // Call Original Func
+
+	memcpy(clickMap, &a1->leftClickDown, 5);
+
+	if(callOriginalFunc)
+		oFunc(a1, a2, a3); // Call Original Func
 	return;
 }
 

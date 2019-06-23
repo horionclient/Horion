@@ -136,7 +136,12 @@ void ClickGui::render()
 void ClickGui::init() {
 }
 
-void ClickGui::onMouseClickUpdate(bool isDown)
+void ClickGui::onMouseClickUpdate(int key, bool isDown)
 {
-	isLeftClickDown = isDown;
+	switch (key) {
+	case 0: // Left Click
+		isLeftClickDown = isDown;
+		break;
+	}
+	
 }

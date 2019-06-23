@@ -13,5 +13,5 @@ private:
 public:
 	static void init();
 	static void render();
-	static void onMouseClickUpdate(bool isDown);
+	static void onMouseClickUpdate(int key, bool isDown);
 };

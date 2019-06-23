@@ -143,5 +143,6 @@
     <ClInclude Include="Horion\Module\Modules\AutoTotem.h" />
     <ClInclude Include="Horion\Menu\ClickGui.h" />
     <ClInclude Include="Horion\Module\Modules\ClickGuiMod.h" />
+    <ClInclude Include="SDK\CHIDController.h" />
   </ItemGroup>
 </Project>

@@ -52,9 +52,9 @@ bool GameData::isKeyPressed(int key) {
 }
 
 bool GameData::isLeftClickDown() {
-	if (g_Data.hid == 0)
+	if (g_Data.hidController == 0)
 		return false;
-	return *reinterpret_cast<bool*>(g_Data.hid + 0x50);
+	return g_Data.hidController->leftClickDown;
 }
 
 bool GameData::shouldTerminate()
@@ -98,9 +98,9 @@ void GameData::EntityList_tick(C_EntityList * list)
 	g_Data.entityList = list;
 }
 
-void GameData::addHIDController(void*  Hid)
+void GameData::setHIDController(C_HIDController* Hid)
 {
-	g_Data.hid = reinterpret_cast<uintptr_t>(Hid);
+	g_Data.hidController = Hid;
 }
 
 void GameData::forEachEntity(void(*callback)(C_Entity *))
