@@ -6,6 +6,6 @@
 class GuiUtils
 {
 public:
-	static void drawCrossLine(vec4_t pos, MC_Color col,float lineWidth);
+	static void drawCrossLine(vec4_t pos, MC_Color col,float lineWidth,bool secondCross);
 };
 

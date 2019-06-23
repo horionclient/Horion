@@ -46,8 +46,11 @@ void ClickGui::renderLabel(const char * text)
 	mousePos.div(windowSizeReal);
 	mousePos.mul(windowSize);
 
+	DrawUtils::fillRectangle(vec4_t(0, 0, g_Data.getClientInstance()->getGuiData()->widthGame,
+		g_Data.getClientInstance()->getGuiData()->heightGame), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.025f);
+
 	std::string textStr = text;
-	float textWidth0 = DrawUtils::getTextWidth(&textStr);
+	float textWidth = DrawUtils::getTextWidth(&textStr);
 
 	vec2_t textPos = vec2_t(
 		xOffset1 + textPadding,
@@ -61,14 +64,14 @@ void ClickGui::renderLabel(const char * text)
 	);
 	DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 	DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), 1.0f);
-	GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(0.1f, 0.8f, 0.1f, 1.0f), 0.5f);
+	GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(1.0f, 0.2f, 0, 1.0f), 0.5f,false);
 	yOffset1 += textHeight + (textPadding * 2);
 
 	// Loop through mods to display Labels
 	for (std::vector<IModule*>::iterator it = CmoduleList.begin(); it != CmoduleList.end(); ++it) {
 
 		textStr = (*it)->getModuleName();
-		float textWidth = DrawUtils::getTextWidth(&textStr);
+		textWidth = DrawUtils::getTextWidth(&textStr);
 
 		textPos = vec2_t(
 			xOffset1 + textPadding,
@@ -80,26 +83,20 @@ void ClickGui::renderLabel(const char * text)
 			xOffset1 + maxLenght + 10.5f,
 			yOffset1 + textHeight
 		);
-		DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
+		DrawUtils::drawText(textPos, &textStr, (*it)->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 		if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos)) {
 
+			DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 0.1f),1.0f);
 			if (isdown) {
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 0.1f), (*it)->isEnabled() ? 0.6f : 0.6f);
 				(*it)->toggle();
 				isdown = false;
 			}
-			else
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.7f, 0.3f, 0.1f), (*it)->isEnabled() ? 0.4f : 0.15f);
 		}
-		else
-			DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), (*it)->isEnabled() ? 0.4f : 0.15f);
-		GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(0.1f, 0.8f, 0.1f, 1.0f),0.5f);
+		GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(1.0f, 0.2f, 0, 1.0f), 0.5f,true);
 
 		yOffset1 += textHeight + (textPadding * 2);
 	}
-	DrawUtils::fillRectangle(vec4_t(0, 0, g_Data.getClientInstance()->getGuiData()->widthGame,
-		g_Data.getClientInstance()->getGuiData()->heightGame), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.025f);
-
+	DrawUtils::fillRectangle(vec4_t(xOffset1, 4, rectPos.z,yOffset1), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
 	DrawUtils::flush();
 	CmoduleList.clear();
 	yOffset1 = 4;
