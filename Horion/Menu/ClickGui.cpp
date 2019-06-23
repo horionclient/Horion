@@ -1,8 +1,5 @@
 #include "ClickGui.h"
 
-
-// State
-int i;
 // Render
 float yOffset1;
 float xOffset1;
@@ -115,9 +112,6 @@ void ClickGui::renderCategory(Category category)
 	DrawUtils::flush();
 	CmoduleList.clear();
 	yOffset1 = 4;
-	i++;
-	if (i > 4)
-		i = 0;
 	xOffset1 += 100;
 }
 
@@ -136,7 +130,6 @@ void ClickGui::render()
 }
 
 void ClickGui::init() {
-	i = 0;
 	yOffset1 = 4;
 	xOffset1 = 100;
 }
