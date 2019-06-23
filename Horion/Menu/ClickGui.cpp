@@ -153,11 +153,9 @@ void ClickGui::renderCategory(Category category)
 				dragStart = mousePos;
 			}
 			else { // Stopped dragging
-				logF("stopped dragging");
 				isDragging = false;
 			}
 		} else if (rectPos.contains(&mousePos) && shouldToggle) {
-			logF("started dragging");
 			isDragging = true;
 			draggedWindow = getWindowHash(categoryName);
 			shouldToggle = false;
