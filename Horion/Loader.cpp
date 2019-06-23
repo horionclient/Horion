@@ -17,7 +17,11 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 
 	bool* keyMap = static_cast<bool*>(malloc(0xFF * 4 + 0x4));
 	if(keyMap == 0)
-		throw std::exception("Keymap 1 not located");
+		throw std::exception("Keymap not allocated");
+
+	uintptr_t clickMap = reinterpret_cast<uintptr_t>(malloc(5));
+	if (clickMap == 0)
+		throw std::exception("Clickmap not allocated");
 
 	bool* keyMapAddr = 0x0;
 	uintptr_t sigOffset = Utils::FindSignature("48 8D 0D ?? ?? ?? ?? 89 3C 81 E9");
@@ -29,6 +33,8 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		logF("!!!KeyMap not located!!!");
 		throw std::exception("Keymap not located");
 	}
+
+	C_HIDController** hidController = g_Data.getHIDController();
 
 	while (isRunning) {
 		if (GameData::isKeyDown('L') && GameData::isKeyDown(VK_CONTROL) || GameData::shouldTerminate()) { // Press L to uninject
@@ -46,6 +52,22 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			if(*newKey != *oldKey) // Skip Chat or inventory checks
 				TabGui::onKeyUpdate((int)i, *newKey);
 		}
+
+		if (*hidController != 0) {
+			
+			for (uintptr_t key = 0; key < 5; key++) {
+				bool newKey = (*hidController)->clickMap[key];
+				if (newKey)
+					logF("key down=%i", key);
+				bool* oldKey = reinterpret_cast<bool*>(clickMap + key);
+				if (newKey != *oldKey) {
+					ClickGui::onMouseClickUpdate((int)key, newKey);
+				}
+			}
+
+			memcpy(reinterpret_cast<void*>(clickMap), &(*hidController)->leftClickDown, 5);
+		}
+		
 
 		memcpy_s(keyMap, 0xFF * 4, keyMapAddr, 0xFF * 4);
 		
