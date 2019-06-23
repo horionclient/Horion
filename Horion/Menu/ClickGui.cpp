@@ -1,8 +1,8 @@
 #include "ClickGui.h"
 
 // Render
-float yOffset1;
-float xOffset1;
+static float yOffset;
+static float xOffset;
 
 bool isdown;
 
@@ -64,20 +64,20 @@ void ClickGui::renderCategory(Category category)
 	float textWidth = DrawUtils::getTextWidth(&textStr);
 
 	vec2_t textPos = vec2_t(
-		xOffset1 + textPadding,
-		yOffset1 + textPadding
+		xOffset + textPadding,
+		yOffset + textPadding
 	);
 	vec4_t rectPos = vec4_t(
-		xOffset1,
-		yOffset1,
-		xOffset1 + maxLength + 10.5f,
-		yOffset1 + textHeight
+		xOffset,
+		yOffset,
+		xOffset + maxLength + 10.5f,
+		yOffset + textHeight
 	);
 
 	DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 	DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), 1.0f);
 	GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(1.0f, 0.2f, 0, 1.0f), 0.5f, false);
-	yOffset1 += textHeight + (textPadding * 2);
+	yOffset += textHeight + (textPadding * 2);
 
 	// Loop through mods to display Labels
 	for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it) {
@@ -86,14 +86,14 @@ void ClickGui::renderCategory(Category category)
 		textWidth = DrawUtils::getTextWidth(&textStr);
 
 		textPos = vec2_t(
-			xOffset1 + textPadding,
-			yOffset1 + textPadding
+			xOffset + textPadding,
+			yOffset + textPadding
 		);
 		rectPos = vec4_t(
-			xOffset1,
-			yOffset1,
-			xOffset1 + maxLength + 10.5f,
-			yOffset1 + textHeight
+			xOffset,
+			yOffset,
+			xOffset + maxLength + 10.5f,
+			yOffset + textHeight
 		);
 		DrawUtils::drawText(textPos, &textStr, (*it)->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 		if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos)) {
@@ -106,21 +106,21 @@ void ClickGui::renderCategory(Category category)
 		}
 		GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(1.0f, 0.2f, 0, 1.0f), 0.5f, true);
 
-		yOffset1 += textHeight + (textPadding * 2);
+		yOffset += textHeight + (textPadding * 2);
 	}
-	DrawUtils::fillRectangle(vec4_t(xOffset1, 4, rectPos.z,yOffset1), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
+	DrawUtils::fillRectangle(vec4_t(xOffset, 4, rectPos.z,yOffset), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
 	DrawUtils::flush();
 	moduleList.clear();
-	yOffset1 = 4;
-	xOffset1 += 100;
+	yOffset = 4;
+	xOffset += 100;
 }
 
 void ClickGui::render()
 {
 	if (!moduleMgr->isInitialized())
 		return;
-	yOffset1 = 4;
-	xOffset1 = 150;
+	yOffset = 4;
+	xOffset = 150;
 	// Render all categorys
 	renderCategory(COMBAT);
 	renderCategory(VISUAL);
@@ -130,8 +130,8 @@ void ClickGui::render()
 }
 
 void ClickGui::init() {
-	yOffset1 = 4;
-	xOffset1 = 100;
+	yOffset = 4;
+	xOffset = 100;
 }
 
 void ClickGui::onMouseClickUpdate(bool isDown)

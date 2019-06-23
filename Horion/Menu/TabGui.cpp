@@ -7,8 +7,8 @@ int selected[4];
 bool toggleCurrentSelection = false;
 
 // Render
-float yOffset;
-float xOffset;
+static float yOffset;
+static float xOffset;
 int renderedLevel;
 
 struct LabelContainer {
