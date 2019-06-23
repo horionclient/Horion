@@ -1,13 +1,14 @@
 #include "ClickGui.h"
 
-// Render
 
+std::map<int, std::shared_ptr<ClickWindow>> windowMap;
 
 bool isLeftClickDown = false;
 bool shouldToggle = false;
 bool isRightClickDown = false;
 
 bool isDragging = false;
+vec2_t dragStart = vec2_t();
 
 void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>* modList) {
 	std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
@@ -18,15 +19,62 @@ void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>*
 	}
 }
 
+// Stolen from IMGUI
+unsigned int ClickGui::getCrcHash(const char * str)
+{
+	static unsigned int crc32_lut[256] = { 0 };
+	static int seed = 0;
+	if (!crc32_lut[1])
+	{
+		const unsigned int polynomial = 0xEDB88320;
+		for (unsigned int i = 0; i < 256; i++)
+		{
+			unsigned int crc = i;
+			for (unsigned int j = 0; j < 8; j++)
+				crc = (crc >> 1) ^ (unsigned int(-int(crc & 1)) & polynomial);
+			crc32_lut[i] = crc;
+		}
+	}
+
+	seed = ~seed;
+	unsigned int crc = seed;
+	const unsigned char* current = (const unsigned char*)str;
+	{
+		// Zero-terminated string
+		while (unsigned char c = *current++)
+		{
+			// We support a syntax of "label###id" where only "###id" is included in the hash, and only "label" gets displayed.
+			// Because this syntax is rarely used we are optimizing for the common case.
+			// - If we reach ### in the string we discard the hash so far and reset to the seed.
+			// - We don't do 'current += 2; continue;' after handling ### to keep the code smaller.
+			if (c == '#' && current[0] == '#' && current[1] == '#')
+				crc = seed;
+			crc = (crc >> 8) ^ crc32_lut[(crc & 0xFF) ^ c];
+		}
+	}
+	return ~crc;
+}
+
+std::shared_ptr<ClickWindow> ClickGui::getWindow(const char * name)
+{
+	int id = getCrcHash(name);
+	auto search = windowMap.find(id);
+	if (search != windowMap.end()) { // Window exists already
+		return search->second;
+	}
+	else { // Create window
+		// TODO: restore settings for position etc
+		std::shared_ptr<ClickWindow> newWindow = std::make_shared<ClickWindow>();
+		windowMap[id] = newWindow;
+		return newWindow;
+	}
+}
+
 void ClickGui::renderCategory(Category category)
 {
 	static constexpr float textPadding = 1.0f;
 	static constexpr float textSize = 1.0f;
 	static constexpr float textHeight = textSize * 10.0f;
-
-	const float yOffset = 4;
-	float currentYOffset = yOffset;
-	const float xOffset = 150;
 	
 	const char* categoryName;
 	// Get Category Name
@@ -49,6 +97,12 @@ void ClickGui::renderCategory(Category category)
 			break;
 		}
 	}
+
+	const std::shared_ptr<ClickWindow> ourWindow = getWindow(categoryName);
+
+	const float xOffset = ourWindow->pos.x;
+	const float yOffset = ourWindow->pos.y;
+	float currentYOffset = yOffset;
 	
 	// Get All Modules in our category
 	std::vector<IModule*> moduleList;
@@ -86,6 +140,23 @@ void ClickGui::renderCategory(Category category)
 			xOffset + maxLength + 10.5f,
 			currentYOffset + textHeight
 		);
+
+		if (isDragging) {
+			if (isLeftClickDown) { // Still dragging
+				vec2_t diff = vec2_t(mousePos).sub(dragStart);
+				ourWindow->pos.add(diff);
+				dragStart = mousePos;
+			}
+			else { // Stopped dragging
+				logF("stopped dragging");
+				isDragging = false;
+			}
+		} else if (rectPos.contains(&mousePos) && shouldToggle) {
+			logF("started dragging");
+			isDragging = true;
+			shouldToggle = false;
+			dragStart = mousePos;
+		}
 
 		std::string textStr = categoryName;
 		DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
@@ -152,8 +223,6 @@ void ClickGui::render()
 	renderCategory(BUILD);
 	renderCategory(EXPLOITS);
 
-	isLeftClickDown = false;
-	isRightClickDown = false;
 	shouldToggle = false;
 }
 
