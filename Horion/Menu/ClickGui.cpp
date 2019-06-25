@@ -3,6 +3,7 @@
 bool isLeftClickDown = false;
 bool shouldToggle = false;
 bool isRightClickDown = false;
+bool isStartPos = true;
 
 std::map<unsigned int, std::shared_ptr<ClickWindow>> windowMap;
 
@@ -106,6 +107,27 @@ void ClickGui::renderCategory(Category category)
 
 	const std::shared_ptr<ClickWindow> ourWindow = getWindow(categoryName);
 
+	if (isStartPos) {
+		ourWindow->pos.y = 4;
+		switch (category) {
+		case COMBAT:
+			ourWindow->pos.x = 150;
+			break;
+		case VISUAL:
+			ourWindow->pos.x = 250;
+			break;
+		case MOVEMENT:
+			ourWindow->pos.x = 350;
+			break;
+		case BUILD:
+			ourWindow->pos.x = 450;
+			break;
+		case EXPLOITS:
+			ourWindow->pos.x = 550;
+			break;
+		}
+	}
+
 	const float xOffset = ourWindow->pos.x;
 	const float yOffset = ourWindow->pos.y;
 	float currentYOffset = yOffset;
@@ -161,6 +183,7 @@ void ClickGui::renderCategory(Category category)
 			draggedWindow = getWindowHash(categoryName);
 			shouldToggle = false;
 			dragStart = mousePos;
+			isStartPos = false;
 		}
 
 		std::string textStr = categoryName;
@@ -193,15 +216,12 @@ void ClickGui::renderCategory(Category category)
 				shouldToggle = false;
 			}
 		}
-		else {
-			DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.f, 0.f, 1.f), 1.0f);
-		}
 		DrawUtils::drawText(textPos, &textStr, (*it)->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 		GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(1.0f, 0.2f, 0, 1.0f), 0.5f, true);
 
 		currentYOffset += textHeight + (textPadding * 2);
 	}
-	
+	DrawUtils::fillRectangle(vec4_t(xOffset, yOffset,xEnd, currentYOffset), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
 	DrawUtils::flush();
 	moduleList.clear();
 }

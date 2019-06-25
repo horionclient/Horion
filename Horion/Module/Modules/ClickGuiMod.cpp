@@ -23,3 +23,8 @@ void ClickGuiMod::onEnable(){
 void ClickGuiMod::onDisable() {
 	g_Data.getClientInstance()->grabMouse();
 }
+
+void ClickGuiMod::onPostRender() {
+	if (GameData::canUseMoveKeys())
+		g_Data.getClientInstance()->releaseMouse();
+}

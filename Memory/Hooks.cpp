@@ -118,6 +118,10 @@ void Hooks::Init()
 	void* isUsingItem = reinterpret_cast<void*>(Utils::FindSignature("80 79 ?? 00 74 5E 48 8B 11 45 33 C0 48 85 D2 74 05 4C 8B 0A"));
 	g_Hooks.Player_isUsingItemHook = std::make_unique<FuncHook>(isUsingItem, Hooks::Player_isUsingItem);
 	g_Hooks.Player_isUsingItemHook->init();
+
+	/*void* test = reinterpret_cast<void*>(0x7FF74DA2EA30);
+	g_Hooks.testHook = std::make_unique<FuncHook>(test, Hooks::testFunc);
+	g_Hooks.testHook->init();*/
 	//logF("Hooks hooked");
 }
 
@@ -142,6 +146,19 @@ void Hooks::Restore()
 	g_Hooks.LevelRenderer_renderLevelHook->Restore();
 	g_Hooks.BlockLegacy_getLightEmissionHook->Restore();
 	g_Hooks.Player_isUsingItemHook->Restore();
+}
+
+void __fastcall Hooks::sub_14140E8D0(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8) {
+
+	static auto oFunc = g_Hooks.yikesHook->GetOriginal<sub_14140E8D0_t>();
+	static IModule* clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
+
+	if (clickGuiModule == nullptr)
+		clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
+	else if (clickGuiModule->isEnabled()) {
+		return;
+	}
+	oFunc(a1, a2, a3,a4,a5,a6,a7,a8); // Call Original Func
 }
 
 void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
@@ -248,13 +265,11 @@ void Hooks::HIDController_keyMouse(C_HIDController* a1, void* a2, void* a3)
 	static IModule* clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 
 	GameData::setHIDController(a1);
-	
 	if (clickGuiModule == nullptr)
 		clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 	else if (clickGuiModule->isEnabled()) {
 		//return;
 	}
-
 	oFunc(a1, a2, a3); // Call Original Func
 	return;
 }

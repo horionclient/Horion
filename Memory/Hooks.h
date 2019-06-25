@@ -62,6 +62,7 @@ private:
 	static BYTE* __fastcall BlockLegacy_getLightEmission(C_BlockLegacy* a1 ,BYTE* a2);
 	static __int64 LevelRenderer_renderLevel(__int64 a1, __int64 a2, __int64 a3);
 	static bool __fastcall Player_isUsingItem(uintptr_t a1, uintptr_t rdx, uintptr_t r8, uintptr_t r9);
+	static void __fastcall sub_14140E8D0(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
 	 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
@@ -87,6 +88,9 @@ private:
 	std::unique_ptr<FuncHook> BlockLegacy_getLightEmissionHook;
 	std::unique_ptr<FuncHook> LevelRenderer_renderLevelHook;
 	std::unique_ptr<FuncHook> Player_isUsingItemHook;
+	std::unique_ptr<FuncHook> yikesHook;
+	std::unique_ptr<FuncHook> testHook;
+
 
 
 	typedef __int64(__fastcall* LevelRenderer_renderLevel_t)(__int64 a1, __int64 a2, __int64 a3);
@@ -109,12 +113,11 @@ private:
 	typedef void(__fastcall* MultiLevelPlayer_tick_t)(C_EntityList* entityList);
 	typedef void(__fastcall* LocalPlayer_CheckFallDamage_t)(C_LocalPlayer* a, float* a2, void*a3);
 	typedef void(__fastcall* GameMode_startDestroyBlock_t)(C_GameMode* a, vec3_ti* a2, uint8_t face, void* a4, void* a5);
-	typedef __int64(__fastcall* HIDController_keyMouse_t)(C_HIDController* a1,void* a2, void* a3);
+	typedef void(__fastcall* HIDController_keyMouse_t)(C_HIDController* a1,void* a2, void* a3);
 	typedef int(__fastcall *BlockLegacy_getRenderLayer_t)(C_BlockLegacy* a1);
 	typedef BYTE*(__fastcall *BlockLegacy_getLightEmission_t)(C_BlockLegacy* a1 ,BYTE* a2);
 	typedef bool(__fastcall *Player_isUsingItem_t)(uintptr_t a1);
-
-
+	typedef __int64(__fastcall *sub_14140E8D0_t)(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
 };
 
 extern Hooks g_Hooks;
