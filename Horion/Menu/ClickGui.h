@@ -11,6 +11,7 @@
 struct ClickWindow {
 	vec2_t pos;
 	bool isFocused = false;
+	bool isExtended = true;
 };
 
 class ClickGui

@@ -216,7 +216,7 @@ bool __fastcall Hooks::Player_isUsingItem(C_ItemStack* a1)
 	else if (NoSlowModule->isEnabled()) {
 		//static C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 		//static C_Inventory* inv = supplies->inventory;
-		if (a1->item != NULL && (*a1->item)->itemId == 261)
+		if (a1 != NULL && a1->item != NULL && (*a1->item)->itemId == 261)
 			return true;
 	}
 	return oFunc(a1);

@@ -76,6 +76,11 @@ void IModule::setKeybind(int key) {
 	this->keybind = key;
 }
 
+bool IModule::allowAutoStart()
+{
+	return true;
+}
+
 void IModule::onTick(C_GameMode*)
 {
 }

@@ -13,5 +13,6 @@ public:
 	virtual const char* getModuleName() override;
 	virtual void onDisable() override;
 	virtual void onEnable() override;
+	virtual bool allowAutoStart() override;
 };
 

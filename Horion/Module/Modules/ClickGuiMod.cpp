@@ -20,6 +20,11 @@ void ClickGuiMod::onEnable(){
 	g_Data.getClientInstance()->releaseMouse();
 }
 
+bool ClickGuiMod::allowAutoStart()
+{
+	return false;
+}
+
 void ClickGuiMod::onDisable() {
 	g_Data.getClientInstance()->grabMouse();
 }
