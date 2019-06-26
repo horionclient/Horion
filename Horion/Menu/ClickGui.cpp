@@ -8,7 +8,7 @@ bool isStartPos = true;
 std::map<unsigned int, std::shared_ptr<ClickWindow>> windowMap;
 
 bool isDragging = false;
-unsigned int draggedWindow = -2;
+unsigned int draggedWindow = -1;
 vec2_t dragStart = vec2_t();
 
 void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>* modList) {
