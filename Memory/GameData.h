@@ -9,9 +9,7 @@
 #include "SlimMem.h"
 #include <map>
 
-struct ClickWindow {
-	vec2_t pos;
-};
+
 class GameData {
 private:
 	C_ClientInstance* clientInstance = 0;
