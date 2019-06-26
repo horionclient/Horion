@@ -2,7 +2,7 @@
 #include "../Directx/Directx.h"
 
 Hooks    g_Hooks;
-
+bool isTicked = false;
 
 void Hooks::Init()
 {
@@ -119,9 +119,9 @@ void Hooks::Init()
 	g_Hooks.Player_isUsingItemHook = std::make_unique<FuncHook>(isUsingItem, Hooks::Player_isUsingItem);
 	g_Hooks.Player_isUsingItemHook->init();
 
-	/*void* test = reinterpret_cast<void*>(0x7FF74DA2EA30);
-	g_Hooks.testHook = std::make_unique<FuncHook>(test, Hooks::testFunc);
-	g_Hooks.testHook->init();*/
+	void* clickHook = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 48 89 58 ?? 48 89 68 ?? 48 89 70 ?? 57 41 54 41 55 41 56 41 57 48 83 EC 60 44 ?? ?? ?? ?? ?? ?? ?? ?? 33 F6"));
+	g_Hooks.clickHook = std::make_unique<FuncHook>(clickHook, Hooks::clickFunc);
+	g_Hooks.clickHook->init();
 	//logF("Hooks hooked");
 }
 
@@ -146,20 +146,25 @@ void Hooks::Restore()
 	g_Hooks.LevelRenderer_renderLevelHook->Restore();
 	g_Hooks.BlockLegacy_getLightEmissionHook->Restore();
 	g_Hooks.Player_isUsingItemHook->Restore();
+	g_Hooks.clickHook->Restore();
 }
 
-void __fastcall Hooks::sub_14140E8D0(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8) {
+void __fastcall Hooks::clickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8){
 
-	static auto oFunc = g_Hooks.yikesHook->GetOriginal<sub_14140E8D0_t>();
+	static auto oFunc = g_Hooks.clickHook->GetOriginal<clickFunc_t>();
 	static IModule* clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 
 	if (clickGuiModule == nullptr)
 		clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 	else if (clickGuiModule->isEnabled()) {
-		return;
+		if (isTicked) {
+			isTicked = false;
+			return;
+		}
 	}
-	oFunc(a1, a2, a3,a4,a5,a6,a7,a8); // Call Original Func
+	oFunc(a1,a2,a3,a4,a5,a6,a7,a8); // Call Original Func
 }
+
 
 void __fastcall Hooks::GameMode_tick(C_GameMode * _this)
 {
@@ -202,15 +207,16 @@ int __fastcall Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1)
 	return oFunc(a1);
 }
 
-bool __fastcall Hooks::Player_isUsingItem(uintptr_t a1, uintptr_t rdx, uintptr_t r8, uintptr_t r9)
+bool __fastcall Hooks::Player_isUsingItem(C_ItemStack* a1)
 {
 	static auto oFunc = g_Hooks.Player_isUsingItemHook->GetOriginal<Player_isUsingItem_t>();
 	static IModule* NoSlowModule = moduleMgr->getModule<NoSlowDown>();
 	if (NoSlowModule == nullptr)
 		NoSlowModule = moduleMgr->getModule<NoSlowDown>();
 	else if (NoSlowModule->isEnabled()) {
-		uintptr_t _this = reinterpret_cast<uintptr_t>(g_Data.getLocalPlayer());
-		if (_this + 0x1998 == a1 && rdx == NULL)// && r8 == NULL && r9 == NULL)
+		//static C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
+		//static C_Inventory* inv = supplies->inventory;
+		if (a1->item != NULL && (*a1->item)->itemId == 261)
 			return true;
 	}
 	return oFunc(a1);
@@ -262,14 +268,8 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 a1, __int64 a2, __int64 a3)
 void Hooks::HIDController_keyMouse(C_HIDController* a1, void* a2, void* a3)
 {
 	static auto oFunc = g_Hooks.HIDController_keyMouseHook->GetOriginal<HIDController_keyMouse_t>();
-	static IModule* clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
-
 	GameData::setHIDController(a1);
-	if (clickGuiModule == nullptr)
-		clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
-	else if (clickGuiModule->isEnabled()) {
-		//return;
-	}
+	isTicked = true;
 	oFunc(a1, a2, a3); // Call Original Func
 	return;
 }
@@ -428,7 +428,7 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
 		if (frenchBoy.vTable == packet->vTable) {
 			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
-			p->onGround = false;
+			p->onGround = true;
 		}
 	}
 
