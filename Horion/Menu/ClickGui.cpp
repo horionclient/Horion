@@ -1,9 +1,9 @@
 #include "ClickGui.h"
 
-bool isLeftClickDown = false;
-bool shouldToggle = false;
+bool isLeftClickDown = false; 
 bool isRightClickDown = false;
-bool isStartPos = true;
+bool shouldToggle = false; // If true, toggle the focused module
+bool resetStartPos = true;
 
 std::map<unsigned int, std::shared_ptr<ClickWindow>> windowMap;
 
@@ -107,7 +107,7 @@ void ClickGui::renderCategory(Category category)
 
 	const std::shared_ptr<ClickWindow> ourWindow = getWindow(categoryName);
 
-	if (isStartPos) {
+	if (resetStartPos) {
 		ourWindow->pos.y = 4;
 		switch (category) {
 		case COMBAT:
@@ -126,6 +126,8 @@ void ClickGui::renderCategory(Category category)
 			ourWindow->pos.x = 550;
 			break;
 		}
+
+		resetStartPos = false;
 	}
 
 	const float xOffset = ourWindow->pos.x;
@@ -169,7 +171,7 @@ void ClickGui::renderCategory(Category category)
 			currentYOffset + textHeight
 		);
 
-		if (isDragging && getWindowHash(categoryName) == draggedWindow) {
+		if (isDragging && getWindowHash(categoryName) == draggedWindow) { // WE are being dragged
 			if (isLeftClickDown) { // Still dragging
 				vec2_t diff = vec2_t(mousePos).sub(dragStart);
 				ourWindow->pos.add(diff);
@@ -183,7 +185,6 @@ void ClickGui::renderCategory(Category category)
 			draggedWindow = getWindowHash(categoryName);
 			shouldToggle = false;
 			dragStart = mousePos;
-			isStartPos = false;
 		}
 
 		std::string textStr = categoryName;
@@ -248,15 +249,13 @@ void ClickGui::render()
 	renderCategory(BUILD);
 	renderCategory(EXPLOITS);
 
-	shouldToggle = false;
+	shouldToggle = false; 
 }
 
-void ClickGui::init() {
-}
+void ClickGui::init() { }
 
 void ClickGui::onMouseClickUpdate(int key, bool isDown)
 {
-	//logF("onMouseClickUpdate(%i, %s)", key, isDown ? "true" : "false");
 	switch (key) {
 	case 0: // Left Click
 		isLeftClickDown = isDown;

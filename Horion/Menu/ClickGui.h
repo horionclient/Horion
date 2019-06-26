@@ -8,7 +8,10 @@
 #include "../Module/ModuleManager.h"
 
 
-
+struct ClickWindow {
+	vec2_t pos;
+	bool isFocused = false;
+};
 
 class ClickGui
 {
