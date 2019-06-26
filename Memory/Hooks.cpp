@@ -269,8 +269,19 @@ void Hooks::HIDController_keyMouse(C_HIDController* a1, void* a2, void* a3)
 {
 	static auto oFunc = g_Hooks.HIDController_keyMouseHook->GetOriginal<HIDController_keyMouse_t>();
 	GameData::setHIDController(a1);
-	isTicked = true;
+	//isTicked = true;
 	oFunc(a1, a2, a3); // Call Original Func
+	uintptr_t clickMap = reinterpret_cast<uintptr_t>(malloc(5));
+	if (clickMap == 0)
+		throw std::exception("Clickmap not allocated");
+	for (uintptr_t key = 0; key < 5; key++) {
+		bool newKey = a1->clickMap[key];
+		bool* oldKey = reinterpret_cast<bool*>(clickMap + key);
+		if (newKey != *oldKey) {
+			isTicked = true;
+		}
+	}
+	memcpy(reinterpret_cast<void*>(clickMap), &a1->leftClickDown, 5);
 	return;
 }
 
