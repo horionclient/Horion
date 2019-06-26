@@ -301,10 +301,10 @@ struct vec4_t
 		vec2_t start = vec2_t(x, y);
 		vec2_t end = vec2_t(z, w);
 
-		if (point->x < start.x || point->y < start.y)
+		if (point->x <= start.x || point->y <= start.y)
 			return false;
 
-		if (point->x > end.x || point->y > end.y)
+		if (point->x >= end.x || point->y >= end.y)
 			return false;
 		return true;
 	};

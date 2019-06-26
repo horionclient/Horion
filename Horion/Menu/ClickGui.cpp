@@ -195,7 +195,7 @@ void ClickGui::renderCategory(Category category)
 			// Draw Text
 			std::string textStr = categoryName;
 			DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
-			DrawUtils::fillRectangle(rectPos, MC_Color(0.118f, 0.827f, 0.764f, 1.f), 0.8f);
+			DrawUtils::fillRectangle(rectPos, MC_Color(0.118f, 0.827f, 0.764f, 1.f), 0.95f);
 			// Draw Dash
 			GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(1.0f, 0.2f, 0, 1.0f), 0.5f, false);
 			currentYOffset += textHeight + (textPadding * 2);
@@ -215,16 +215,20 @@ void ClickGui::renderCategory(Category category)
 			xOffset,
 			currentYOffset,
 			xEnd,
-			currentYOffset + textHeight
+			currentYOffset + textHeight + (textPadding * 2)
 		);
 		
 		if (rectPos.contains(&mousePos)) { // Is the Mouse hovering above us?
-			DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 0.1f), 1.0f);
+			DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 1.f), 0.8f);
 			if (shouldToggle) { // Are we being clicked?
 				(*it)->toggle();
 				shouldToggle = false;
 			}
 		}
+		else {
+			DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.4f, 0.4f, 1.f), 0.8f);
+		}
+
 		DrawUtils::drawText(textPos, &textStr, (*it)->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 		GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(1.0f, 0.2f, 0, 1.0f), 0.5f, true);
 
