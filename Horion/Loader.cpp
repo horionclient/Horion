@@ -69,7 +69,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 
 		memcpy_s(keyMap, 0xFF * 4, keyMapAddr, 0xFF * 4);
 		
-		Sleep(10); 
+		Sleep(2); 
 	}
 	logF("Uninjecting...");
 
