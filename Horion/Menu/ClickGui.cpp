@@ -107,6 +107,7 @@ void ClickGui::renderCategory(Category category)
 
 	const std::shared_ptr<ClickWindow> ourWindow = getWindow(categoryName);
 
+	// Reset Windows to pre-set positions to avoid confusion
 	if (resetStartPos) {
 		ourWindow->pos.y = 4;
 		switch (category) {
@@ -126,8 +127,6 @@ void ClickGui::renderCategory(Category category)
 			ourWindow->pos.x = 550;
 			break;
 		}
-
-		resetStartPos = false;
 	}
 
 	const float xOffset = ourWindow->pos.x;
@@ -168,31 +167,40 @@ void ClickGui::renderCategory(Category category)
 			xOffset,
 			currentYOffset,
 			xOffset + maxLength + 10.5f,
-			currentYOffset + textHeight
+			currentYOffset + textHeight + (textPadding * 2)
 		);
 
-		if (isDragging && getWindowHash(categoryName) == draggedWindow) { // WE are being dragged
-			if (isLeftClickDown) { // Still dragging
-				vec2_t diff = vec2_t(mousePos).sub(dragStart);
-				ourWindow->pos.add(diff);
+		// Dragging Logic
+		{
+			if (isDragging && getWindowHash(categoryName) == draggedWindow) { // WE are being dragged
+				if (isLeftClickDown) { // Still dragging
+					vec2_t diff = vec2_t(mousePos).sub(dragStart);
+					ourWindow->pos.add(diff);
+					dragStart = mousePos;
+				}
+				else { // Stopped dragging
+					isDragging = false;
+				}
+			}
+			else if (rectPos.contains(&mousePos) && shouldToggle) {
+				isDragging = true;
+				draggedWindow = getWindowHash(categoryName);
+				shouldToggle = false;
 				dragStart = mousePos;
 			}
-			else { // Stopped dragging
-				isDragging = false;
-			}
-		} else if (rectPos.contains(&mousePos) && shouldToggle) {
-			isDragging = true;
-			draggedWindow = getWindowHash(categoryName);
-			shouldToggle = false;
-			dragStart = mousePos;
 		}
-
-		std::string textStr = categoryName;
-		DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
-		DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), 1.0f);
-		// Draw Dash
-		GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(1.0f, 0.2f, 0, 1.0f), 0.5f, false);
-		currentYOffset += textHeight + (textPadding * 2);
+		
+		// Draw component
+		{
+			// Draw Text
+			std::string textStr = categoryName;
+			DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
+			DrawUtils::fillRectangle(rectPos, MC_Color(0.118f, 0.827f, 0.764f, 1.f), 0.8f);
+			// Draw Dash
+			GuiUtils::drawCrossLine(vec4_t(rectPos.z - 8.0f, rectPos.y + 1.0f, rectPos.z - 1.0f, rectPos.w - 1.0f), MC_Color(1.0f, 0.2f, 0, 1.0f), 0.5f, false);
+			currentYOffset += textHeight + (textPadding * 2);
+		}
+		
 	}
 	
 	// Loop through mods to display Labels
@@ -222,7 +230,8 @@ void ClickGui::renderCategory(Category category)
 
 		currentYOffset += textHeight + (textPadding * 2);
 	}
-	DrawUtils::fillRectangle(vec4_t(xOffset, yOffset,xEnd, currentYOffset), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
+	// Dont do this this is a bad habit
+	//DrawUtils::fillRectangle(vec4_t(xOffset, yOffset,xEnd, currentYOffset), MC_Color(0.f, 0.1f, 0.1f, 0.1f), 0.4f);
 	DrawUtils::flush();
 	moduleList.clear();
 }
@@ -250,6 +259,7 @@ void ClickGui::render()
 	renderCategory(EXPLOITS);
 
 	shouldToggle = false; 
+	resetStartPos = false;
 }
 
 void ClickGui::init() { }
