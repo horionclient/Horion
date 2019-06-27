@@ -148,7 +148,11 @@ private:
 public:
 	TextHolder name2; //0x15D0
 private:
-	char pad_0x15DC[0x448]; //0x15F0
+	char pad_0x15DC[0x3A8]; //0x15F0
+public:
+	C_ItemStack* itemUsed; //0x1998
+private:
+	char pad_0x19A0[0x98]; //0x19A0
 public:
 	uint16_t itemData;//0x1A38 
 	uint16_t itemId;
@@ -497,6 +501,9 @@ public:
 
 	bool isSprinting() {
 		return Utils::CallVFunc<256, bool>(this);
+	};
+	bool isInventoryClosed(){
+		return Utils::CallVFunc<392,bool>(this);
 	};
 };
 

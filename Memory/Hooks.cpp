@@ -214,10 +214,10 @@ bool __fastcall Hooks::Player_isUsingItem(C_ItemStack* a1)
 	if (NoSlowModule == nullptr)
 		NoSlowModule = moduleMgr->getModule<NoSlowDown>();
 	else if (NoSlowModule->isEnabled()) {
-		//static C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
-		//static C_Inventory* inv = supplies->inventory;
-		if (a1 != NULL && a1->item != NULL && (*a1->item)->itemId == 261)
+		if (a1 != NULL && a1->item != NULL && g_Data.getLocalPlayer()->itemUsed != NULL) {
 			return true;
+		}
+			
 	}
 	return oFunc(a1);
 }
@@ -418,7 +418,7 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 			if (mod3->isEnabled())
 			{
 				C_MovePlayerPacket* meme = reinterpret_cast<C_MovePlayerPacket*>(packet);
-				meme->onGround = false; //Don't take Fall Damages when turned off
+				meme->onGround = true; //Don't take Fall Damages when turned off
 				mod3->PacketMeme.push_back(new C_MovePlayerPacket(*meme)); // Saving the packets
 			}
 			return; // Dont call sendToServer
@@ -649,7 +649,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 {
 	static auto oText = g_Hooks.renderTextHook->GetOriginal<renderText_t>();
 	DrawUtils::setCtx(renderCtx, g_Data.getClientInstance()->getGuiData());
-	if (g_Hooks.shouldRender == false)
+	if (g_Hooks.shouldRender == false && g_Data.getLocalPlayer() != NULL && g_Data.getLocalPlayer()->isInventoryClosed()==1)
 		return oText(yeet, renderCtx);
 
 	// Call PreRender() functions
