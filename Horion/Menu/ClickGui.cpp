@@ -241,9 +241,12 @@ void ClickGui::renderCategory(Category category)
 			else {
 				DrawUtils::fillRectangle(rectPos, MC_Color(0.2f, 0.2f, 0.2f, 1.f), 0.7f);
 			}
-
+			if (rectPos.contains(&mousePos) && shouldToggleRightClick) {
+				shouldToggleRightClick = false;
+				(*it)->setExtended(!(*it)->isExtended());
+			}
 			DrawUtils::drawText(textPos, &textStr, (*it)->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
-			GuiUtils::drawCrossLine(vec2_t(xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f, currentYOffset + textPadding + (textHeight / 2)), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, true);
+			GuiUtils::drawCrossLine(vec2_t(xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f, currentYOffset + textPadding + (textHeight / 2)), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize,!(*it)->isExtended());
 
 			currentYOffset += textHeight + (textPadding * 2);
 		}

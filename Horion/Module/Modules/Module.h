@@ -47,6 +47,7 @@ class IModule
 private:
 	bool enabled = false;
 	int keybind = 0x0;
+	bool extended = false;
 	Category category;
 
 	std::vector<SettingEntry*> settings;
@@ -79,5 +80,7 @@ public:
 	virtual void setEnabled(bool enabled);
 	virtual void toggle();
 	virtual bool isEnabled();
+	virtual bool isExtended();
+	virtual void setExtended(bool extended);
 };
 

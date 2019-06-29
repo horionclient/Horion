@@ -30,7 +30,6 @@ void AutoTotem::onEnable() {
 				C_Item* yikes = *test->item;
 				if (yikes->itemId == 450) {
 					g_Data.getLocalPlayer()->setOffhandSlot(test);
-					g_Data.getLocalPlayer()->sendInventory();
 				}
 					
 			}

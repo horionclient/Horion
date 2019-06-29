@@ -83,19 +83,21 @@ void InfiniteReach::onPostRender()
 		}
 	}
 
-	if (targetList.size() > 0 && delay >= 40)
+	if (targetList.size() > 0)
 	{
 		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
 		C_MovePlayerPacket* p = new C_MovePlayerPacket(localPlayer, *targetList[0]->getPos());
-		C_MovePlayerPacket* p1 = new C_MovePlayerPacket(localPlayer, *localPlayer->getPos());
-		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(p1);
-		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(p);
 		
+		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(p);
 		localPlayer->swing();
 		g_Data.getCGameMode()->attack(targetList[0]);
+		delete p;
+		p = new C_MovePlayerPacket(localPlayer, *localPlayer->getPos());
+		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(p);
+		
+		
 		delay = 0;
 		delete p;
-		delete p1;
 	}
 
 }

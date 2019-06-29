@@ -217,6 +217,13 @@ void IModule::setEnabled(bool enabled)
 	}
 }
 
+void IModule::setExtended(bool extended)
+{
+	if (this->extended != extended) {
+		this->extended = extended;
+	}
+}
+
 void IModule::toggle()
 {
 	setEnabled(!this->enabled);
@@ -225,4 +232,9 @@ void IModule::toggle()
 bool IModule::isEnabled()
 {
 	return this->enabled;
+}
+
+bool IModule::isExtended()
+{
+	return this->extended;
 }
