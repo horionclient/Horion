@@ -319,7 +319,8 @@ void ClickGui::renderCategory(Category category)
 	// Loop through mods to display Labels
 	if (ourWindow->isExtended) {
 		for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it) {
-			std::string textStr = (*it)->getModuleName();
+			IModule* mod = *it;
+			std::string textStr = mod->getModuleName();
 
 			vec2_t textPos = vec2_t(
 				xOffset + textPadding,
@@ -335,19 +336,27 @@ void ClickGui::renderCategory(Category category)
 			if (rectPos.contains(&mousePos)) { // Is the Mouse hovering above us?
 				DrawUtils::fillRectangle(rectPos, selectedModuleColor, 0.8f);
 				if (shouldToggleLeftClick) { // Are we being clicked?
-					(*it)->toggle();
+					mod->toggle();
 					shouldToggleLeftClick = false;
 				}
-			}
-			else {
+			} else {
 				DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
 			}
+
 			if (rectPos.contains(&mousePos) && shouldToggleRightClick) {
 				shouldToggleRightClick = false;
-				(*it)->setExtended(!(*it)->isExtended());
+				mod->setExtended(!mod->isExtended());
 			}
-			DrawUtils::drawText(textPos, &textStr, (*it)->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
-			GuiUtils::drawCrossLine(vec2_t(xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f, currentYOffset + textPadding + (textHeight / 2)), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !(*it)->isExtended());
+			DrawUtils::drawText(textPos, &textStr, mod->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
+
+			// Settings
+			{
+				GuiUtils::drawCrossLine(vec2_t(
+					xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f,
+					currentYOffset + textPadding + (textHeight / 2)
+				), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !mod->isExtended());
+			}
+			
 
 			currentYOffset += textHeight + (textPadding * 2);
 		}

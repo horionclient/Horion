@@ -62,6 +62,8 @@ public:
 
 	const Category getCategory() { return category; };
 
+	inline std::vector<SettingEntry*>* getSettings() { return &settings; };
+
 	virtual const char* getModuleName() = 0;
 	virtual const char* getRawModuleName();
 	virtual int getKeybind();
