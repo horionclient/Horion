@@ -9,6 +9,10 @@
 
 
 struct ClickWindow {
+	ClickWindow() {
+		pos.x = 500;
+		pos.y = 250;
+	}
 	vec2_t pos;
 	bool isFocused = false;
 	bool isExtended = true;
@@ -21,7 +25,9 @@ private:
 	
 
 	static void renderCategory(Category category);
+	static void renderSettings(IModule * mod);
 	static void getModuleListByCategory(Category category, std::vector<IModule*>* modList);
+	static void getExtendedModuleList(bool isExtended, std::vector<IModule*>* modList);
 	static unsigned int getCrcHash(const char* str);
 	static unsigned int getWindowHash(const char * name);
 public:

@@ -103,6 +103,11 @@ void GameData::setHIDController(C_HIDController* Hid)
 	g_Data.hidController = Hid;
 }
 
+void GameData::setMoveInputHandler(C_MoveInputHandler* handler)
+{
+	g_Data.inputHandler = handler;
+}
+
 void GameData::forEachEntity(void(*callback)(C_Entity *))
 {
 	C_LocalPlayer* localPlayer = getLocalPlayer();
@@ -116,7 +121,7 @@ void GameData::forEachEntity(void(*callback)(C_Entity *))
 		for (__int64 *i = (__int64 *)*entityIdMap; i != entityIdMap; i = (__int64 *)*i)
 		{
 			__int64 actor = i[3];
-			if (actor && !*(char *)(actor + 0xD09) && !*(char *)(actor + 0xD0A)) {
+			if (actor && !*(char *)(actor + 0xD09) && !*(char *)(actor + 0xD0A)) {4
 				C_Entity* ent = reinterpret_cast<C_Entity*>(actor);
 				callback(ent);
 			}

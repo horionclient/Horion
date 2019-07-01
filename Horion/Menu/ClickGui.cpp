@@ -1,6 +1,6 @@
 #include "ClickGui.h"
 
-bool isLeftClickDown = false; 
+bool isLeftClickDown = false;
 bool isRightClickDown = false;
 bool shouldToggleLeftClick = false; // If true, toggle the focused module
 bool shouldToggleRightClick = false;
@@ -17,6 +17,15 @@ void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>*
 
 	for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
 		if ((*it)->getCategory() == category)
+			modList->push_back(*it);
+	}
+}
+
+void ClickGui::getExtendedModuleList(bool isExtended, std::vector<IModule*>* modList) {
+	std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
+
+	for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
+		if ((*it)->isExtended() == isExtended)
 			modList->push_back(*it);
 	}
 }
@@ -78,6 +87,94 @@ std::shared_ptr<ClickWindow> ClickGui::getWindow(const char * name)
 	}
 }
 
+void ClickGui::renderSettings(IModule * mod)
+{
+	static constexpr float textPadding = 1.0f;
+	static constexpr float textSize = 1.0f;
+	static constexpr float textHeight = textSize * 10.0f;
+	static constexpr float paddingRight = 13.5f;
+	static constexpr float crossSize = textHeight / 2.f;
+	static constexpr float crossWidth = 0.3f;
+
+	const char* WindowName = mod->getModuleName();
+
+	const std::shared_ptr<ClickWindow> ourWindow = getWindow(WindowName);
+
+
+	const float xOffset = ourWindow->pos.x;
+	const float yOffset = ourWindow->pos.y;
+	float currentYOffset = yOffset;
+
+	float maxLength = 1;
+	maxLength = max(maxLength, DrawUtils::getTextWidth(&std::string(WindowName), textSize, SMOOTH));
+
+	const float xEnd = xOffset + maxLength + paddingRight;
+
+	vec2_t mousePos = *g_Data.getClientInstance()->getMousePos();
+	// Convert mousePos to visual Pos
+	{
+		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+		vec2_t windowSizeReal = g_Data.getClientInstance()->getGuiData()->windowSizeReal;
+		mousePos.div(windowSizeReal);
+		mousePos.mul(windowSize);
+	}
+
+	// Draw Category Name
+	{
+		vec2_t textPos = vec2_t(
+			xOffset + textPadding,
+			currentYOffset + textPadding
+		);
+		vec4_t rectPos = vec4_t(
+			xOffset,
+			currentYOffset,
+			xOffset + maxLength + paddingRight,
+			currentYOffset + textHeight + (textPadding * 2)
+		);
+
+		// Extend Logic
+		{
+			if (rectPos.contains(&mousePos) && shouldToggleRightClick && !isDragging) {
+				shouldToggleRightClick = false;
+				ourWindow->isExtended = !ourWindow->isExtended;
+				mod->setExtended(!(mod->isExtended()));
+			}
+		}
+
+		// Dragging Logic
+		{
+			if (isDragging && getWindowHash(WindowName) == draggedWindow) { // WE are being dragged
+				if (isLeftClickDown) { // Still dragging
+					vec2_t diff = vec2_t(mousePos).sub(dragStart);
+					ourWindow->pos.add(diff);
+					dragStart = mousePos;
+				}
+				else { // Stopped dragging
+					isDragging = false;
+				}
+			}
+			else if (rectPos.contains(&mousePos) && shouldToggleLeftClick) {
+				isDragging = true;
+				draggedWindow = getWindowHash(WindowName);
+				shouldToggleLeftClick = false;
+				dragStart = mousePos;
+			}
+		}
+
+		// Draw component
+		{
+			// Draw Text
+			std::string textStr = WindowName;
+			DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
+			DrawUtils::fillRectangle(rectPos, MC_Color(0.118f, 0.827f, 0.764f, 1.f), 0.95f);
+			// Draw Dash
+			GuiUtils::drawCrossLine(vec2_t(xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f, currentYOffset + textPadding + (textHeight / 2)), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !ourWindow->isExtended);
+			currentYOffset += textHeight + (textPadding * 2);
+		}
+
+	}
+}
+
 void ClickGui::renderCategory(Category category)
 {
 	static constexpr float textPadding = 1.0f;
@@ -86,8 +183,9 @@ void ClickGui::renderCategory(Category category)
 	static constexpr float paddingRight = 13.5f;
 	static constexpr float crossSize = textHeight / 2.f;
 	static constexpr float crossWidth = 0.3f;
-	
+
 	const char* categoryName;
+
 	// Get Category Name
 	{
 		switch (category) {
@@ -108,7 +206,7 @@ void ClickGui::renderCategory(Category category)
 			break;
 		}
 	}
-
+	
 	const std::shared_ptr<ClickWindow> ourWindow = getWindow(categoryName);
 
 	// Reset Windows to pre-set positions to avoid confusion
@@ -136,7 +234,7 @@ void ClickGui::renderCategory(Category category)
 	const float xOffset = ourWindow->pos.x;
 	const float yOffset = ourWindow->pos.y;
 	float currentYOffset = yOffset;
-	
+
 	// Get All Modules in our category
 	std::vector<IModule*> moduleList;
 	getModuleListByCategory(category, &moduleList);
@@ -201,7 +299,7 @@ void ClickGui::renderCategory(Category category)
 				dragStart = mousePos;
 			}
 		}
-		
+
 		// Draw component
 		{
 			// Draw Text
@@ -212,7 +310,7 @@ void ClickGui::renderCategory(Category category)
 			GuiUtils::drawCrossLine(vec2_t(xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f, currentYOffset + textPadding + (textHeight / 2)), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !ourWindow->isExtended);
 			currentYOffset += textHeight + (textPadding * 2);
 		}
-		
+
 	}
 
 	// Loop through mods to display Labels
@@ -246,12 +344,17 @@ void ClickGui::renderCategory(Category category)
 				(*it)->setExtended(!(*it)->isExtended());
 			}
 			DrawUtils::drawText(textPos, &textStr, (*it)->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
-			GuiUtils::drawCrossLine(vec2_t(xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f, currentYOffset + textPadding + (textHeight / 2)), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize,!(*it)->isExtended());
+			GuiUtils::drawCrossLine(vec2_t(xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f, currentYOffset + textPadding + (textHeight / 2)), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !(*it)->isExtended());
 
 			currentYOffset += textHeight + (textPadding * 2);
 		}
 	}
-	
+	moduleList.clear();
+	getExtendedModuleList(true, &moduleList);
+	for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it)
+	{
+		renderSettings(*it);
+	}
 	DrawUtils::flush();
 	moduleList.clear();
 }
@@ -278,7 +381,7 @@ void ClickGui::render()
 	renderCategory(BUILD);
 	renderCategory(EXPLOITS);
 
-	shouldToggleLeftClick = false; 
+	shouldToggleLeftClick = false;
 	shouldToggleRightClick = false;
 	resetStartPos = false;
 }
@@ -299,5 +402,5 @@ void ClickGui::onMouseClickUpdate(int key, bool isDown)
 			shouldToggleRightClick = true;
 		break;
 	}
-	
+
 }

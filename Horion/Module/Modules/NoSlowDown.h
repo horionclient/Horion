@@ -8,6 +8,7 @@ public:
 	~NoSlowDown();
 
 	// Inherited via IModule
+	virtual void onTick(C_GameMode* gm) override;
 	virtual const char* getModuleName() override;
 };
 

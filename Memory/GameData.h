@@ -5,6 +5,7 @@
 #include "../SDK/CGameMode.h"
 #include "../SDK/CChestBlockActor.h"
 #include "../SDK/CHIDController.h"
+#include "../SDK/CMoveInputHandler.h"
 #include "../Utils/TextFormat.h"
 #include "SlimMem.h"
 #include <map>
@@ -17,6 +18,7 @@ private:
 	C_GameMode* gameMode;
 	C_EntityList* entityList = 0;
 	C_HIDController* hidController;
+	C_MoveInputHandler* inputHandler;
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
 	
 	const SlimUtils::SlimModule* gameModule;
@@ -35,6 +37,7 @@ public:
 	static void addChestToList(C_ChestBlockActor * ChestBlock2);
 	static void EntityList_tick(C_EntityList * list);
 	static void setHIDController(C_HIDController* Hid);
+	static void setMoveInputHandler(C_MoveInputHandler* handler);
 
 	inline C_ClientInstance* getClientInstance() { return clientInstance; };
 	inline C_GuiData* getGuiData() { return clientInstance->getGuiData(); };
@@ -60,6 +63,7 @@ public:
 	C_GameMode* getCGameMode() { return gameMode; };
 	C_EntityList* getEntityList() { return entityList; };
 	C_HIDController** getHIDController() { return &hidController; };
+	C_MoveInputHandler* getInputHandler() { return inputHandler; };
 	std::set<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
 
 	void forEachEntity(void(*callback) (C_Entity*));

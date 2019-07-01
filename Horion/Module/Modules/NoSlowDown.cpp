@@ -15,3 +15,7 @@ const char* NoSlowDown::getModuleName()
 {
 	return ("NoSlowDown");
 }
+
+void NoSlowDown::onTick(C_GameMode* gm) 
+{
+}

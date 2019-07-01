@@ -19,6 +19,7 @@
 #include "../Horion/Menu/TabGui.h"
 #include "../Horion/Menu/ClickGui.h"
 #include "../SDK/CUIScene.h"
+#include "../SDK/CMoveInputHandler.h"
 
 #ifdef PERFORMANCE_TEST
 #include <chrono>
@@ -61,8 +62,9 @@ private:
 	static int __fastcall BlockLegacy_getRenderLayer(C_BlockLegacy* a1);
 	static BYTE* __fastcall BlockLegacy_getLightEmission(C_BlockLegacy* a1 ,BYTE* a2);
 	static __int64 LevelRenderer_renderLevel(__int64 a1, __int64 a2, __int64 a3);
-	static bool __fastcall Player_isUsingItem(C_ItemStack* a1);
+	static bool __fastcall Player_isUsingItem(C_Entity* a1);
 	static void __fastcall clickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
+	static __int64 __fastcall MoveInputHandler_tick(C_MoveInputHandler* a1,C_Entity* a2);
 	 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
@@ -89,6 +91,7 @@ private:
 	std::unique_ptr<FuncHook> LevelRenderer_renderLevelHook;
 	std::unique_ptr<FuncHook> Player_isUsingItemHook;
 	std::unique_ptr<FuncHook> clickHook;
+	std::unique_ptr<FuncHook> MoveInputHandler_tickHook;
 
 
 
@@ -115,8 +118,9 @@ private:
 	typedef void(__fastcall* HIDController_keyMouse_t)(C_HIDController* a1,void* a2, void* a3);
 	typedef int(__fastcall *BlockLegacy_getRenderLayer_t)(C_BlockLegacy* a1);
 	typedef BYTE*(__fastcall *BlockLegacy_getLightEmission_t)(C_BlockLegacy* a1 ,BYTE* a2);
-	typedef bool(__fastcall *Player_isUsingItem_t)(C_ItemStack* a1);
+	typedef bool(__fastcall *Player_isUsingItem_t)(C_Entity* a1);
 	typedef __int64(__fastcall *clickFunc_t)(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
+	typedef __int64(__fastcall *MoveInputHandler_tick_t)(C_MoveInputHandler* a1, C_Entity* a2);
 
 };
 

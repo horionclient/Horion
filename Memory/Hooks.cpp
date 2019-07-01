@@ -115,13 +115,17 @@ void Hooks::Init()
 	g_Hooks.BlockLegacy_getLightEmissionHook = std::make_unique<FuncHook>(getLightEmission, Hooks::BlockLegacy_getLightEmission);
 	g_Hooks.BlockLegacy_getLightEmissionHook->init();
 
-	void* isUsingItem = reinterpret_cast<void*>(Utils::FindSignature("80 79 ?? 00 74 5E 48 8B 11 45 33 C0 48 85 D2 74 05 4C 8B 0A"));
+	/*void* isUsingItem = reinterpret_cast<void*>(Utils::FindSignature("80 79 ?? 00 74 5E 48 8B 11 45 33 C0 48 85 D2 74 05 4C 8B 0A"));
 	g_Hooks.Player_isUsingItemHook = std::make_unique<FuncHook>(isUsingItem, Hooks::Player_isUsingItem);
-	g_Hooks.Player_isUsingItemHook->init();
+	g_Hooks.Player_isUsingItemHook->init();*/
 
 	void* clickHook = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 48 89 58 ?? 48 89 68 ?? 48 89 70 ?? 57 41 54 41 55 41 56 41 57 48 83 EC 60 44 ?? ?? ?? ?? ?? ?? ?? ?? 33 F6"));
 	g_Hooks.clickHook = std::make_unique<FuncHook>(clickHook, Hooks::clickFunc);
 	g_Hooks.clickHook->init();
+
+	void* MoveInputHandlerTick = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 56 57 41 54 41 56 41 57 48 83 EC 50 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 68 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B FA 48 8B D9 33 C0"));
+	g_Hooks.MoveInputHandler_tickHook = std::make_unique<FuncHook>(MoveInputHandlerTick, Hooks::MoveInputHandler_tick);
+	g_Hooks.MoveInputHandler_tickHook->init();
 	//logF("Hooks hooked");
 }
 
@@ -147,6 +151,7 @@ void Hooks::Restore()
 	g_Hooks.BlockLegacy_getLightEmissionHook->Restore();
 	g_Hooks.Player_isUsingItemHook->Restore();
 	g_Hooks.clickHook->Restore();
+	g_Hooks.MoveInputHandler_tickHook->Restore();
 }
 
 void __fastcall Hooks::clickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8){
@@ -189,6 +194,13 @@ void __fastcall Hooks::SurvivalMode_tick(C_GameMode * _this)
 	}
 }
 
+__int64 __fastcall Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity* a2)
+{
+	static auto oTick = g_Hooks.MoveInputHandler_tickHook->GetOriginal<MoveInputHandler_tick_t>();
+	GameData::setMoveInputHandler(a1);
+	return oTick(a1, a2);
+}
+
 int __fastcall Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1)
 {
 	static auto oFunc = g_Hooks.BlockLegacy_getRenderLayerHook->GetOriginal<BlockLegacy_getRenderLayer_t>();
@@ -207,17 +219,14 @@ int __fastcall Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1)
 	return oFunc(a1);
 }
 
-bool __fastcall Hooks::Player_isUsingItem(C_ItemStack* a1)
+bool __fastcall Hooks::Player_isUsingItem(C_Entity* a1)
 {
 	static auto oFunc = g_Hooks.Player_isUsingItemHook->GetOriginal<Player_isUsingItem_t>();
 	static IModule* NoSlowModule = moduleMgr->getModule<NoSlowDown>();
 	if (NoSlowModule == nullptr)
 		NoSlowModule = moduleMgr->getModule<NoSlowDown>();
 	else if (NoSlowModule->isEnabled()) {
-		if (a1 != NULL && a1->item != NULL && g_Data.getLocalPlayer()->itemUsed != NULL) {
-			return true;
-		}
-			
+		return 0;
 	}
 	return oFunc(a1);
 }
@@ -442,7 +451,6 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 			p->onGround = true;
 		}
 	}
-
 	oFunc(a, packet);
 }
 

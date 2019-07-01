@@ -145,5 +145,6 @@
     <ClInclude Include="Horion\Module\Modules\ClickGuiMod.h" />
     <ClInclude Include="SDK\CHIDController.h" />
     <ClInclude Include="SDK\CUIScene.h" />
+    <ClInclude Include="SDK\CMoveInputHandler.h" />
   </ItemGroup>
 </Project>
