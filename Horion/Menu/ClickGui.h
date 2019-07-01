@@ -17,7 +17,6 @@ struct ClickWindow {
 		pos.y = 250;
 	}
 	vec2_t pos;
-	bool isFocused = false;
 	bool isExtended = true;
 	std::map<unsigned int, std::shared_ptr<ClickModule>> moduleMap;
 };
@@ -27,6 +26,8 @@ class ClickGui
 private:
 	inline static std::shared_ptr<ClickWindow> getWindow(const char* id);
 	inline static std::shared_ptr<ClickModule> getClickModule(std::shared_ptr<ClickWindow> window, const char* id);
+
+	static void renderLabel(const char* text);
 
 	static void renderCategory(Category category);
 	inline static void getModuleListByCategory(Category category, std::vector<IModule*>* modList);

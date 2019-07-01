@@ -12,6 +12,22 @@ bool isDragging = false;
 unsigned int draggedWindow = -1;
 vec2_t dragStart = vec2_t();
 
+unsigned int focusedElement = -1;
+bool isFocused = false;
+
+static constexpr float textPadding = 1.0f;
+static constexpr float textSize = 1.0f;
+static constexpr float textHeight = textSize * 10.0f;
+static constexpr float categoryMargin = 0.5f;
+static constexpr float paddingRight = 13.5f;
+static constexpr float crossSize = textHeight / 2.f;
+static constexpr float crossWidth = 0.3f;
+static const MC_Color selectedModuleColor = MC_Color(0.5f, 0.5f, 0.5f, 1.f);
+static const MC_Color moduleColor = MC_Color(0.2f, 0.2f, 0.2f, 1.f);
+
+float currentYOffset = 0;
+float currentXOffset = 0;
+
 void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>* modList) {
 	std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
 
@@ -90,17 +106,14 @@ std::shared_ptr<ClickModule> ClickGui::getClickModule(std::shared_ptr<ClickWindo
 	}
 }
 
+void ClickGui::renderLabel(const char * text)
+{
+
+}
+
 void ClickGui::renderCategory(Category category)
 {
-	static constexpr float textPadding = 1.0f;
-	static constexpr float textSize = 1.0f;
-	static constexpr float textHeight = textSize * 10.0f;
-	static constexpr float categoryMargin = 0.5f;
-	static constexpr float paddingRight = 13.5f;
-	static constexpr float crossSize = textHeight / 2.f;
-	static constexpr float crossWidth = 0.3f;
-	static const MC_Color selectedModuleColor = MC_Color(0.5f, 0.5f, 0.5f, 1.f);
-	static const MC_Color moduleColor = MC_Color(0.2f, 0.2f, 0.2f, 1.f);
+	
 
 	const char* categoryName;
 
@@ -151,7 +164,8 @@ void ClickGui::renderCategory(Category category)
 
 	const float xOffset = ourWindow->pos.x;
 	const float yOffset = ourWindow->pos.y;
-	float currentYOffset = yOffset;
+	currentXOffset = xOffset;
+	currentYOffset = yOffset;
 
 	// Get All Modules in our category
 	std::vector<IModule*> moduleList;
@@ -166,7 +180,7 @@ void ClickGui::renderCategory(Category category)
 		}
 	}
 
-	const float xEnd = xOffset + maxLength + paddingRight;
+	const float xEnd = currentXOffset + maxLength + paddingRight;
 
 	vec2_t mousePos = *g_Data.getClientInstance()->getMousePos();
 	// Convert mousePos to visual Pos
@@ -180,13 +194,13 @@ void ClickGui::renderCategory(Category category)
 	// Draw Category Name
 	{
 		vec2_t textPos = vec2_t(
-			xOffset + textPadding,
+			currentXOffset + textPadding,
 			currentYOffset + textPadding
 		);
 		vec4_t rectPos = vec4_t(
-			xOffset                                         - categoryMargin,
+			currentXOffset                                         - categoryMargin,
 			currentYOffset                                  - categoryMargin,
-			xOffset + maxLength + paddingRight              + categoryMargin,
+			currentXOffset + maxLength + paddingRight              + categoryMargin,
 			currentYOffset + textHeight + (textPadding * 2)
 		);
 
@@ -225,7 +239,7 @@ void ClickGui::renderCategory(Category category)
 			DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 			DrawUtils::fillRectangle(rectPos, MC_Color(0.118f, 0.827f, 0.764f, 1.f), 0.95f);
 			// Draw Dash
-			GuiUtils::drawCrossLine(vec2_t(xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f, currentYOffset + textPadding + (textHeight / 2)), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !ourWindow->isExtended);
+			GuiUtils::drawCrossLine(vec2_t(currentXOffset + maxLength + paddingRight - (crossSize / 2) - 1.f, currentYOffset + textPadding + (textHeight / 2)), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !ourWindow->isExtended);
 			currentYOffset += textHeight + (textPadding * 2);
 		}
 	}
@@ -238,11 +252,11 @@ void ClickGui::renderCategory(Category category)
 			std::string textStr = mod->getModuleName();
 
 			vec2_t textPos = vec2_t(
-				xOffset + textPadding,
+				currentXOffset + textPadding,
 				currentYOffset + textPadding
 			);
 			vec4_t rectPos = vec4_t(
-				xOffset,
+				currentXOffset,
 				currentYOffset,
 				xEnd,
 				currentYOffset + textHeight + (textPadding * 2)
@@ -271,14 +285,26 @@ void ClickGui::renderCategory(Category category)
 					}
 
 					GuiUtils::drawCrossLine(vec2_t(
-						xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f,
+						currentXOffset + maxLength + paddingRight - (crossSize / 2) - 1.f,
 						currentYOffset + textPadding + (textHeight / 2)
 					), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !clickMod->isExtended);
-				}
-				
-			}
 
-			currentYOffset += textHeight + (textPadding * 2);
+					currentYOffset += textHeight + (textPadding * 2);
+
+					// Draw Settings
+					if (clickMod->isExtended) {
+						for (auto it = settings->begin(); it != settings->end(); ++it) {
+							SettingEntry* setting = *it;
+							switch (setting->valueType) {
+							default:
+
+								break;
+							}
+						}
+					}
+				}else
+					currentYOffset += textHeight + (textPadding * 2);
+			}
 		}
 	}
 	moduleList.clear();
