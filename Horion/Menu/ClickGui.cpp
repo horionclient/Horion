@@ -22,10 +22,9 @@ void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>*
 }
 
 // Stolen from IMGUI
-unsigned int ClickGui::getCrcHash(const char * str)
+unsigned int ClickGui::getCrcHash(const char * str, int seed)
 {
 	static unsigned int crc32_lut[256] = { 0 };
-	int seed = 0;
 	if (!crc32_lut[1])
 	{
 		const unsigned int polynomial = 0xEDB88320;
@@ -57,13 +56,9 @@ unsigned int ClickGui::getCrcHash(const char * str)
 	return ~crc;
 }
 
-unsigned int ClickGui::getWindowHash(const char* name) {
-	return getCrcHash(name);
-}
-
 std::shared_ptr<ClickWindow> ClickGui::getWindow(const char * name)
 {
-	unsigned int id = getWindowHash(name);
+	unsigned int id = getCrcHash(name);
 
 	auto search = windowMap.find(id);
 	if (search != windowMap.end()) { // Window exists already
@@ -75,6 +70,23 @@ std::shared_ptr<ClickWindow> ClickGui::getWindow(const char * name)
 
 		windowMap.insert(std::make_pair(id, newWindow));
 		return newWindow;
+	}
+}
+
+std::shared_ptr<ClickModule> ClickGui::getClickModule(std::shared_ptr<ClickWindow> window, const char * name)
+{
+	unsigned int id = getCrcHash(name);
+
+	auto search = window->moduleMap.find(id);
+	if (search != window->moduleMap.end()) { // Window exists already
+		return search->second;
+	}
+	else { // Create window
+		// TODO: restore settings for position etc
+		std::shared_ptr<ClickModule> newModule = std::make_shared<ClickModule>();
+
+		window->moduleMap.insert(std::make_pair(id, newModule));
+		return newModule;
 	}
 }
 
@@ -188,7 +200,7 @@ void ClickGui::renderCategory(Category category)
 
 		// Dragging Logic
 		{
-			if (isDragging && getWindowHash(categoryName) == draggedWindow) { // WE are being dragged
+			if (isDragging && getCrcHash(categoryName) == draggedWindow) { // WE are being dragged
 				if (isLeftClickDown) { // Still dragging
 					vec2_t diff = vec2_t(mousePos).sub(dragStart);
 					ourWindow->pos.add(diff);
@@ -200,7 +212,7 @@ void ClickGui::renderCategory(Category category)
 			}
 			else if (rectPos.contains(&mousePos) && shouldToggleLeftClick) {
 				isDragging = true;
-				draggedWindow = getWindowHash(categoryName);
+				draggedWindow = getCrcHash(categoryName);
 				shouldToggleLeftClick = false;
 				dragStart = mousePos;
 			}
@@ -216,7 +228,6 @@ void ClickGui::renderCategory(Category category)
 			GuiUtils::drawCrossLine(vec2_t(xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f, currentYOffset + textPadding + (textHeight / 2)), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !ourWindow->isExtended);
 			currentYOffset += textHeight + (textPadding * 2);
 		}
-
 	}
 
 	// Loop through mods to display Labels
@@ -247,40 +258,31 @@ void ClickGui::renderCategory(Category category)
 				DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
 			}
 
-			if (rectPos.contains(&mousePos) && shouldToggleRightClick) {
-				shouldToggleRightClick = false;
-				
-			}
 			DrawUtils::drawText(textPos, &textStr, mod->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 
 			// Settings
 			{
-				const bool isExtended = false;
 				std::vector<SettingEntry*>* settings = mod->getSettings();
 				if (settings->size() > 0) { // Always true, because keybind and isEnabled are settings
+					std::shared_ptr<ClickModule> clickMod = getClickModule(ourWindow, mod->getRawModuleName());
+					if (rectPos.contains(&mousePos) && shouldToggleRightClick) {
+						shouldToggleRightClick = false;
+						clickMod->isExtended = !clickMod->isExtended;
+					}
+
 					GuiUtils::drawCrossLine(vec2_t(
 						xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f,
 						currentYOffset + textPadding + (textHeight / 2)
-					), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, isExtended);
+					), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !clickMod->isExtended);
 				}
 				
 			}
-			
 
 			currentYOffset += textHeight + (textPadding * 2);
 		}
 	}
 	moduleList.clear();
-	// Ghetto
-	/*getExtendedModuleList(true, &moduleList);
-	for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it)
-	{
-		renderSettings(*it);
-	}
-	moduleList.clear();
-	*/
 	DrawUtils::flush();
-	
 }
 
 void ClickGui::render()
@@ -295,7 +297,7 @@ void ClickGui::render()
 			0,
 			g_Data.getClientInstance()->getGuiData()->widthGame,
 			g_Data.getClientInstance()->getGuiData()->heightGame
-		), MC_Color(0.8f, 0.8f, 0.8f, 0.1f), 0.1f);
+		), MC_Color(0.8f, 0.8f, 0.8f, 0.1f), 0.2f);
 	}
 
 	// Render all categorys
@@ -326,5 +328,20 @@ void ClickGui::onMouseClickUpdate(int key, bool isDown)
 			shouldToggleRightClick = true;
 		break;
 	}
+}
 
+void ClickGui::onKeyUpdate(int key, bool isDown)
+{
+	if (!isDown)
+		return;
+
+	switch (key) {
+	case VK_ESCAPE:
+		static IModule* clickGuiMod = moduleMgr->getModule<ClickGuiMod>();
+		if (clickGuiMod == NULL)
+			clickGuiMod = moduleMgr->getModule<ClickGuiMod>();
+		else
+			clickGuiMod->setEnabled(false);
+		break;
+	}
 }

@@ -7,6 +7,9 @@
 #include "../../Memory/GameData.h"
 #include "../Module/ModuleManager.h"
 
+struct ClickModule {
+	bool isExtended = false;
+};
 
 struct ClickWindow {
 	ClickWindow() {
@@ -16,22 +19,21 @@ struct ClickWindow {
 	vec2_t pos;
 	bool isFocused = false;
 	bool isExtended = true;
+	std::map<unsigned int, std::shared_ptr<ClickModule>> moduleMap;
 };
 
 class ClickGui
 {
 private:
-	static std::shared_ptr<ClickWindow> getWindow(const char* id);
-	
+	inline static std::shared_ptr<ClickWindow> getWindow(const char* id);
+	inline static std::shared_ptr<ClickModule> getClickModule(std::shared_ptr<ClickWindow> window, const char* id);
 
 	static void renderCategory(Category category);
-	static void renderSettings(IModule * mod);
-	static void getModuleListByCategory(Category category, std::vector<IModule*>* modList);
-	static void getExtendedModuleList(bool isExtended, std::vector<IModule*>* modList);
-	static unsigned int getCrcHash(const char* str);
-	static unsigned int getWindowHash(const char * name);
+	inline static void getModuleListByCategory(Category category, std::vector<IModule*>* modList);
+	inline static unsigned int getCrcHash(const char* str, int seed = 0);
 public:
 	static void init();
 	static void render();
+	static void onKeyUpdate(int key, bool isDown);
 	static void onMouseClickUpdate(int key, bool isDown);
 };

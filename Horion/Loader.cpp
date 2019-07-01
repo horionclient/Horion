@@ -49,8 +49,10 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			if (newKeyPressed != *oldKey) {
 				moduleMgr->onKeyUpdate((int) i, newKeyPressed);
 			}
-			if(*newKey != *oldKey) // Skip Chat or inventory checks
+			if (*newKey != *oldKey) { // Skip Chat or inventory checks
 				TabGui::onKeyUpdate((int)i, *newKey);
+				ClickGui::onKeyUpdate((int)i, *newKey);
+			}
 		}
 
 		if (*hidController != 0) {
