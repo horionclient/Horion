@@ -184,6 +184,8 @@ void ClickGui::renderCategory(Category category)
 	static constexpr float paddingRight = 13.5f;
 	static constexpr float crossSize = textHeight / 2.f;
 	static constexpr float crossWidth = 0.3f;
+	static const MC_Color selectedModuleColor = MC_Color(0.5f, 0.5f, 0.5f, 1.f);
+	static const MC_Color moduleColor = MC_Color(0.2f, 0.2f, 0.2f, 1.f);
 
 	const char* categoryName;
 
@@ -331,14 +333,14 @@ void ClickGui::renderCategory(Category category)
 			);
 
 			if (rectPos.contains(&mousePos)) { // Is the Mouse hovering above us?
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 1.f), 0.8f);
+				DrawUtils::fillRectangle(rectPos, selectedModuleColor, 0.8f);
 				if (shouldToggleLeftClick) { // Are we being clicked?
 					(*it)->toggle();
 					shouldToggleLeftClick = false;
 				}
 			}
 			else {
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.2f, 0.2f, 0.2f, 1.f), 0.7f);
+				DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
 			}
 			if (rectPos.contains(&mousePos) && shouldToggleRightClick) {
 				shouldToggleRightClick = false;
@@ -351,13 +353,16 @@ void ClickGui::renderCategory(Category category)
 		}
 	}
 	moduleList.clear();
-	getExtendedModuleList(true, &moduleList);
+	// Ghetto
+	/*getExtendedModuleList(true, &moduleList);
 	for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it)
 	{
 		renderSettings(*it);
 	}
-	DrawUtils::flush();
 	moduleList.clear();
+	*/
+	DrawUtils::flush();
+	
 }
 
 void ClickGui::render()

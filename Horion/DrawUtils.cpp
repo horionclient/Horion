@@ -114,7 +114,7 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth)
 
 }
 
-void DrawUtils::fillRectangle(vec4_t pos, MC_Color col, float alpha)
+void DrawUtils::fillRectangle(vec4_t pos, const MC_Color col, float alpha)
 {
 	float* posF = new float[4]; // vec4_t(startX, startY, endX, endY);
 	posF[0] = pos.x;
