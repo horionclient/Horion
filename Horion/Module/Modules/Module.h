@@ -82,7 +82,5 @@ public:
 	virtual void setEnabled(bool enabled);
 	virtual void toggle();
 	virtual bool isEnabled();
-	virtual bool isExtended();
-	virtual void setExtended(bool extended);
 };
 

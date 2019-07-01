@@ -21,15 +21,6 @@ void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>*
 	}
 }
 
-void ClickGui::getExtendedModuleList(bool isExtended, std::vector<IModule*>* modList) {
-	std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
-
-	for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
-		if ((*it)->isExtended() == isExtended)
-			modList->push_back(*it);
-	}
-}
-
 // Stolen from IMGUI
 unsigned int ClickGui::getCrcHash(const char * str)
 {
@@ -84,94 +75,6 @@ std::shared_ptr<ClickWindow> ClickGui::getWindow(const char * name)
 
 		windowMap.insert(std::make_pair(id, newWindow));
 		return newWindow;
-	}
-}
-
-void ClickGui::renderSettings(IModule * mod)
-{
-	static constexpr float textPadding = 1.0f;
-	static constexpr float textSize = 1.0f;
-	static constexpr float textHeight = textSize * 10.0f;
-	static constexpr float paddingRight = 13.5f;
-	static constexpr float crossSize = textHeight / 2.f;
-	static constexpr float crossWidth = 0.3f;
-
-	const char* WindowName = mod->getModuleName();
-
-	const std::shared_ptr<ClickWindow> ourWindow = getWindow(WindowName);
-
-
-	const float xOffset = ourWindow->pos.x;
-	const float yOffset = ourWindow->pos.y;
-	float currentYOffset = yOffset;
-
-	float maxLength = 1;
-	maxLength = max(maxLength, DrawUtils::getTextWidth(&std::string(WindowName), textSize, SMOOTH));
-
-	const float xEnd = xOffset + maxLength + paddingRight;
-
-	vec2_t mousePos = *g_Data.getClientInstance()->getMousePos();
-	// Convert mousePos to visual Pos
-	{
-		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
-		vec2_t windowSizeReal = g_Data.getClientInstance()->getGuiData()->windowSizeReal;
-		mousePos.div(windowSizeReal);
-		mousePos.mul(windowSize);
-	}
-
-	// Draw Category Name
-	{
-		vec2_t textPos = vec2_t(
-			xOffset + textPadding,
-			currentYOffset + textPadding
-		);
-		vec4_t rectPos = vec4_t(
-			xOffset,
-			currentYOffset,
-			xOffset + maxLength + paddingRight,
-			currentYOffset + textHeight + (textPadding * 2)
-		);
-
-		// Extend Logic
-		{
-			if (rectPos.contains(&mousePos) && shouldToggleRightClick && !isDragging) {
-				shouldToggleRightClick = false;
-				mod->setExtended(!(mod->isExtended()));
-			}
-		}
-
-		// Dragging Logic
-		{
-			if (isDragging && getWindowHash(WindowName) == draggedWindow) { // WE are being dragged
-				if (isLeftClickDown) { // Still dragging
-					vec2_t diff = vec2_t(mousePos).sub(dragStart);
-					ourWindow->pos.add(diff);
-					dragStart = mousePos;
-				}
-				else { // Stopped dragging
-					isDragging = false;
-				}
-			}
-			else if (rectPos.contains(&mousePos) && shouldToggleLeftClick) {
-				isDragging = true;
-				draggedWindow = getWindowHash(WindowName);
-				shouldToggleLeftClick = false;
-				dragStart = mousePos;
-			}
-		}
-
-		// Draw component
-		{
-			// Draw Text
-			std::string textStr = WindowName;
-			DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
-			// Draw Background
-			DrawUtils::fillRectangle(rectPos, MC_Color(0.118f, 0.827f, 0.764f, 1.f), 0.95f);
-			// Draw Dash
-			GuiUtils::drawCrossLine(vec2_t(xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f, currentYOffset + textPadding + (textHeight / 2)), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !mod->isExtended());
-			currentYOffset += textHeight + (textPadding * 2);
-		}
-
 	}
 }
 
@@ -317,6 +220,7 @@ void ClickGui::renderCategory(Category category)
 	}
 
 	// Loop through mods to display Labels
+	// TODO: nice extend animation
 	if (ourWindow->isExtended) {
 		for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it) {
 			IModule* mod = *it;
@@ -345,16 +249,21 @@ void ClickGui::renderCategory(Category category)
 
 			if (rectPos.contains(&mousePos) && shouldToggleRightClick) {
 				shouldToggleRightClick = false;
-				mod->setExtended(!mod->isExtended());
+				
 			}
 			DrawUtils::drawText(textPos, &textStr, mod->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 
 			// Settings
 			{
-				GuiUtils::drawCrossLine(vec2_t(
-					xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f,
-					currentYOffset + textPadding + (textHeight / 2)
-				), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !mod->isExtended());
+				const bool isExtended = false;
+				std::vector<SettingEntry*>* settings = mod->getSettings();
+				if (settings->size() > 0) { // Always true, because keybind and isEnabled are settings
+					GuiUtils::drawCrossLine(vec2_t(
+						xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f,
+						currentYOffset + textPadding + (textHeight / 2)
+					), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, isExtended);
+				}
+				
 			}
 			
 

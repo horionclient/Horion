@@ -34,3 +34,8 @@ void Glide::onTick(C_GameMode* gm) {
 	}
 		
 }
+
+const char * Glide::getRawModuleName()
+{
+	return "Glide";
+}
