@@ -136,7 +136,6 @@ void ClickGui::renderSettings(IModule * mod)
 		{
 			if (rectPos.contains(&mousePos) && shouldToggleRightClick && !isDragging) {
 				shouldToggleRightClick = false;
-				ourWindow->isExtended = !ourWindow->isExtended;
 				mod->setExtended(!(mod->isExtended()));
 			}
 		}
@@ -168,7 +167,7 @@ void ClickGui::renderSettings(IModule * mod)
 			DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 			DrawUtils::fillRectangle(rectPos, MC_Color(0.118f, 0.827f, 0.764f, 1.f), 0.95f);
 			// Draw Dash
-			GuiUtils::drawCrossLine(vec2_t(xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f, currentYOffset + textPadding + (textHeight / 2)), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !ourWindow->isExtended);
+			GuiUtils::drawCrossLine(vec2_t(xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f, currentYOffset + textPadding + (textHeight / 2)), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !mod->isExtended());
 			currentYOffset += textHeight + (textPadding * 2);
 		}
 
