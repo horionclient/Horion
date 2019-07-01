@@ -165,6 +165,7 @@ void ClickGui::renderSettings(IModule * mod)
 			// Draw Text
 			std::string textStr = WindowName;
 			DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
+			// Draw Background
 			DrawUtils::fillRectangle(rectPos, MC_Color(0.118f, 0.827f, 0.764f, 1.f), 0.95f);
 			// Draw Dash
 			GuiUtils::drawCrossLine(vec2_t(xOffset + maxLength + paddingRight - (crossSize / 2) - 1.f, currentYOffset + textPadding + (textHeight / 2)), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !mod->isExtended());
@@ -179,6 +180,7 @@ void ClickGui::renderCategory(Category category)
 	static constexpr float textPadding = 1.0f;
 	static constexpr float textSize = 1.0f;
 	static constexpr float textHeight = textSize * 10.0f;
+	static constexpr float categoryMargin = 0.5f;
 	static constexpr float paddingRight = 13.5f;
 	static constexpr float crossSize = textHeight / 2.f;
 	static constexpr float crossWidth = 0.3f;
@@ -265,9 +267,9 @@ void ClickGui::renderCategory(Category category)
 			currentYOffset + textPadding
 		);
 		vec4_t rectPos = vec4_t(
-			xOffset,
-			currentYOffset,
-			xOffset + maxLength + paddingRight,
+			xOffset                                         - categoryMargin,
+			currentYOffset                                  - categoryMargin,
+			xOffset + maxLength + paddingRight              + categoryMargin,
 			currentYOffset + textHeight + (textPadding * 2)
 		);
 
