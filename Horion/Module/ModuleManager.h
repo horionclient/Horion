@@ -34,6 +34,7 @@
 #include "Modules/InfiniteReach.h"
 #include "Modules/AutoTotem.h"
 #include "Modules/ClickGuiMod.h"
+#include "Modules/ChestStealer.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

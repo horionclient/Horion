@@ -166,6 +166,7 @@
     <ClCompile Include="Horion\Module\Modules\AutoTotem.cpp" />
     <ClCompile Include="Horion\Module\Modules\BedFucker.cpp" />
     <ClCompile Include="Horion\Module\Modules\Blink.cpp" />
+    <ClCompile Include="Horion\Module\Modules\ChestStealer.cpp" />
     <ClCompile Include="Horion\Module\Modules\ClickGuiMod.cpp" />
     <ClCompile Include="Horion\Module\Modules\InfiniteReach.cpp" />
     <ClCompile Include="Horion\Module\Modules\InstaBreak.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="Horion\Module\Modules\AutoTotem.h" />
     <ClInclude Include="Horion\Module\Modules\BedFucker.h" />
     <ClInclude Include="Horion\Module\Modules\Blink.h" />
+    <ClInclude Include="Horion\Module\Modules\ChestStealer.h" />
     <ClInclude Include="Horion\Module\Modules\ClickGuiMod.h" />
     <ClInclude Include="Horion\Module\Modules\InfiniteReach.h" />
     <ClInclude Include="Horion\Module\Modules\InstaBreak.h" />

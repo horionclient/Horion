@@ -63,6 +63,7 @@
     <ClCompile Include="Horion\Module\Modules\AutoTotem.cpp" />
     <ClCompile Include="Horion\Menu\ClickGui.cpp" />
     <ClCompile Include="Horion\Module\Modules\ClickGuiMod.cpp" />
+    <ClCompile Include="Horion\Module\Modules\ChestStealer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -146,5 +147,6 @@
     <ClInclude Include="SDK\CHIDController.h" />
     <ClInclude Include="SDK\CUIScene.h" />
     <ClInclude Include="SDK\CMoveInputHandler.h" />
+    <ClInclude Include="Horion\Module\Modules\ChestStealer.h" />
   </ItemGroup>
 </Project>

@@ -39,3 +39,20 @@ private:
 public:
 	C_Inventory* inventory; //0x00A8 
 };
+
+class C_ContainerScreenController
+{
+public:
+	void handleAutoPlace(uintptr_t idk, std::string name, int slot) {
+		using ContainerScreenController__autoPlace = __int64(__fastcall*)(C_ContainerScreenController*, uintptr_t, TextHolder, int);
+		static ContainerScreenController__autoPlace autoPlaceFunc = reinterpret_cast<ContainerScreenController__autoPlace>(Utils::FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 ?? ?? ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B ?? ?? ?? ?? ?? 48 33 C4 ?? ?? ?? ?? ?? ?? ?? 45 8B F9 49 8B F8 44 8B EA 89 54 24 ?? 48 8B F1"));
+
+		if (autoPlaceFunc != 0x0)
+			autoPlaceFunc(this, idk,TextHolder(name),slot);
+	}
+};
+
+class C_ChestScreenController : public C_ContainerScreenController
+{
+
+};

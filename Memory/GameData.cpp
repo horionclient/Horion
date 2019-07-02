@@ -108,6 +108,11 @@ void GameData::setMoveInputHandler(C_MoveInputHandler* handler)
 	g_Data.inputHandler = handler;
 }
 
+void GameData::setChestScreenController(C_ChestScreenController* chestScreenController)
+{
+	g_Data.chestScreen = chestScreenController;
+}
+
 void GameData::forEachEntity(void(*callback)(C_Entity *))
 {
 	C_LocalPlayer* localPlayer = getLocalPlayer();

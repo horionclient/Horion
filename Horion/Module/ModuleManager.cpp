@@ -37,6 +37,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new AutoTotem());
 	this->moduleList.push_back(new InfiniteReach());
 	this->moduleList.push_back(new ClickGuiMod());
+	this->moduleList.push_back(new ChestStealer());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);
