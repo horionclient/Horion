@@ -4,6 +4,8 @@
 
 class Killaura : public IModule
 {
+private:
+	bool isMulti = true;
 public:
 	Killaura();
 	~Killaura();

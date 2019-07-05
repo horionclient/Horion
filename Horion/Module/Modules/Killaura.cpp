@@ -4,6 +4,7 @@
 
 Killaura::Killaura() : IModule('P', COMBAT) // <-- keybind
 {
+	this->registerBoolSetting("multiaura", &this->isMulti, this->isMulti);
 }
 
 
@@ -47,7 +48,6 @@ void Killaura::onTick(C_GameMode* gm)
 {
 	if (!g_Data.isInGame())
 		return;
-	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
 	//Loop through all our players and retrieve their information
 	
@@ -55,12 +55,17 @@ void Killaura::onTick(C_GameMode* gm)
 
 	g_Data.forEachEntity(findEntity);
 
-	if (targetList.size() > 0)
-		localPlayer->swingArm();
+	if (targetList.size() > 0) {
+		g_Data.getLocalPlayer()->swingArm();
 
-	// Attack all entitys in targetList 
-	for (int i = 0; i < targetList.size(); i++)
-		g_Data.getCGameMode()->attack(targetList[i]);
+		// Attack all entitys in targetList 
+		if (isMulti) {
+			for (int i = 0; i < targetList.size(); i++)
+				g_Data.getCGameMode()->attack(targetList[i]);
+		}
+		else
+			g_Data.getCGameMode()->attack(targetList[0]);
+	}
 }
 
 void Killaura::onEnable()
