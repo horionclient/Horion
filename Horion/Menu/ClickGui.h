@@ -15,8 +15,12 @@ struct ClickWindow {
 	ClickWindow() {
 		pos.x = 500;
 		pos.y = 250;
+
+		size.x = 100;
+		size.y = 100;
 	}
 	vec2_t pos;
+	vec2_t size;
 	bool isExtended = true;
 	std::map<unsigned int, std::shared_ptr<ClickModule>> moduleMap;
 };
