@@ -16,8 +16,7 @@ struct ClickWindow {
 		pos.x = 500;
 		pos.y = 250;
 
-		size.x = 100;
-		size.y = 100;
+		size.x = 30;
 	}
 	vec2_t pos;
 	vec2_t size;

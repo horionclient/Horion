@@ -113,8 +113,6 @@ void ClickGui::renderLabel(const char * text)
 
 void ClickGui::renderCategory(Category category)
 {
-	
-
 	const char* categoryName;
 
 	// Get Category Name
@@ -171,7 +169,6 @@ void ClickGui::renderCategory(Category category)
 	// Get All Modules in our category
 	std::vector<IModule*> moduleList;
 	getModuleListByCategory(category, &moduleList);
-
 	
 	// Get max width of all text
 	{
@@ -297,11 +294,23 @@ void ClickGui::renderCategory(Category category)
 
 					// Draw Settings
 					if (clickMod->isExtended) {
+						
 						for (auto it = settings->begin(); it != settings->end(); ++it) {
 							SettingEntry* setting = *it;
+							if (strcmp(setting->name, "enabled") == 0)
+								continue;
+							vec2_t settingOffset = vec2_t(
+								currentXOffset + textPadding,
+								currentYOffset + textPadding
+							);
 							switch (setting->valueType) {
 							default:
-
+								char alc[100];
+								sprintf_s(alc, 100, "Not implemented (%s)", setting->name);
+								std::string elTexto = alc;
+								windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize));
+								DrawUtils::drawText(settingOffset, &elTexto, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
+								currentYOffset += textHeight + (textPadding * 2);
 								break;
 							}
 						}
