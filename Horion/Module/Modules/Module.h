@@ -43,6 +43,9 @@ struct SettingEntry {
 	SettingValue* minValue;
 	SettingValue* maxValue;
 
+	// ClickGui Data
+	bool isDragging = false; // This is incredibly hacky and i wanted to avoid this as much as possible but i want to get this clickgui done
+
 	void makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
 		switch (valueType) {
 		case TEXT_T:

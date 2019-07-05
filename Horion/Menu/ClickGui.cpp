@@ -296,7 +296,7 @@ void ClickGui::renderCategory(Category category)
 					if (clickMod->isExtended) {
 						for (auto it = settings->begin(); it != settings->end(); ++it) {
 							SettingEntry* setting = *it;
-							if (strcmp(setting->name, "enabled") == 0)
+							if (strcmp(setting->name, "enabled") == 0 || strcmp(setting->name, "keybind") == 0)
 								continue;
 							
 							vec2_t textPos = vec2_t(
@@ -317,11 +317,76 @@ void ClickGui::renderCategory(Category category)
 							{
 								// Text
 								{
+									// Convert first letter to uppercase for more friendlieness
+									char name[0x21];
+									sprintf_s(name, 0x21, "%s:", setting->name);
+									if (name[0] != 0)
+										name[0] = toupper(name[0]);
 
+									std::string elTexto = name;
+									windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
+									DrawUtils::drawText(textPos, &elTexto, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
+									currentYOffset += textHeight + (textPadding * 2);
+									rectPos.w = currentYOffset;
+									DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
 								}
 								// Slider
 								{
+									vec4_t rect = vec4_t(
+										currentXOffset + textPadding + 5,
+										currentYOffset + textPadding,
+										xEnd           - textPadding,
+										currentYOffset + textPadding + textHeight
+									);
+									// Visuals & Logic
+									{
+										rectPos.y = currentYOffset;
+										rectPos.w += textHeight + (textPadding * 2);
+										// Background
+										const bool areWeFocused = rect.contains(&mousePos);
 
+										DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
+										DrawUtils::drawRectangle(rect, MC_Color(1.0f, 1.0f, 1.0f, 1.0f), 1.f, 0.7f);
+
+										const float minValue = (float) setting->minValue->_int;
+										const float maxValue = (float) setting->maxValue->_int - minValue;
+										float value = (float) max(0,   setting->   value->_int - minValue); // Value is now always > 0 && < maxValue
+										if (value > maxValue)
+											value = maxValue;
+										value /= maxValue; // Value is now in range 0 - 1
+										const float endXlol = (xEnd - textPadding) - (currentXOffset + textPadding + 5);
+										value *= endXlol; // Value is now pixel diff between start of bar and end of progress
+
+										// Draw Progress
+										{
+											rect.z = rect.x + value;
+											DrawUtils::fillRectangle(rect, MC_Color(1.0f, 1.0f, 1.0f, 1.0f), (areWeFocused || setting->isDragging) ? 1.f : 0.7f);
+										}
+										
+										// Drag Logic
+										{
+											if (setting->isDragging) {
+												if (isLeftClickDown && !isRightClickDown) 
+													value = mousePos.x - rect.x;
+												else
+													setting->isDragging = false;
+											}else if (areWeFocused && shouldToggleLeftClick) {
+												shouldToggleLeftClick = false;
+												setting->isDragging = true;
+											}
+										}
+
+										// Save Value
+										{
+											value /= endXlol; // Now in range 0 - 1
+											value *= maxValue;
+											value += minValue;
+											
+											setting->value->_int = (int) roundf(value);
+											setting->makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt();
+										}
+									}
+									currentYOffset += textHeight + (textPadding * 2);
 								}
 							}
 								break;
@@ -337,8 +402,8 @@ void ClickGui::renderCategory(Category category)
 								
 								break;
 							}
-							rectPos.w = currentYOffset;
-							DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
+							// Draw Background
+							
 						}
 					}
 				}else

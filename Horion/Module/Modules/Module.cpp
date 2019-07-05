@@ -12,6 +12,11 @@ IModule::IModule(int key, Category c)
 
 void IModule::registerFloatSetting(std::string name, float* floatPtr, float defaultValue, float minValue, float maxValue)
 {
+#ifdef DEBUG
+	if (minValue > maxValue)
+		__debugbreak(); // Minimum value is bigger than maximum value
+#endif
+
 	SettingEntry* setting = new SettingEntry();
 	setting->valueType = FLOAT_T;
 	
@@ -39,6 +44,11 @@ void IModule::registerFloatSetting(std::string name, float* floatPtr, float defa
 
 void IModule::registerIntSetting(std::string name, int * intPtr, int defaultValue, int minValue, int maxValue)
 {
+#ifdef DEBUG
+	if (minValue > maxValue)
+		__debugbreak(); // Minimum value is bigger than maximum value
+#endif
+
 	SettingEntry* setting = new SettingEntry();
 	setting->valueType = INT_T;
 	setting->value = reinterpret_cast<SettingValue*>(intPtr); // Actual Value
