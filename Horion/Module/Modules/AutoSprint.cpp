@@ -1,6 +1,6 @@
 #include "AutoSprint.h"
 
-AutoSprint::AutoSprint() : IModule(VK_SHIFT, MOVEMENT)
+AutoSprint::AutoSprint() : IModule(0x0, MOVEMENT)
 {
 }
 
@@ -12,6 +12,11 @@ AutoSprint::~AutoSprint()
 const char* AutoSprint::getModuleName()
 {
 	return ("AutoSprint");
+}
+
+const char* AutoSprint::getRawModuleName()
+{
+	return ("AutoSprint_");
 }
 
 void AutoSprint::onTick(C_GameMode* gm) {
