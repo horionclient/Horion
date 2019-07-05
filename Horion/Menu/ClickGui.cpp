@@ -278,7 +278,7 @@ void ClickGui::renderCategory(Category category)
 			// Settings
 			{
 				std::vector<SettingEntry*>* settings = mod->getSettings();
-				if (settings->size() > 0) { // Always true, because keybind and isEnabled are settings
+				if (settings->size() > 2) {
 					std::shared_ptr<ClickModule> clickMod = getClickModule(ourWindow, mod->getRawModuleName());
 					if (rectPos.contains(&mousePos) && shouldToggleRightClick) {
 						shouldToggleRightClick = false;
@@ -294,25 +294,51 @@ void ClickGui::renderCategory(Category category)
 
 					// Draw Settings
 					if (clickMod->isExtended) {
-						
 						for (auto it = settings->begin(); it != settings->end(); ++it) {
 							SettingEntry* setting = *it;
 							if (strcmp(setting->name, "enabled") == 0)
 								continue;
-							vec2_t settingOffset = vec2_t(
-								currentXOffset + textPadding,
+							
+							vec2_t textPos = vec2_t(
+								currentXOffset + textPadding + 5,
 								currentYOffset + textPadding
 							);
+
+							// Incomplete, because we dont know the endY yet
+							vec4_t rectPos = vec4_t(
+								currentXOffset,
+								currentYOffset,
+								xEnd,
+								0
+							);
+
 							switch (setting->valueType) {
+							case INT_T:
+							{
+								// Text
+								{
+
+								}
+								// Slider
+								{
+
+								}
+							}
+								break;
 							default:
 								char alc[100];
 								sprintf_s(alc, 100, "Not implemented (%s)", setting->name);
 								std::string elTexto = alc;
-								windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize));
-								DrawUtils::drawText(settingOffset, &elTexto, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
+								// Adjust window size if our text is too  t h i c c
+								windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
+
+								DrawUtils::drawText(textPos, &elTexto, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 								currentYOffset += textHeight + (textPadding * 2);
+								
 								break;
 							}
+							rectPos.w = currentYOffset;
+							DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
 						}
 					}
 				}else

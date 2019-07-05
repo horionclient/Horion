@@ -4,7 +4,7 @@
 
 Jetpack::Jetpack() : IModule('F', MOVEMENT)
 {
-	registerFloatSetting("speed", &this->speedMod, 1);
+	registerFloatSetting("speed", &this->speedMod, 1, 0.2f, 2.f);
 }
 
 

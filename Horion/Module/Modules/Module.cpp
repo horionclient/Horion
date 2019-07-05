@@ -6,38 +6,60 @@ IModule::IModule(int key, Category c)
 {
 	this->keybind = key;
 	this->category = c;
-	this->registerIntSetting(std::string("keybind"), &this->keybind, this->keybind);
+	this->registerIntSetting(std::string("keybind"), &this->keybind, this->keybind, 0, 0xFF);
 	this->registerBoolSetting(std::string("enabled"), &this->enabled, false);
 }
 
-void IModule::registerFloatSetting(std::string name, float* floatPtr, float defaultValue)
+void IModule::registerFloatSetting(std::string name, float* floatPtr, float defaultValue, float minValue, float maxValue)
 {
 	SettingEntry* setting = new SettingEntry();
 	setting->valueType = FLOAT_T;
 	
 	setting->value = reinterpret_cast<SettingValue*>(floatPtr);
 
-	SettingValue* defaultVal = new SettingValue(); // Default Value
+	// Default Value
+	SettingValue* defaultVal = new SettingValue(); 
 	defaultVal->_float = defaultValue;
 	setting->defaultValue = defaultVal;
+
+	// Min Value
+	SettingValue* minVal = new SettingValue();
+	minVal->_float = minValue;
+	setting->minValue = minVal;
+
+	// Max Value
+	SettingValue* maxVal = new SettingValue();
+	maxVal->_float = maxValue;
+	setting->maxValue = maxVal;
 
 	strcpy_s(setting->name, 19, name.c_str()); // Name
 
 	settings.push_back(setting); // Add to list
 }
 
-void IModule::registerIntSetting(std::string name, int * intPtr, int defaultValue)
+void IModule::registerIntSetting(std::string name, int * intPtr, int defaultValue, int minValue, int maxValue)
 {
 	SettingEntry* setting = new SettingEntry();
 	setting->valueType = INT_T;
+	setting->value = reinterpret_cast<SettingValue*>(intPtr); // Actual Value
 
-	setting->value = reinterpret_cast<SettingValue*>(intPtr); // Actual value
-
-	SettingValue* defaultVal = new SettingValue(); // Default Value
+	// Default Value
+	SettingValue* defaultVal = new SettingValue(); 
 	defaultVal->_int = defaultValue;
 	setting->defaultValue = defaultVal;
 
-	strcpy_s(setting->name, 19, name.c_str()); // Name
+	// Min Value
+	SettingValue* minVal = new SettingValue();
+	minVal->_int = minValue;
+	setting->minValue = minVal;
+
+	// Max Value
+	SettingValue* maxVal = new SettingValue();
+	maxVal->_int = maxValue;
+	setting->maxValue = maxVal;
+
+	// Name
+	strcpy_s(setting->name, 19, name.c_str()); 
 
 	settings.push_back(setting); // Add to list
 }
@@ -128,32 +150,32 @@ void IModule::onLoadConfig(json * conf)
 					switch (sett->valueType) {
 					case FLOAT_T:
 						sett->value->_float = value.get<float>();
-						continue;
+						break;
 					case DOUBLE_T:
 						sett->value->_double = value.get<double>();
-						continue;
+						break;
 					case INT64_T:
 						sett->value->int64 = value.get<__int64>();
-						continue;
+						break;
 					case INT_T:
 						sett->value->_int = value.get<int>();
-						continue;
+						break;
 					case BOOL_T:
 						sett->value->_bool = value.get<bool>();
-						continue;
+						break;
 					case TEXT_T:
 						sett->value->text = &value.get<std::string>();
-						continue;
+						break;
 					}
+					sett->makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt();
+					continue;
 				}
 				catch (std::exception e) {
 					logF("Config Load Error (%s): %s", this->getRawModuleName(), e.what());
 				}
-				
 			}
 		}
 	}
-	
 }
 
 #pragma warning( push )

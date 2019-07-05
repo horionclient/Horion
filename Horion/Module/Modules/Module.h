@@ -40,6 +40,30 @@ struct SettingEntry {
 	ValueType valueType;
 	SettingValue* value;
 	SettingValue* defaultValue;
+	SettingValue* minValue;
+	SettingValue* maxValue;
+
+	void makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
+		switch (valueType) {
+		case TEXT_T:
+		case BOOL_T:
+			break;
+		case INT64_T:
+			value->int64 = max(minValue->int64, min(maxValue->int64, value->int64));
+			break;
+		case DOUBLE_T:
+			value->_double = max(minValue->_double, min(maxValue->_double, value->_double));
+			break;
+		case FLOAT_T:
+			value->_float = max(minValue->_float, min(maxValue->_float, value->_float));
+			break;
+		case INT_T:
+			value->_int = max(minValue->_int, min(maxValue->_int, value->_int));
+			break;
+		default:
+			logF("unrecognized value %i", valueType);
+		}
+	}
 };
 
 class IModule
@@ -54,8 +78,8 @@ private:
 protected:
 	IModule(int key, Category c);
 
-	void registerFloatSetting(std::string name, float* floatPtr, float defaultValue);
-	void registerIntSetting(std::string name, int* intpTr, int defaultValue);
+	void registerFloatSetting(std::string name, float* floatPtr, float defaultValue, float minValue, float maxValue);
+	void registerIntSetting(std::string name, int* intpTr, int defaultValue, int minValue, int maxValue);
 	void registerBoolSetting(std::string name, bool* boolPtr, bool defaultValue);
 public:
 	~IModule();
