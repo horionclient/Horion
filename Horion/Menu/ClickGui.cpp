@@ -326,7 +326,7 @@ void ClickGui::renderCategory(Category category)
 									std::string elTexto = name;
 									windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
 									DrawUtils::drawText(textPos, &elTexto, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
-									currentYOffset += textHeight + (textPadding * 2);
+									currentYOffset += textHeight + textPadding;
 									rectPos.w = currentYOffset;
 									DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
 								}
@@ -356,6 +356,20 @@ void ClickGui::renderCategory(Category category)
 										value /= maxValue; // Value is now in range 0 - 1
 										const float endXlol = (xEnd - textPadding) - (currentXOffset + textPadding + 5);
 										value *= endXlol; // Value is now pixel diff between start of bar and end of progress
+
+										// Draw Int
+										{
+											vec2_t mid = vec2_t(
+												rect.x + ((rect.z - rect.x) / 2),
+												rect.y
+											);
+											char str[6];
+											sprintf_s(str, 6, "%i", setting->value->_int);
+											std::string text = str;
+											mid.x -= DrawUtils::getTextWidth(&text, textSize) / 2;
+
+											DrawUtils::drawText(mid, &text, (areWeFocused || setting->isDragging) ? new MC_Color(1.0f, 0.1f, 0.1f, 1.f) : new MC_Color(0.7f, 0.05f, 0.05f, 1.f), textSize);
+										}
 
 										// Draw Progress
 										{

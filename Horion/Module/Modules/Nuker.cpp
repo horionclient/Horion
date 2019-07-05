@@ -4,7 +4,7 @@
 
 Nuker::Nuker() : IModule(VK_NUMPAD5, BUILD)
 {
-	this->registerIntSetting(std::string("radius"), &this->nukerRadius, this->nukerRadius, 1, 20);
+	this->registerIntSetting(std::string("radius"), &this->nukerRadius, this->nukerRadius, 1, 10);
 }
 
 
