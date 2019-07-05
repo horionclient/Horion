@@ -416,8 +416,6 @@ void ClickGui::renderCategory(Category category)
 								
 								break;
 							}
-							// Draw Background
-							
 						}
 					}
 				}else

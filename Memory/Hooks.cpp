@@ -669,165 +669,167 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	std::chrono::steady_clock::time_point beginPostRender = std::chrono::steady_clock::now();
 #endif
 
+	bool shouldRenderArrayList = true;
 	// Call PostRender() functions
 	{
+		moduleMgr->onPostRender();
 		TabGui::render();
 		static IModule* ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 		if (ClickGuiModule == nullptr)
 			ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 		else if (ClickGuiModule->isEnabled()) {
 			ClickGui::render();
+			shouldRenderArrayList = false;
 		}
-		moduleMgr->onPostRender();
 	}
 
-	// Display ArrayList on the Right?
-	static constexpr bool isOnRightSide = true;
-	static float rcolors[4]; // Rainbow color array RGBA
-	static float disabledRcolors[4]; // Rainbow Colors, but for disabled modules
-	static std::string horionStr = std::string("Horion");					 // Static Horion logo / text
-	static float       horionStrWidth = DrawUtils::getTextWidth(&horionStr); // Graphical Width of Horion logo / text
-
-	float yOffset = 0; // Offset of next Text
-	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
-	vec2_t windowSizeReal = g_Data.getClientInstance()->getGuiData()->windowSizeReal;
-
-	vec2_t mousePos = *g_Data.getClientInstance()->getMousePos();
-	mousePos.div(windowSizeReal);
-	mousePos.mul(windowSize);
-
-	// Rainbow color updates
 	{
-		DrawUtils::rainbow(rcolors); // Increase Hue of rainbow color array
-		disabledRcolors[0] = min(1, rcolors[0] * 0.4f + 0.2f);
-		disabledRcolors[1] = min(1, rcolors[1] * 0.4f + 0.2f);
-		disabledRcolors[2] = min(1, rcolors[2] * 0.4f + 0.2f);
-		disabledRcolors[3] = 1;
-	}
+		// Display ArrayList on the Right?
+		static constexpr bool isOnRightSide = true;
+		static float rcolors[4]; // Rainbow color array RGBA
+		static float disabledRcolors[4]; // Rainbow Colors, but for disabled modules
+		static std::string horionStr = std::string("Horion");					 // Static Horion logo / text
+		static float       horionStrWidth = DrawUtils::getTextWidth(&horionStr); // Graphical Width of Horion logo / text
 
-	// Draw Horion logo
-	{
+		float yOffset = 0; // Offset of next Text
+		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+		vec2_t windowSizeReal = g_Data.getClientInstance()->getGuiData()->windowSizeReal;
 
-		if (isOnRightSide)
-			DrawUtils::drawText(vec2_t(4, 2), &horionStr/*, new MC_Color(rcolors)*/);
-		else
-			DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth - 1, 1), &horionStr/*, new MC_Color(rcolors)*/);
-	}
+		vec2_t mousePos = *g_Data.getClientInstance()->getMousePos();
+		mousePos.div(windowSizeReal);
+		mousePos.mul(windowSize);
 
-	// Draw ArrayList
-	if (moduleMgr->isInitialized()) {
-		struct IModuleContainer {
-			// Struct used to Sort IModules in a std::set
-			IModule* backingModule;
-			std::string moduleName;
-			bool enabled;
-			int keybind;
-			float textWidth;
-
-			IModuleContainer(IModule* mod) {
-				const char* moduleNameChr = mod->getModuleName();
-				this->enabled = mod->isEnabled();
-				this->keybind = mod->getKeybind();
-				this->backingModule = mod;
-
-				if (keybind == 0x0)
-					moduleName = moduleNameChr;
-				else {
-					char yikes[50];
-					sprintf_s(yikes, 50, "%s [%s]", moduleNameChr, Utils::getKeybindName(keybind));
-					moduleName = yikes;
-				}
-
-				this->textWidth = DrawUtils::getTextWidth(&moduleName);
-			}
-
-			bool operator<(const IModuleContainer &other) const {
-
-				if (enabled) {
-					if (!other.enabled) // We are enabled
-						return true;
-				}
-				else if (other.enabled) // They are enabled
-					return false;
-
-				if (this->textWidth == other.textWidth)
-					return moduleName < other.moduleName;
-				return this->textWidth > other.textWidth;
-			}
-		};
-
-		// Parameters
-		static constexpr float textPadding = 1.0f;
-		static constexpr float textSize = 1.0f;
-		static constexpr float textHeight = textSize * 10.0f;
-
-		// Mouse click detector
-		static bool wasLeftMouseDown = GameData::isLeftClickDown(); // Last isDown value
-		bool leftMouseDown = GameData::isLeftClickDown(); // current isDown value
-
-		bool executeClick = leftMouseDown && leftMouseDown != wasLeftMouseDown; // isDown == true AND (current state IS NOT last state)
-		wasLeftMouseDown = leftMouseDown; // Set last isDown value
-
-		// Show disabled Modules?
-		//const bool extendedArraylist = g_Data.getLocalPlayer() == nullptr ? /* not ingame */ true : /* ingame */(GameData::canUseMoveKeys() ? false : true);
-		constexpr bool extendedArraylist = false;
-		std::set<IModuleContainer> modContainerList;
-		// Fill modContainerList with Modules
+		// Rainbow color updates
 		{
-			std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
-
-			for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
-				if (extendedArraylist || (*it)->isEnabled())
-					modContainerList.emplace(IModuleContainer(*it));
-			}
+			DrawUtils::rainbow(rcolors); // Increase Hue of rainbow color array
+			disabledRcolors[0] = min(1, rcolors[0] * 0.4f + 0.2f);
+			disabledRcolors[1] = min(1, rcolors[1] * 0.4f + 0.2f);
+			disabledRcolors[2] = min(1, rcolors[2] * 0.4f + 0.2f);
+			disabledRcolors[3] = 1;
 		}
 
-		// Loop through mods to display Labels
-		for (std::set<IModuleContainer>::iterator it = modContainerList.begin(); it != modContainerList.end(); ++it) {
+		// Draw Horion logo
+		{
+			if (isOnRightSide)
+				DrawUtils::drawText(vec2_t(4, 2), &horionStr/*, new MC_Color(rcolors)*/);
+			else
+				DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth - 1, 1), &horionStr/*, new MC_Color(rcolors)*/);
+		}
 
-			if (!extendedArraylist && !it->enabled)
-				continue;
+		// Draw ArrayList
+		if (moduleMgr->isInitialized() && shouldRenderArrayList) {
+			struct IModuleContainer {
+				// Struct used to Sort IModules in a std::set
+				IModule* backingModule;
+				std::string moduleName;
+				bool enabled;
+				int keybind;
+				float textWidth;
 
-			std::string textStr = it->moduleName;
-			float textWidth = it->textWidth;
+				IModuleContainer(IModule* mod) {
+					const char* moduleNameChr = mod->getModuleName();
+					this->enabled = mod->isEnabled();
+					this->keybind = mod->getKeybind();
+					this->backingModule = mod;
 
-			float xOffset = isOnRightSide ? windowSize.x - textWidth - (textPadding * 2) : 0;
-			vec2_t textPos = vec2_t(
-				xOffset + textPadding,
-				yOffset + textPadding
-			);
-			vec4_t rectPos = vec4_t(
-				xOffset,
-				yOffset,
-				isOnRightSide ? windowSize.x : textWidth + (textPadding * 2),
-				yOffset + textPadding * 2 + textHeight
-			);
+					if (keybind == 0x0)
+						moduleName = moduleNameChr;
+					else {
+						char yikes[50];
+						sprintf_s(yikes, 50, "%s [%s]", moduleNameChr, Utils::getKeybindName(keybind));
+						moduleName = yikes;
+					}
 
-			DrawUtils::drawText(textPos, &textStr, new MC_Color(it->enabled ? rcolors : disabledRcolors), textSize);
-			if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos)) {
-
-				if (leftMouseDown) {
-					DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 0.1f), it->enabled ? 0.6f : 0.6f);
-					if (executeClick)
-						it->backingModule->toggle();
+					this->textWidth = DrawUtils::getTextWidth(&moduleName);
 				}
-				else
-					DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.7f, 0.3f, 0.1f), it->enabled ? 0.4f : 0.15f);
-			}
-			/*else
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), it->enabled ? 0.4f : 0.15f);*/
 
-			yOffset += textHeight + (textPadding * 2);
+				bool operator<(const IModuleContainer &other) const {
+
+					if (enabled) {
+						if (!other.enabled) // We are enabled
+							return true;
+					}
+					else if (other.enabled) // They are enabled
+						return false;
+
+					if (this->textWidth == other.textWidth)
+						return moduleName < other.moduleName;
+					return this->textWidth > other.textWidth;
+				}
+			};
+
+			// Parameters
+			static constexpr float textPadding = 1.0f;
+			static constexpr float textSize = 1.0f;
+			static constexpr float textHeight = textSize * 10.0f;
+
+			// Mouse click detector
+			static bool wasLeftMouseDown = GameData::isLeftClickDown(); // Last isDown value
+			bool leftMouseDown = GameData::isLeftClickDown(); // current isDown value
+
+			bool executeClick = leftMouseDown && leftMouseDown != wasLeftMouseDown; // isDown == true AND (current state IS NOT last state)
+			wasLeftMouseDown = leftMouseDown; // Set last isDown value
+
+			// Show disabled Modules?
+			//const bool extendedArraylist = g_Data.getLocalPlayer() == nullptr ? /* not ingame */ true : /* ingame */(GameData::canUseMoveKeys() ? false : true);
+			constexpr bool extendedArraylist = false;
+			std::set<IModuleContainer> modContainerList;
+			// Fill modContainerList with Modules
+			{
+				std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
+
+				for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
+					if (extendedArraylist || (*it)->isEnabled())
+						modContainerList.emplace(IModuleContainer(*it));
+				}
+			}
+
+			// Loop through mods to display Labels
+			for (std::set<IModuleContainer>::iterator it = modContainerList.begin(); it != modContainerList.end(); ++it) {
+
+				if (!extendedArraylist && !it->enabled)
+					continue;
+
+				std::string textStr = it->moduleName;
+				float textWidth = it->textWidth;
+
+				float xOffset = isOnRightSide ? windowSize.x - textWidth - (textPadding * 2) : 0;
+				vec2_t textPos = vec2_t(
+					xOffset + textPadding,
+					yOffset + textPadding
+				);
+				vec4_t rectPos = vec4_t(
+					xOffset,
+					yOffset,
+					isOnRightSide ? windowSize.x : textWidth + (textPadding * 2),
+					yOffset + textPadding * 2 + textHeight
+				);
+
+				DrawUtils::drawText(textPos, &textStr, new MC_Color(it->enabled ? rcolors : disabledRcolors), textSize);
+				if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos)) {
+
+					if (leftMouseDown) {
+						DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 0.1f), it->enabled ? 0.6f : 0.6f);
+						if (executeClick)
+							it->backingModule->toggle();
+					}
+					else
+						DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.7f, 0.3f, 0.1f), it->enabled ? 0.4f : 0.15f);
+				}
+				/*else
+					DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), it->enabled ? 0.4f : 0.15f);*/
+
+				yOffset += textHeight + (textPadding * 2);
+			}
+			modContainerList.clear();
 		}
-		modContainerList.clear();
 	}
+	
 
 	DrawUtils::flush();
 
 #ifdef PERFORMANCE_TEST
 	std::chrono::steady_clock::time_point endRender = std::chrono::steady_clock::now();
-
-
 	//logF("PreRender: %.1f", std::chrono::duration_cast<std::chrono::microseconds>(endPreRender - beginPreRender).count() / 1000.f);
 	logF("Render: %.2fms", std::chrono::duration_cast<std::chrono::microseconds>(endRender - beginPostRender).count() / 1000.f);
 #endif

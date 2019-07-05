@@ -2,7 +2,7 @@
 
 
 
-ClickGuiMod::ClickGuiMod() : IModule(0x0, VISUAL)
+ClickGuiMod::ClickGuiMod() : IModule(VK_INSERT, VISUAL)
 {
 }
 
