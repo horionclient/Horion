@@ -4,6 +4,7 @@
 
 ESP::ESP() : IModule('O', VISUAL)
 {
+	this->registerBoolSetting("rainbow", &this->doRainbow, this->doRainbow);
 }
 
 
@@ -19,16 +20,24 @@ const char* ESP::getModuleName()
 static float rcolors[4];
 
 void doRenderStuff(C_Entity* ent) {
-	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
-	if (ent != localPlayer) {
-		if (ent->timeSinceDeath > 0)
-			return;
-		if (Target::isValidTarget(ent))
-			DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
-		else
-			DrawUtils::setColor(0.4f, 0.4f, 0.4f, 0.2f);
+	static ESP* espMod = static_cast<ESP*>(moduleMgr->getModule<ESP>());
+	if(espMod == 0)
+		espMod = static_cast<ESP*>(moduleMgr->getModule<ESP>());
+	else {
+		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
+		if (ent != localPlayer) {
+			if (ent->timeSinceDeath > 0)
+				return;
+			if (Target::isValidTarget(ent))
+				if(espMod->doRainbow)
+					DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
+				else
+					DrawUtils::setColor(0.9f, 0.9f, 0.9f, max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
+			else
+				DrawUtils::setColor(0.4f, 0.4f, 0.4f, 0.2f);
 
-		DrawUtils::drawEntityBox(ent, max(0.2f, 1 / max(1, (*localPlayer->getPos()).dist(*ent->getPos())))); // Fancy math to give an illusion of good esp
+			DrawUtils::drawEntityBox(ent, max(0.2f, 1 / max(1, (*localPlayer->getPos()).dist(*ent->getPos())))); // Fancy math to give an illusion of good esp
+		}
 	}
 }
 

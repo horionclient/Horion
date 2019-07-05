@@ -7,6 +7,7 @@
 class ESP : public IModule
 {
 public:
+	bool doRainbow = true;
 	ESP();
 	~ESP();
 

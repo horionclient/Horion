@@ -308,7 +308,6 @@ void ClickGui::renderCategory(Category category)
 
 					currentYOffset += textHeight + (textPadding * 2);
 
-					// Draw Settings
 					if (clickMod->isExtended) {
 						float startYOffset = currentYOffset;
 						for (auto it = settings->begin(); it != settings->end(); ++it) {
@@ -330,6 +329,61 @@ void ClickGui::renderCategory(Category category)
 							);
 
 							switch (setting->valueType) {
+							case BOOL_T:
+							{
+								rectPos.w = currentYOffset + textHeight + (textPadding * 2);
+								DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
+								vec4_t selectableSurface = vec4_t(
+									textPos.x + textPadding,
+									textPos.y + textPadding,
+									textPos.x + xEnd - textPadding,
+									textPos.y + textHeight - textPadding
+								);
+								bool isFocused = selectableSurface.contains(&mousePos);
+								// Logic
+								{
+									if (isFocused && shouldToggleLeftClick) {
+										shouldToggleLeftClick = false;
+										setting->value->_bool = !setting->value->_bool;
+									}
+								}
+								// Checkbox
+								{
+									vec4_t boxPos = vec4_t(
+										textPos.x              + textPadding,
+										textPos.y              + textPadding,
+										textPos.x + textHeight - textPadding,
+										textPos.y + textHeight - textPadding
+									);
+
+									DrawUtils::drawRectangle(boxPos, MC_Color(1, 1, 1, 1), isFocused ? 1 : 0.8f, 0.5f);
+
+									if (setting->value->_bool) {
+										DrawUtils::setColor(0.2f, 0.7f, 0.2f, 1);
+										boxPos.x += textPadding;
+										boxPos.y += textPadding;
+										boxPos.z -= textPadding;
+										boxPos.w -= textPadding;
+										DrawUtils::drawLine(vec2_t(boxPos.x, boxPos.y), vec2_t(boxPos.z, boxPos.w), 0.5f);
+										DrawUtils::drawLine(vec2_t(boxPos.z, boxPos.y), vec2_t(boxPos.x, boxPos.w), 0.5f);
+									}
+								}
+								textPos.x += textHeight + (textPadding * 2);
+								// Text
+								{
+									// Convert first letter to uppercase for more friendlieness
+									char name[0x21];
+									sprintf_s(name, 0x21, "%s", setting->name);
+									if (name[0] != 0)
+										name[0] = toupper(name[0]);
+
+									std::string elTexto = name;
+									windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 10 /* because we add 10 to text padding + checkbox*/);
+									DrawUtils::drawText(textPos, &elTexto, isFocused ? new MC_Color(1.0f, 1.0f, 1.0f, 1.0f) : new MC_Color(0.8f, 0.8f, 0.8f, 1.0f), textSize);
+									currentYOffset += textHeight + (textPadding * 2);
+								}
+							}
+								break;
 							case FLOAT_T:
 							{
 								// Text
