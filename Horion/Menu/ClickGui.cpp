@@ -189,7 +189,7 @@ void ClickGui::renderCategory(Category category)
 		mousePos.mul(windowSize);
 	}
 
-	// Draw Category Name
+	// Draw Category Header
 	{
 		vec2_t textPos = vec2_t(
 			currentXOffset + textPadding,
@@ -245,7 +245,7 @@ void ClickGui::renderCategory(Category category)
 		}
 	}
 
-	// Loop through mods to display Labels
+	// Loop through Modules to display em
 	// TODO: nice extend animation
 	if (ourWindow->isExtended) {
 		for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it) {
@@ -263,16 +263,21 @@ void ClickGui::renderCategory(Category category)
 				currentYOffset + textHeight + (textPadding * 2)
 			);
 
-			if (rectPos.contains(&mousePos)) { // Is the Mouse hovering above us?
-				DrawUtils::fillRectangle(rectPos, selectedModuleColor, 0.8f);
-				if (shouldToggleLeftClick) { // Are we being clicked?
-					mod->toggle();
-					shouldToggleLeftClick = false;
+			// Background
+			{
+				if (rectPos.contains(&mousePos)) { // Is the Mouse hovering above us?
+					DrawUtils::fillRectangle(rectPos, selectedModuleColor, 0.8f);
+					if (shouldToggleLeftClick) { // Are we being clicked?
+						mod->toggle();
+						shouldToggleLeftClick = false;
+					}
 				}
-			} else {
-				DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
+				else {
+					DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
+				}
 			}
-
+			
+			// Text
 			DrawUtils::drawText(textPos, &textStr, mod->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 
 			// Settings
@@ -294,6 +299,7 @@ void ClickGui::renderCategory(Category category)
 
 					// Draw Settings
 					if (clickMod->isExtended) {
+						float startYOffset = currentYOffset;
 						for (auto it = settings->begin(); it != settings->end(); ++it) {
 							SettingEntry* setting = *it;
 							if (strcmp(setting->name, "enabled") == 0 || strcmp(setting->name, "keybind") == 0)
@@ -326,7 +332,7 @@ void ClickGui::renderCategory(Category category)
 									std::string elTexto = name;
 									windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
 									DrawUtils::drawText(textPos, &elTexto, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
-									currentYOffset += textHeight + textPadding;
+									currentYOffset += textPadding + textHeight;
 									rectPos.w = currentYOffset;
 									DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
 								}
@@ -336,7 +342,7 @@ void ClickGui::renderCategory(Category category)
 										currentXOffset + textPadding + 5,
 										currentYOffset + textPadding,
 										xEnd           - textPadding,
-										currentYOffset + textPadding + textHeight
+										currentYOffset - textPadding + textHeight
 									);
 									// Visuals & Logic
 									{
@@ -345,8 +351,8 @@ void ClickGui::renderCategory(Category category)
 										// Background
 										const bool areWeFocused = rect.contains(&mousePos);
 
-										DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
-										DrawUtils::drawRectangle(rect, MC_Color(1.0f, 1.0f, 1.0f, 1.0f), 1.f, 0.7f);
+										DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f); // Background
+										DrawUtils::drawRectangle(rect, MC_Color(1.0f, 1.0f, 1.0f, 1.0f), 1.f, 0.7f); // Slider background
 
 										const float minValue = (float) setting->minValue->_int;
 										const float maxValue = (float) setting->maxValue->_int - minValue;
@@ -361,7 +367,7 @@ void ClickGui::renderCategory(Category category)
 										{
 											vec2_t mid = vec2_t(
 												rect.x + ((rect.z - rect.x) / 2),
-												rect.y
+												rect.y - 1.5f // Hardcoded ghetto
 											);
 											char str[6];
 											sprintf_s(str, 6, "%i", setting->value->_int);
@@ -416,6 +422,13 @@ void ClickGui::renderCategory(Category category)
 								
 								break;
 							}
+						}
+						float endYOffset = currentYOffset;
+						if (endYOffset - startYOffset > textHeight + 5) {
+							startYOffset += textPadding;
+							endYOffset   -= textPadding;
+							DrawUtils::setColor(1, 1, 1, 1);
+							DrawUtils::drawLine(vec2_t(currentXOffset + 2, startYOffset), vec2_t(currentXOffset + 2, endYOffset), 0.5f);
 						}
 					}
 				}else
