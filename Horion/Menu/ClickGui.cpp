@@ -200,65 +200,30 @@ void ClickGui::renderCategory(Category category)
 		ourWindow->pos.y = max(0, ourWindow->pos.y);
 	}
 
-	// Draw Category Header
-	{
-		vec2_t textPos = vec2_t(
-			currentXOffset + textPadding,
-			currentYOffset + textPadding
-		);
-		vec4_t rectPos = vec4_t(
-			currentXOffset                                - categoryMargin,
-			currentYOffset                                - categoryMargin,
-			currentXOffset + windowSize->x + paddingRight + categoryMargin,
-			currentYOffset + textHeight + (textPadding * 2)
-		);
 
-		// Extend Logic
-		{
-			if (rectPos.contains(&mousePos) && shouldToggleRightClick && !isDragging) {
-				shouldToggleRightClick = false;
-				ourWindow->isExtended = !ourWindow->isExtended;
-			}
+	float categoryHeaderYOffset = currentYOffset;
+
+	if (ourWindow->isInAnimation) {
+		if (ourWindow->isExtended) {
+			ourWindow->animation -= 0.05f;
+			if (ourWindow->animation <= 0)
+				ourWindow->isInAnimation = false;
 		}
-
-		// Dragging Logic
-		{
-			if (isDragging && getCrcHash(categoryName) == draggedWindow) { // WE are being dragged
-				if (isLeftClickDown) { // Still dragging
-					vec2_t diff = vec2_t(mousePos).sub(dragStart);
-					ourWindow->pos.add(diff);
-					dragStart = mousePos;
-				}
-				else { // Stopped dragging
-					isDragging = false;
-				}
-			}
-			else if (rectPos.contains(&mousePos) && shouldToggleLeftClick) {
-				isDragging = true;
-				draggedWindow = getCrcHash(categoryName);
-				shouldToggleLeftClick = false;
-				dragStart = mousePos;
-			}
-		}
-
-		// Draw component
-		{
-			// Draw Text
-			std::string textStr = categoryName;
-			DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
-			DrawUtils::fillRectangle(rectPos, MC_Color(0.118f, 0.827f, 0.764f, 1.f), 0.95f);
-			// Draw Dash
-			GuiUtils::drawCrossLine(vec2_t(
-				currentXOffset + windowSize->x + paddingRight - (crossSize / 2) - 1.f, 
-				currentYOffset + textPadding + (textHeight / 2)
-			), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !ourWindow->isExtended);
-			currentYOffset += textHeight + (textPadding * 2);
+		else {
+			ourWindow->animation += 0.05f;
+			if (ourWindow->animation >= 1)
+				ourWindow->isInAnimation = false;
 		}
 	}
 
-	// Loop through Modules to display em
-	// TODO: nice extend animation
-	if (ourWindow->isExtended) {
+	currentYOffset += textHeight + (textPadding * 2);
+	// Loop through Modules to display em	
+	if (ourWindow->isExtended || ourWindow->isInAnimation) {
+		if (ourWindow->isInAnimation) {
+			currentYOffset -= pow(ourWindow->animation * 10, 3);
+			shouldToggleLeftClick = false; // Disable Toggles during animations because they can be buggy af
+		}
+			
 		for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it) {
 			IModule* mod = *it;
 			std::string textStr = mod->getModuleName();
@@ -274,7 +239,10 @@ void ClickGui::renderCategory(Category category)
 				currentYOffset + textHeight + (textPadding * 2)
 			);
 
+			bool allowRender = currentYOffset >= categoryHeaderYOffset;
+
 			// Background
+			if(allowRender)
 			{
 				if (rectPos.contains(&mousePos)) { // Is the Mouse hovering above us?
 					DrawUtils::fillRectangle(rectPos, selectedModuleColor, 0.8f);
@@ -289,12 +257,13 @@ void ClickGui::renderCategory(Category category)
 			}
 			
 			// Text
-			DrawUtils::drawText(textPos, &textStr, mod->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
+			if (allowRender)
+				DrawUtils::drawText(textPos, &textStr, mod->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 
 			// Settings
 			{
 				std::vector<SettingEntry*>* settings = mod->getSettings();
-				if (settings->size() > 2) {
+				if (settings->size() > 2 && allowRender) {
 					std::shared_ptr<ClickModule> clickMod = getClickModule(ourWindow, mod->getRawModuleName());
 					if (rectPos.contains(&mousePos) && shouldToggleRightClick) {
 						shouldToggleRightClick = false;
@@ -568,15 +537,16 @@ void ClickGui::renderCategory(Category category)
 							}
 								break;
 							default:
+							{
 								char alc[100];
 								sprintf_s(alc, 100, "Not implemented (%s)", setting->name);
 								std::string elTexto = alc;
 								// Adjust window size if our text is too  t h i c c
 								windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
-
+								
 								DrawUtils::drawText(textPos, &elTexto, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 								currentYOffset += textHeight + (textPadding * 2);
-								
+							}
 								break;
 							}
 						}
@@ -593,6 +563,74 @@ void ClickGui::renderCategory(Category category)
 			}
 		}
 	}
+	DrawUtils::flush();
+	// Draw Category Header
+	{
+		vec2_t textPos = vec2_t(
+			currentXOffset + textPadding,
+			categoryHeaderYOffset + textPadding
+		);
+		vec4_t rectPos = vec4_t(
+			currentXOffset - categoryMargin,
+			categoryHeaderYOffset - categoryMargin,
+			currentXOffset + windowSize->x + paddingRight + categoryMargin,
+			categoryHeaderYOffset + textHeight + (textPadding * 2)
+		);
+
+		// Extend Logic
+		{
+			if (rectPos.contains(&mousePos) && shouldToggleRightClick && !isDragging) {
+				shouldToggleRightClick = false;
+				ourWindow->isExtended = !ourWindow->isExtended;
+				if (ourWindow->isExtended && ourWindow->animation == 0)
+					ourWindow->animation = 0.2f;
+				else if (!ourWindow->isExtended && ourWindow->animation == 1)
+					ourWindow->animation = 0;
+				ourWindow->isInAnimation = true;
+
+				for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it) {
+					IModule* mod = *it;
+					std::shared_ptr<ClickModule> clickMod = getClickModule(ourWindow, mod->getRawModuleName());
+					clickMod->isExtended = false;
+				}
+			}
+		}
+
+		// Dragging Logic
+		{
+			if (isDragging && getCrcHash(categoryName) == draggedWindow) { // WE are being dragged
+				if (isLeftClickDown) { // Still dragging
+					vec2_t diff = vec2_t(mousePos).sub(dragStart);
+					ourWindow->pos.add(diff);
+					dragStart = mousePos;
+				}
+				else { // Stopped dragging
+					isDragging = false;
+				}
+			}
+			else if (rectPos.contains(&mousePos) && shouldToggleLeftClick) {
+				isDragging = true;
+				draggedWindow = getCrcHash(categoryName);
+				shouldToggleLeftClick = false;
+				dragStart = mousePos;
+			}
+		}
+
+		// Draw component
+		{
+			// Draw Text
+			std::string textStr = categoryName;
+			DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
+			DrawUtils::fillRectangle(rectPos, MC_Color(0.118f, 0.827f, 0.764f, 1.f), 0.95f);
+			// Draw Dash
+			GuiUtils::drawCrossLine(vec2_t(
+				currentXOffset + windowSize->x + paddingRight - (crossSize / 2) - 1.f,
+				categoryHeaderYOffset + textPadding + (textHeight / 2)
+			), MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !ourWindow->isExtended);
+		}
+	}
+
+
 	moduleList.clear();
 	DrawUtils::flush();
 }
