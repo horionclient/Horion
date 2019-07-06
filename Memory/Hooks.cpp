@@ -296,7 +296,11 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face,
 			vec3_ti tempPos;
 
 			const int range = nukerModule->getNukerRadius();
+			const bool isVeinMiner = nukerModule->isVeinMiner();
+
 			C_BlockSource* region = g_Data.getLocalPlayer()->region;
+			int selectedBlockId = (*(region->getBlock(*a2)->blockLegacy))->blockId;
+			uint8_t selectedBlockData = region->getBlock(*a2)->data;
 
 			for (int x = -range; x < range; x++) {
 				for (int y = -range; y < range; y++) {
@@ -304,8 +308,12 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face,
 						tempPos.x = a2->x + x;
 						tempPos.y = a2->y + y;
 						tempPos.z = a2->z + z;
-						if (tempPos.y > 0 && (*(region->getBlock(tempPos)->blockLegacy))->blockId != 0) {
-							a->destroyBlock(&tempPos, face);
+						if (tempPos.y > 0) {
+							C_Block* blok = region->getBlock(tempPos);
+							uint8_t data = blok->data;
+							int id = (*(blok->blockLegacy))->blockId;
+							if(id != 0 && (!isVeinMiner || (id == selectedBlockId && data == selectedBlockData)))
+								a->destroyBlock(&tempPos, face);
 						}
 					}
 				}

@@ -50,7 +50,6 @@ void Killaura::onTick(C_GameMode* gm)
 		return;
 
 	//Loop through all our players and retrieve their information
-	
 	targetList.clear();
 
 	g_Data.forEachEntity(findEntity);

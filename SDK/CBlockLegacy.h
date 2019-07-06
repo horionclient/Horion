@@ -48,7 +48,11 @@ public:
 class C_Block
 {
 private:
-	char pad[0x10];
+	uintptr_t** vtable;
+public:
+	uint8_t data;
+private:
+	char pad[0x7];
 public:
 	C_BlockLegacy** blockLegacy;
 
