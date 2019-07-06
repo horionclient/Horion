@@ -1,5 +1,6 @@
 #pragma once
 #include "Module.h"
+#include "../ModuleManager.h"
 #include "../../../Utils/Target.h"
 
 class Killaura : public IModule
@@ -7,6 +8,8 @@ class Killaura : public IModule
 private:
 	bool isMulti = true;
 public:
+	float range = 6;
+
 	Killaura();
 	~Killaura();
 

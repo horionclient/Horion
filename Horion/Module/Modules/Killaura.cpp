@@ -5,6 +5,7 @@
 Killaura::Killaura() : IModule('P', COMBAT) // <-- keybind
 {
 	this->registerBoolSetting("multiaura", &this->isMulti, this->isMulti);
+	this->registerFloatSetting("range", &this->range, this->range, 2, 8);
 }
 
 
@@ -18,30 +19,35 @@ const char* Killaura::getModuleName()
 }
 
 static std::vector <C_Entity*> targetList;
-static constexpr float maxDist = 8;
 
 void findEntity(C_Entity* currentEntity) {
-	if (currentEntity == g_Data.getLocalPlayer()) // Skip Local player
-		return;
+	static Killaura* killauraMod = static_cast<Killaura*>(moduleMgr->getModule<Killaura>());
+	if (killauraMod == 0)
+		killauraMod = static_cast<Killaura*>(moduleMgr->getModule<Killaura>());
+	else {
+		if (currentEntity == g_Data.getLocalPlayer()) // Skip Local player
+			return;
 
-	if (currentEntity == 0)
-		return;
+		if (currentEntity == 0)
+			return;
 
-	if (currentEntity->timeSinceDeath > 0 || currentEntity->damageTime >= 7)
-		return;
+		if (currentEntity->timeSinceDeath > 0 || currentEntity->damageTime >= 7)
+			return;
 
-	if (FriendList::findPlayer(currentEntity->getNameTag()->getText())) // Skip Friend
-		return;
+		if (FriendList::findPlayer(currentEntity->getNameTag()->getText())) // Skip Friend
+			return;
 
-	if (!Target::isValidTarget(currentEntity))
-		return;
+		if (!Target::isValidTarget(currentEntity))
+			return;
 
-	float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
+		float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
 
-	if (dist < maxDist)
-	{
-		targetList.push_back(currentEntity);
+		if (dist < killauraMod->range)
+		{
+			targetList.push_back(currentEntity);
+		}
 	}
+	
 }
 
 void Killaura::onTick(C_GameMode* gm)
