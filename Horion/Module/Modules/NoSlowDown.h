@@ -3,12 +3,15 @@
 class NoSlowDown :
 	public IModule
 {
+private:
+	uint8_t* opcode = 0;
 public:
 	NoSlowDown();
 	~NoSlowDown();
 
 	// Inherited via IModule
-	virtual void onTick(C_GameMode* gm) override;
 	virtual const char* getModuleName() override;
+	virtual void onEnable() override;
+	virtual void onDisable() override;
 };
 
