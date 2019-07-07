@@ -672,7 +672,13 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 	// Call PostRender() functions
 	{
 		moduleMgr->onPostRender();
-		TabGui::render();
+		static IModule* TabGuiModule = moduleMgr->getModule<TabGuiMod>();
+		if (TabGuiModule == nullptr)
+			TabGuiModule = moduleMgr->getModule<TabGuiMod>();
+		else if (TabGuiModule->isEnabled()) {
+			TabGui::render();
+		}
+		
 		static IModule* ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 		if (ClickGuiModule == nullptr)
 			ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();

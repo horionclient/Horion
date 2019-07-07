@@ -191,6 +191,7 @@
     <ClCompile Include="Horion\Module\Modules\Scaffold.cpp" />
     <ClCompile Include="Horion\Module\Modules\Speed.cpp" />
     <ClCompile Include="Horion\Module\Modules\Step.cpp" />
+    <ClCompile Include="Horion\Module\Modules\TabGuiMod.cpp" />
     <ClCompile Include="Horion\Module\Modules\Tracer.cpp" />
     <ClCompile Include="Horion\Module\Modules\TriggerBot.cpp" />
     <ClCompile Include="Horion\Module\Modules\Xray.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="Horion\Module\Modules\Scaffold.h" />
     <ClInclude Include="Horion\Module\Modules\Speed.h" />
     <ClInclude Include="Horion\Module\Modules\Step.h" />
+    <ClInclude Include="Horion\Module\Modules\TabGuiMod.h" />
     <ClInclude Include="Horion\Module\Modules\Tracer.h" />
     <ClInclude Include="Horion\Module\Modules\TriggerBot.h" />
     <ClInclude Include="Horion\Module\Modules\Xray.h" />

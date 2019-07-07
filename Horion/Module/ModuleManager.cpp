@@ -39,9 +39,11 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new ClickGuiMod());
 	this->moduleList.push_back(new ChestStealer());
 	this->moduleList.push_back(new Fly());
+	this->moduleList.push_back(new TabGuiMod());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);
+	this->getModule<TabGuiMod>()->setEnabled(true);
 }
 
 void ModuleManager::disable()

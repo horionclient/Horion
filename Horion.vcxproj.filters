@@ -65,6 +65,7 @@
     <ClCompile Include="Horion\Module\Modules\ClickGuiMod.cpp" />
     <ClCompile Include="Horion\Module\Modules\ChestStealer.cpp" />
     <ClCompile Include="Horion\Module\Modules\Fly.cpp" />
+    <ClCompile Include="Horion\Module\Modules\TabGuiMod.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -150,5 +151,6 @@
     <ClInclude Include="SDK\CMoveInputHandler.h" />
     <ClInclude Include="Horion\Module\Modules\ChestStealer.h" />
     <ClInclude Include="Horion\Module\Modules\Fly.h" />
+    <ClInclude Include="Horion\Module\Modules\TabGuiMod.h" />
   </ItemGroup>
 </Project>
