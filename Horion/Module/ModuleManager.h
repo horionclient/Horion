@@ -35,6 +35,7 @@
 #include "Modules/AutoTotem.h"
 #include "Modules/ClickGuiMod.h"
 #include "Modules/ChestStealer.h"
+#include "Modules/Fly.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

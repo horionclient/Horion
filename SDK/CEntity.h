@@ -336,9 +336,9 @@ private:
 	virtual __int64 killed(C_Entity&);
 	virtual __int64 awardKillScore(C_Entity&, int);
 public:
-	virtual void setArmor(__int64, __int64 const&);
+	virtual void setArmor(int,C_ItemStack*);
+	virtual __int64 getArmor(int)const;
 private:
-	virtual __int64 getArmor(__int64)const;
 	virtual __int64 getArmorMaterialTypeInSlot(__int64)const;
 	virtual __int64 getArmorMaterialTextureTypeInSlot(__int64)const;
 	virtual __int64 getArmorColorInSlot(__int64, int)const;

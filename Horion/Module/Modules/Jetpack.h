@@ -6,6 +6,8 @@ class Jetpack :
 	public IModule
 {
 private:
+	int delay = 0;
+	bool isBypass = false;
 	float speedMod = 1;
 public:
 	Jetpack();
