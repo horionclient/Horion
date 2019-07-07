@@ -653,7 +653,11 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 {
 	static auto oText = g_Hooks.renderTextHook->GetOriginal<renderText_t>();
 	DrawUtils::setCtx(renderCtx, g_Data.getClientInstance()->getGuiData());
-	if (g_Hooks.shouldRender == false && g_Data.getLocalPlayer() != NULL && g_Data.getLocalPlayer()->isInventoryClosed()==1)
+	if(GameData::shouldHide())
+		return  oText(yeet, renderCtx);
+
+	if (g_Hooks.shouldRender == false  && 
+		g_Data.getLocalPlayer() != NULL && g_Data.getLocalPlayer()->isInventoryClosed()==1)
 		return oText(yeet, renderCtx);
 
 	// Call PreRender() functions

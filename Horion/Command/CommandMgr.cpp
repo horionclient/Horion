@@ -23,6 +23,7 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new HelpCommand());
 	commandList.push_back(new ModulesCommand());
 	commandList.push_back(new PanicCommand());
+	commandList.push_back(new HideCommand());
 #ifdef _DEBUG
 	commandList.push_back(new TestCommand());
 #endif

@@ -16,6 +16,7 @@
 #include "Commands/HelpCommand.h"
 #include "Commands/ModulesCommand.h"
 #include "Commands/PanicCommand.h"
+#include "Commands/HideCommand.h"
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"
 #endif
