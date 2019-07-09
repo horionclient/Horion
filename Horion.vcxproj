@@ -142,6 +142,7 @@
     <ClCompile Include="Horion\Command\Commands\FriendListCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\GameModeCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\HelpCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\HideCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ICommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ModulesCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\PanicCommand.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="Horion\Module\Modules\Blink.cpp" />
     <ClCompile Include="Horion\Module\Modules\ChestStealer.cpp" />
     <ClCompile Include="Horion\Module\Modules\ClickGuiMod.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Fly.cpp" />
     <ClCompile Include="Horion\Module\Modules\InfiniteReach.cpp" />
     <ClCompile Include="Horion\Module\Modules\InstaBreak.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoFall.cpp" />
@@ -190,6 +192,7 @@
     <ClCompile Include="Horion\Module\Modules\Scaffold.cpp" />
     <ClCompile Include="Horion\Module\Modules\Speed.cpp" />
     <ClCompile Include="Horion\Module\Modules\Step.cpp" />
+    <ClCompile Include="Horion\Module\Modules\TabGuiMod.cpp" />
     <ClCompile Include="Horion\Module\Modules\Tracer.cpp" />
     <ClCompile Include="Horion\Module\Modules\TriggerBot.cpp" />
     <ClCompile Include="Horion\Module\Modules\Xray.cpp" />
@@ -207,6 +210,7 @@
     <ClInclude Include="Horion\Command\Commands\FriendListCommand.h" />
     <ClInclude Include="Horion\Command\Commands\GameModeCommand.h" />
     <ClInclude Include="Horion\Command\Commands\HelpCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\HideCommand.h" />
     <ClInclude Include="Horion\Command\Commands\ICommand.h" />
     <ClInclude Include="Horion\Command\Commands\ModulesCommand.h" />
     <ClInclude Include="Horion\Command\Commands\PanicCommand.h" />
@@ -233,6 +237,7 @@
     <ClInclude Include="Horion\Module\Modules\Blink.h" />
     <ClInclude Include="Horion\Module\Modules\ChestStealer.h" />
     <ClInclude Include="Horion\Module\Modules\ClickGuiMod.h" />
+    <ClInclude Include="Horion\Module\Modules\Fly.h" />
     <ClInclude Include="Horion\Module\Modules\InfiniteReach.h" />
     <ClInclude Include="Horion\Module\Modules\InstaBreak.h" />
     <ClInclude Include="Horion\Module\Modules\NoFall.h" />
@@ -255,6 +260,7 @@
     <ClInclude Include="Horion\Module\Modules\Scaffold.h" />
     <ClInclude Include="Horion\Module\Modules\Speed.h" />
     <ClInclude Include="Horion\Module\Modules\Step.h" />
+    <ClInclude Include="Horion\Module\Modules\TabGuiMod.h" />
     <ClInclude Include="Horion\Module\Modules\Tracer.h" />
     <ClInclude Include="Horion\Module\Modules\TriggerBot.h" />
     <ClInclude Include="Horion\Module\Modules\Xray.h" />

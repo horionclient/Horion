@@ -1,6 +1,6 @@
 #include "AutoTotem.h"
 
-int delay = 0;
+
 
 AutoTotem::AutoTotem() : IModule(0x0, EXPLOITS)
 {
@@ -20,7 +20,7 @@ void AutoTotem::onTick(C_GameMode* gm) {
 	delay++;
 	if (g_Data.getLocalPlayer() != nullptr) {
 		C_ItemStack* i = g_Data.getLocalPlayer()->getEquippedTotem();
-		if (i->item == NULL && delay > 1) {
+		if (i->item == NULL && delay >= 4) {
 			C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 			C_Inventory* a = supplies->inventory;
 			for (int i = 0; i < 36; i++) {

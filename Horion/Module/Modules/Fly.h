@@ -1,16 +1,17 @@
 #pragma once
 #include "Module.h"
-
-class AutoTotem : public IModule
+class Fly :
+	public IModule
 {
 private:
-	int delay;
+	int oldGameMode;
 public:
-	AutoTotem();
-	~AutoTotem();
+	Fly();
+	~Fly();
 
+	// Inherited via IModule
 	virtual const char* getModuleName() override;
-	virtual void onTick(C_GameMode* gm) override;
 	virtual void onEnable() override;
+	virtual void onDisable() override;
 };
 

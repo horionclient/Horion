@@ -68,6 +68,16 @@ void GameData::terminate()
 	g_Data.shouldTerminateB = true;
 }
 
+bool GameData::shouldHide()
+{
+	return g_Data.shouldHideB;
+}
+
+void GameData::hide()
+{
+	g_Data.shouldHideB = !(g_Data.shouldHideB);
+}
+
 void GameData::updateGameData(C_GameMode * gameMode)
 {
 	retrieveClientInstance();

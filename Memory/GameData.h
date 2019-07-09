@@ -25,6 +25,7 @@ private:
 	const SlimUtils::SlimModule* gameModule;
 	SlimUtils::SlimMem* slimMem;
 	bool shouldTerminateB = false;
+	bool shouldHideB = false;
 	static void retrieveClientInstance();
 public:
 	static bool canUseMoveKeys();
@@ -32,6 +33,8 @@ public:
 	static bool isKeyPressed(int key);
 	static bool isLeftClickDown();
 	static bool shouldTerminate();
+	static bool shouldHide();
+	static void hide();
 	static void terminate();
 	static void updateGameData(C_GameMode* gameMode);
 	static void initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem);

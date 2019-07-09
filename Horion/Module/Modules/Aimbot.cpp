@@ -23,6 +23,7 @@ struct CompareTargetEnArray
 		return (*lhs->getPos()).dist(*localPlayer->getPos()) < (*rhs->getPos()).dist(*localPlayer->getPos());
 	}
 };
+
 void Aimbot::onPostRender()
 {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
@@ -43,7 +44,6 @@ void Aimbot::onPostRender()
 	vec3_t origin = g_Data.getClientInstance()->levelRenderer->origin;
 
 	//Loop through all our players and retrieve their information
-	float maxDist = 6;
 	static std::vector <C_Entity*> targetList;
 	targetList.clear();
 	for (size_t i = 0; i < listSize; i++)
@@ -74,7 +74,7 @@ void Aimbot::onPostRender()
 
 		float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());;
 
-		if (dist < maxDist) 
+		if (dist < range) 
 		{
 			targetList.push_back(currentEntity);
 		}
@@ -88,7 +88,7 @@ void Aimbot::onPostRender()
 		vec2_t appl = angle.sub(localPlayer->viewAngles).normAngles();
 		appl.x = -appl.x;
 		
-		appl.div(7); // Smooth dat boi
+		appl.div(smoothNess); // Smooth dat boi
 
 		localPlayer->applyTurnDelta(&appl);
 	}
