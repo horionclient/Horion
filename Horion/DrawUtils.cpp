@@ -19,7 +19,9 @@ using tess_end_t = void(__fastcall*)(__int64, __int64 tesselator, __int64*);
 
 tess_begin_t tess_begin = reinterpret_cast<tess_begin_t>(Utils::FindSignature("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 80 B9 ?? ?? ?? ?? 00 41 0F"));
 tess_vertex_t tess_vertex = reinterpret_cast<tess_vertex_t>(Utils::FindSignature("4C 8B DC 55 53 49 8D 6B ?? 48 81 EC ?? ?? ?? ?? 41"));
-tess_end_t tess_end = reinterpret_cast<tess_end_t>(Utils::FindSignature("40 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 49 8B D8 4C 8B E2 4C 8B F9 80"));
+//tess_end_t tess_end = reinterpret_cast<tess_end_t>(Utils::FindSignature("40 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 49 8B D8 4C 8B E2 4C 8B F9 80"));
+tess_end_t tess_end /*= reinterpret_cast<tess_end_t>(0x892040 + g_Data.getModule()->ptrBase)*/;
+
 
 void DrawUtils::setCtx(C_MinecraftUIRenderContext * ctx, C_GuiData* gui)
 {
@@ -37,6 +39,7 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext * ctx, C_GuiData* gui)
 	if(g_Data.getClientInstance()->levelRenderer != nullptr)	
 		origin = g_Data.getClientInstance()->levelRenderer->origin;
 
+	tess_end = reinterpret_cast<tess_end_t>(0x892040 + g_Data.getModule()->ptrBase);
 	if (tess_end_base == 0x0) {
 		uintptr_t sigOffset = Utils::FindSignature("FF 50 08 4C 8D 05") + 3;
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);

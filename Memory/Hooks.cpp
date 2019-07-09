@@ -42,13 +42,13 @@ void Hooks::Init()
 	g_Hooks.renderTextHook = std::make_unique<FuncHook>(_shit, Hooks::renderText);
 	g_Hooks.renderTextHook->init();
 
-	void* setupRenderIdk = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 81 EC ?? ?? ??  ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B DA 48 8B F9 33 D2 41 B8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 4C 8B C3"));
-	g_Hooks.setupRenderHook = std::make_unique<FuncHook>(setupRenderIdk, setupAndRender);
-	g_Hooks.setupRenderHook->init();
+	//void* setupRenderIdk = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 81 EC ?? ?? ??  ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B DA 48 8B F9 33 D2 41 B8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 4C 8B C3"));
+	//g_Hooks.setupRenderHook = std::make_unique<FuncHook>(setupRenderIdk, setupAndRender);
+	//g_Hooks.setupRenderHook->init();
 
-	void* render = reinterpret_cast<void*>(Utils::FindSignature("40 56 57 41 56 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B DA 48 8B F9 41"));
-	g_Hooks.uiscene_RenderHook = std::make_unique<FuncHook>(render, uiscene_render);
-	g_Hooks.uiscene_RenderHook->init();
+	//void* render = reinterpret_cast<void*>(Utils::FindSignature("40 56 57 41 56 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B DA 48 8B F9 41"));
+	//g_Hooks.uiscene_RenderHook = std::make_unique<FuncHook>(render, uiscene_render);
+	//g_Hooks.uiscene_RenderHook->init();
 
 	// I8n::get doesnt want to work
 	//void *_shitshikt = reinterpret_cast<void*>(g_Data.getModule()->ptrBase + 0xB577C0);
@@ -63,33 +63,33 @@ void Hooks::Init()
 	g_Hooks.ChestBlockActor_tickHook = std::make_unique <FuncHook>(ChestTick, Hooks::ChestBlockActor_tick);
 	g_Hooks.ChestBlockActor_tickHook->init();
 
-	void* lerpFunc = reinterpret_cast<void*>(Utils::FindSignature("8B 02 89 81 ?? 0F ?? ?? 8B 42 04 89 81 ?? ?? ?? ?? 8B 42 08 89 81 ?? ?? ?? ?? C3"));
-	g_Hooks.Actor_lerpMotionHook = std::make_unique <FuncHook>(lerpFunc, Hooks::Actor_lerpMotion);
-	g_Hooks.Actor_lerpMotionHook->init();
+	//void* lerpFunc = reinterpret_cast<void*>(Utils::FindSignature("8B 02 89 81 ?? 0F ?? ?? 8B 42 04 89 81 ?? ?? ?? ?? 8B 42 08 89 81 ?? ?? ?? ?? C3"));
+	//g_Hooks.Actor_lerpMotionHook = std::make_unique <FuncHook>(lerpFunc, Hooks::Actor_lerpMotion);
+	//g_Hooks.Actor_lerpMotionHook->init();
 
 	void* getGameEdition = reinterpret_cast<void*>(Utils::FindSignature("8B 91 ?? ?? ?? ?? 85 D2 74 1C 83 EA 01"));
 	g_Hooks.AppPlatform_getGameEditionHook = std::make_unique <FuncHook>(getGameEdition, Hooks::AppPlatform_getGameEdition);
 	g_Hooks.AppPlatform_getGameEditionHook->init();
 
-	void* autoComplete = reinterpret_cast<void*>(Utils::FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 44 89 4C 24 ?? 4D 8B F8"));
-	g_Hooks.autoComplete_Hook = std::make_unique <FuncHook>(autoComplete, Hooks::pleaseAutoComplete);
-	g_Hooks.autoComplete_Hook->init();
+	//void* autoComplete = reinterpret_cast<void*>(Utils::FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 44 89 4C 24 ?? 4D 8B F8"));
+	//g_Hooks.autoComplete_Hook = std::make_unique <FuncHook>(autoComplete, Hooks::pleaseAutoComplete);
+	//g_Hooks.autoComplete_Hook->init();
 
 	void* sendtoServer = reinterpret_cast<void*>(Utils::FindSignature("48 89 5C 24 08 57 48 ?? ?? ?? ?? ?? ?? 0F B6 41 ?? 48 8B FA 88 42 ?? 48 8D 54 24 ?? 48 8B 59 ?? 48 8B CB E8 ?? ?? ?? ?? 48 8B D0 45 33 C9"));
 	g_Hooks.sendToServerHook = std::make_unique <FuncHook>(sendtoServer, Hooks::sendToServer);
 	g_Hooks.sendToServerHook->init();
 
-	void* getFov = reinterpret_cast<void*>(Utils::FindSignature("40 53 48 83 EC ?? 0F 29 74 24 ?? 0F 29 7C 24 ?? 44 0F 29 4C 24 ?? 48 8B 05"));
-	g_Hooks.levelRendererPlayer_getFovHook = std::make_unique<FuncHook>(getFov, Hooks::LevelRendererPlayer_getFov);
-	g_Hooks.levelRendererPlayer_getFovHook->init();
+	//void* getFov = reinterpret_cast<void*>(Utils::FindSignature("40 53 48 83 EC ?? 0F 29 74 24 ?? 0F 29 7C 24 ?? 44 0F 29 4C 24 ?? 48 8B 05"));
+	//g_Hooks.levelRendererPlayer_getFovHook = std::make_unique<FuncHook>(getFov, Hooks::LevelRendererPlayer_getFov);
+	//g_Hooks.levelRendererPlayer_getFovHook->init();
 
 	void* mob_isAlive = reinterpret_cast<void*>(Utils::FindSignature("48 83 EC ?? 80 B9 ?? ?? ?? ?? 00 75 ?? 48 8B 01 48 8D"));
 	g_Hooks.mob_isAliveHook = std::make_unique<FuncHook>(mob_isAlive, Hooks::Mob_isAlive);
 	g_Hooks.mob_isAliveHook->init();
 
-	void* tick_entityList = reinterpret_cast<void*>(Utils::FindSignature("40 53 48 83 EC ?? 48 8B D9 E8 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 49 8B C8 4D 85 C0 75 07 ?? ?? ?? ?? ?? ?? ?? 4C 8B 49 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 49 ?? 49 2B C9 48 F7 E9 48 C1 FA 03 48 8B C2 48 C1 E8 3F 48 03 D0 83 FA 01 7E 36 49 8D 41 ?? 48 85 C0 74 2D 80 78 ?? 00 74 27 ?? ?? ?? ?? ?? ?? ?? 49 8B C0 4D 85 C0 75 03 48 8B C1 8B ?? ?? ?? ?? ?? 4D 85 C0"));
-	g_Hooks.MultiLevelPlayerHook = std::make_unique<FuncHook>(tick_entityList, Hooks::MultiLevelPlayer_tick);
-	g_Hooks.MultiLevelPlayerHook->init();
+	//void* tick_entityList = reinterpret_cast<void*>(Utils::FindSignature("40 53 48 83 EC ?? 48 8B D9 E8 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 49 8B C8 4D 85 C0 75 07 ?? ?? ?? ?? ?? ?? ?? 4C 8B 49 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 49 ?? 49 2B C9 48 F7 E9 48 C1 FA 03 48 8B C2 48 C1 E8 3F 48 03 D0 83 FA 01 7E 36 49 8D 41 ?? 48 85 C0 74 2D 80 78 ?? 00 74 27 ?? ?? ?? ?? ?? ?? ?? 49 8B C0 4D 85 C0 75 03 48 8B C1 8B ?? ?? ?? ?? ?? 4D 85 C0"));
+	//g_Hooks.MultiLevelPlayerHook = std::make_unique<FuncHook>(tick_entityList, Hooks::MultiLevelPlayer_tick);
+	//g_Hooks.MultiLevelPlayerHook->init();
 
 	/*void* CheckFallDamage = reinterpret_cast<void*>(Utils::FindSignature("48 83 EC 38 ?? ?? ?? ?? ?? ?? ?? 4D 8B D8 49 8B 0A ?? ?? ?? ?? ?? ?? 49 8B 42 ?? 48 2B C1 48 C1 F8 03 66 44 3B C0 73 39 ?? ?? ?? ?? ?? ?? ?? 48 85 C0 74 2D 80 78 ?? 08 75 27 F2 0F 10 40 ?? 8B 40 ?? 0F 28 C8 89 44 24 ?? F3 0F 10 54 24 ?? F2 0F 11 44 24 ?? F3 0F 10 5C 24 ?? 0F C6 C9 55 EB 09"));
 	g_Hooks.LocalPlayer_CheckFallDamageHook = std::make_unique<FuncHook>(CheckFallDamage, Hooks::LocalPlayer_CheckFallDamage);
@@ -123,9 +123,9 @@ void Hooks::Init()
 	g_Hooks.MoveInputHandler_tickHook = std::make_unique<FuncHook>(MoveInputHandlerTick, Hooks::MoveInputHandler_tick);
 	g_Hooks.MoveInputHandler_tickHook->init();
 
-	void* chestScreenControllerTick = reinterpret_cast<void*>(Utils::FindSignature("48 89 54 24 ?? 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 4D 8B D0 48 8B FA 48 8B 01 45 8B C1 49 8B D2 FF 90 ?? ?? ?? ?? 48 8B D8 48 8B D0 48 8B CF"));
-	g_Hooks.chestScreenController__tickHook = std::make_unique<FuncHook>(chestScreenControllerTick, Hooks::chestScreenController__tick);
-	g_Hooks.chestScreenController__tickHook->init();
+	//void* chestScreenControllerTick = reinterpret_cast<void*>(Utils::FindSignature("48 89 54 24 ?? 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 4D 8B D0 48 8B FA 48 8B 01 45 8B C1 49 8B D2 FF 90 ?? ?? ?? ?? 48 8B D8 48 8B D0 48 8B CF"));
+	//g_Hooks.chestScreenController__tickHook = std::make_unique<FuncHook>(chestScreenControllerTick, Hooks::chestScreenController__tick);
+	//g_Hooks.chestScreenController__tickHook->init();
 
 }
 
