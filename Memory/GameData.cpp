@@ -4,7 +4,7 @@ GameData g_Data;
 
 void GameData::retrieveClientInstance()
 {
-	logF("base: %llX", g_Data.getModule()->ptrBase);
+	
 	static uintptr_t clientInstanceOffset = 0x0;
 	if (clientInstanceOffset == 0x0) {
 		uintptr_t sigOffset = Utils::FindSignature("4C 8B F8 48 8B 0D ?? ?? ?? ?? 48 8B 11");
@@ -15,6 +15,7 @@ void GameData::retrieveClientInstance()
 		} 
 	}
 	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + clientInstanceOffset, { 0x0, 0x280, 0x8 }));
+
 	// 4C 8B F8 48 8B 0D ?? ?? ?? ?? 48 8B 11
 	// 1.11.1 : 0x0250A2D0
 }
@@ -148,13 +149,21 @@ void GameData::forEachEntity(void(*callback)(C_Entity *))
 	// Regular EntityList
 	{
 		C_EntityList* entList = g_Data.getEntityList();
-		size_t listSize = entList->getListSize();
-		if (listSize < 1000 && listSize > 1) {
-			for (size_t i = 0; i < listSize; i++) {
-				C_Entity* current = entList->get(i);
-				callback(current);
+		if (entList == 0) {
+#ifdef _DEBUG
+			logF("EntityList broken btw");
+#endif
+		}
+		else {
+			size_t listSize = entList->getListSize();
+			if (listSize < 1000 && listSize > 1) {
+				for (size_t i = 0; i < listSize; i++) {
+					C_Entity* current = entList->get(i);
+					callback(current);
+				}
 			}
 		}
+		
 	}
 }
 
@@ -176,7 +185,10 @@ void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::
 	g_Data.slimMem = slimMem;
 	retrieveClientInstance();
 #ifdef _DEBUG
+	logF("base: %llX", g_Data.getModule()->ptrBase);
 	logF("clientInstance %llX", g_Data.clientInstance);
 	logF("localPlayer %llX", g_Data.getLocalPlayer());
+	if (g_Data.clientInstance != nullptr)
+		logF("minecraftGame: %llX", g_Data.clientInstance->minecraftGame);
 #endif
 }

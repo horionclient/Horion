@@ -38,7 +38,7 @@ void Hooks::Init()
 
 
 	// 
-	void* _shit = reinterpret_cast<void*>(Utils::FindSignature("30 5F C3 CC 48 8B C4 55 56 57 41 54") + 4);
+	void* _shit = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 ?? 0F 29  70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 8985 ?? ?? ?? ?? 48 89 54 24"));
 	g_Hooks.renderTextHook = std::make_unique<FuncHook>(_shit, Hooks::renderText);
 	g_Hooks.renderTextHook->init();
 
@@ -652,14 +652,14 @@ __int64 __fastcall Hooks::uiscene_render(C_UIScene * uiscene, __int64 screencont
 __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* renderCtx)
 {
 	static auto oText = g_Hooks.renderTextHook->GetOriginal<renderText_t>();
-	__debugbreak();
-	DrawUtils::setCtx(renderCtx, g_Data.getClientInstance()->getGuiData());
+	C_GuiData* dat = g_Data.getClientInstance()->getGuiData(); 
+	DrawUtils::setCtx(renderCtx, dat);
 	if(GameData::shouldHide())
 		return  oText(yeet, renderCtx);
 
-	if (g_Hooks.shouldRender == false  && 
-		g_Data.getLocalPlayer() != NULL && g_Data.getLocalPlayer()->isInventoryClosed()==1)
-		return oText(yeet, renderCtx);
+	//if (g_Hooks.shouldRender == false  && 
+	//	g_Data.getLocalPlayer() != NULL && g_Data.getLocalPlayer()->isInventoryClosed()==1)
+	//	return oText(yeet, renderCtx);
 
 	// Call PreRender() functions
 	moduleMgr->onPreRender();

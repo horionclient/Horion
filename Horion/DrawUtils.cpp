@@ -38,7 +38,6 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext * ctx, C_GuiData* gui)
 	if(g_Data.getClientInstance()->levelRenderer != nullptr)	
 		origin = g_Data.getClientInstance()->levelRenderer->origin;
 
-	tess_end = reinterpret_cast<tess_end_t>(0x892040 + g_Data.getModule()->ptrBase);
 	if (tess_end_base == 0x0) {
 		uintptr_t sigOffset = Utils::FindSignature("FF 50 08 4C 8D 05") + 3;
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);

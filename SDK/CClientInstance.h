@@ -15,9 +15,9 @@ class HitDetectSystem;
 
 class MinecraftGame {
 private:
-	char filler[0xA0];
+	char filler[0x98];
 	uintptr_t goodFont;
-	char pad_0x00A8[0x80]; //0x00A8
+	char pad_0x00A8[0x88]; //0x00A8
 	bool canUseKeys;
 public:
 	
@@ -328,6 +328,10 @@ private:
 	virtual __int64 getGuiScale(void)const;
 	virtual __int64 getGuiScaleOption(void)const;
 	virtual __int64 getGuiScaleOffset(void)const;
+
+	virtual __int64 yeet1(void)const; // Filler until ida is done processing
+	virtual __int64 yeet2(void)const;
+	virtual __int64 yeet3(void)const;
 public:
 	virtual void setGuiScaleOffset(int);
 	virtual C_GuiData* getGuiData(void);
