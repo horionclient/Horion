@@ -652,6 +652,7 @@ __int64 __fastcall Hooks::uiscene_render(C_UIScene * uiscene, __int64 screencont
 __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* renderCtx)
 {
 	static auto oText = g_Hooks.renderTextHook->GetOriginal<renderText_t>();
+	__debugbreak();
 	DrawUtils::setCtx(renderCtx, g_Data.getClientInstance()->getGuiData());
 	if(GameData::shouldHide())
 		return  oText(yeet, renderCtx);
