@@ -12,10 +12,10 @@ class C_GameMode;
 class PointingStruct
 {
 private:
-	char pad_0x0000[0x570]; //0x0000
+	char pad_0x0000[0x630]; //0x0000
 public:
-	short rayHitType; //0x0570 
-	short blockSide; //0x0574 
+	int rayHitType; //0x0570 
+	int blockSide; //0x0574 
 	vec3_ti block; //0x0578 
 	vec3_t rayHitVec; //0x0584 
 	C_Entity* entityPtr; //0x0590 
@@ -67,103 +67,89 @@ public:
 		vec2_t viewAngles;
 	};
 
-	float pitch2; //0x00E8
-	float yaw2; //0x00EC
+	float pitch2; //0x00E8 
+	float yaw2; //0x00EC 
 private:
 	char pad_0x00F0[0x10]; //0x00F0
 public:
 	vec3_t eyePos0; //0x0100 
 private:
-	char pad_0x010C[0xC]; //0x010C
+	char pad_0x010C[0x5C]; //0x010C
 public:
-	_1ptr1* ptrToPtrToPtrToCGameMode; //0x0118
+	bool onGround; //0x0168 
 private:
-	char pad_0x0120[0x34]; //0x0120
+	char pad_0x0169[0xF]; //0x0169
 public:
-	bool onGround; //0x0154
+	float fallDistance; //0x0178 
 private:
-	char pad_0x0155[0x13]; //0x0155
+	char pad_0x017C[0x84]; //0x017C
 public:
-	float isFalling; //0x0168
+	float stepHeight; //0x0200 
 private:
-	char pad_0x016C[0x4C]; //0x016C
+	char pad_0x0204[0x64]; //0x0204
 public:
-	int entityType1; //0x01B8 
+	int ticksAlive; //0x0268 
 private:
-	char pad_0x01BC[0x33]; //0x01BC
+	char pad_0x026C[0xA8C]; //0x026C
 public:
-	char entityType2; //0x01EF
+	C_BlockSource* region; //0x0CF8 
 private:
-	char pad_0x01F0[0x8]; //0x01F0
+	char pad_0x0D00[0x8]; //0x0D00
 public:
-	float stepHeight; //0x01F8
+	PointingStruct* pointingAt; //0x0D08 
 private:
-	char pad_0x01FC[0x64]; //0x01FC
+	char pad_0x0D10[0xD8]; //0x0D10
 public:
-	uintptr_t ticksAlive; //0x0260 
+	AABB aabb; //0x0DE8 
 private:
-	char pad_0x0268[0xA88]; //0x0268
+	char pad_0x0E00[0x4]; //0x0E00
 public:
-	C_BlockSource* region;
-	uintptr_t* dimension;
-	PointingStruct* pointingAt; //0x0D00
+	float width; //0x0E04 
+	float height; //0x0E08 
+	vec3_t velocity; //0x0E0C 
+	vec3_t eyePos1; //0x0E18 
+	vec3_t eyePos2; //0x0E24 
 private:
-	char pad_0x0D08[0x2A8]; //0x0D08
+	char pad_0x0E30[0x58]; //0x0E30
 public:
-	AABB aabb; //0x0FB0 
+	uintptr_t entityRuntimeId; //0x0E88 
 private:
-	char pad_0x0FC8[0x4]; //0x0FC8
+	char pad_0x0E90[0x30]; //0x0E90
 public:
-	float width; //0x0FCC
-	float height; //0x0FD0 
-	vec3_t velocity; //0x0FD4
-	vec3_t eyePosInterp1; //0x0FE0
-	vec3_t eyePosInterp2; //0x0FEC
+	TextHolder N00000653; //0x0EC0 
 private:
-	char pad_0x0FF0[0x58]; //0x0FF8
+	char pad_0x0EE0[0x2E8]; //0x0EE0
 public:
-	__int64 entityRuntimeId; //0x1050
+	float bodyYaw; //0x11C8 
+	float oldBodyYaw; //0x11CC 
+	float yawUnused1; //0x11D0 
+	float yawUnused2; //0x11D4 
+	int damageTime; //0x11D8 
 private:
-	char pad_0x1050[0x30]; //0x1058
+	char pad_0x11DC[0x70]; //0x11DC
 public:
-	TextHolder name; //0x1088
+	int swingInt; //0x124C 
 private:
-	char pad_0x109C[0x2E8]; //0x10A8
+	char pad_0x1250[0x14]; //0x1250
 public:
-	float bodyYaw; //0x1390
-	float oldBodyYaw; //0x1394
-	float yawUnused1; //0x1398
-	float yawUnused2; //0x139C
-	int damageTime; //0x13A0 
+	int timeSinceDeath; //0x1264 
 private:
-	char pad_0x13A4[0x70]; //0x13A4
+	char pad_0x1268[0x198]; //0x1268
 public:
-	int swingInt; //0x1414 
+	TextHolder name2; //0x1400 
 private:
-	char pad_0x1418[0x18]; //0x1418
+	char pad_0x1420[0x518]; //0x1420
 public:
-	int timeSinceDeath; //0x1430
+	short itemData; //0x1938 
+	short itemId; //0x193A 
 private:
-	char pad_0x1434[0x19C]; //0x1434
+	char pad_0x193C[0x290]; //0x193C
 public:
-	TextHolder name2; //0x15D0
+	int gamemode; //0x1BCC 
 private:
-	char pad_0x15DC[0x3A8]; //0x15F0
+	char pad_0x1BD0[0x60]; //0x1BD0
 public:
-	C_ItemStack* itemUsed; //0x1998
-private:
-	char pad_0x19A0[0x98]; //0x19A0
-public:
-	uint16_t itemData;//0x1A38 
-	uint16_t itemId;
-private:
-	char pad_0x1A3C[0x210]; //0x1A3C
-public:
-	int gamemode; //0x1C4C
-private:
-	char pad_0x1C4C[0x60]; //0x1C50
-public:
-	TextHolder uuid; //0x1CB0
+	TextHolder uuid; //0x1C30 
 
 
 private:
@@ -563,8 +549,9 @@ public:
 	}
 	void setGameModeType(int GameMode)
 	{
-		using setGameMode = void(__thiscall*)(void*,int);
-		static setGameMode Game_Mode = reinterpret_cast<setGameMode>(Utils::FindSignature("40 55 57 41 56 48 8B EC 48 83 EC 50 48 ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 F0 8B DA 48 8B F9 8B ?? ?? ?? ?? ?? 83 FA 05 75 22 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 85 C0 75 07 ?? ?? ?? ?? ?? ?? ?? 8B ?? ?? ?? ?? ?? EB 02 8B C3 45 33 F6 3B F0"));
-		Game_Mode(this,GameMode);
+		// pls fix
+		//using setGameMode = void(__thiscall*)(void*,int);
+		//static setGameMode Game_Mode = reinterpret_cast<setGameMode>(Utils::FindSignature("40 55 57 41 56 48 8B EC 48 83 EC 50 48 ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 F0 8B DA 48 8B F9 8B ?? ?? ?? ?? ?? 83 FA 05 75 22 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 85 C0 75 07 ?? ?? ?? ?? ?? ?? ?? 8B ?? ?? ?? ?? ?? EB 02 8B C3 45 33 F6 3B F0"));
+		//Game_Mode(this,GameMode);
 	}
 };

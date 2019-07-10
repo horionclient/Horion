@@ -26,6 +26,7 @@ void doRenderStuff(C_Entity* ent) {
 	else {
 		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 		if (ent != localPlayer) {
+			
 			if (ent->timeSinceDeath > 0)
 				return;
 			if (Target::isValidTarget(ent))
