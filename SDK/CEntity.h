@@ -194,8 +194,8 @@ public:
 private:
 	virtual __int64 move(vec3_t const&);
 	virtual __int64 getInterpolatedRidingPosition(float)const;
-	virtual __int64 getInterpolatedBodyRot(float)const;
-	virtual __int64 getInterpolatedHeadRot(float)const;
+	//virtual __int64 getInterpolatedBodyRot(float)const;
+	//virtual __int64 getInterpolatedHeadRot(float)const;
 	virtual __int64 getInterpolatedBodyYaw(float)const;
 	virtual __int64 getYawSpeedInDegreesPerSecond(void)const;
 	virtual __int64 getInterpolatedWalkAnimSpeed(float)const;

@@ -25,7 +25,7 @@ public:
 	C_MovePlayerPacket() {
 		static uintptr_t** movePlayerPacketVtable = 0x0;
 		if (movePlayerPacketVtable == 0x0) {
-			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 82 ?? ?? ?? ?? 48 89 41 ?? 48 8B 02 48 8B CA FF 50 60");
+			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 82 ?? ?? ?? ?? 48 89 41 ?? 48 8B 02 48 8B CA FF 50");
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
 			movePlayerPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset  + offset + /*length of instruction*/ 7);
 			if (movePlayerPacketVtable == 0x0 || sigOffset == 0x0)
@@ -37,7 +37,7 @@ public:
 	C_MovePlayerPacket(C_LocalPlayer* player,vec3_t pos) {
 		static uintptr_t** movePlayerPacketVtable = 0x0;
 		if (movePlayerPacketVtable == 0x0) {
-			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 82 ?? ?? ?? ?? 48 89 41 ?? 48 8B 02 48 8B CA FF 50 60");
+			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 82 ?? ?? ?? ?? 48 89 41 ?? 48 8B 02 48 8B CA FF 50");
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
 			movePlayerPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 			if (movePlayerPacketVtable == 0x0 || sigOffset == 0x0)

@@ -453,7 +453,7 @@ float Hooks::LevelRendererPlayer_getFov(__int64 a1, float a2, bool a3)
 {
 	static auto oGetFov = g_Hooks.levelRendererPlayer_getFovHook->GetOriginal<getFov_t>();
 	static void* renderItemInHand = reinterpret_cast<void*>(Utils::FindSignature("F3 44 0F 10 2D ?? ?? ?? ?? F3 41 0F 59 C5 0F 28 DE F3"));
-	static void* setupCamera = reinterpret_cast<void*>(Utils::FindSignature("48 8B 8E ?? ?? ?? ?? 44 0F 28 C0"));
+	static void* setupCamera = reinterpret_cast<void*>(Utils::FindSignature("48 8B 8B ?? ?? ?? ?? 0F 28 F8"));
 
 	if (_ReturnAddress() == renderItemInHand) {
 		//static float yess = 0;
@@ -465,6 +465,7 @@ float Hooks::LevelRendererPlayer_getFov(__int64 a1, float a2, bool a3)
 		return oGetFov(a1, a2, a3);
 	}
 #ifdef _DEBUG
+	logF("LevelRendererPlayer_getFov Return Addres: %llX", _ReturnAddress());
 	__debugbreak(); // IF we reach here, a sig is broken
 #endif
 	return oGetFov(a1, a2, a3);
@@ -581,17 +582,17 @@ void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
 	using sub_140074FA0_t = void(__fastcall*)(__int64);
 	static sub_140074FA0_t sub_140074FA0 = reinterpret_cast<sub_140074FA0_t>(Utils::FindSignature("40 53 48 83 EC ?? 48 8B 51 ?? 48 8B D9 48 83 FA 10 72 ?? 48 8B 09 48 FF C2 48 81 FA 00 10 00 00 72 ?? 4C 8B 41 ?? 48 83 C2 ?? 49 2B C8 48 8D 41 ?? 48 83 F8 ?? 77 ?? 49 8B C8 E8 ?? ?? ?? ?? 48 C7 43 ?? 00 00 00 00"));
 
-	uintptr_t* idk = reinterpret_cast<uintptr_t*>(_this + 0x688);
+	uintptr_t* idk = reinterpret_cast<uintptr_t*>(_this + 0x6C0);
 	if (*idk) {
-		char* message = reinterpret_cast<char*>(_this + 0x678);
-		if (*reinterpret_cast<__int64*>(_this + 0x690) >= 0x10)
+		char* message = reinterpret_cast<char*>(_this + 0x6B0);
+		if (*reinterpret_cast<__int64*>(_this + 0x6C8) >= 0x10)
 			message = *reinterpret_cast<char**>(message);
 
 		if (*message == '.') {
 			cmdMgr->execute(message);
 
 			__int64* i = 0;
-			for (i = *reinterpret_cast<__int64**>(_this + 0x6A0); i[4] > 0x64ui64; i = *reinterpret_cast<__int64**>(_this + 0x6A0))
+			for (i = *reinterpret_cast<__int64**>(_this + 0x6D8); i[4] > 0x64ui64; i = *reinterpret_cast<__int64**>(_this + 0x6D8))
 			{
 				sub_140074FA0(*reinterpret_cast<__int64*>(i[1] + 8 * (i[3] & (i[2] - 1i64))));
 				bool v15 = i[4]-- == 1i64;
@@ -601,10 +602,10 @@ void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
 					++i[3];
 			}
 
-			dequeuePushBack(i, reinterpret_cast<__int64>(_this + 0x678)); // This will put the command in the chat history (Arrow up/down)
-			*reinterpret_cast<__int64*>(_this + 0x6A8) = *reinterpret_cast<__int64*>(*reinterpret_cast<__int64*>(_this + 0x6A0) + 0x20);
+			dequeuePushBack(i, reinterpret_cast<__int64>(_this + 0x6B0)); // This will put the command in the chat history (Arrow up/down)
+			*reinterpret_cast<__int64*>(_this + 0x6E0) = *reinterpret_cast<__int64*>(*reinterpret_cast<__int64*>(_this + 0x6D8) + 0x20);
 
-			*reinterpret_cast<__int64*>(_this + 0x688) = 0i64;
+			*reinterpret_cast<__int64*>(_this + 0x6C0) = 0i64;
 			*message = 0x0; // Remove command in textbox
 			*idk = 0x0; // text length
 			return;

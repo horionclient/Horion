@@ -28,7 +28,7 @@ void Jetpack::onTick(C_GameMode * gm)
 	float calcYaw = (gm->player->yaw + 90) *  (PI / 180);
 	float calcPitch = (gm->player->pitch)  * -(PI / 180);
 	delay1++;
-	if (delay1 > 2) {
+	if (delay1 > 2 && false) {
 		vec3_t pos = *g_Data.getLocalPlayer()->getPos();
 		C_MovePlayerPacket* a = new C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
 		a->onGround = true;
@@ -47,7 +47,10 @@ void Jetpack::onTick(C_GameMode * gm)
 		moveVec.x = cos(calcYaw) * cos(calcPitch) * speedMod;
 		moveVec.y = sin(calcPitch)				  * speedMod;
 		moveVec.z = sin(calcYaw) * cos(calcPitch) * speedMod;
-		gm->player->lerpMotion(moveVec);
+
+		C_GameMode* m = gm;
+		C_Entity* p = m->player;
+		p->lerpMotion(moveVec);
 	}
 	else if (!gm->player->onGround){
 		delay++;
