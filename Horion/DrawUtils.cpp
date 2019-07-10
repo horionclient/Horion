@@ -27,7 +27,7 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext * ctx, C_GuiData* gui)
 	guiData = gui;
 	renderCtx = ctx;
 	a2 = reinterpret_cast<__int64*>(renderCtx)[2];
-	tesselator = *reinterpret_cast<__int64*>(a2 + 0x78);
+	tesselator = *reinterpret_cast<__int64*>(a2 + 0x90);
 	colorHolder = *reinterpret_cast<float**>(a2 + 0x30);
 
 	glmatrixf* badrefdef = g_Data.getClientInstance()->getRefDef();
@@ -37,6 +37,8 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext * ctx, C_GuiData* gui)
 	screenSize.y = gui->heightGame;
 	if(g_Data.getClientInstance()->levelRenderer != nullptr)	
 		origin = g_Data.getClientInstance()->levelRenderer->origin;
+
+	tess_end = reinterpret_cast<tess_end_t>(0x891910 + g_Data.getModule()->ptrBase);
 
 	if (tess_end_base == 0x0) {
 		uintptr_t sigOffset = Utils::FindSignature("FF 50 08 4C 8D 05") + 3;
