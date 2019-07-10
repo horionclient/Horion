@@ -164,8 +164,8 @@ private:
 	virtual __int64 getInventory(void);
 	virtual __int64 destructor(void);
 	// Duplicate destructor
-	virtual __int64 reset(void);
-	virtual __int64 getOwnerEntityType(void);
+	//virtual __int64 reset(void);
+	//virtual __int64 getOwnerEntityType(void);
 	virtual __int64 remove(void);
 public:
 	virtual void setPos(vec3_t const&);
@@ -180,8 +180,8 @@ public:
 private:
 	virtual __int64 move(vec3_t const&);
 	virtual __int64 getInterpolatedRidingPosition(float)const;
-	//virtual __int64 getInterpolatedBodyRot(float)const;
-	//virtual __int64 getInterpolatedHeadRot(float)const;
+	virtual __int64 getInterpolatedBodyRot(float)const;
+	virtual __int64 getInterpolatedHeadRot(float)const;
 	virtual __int64 getInterpolatedBodyYaw(float)const;
 	virtual __int64 getYawSpeedInDegreesPerSecond(void)const;
 	virtual __int64 getInterpolatedWalkAnimSpeed(float)const;
@@ -469,7 +469,7 @@ private:
 public:
 
 	AABB* getAABB() {
-		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
+		/*uintptr_t _this = reinterpret_cast<uintptr_t>(this);
 		static int AABBOffset = 0x0;
 		if (AABBOffset == 0x0) {
 			uintptr_t sigOffset = Utils::FindSignature("F3 ?? ?? ?? ?? ?? ?? ?? 41 0F 2F 00 F3 0F 10 2A");
@@ -479,7 +479,8 @@ public:
 		}
 		AABB* aabb;
 		aabb = reinterpret_cast<AABB*>(_this + AABBOffset);
-		return aabb;
+		return aabb;*/
+		return &this->aabb;
 	}
 
 	void setSprinting(bool sprint) {
