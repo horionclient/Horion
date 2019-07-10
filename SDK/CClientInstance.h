@@ -17,7 +17,7 @@ class MinecraftGame {
 private:
 	char filler[0x98];
 	uintptr_t goodFont;
-	char pad_0x00A8[0x88]; //0x00A8
+	char pad_0x00A8[0x80]; //0x00A8
 	bool canUseKeys;
 public:
 	

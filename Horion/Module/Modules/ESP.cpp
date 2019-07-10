@@ -42,9 +42,11 @@ void doRenderStuff(C_Entity* ent) {
 }
 
 void ESP::onPostRender() {
+	
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
+	
 	if (localPlayer != nullptr && GameData::canUseMoveKeys()) {
-
+		
 		// Rainbow colors
 		{
 			if (rcolors[3] < 1) {

@@ -23,8 +23,10 @@ void GameData::retrieveClientInstance()
 bool GameData::canUseMoveKeys()
 {
 	MinecraftGame* mc = g_Data.clientInstance->minecraftGame;
-	if(mc == nullptr)
+	if (mc == nullptr) {
 		return false;
+	}
+		
 	return mc->canUseKeybinds();
 }
 
@@ -156,6 +158,7 @@ void GameData::forEachEntity(void(*callback)(C_Entity *))
 		}
 		else {
 			size_t listSize = entList->getListSize();
+			//logF("listSize: %li", listSize);
 			if (listSize < 1000 && listSize > 1) {
 				for (size_t i = 0; i < listSize; i++) {
 					C_Entity* current = entList->get(i);
