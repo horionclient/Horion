@@ -10,6 +10,7 @@ private:
 	bool isBypass = false;
 	float speedMod = 1;
 public:
+	C_MovePlayerPacket* jetpack = nullptr;
 	Jetpack();
 	~Jetpack();
 

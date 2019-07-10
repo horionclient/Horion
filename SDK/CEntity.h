@@ -84,7 +84,7 @@ public:
 private:
 	char pad_0x0155[0x13]; //0x0155
 public:
-	int isFalling; //0x0168
+	float isFalling; //0x0168
 private:
 	char pad_0x016C[0x4C]; //0x016C
 public:
