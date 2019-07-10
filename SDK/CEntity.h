@@ -469,7 +469,7 @@ private:
 public:
 
 	AABB* getAABB() {
-		/*uintptr_t _this = reinterpret_cast<uintptr_t>(this);
+		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
 		static int AABBOffset = 0x0;
 		if (AABBOffset == 0x0) {
 			uintptr_t sigOffset = Utils::FindSignature("F3 ?? ?? ?? ?? ?? ?? ?? 41 0F 2F 00 F3 0F 10 2A");
@@ -479,8 +479,7 @@ public:
 		}
 		AABB* aabb;
 		aabb = reinterpret_cast<AABB*>(_this + AABBOffset);
-		return aabb;*/
-		return &this->aabb;
+		return aabb;
 	}
 
 	void setSprinting(bool sprint) {
