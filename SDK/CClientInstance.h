@@ -530,9 +530,7 @@ public:
 
 	vec2_t* getMousePos(){
 		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
-		vec2_t* MousePos;
-		MousePos = reinterpret_cast<vec2_t*>(_this + 0x3C0);
-		return MousePos;
+		return reinterpret_cast<vec2_t*>(_this + 0x3D0);;
 	}
 
 	vec2_t getFov() {
