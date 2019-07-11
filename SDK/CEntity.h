@@ -602,15 +602,7 @@ public:
 		return aabb;
 	}
 
-	//void setSprinting(bool sprint) {
-	//	Utils::CallVFunc<257, void, bool>(this, sprint);
-	//};
-
-	//bool isSprinting() {
-	//	return Utils::CallVFunc<256, bool>(this);
-	//};
 	bool isInventoryClosed(){
-		__debugbreak();
 		return Utils::CallVFunc<387,bool>(this);
 	};
 };
