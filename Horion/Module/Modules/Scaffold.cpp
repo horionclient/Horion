@@ -25,7 +25,11 @@ bool Scaffold::tryScaffold(vec3_t blockBelow)
 	DrawUtils::drawBox(blockBelow, vec3_t(blockBelow).add(1), 0.4f);
 
 	// BlockSource::getBlock()::getMaterial()::isReplaceable()
-	if ((*(g_Data.getLocalPlayer()->region->getBlock(vec3_ti(blockBelow))->blockLegacy))->material->isReplaceable) {
+	C_Block* block = g_Data.getLocalPlayer()->region->getBlock(vec3_ti(blockBelow));
+	//logF("block: %llX", block);
+	C_BlockLegacy* blockLegacy = *(block->blockLegacy);
+	//logF("blockLegacy: %llX", blockLegacy);
+	if (blockLegacy->material->isReplaceable) {
 		
 		vec3_ti* blok = new vec3_ti(blockBelow);
 

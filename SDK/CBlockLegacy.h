@@ -31,17 +31,16 @@ public:
 	TextHolder tileName; // 0x0008
 	TextHolder name; //0x0028
 private:
-	char pad_0x0048[0x30]; //0x0048
+	char pad_0x0048[0x70]; //0x0048
 public:
-	C_Material* material;
+	C_Material* material; //0x00B8
 private:
-	char pad_0x0080[0x35]; //0x0080
+	char pad_0x00C0[0x44]; //0x00C0
 public:
-	BYTE lightEmission; //0x00B5
+	short blockId; // 0x00C4
 private:
-	char pad_0x00B6[0xE];//0x00B6
+	char pad_0x0106[0xA]; //0x0106
 public:
-	int blockId; // 0x00C4
 	AABB aabb; //0x00C8
 };
 
