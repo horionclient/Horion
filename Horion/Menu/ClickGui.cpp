@@ -28,6 +28,8 @@ static const MC_Color moduleColor = MC_Color(0.2f, 0.2f, 0.2f, 1.f);
 float currentYOffset = 0;
 float currentXOffset = 0;
 
+int timesRendered = 0;
+
 void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>* modList) {
 	std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
 
@@ -640,6 +642,9 @@ void ClickGui::render()
 	if (!moduleMgr->isInitialized())
 		return;
 
+	if (timesRendered < 10)
+		timesRendered++;
+
 	// Fill Background
 	{
 		DrawUtils::fillRectangle(vec4_t(
@@ -682,16 +687,29 @@ void ClickGui::onMouseClickUpdate(int key, bool isDown)
 
 void ClickGui::onKeyUpdate(int key, bool isDown)
 {
-	if (!isDown)
-		return;
+	static IModule* clickGuiMod = moduleMgr->getModule<ClickGuiMod>();
+	if (clickGuiMod == NULL)
+		clickGuiMod = moduleMgr->getModule<ClickGuiMod>();
+	else {
+		if (!isDown)
+			return;
 
-	switch (key) {
-	case VK_ESCAPE:
-		static IModule* clickGuiMod = moduleMgr->getModule<ClickGuiMod>();
-		if (clickGuiMod == NULL)
-			clickGuiMod = moduleMgr->getModule<ClickGuiMod>();
-		else
+		if (!clickGuiMod->isEnabled()) {
+			timesRendered = 0;
+			return;
+		}
+		
+		if (timesRendered < 10)
+			return;
+		timesRendered = 0;
+
+		switch (key) {
+		case VK_ESCAPE:
 			clickGuiMod->setEnabled(false);
-		break;
+			return;
+		default:
+			if (key == clickGuiMod->getKeybind())
+				clickGuiMod->setEnabled(false);
+		}
 	}
 }
