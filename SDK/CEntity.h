@@ -153,6 +153,7 @@ public:
 
 
 private:
+	virtual __int64 reloadHardcoded(__int64, __int64 const&);
 	virtual __int64 reloadHardcodedClient(__int64, __int64 const&);
 	virtual __int64 initializeComponents(__int64, __int64 const&);
 	virtual __int64 reloadComponents(__int64, __int64 const&);
