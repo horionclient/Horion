@@ -606,9 +606,9 @@ public:
 	//	Utils::CallVFunc<257, void, bool>(this, sprint);
 	//};
 
-	bool isSprinting() {
-		return Utils::CallVFunc<256, bool>(this);
-	};
+	//bool isSprinting() {
+	//	return Utils::CallVFunc<256, bool>(this);
+	//};
 	bool isInventoryClosed(){
 		return Utils::CallVFunc<392,bool>(this);
 	};

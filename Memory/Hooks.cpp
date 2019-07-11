@@ -57,9 +57,9 @@ void Hooks::Init()
 	g_Hooks.ChestBlockActor_tickHook = std::make_unique <FuncHook>(ChestTick, Hooks::ChestBlockActor_tick);
 	g_Hooks.ChestBlockActor_tickHook->init();
 
-	//void* lerpFunc = reinterpret_cast<void*>(Utils::FindSignature("8B 02 89 81 ?? 0F ?? ?? 8B 42 04 89 81 ?? ?? ?? ?? 8B 42 08 89 81 ?? ?? ?? ?? C3"));
-	//g_Hooks.Actor_lerpMotionHook = std::make_unique <FuncHook>(lerpFunc, Hooks::Actor_lerpMotion);
-	//g_Hooks.Actor_lerpMotionHook->init();
+	void* lerpFunc = reinterpret_cast<void*>(Utils::FindSignature("8B 02 89 81 ?? 0E ?? ?? 8B 42 04 89 81 ?? ?? ?? ?? 8B 42 08 89 81 ?? ?? ?? ?? C3"));
+	g_Hooks.Actor_lerpMotionHook = std::make_unique <FuncHook>(lerpFunc, Hooks::Actor_lerpMotion);
+	g_Hooks.Actor_lerpMotionHook->init();
 
 	void* getGameEdition = reinterpret_cast<void*>(Utils::FindSignature("8B 91 ?? ?? ?? ?? 85 D2 74 1C 83 EA 01"));
 	g_Hooks.AppPlatform_getGameEditionHook = std::make_unique <FuncHook>(getGameEdition, Hooks::AppPlatform_getGameEdition);
@@ -370,11 +370,12 @@ void Hooks::Actor_lerpMotion(C_Entity * _this, vec3_t motVec)
 	else if (mod->isEnabled()) {
 		// Do nothing i guess
 		// Do some stuff with modifiers here maybe
-		static void* networkSender = reinterpret_cast<void*>(Utils::FindSignature("EB ?? 4C 8B 64 24 ?? 49 8B 44 24 ?? 48 8B"));
+		static void* networkSender = reinterpret_cast<void*>(Utils::FindSignature("41 80 BF ?? ?? ?? ?? 00 0F 85 ?? ?? ?? ?? FF"));
 		if (networkSender == 0x0)
 			logF("Network Sender not Found!!!");
 		if (networkSender == _ReturnAddress()) // Check if we are being called from the network receiver
 			return;
+		//logF("ret: %llX", _ReturnAddress());
 	}
 
 	oLerp(_this, motVec);
