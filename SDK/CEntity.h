@@ -619,7 +619,7 @@ class C_ServerPlayer;
 class C_Player : public C_Entity {
 public:
 	C_PlayerInventoryProxy* getSupplies() {
-		return *reinterpret_cast<C_PlayerInventoryProxy**>(reinterpret_cast<__int64>(this) + 0x18D8);
+		return *reinterpret_cast<C_PlayerInventoryProxy**>(reinterpret_cast<__int64>(this) + 0x17A8);
 	};
 
 	C_ServerPlayer* getServerPlayer() {
@@ -631,16 +631,16 @@ class C_ServerPlayer : public C_Player {
 public:
 	void sendInventory() {
 		
-		Utils::CallVFunc<315, void>(this);
+		//Utils::CallVFunc<315, void>(this);
 	}
 };
 
 class C_LocalPlayer : public C_Player {
 public:
 	void sendInventory() {
-		using sendInventory_t = void(__fastcall*)(C_Player*, bool);
-		static sendInventory_t sendInventory = reinterpret_cast<sendInventory_t>(Utils::FindSignature("48 8B C4 55 48 8D A8 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 58 ?? 48 89 70 ?? 48 89 78 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 0F B6 DA 48 8B F1"));
-		sendInventory(this, true);
+		//using sendInventory_t = void(__fastcall*)(C_Player*, bool);
+		//static sendInventory_t sendInventory = reinterpret_cast<sendInventory_t>(Utils::FindSignature("48 8B C4 55 48 8D A8 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 58 ?? 48 89 70 ?? 48 89 78 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 0F B6 DA 48 8B F1"));
+		//sendInventory(this, true);
 	};
 
 	void unlockAchievments() { // MinecraftEventing::fireEventAwardAchievement
@@ -669,9 +669,8 @@ public:
 	}
 	void setGameModeType(int GameMode)
 	{
-		// pls fix
-		//using setGameMode = void(__thiscall*)(void*,int);
-		//static setGameMode Game_Mode = reinterpret_cast<setGameMode>(Utils::FindSignature("40 55 57 41 56 48 8B EC 48 83 EC 50 48 ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 F0 8B DA 48 8B F9 8B ?? ?? ?? ?? ?? 83 FA 05 75 22 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 85 C0 75 07 ?? ?? ?? ?? ?? ?? ?? 8B ?? ?? ?? ?? ?? EB 02 8B C3 45 33 F6 3B F0"));
-		//Game_Mode(this,GameMode);
+		using setGameMode = void(__thiscall*)(void*,int);
+		static setGameMode Game_Mode = reinterpret_cast<setGameMode>(Utils::FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 89 74 24 ?? 8B DA 48 8B F9 8B"));
+		Game_Mode(this,GameMode);
 	}
 };

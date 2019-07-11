@@ -20,6 +20,7 @@ class C_Inventory {
 private:
 	virtual ~C_Inventory();
 public:
+	virtual __int64 init();
 	virtual __int64 addContentChangeListener(__int64 a2);
 	virtual __int64 removeContentChangeListener(__int64 a2);
 	virtual C_ItemStack* getItemStack(int slot);
