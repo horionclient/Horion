@@ -124,11 +124,12 @@ private:
 	virtual __int64 resetPrimaryClient(void);
 	virtual __int64 resetGameSession(void);
 	virtual __int64 tick(void);
+	virtual __int64 frameUpdate(__int64 &);
 	virtual __int64 update(bool);
 	virtual __int64 endFrame(void);
 	virtual __int64 startSubClientLateJoin(bool);
 public:
-	virtual void setupClientGame(__int64, bool);
+	virtual void setupClientGame(__int64 &&, bool);
 private:
 	virtual __int64 getLocalC_Player(void);
 	virtual __int64 getLocalC_Player(void)const;
@@ -164,6 +165,7 @@ private:
 	virtual __int64 getHoloviewerScale(void)const;
 	virtual __int64 getSplitScreenCount(void)const;
 public:
+	virtual bool isStereoRendering(void)const;
 	virtual bool isPlatformNX(void)const;
 	virtual bool isLocalSplitscreenWith(__int64 const&)const;
 	virtual bool isValidCrossPlatformSkin(void)const;
@@ -231,10 +233,11 @@ private:
 	virtual __int64 navigateToBrazeScreen(std::string const&, std::string const&, std::string const&, std::string const&, std::string const&, std::string const&, std::string const&);
 	virtual __int64 navigateToStoreHomeScreen(void);
 	virtual __int64 navigateToCoinPurchaseScreen(int, __int64);
-	virtual __int64 navigateToPurchaseOfferScreen(__int64 &, __int64, bool);
+	virtual __int64 navigateToPurchaseOfferScreen(__int64, bool);
 	virtual __int64 navigateToOfferCollectionScreen(__int64 &);
 	virtual __int64 navigateToStoreSeeAllByCreatorScreen(std::string const&, bool);
 	virtual __int64 navigateToServersScreen(bool);
+	virtual __int64 navigateToHowToPlayScreen(std::string const&);
 	virtual __int64 tryPushLeaveGameScreen(void);
 public:
 	virtual bool isReadyToRender(void)const;
@@ -311,7 +314,7 @@ public:
 private:
 	virtual __int64 getUITexture(void);
 public:
-	virtual void setLevelTexture(__int64 *);
+	virtual void setLevelTexture(__int64*);
 private:
 	virtual __int64 getLevelTexture(void);
 public:
@@ -328,15 +331,15 @@ private:
 	virtual __int64 getGuiScale(void)const;
 	virtual __int64 getGuiScaleOption(void)const;
 	virtual __int64 getGuiScaleOffset(void)const;
-
-	virtual __int64 yeet1(void)const; // Filler until ida is done processing
-	virtual __int64 yeet2(void)const;
-	virtual __int64 yeet3(void)const;
 public:
 	virtual void setGuiScaleOffset(int);
+private:
+	virtual __int64 renderEditorGui(__int64 &, bool);
+public:
 	virtual C_GuiData* getGuiData(void);
 	virtual C_GuiData* getGuiData(void)const;
 private:
+	virtual __int64 getGuidedFlowManager(void);
 	virtual __int64 getDpadScale(void)const;
 	virtual __int64 getDateManager(void)const;
 	virtual __int64 addOverrideHoursToDateTime(unsigned int);
@@ -352,9 +355,13 @@ private:
 	virtual __int64 getMainSceneStack(void)const;
 	virtual __int64 getCurrentSceneStack(void)const;
 	virtual __int64 getCurrentSceneStack(void);
-	virtual __int64 prepareSceneFor(__int64, __int64);
+	virtual __int64 getCurrentUIRouter(void);
+	virtual __int64 getCurrentUIRouter(void)const;
+	virtual __int64 prepareSceneFor(__int64);
 	virtual __int64 getCachedScenes(void);
-	virtual __int64 getScreenNames(void);
+	virtual __int64 getScreenName(void)const;
+	virtual __int64 getScreenTelemetry(void)const;
+	virtual __int64 getTopSceneType(void)const;
 	virtual __int64 getMobEffectsLayout(void);
 	virtual __int64 onMobEffectsChange(void);
 public:
@@ -366,7 +373,7 @@ private:
 	virtual __int64 updateSceneStack(void);
 	virtual __int64 forEachAlwaysAcceptInputScreen(__int64);
 	virtual __int64 forEachAlwaysAcceptInputScreenWithTop(__int64);
-	virtual __int64 showPlayerProfile(std::string const&, __int64);
+	virtual __int64 showC_PlayerProfile(std::string const&, __int64);
 	virtual __int64 getCurrentInputMode(void)const;
 public:
 	virtual bool isTouchGameplayAllowed(void)const;
@@ -414,10 +421,11 @@ private:
 public:
 	virtual void setSuspendInput(bool);
 	virtual void setDisableInput(bool);
-	virtual __int64 grabMouse(void);
-	virtual __int64 releaseMouse(void);
+
+	virtual void grabMouse(void);
+	virtual void releaseMouse(void);
+	virtual void refocusMouse(void);
 private:
-	virtual __int64 refocusMouse(void);
 	virtual __int64 resetBai(int);
 	virtual __int64 clearInProgressBAI(void);
 	virtual __int64 tickBuildAction(void);
@@ -432,7 +440,7 @@ private:
 public:
 	virtual bool isFullVanillaPackOnStack(void)const;
 private:
-	virtual __int64 onPlayerLoaded(__int64 &);
+	virtual __int64 onPlayerLoaded(C_Player &);
 public:
 	virtual void setClientGameMode(__int64);
 private:
@@ -452,13 +460,13 @@ private:
 	virtual __int64 postInitRenderResources(void);
 	virtual __int64 onAppSuspended(void);
 	virtual __int64 onActiveResourcePacksChanged(__int64 const&);
+	virtual __int64 reloadEntityRenderers(__int64 const&);
 	virtual __int64 getBlockTessellator(void);
 	virtual __int64 getBlockEntityRenderDispatcher(void);
 	virtual __int64 getEntityRenderDispatcher(void);
 	virtual __int64 getEntityBlockRenderer(void);
 	virtual __int64 getItemInHandRenderer(void);
 	virtual __int64 getItemRenderer(void);
-	virtual __int64 getRenderOptions(void);
 	virtual __int64 getSentMessageHistory(void);
 	virtual __int64 getUIProfanityContext(void)const;
 	virtual __int64 initTTSClient(__int64 &);
@@ -468,24 +476,24 @@ private:
 	virtual __int64 addTTSMessage(std::string const&, __int64, bool, bool, bool);
 	virtual __int64 initCommands(void);
 	virtual __int64 getUserId(void)const;
-public:
-	virtual double getServerConnectionTime(void)const;
-private:
+	virtual __int64 getServerConnectionTime(void)const;
 	virtual __int64 getHMDState(void);
 	virtual __int64 getHMDState(void)const;
 public:
 	virtual void setServerPingTime(unsigned int);
-	virtual unsigned int getServerPingTime(void)const; // Doesnt work
+private:
+	virtual __int64 getServerPingTime(void)const;
+public:
 	virtual void setDefaultPlayscreenTab(__int64);
 	virtual void setClientInstanceState(__int64 const&);
-	virtual void setUIEventCoordinator(__int64);
+	virtual void setUIEventCoordinator(__int64 &&);
 private:
 	virtual __int64 getUIEventCoordinator(void);
 	virtual __int64 getEventCoordinator(void);
 	virtual __int64 computeScreenCoordsFromScreenNormCoords(float, float, short &, short &);
 	virtual __int64 getNoBlockBreakUntil(void);
-	virtual void setNoBlockBreakUntil(__int64);
 public:
+	virtual void setNoBlockBreakUntil(__int64);
 	virtual void setDictation(std::string const&);
 	virtual void setNewDictationString(bool);
 	virtual void setGameModule(__int64);
@@ -499,6 +507,7 @@ private:
 public:
 	virtual bool isPlaying(void)const;
 private:
+	virtual __int64 getLatencyGraphDisplay(void)const;
 	virtual __int64 createSkin(void);
 	virtual __int64 onExtendDiskSpace(bool, __int64 &, unsigned long long const&, __int64);
 	virtual __int64 onLowDiskSpace(bool);
