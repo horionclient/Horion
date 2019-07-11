@@ -138,12 +138,12 @@ private:
 public:
 	TextHolder name2; //0x1400 
 private:
-	char pad_0x1420[0x518]; //0x1420
+	char pad_0x1420[0x500]; //0x1420
 public:
 	short itemData; //0x1938 
 	short itemId; //0x193A 
 private:
-	char pad_0x193C[0x290]; //0x193C
+	char pad_0x193C[0x2A8]; //0x193C
 public:
 	int gamemode; //0x1BCC 
 private:
