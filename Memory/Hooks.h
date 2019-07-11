@@ -64,7 +64,7 @@ private:
 	static __int64 LevelRenderer_renderLevel(__int64 a1, __int64 a2, __int64 a3);
 	static void __fastcall clickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
 	static __int64 __fastcall MoveInputHandler_tick(C_MoveInputHandler* a1,C_Entity* a2);
-	static __int64 __fastcall chestScreenController__tick(C_ChestScreenController* a1, __int64 a2, __int64 a3, unsigned int a4);
+	static __int64 __fastcall chestScreenController__tick(C_ChestScreenController* a1);
 	 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
@@ -121,7 +121,7 @@ private:
 	typedef BYTE*(__fastcall *BlockLegacy_getLightEmission_t)(C_BlockLegacy* a1 ,BYTE* a2);
 	typedef __int64(__fastcall *clickFunc_t)(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
 	typedef __int64(__fastcall *MoveInputHandler_tick_t)(C_MoveInputHandler* a1, C_Entity* a2);
-	typedef __int64(__fastcall *chestScreenController__tick_t)(C_ChestScreenController* a1, __int64 a2, __int64 a3, unsigned int a4);
+	typedef __int64(__fastcall *chestScreenController__tick_t)(C_ChestScreenController* a1);
 };
 
 extern Hooks g_Hooks;

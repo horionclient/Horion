@@ -122,9 +122,9 @@ void Hooks::Init()
 	g_Hooks.MoveInputHandler_tickHook = std::make_unique<FuncHook>(MoveInputHandlerTick, Hooks::MoveInputHandler_tick);
 	g_Hooks.MoveInputHandler_tickHook->init();
 
-	//void* chestScreenControllerTick = reinterpret_cast<void*>(Utils::FindSignature("48 89 54 24 ?? 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 4D 8B D0 48 8B FA 48 8B 01 45 8B C1 49 8B D2 FF 90 ?? ?? ?? ?? 48 8B D8 48 8B D0 48 8B CF"));
-	//g_Hooks.chestScreenController__tickHook = std::make_unique<FuncHook>(chestScreenControllerTick, Hooks::chestScreenController__tick);
-	//g_Hooks.chestScreenController__tickHook->init();
+	void* chestScreenControllerTick = reinterpret_cast<void*>(Utils::FindSignature("48 89 5C 24 08 57 48 83 EC 20 48 8B F9 E8 ?? ?? ?? ?? 48 8B 17 48 8B CF 8B D8 FF 92 ?? ?? ?? ?? 84 C0 74 31"));
+	g_Hooks.chestScreenController__tickHook = std::make_unique<FuncHook>(chestScreenControllerTick, Hooks::chestScreenController__tick);
+	g_Hooks.chestScreenController__tickHook->init();
 
 }
 
@@ -153,11 +153,11 @@ void Hooks::Restore()
 	g_Hooks.chestScreenController__tickHook->Restore();
 }
 
-__int64 __fastcall Hooks::chestScreenController__tick(C_ChestScreenController* a1, __int64 a2, __int64 a3, unsigned int a4)
+__int64 __fastcall Hooks::chestScreenController__tick(C_ChestScreenController* a1)
 {
 	static auto oFunc = g_Hooks.chestScreenController__tickHook->GetOriginal<chestScreenController__tick_t>();
 	GameData::setChestScreenController(a1);
-	return oFunc(a1, a2, a3, a4);
+	return oFunc(a1);
 }
 
 void __fastcall Hooks::clickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8){
