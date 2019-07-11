@@ -102,10 +102,17 @@ void Hooks::Init()
 	g_Hooks.HIDController_keyMouseHook = std::make_unique<FuncHook>(keyMouseFunc, Hooks::HIDController_keyMouse);
 	g_Hooks.HIDController_keyMouseHook->init();
 
-	void* getRenderLayer = reinterpret_cast<void*>(Utils::FindSignature("0F 57 C0 0F 2F ?? ?? ?? ?? ?? 0F 92 C0") + 0x10);
-	g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(getRenderLayer, Hooks::BlockLegacy_getRenderLayer);
-	//g_Hooks.BlockLegacy_getRenderLayerHook->init();
-	// temporarily remove because it causes crashes
+	uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 4C 39 72");
+	if (sigOffset != 0x0) {
+		int offset = *reinterpret_cast<int*>((sigOffset + 3)); // Get Offset from code
+		uintptr_t lol = static_cast<uintptr_t>(sigOffset + offset + /*length of instruction*/ 7); // Offset is relative
+
+		void* getRenderLayer = *reinterpret_cast<void**>(lol + 8 * 115);
+		g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(getRenderLayer, Hooks::BlockLegacy_getRenderLayer);
+		g_Hooks.BlockLegacy_getRenderLayerHook->init();
+	}
+	else
+		logF("BlockLegacy_getRenderLayer broken");
 
 	void* renderLevel = reinterpret_cast<void*>(Utils::FindSignature("40 53 56 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B D8 48 8B FA 48 8B F1 33 D2"));
 	g_Hooks.LevelRenderer_renderLevelHook = std::make_unique<FuncHook>(renderLevel, Hooks::LevelRenderer_renderLevel);
