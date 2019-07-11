@@ -610,7 +610,8 @@ public:
 	//	return Utils::CallVFunc<256, bool>(this);
 	//};
 	bool isInventoryClosed(){
-		return Utils::CallVFunc<392,bool>(this);
+		__debugbreak();
+		return Utils::CallVFunc<387,bool>(this);
 	};
 };
 
