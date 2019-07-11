@@ -283,9 +283,9 @@ public:
 private:
 	virtual __int64 getServerData(void);
 	virtual __int64 getServerData(void)const;
-	virtual __int64 getLevel(void);
-	virtual __int64 getLevel(void)const;
 public:
+	virtual PointingStruct* getLevel(void);
+	virtual PointingStruct* getLevel(void)const;
 	virtual bool isPreGame(void)const;
 	virtual bool isInMultiplayerGame(void)const;
 	virtual bool isMultiC_PlayerClient(void)const;
@@ -528,7 +528,7 @@ public:
 	};
 
 	PointingStruct* getPointerStruct() {
-		return Utils::CallVFunc<140, PointingStruct*>(this);
+		return this->getLevel();
 	}
 
 	glmatrixf* getRefDef() {
