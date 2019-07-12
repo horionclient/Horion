@@ -1,4 +1,5 @@
 #include "BowAimbot.h"
+#include "../../../Utils/Target.h"
 
 std::vector <C_Entity*> targetList;
 
@@ -22,19 +23,13 @@ void findTargets(C_Entity* currentEntity,bool isRegularEntitie) {
 	if (currentEntity == g_Data.getLocalPlayer()) // Skip Local player
 		return;
 
-	if (FriendList::findPlayer(currentEntity->name2.getText())) //Skip Friend
+	if (FriendList::findPlayer(currentEntity->getNameTag()->getText())) //Skip Friend
 		return;
 
-	if (g_Data.getLocalPlayer()->getEntityTypeId() != currentEntity->getEntityTypeId()) // Skip Invalid Entity
+	if (!Target::isValidTarget(currentEntity))
 		return;
 
-	if (!(currentEntity->name2.getTextLength() > 0))
-		return;
-
-	if (currentEntity->aabb.upper.y - currentEntity->aabb.lower.y < 1 || currentEntity->aabb.upper.y - currentEntity->aabb.lower.y > 2)
-		return;
-
-	float dist = currentEntity->eyePos0.dist(g_Data.getLocalPlayer()->eyePos0);
+	float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());;
 
 	if (dist < 130)
 	{
@@ -61,7 +56,7 @@ void BowAimbot::onPostRender() {
 	{
 		vec3_t origin = g_Data.getClientInstance()->levelRenderer->origin; // TODO: sort list
 		C_Entity* entity = targetList[0];
-		vec3_t pos = entity->eyePos0;
+		vec3_t pos = *entity->getPos();
 
 		pos = pos.sub(origin);
 

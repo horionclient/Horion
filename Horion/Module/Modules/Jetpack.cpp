@@ -54,14 +54,14 @@ void Jetpack::onTick(C_GameMode * gm)
 
 			gm->player->velocity.y = 0.465f;
 			vec3_t moveVec;
-			moveVec.x = cos(calcYaw) * cos(calcPitch) * 0.58f;
-			moveVec.z = sin(calcYaw) * cos(calcPitch) * 0.58f;
+			moveVec.x = cos(calcYaw) * cos(calcPitch) * 0.425f;
+			moveVec.z = sin(calcYaw) * cos(calcPitch) * 0.425f;
 
 			gm->player->velocity.x = moveVec.x;
 			gm->player->velocity.z = moveVec.z;
 
-			float teleportX = cos(calcYaw) * cos(calcPitch) * 0.00005f;
-			float teleportZ = sin(calcYaw) * cos(calcPitch) * 0.00005f;
+			float teleportX = cos(calcYaw) * cos(calcPitch) * 0.00000005f;
+			float teleportZ = sin(calcYaw) * cos(calcPitch) * 0.00000005f;
 
 			vec3_t pos = *gm->player->getPos();
 			g_Data.getLocalPlayer()->setPos(vec3_t(pos.x + teleportX, pos.y - 0.15f, pos.z + teleportZ));
