@@ -40,6 +40,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new ChestStealer());
 	this->moduleList.push_back(new Fly());
 	this->moduleList.push_back(new TabGuiMod());
+	this->moduleList.push_back(new Hitbox());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);

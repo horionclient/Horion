@@ -67,6 +67,7 @@
     <ClCompile Include="Horion\Module\Modules\Fly.cpp" />
     <ClCompile Include="Horion\Module\Modules\TabGuiMod.cpp" />
     <ClCompile Include="Horion\Command\Commands\HideCommand.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Hitbox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -154,5 +155,6 @@
     <ClInclude Include="Horion\Module\Modules\Fly.h" />
     <ClInclude Include="Horion\Module\Modules\TabGuiMod.h" />
     <ClInclude Include="Horion\Command\Commands\HideCommand.h" />
+    <ClInclude Include="Horion\Module\Modules\Hitbox.h" />
   </ItemGroup>
 </Project>

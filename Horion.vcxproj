@@ -170,6 +170,7 @@
     <ClCompile Include="Horion\Module\Modules\ChestStealer.cpp" />
     <ClCompile Include="Horion\Module\Modules\ClickGuiMod.cpp" />
     <ClCompile Include="Horion\Module\Modules\Fly.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Hitbox.cpp" />
     <ClCompile Include="Horion\Module\Modules\InfiniteReach.cpp" />
     <ClCompile Include="Horion\Module\Modules\InstaBreak.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoFall.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="Horion\Module\Modules\ChestStealer.h" />
     <ClInclude Include="Horion\Module\Modules\ClickGuiMod.h" />
     <ClInclude Include="Horion\Module\Modules\Fly.h" />
+    <ClInclude Include="Horion\Module\Modules\Hitbox.h" />
     <ClInclude Include="Horion\Module\Modules\InfiniteReach.h" />
     <ClInclude Include="Horion\Module\Modules\InstaBreak.h" />
     <ClInclude Include="Horion\Module\Modules\NoFall.h" />

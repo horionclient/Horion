@@ -37,6 +37,7 @@
 #include "Modules/ChestStealer.h"
 #include "Modules/TabGuiMod.h"
 #include "Modules/Fly.h"
+#include "Modules/Hitbox.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;
