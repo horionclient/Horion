@@ -15,7 +15,7 @@ const char* BowAimbot::getModuleName() {
 	return ("BowAimbot");
 }
 
-void findTargets(C_Entity* currentEntity) {
+void findTargets(C_Entity* currentEntity,bool isRegularEntitie) {
 	if (currentEntity == 0)
 		return;
 

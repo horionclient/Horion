@@ -72,7 +72,7 @@ public:
 	C_ChestScreenController** getChestScreenController() { return &chestScreen; };
 	std::set<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
 
-	void forEachEntity(void(*callback) (C_Entity*));
+	void forEachEntity(void(*callback) (C_Entity*,bool));
 };
 
 

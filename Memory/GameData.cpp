@@ -127,12 +127,12 @@ void GameData::setChestScreenController(C_ChestScreenController* chestScreenCont
 	g_Data.chestScreen = chestScreenController;
 }
 
-void GameData::forEachEntity(void(*callback)(C_Entity *))
+void GameData::forEachEntity(void(*callback)(C_Entity *,bool))
 {
 	C_LocalPlayer* localPlayer = getLocalPlayer();
 
 	// New EntityList
-	/*{
+	{
 		// MultiplayerLevel::directTickEntities
 		// 48 89 5C 24 08 48 89 74  24 18 57 48 83 EC 20 48 8B 7A 20 48 8B F2 48 8B  BF F8 01 00 00 48 8B 1F
 		__int64 region = reinterpret_cast<__int64>(g_Data.getLocalPlayer()->region);
@@ -140,12 +140,12 @@ void GameData::forEachEntity(void(*callback)(C_Entity *))
 		for (__int64 *i = (__int64 *)*entityIdMap; i != entityIdMap; i = (__int64 *)*i)
 		{
 			__int64 actor = i[3];
-			if (actor && !*(char *)(actor + 0xD09) && !*(char *)(actor + 0xD0A)) {4
+			if (actor && !*(char *)(actor + 0xD11) && !*(char *)(actor + 0xD12)) {
 				C_Entity* ent = reinterpret_cast<C_Entity*>(actor);
-				callback(ent);
+				callback(ent,false);
 			}
 		}
-	}*/
+	}
 
 
 	// Regular EntityList
@@ -162,11 +162,11 @@ void GameData::forEachEntity(void(*callback)(C_Entity *))
 			if (listSize < 1000 && listSize > 1) {
 				for (size_t i = 0; i < listSize; i++) {
 					C_Entity* current = entList->get(i);
-					callback(current);
+					callback(current,true);
 				}
 			}
 		}
-		
+	
 	}
 }
 

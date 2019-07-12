@@ -5,6 +5,7 @@
 Killaura::Killaura() : IModule('P', COMBAT) // <-- keybind
 {
 	this->registerBoolSetting("multiaura", &this->isMulti, this->isMulti);
+	this->registerBoolSetting("MobAura", &this->isMobAura, this->isMobAura);
 	this->registerFloatSetting("range", &this->range, this->range, 2, 8);
 }
 
@@ -20,7 +21,7 @@ const char* Killaura::getModuleName()
 
 static std::vector <C_Entity*> targetList;
 
-void findEntity(C_Entity* currentEntity) {
+void findEntity(C_Entity* currentEntity,bool isRegularEntitie) {
 	static Killaura* killauraMod = static_cast<Killaura*>(moduleMgr->getModule<Killaura>());
 	if (killauraMod == 0)
 		killauraMod = static_cast<Killaura*>(moduleMgr->getModule<Killaura>());
@@ -37,9 +38,17 @@ void findEntity(C_Entity* currentEntity) {
 		if (FriendList::findPlayer(currentEntity->getNameTag()->getText())) // Skip Friend
 			return;
 
-		if (!Target::isValidTarget(currentEntity))
-			return;
-
+		if (killauraMod->isMobAura && !isRegularEntitie)
+		{
+			if (!g_Data.getLocalPlayer()->canAttack(currentEntity, false))
+				return;
+		}
+		else 
+		{
+			if (!Target::isValidTarget(currentEntity))
+				return;
+		}
+		
 		float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
 
 		if (dist < killauraMod->range)

@@ -13,7 +13,9 @@ bool Target::isValidTarget(C_Entity * ent)
 
 	const bool isPlayer = ent->getEntityTypeId() == 63;
 
-	if (ent->getNameTag()->getTextLength() <= 1 && isPlayer)
+	if (isPlayer)
+		return false;
+	if (ent->getNameTag()->getTextLength() <= 1)
 		return false;
 	if (ent->height < 1.5f || ent->width < 0.5f || ent->height > 2.1f || ent->width > 0.9f)
 		return false;

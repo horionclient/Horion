@@ -5,6 +5,7 @@
 ESP::ESP() : IModule('O', VISUAL)
 {
 	this->registerBoolSetting("rainbow", &this->doRainbow, this->doRainbow);
+	this->registerBoolSetting("MobEsp", &this->isMobEsp, this->isMobEsp);
 }
 
 
@@ -19,7 +20,7 @@ const char* ESP::getModuleName()
 
 static float rcolors[4];
 
-void doRenderStuff(C_Entity* ent) {
+void doRenderStuff(C_Entity* ent,bool isRegularEntitie) {
 	static ESP* espMod = reinterpret_cast<ESP*>(moduleMgr->getModule<ESP>());
 	if(espMod == nullptr)
 		espMod = reinterpret_cast<ESP*>(moduleMgr->getModule<ESP>());
@@ -35,6 +36,11 @@ void doRenderStuff(C_Entity* ent) {
 					DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
 				else
 					DrawUtils::setColor(0.9f, 0.9f, 0.9f, max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
+			}
+			else if (espMod->isMobEsp && !isRegularEntitie)
+			{
+				if (g_Data.getLocalPlayer()->canAttack(ent, false))
+					DrawUtils::setColor(0.2f, 0.2f, 0.9f, max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
 			}
 			else
 				DrawUtils::setColor(0.4f, 0.4f, 0.4f, 0.2f);

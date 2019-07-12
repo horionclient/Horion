@@ -8,6 +8,7 @@ class Killaura : public IModule
 private:
 	bool isMulti = true;
 public:
+	bool isMobAura = false;
 	float range = 6;
 
 	Killaura();
