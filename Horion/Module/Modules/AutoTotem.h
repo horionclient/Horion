@@ -4,7 +4,7 @@
 class AutoTotem : public IModule
 {
 private:
-	int delay;
+	int delay = 0;
 public:
 	AutoTotem();
 	~AutoTotem();

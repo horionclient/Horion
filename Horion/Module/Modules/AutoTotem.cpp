@@ -17,10 +17,13 @@ const char* AutoTotem::getModuleName()
 }
 
 void AutoTotem::onTick(C_GameMode* gm) {
-	delay++;
-	if (g_Data.getLocalPlayer() != nullptr) {
+	
+	if (g_Data.getLocalPlayer() != nullptr) 
+	{
 		C_ItemStack* i = g_Data.getLocalPlayer()->getEquippedTotem();
-		if (i->item == NULL && delay >= 4) {
+
+		if (i->item == NULL && delay > 3) 
+		{
 			C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 			C_Inventory* a = supplies->inventory;
 			for (int i = 0; i < 36; i++) {
@@ -35,6 +38,8 @@ void AutoTotem::onTick(C_GameMode* gm) {
 			}
 			delay = 0;
 		}
+
+		delay++;
 	}
 }
 
