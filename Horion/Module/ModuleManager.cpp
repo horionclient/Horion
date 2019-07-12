@@ -41,6 +41,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Fly());
 	this->moduleList.push_back(new TabGuiMod());
 	this->moduleList.push_back(new Hitbox());
+	this->moduleList.push_back(new Reach());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);

@@ -337,8 +337,8 @@ public:
 	virtual void setCarriedItem(__int64 const&);
 	virtual void setOffhandSlot(C_ItemStack*);
 	virtual C_ItemStack* getEquippedTotem(void)const;
-private:
 	virtual __int64 consumeTotem(void);
+private:
 	virtual __int64 save(__int64 &);
 	virtual __int64 saveWithoutId(__int64 &);
 	virtual __int64 load(__int64 const&, __int64 &);
