@@ -4,6 +4,7 @@
 
 Glide::Glide() : IModule('U', MOVEMENT)
 {
+	this->registerFloatSetting("value", &this->glideMod, this->glideMod, -2, 1);
 }
 
 
