@@ -126,6 +126,9 @@ void Hooks::Init()
 	g_Hooks.chestScreenController__tickHook = std::make_unique<FuncHook>(chestScreenControllerTick, Hooks::chestScreenController__tick);
 	g_Hooks.chestScreenController__tickHook->init();
 
+	void* fullbright = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC 40 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 89 74 24 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 33 C0 48 89 44 24 ?? 48 89 44 24 ?? 48 8B 01 48 8D 54 24 ??"));
+	g_Hooks.fullBrightIdk__Hook = std::make_unique<FuncHook>(fullbright, Hooks::fullBrightIdk);
+	g_Hooks.fullBrightIdk__Hook->init();
 }
 
 void Hooks::Restore()
@@ -151,6 +154,31 @@ void Hooks::Restore()
 	g_Hooks.clickHook->Restore();
 	g_Hooks.MoveInputHandler_tickHook->Restore();
 	g_Hooks.chestScreenController__tickHook->Restore();
+	g_Hooks.fullBrightIdk__Hook->Restore();
+}
+
+__int64 __fastcall Hooks::fullBrightIdk(__int64 a1)
+{
+	static auto oFunc = g_Hooks.fullBrightIdk__Hook->GetOriginal<fullbrightIdk_t>();
+
+	static FullBright* fullBrightModule = reinterpret_cast<FullBright*>(moduleMgr->getModule<FullBright>());
+	if (fullBrightModule == nullptr)
+		fullBrightModule = reinterpret_cast<FullBright*>(moduleMgr->getModule<FullBright>());
+
+	static __int64 v7 = 0;
+	if (v7 == 0) {
+		__int64 v6 = oFunc(a1);
+		if (*(bool*)(v6 + 0xF01))
+			v7 = *(__int64 *)(v6 + 0x7B8);
+		else
+			v7 = *(__int64 *)(v6 + 0x128);
+	}
+	else {
+		if (fullBrightModule != nullptr)
+			fullBrightModule->gammaPtr = reinterpret_cast<float*>(v7 + 0xF0);
+	}
+
+	return oFunc(a1);
 }
 
 __int64 __fastcall Hooks::chestScreenController__tick(C_ChestScreenController* a1)
@@ -730,7 +758,7 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		// Draw Horion logo
 		{
 			DrawUtils::drawText(vec2_t(2, 2), &horionStr, nullptr, 1.5f);
-			DrawUtils::drawText(vec2_t(2.75f, 13.75f), &dlStr, nullptr, 0.5f);
+			DrawUtils::drawText(vec2_t(2.75f, 13.75f), &dlStr, nullptr, 0.85f);
 		}
 
 		// Draw ArrayList

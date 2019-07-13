@@ -185,6 +185,8 @@ void IModule::onLoadConfig(json * conf)
 				}
 			}
 		}
+		if (this->enabled)
+			this->onEnable();
 	}
 }
 

@@ -153,7 +153,7 @@ void TabGui::render()
 	if (!moduleMgr->isInitialized())
 		return;
 	renderedLevel = 0;
-	yOffset = 20;
+	yOffset = 22;
 	xOffset = 3;
 
 	// Render all categorys

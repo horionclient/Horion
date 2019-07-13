@@ -140,12 +140,12 @@ public:
 private:
 	char pad_0x1420[0x500]; //0x1420
 public:
-	short itemData; //0x1938 
-	short itemId; //0x193A 
+	short itemData; //0x1920
+	short itemId; //0x1922
 private:
-	char pad_0x193C[0x2A8]; //0x193C
+	char pad_0x193C[0x290]; //0x1924
 public:
-	int gamemode; //0x1BCC 
+	int gamemode; //0x1BB4 
 private:
 	char pad_0x1BD0[0x60]; //0x1BD0
 public:

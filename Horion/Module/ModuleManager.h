@@ -39,6 +39,7 @@
 #include "Modules/Fly.h"
 #include "Modules/Hitbox.h"
 #include "Modules/Reach.h"
+#include "Modules/FullBright.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;
