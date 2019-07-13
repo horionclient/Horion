@@ -393,6 +393,12 @@ void ClickGui::renderCategory(Category category)
 										xEnd - textPadding,
 										currentYOffset - textPadding + textHeight
 									);
+									// Debugging
+									{
+#ifdef DEBUG_DRAW_SELECTABLE_AREA
+										DrawUtils::fillRectangle(rect, MC_Color(1, 0, 0, 1), 0.3f);
+#endif
+									}
 									// Visuals & Logic
 									{
 										rectPos.y = currentYOffset;
@@ -485,6 +491,12 @@ void ClickGui::renderCategory(Category category)
 										xEnd           - textPadding,
 										currentYOffset - textPadding + textHeight
 									);
+									// Debugging
+									{
+#ifdef DEBUG_DRAW_SELECTABLE_AREA
+										DrawUtils::fillRectangle(rect, MC_Color(1, 0, 0, 1), 0.3f);
+#endif
+									}
 									// Visuals & Logic
 									{
 										rectPos.y = currentYOffset;
