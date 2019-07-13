@@ -299,6 +299,13 @@ void ClickGui::renderCategory(Category category)
 								0
 							);
 
+#ifdef _DEBUG
+#ifndef DEBUG_DRAW_SELECTABLE_AREA
+//#define DEBUG_DRAW_SELECTABLE_AREA
+#endif
+#endif
+
+
 							switch (setting->valueType) {
 							case BOOL_T:
 							{
@@ -307,9 +314,15 @@ void ClickGui::renderCategory(Category category)
 								vec4_t selectableSurface = vec4_t(
 									textPos.x + textPadding,
 									textPos.y + textPadding,
-									textPos.x + xEnd - textPadding,
+									xEnd - textPadding,
 									textPos.y + textHeight - textPadding
 								);
+								// Debugging
+								{
+#ifdef DEBUG_DRAW_SELECTABLE_AREA
+									DrawUtils::drawRectangle(selectableSurface, MC_Color(1, 0, 0, 1), 0.3f);
+#endif
+								}
 								bool isFocused = selectableSurface.contains(&mousePos);
 								// Logic
 								{
