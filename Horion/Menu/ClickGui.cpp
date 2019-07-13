@@ -425,7 +425,7 @@ void ClickGui::renderCategory(Category category)
 												rect.y - 1.5f // Hardcoded ghetto
 											);
 											char str[10];
-											sprintf_s(str, 10, "%.1f", setting->value->_float);
+											sprintf_s(str, 10, "%.2f", setting->value->_float);
 											std::string text = str;
 											mid.x -= DrawUtils::getTextWidth(&text, textSize) / 2;
 
