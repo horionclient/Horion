@@ -40,6 +40,7 @@
 #include "Modules/Hitbox.h"
 #include "Modules/Reach.h"
 #include "Modules/FullBright.h"
+#include "Modules/AirSwim.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

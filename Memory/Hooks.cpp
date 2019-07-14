@@ -129,6 +129,10 @@ void Hooks::Init()
 	void* fullbright = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC 40 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 89 74 24 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 33 C0 48 89 44 24 ?? 48 89 44 24 ?? 48 8B 01 48 8D 54 24 ??"));
 	g_Hooks.fullBrightIdk__Hook = std::make_unique<FuncHook>(fullbright, Hooks::fullBrightIdk);
 	g_Hooks.fullBrightIdk__Hook->init();
+
+	void* isInWater = reinterpret_cast<void*>(Utils::FindSignature("0F B6 ?? ?? ?? ?? ?? C3 CC CC CC CC CC CC CC CC 0F B6 ?? ?? ?? ?? ?? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ?? 57 48 83 EC 30 ?? ?? ?? ?? ?? ?? ?? 48 8B D9 ?? ?? ?? ?? ?? ?? ?? 48 8B 01"));
+	g_Hooks.Actor__isInWaterHook = std::make_unique<FuncHook>(isInWater, Hooks::Actor__isInWater);
+	g_Hooks.Actor__isInWaterHook->init();
 }
 
 void Hooks::Restore()
@@ -155,6 +159,23 @@ void Hooks::Restore()
 	g_Hooks.MoveInputHandler_tickHook->Restore();
 	g_Hooks.chestScreenController__tickHook->Restore();
 	g_Hooks.fullBrightIdk__Hook->Restore();
+	g_Hooks.Actor__isInWaterHook->Restore();
+}
+
+bool __fastcall Hooks::Actor__isInWater(C_Entity* a1)
+{
+	static auto oFunc = g_Hooks.Actor__isInWaterHook->GetOriginal<Actor__isInWater_t>();
+
+	if (g_Data.getLocalPlayer() != a1)
+		return oFunc(a1);
+
+	static AirSwim* AirSwimModule = reinterpret_cast<AirSwim*>(moduleMgr->getModule<AirSwim>());
+	if (AirSwimModule == nullptr)
+		AirSwimModule = reinterpret_cast<AirSwim*>(moduleMgr->getModule<AirSwim>());
+	else if (AirSwimModule->isEnabled())
+		return true;
+
+	return oFunc(a1);
 }
 
 __int64 __fastcall Hooks::fullBrightIdk(__int64 a1)
@@ -370,20 +391,6 @@ void __fastcall Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a)
 	GameData::addChestToList(_this);
 }
 
-void Hooks::LocalPlayer_CheckFallDamage(C_LocalPlayer* a, float* a2, void* a3)
-{
-	static auto oFunc = g_Hooks.LocalPlayer_CheckFallDamageHook->GetOriginal<LocalPlayer_CheckFallDamage_t>();
-
-
-	static IModule* mod = moduleMgr->getModule<NoFall>();
-	if (mod == nullptr)
-		mod = moduleMgr->getModule<NoFall>();
-	else if (mod->isEnabled()) {
-		return;
-	}
-
-	oFunc(a, a2, a3);
-}
 
 void Hooks::Actor_lerpMotion(C_Entity * _this, vec3_t motVec)
 {

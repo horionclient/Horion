@@ -40,6 +40,12 @@ void findEntity(C_Entity* currentEntity,bool isRegularEntitie) {
 
 		if (killauraMod->isMobAura && !isRegularEntitie)
 		{
+			if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)
+				return;
+
+			if (currentEntity->isInvisible() && currentEntity->getEntityTypeId() != 33) // Exception for kitmap.sylphhcf.net they use a creeper as hitbox
+				return;
+
 			if (!g_Data.getLocalPlayer()->canAttack(currentEntity, false))
 				return;
 		}

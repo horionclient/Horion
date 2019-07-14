@@ -51,7 +51,7 @@ bool PlayerTeleportCommand::execute(std::vector<std::string>* args)
 		if (name.find(nameOfPlayerLower) == std::string::npos)
 			continue;
 
-		pos = currentEntity->eyePos0;
+		pos = *currentEntity->getPos();
 		playerName = currentEntity->getNameTag()->getText();
 		break;
 

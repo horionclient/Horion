@@ -39,8 +39,15 @@ void doRenderStuff(C_Entity* ent,bool isRegularEntitie) {
 			}
 			else if (espMod->isMobEsp && !isRegularEntitie)
 			{
-				if (g_Data.getLocalPlayer()->canAttack(ent, false))
-					DrawUtils::setColor(0.2f, 0.2f, 0.9f, max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
+				if (ent->getNameTag()->getTextLength() <= 1 && ent->getEntityTypeId() == 63)
+					return;
+
+				if (ent->isInvisible() && ent->getEntityTypeId() != 33) // Exception for kitmap.sylphhcf.net they use a creeper as hitbox
+					return;
+
+				if (!g_Data.getLocalPlayer()->canAttack(ent, false))
+					return;
+				DrawUtils::setColor(0.2f, 0.2f, 0.9f, max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
 			}
 			else
 				DrawUtils::setColor(0.4f, 0.4f, 0.4f, 0.2f);

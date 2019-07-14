@@ -43,6 +43,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Hitbox());
 	this->moduleList.push_back(new Reach());
 	this->moduleList.push_back(new FullBright());
+	this->moduleList.push_back(new AirSwim());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);

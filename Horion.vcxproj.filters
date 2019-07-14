@@ -70,6 +70,7 @@
     <ClCompile Include="Horion\Module\Modules\Hitbox.cpp" />
     <ClCompile Include="Horion\Module\Modules\Reach.cpp" />
     <ClCompile Include="Horion\Module\Modules\FullBright.cpp" />
+    <ClCompile Include="Horion\Module\Modules\AirSwim.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -160,5 +161,6 @@
     <ClInclude Include="Horion\Module\Modules\Hitbox.h" />
     <ClInclude Include="Horion\Module\Modules\Reach.h" />
     <ClInclude Include="Horion\Module\Modules\FullBright.h" />
+    <ClInclude Include="Horion\Module\Modules\AirSwim.h" />
   </ItemGroup>
 </Project>

@@ -13,7 +13,13 @@ FullBright::~FullBright()
 
 const char* FullBright::getModuleName()
 {
-	return ("FullBright");
+	return ("Fullbright");
+}
+
+void FullBright::onTick(C_GameMode* gm)
+{
+	if (gammaPtr != nullptr && *gammaPtr != 10)
+		*gammaPtr = 10;
 }
 
 void FullBright::onEnable()
