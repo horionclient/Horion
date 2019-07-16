@@ -3,6 +3,8 @@
 class InventoryMove :
 	public IModule
 {
+private:
+	bool keyPressed = false;
 public:
 	InventoryMove();
 	~InventoryMove();
