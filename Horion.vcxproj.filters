@@ -71,6 +71,7 @@
     <ClCompile Include="Horion\Module\Modules\Reach.cpp" />
     <ClCompile Include="Horion\Module\Modules\FullBright.cpp" />
     <ClCompile Include="Horion\Module\Modules\AirSwim.cpp" />
+    <ClCompile Include="Horion\Module\Modules\InventoryMove.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -162,5 +163,7 @@
     <ClInclude Include="Horion\Module\Modules\Reach.h" />
     <ClInclude Include="Horion\Module\Modules\FullBright.h" />
     <ClInclude Include="Horion\Module\Modules\AirSwim.h" />
+    <ClInclude Include="SDK\CGameSettingsInput.h" />
+    <ClInclude Include="Horion\Module\Modules\InventoryMove.h" />
   </ItemGroup>
 </Project>

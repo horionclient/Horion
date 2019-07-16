@@ -4,6 +4,7 @@ class ChestStealer :
 	public IModule
 {
 public:
+	C_ChestScreenController* chestScreenController = nullptr;
 	ChestStealer();
 	~ChestStealer();
 

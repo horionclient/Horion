@@ -19,15 +19,14 @@ const char* ChestStealer::getModuleName()
 
 void ChestStealer::onTick(C_GameMode* gm)
 {
-	C_ChestScreenController** chestScreenController = g_Data.getChestScreenController();
-	if (g_Data.getLocalPlayer()->isInventoryClosed() == 0 && *chestScreenController != NULL)
+	if (g_Data.getLocalPlayer()->isInventoryClosed() == 0 && chestScreenController != nullptr)
 	{ 
 		for (int i = 0; i < 54; i++)
 		{
-			(*chestScreenController)->handleAutoPlace(0x7FFFFFFF,"container_items", i);
+			chestScreenController->handleAutoPlace(0x7FFFFFFF,"container_items", i);
 		}
 	}
-	*chestScreenController = NULL;
+	chestScreenController = nullptr;
 }
 
 

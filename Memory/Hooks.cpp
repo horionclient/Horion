@@ -205,7 +205,14 @@ __int64 __fastcall Hooks::fullBrightIdk(__int64 a1)
 __int64 __fastcall Hooks::chestScreenController__tick(C_ChestScreenController* a1)
 {
 	static auto oFunc = g_Hooks.chestScreenController__tickHook->GetOriginal<chestScreenController__tick_t>();
-	GameData::setChestScreenController(a1);
+
+	static ChestStealer* ChestStealerMod = reinterpret_cast<ChestStealer*>(moduleMgr->getModule<ChestStealer>());
+	if (ChestStealerMod == nullptr)
+		ChestStealerMod = reinterpret_cast<ChestStealer*>(moduleMgr->getModule<ChestStealer>());
+	else {
+		ChestStealerMod->chestScreenController = a1;
+	}
+		
 	return oFunc(a1);
 }
 
@@ -252,7 +259,6 @@ void __fastcall Hooks::SurvivalMode_tick(C_GameMode * _this)
 __int64 __fastcall Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity* a2)
 {
 	static auto oTick = g_Hooks.MoveInputHandler_tickHook->GetOriginal<MoveInputHandler_tick_t>();
-	GameData::setMoveInputHandler(a1);
 	return oTick(a1, a2);
 }
 

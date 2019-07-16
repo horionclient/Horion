@@ -41,6 +41,7 @@
 #include "Modules/Reach.h"
 #include "Modules/FullBright.h"
 #include "Modules/AirSwim.h"
+#include "Modules/InventoryMove.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

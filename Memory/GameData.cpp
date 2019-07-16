@@ -20,6 +20,21 @@ void GameData::retrieveClientInstance()
 	// 1.11.1 : 0x0250A2D0
 }
 
+void GameData::retrieveGameSettingsInput()
+{
+
+	static uintptr_t gameSettingsInputOffset = 0x0;
+	if (gameSettingsInputOffset == 0x0) {
+		uintptr_t sigOffset = Utils::FindSignature("48 8B 1D ?? ?? ?? ?? 48 2B C3 48 C1 F8 03 48 85 C0");
+		if (sigOffset != 0x0) {
+			int offset = *reinterpret_cast<int*>((sigOffset + 3)); // Get Offset from code
+			gameSettingsInputOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instruction*/ 7; // Offset is relative
+			logF("settingsInput: %llX", gameSettingsInputOffset);
+		}
+	}
+	g_Data.gameSettingsInput = reinterpret_cast<C_GameSettingsInput*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + gameSettingsInputOffset, { 0x0, 0x10, 0xD8}));
+}
+
 bool GameData::canUseMoveKeys()
 {
 	MinecraftGame* mc = g_Data.clientInstance->minecraftGame;
@@ -117,16 +132,6 @@ void GameData::setHIDController(C_HIDController* Hid)
 	g_Data.hidController = Hid;
 }
 
-void GameData::setMoveInputHandler(C_MoveInputHandler* handler)
-{
-	g_Data.inputHandler = handler;
-}
-
-void GameData::setChestScreenController(C_ChestScreenController* chestScreenController)
-{
-	g_Data.chestScreen = chestScreenController;
-}
-
 void GameData::forEachEntity(void(*callback)(C_Entity *,bool))
 {
 	C_LocalPlayer* localPlayer = getLocalPlayer();
@@ -187,9 +192,11 @@ void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::
 	g_Data.gameModule = gameModule;
 	g_Data.slimMem = slimMem;
 	retrieveClientInstance();
+	retrieveGameSettingsInput();
 #ifdef _DEBUG
 	logF("base: %llX", g_Data.getModule()->ptrBase);
 	logF("clientInstance %llX", g_Data.clientInstance);
+	logF("gameSettingsInput %llX", g_Data.gameSettingsInput);
 	logF("localPlayer %llX", g_Data.getLocalPlayer());
 	if (g_Data.clientInstance != nullptr)
 		logF("minecraftGame: %llX", g_Data.clientInstance->minecraftGame);

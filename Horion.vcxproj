@@ -175,6 +175,7 @@
     <ClCompile Include="Horion\Module\Modules\Hitbox.cpp" />
     <ClCompile Include="Horion\Module\Modules\InfiniteReach.cpp" />
     <ClCompile Include="Horion\Module\Modules\InstaBreak.cpp" />
+    <ClCompile Include="Horion\Module\Modules\InventoryMove.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoFall.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSprint.cpp" />
     <ClCompile Include="Horion\Module\Modules\BowAimbot.cpp" />
@@ -247,6 +248,7 @@
     <ClInclude Include="Horion\Module\Modules\Hitbox.h" />
     <ClInclude Include="Horion\Module\Modules\InfiniteReach.h" />
     <ClInclude Include="Horion\Module\Modules\InstaBreak.h" />
+    <ClInclude Include="Horion\Module\Modules\InventoryMove.h" />
     <ClInclude Include="Horion\Module\Modules\NoFall.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSprint.h" />
     <ClInclude Include="Horion\Module\Modules\BowAimbot.h" />
@@ -282,6 +284,7 @@
     <ClInclude Include="SDK\CEntity.h" />
     <ClInclude Include="SDK\CEntityList.h" />
     <ClInclude Include="SDK\CGameMode.h" />
+    <ClInclude Include="SDK\CGameSettingsInput.h" />
     <ClInclude Include="SDK\CHIDController.h" />
     <ClInclude Include="SDK\CInventory.h" />
     <ClInclude Include="SDK\CMinecraftUIRenderContext.h" />

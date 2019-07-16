@@ -4,18 +4,16 @@
 
 class InfiniteReach : public IModule
 {
-private:
-	int delay;
-	float fakeX;
-	float fakeZ;
 public:
+	int delay = 0;
+	float range = 15;
+	bool isMulti = true;
+	C_MovePlayerPacket* pack = nullptr;
 	InfiniteReach();
 	~InfiniteReach();
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
-	virtual void onPostRender() override;
-	virtual void onEnable() override;
-	virtual void onDisable() override;
+	virtual void onTick(C_GameMode* gm) override;
 };
 
