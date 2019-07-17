@@ -67,6 +67,7 @@ private:
 	static __int64 __fastcall chestScreenController__tick(C_ChestScreenController* a1);
 	static __int64 __fastcall fullBrightIdk(__int64 a1);
 	static bool __fastcall Actor__isInWater(C_Entity* a1);
+	static void __fastcall jumpPower(C_Entity* a1, float a2);
 	 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
@@ -97,6 +98,7 @@ private:
 	std::unique_ptr<FuncHook> chestScreenController__tickHook;
 	std::unique_ptr<FuncHook> fullBrightIdk__Hook;
 	std::unique_ptr<FuncHook> Actor__isInWaterHook;
+	std::unique_ptr<FuncHook> jumpPowerHook;
 
 
 	typedef __int64(__fastcall* LevelRenderer_renderLevel_t)(__int64 a1, __int64 a2, __int64 a3);
@@ -127,6 +129,7 @@ private:
 	typedef __int64(__fastcall *chestScreenController__tick_t)(C_ChestScreenController* a1);
 	typedef __int64(__fastcall *fullbrightIdk_t)(__int64 a1);
 	typedef bool(__fastcall * Actor__isInWater_t)(C_Entity *a1);
+	typedef __int64(__fastcall* jumpPower_t)(C_Entity* a1, float a2);
 };
 
 extern Hooks g_Hooks;

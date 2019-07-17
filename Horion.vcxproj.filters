@@ -72,6 +72,7 @@
     <ClCompile Include="Horion\Module\Modules\FullBright.cpp" />
     <ClCompile Include="Horion\Module\Modules\AirSwim.cpp" />
     <ClCompile Include="Horion\Module\Modules\InventoryMove.cpp" />
+    <ClCompile Include="Horion\Module\Modules\HighJump.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -165,5 +166,6 @@
     <ClInclude Include="Horion\Module\Modules\AirSwim.h" />
     <ClInclude Include="SDK\CGameSettingsInput.h" />
     <ClInclude Include="Horion\Module\Modules\InventoryMove.h" />
+    <ClInclude Include="Horion\Module\Modules\HighJump.h" />
   </ItemGroup>
 </Project>

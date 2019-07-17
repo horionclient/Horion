@@ -1,7 +1,6 @@
 #include "AirJump.h"
 
 
-
 AirJump::AirJump() : IModule('G', MOVEMENT)
 {
 }
@@ -17,6 +16,7 @@ const char* AirJump::getModuleName()
 }
 
 void AirJump::onTick(C_GameMode* gm) {
-	if(gm->player != nullptr)
+	static IModule* InvMovMod = moduleMgr->getModule<InventoryMove>();
+	if(gm->player != nullptr && InvMovMod!= nullptr && !InvMovMod->isEnabled())
 		gm->player->onGround = true;
 }

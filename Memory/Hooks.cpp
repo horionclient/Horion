@@ -133,6 +133,10 @@ void Hooks::Init()
 	void* isInWater = reinterpret_cast<void*>(Utils::FindSignature("0F B6 ?? ?? ?? ?? ?? C3 CC CC CC CC CC CC CC CC 0F B6 ?? ?? ?? ?? ?? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ?? 57 48 83 EC 30 ?? ?? ?? ?? ?? ?? ?? 48 8B D9 ?? ?? ?? ?? ?? ?? ?? 48 8B 01"));
 	g_Hooks.Actor__isInWaterHook = std::make_unique<FuncHook>(isInWater, Hooks::Actor__isInWater);
 	g_Hooks.Actor__isInWaterHook->init();
+
+	void* jump = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC 40 48 8B 01 48 8B F9 FF 50 ?? 8B 08 89 ?? ?? ?? ?? ?? 8B 48 ?? 89"));
+	g_Hooks.jumpPowerHook = std::make_unique<FuncHook>(jump, Hooks::jumpPower);
+	g_Hooks.jumpPowerHook->init();
 }
 
 void Hooks::Restore()
@@ -160,6 +164,20 @@ void Hooks::Restore()
 	g_Hooks.chestScreenController__tickHook->Restore();
 	g_Hooks.fullBrightIdk__Hook->Restore();
 	g_Hooks.Actor__isInWaterHook->Restore();
+	g_Hooks.jumpPowerHook->Restore();
+}
+
+void __fastcall Hooks::jumpPower(C_Entity* a1, float a2)
+{
+	static auto oFunc = g_Hooks.jumpPowerHook->GetOriginal<jumpPower_t>();
+	static HighJump* HighJumpMod = reinterpret_cast<HighJump*>(moduleMgr->getModule<HighJump>());
+	if (HighJumpMod == nullptr)
+		HighJumpMod = reinterpret_cast<HighJump*>(moduleMgr->getModule<HighJump>());
+	else if (HighJumpMod->isEnabled()) {
+		g_Data.getLocalPlayer()->velocity.y = HighJumpMod->jumpPower;
+		return;
+	}
+	oFunc(a1, a2);
 }
 
 bool __fastcall Hooks::Actor__isInWater(C_Entity* a1)

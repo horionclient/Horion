@@ -1,6 +1,6 @@
 #pragma once
 #include "Module.h"
-
+#include "../ModuleManager.h"
 class AirJump : public IModule
 {
 public:
