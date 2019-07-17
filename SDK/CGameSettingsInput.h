@@ -2,7 +2,11 @@
 
 class C_GameSettingsInput {
 private:
-	char pad_0x0000[0x460]; //0x0000
+	char pad_0x0000[0x3B8];//0x0000
+public:
+	int* spaceBarKey;//0x3B8
+private:
+	char pad_0x3C0[0xA0];//0x3C0
 public:
 	int* leftKey;//0x460
 private:

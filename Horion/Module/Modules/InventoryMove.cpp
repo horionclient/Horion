@@ -18,31 +18,35 @@ const char* InventoryMove::getModuleName()
 
 void InventoryMove::onTick(C_GameMode* gm)
 {
-	if (GameData::canUseMoveKeys())
+	if (g_Data.getLocalPlayer()->isInventoryClosed() == 1 && GameData::canUseMoveKeys())
 		return;
 		
 
 	float speed = 0.3f;
 
-	static C_GameSettingsInput* input = g_Data.getGameSettingsInput();
+	C_GameSettingsInput* input = g_Data.getGameSettingsInput();
 	float yaw = gm->player->yaw;
 
-	if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->rightKey))
+	if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->backKey))
+	{
+		return;
+	}
+	else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey))
 	{
 		yaw += 45.f;
 		keyPressed = true;
 	}
-	else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->leftKey))
+	else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->leftKey) &&!GameData::isKeyDown(*input->rightKey))
 	{
 		yaw -= 45.f;
 		keyPressed = true;
 	}
-	else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->rightKey))
+	else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey))
 	{
 		yaw += 135.f;
 		keyPressed = true;
 	}
-	else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->leftKey))
+	else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey))
 	{
 		yaw -= 135.f;
 		keyPressed = true;
@@ -56,12 +60,12 @@ void InventoryMove::onTick(C_GameMode* gm)
 		yaw += 180.f;
 		keyPressed = true;
 	}
-	else if (GameData::isKeyDown(*input->rightKey))
+	else if (GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey))
 	{
 		yaw += 90.f;
 		keyPressed = true;
 	}
-	else if (GameData::isKeyDown(*input->leftKey))
+	else if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey))
 	{
 		yaw -= 90.f;
 		keyPressed = true;
