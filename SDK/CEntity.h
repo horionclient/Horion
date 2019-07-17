@@ -563,7 +563,9 @@ private:
 	virtual __int64 ascendScaffolding(void);
 	virtual __int64 descendScaffolding(void);
 	virtual __int64 initBodyControl(void);
+public:
 	virtual __int64 jumpFromGround(void);
+private:
 	virtual __int64 updateAi(void);
 	virtual __int64 newServerAiStep(void);
 	virtual __int64 _serverAiMobStep(void);

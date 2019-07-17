@@ -27,10 +27,11 @@ void InventoryMove::onTick(C_GameMode* gm)
 	C_GameSettingsInput* input = g_Data.getGameSettingsInput();
 	float yaw = gm->player->yaw;
 
+	if (GameData::isKeyDown(*input->spaceBarKey) && gm->player->onGround)
+		gm->player->jumpFromGround();
+
 	if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->backKey))
-	{
 		return;
-	}
 	else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey))
 	{
 		yaw += 45.f;
