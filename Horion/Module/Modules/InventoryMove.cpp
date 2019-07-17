@@ -18,10 +18,12 @@ const char* InventoryMove::getModuleName()
 
 void InventoryMove::onTick(C_GameMode* gm)
 {
-	if (g_Data.getLocalPlayer()->isInventoryClosed() == 1)
+	if (GameData::canUseMoveKeys())
 		return;
+		
 
-	float speed = 0.25f;
+	float speed = 0.3f;
+
 	static C_GameSettingsInput* input = g_Data.getGameSettingsInput();
 	float yaw = gm->player->yaw;
 

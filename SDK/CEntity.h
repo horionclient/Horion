@@ -478,8 +478,8 @@ private:
 	virtual __int64 getAmbientSound(void);
 	virtual __int64 getAmbientSoundPostponeTicks(void);
 	virtual __int64 getItemInHandIcon(__int64 const&, int);
-	virtual __int64 getSpeed(void)const;
 public:
+	virtual __int64 getSpeed(void)const;
 	virtual void setSpeed(float);
 private:
 	virtual __int64 getJumpPower(void)const;

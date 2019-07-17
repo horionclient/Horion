@@ -5,6 +5,7 @@ class Speed : public IModule
 {
 private:
 	float origSpeed = 0;
+	float speed = 1.6f;
 public:
 	Speed();
 	~Speed();
