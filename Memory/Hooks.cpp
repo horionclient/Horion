@@ -137,6 +137,11 @@ void Hooks::Init()
 	void* jump = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC 40 48 8B 01 48 8B F9 FF 50 ?? 8B 08 89 ?? ?? ?? ?? ?? 8B 48 ?? 89"));
 	g_Hooks.jumpPowerHook = std::make_unique<FuncHook>(jump, Hooks::jumpPower);
 	g_Hooks.jumpPowerHook->init();
+
+	void* onAppSuspended = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 68 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B F1 ?? ?? ?? ?? ?? ?? ?? 48 85 C9"));
+	g_Hooks.MinecraftGame__onAppSuspendedHook = std::make_unique<FuncHook>(onAppSuspended, Hooks::MinecraftGame__onAppSuspended);
+	g_Hooks.MinecraftGame__onAppSuspendedHook->init();
+
 }
 
 void Hooks::Restore()
@@ -165,6 +170,14 @@ void Hooks::Restore()
 	g_Hooks.fullBrightIdk__Hook->Restore();
 	g_Hooks.Actor__isInWaterHook->Restore();
 	g_Hooks.jumpPowerHook->Restore();
+	g_Hooks.MinecraftGame__onAppSuspendedHook->Restore();
+}
+
+__int64 __fastcall Hooks::MinecraftGame__onAppSuspended(__int64 _this)
+{
+	static auto oFunc = g_Hooks.MinecraftGame__onAppSuspendedHook->GetOriginal<MinecraftGame__onAppSuspended_t>();
+	configMgr->saveConfig();
+	return oFunc(_this);
 }
 
 void __fastcall Hooks::jumpPower(C_Entity* a1, float a2)
