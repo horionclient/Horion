@@ -1,6 +1,6 @@
 #include "ICommand.h"
 
-ICommand::ICommand(const char * command, char * description, char * usage)
+IMCCommand::IMCCommand(const char * command, char * description, char * usage)
 {
 	this->_command = command;
 	this->_description = description;
@@ -8,6 +8,6 @@ ICommand::ICommand(const char * command, char * description, char * usage)
 	registerAlias(command);
 }
 
-ICommand::~ICommand()
+IMCCommand::~IMCCommand()
 {
 }

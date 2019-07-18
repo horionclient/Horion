@@ -2,7 +2,7 @@
 
 
 
-HideCommand::HideCommand() : ICommand("hide", "hide the cheat", "")
+HideCommand::HideCommand() : IMCCommand("hide", "hide the cheat", "")
 {
 }
 

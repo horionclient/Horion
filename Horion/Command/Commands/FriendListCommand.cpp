@@ -2,7 +2,7 @@
 
 
 
-FriendListCommand::FriendListCommand() : ICommand("friend", "Add/Remove friendly players", "<add/remove>")
+FriendListCommand::FriendListCommand() : IMCCommand("friend", "Add/Remove friendly players", "<add/remove>")
 {
 	registerAlias("friendlist");
 }

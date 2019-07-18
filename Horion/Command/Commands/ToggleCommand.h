@@ -1,13 +1,13 @@
 #pragma once
 #include "ICommand.h"
 class ToggleCommand :
-	public ICommand
+	public IMCCommand
 {
 public:
 	ToggleCommand();
 	~ToggleCommand();
 
-	// Inherited via ICommand
+	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
 };
 

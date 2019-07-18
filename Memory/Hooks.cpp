@@ -583,7 +583,7 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 
 		struct LilPlump {
 			std::string cmdAlias;
-			ICommand* command = 0;
+			IMCCommand* command = 0;
 			bool shouldReplace = true;
 
 			bool operator<(const LilPlump &o) const {
@@ -593,9 +593,9 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 
 		std::set<LilPlump> searchResults;
 
-		std::vector<ICommand*>* commandList = cmdMgr->getCommandList();
-		for (std::vector<ICommand*>::iterator it = commandList->begin(); it != commandList->end(); ++it) { // Loop through commands
-			ICommand* c = *it;
+		std::vector<IMCCommand*>* commandList = cmdMgr->getCommandList();
+		for (std::vector<IMCCommand*>::iterator it = commandList->begin(); it != commandList->end(); ++it) { // Loop through commands
+			IMCCommand* c = *it;
 			auto* aliasList = c->getAliasList();
 			for (std::vector<std::string>::iterator it = aliasList->begin(); it != aliasList->end(); ++it) { // Loop through aliases
 				std::string cmd = *it;

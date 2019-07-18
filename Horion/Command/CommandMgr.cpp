@@ -33,7 +33,7 @@ void CommandMgr::disable() {
 
 }
 
-std::vector<ICommand*>* CommandMgr::getCommandList()
+std::vector<IMCCommand*>* CommandMgr::getCommandList()
 {
 	return &commandList;
 }
@@ -55,8 +55,8 @@ void CommandMgr::execute(char * message)
 		std::string cmd = ((*args)[0]);
 		std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
 		
-		for (std::vector<ICommand*>::iterator it = this->commandList.begin(); it != this->commandList.end(); ++it) {
-			ICommand* c = *it;
+		for (std::vector<IMCCommand*>::iterator it = this->commandList.begin(); it != this->commandList.end(); ++it) {
+			IMCCommand* c = *it;
 			auto* aliases = c->getAliasList();
 			for (std::vector<std::string>::iterator it = aliases->begin(); it != aliases->end(); ++it) {
 				if (*it == cmd) {

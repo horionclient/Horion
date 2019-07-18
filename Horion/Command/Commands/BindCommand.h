@@ -3,13 +3,13 @@
 #include <map>
 
 class BindCommand :
-	public ICommand
+	public IMCCommand
 {
 public:
 	BindCommand();
 	~BindCommand();
 
-	// Inherited via ICommand
+	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
 };
 

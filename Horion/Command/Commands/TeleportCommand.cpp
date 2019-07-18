@@ -2,7 +2,7 @@
 
 
 
-TeleportCommand::TeleportCommand() : ICommand("tp", "Teleports to coordinates", "<X> <Y> <Z>")
+TeleportCommand::TeleportCommand() : IMCCommand("tp", "Teleports to coordinates", "<X> <Y> <Z>")
 {
 	registerAlias("teleport");
 	registerAlias("setpos");

@@ -2,7 +2,7 @@
 
 
 
-EjectCommand::EjectCommand() : ICommand("eject", "Removes the cheat from the game.", "")
+EjectCommand::EjectCommand() : IMCCommand("eject", "Removes the cheat from the game.", "")
 {
 	registerAlias("uninject");
 }

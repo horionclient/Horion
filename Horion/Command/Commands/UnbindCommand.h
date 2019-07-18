@@ -3,13 +3,13 @@
 #include <map>
 
 class UnbindCommand :
-	public ICommand
+	public IMCCommand
 {
 public:
 	UnbindCommand();
 	~UnbindCommand();
 
-	// Inherited via ICommand
+	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
 };
 

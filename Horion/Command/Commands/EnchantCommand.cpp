@@ -2,7 +2,7 @@
 
 
 
-EnchantCommand::EnchantCommand() : ICommand("enchant", "Enchants items", "<enchantment> [level]")
+EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enchantment> [level]")
 {
 }
 

@@ -10,7 +10,7 @@
 #define ASSERT_T(x) if(!(x)) return false;
 #endif
 
-class ICommand {
+class IMCCommand {
 private:
 	const char* _command;
 	const char* _description;
@@ -34,8 +34,8 @@ protected:
 		va_end(arg);
 	};
 public:
-	ICommand(const char* command, char* description, char* usage);
-	~ICommand();
+	IMCCommand(const char* command, char* description, char* usage);
+	~IMCCommand();
 
 	virtual const char* getCommand() { return _command; };
 	virtual std::vector<std::string>* getAliasList() { return &aliasList; };

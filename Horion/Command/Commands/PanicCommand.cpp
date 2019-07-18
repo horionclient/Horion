@@ -2,7 +2,7 @@
 
 
 
-PanicCommand::PanicCommand() : ICommand("panic", "Disables all Modules", "")
+PanicCommand::PanicCommand() : IMCCommand("panic", "Disables all Modules", "")
 {
 }
 

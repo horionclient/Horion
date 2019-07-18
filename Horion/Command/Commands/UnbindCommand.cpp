@@ -2,7 +2,7 @@
 
 
 
-UnbindCommand::UnbindCommand() : ICommand("unbind", "unbind modules", "<module | all>")
+UnbindCommand::UnbindCommand() : IMCCommand("unbind", "unbind modules", "<module | all>")
 {
 }
 

@@ -2,7 +2,7 @@
 
 
 
-BindCommand::BindCommand() : ICommand("bind", "Binds Modules to specific keys", "<module> <key>")
+BindCommand::BindCommand() : IMCCommand("bind", "Binds Modules to specific keys", "<module> <key>")
 {
 	registerAlias("b");
 }

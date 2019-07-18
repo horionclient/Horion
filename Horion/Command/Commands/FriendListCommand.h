@@ -1,13 +1,13 @@
 #pragma once
 #include "ICommand.h"
 class FriendListCommand :
-	public ICommand
+	public IMCCommand
 {
 public:
 	FriendListCommand();
 	~FriendListCommand();
 
-	// Inherited via ICommand
+	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
 };
 

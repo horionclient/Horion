@@ -2,7 +2,7 @@
 
 
 
-GameModeCommand::GameModeCommand() : ICommand("gamemode", "Changes the local player's gamemode", "<number>")
+GameModeCommand::GameModeCommand() : IMCCommand("gamemode", "Changes the local player's gamemode", "<number>")
 {
 	registerAlias("gm");
 }

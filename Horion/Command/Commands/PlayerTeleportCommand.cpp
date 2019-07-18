@@ -2,7 +2,7 @@
 
 
 
-PlayerTeleportCommand::PlayerTeleportCommand() : ICommand("playertp", "Teleports to players coordinates", "<NameOfThePlayer>")
+PlayerTeleportCommand::PlayerTeleportCommand() : IMCCommand("playertp", "Teleports to players coordinates", "<NameOfThePlayer>")
 {
 
 }

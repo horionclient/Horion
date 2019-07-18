@@ -28,14 +28,14 @@
 class CommandMgr {
 private:
 	GameData* gameData;
-	std::vector<ICommand*> commandList;
+	std::vector<IMCCommand*> commandList;
 public:
 	CommandMgr(GameData* gm);
 	~CommandMgr();
 	
 	void initCommands();
 	void disable();
-	std::vector<ICommand*>* getCommandList();
+	std::vector<IMCCommand*>* getCommandList();
 
 	void execute(char* message);
 };

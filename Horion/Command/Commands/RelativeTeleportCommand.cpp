@@ -2,7 +2,7 @@
 
 
 
-RelativeTeleportCommand::RelativeTeleportCommand() : ICommand("relativeteleport", "Teleports to coordinates relative to the Player", "<X> <Y> <Z>")
+RelativeTeleportCommand::RelativeTeleportCommand() : IMCCommand("relativeteleport", "Teleports to coordinates relative to the Player", "<X> <Y> <Z>")
 {
 	registerAlias("reltp");
 	registerAlias("rtp");
