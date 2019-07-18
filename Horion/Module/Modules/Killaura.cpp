@@ -7,6 +7,7 @@ Killaura::Killaura() : IModule('P', COMBAT) // <-- keybind
 	this->registerBoolSetting("multiaura", &this->isMulti, this->isMulti);
 	this->registerBoolSetting("MobAura", &this->isMobAura, this->isMobAura);
 	this->registerFloatSetting("range", &this->range, this->range, 2, 8);
+	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
 }
 
 
@@ -74,8 +75,8 @@ void Killaura::onTick(C_GameMode* gm)
 	targetList.clear();
 
 	g_Data.forEachEntity(findEntity);
-
-	if (targetList.size() > 0) {
+	Odelay++;
+	if (targetList.size() > 0 && Odelay >= delay) {
 		g_Data.getLocalPlayer()->swingArm();
 
 		// Attack all entitys in targetList 
@@ -85,6 +86,7 @@ void Killaura::onTick(C_GameMode* gm)
 		}
 		else
 			g_Data.getCGameMode()->attack(targetList[0]);
+		Odelay = 0;
 	}
 }
 
