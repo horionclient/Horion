@@ -16,7 +16,6 @@ const char* AirJump::getModuleName()
 }
 
 void AirJump::onTick(C_GameMode* gm) {
-	static IModule* InvMovMod = moduleMgr->getModule<InventoryMove>();
-	if(gm->player != nullptr && InvMovMod!= nullptr && !InvMovMod->isEnabled())
+	if(gm->player != nullptr && g_Data.getLocalPlayer()->isInventoryClosed() == 0)
 		gm->player->onGround = true;
 }
