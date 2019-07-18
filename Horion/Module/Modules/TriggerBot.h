@@ -3,6 +3,9 @@
 
 class TriggerBot : public IModule
 {
+private:
+	int delay = 0;
+	int Odelay = 0;
 public:
 	TriggerBot();
 	~TriggerBot();

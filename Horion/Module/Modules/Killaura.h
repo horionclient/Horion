@@ -7,6 +7,8 @@ class Killaura : public IModule
 {
 private:
 	bool isMulti = true;
+	int delay = 0;
+	int Odelay = 0;
 public:
 	bool isMobAura = false;
 	float range = 6;

@@ -4,6 +4,8 @@
 
 class NoKnockBack : public IModule {
 public:
+	float xModifier = 0.f;
+	float yModifier = 0.f;
 	NoKnockBack();
 	~NoKnockBack();
 

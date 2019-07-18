@@ -455,17 +455,25 @@ void Hooks::Actor_lerpMotion(C_Entity * _this, vec3_t motVec)
 	if (g_Data.getLocalPlayer() != _this)
 		return oLerp(_this, motVec);
 
-	static IModule* mod = moduleMgr->getModule<NoKnockBack>();
+	static NoKnockBack* mod = reinterpret_cast<NoKnockBack*>(moduleMgr->getModule<NoKnockBack>());
 	if (mod == nullptr)
-		mod = moduleMgr->getModule<NoKnockBack>();
+		mod = reinterpret_cast<NoKnockBack*>(moduleMgr->getModule<NoKnockBack>());
 	else if (mod->isEnabled()) {
 		// Do nothing i guess
 		// Do some stuff with modifiers here maybe
 		static void* networkSender = reinterpret_cast<void*>(Utils::FindSignature("41 80 BF ?? ?? ?? ?? 00 0F 85 ?? ?? ?? ?? FF"));
 		if (networkSender == 0x0)
 			logF("Network Sender not Found!!!");
-		if (networkSender == _ReturnAddress()) // Check if we are being called from the network receiver
-			return;
+		if (networkSender == _ReturnAddress()) {// Check if we are being called from the network receiver
+			if(mod->xModifier == 0 && mod->yModifier == 0)
+				return;
+			else {
+				motVec.x *= mod->xModifier;
+				motVec.y *= mod->yModifier;
+				motVec.z *= mod->xModifier;
+			}
+		}
+			
 		//logF("ret: %llX", _ReturnAddress());
 	}
 

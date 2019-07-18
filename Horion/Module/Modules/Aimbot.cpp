@@ -5,7 +5,7 @@
 Aimbot::Aimbot() : IModule('M', COMBAT) // <-- keybind
 {
 	this->registerFloatSetting("smoothness", &this->smoothNess, this->smoothNess, 3.f, 100.f);
-	this->registerFloatSetting("range", &this->range, this->range, 3.f, 10);
+	this->registerFloatSetting("range", &this->range, this->range, 3.f, 8.f);
 }
 
 
