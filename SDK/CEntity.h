@@ -86,7 +86,11 @@ private:
 public:
 	float stepHeight; //0x0200 
 private:
-	char pad_0x0204[0x64]; //0x0204
+	char pad_0x0204[0x14]; //0x204
+public:
+	float web; //0x218
+private:
+	char pad_0x021C[0x4C]; //0x21C
 public:
 	int ticksAlive; //0x0268 
 private:

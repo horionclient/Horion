@@ -43,6 +43,8 @@
 #include "Modules/AirSwim.h"
 #include "Modules/InventoryMove.h"
 #include "Modules/HighJump.h"
+#include "Modules/NoWeb.h"
+#include "Modules/FastLadder.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

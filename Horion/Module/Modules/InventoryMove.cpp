@@ -22,7 +22,7 @@ void InventoryMove::onTick(C_GameMode* gm)
 		return;
 		
 
-	float speed = 0.35f;
+	float speed = 0.325f;
 
 	C_GameSettingsInput* input = g_Data.getGameSettingsInput();
 	float yaw = gm->player->yaw;

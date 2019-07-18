@@ -46,6 +46,8 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new AirSwim());
 	this->moduleList.push_back(new InventoryMove());
 	this->moduleList.push_back(new HighJump());
+	this->moduleList.push_back(new NoWeb());
+	this->moduleList.push_back(new FastLadder());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);

@@ -70,6 +70,7 @@ private:
 	static bool __fastcall Actor__isInWater(C_Entity* a1);
 	static void __fastcall jumpPower(C_Entity* a1, float a2);
 	static __int64 __fastcall MinecraftGame__onAppSuspended(__int64 _this);
+	static void __fastcall ladderUp(C_Entity* _this);
 	 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
@@ -102,6 +103,7 @@ private:
 	std::unique_ptr<FuncHook> Actor__isInWaterHook;
 	std::unique_ptr<FuncHook> jumpPowerHook;
 	std::unique_ptr<FuncHook> MinecraftGame__onAppSuspendedHook;
+	std::unique_ptr<FuncHook> ladderUpHook;
 
 
 	typedef __int64(__fastcall* LevelRenderer_renderLevel_t)(__int64 a1, __int64 a2, __int64 a3);
@@ -134,6 +136,7 @@ private:
 	typedef bool(__fastcall * Actor__isInWater_t)(C_Entity *a1);
 	typedef __int64(__fastcall* jumpPower_t)(C_Entity* a1, float a2);
 	typedef __int64(__fastcall* MinecraftGame__onAppSuspended_t)(__int64 _this);
+	typedef void(__fastcall* ladderUp_t)(C_Entity* _this);
 };
 
 extern Hooks g_Hooks;

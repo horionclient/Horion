@@ -142,6 +142,9 @@ void Hooks::Init()
 	g_Hooks.MinecraftGame__onAppSuspendedHook = std::make_unique<FuncHook>(onAppSuspended, Hooks::MinecraftGame__onAppSuspended);
 	g_Hooks.MinecraftGame__onAppSuspendedHook->init();
 
+	void* ladder_Up = reinterpret_cast<void*>(Utils::FindSignature("C7 81 ?? ?? ?? ?? ?? ?? ?? ?? C3 CC CC CC CC CC C7 81 ?? ?? ?? ?? ?? ?? ?? ?? C3"));
+	g_Hooks.ladderUpHook = std::make_unique<FuncHook>(ladder_Up, Hooks::ladderUp);
+	g_Hooks.ladderUpHook->init();
 }
 
 void Hooks::Restore()
@@ -171,6 +174,22 @@ void Hooks::Restore()
 	g_Hooks.Actor__isInWaterHook->Restore();
 	g_Hooks.jumpPowerHook->Restore();
 	g_Hooks.MinecraftGame__onAppSuspendedHook->Restore();
+	g_Hooks.ladderUpHook->Restore();
+}
+
+void __fastcall Hooks::ladderUp(C_Entity* _this)
+{
+	static auto oFunc = g_Hooks.ladderUpHook->GetOriginal<ladderUp_t>();
+
+	static IModule* FastLadderModule = moduleMgr->getModule< FastLadder>();
+	if (FastLadderModule == nullptr)
+		FastLadderModule = moduleMgr->getModule<Xray>();
+	else if (FastLadderModule->isEnabled() && g_Data.getLocalPlayer() == _this) {
+		_this->velocity.y = 0.4f;
+		return;
+	}
+	return oFunc(_this);
+
 }
 
 __int64 __fastcall Hooks::MinecraftGame__onAppSuspended(__int64 _this)
@@ -186,8 +205,8 @@ void __fastcall Hooks::jumpPower(C_Entity* a1, float a2)
 	static HighJump* HighJumpMod = reinterpret_cast<HighJump*>(moduleMgr->getModule<HighJump>());
 	if (HighJumpMod == nullptr)
 		HighJumpMod = reinterpret_cast<HighJump*>(moduleMgr->getModule<HighJump>());
-	else if (HighJumpMod->isEnabled()) {
-		g_Data.getLocalPlayer()->velocity.y = HighJumpMod->jumpPower;
+	else if (HighJumpMod->isEnabled() && g_Data.getLocalPlayer() == a1) {
+		a1->velocity.y = HighJumpMod->jumpPower;
 		return;
 	}
 	oFunc(a1, a2);
