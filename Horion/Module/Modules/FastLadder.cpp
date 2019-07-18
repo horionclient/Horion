@@ -33,7 +33,7 @@ void FastLadder::onEnable()
 	}
 	else {
 		*opcode = -0.4f;
-		VirtualProtect(opcode, 1, oldProtect, &oldProtect);
+		VirtualProtect(opcode, 4, oldProtect, &oldProtect);
 	}
 
 }
@@ -45,7 +45,7 @@ void FastLadder::onDisable()
 		opcode = reinterpret_cast<float*>(sigOffset + 6);
 	}
 	DWORD oldProtect = 0;
-	if (!VirtualProtect(opcode, 1, PAGE_EXECUTE_READWRITE, &oldProtect)) {
+	if (!VirtualProtect(opcode, 4, PAGE_EXECUTE_READWRITE, &oldProtect)) {
 #ifdef _DEBUG
 		logF("couldnt unprotect memory send help");
 		__debugbreak();
@@ -53,6 +53,6 @@ void FastLadder::onDisable()
 	}
 	else {
 		*opcode = -0.2f;
-		VirtualProtect(opcode, 1, oldProtect, &oldProtect);
+		VirtualProtect(opcode, 4, oldProtect, &oldProtect);
 	};
 }
