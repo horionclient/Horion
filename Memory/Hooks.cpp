@@ -309,6 +309,13 @@ void __fastcall Hooks::SurvivalMode_tick(C_GameMode * _this)
 __int64 __fastcall Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity* a2)
 {
 	static auto oTick = g_Hooks.MoveInputHandler_tickHook->GetOriginal<MoveInputHandler_tick_t>();
+
+	static InventoryMove* InventoryMoveMod = reinterpret_cast<InventoryMove*>(moduleMgr->getModule<InventoryMove>());
+	if (InventoryMoveMod == nullptr)
+		InventoryMoveMod = reinterpret_cast<InventoryMove*>(moduleMgr->getModule<InventoryMove>());
+	else{
+		InventoryMoveMod->inputHandler = a1;
+	}
 	return oTick(a1, a2);
 }
 
@@ -459,12 +466,10 @@ void Hooks::Actor_lerpMotion(C_Entity * _this, vec3_t motVec)
 	if (mod == nullptr)
 		mod = reinterpret_cast<NoKnockBack*>(moduleMgr->getModule<NoKnockBack>());
 	else if (mod->isEnabled()) {
-		// Do nothing i guess
-		// Do some stuff with modifiers here maybe
 		static void* networkSender = reinterpret_cast<void*>(Utils::FindSignature("41 80 BF ?? ?? ?? ?? 00 0F 85 ?? ?? ?? ?? FF"));
 		if (networkSender == 0x0)
 			logF("Network Sender not Found!!!");
-		if (networkSender == _ReturnAddress()) {// Check if we are being called from the network receiver
+		if (networkSender == _ReturnAddress()) {
 			if(mod->xModifier == 0 && mod->yModifier == 0)
 				return;
 			else {
@@ -473,10 +478,7 @@ void Hooks::Actor_lerpMotion(C_Entity * _this, vec3_t motVec)
 				motVec.z *= mod->xModifier;
 			}
 		}
-			
-		//logF("ret: %llX", _ReturnAddress());
 	}
-
 	oLerp(_this, motVec);
 }
 

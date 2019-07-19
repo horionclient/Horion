@@ -25,14 +25,14 @@ void GameData::retrieveGameSettingsInput()
 
 	static uintptr_t gameSettingsInputOffset = 0x0;
 	if (gameSettingsInputOffset == 0x0) {
-		uintptr_t sigOffset = Utils::FindSignature("48 8B 1D ?? ?? ?? ?? 48 2B C3 48 C1 F8 03 48 85 C0");
+		uintptr_t sigOffset = Utils::FindSignature("48 8B 35 ?? ?? ?? ?? 45 33 FF EB 06 45 33 FF 41 8B F7");
 		if (sigOffset != 0x0) {
 			int offset = *reinterpret_cast<int*>((sigOffset + 3)); // Get Offset from code
 			gameSettingsInputOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instruction*/ 7; // Offset is relative
 			logF("settingsInput: %llX", gameSettingsInputOffset);
 		}
 	}
-	g_Data.gameSettingsInput = reinterpret_cast<C_GameSettingsInput*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + gameSettingsInputOffset, { 0x0, 0x10, 0xD8}));
+	g_Data.gameSettingsInput = reinterpret_cast<C_GameSettingsInput*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + gameSettingsInputOffset, { 0x0, 0xC8,0xF98,0x0,0x8}));
 }
 
 bool GameData::canUseMoveKeys()
