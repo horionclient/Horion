@@ -2,7 +2,7 @@
 
 
 
-AutoTotem::AutoTotem() : IModule(0x0, EXPLOITS)
+AutoTotem::AutoTotem() : IModule(0x0, PLAYER)
 {
 }
 

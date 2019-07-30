@@ -38,8 +38,8 @@ void TabGui::renderLevel()
 {
 	// Parameters
 	static constexpr float textSize = 1.f;
-	static constexpr float textHeight = 12.f * textSize;
-	static constexpr float alphaVal = 0.8f;
+	static constexpr float textHeight = 10.f * textSize;
+	static constexpr float alphaVal = 0.5f;
 
 	// First loop: Get the maximum text length 
 	float maxLength = 1;
@@ -153,13 +153,14 @@ void TabGui::render()
 	if (!moduleMgr->isInitialized())
 		return;
 	renderedLevel = 0;
-	yOffset = 22;
+	yOffset = 4;
 	xOffset = 3;
 
 	// Render all categorys
 	renderLabel("Combat");
 	renderLabel("Visual");
 	renderLabel("Movement");
+	renderLabel("Player");
 	renderLabel("Build");
 	renderLabel("Exploits");
 	renderLevel();

@@ -129,6 +129,9 @@ void ClickGui::renderCategory(Category category)
 		case MOVEMENT:
 			categoryName = "Movement";
 			break;
+		case PLAYER:
+			categoryName = "Player";
+			break;
 		case BUILD:
 			categoryName = "Build";
 			break;
@@ -153,11 +156,14 @@ void ClickGui::renderCategory(Category category)
 		case MOVEMENT:
 			ourWindow->pos.x = 300;
 			break;
-		case BUILD:
+		case PLAYER:
 			ourWindow->pos.x = 400;
 			break;
-		case EXPLOITS:
+		case BUILD:
 			ourWindow->pos.x = 500;
+			break;
+		case EXPLOITS:
+			ourWindow->pos.x = 600;
 			break;
 		}
 	}
@@ -684,6 +690,7 @@ void ClickGui::render()
 	renderCategory(COMBAT);
 	renderCategory(VISUAL);
 	renderCategory(MOVEMENT);
+	renderCategory(PLAYER);
 	renderCategory(BUILD);
 	renderCategory(EXPLOITS);
 

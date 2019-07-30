@@ -2,7 +2,7 @@
 
 
 
-StackableItem::StackableItem() : IModule(0x0, EXPLOITS)
+StackableItem::StackableItem() : IModule(0x0, PLAYER)
 {
 }
 

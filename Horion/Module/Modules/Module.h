@@ -11,8 +11,9 @@ enum Category {
 	COMBAT = 0,
 	VISUAL = 1,
 	MOVEMENT = 2,
-	BUILD = 3,
-	EXPLOITS = 4
+	PLAYER = 3,
+	BUILD = 4,
+	EXPLOITS = 5
 };
 
 enum ValueType {

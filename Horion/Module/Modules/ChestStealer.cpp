@@ -2,7 +2,7 @@
 
 
 
-ChestStealer::ChestStealer() : IModule(0x0, EXPLOITS)
+ChestStealer::ChestStealer() : IModule(0x0, PLAYER)
 {
 }
 

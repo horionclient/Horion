@@ -830,8 +830,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 		// Draw Horion logo
 		{
-			DrawUtils::drawText(vec2_t(2, 2), &horionStr, nullptr, 1.5f);
-			DrawUtils::drawText(vec2_t(2.75f, 13.75f), &dlStr, nullptr, 0.85f);
+			DrawUtils::drawText(vec2_t(2,windowSize.y - 20), &horionStr, nullptr, 1.5f);
+			DrawUtils::drawText(vec2_t(2.75f,windowSize.y - 8.75f), &dlStr, nullptr, 0.85f);
 		}
 
 		// Draw ArrayList
