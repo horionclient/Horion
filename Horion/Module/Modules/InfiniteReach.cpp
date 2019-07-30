@@ -61,11 +61,11 @@ void InfiniteReach::onTick(C_GameMode* gm)
 	Odelay++;
 	if (targetList0.size() > 0 && Odelay >= delay)
 	{
+		g_Data.getLocalPlayer()->swingArm();
 		// Attack all entitys in targetList 
 		if (isMulti) {
-			for (int i = 0; i < targetList0.size(); i++) {
-
-				g_Data.getLocalPlayer()->swingArm();
+			for (int i = 0; i < targetList0.size(); i++) 
+			{
 				C_MovePlayerPacket* a = new C_MovePlayerPacket(g_Data.getLocalPlayer(),*targetList0[i]->getPos());
 				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
 				g_Data.getCGameMode()->attack(targetList0[i]);
@@ -73,12 +73,10 @@ void InfiniteReach::onTick(C_GameMode* gm)
 				a = new C_MovePlayerPacket(g_Data.getLocalPlayer(),*g_Data.getLocalPlayer()->getPos());
 				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
 				delete a;
-				
 			}
-
 		}
-		else{
-			g_Data.getLocalPlayer()->swingArm();
+		else
+		{
 			C_MovePlayerPacket* a = new C_MovePlayerPacket(g_Data.getLocalPlayer(), *targetList0[0]->getPos());
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
 			g_Data.getCGameMode()->attack(targetList0[0]);
@@ -86,7 +84,6 @@ void InfiniteReach::onTick(C_GameMode* gm)
 			a = new C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
 			delete a;
-			
 		}
 		Odelay = 0;
 	}
