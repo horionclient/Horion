@@ -75,6 +75,7 @@
     <ClCompile Include="Horion\Module\Modules\HighJump.cpp" />
     <ClCompile Include="Horion\Module\Modules\FastLadder.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoWeb.cpp" />
+    <ClCompile Include="Horion\Module\Modules\StackableItem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -175,5 +176,6 @@
     <ClInclude Include="include\RegExp.h" />
     <ClInclude Include="include\StringProcess.h" />
     <ClInclude Include="include\WinHttpClient.h" />
+    <ClInclude Include="Horion\Module\Modules\StackableItem.h" />
   </ItemGroup>
 </Project>

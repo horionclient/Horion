@@ -45,6 +45,7 @@
 #include "Modules/HighJump.h"
 #include "Modules/NoWeb.h"
 #include "Modules/FastLadder.h"
+#include "Modules/StackableItem.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

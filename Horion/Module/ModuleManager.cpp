@@ -48,6 +48,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new HighJump());
 	this->moduleList.push_back(new NoWeb());
 	this->moduleList.push_back(new FastLadder());
+	this->moduleList.push_back(new StackableItem());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);
