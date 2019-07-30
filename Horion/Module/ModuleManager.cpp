@@ -35,7 +35,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new BedFucker());
 	this->moduleList.push_back(new NoSlowDown());
 	this->moduleList.push_back(new AutoTotem());
-//	this->moduleList.push_back(new InfiniteReach());
+	this->moduleList.push_back(new InfiniteReach());
 	this->moduleList.push_back(new ClickGuiMod());
 	this->moduleList.push_back(new ChestStealer());
 	this->moduleList.push_back(new Fly());
