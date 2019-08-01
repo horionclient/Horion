@@ -65,7 +65,7 @@ void Hooks::Init()
 	g_Hooks.AppPlatform_getGameEditionHook = std::make_unique <FuncHook>(getGameEdition, Hooks::AppPlatform_getGameEdition);
 	g_Hooks.AppPlatform_getGameEditionHook->init();
 
-	//void* autoComplete = reinterpret_cast<void*>(Utils::FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 44 89 4C 24 ?? 4D 8B F8"));
+
 	void* autoComplete = reinterpret_cast<void*>(Utils::FindSignature("40 55 53 56 57 41 56 48 8D 6C 24 C9 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 45 8B F1 49 8B F8 48 8B F2 48 8B D9 48 89 55 ?? 0F 57 C0 F3 0F 7F 45 ?? 48 8B 52 ?? 48 85 D2"));
 	g_Hooks.autoComplete_Hook = std::make_unique <FuncHook>(autoComplete, Hooks::pleaseAutoComplete);
 	g_Hooks.autoComplete_Hook->init();
