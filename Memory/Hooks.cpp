@@ -670,7 +670,8 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 						sync = reinterpret_cast<syncShit>(sigOffset + offset + /*length of instruction*/ 5); // Offset is relative
 					}
 				}
-				sync(text, text);
+				else
+					sync(text, text);
 			}
 
 		}

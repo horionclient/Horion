@@ -76,6 +76,7 @@
     <ClCompile Include="Horion\Module\Modules\FastLadder.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoWeb.cpp" />
     <ClCompile Include="Horion\Module\Modules\StackableItem.cpp" />
+    <ClCompile Include="Horion\Module\Modules\AutoSneak.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -177,5 +178,6 @@
     <ClInclude Include="include\StringProcess.h" />
     <ClInclude Include="include\WinHttpClient.h" />
     <ClInclude Include="Horion\Module\Modules\StackableItem.h" />
+    <ClInclude Include="Horion\Module\Modules\AutoSneak.h" />
   </ItemGroup>
 </Project>

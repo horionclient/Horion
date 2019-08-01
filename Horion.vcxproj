@@ -38,7 +38,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <SpectreMitigation>false</SpectreMitigation>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -165,6 +165,7 @@
     <ClCompile Include="Horion\Module\Modules\Aimbot.cpp" />
     <ClCompile Include="Horion\Module\Modules\AirJump.cpp" />
     <ClCompile Include="Horion\Module\Modules\AirSwim.cpp" />
+    <ClCompile Include="Horion\Module\Modules\AutoSneak.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoTotem.cpp" />
     <ClCompile Include="Horion\Module\Modules\BedFucker.cpp" />
     <ClCompile Include="Horion\Module\Modules\Blink.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="Horion\Module\Modules\Aimbot.h" />
     <ClInclude Include="Horion\Module\Modules\AirJump.h" />
     <ClInclude Include="Horion\Module\Modules\AirSwim.h" />
+    <ClInclude Include="Horion\Module\Modules\AutoSneak.h" />
     <ClInclude Include="Horion\Module\Modules\AutoTotem.h" />
     <ClInclude Include="Horion\Module\Modules\BedFucker.h" />
     <ClInclude Include="Horion\Module\Modules\Blink.h" />

@@ -59,31 +59,43 @@ void InfiniteReach::onTick(C_GameMode* gm)
 
 	g_Data.forEachEntity(findEntities);
 	Odelay++;
+	float calcYaw = (gm->player->yaw + 90) *  (PI / 180);
+	float calcPitch = (gm->player->pitch)  * -(PI / 180);
+
 	if (targetList0.size() > 0 && Odelay >= delay)
 	{
 		g_Data.getLocalPlayer()->swingArm();
+
+		float calcYaw = (gm->player->yaw + 90) * (PI / 180);
+		float calcPitch = (gm->player->pitch) * -(PI / 180);
+
+		float teleportX = cos(calcYaw) * cos(calcPitch) * 3.5f;
+		float teleportZ = sin(calcYaw) * cos(calcPitch) * 3.5f;
+		C_MovePlayerPacket* teleportPacket = nullptr;
 		// Attack all entitys in targetList 
 		if (isMulti) {
 			for (int i = 0; i < targetList0.size(); i++) 
 			{
-				C_MovePlayerPacket* a = new C_MovePlayerPacket(g_Data.getLocalPlayer(),*targetList0[i]->getPos());
-				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
+				vec3_t pos = *targetList0[i]->getPos();
+				teleportPacket = new C_MovePlayerPacket(g_Data.getLocalPlayer(), vec3_t(pos.x - teleportX, pos.y, pos.z - teleportZ));
+				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(teleportPacket);
 				g_Data.getCGameMode()->attack(targetList0[i]);
-				delete a;
-				a = new C_MovePlayerPacket(g_Data.getLocalPlayer(),*g_Data.getLocalPlayer()->getPos());
-				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
-				delete a;
+				delete teleportPacket;
+				teleportPacket = new C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
+				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(teleportPacket);
+				delete teleportPacket;
 			}
 		}
 		else
 		{
-			C_MovePlayerPacket* a = new C_MovePlayerPacket(g_Data.getLocalPlayer(), *targetList0[0]->getPos());
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
+			vec3_t pos = *targetList0[0]->getPos();
+			teleportPacket = new C_MovePlayerPacket(g_Data.getLocalPlayer(), vec3_t(pos.x-teleportX,pos.y,pos.z-teleportZ));
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(teleportPacket);
 			g_Data.getCGameMode()->attack(targetList0[0]);
-			delete a;
-			a = new C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
-			delete a;
+			delete teleportPacket;
+			teleportPacket = new C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(teleportPacket);
+			delete teleportPacket;
 		}
 		Odelay = 0;
 	}
