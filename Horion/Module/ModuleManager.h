@@ -47,6 +47,7 @@
 #include "Modules/FastLadder.h"
 #include "Modules/StackableItem.h"
 #include "Modules/AutoSneak.h"
+#include "Modules/FastEat.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

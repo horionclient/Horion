@@ -18,6 +18,10 @@ public:
 	TextHolder tileName;//0x78
 	TextHolder name;//0x98
 private:
+	char pad_0x0B8[0x4C];//0xB8
+public:
+	int duration;
+private:
 	virtual ~C_Item();
 	virtual __int64 tearDown(void);
 	virtual __int64 getMaxUseDuration(__int64 const*)const;

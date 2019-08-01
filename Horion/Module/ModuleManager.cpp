@@ -50,6 +50,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new FastLadder());
 	this->moduleList.push_back(new StackableItem());
 	this->moduleList.push_back(new AutoSneak());
+	this->moduleList.push_back(new FastEat());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);
