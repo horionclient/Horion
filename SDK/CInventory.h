@@ -169,6 +169,8 @@ public:
 	virtual __int64 addContentChangeListener(__int64 a2);
 	virtual __int64 removeContentChangeListener(__int64 a2);
 	virtual C_ItemStack* getItemStack(int slot);
+	virtual __int64 addItem(C_ItemStack*);
+	virtual __int64 addItemToFirstEmptySlot(C_ItemStack*);
 };
 
 class C_PlayerInventoryProxy {

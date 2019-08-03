@@ -78,6 +78,7 @@
     <ClCompile Include="Horion\Module\Modules\StackableItem.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSneak.cpp" />
     <ClCompile Include="Horion\Module\Modules\FastEast.cpp" />
+    <ClCompile Include="Horion\Command\Commands\GiveCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -181,5 +182,6 @@
     <ClInclude Include="Horion\Module\Modules\StackableItem.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSneak.h" />
     <ClInclude Include="Horion\Module\Modules\FastEat.h" />
+    <ClInclude Include="Horion\Command\Commands\GiveCommand.h" />
   </ItemGroup>
 </Project>

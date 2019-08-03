@@ -24,7 +24,7 @@ void FastEat::onTick(C_GameMode* gm)
 		C_ItemStack* stack = inv->getItemStack(i);
 		if (stack->item != NULL && (*stack->item)->itemId != 261 && (*stack->item)->duration == 32)
 		{
-			(*stack->item)->setMaxUseDuration(1);
+			(*stack->item)->setMaxUseDuration(5);
 		}
 	}
 }

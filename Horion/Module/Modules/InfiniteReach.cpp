@@ -41,7 +41,7 @@ void findEntities(C_Entity* currentEntity, bool isRegularEntitie) {
 
 		float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
 
-		if (dist < InfiniteReachMod->range && targetList0.size() < 5)  
+		if (dist < InfiniteReachMod->range)  
 		{
 			targetList0.push_back(currentEntity);
 		}
