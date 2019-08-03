@@ -9,7 +9,6 @@ GiveCommand::GiveCommand() : IMCCommand("give", "spawn items", "<itemID> <count>
 
 GiveCommand::~GiveCommand()
 {
-	registerAlias("g");
 }
 
 bool GiveCommand::execute(std::vector<std::string>* args)
@@ -40,9 +39,6 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 	C_ItemStack* yot = ItemStackContructor(ItemStackObject,*yeet->item, count, itemData);
 
 	inv->addItemToFirstEmptySlot(yot);
-	clientMessageF("%ssuccessfulLY given %s!", GREEN,(*yot->item)->name.getText());
-
-	delete ItemPtr;
-	delete ItemStackObject;
+	clientMessageF("%ssuccessfully given item!", GREEN);
 	return true;
 }
