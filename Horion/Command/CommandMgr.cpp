@@ -25,6 +25,7 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new PanicCommand());
 	commandList.push_back(new HideCommand());
 	commandList.push_back(new GiveCommand());
+	commandList.push_back(new BruhCommand()); 
 #ifdef _DEBUG
 	commandList.push_back(new TestCommand());
 #endif
