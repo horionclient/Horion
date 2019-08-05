@@ -32,7 +32,7 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 	if (yeet->item == NULL)
 	{
 		clientMessageF("%sInvalid item ID!", RED);
-		return false;
+		return true;
 	}
 		
 
