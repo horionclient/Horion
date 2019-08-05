@@ -18,6 +18,7 @@
 #include "Commands/PanicCommand.h"
 #include "Commands/HideCommand.h"
 #include "Commands/GiveCommand.h"
+#include "Commands/BruhCommand.h"
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"
 #endif
