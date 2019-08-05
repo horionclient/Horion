@@ -32,8 +32,3 @@ void StackableItem::onTick(C_GameMode* gm) {
 		}
 	}
 }
-
-
-void StackableItem::onDisable() 
-{
-}
