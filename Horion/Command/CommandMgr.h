@@ -19,6 +19,7 @@
 #include "Commands/HideCommand.h"
 #include "Commands/GiveCommand.h"
 #include "Commands/BruhCommand.h"
+#include "Commands/setoffhandCommand.h"
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"
 #endif

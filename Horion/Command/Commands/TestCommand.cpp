@@ -13,6 +13,8 @@ TestCommand::~TestCommand()
 
 bool TestCommand::execute(std::vector<std::string>* args)
 {
+
+
 	// HTTP TEST
 
 #ifdef HTTP_TEST
