@@ -56,7 +56,8 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 				item);// Player::selectItem
 
 		g_Data.getLocalPlayer()->sendInventory();
-		clientMessageF("%sEnchant successful!", GREEN);
+		g_Data.getLocalPlayer()->setOffhandSlot(item);
+		clientMessageF("%sEnchant successful! Check your offhand!", GREEN);
 	}
 	else
 		clientMessageF("%sEnchant failed, try using a lower enchant-level", RED);
