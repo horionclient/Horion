@@ -5,6 +5,15 @@ ModuleManager::ModuleManager(GameData * gameData)
 	this->gameData = gameData;
 }
 
+ModuleManager::~ModuleManager()
+{
+	for (int i = 0; i < this->moduleList.size(); i++)
+	{
+		delete this->moduleList[i];
+		this->moduleList[i] = nullptr;
+	}
+}
+
 void ModuleManager::initModules()
 {
 	this->moduleList.push_back(new Killaura());

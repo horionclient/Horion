@@ -37,7 +37,6 @@ ConfigManager::ConfigManager()
 
 ConfigManager::~ConfigManager()
 {
-	saveConfig();
 }
 
 void ConfigManager::loadConfig(std::string name, bool create)

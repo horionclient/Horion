@@ -40,7 +40,8 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	}
 
 	void* EnchantData = malloc(0x60);
-	memset(EnchantData, 0x0, 0x60);
+	if(EnchantData != nullptr)
+		memset(EnchantData, 0x0, 0x60);
 
 	getEnchantsFromUserData(item, EnchantData);
 
@@ -62,7 +63,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	else
 		clientMessageF("%sEnchant failed, try using a lower enchant-level", RED);
 
-	delete EnchantData;
+	free(EnchantData);
 
 	return true;
 }

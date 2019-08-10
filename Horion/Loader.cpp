@@ -129,17 +129,19 @@ DllMain(HMODULE hModule,
 		moduleMgr->disable();
 		cmdMgr->disable();
 		Hooks::Restore();
+		
 		logF("Removing logger");
 		Logger::Disable();
 		
 		MH_Uninitialize();
-
+		delete moduleMgr;
+		delete cmdMgr;
+		delete configMgr;
 		if (g_Data.getClientInstance()->getLocalPlayer() != nullptr) {
 			C_GuiData* guiData = g_Data.getClientInstance()->getGuiData();
 			if (guiData != nullptr)
 				guiData->displayClientMessageF("%sUninjected!", RED);
 		}
-
 		break;
 	}
 	return TRUE;

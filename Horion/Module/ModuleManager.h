@@ -58,6 +58,7 @@ private:
 	std::vector<IModule*> moduleList;
 	bool initialized = false;
 public:
+	~ModuleManager();
 	ModuleManager(GameData* gameData);
 	void initModules();
 	void disable();

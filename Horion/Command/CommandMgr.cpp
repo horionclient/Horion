@@ -7,6 +7,11 @@ CommandMgr::CommandMgr(GameData* gm)
 
 CommandMgr::~CommandMgr()
 {
+	for (int i = 0; i < commandList.size(); i++)
+	{
+		delete commandList[i];
+		commandList[i] = nullptr;
+	}
 }
 
 void CommandMgr::initCommands() {
