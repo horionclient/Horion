@@ -26,18 +26,16 @@ public:
 			strcpy_s(inlineText, 16, str.c_str());
 		else {
 			size_t size = str.size();
-			char* ptr = reinterpret_cast<char*>(malloc(alignedTextLength + 1));
-			if (ptr != 0x0) {
-				strcpy_s(ptr, size + 1, str.c_str());
+			pText = reinterpret_cast<char*>(malloc(alignedTextLength + 1));
+			if (pText != 0x0) {
+				strcpy_s(pText, size + 1, str.c_str());
 			}
-			
-			pText = ptr;
 		}
 	}
 
 	~TextHolder() {
 		if (textLength >= 16 && pText != nullptr) {
-			//free(pText);
+			free(pText);
 		}
 	}
 
