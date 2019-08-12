@@ -1,6 +1,7 @@
 #pragma once
 #include "../Utils/HMath.h"
 #include "../Utils/Logger.h"
+#include "TextHolder.h"
 
 class C_Packet {
 public:
@@ -14,6 +15,32 @@ private:
 public:
 	__int64 entityRuntimeID; //0x28
 	vec3_t pos; //0x30
+};
+
+
+
+
+class C_TextPacket : public C_Packet
+{
+public:
+	C_TextPacket() {
+
+	}
+
+	unsigned char gap0[24];
+	unsigned __int8 messageType;
+
+	unsigned char gap[3];
+	unsigned char field_24[4];
+	
+	TextHolder sourceName;
+	TextHolder message;
+	unsigned char field_24222[24];
+	bool translationNeeded;
+
+	unsigned char ga2p[7];
+	TextHolder xboxUserId;
+	TextHolder platformChatId;
 };
 
 #pragma pack(push,8)
