@@ -12,6 +12,6 @@ public:
 	virtual void onTick(C_GameMode* gm) override;
 	virtual void onEnable() override;
 	virtual void onDisable() override;
-	int delay;
+	int delay = 0;
 };
 

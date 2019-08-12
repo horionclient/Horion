@@ -4,6 +4,7 @@ namespace SlimUtils {
 #pragma region Constructors/Destructors
 	SlimMem::SlimMem(const SlimMem & copy)
 	{
+		this->m_dwPID = 0;
 		DuplicateHandle(GetCurrentProcess(), copy.m_hProc, GetCurrentProcess(), &m_hProc, NULL, FALSE, DUPLICATE_SAME_ACCESS);
 	}
 

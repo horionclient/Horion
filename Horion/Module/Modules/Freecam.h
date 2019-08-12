@@ -4,7 +4,7 @@ class Freecam :
 	public IModule
 {
 private:
-	int oldGameMode;
+	int oldGameMode = -1;
 	vec3_t oldPos;
 public:
 	Freecam();

@@ -12,7 +12,7 @@ static float xOffset;
 int renderedLevel;
 
 struct LabelContainer {
-	const char* text;
+	const char* text = 0;
 	bool enabled = false;
 	IModule* mod = 0;
 };

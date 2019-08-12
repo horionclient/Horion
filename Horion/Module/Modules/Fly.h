@@ -4,7 +4,7 @@ class Fly :
 	public IModule
 {
 private:
-	int oldGameMode;
+	int oldGameMode = -1;
 public:
 	Fly();
 	~Fly();

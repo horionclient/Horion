@@ -15,14 +15,14 @@
 class GameData {
 private:
 	C_ClientInstance* clientInstance = 0;
-	C_LocalPlayer* localPlayer;
-	C_GameMode* gameMode;
+	C_LocalPlayer* localPlayer = 0;
+	C_GameMode* gameMode = 0;
 	C_EntityList* entityList = 0;
-	C_HIDController* hidController;
-	C_GameSettingsInput* gameSettingsInput;
+	C_HIDController* hidController = 0;
+	C_GameSettingsInput* gameSettingsInput = 0;
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
 	
-	const SlimUtils::SlimModule* gameModule;
+	const SlimUtils::SlimModule* gameModule = 0;
 	SlimUtils::SlimMem* slimMem;
 	bool shouldTerminateB = false;
 	bool shouldHideB = false;

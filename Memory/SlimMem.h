@@ -137,7 +137,7 @@ namespace SlimUtils {
 	*/
 	class SlimMem {
 	public:
-		SlimMem() : m_hProc(INVALID_HANDLE_VALUE) { }
+		SlimMem() : m_hProc(INVALID_HANDLE_VALUE), m_dwPID(0) { }
 		SlimMem(const SlimMem& copy);
 		~SlimMem();
 
