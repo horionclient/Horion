@@ -19,7 +19,9 @@ bool SayCommand::execute(std::vector<std::string>* args)
 		os << args->at(i);
 	}
 	
-	
+	C_TextPacket* textPacket = new C_TextPacket();
+	textPacket->message.setText(os.str());
+	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(textPacket);
 
 	clientMessageF("[%sHorion%s] %sSent Message", GOLD, WHITE, GREEN);
 	return true;

@@ -24,7 +24,18 @@ class C_TextPacket : public C_Packet
 {
 public:
 	C_TextPacket() {
+		static uintptr_t** textPacketVtable = 0x0;
+		if (textPacketVtable == 0x0) {
+			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 85 ?? ?? ?? ?? C6 85 ?? ?? ?? ?? 01 4C");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			textPacketVtable = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
+			if (textPacketVtable == 0x0 || sigOffset == 0x0)
+				logF("C_TextPacket signature not working!!!");
+		}
+		memset(this, 0, sizeof(C_TextPacket)); // Avoid overwriting vtable
+		vTable = textPacketVtable;
 
+		messageType = 1; // TYPE_CHAT
 	}
 
 	unsigned char gap0[24];
@@ -36,7 +47,7 @@ public:
 	TextHolder sourceName;
 	TextHolder message;
 	unsigned char field_24222[24];
-	bool translationNeeded;
+	bool translationNeeded = false;
 
 	unsigned char ga2p[7];
 	TextHolder xboxUserId;
