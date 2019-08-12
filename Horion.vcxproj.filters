@@ -83,6 +83,7 @@
     <ClCompile Include="Horion\Command\Commands\setoffhandCommand.cpp" />
     <ClCompile Include="Horion\Module\Modules\Jesus.cpp" />
     <ClCompile Include="Horion\Command\Commands\CoordsCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\SayCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -191,5 +192,6 @@
     <ClInclude Include="Horion\Command\Commands\setoffhandCommand.h" />
     <ClInclude Include="Horion\Module\Modules\Jesus.h" />
     <ClInclude Include="Horion\Command\Commands\CoordsCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\SayCommand.h" />
   </ItemGroup>
 </Project>

@@ -36,15 +36,9 @@ void Jesus::onTick(C_GameMode* gm)
 		else {
 			if (wasInWater) {
 				wasInWater = false;
-				gm->player->velocity.x *= 1.15f;
-				gm->player->velocity.x *= 1.15f;
+				gm->player->velocity.x *= 1.2f;
+				gm->player->velocity.x *= 1.2f;
 			}
-			else if (gm->player->isOverWater())
-				gm->player->velocity.y = 0.3f;
-			
-		}
-			
+		}	
 	}
-
-
 }

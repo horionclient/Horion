@@ -21,7 +21,7 @@
 #include "Commands/BruhCommand.h"
 #include "Commands/setoffhandCommand.h"
 #include "Commands/CoordsCommand.h"
-
+#include "Commands/SayCommand.h"
 
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"
