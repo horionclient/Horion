@@ -183,6 +183,7 @@
     <ClCompile Include="Horion\Module\Modules\InfiniteReach.cpp" />
     <ClCompile Include="Horion\Module\Modules\InstaBreak.cpp" />
     <ClCompile Include="Horion\Module\Modules\InventoryMove.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Jesus.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoFall.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSprint.cpp" />
     <ClCompile Include="Horion\Module\Modules\BowAimbot.cpp" />
@@ -265,6 +266,7 @@
     <ClInclude Include="Horion\Module\Modules\InfiniteReach.h" />
     <ClInclude Include="Horion\Module\Modules\InstaBreak.h" />
     <ClInclude Include="Horion\Module\Modules\InventoryMove.h" />
+    <ClInclude Include="Horion\Module\Modules\Jesus.h" />
     <ClInclude Include="Horion\Module\Modules\NoFall.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSprint.h" />
     <ClInclude Include="Horion\Module\Modules\BowAimbot.h" />

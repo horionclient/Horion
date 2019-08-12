@@ -7,10 +7,10 @@ ModuleManager::ModuleManager(GameData * gameData)
 
 ModuleManager::~ModuleManager()
 {
+	initialized = false;
 	for (int i = 0; i < this->moduleList.size(); i++)
 	{
 		delete this->moduleList[i];
-		this->moduleList[i] = nullptr;
 	}
 }
 
@@ -60,6 +60,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new StackableItem());
 	this->moduleList.push_back(new AutoSneak());
 	this->moduleList.push_back(new FastEat());
+	this->moduleList.push_back(new Jesus());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);
