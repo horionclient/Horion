@@ -20,6 +20,9 @@
 #include "Commands/GiveCommand.h"
 #include "Commands/BruhCommand.h"
 #include "Commands/setoffhandCommand.h"
+#include "Commands/CoordsCommand.h"
+
+
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"
 #endif

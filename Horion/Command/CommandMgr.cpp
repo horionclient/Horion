@@ -31,7 +31,9 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new HideCommand());
 	commandList.push_back(new GiveCommand());
 	commandList.push_back(new BruhCommand()); 
-	commandList.push_back(new setoffhandCommand());
+	//commandList.push_back(new setoffhandCommand());
+	commandList.push_back(new CoordsCommand());
+
 #ifdef _DEBUG
 	commandList.push_back(new TestCommand());
 #endif
