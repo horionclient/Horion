@@ -15,7 +15,6 @@ void Hooks::Init()
 	g_Hooks.gameMode_tickHook->init();
 
 	// SurvivalMode::tick Sig
-	// 48 8B C4 55 48 8D 68 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 10 48 89 70 18 48 89 78 20 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 8B F9 8B 41 ??
 	void* surv_tick = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 55 48 8D 68 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 10 48 89 70 18 48 89 78 20 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 8B F9 8B 41 ??"));
 	g_Hooks.survivalMode_tickHook = std::make_unique<FuncHook>(surv_tick, Hooks::SurvivalMode_tick);
 	g_Hooks.survivalMode_tickHook->init();
@@ -48,7 +47,6 @@ void Hooks::Init()
 	g_Hooks.uiscene_RenderHook = std::make_unique<FuncHook>(render, uiscene_render);
 	g_Hooks.uiscene_RenderHook->init();
 
-
 	void* boii = reinterpret_cast<void*>(Utils::FindSignature("0F 28 C2 C7 42 0C 00 00 80 3F F3"));
 	g_Hooks.Dimension_getFogColorHook = std::make_unique<FuncHook>(boii, Hooks::Dimension_getFogColor);
 	g_Hooks.Dimension_getFogColorHook->init();
@@ -64,7 +62,6 @@ void Hooks::Init()
 	void* getGameEdition = reinterpret_cast<void*>(Utils::FindSignature("8B 91 ?? ?? ?? ?? 85 D2 74 1C 83 EA 01"));
 	g_Hooks.AppPlatform_getGameEditionHook = std::make_unique <FuncHook>(getGameEdition, Hooks::AppPlatform_getGameEdition);
 	g_Hooks.AppPlatform_getGameEditionHook->init();
-
 
 	void* autoComplete = reinterpret_cast<void*>(Utils::FindSignature("40 55 53 56 57 41 56 48 8D 6C 24 C9 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 45 8B F1 49 8B F8 48 8B F2 48 8B D9 48 89 55 ?? 0F 57 C0 F3 0F 7F 45 ?? 48 8B 52 ?? 48 85 D2"));
 	g_Hooks.autoComplete_Hook = std::make_unique <FuncHook>(autoComplete, Hooks::pleaseAutoComplete);
@@ -94,25 +91,46 @@ void Hooks::Init()
 	g_Hooks.HIDController_keyMouseHook = std::make_unique<FuncHook>(keyMouseFunc, Hooks::HIDController_keyMouse);
 	g_Hooks.HIDController_keyMouseHook->init();
 
-	uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 4C 39 72");
-	if (sigOffset != 0x0) {
-		int offset = *reinterpret_cast<int*>((sigOffset + 3)); // Get Offset from code
-		uintptr_t lol = static_cast<uintptr_t>(sigOffset + offset + /*length of instruction*/ 7); // Offset is relative
+	static uintptr_t** blockLegacyVtable = 0x0;
+	if (blockLegacyVtable == 0x0) {
+		uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 4C 39 72");
+		int offset = *reinterpret_cast<int*>(sigOffset + 3);
+		blockLegacyVtable = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
+		if (blockLegacyVtable == 0x0 || sigOffset == 0x0)
+			logF("C_BlockLegacy signature not working!!!");
+		else
+		{
+			g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(blockLegacyVtable[115], Hooks::BlockLegacy_getRenderLayer);
+			g_Hooks.BlockLegacy_getRenderLayerHook->init();
 
-		void* getRenderLayer = *reinterpret_cast<void**>(lol + 8 * 115);
-		g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(getRenderLayer, Hooks::BlockLegacy_getRenderLayer);
-		g_Hooks.BlockLegacy_getRenderLayerHook->init();
+			g_Hooks.BlockLegacy_getLightEmissionHook = std::make_unique<FuncHook>(blockLegacyVtable[14], Hooks::BlockLegacy_getLightEmission);
+			g_Hooks.BlockLegacy_getLightEmissionHook->init();
+		}
 	}
-	else
-		logF("BlockLegacy_getRenderLayer broken");
+
+	static uintptr_t** localPlayerVtable = 0x0;
+	if (localPlayerVtable == 0x0) {
+		uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 49 89 45 00 49 8D 8D");
+		int offset = *reinterpret_cast<int*>(sigOffset + 3);
+		localPlayerVtable = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
+		if (localPlayerVtable == 0x0 || sigOffset == 0x0)
+			logF("C_ signature not working!!!");
+		else
+		{
+			g_Hooks.Actor__isInWaterHook = std::make_unique<FuncHook>(localPlayerVtable[59], Hooks::Actor__isInWater);
+			g_Hooks.Actor__isInWaterHook->init();
+
+			g_Hooks.Actor__startSwimmingHook = std::make_unique<FuncHook>(localPlayerVtable[180], Hooks::Actor__isInWater);
+			g_Hooks.Actor__startSwimmingHook->init();
+
+			g_Hooks.ladderUpHook = std::make_unique<FuncHook>(localPlayerVtable[323], Hooks::ladderUp);
+			g_Hooks.ladderUpHook->init();
+		}
+	}
 
 	void* renderLevel = reinterpret_cast<void*>(Utils::FindSignature("40 53 56 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B D8 48 8B FA 48 8B F1 33 D2"));
 	g_Hooks.LevelRenderer_renderLevelHook = std::make_unique<FuncHook>(renderLevel, Hooks::LevelRenderer_renderLevel);
 	g_Hooks.LevelRenderer_renderLevelHook->init();
-
-	void* getLightEmission = reinterpret_cast<void*>(Utils::FindSignature("0F B6 ?? ?? ?? ?? ?? 88 02 48 8B C2 C3"));
-	g_Hooks.BlockLegacy_getLightEmissionHook = std::make_unique<FuncHook>(getLightEmission, Hooks::BlockLegacy_getLightEmission);
-	g_Hooks.BlockLegacy_getLightEmissionHook->init();
 
 	void* clickHook = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 48 89 58 ?? 48 89 68 ?? 48 89 70 ?? 57 41 54 41 55 41 56 41 57 48 83 EC 60 44 ?? ?? ?? ?? ?? ?? ?? ?? 33 F6"));
 	g_Hooks.clickHook = std::make_unique<FuncHook>(clickHook, Hooks::clickFunc);
@@ -130,10 +148,6 @@ void Hooks::Init()
 	g_Hooks.fullBrightIdk__Hook = std::make_unique<FuncHook>(fullbright, Hooks::fullBrightIdk);
 	g_Hooks.fullBrightIdk__Hook->init();
 
-	void* isInWater = reinterpret_cast<void*>(Utils::FindSignature("0F B6 ?? ?? ?? ?? ?? C3 CC CC CC CC CC CC CC CC 0F B6 ?? ?? ?? ?? ?? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ?? 57 48 83 EC 30 ?? ?? ?? ?? ?? ?? ?? 48 8B D9 ?? ?? ?? ?? ?? ?? ?? 48 8B 01"));
-	g_Hooks.Actor__isInWaterHook = std::make_unique<FuncHook>(isInWater, Hooks::Actor__isInWater);
-	g_Hooks.Actor__isInWaterHook->init();
-
 	void* jump = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC 40 48 8B 01 48 8B F9 FF 50 ?? 8B 08 89 ?? ?? ?? ?? ?? 8B 48 ?? 89"));
 	g_Hooks.jumpPowerHook = std::make_unique<FuncHook>(jump, Hooks::jumpPower);
 	g_Hooks.jumpPowerHook->init();
@@ -141,10 +155,6 @@ void Hooks::Init()
 	void* onAppSuspended = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 68 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B F1 ?? ?? ?? ?? ?? ?? ?? 48 85 C9"));
 	g_Hooks.MinecraftGame__onAppSuspendedHook = std::make_unique<FuncHook>(onAppSuspended, Hooks::MinecraftGame__onAppSuspended);
 	g_Hooks.MinecraftGame__onAppSuspendedHook->init();
-
-	void* ladder_Up = reinterpret_cast<void*>(Utils::FindSignature("C7 81 ?? ?? ?? ?? ?? ?? ?? ?? C3 CC CC CC CC CC C7 81 ?? ?? ?? ?? ?? ?? ?? ?? C3"));
-	g_Hooks.ladderUpHook = std::make_unique<FuncHook>(ladder_Up, Hooks::ladderUp);
-	g_Hooks.ladderUpHook->init();
 }
 
 void Hooks::Restore()
@@ -181,15 +191,28 @@ void __fastcall Hooks::ladderUp(C_Entity* _this)
 {
 	static auto oFunc = g_Hooks.ladderUpHook->GetOriginal<ladderUp_t>();
 
-	static IModule* FastLadderModule = moduleMgr->getModule< FastLadder>();
+	static IModule* FastLadderModule = moduleMgr->getModule<FastLadder>();
 	if (FastLadderModule == nullptr)
-		FastLadderModule = moduleMgr->getModule<Xray>();
+		FastLadderModule = moduleMgr->getModule<FastLadder>();
 	else if (FastLadderModule->isEnabled() && g_Data.getLocalPlayer() == _this) {
 		_this->velocity.y = 0.4f;
 		return;
 	}
 	return oFunc(_this);
 
+}
+
+void __fastcall Hooks::Actor__startSwimming(C_Entity* _this)
+{
+	static auto oFunc = g_Hooks.Actor__startSwimmingHook->GetOriginal<Actor__startSwimming_t>();
+
+	static IModule* JesusModule = moduleMgr->getModule<Jesus>();
+	if (JesusModule == nullptr)
+		JesusModule = moduleMgr->getModule<Xray>();
+	else if (JesusModule->isEnabled() && g_Data.getLocalPlayer() == _this) {
+		return;
+	}
+	oFunc(_this);
 }
 
 __int64 __fastcall Hooks::MinecraftGame__onAppSuspended(__int64 _this)
