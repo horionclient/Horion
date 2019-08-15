@@ -55,7 +55,7 @@ private:
 	virtual __int64 get__int64DataForAuxValue(int)const;
 public:
 	virtual bool isStackedByData(void)const;
-private:
+public:
 	virtual __int64 getMaxDamage(void)const;
 	virtual __int64 getAttackDamage(void)const;
 public:
@@ -80,14 +80,14 @@ private:
 	virtual __int64 appendFormattedHovertext(__int64 const&, __int64 &, std::string &, bool)const;
 public:
 	virtual bool isValidRepairItem(C_ItemStack const&, C_ItemStack const&)const;
-private:
+public:
 	virtual __int64 getEnchantSlot(void)const;
 	virtual __int64 getEnchantValue(void)const;
 	virtual __int64 getArmorValue(void)const;
 public:
 	virtual bool isComplex(void)const;
 	virtual bool isValidAuxValue(int)const;
-private:
+public:
 	virtual __int64 getDamageChance(int)const;
 	virtual __int64 uniqueAuxValues(void)const;
 public:

@@ -132,6 +132,11 @@ void GameData::setHIDController(C_HIDController* Hid)
 	g_Data.hidController = Hid;
 }
 
+void GameData::setRakNetInstance(C_RakNetInstance* raknet)
+{
+	g_Data.raknetInstance = raknet;
+}
+
 void GameData::forEachEntity(void(*callback)(C_Entity *,bool))
 {
 	C_LocalPlayer* localPlayer = getLocalPlayer();

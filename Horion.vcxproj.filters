@@ -193,5 +193,6 @@
     <ClInclude Include="Horion\Module\Modules\Jesus.h" />
     <ClInclude Include="Horion\Command\Commands\CoordsCommand.h" />
     <ClInclude Include="Horion\Command\Commands\SayCommand.h" />
+    <ClInclude Include="SDK\CRakNetInstance.h" />
   </ItemGroup>
 </Project>

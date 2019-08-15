@@ -28,7 +28,7 @@ public:
 	BOOL operator != (CONST D3DXFLOAT16&) const;
 
 protected:
-	WORD value;
+	WORD value = 0;
 } D3DXFLOAT16, *LPD3DXFLOAT16;
 #endif
 
@@ -116,7 +116,7 @@ public:
 	BOOL operator == (CONST D3DXCOLOR&) const;
 	BOOL operator != (CONST D3DXCOLOR&) const;
 
-	FLOAT r, g, b, a;
+	FLOAT r = 0, g = 0, b = 0, a = 0;
 } D3DXCOLOR, *LPD3DXCOLOR;
 #endif
 

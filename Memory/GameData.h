@@ -7,6 +7,7 @@
 #include "../SDK/CHIDController.h"
 #include "../SDK/CMoveInputHandler.h"
 #include "../SDK/CGameSettingsInput.h"
+#include "../SDK/CRakNetInstance.h"
 #include "../Utils/TextFormat.h"
 #include "SlimMem.h"
 #include <map>
@@ -20,6 +21,7 @@ private:
 	C_EntityList* entityList = 0;
 	C_HIDController* hidController = 0;
 	C_GameSettingsInput* gameSettingsInput = 0;
+	C_RakNetInstance* raknetInstance = 0;
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
 	
 	const SlimUtils::SlimModule* gameModule = 0;
@@ -42,6 +44,7 @@ public:
 	static void addChestToList(C_ChestBlockActor * ChestBlock2);
 	static void EntityList_tick(C_EntityList * list);
 	static void setHIDController(C_HIDController* Hid);
+	static void setRakNetInstance(C_RakNetInstance* raknet);
 
 	inline C_ClientInstance* getClientInstance() { return clientInstance; };
 	inline C_GameSettingsInput* getGameSettingsInput() { return gameSettingsInput; };
@@ -68,6 +71,7 @@ public:
 	C_GameMode* getCGameMode() { return gameMode; };
 	C_EntityList* getEntityList() { return entityList; };
 	C_HIDController** getHIDController() { return &hidController; };
+	C_RakNetInstance* getRakNetInstance() { return raknetInstance; };
 	std::set<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
 
 	void forEachEntity(void(*callback) (C_Entity*,bool));
