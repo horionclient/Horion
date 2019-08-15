@@ -61,6 +61,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new AutoSneak());
 	this->moduleList.push_back(new FastEat());
 	this->moduleList.push_back(new Jesus());
+	this->moduleList.push_back(new AutoArmor());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);

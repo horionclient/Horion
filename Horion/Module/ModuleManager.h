@@ -49,6 +49,7 @@
 #include "Modules/AutoSneak.h"
 #include "Modules/FastEat.h"
 #include "Modules/Jesus.h"
+#include "Modules/AutoArmor.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

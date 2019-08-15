@@ -41,7 +41,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			isRunning = false;
 			break;
 		}
-		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(),"play.valeanetwork.eu") == 0)
+		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(),"play.valeanetwork.eu") == 0 || strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "137.74.152.142") == 0)
 		{
 			isRunning = false;
 			break;
