@@ -41,6 +41,12 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			isRunning = false;
 			break;
 		}
+		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(),"play.valeanetwork.eu") == 0)
+		{
+			isRunning = false;
+			break;
+		}
+
 		
 		for (uintptr_t i = 0; i < 0xFF; i++) {
 			bool* newKey = keyMapAddr + (4 * i); 

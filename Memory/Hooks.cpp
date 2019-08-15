@@ -175,7 +175,6 @@ void Hooks::Restore()
 	g_Hooks.sendToServerHook->Restore();
 	g_Hooks.MultiLevelPlayerHook->Restore();
 	g_Hooks.mob_isAliveHook->Restore();
-	g_Hooks.LocalPlayer_CheckFallDamageHook->Restore();
 	g_Hooks.GameMode_startDestroyHook->Restore();
 	g_Hooks.HIDController_keyMouseHook->Restore();
 	g_Hooks.BlockLegacy_getRenderLayerHook->Restore();

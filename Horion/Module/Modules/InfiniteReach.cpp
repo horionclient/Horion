@@ -72,6 +72,19 @@ void InfiniteReach::onTick(C_GameMode* gm)
 		float teleportX = cos(calcYaw) * cos(calcPitch) * 3.5f;
 		float teleportZ = sin(calcYaw) * cos(calcPitch) * 3.5f;
 		C_MovePlayerPacket* teleportPacket = nullptr;
+
+		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(),"mco.cubecraft.net") == 0)
+		{
+			vec3_t pos = *g_Data.getLocalPlayer()->getPos();
+			C_MovePlayerPacket* oof = new C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(oof);
+			delete oof;
+			pos.y += 0.35f;
+			oof = new C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(oof);
+			delete oof;
+		}
+		
 		// Attack all entitys in targetList 
 		if (isMulti) {
 			for (int i = 0; i < targetList0.size(); i++) 

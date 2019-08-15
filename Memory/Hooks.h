@@ -58,7 +58,6 @@ private:
 	static float LevelRendererPlayer_getFov(__int64 a1, float a2, bool a3);
 	static bool Mob_isAlive(C_Entity* a1);
 	static void MultiLevelPlayer_tick(C_EntityList* entityList);
-	static void LocalPlayer_CheckFallDamage(C_LocalPlayer* a, float* a2, void*a3);
 	static void GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face,void* a4,void* a5);
 	static void HIDController_keyMouse(C_HIDController* a1, void* a2, void* a3);
 	static int __fastcall BlockLegacy_getRenderLayer(C_BlockLegacy* a1);
@@ -92,7 +91,6 @@ private:
 	std::unique_ptr<FuncHook> levelRendererPlayer_getFovHook;
 	std::unique_ptr<FuncHook> mob_isAliveHook;
 	std::unique_ptr<FuncHook> MultiLevelPlayerHook;
-	std::unique_ptr<FuncHook> LocalPlayer_CheckFallDamageHook;
 	std::unique_ptr<FuncHook> GameMode_startDestroyHook;
 	std::unique_ptr<FuncHook> HIDController_keyMouseHook;
 	std::unique_ptr<FuncHook> BlockLegacy_getRenderLayerHook;
@@ -129,7 +127,6 @@ private:
 	typedef void(__fastcall* ChestBlockActor_tick_t)(void* _this,void*);
 	typedef void(__fastcall* sendToServer_tick_t)(C_LoopbackPacketSender* a, C_Packet* packet);
 	typedef void(__fastcall* MultiLevelPlayer_tick_t)(C_EntityList* entityList);
-	typedef void(__fastcall* LocalPlayer_CheckFallDamage_t)(C_LocalPlayer* a, float* a2, void*a3);
 	typedef void(__fastcall* GameMode_startDestroyBlock_t)(C_GameMode* a, vec3_ti* a2, uint8_t face, void* a4, void* a5);
 	typedef void(__fastcall* HIDController_keyMouse_t)(C_HIDController* a1,void* a2, void* a3);
 	typedef int(__fastcall *BlockLegacy_getRenderLayer_t)(C_BlockLegacy* a1);
