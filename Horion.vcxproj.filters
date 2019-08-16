@@ -133,7 +133,6 @@
     <ClInclude Include="SDK\CMinecraftUIRenderContext.h" />
     <ClInclude Include="SDK\CPacket.h" />
     <ClInclude Include="SDK\CLoopbackPacketSender.h" />
-    <ClInclude Include="Utils\Json.hpp" />
     <ClInclude Include="Utils\TextFormat.h" />
     <ClInclude Include="SDK\TextHolder.h" />
     <ClInclude Include="Utils\HMath.h" />
@@ -196,5 +195,6 @@
     <ClInclude Include="Horion\Command\Commands\SayCommand.h" />
     <ClInclude Include="SDK\CRakNetInstance.h" />
     <ClInclude Include="Horion\Module\Modules\AutoArmor.h" />
+    <ClInclude Include="Utils\Json.hpp" />
   </ItemGroup>
 </Project>
