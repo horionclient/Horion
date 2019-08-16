@@ -41,8 +41,18 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			isRunning = false;
 			break;
 		}
-		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(),"play.valeanetwork.eu") == 0 || strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "137.74.152.142") == 0)
+
+		if (
+			strcmp(g_Data.getRakNetInstance()->serverIp.getText(),"play.valeanetwork.eu") == 0 || 
+			strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "137.74.152.142") == 0 || 
+			strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "pvp.valeanetwork.eu") == 0
+			)
 		{
+
+			C_GuiData* guiData = g_Data.getClientInstance()->getGuiData();
+
+			if (guiData != nullptr) guiData->displayClientMessageF("%sHorion Client is not allowed in Valea Network.", RED);
+
 			isRunning = false;
 			break;
 		}
