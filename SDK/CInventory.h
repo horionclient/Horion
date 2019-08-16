@@ -208,7 +208,7 @@ public:
 			autoPlaceFunc(this, idk, txt, slot);
 	}
 private:
-	virtual ~C_ContainerScreenController();
+	virtual __int64 destructor();
 	virtual __int64 tick(void);
 	virtual __int64 handleEvent(__int64&);
 	virtual __int64 onOpen(void);
@@ -243,7 +243,7 @@ private:
 	virtual __int64 addStaticScreenVars(__int64&);
 	virtual __int64 getAdditionalScreenInfo(void)const;
 	virtual __int64 getTelemetryOverride(void)const;
-	virtual __int64 addEventProperties(std::unordered_map<std::string, std::string, std::hash<std::string>, std::equal_to<std::string>, std::allocator<std::pair<std::string const, std::string>>>&)const;
+	virtual __int64 addEventProperties(__int64)const;
 	virtual __int64 getSceneType(void)const;
 	virtual __int64 getScreenVersion(void)const;
 	virtual __int64 screenHandlesGamepadMenuButton(void)const;
