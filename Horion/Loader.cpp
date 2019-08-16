@@ -16,7 +16,7 @@ DWORD WINAPI analyticsThread(LPVOID lpParam) {
 
 	auto sendRequest = [](char* request) {
 		wchar_t boi[200];
-		swprintf_s(boi, 200, L"https://hbob.ml/horion/action?type=%S", request);
+		swprintf_s(boi, 200, L"https://hbob.ml/horion/action.php?type=%S", request);
 		WinHttpClient client(boi);
 
 		// Send HTTP request, a GET request by default.
