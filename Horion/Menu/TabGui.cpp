@@ -131,7 +131,7 @@ void TabGui::renderLevel()
 			
 		//DrawUtils::drawRectangle(rectPos, MC_Color(0.0f, 0.0f, 0.0f, 1.0f), 1, 0.3f); // Border around Text
 
-		DrawUtils::drawText(vec2_t(xOffset + 1.5f, yOffset + 0.5f), &std::string(label.text), /* White Color*/ nullptr, textSize, SMOOTH);
+		DrawUtils::drawText(vec2_t(xOffset + 1.5f, yOffset /*+ 0.5f*/), &std::string(label.text), /* White Color*/ nullptr, textSize, SMOOTH);
 
 		yOffset += textHeight;
 		i++;

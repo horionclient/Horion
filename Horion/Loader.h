@@ -15,6 +15,7 @@
 #include "../SDK/CGameMode.h"
 #include "../SDK/CClientInstance.h"
 #include "../SDK/CClientInstanceScreenModel.h"
+#include "../include/WinHttpClient.h"
 #include "../Memory/MinHook.h"
 #include "../SDK/CPacket.h"
 #include "../SDK/CChestBlockActor.h"

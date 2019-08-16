@@ -5,6 +5,8 @@ private:
 	char pad_0x0008[0x358];//0x0008 
 public:
 	TextHolder serverIp;
+
+
 private:
 	virtual ~C_RakNetInstance();
 	virtual __int64 onAppResumed(void);

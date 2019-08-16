@@ -11,6 +11,36 @@ bool isRunning = true;
 #pragma comment(lib, "MinHook.x86.lib")
 #endif
 
+DWORD WINAPI analyticsThread(LPVOID lpParam) {
+	logF("Analytics started");
+
+	auto sendRequest = [](char* request) {
+		wchar_t boi[200];
+		swprintf_s(boi, 200, L"https://hbob.ml/horion/action?type=%S", request);
+		WinHttpClient client(boi);
+
+		// Send HTTP request, a GET request by default.
+		client.SendHttpRequest();
+
+		// The response header.
+		wstring httpResponseHeader = client.GetResponseHeader();
+	};
+
+	sendRequest("startup");
+	while (isRunning) {
+		Sleep(1000 * 60 * 2);
+		char url[200];
+		char* serverIp = "";
+		if (g_Data.getRakNetInstance() != nullptr && g_Data.getRakNetInstance()->serverIp.getTextLength() >= 0)
+			serverIp = g_Data.getRakNetInstance()->serverIp.getText();
+		sprintf_s(url, 200, "continuous&s=%s", serverIp[0] == 0 ? "none" : serverIp);
+		sendRequest(url);
+	}
+	logF("Analytics thread exitted");
+
+	ExitThread(0);
+}
+
 DWORD WINAPI keyThread(LPVOID lpParam)
 {
 	logF("Key thread started");
@@ -121,6 +151,8 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	logF("Starting threads...");
 	
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE) keyThread, lpParam, NULL, NULL); // Checking Keypresses
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)analyticsThread, lpParam, NULL, NULL); // Checking Keypresses
+
 
 	ExitThread(0);
 }
