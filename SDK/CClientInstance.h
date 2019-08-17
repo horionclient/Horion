@@ -60,8 +60,6 @@ public:
 	}
 
 	void displayClientMessageF(const char * fmt, ...) {
-		if (GameData::shouldHide())
-			return;
 		va_list arg;
 		va_start(arg, fmt);
 		displayClientMessageVA(fmt, arg);
