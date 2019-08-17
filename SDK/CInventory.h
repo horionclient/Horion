@@ -27,9 +27,9 @@ public:
 private:
 	char pad_0x0B8[0x4C];//0xB8
 public:
-	int duration;
+	int duration; //0x104
 private:
-	virtual ~C_Item();
+	virtual __int64 destructor();
 	virtual __int64 tearDown(void);
 	virtual __int64 getMaxUseDuration(__int64 const*)const;
 	virtual __int64 getMaxUseDuration(C_ItemStack const*)const;
@@ -83,7 +83,7 @@ public:
 public:
 	virtual __int64 getEnchantSlot(void)const;
 	virtual __int64 getEnchantValue(void)const;
-	virtual __int64 getArmorValue(void)const;
+	virtual int getArmorValue(void)const;
 public:
 	virtual bool isComplex(void)const;
 	virtual bool isValidAuxValue(int)const;
@@ -166,6 +166,14 @@ private:
 	virtual __int64 _calculatePlacePos(C_ItemStack &, C_Entity &, unsigned char &, vec3_ti &)const;
 	virtual __int64 _useOn(__int64 &, C_Entity &, vec3_ti, unsigned char, float, float, float)const;
 	virtual __int64 _useOn(C_ItemStack &, C_Entity &, vec3_ti, unsigned char, float, float, float)const;
+};
+
+class C_ArmorItem : public C_Item
+{
+private:
+	char pad_0x108[0x48];//0x108
+public:
+	int ArmorSlot; //0x150
 };
 
 class C_Inventory {
@@ -264,7 +272,7 @@ public:
 	virtual __int64 _handlePlaceOne(std::string const&, int);
 	virtual __int64 _handleSelectSlot(std::string const&, int);
 	virtual __int64 _getSelectedItem(void)const;
-	virtual __int64 _getItemStack(std::string const&, int)const;
+	virtual C_ItemStack* _getItemStack(TextHolder, int)const;
 private:
 	virtual __int64 _getVisualItemStack(std::string const&, int)const;
 	virtual __int64 _onContainerSlotHovered(std::string const&, int);

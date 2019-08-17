@@ -4,6 +4,7 @@ class AutoArmor :
 	public IModule
 {
 public:
+	C_CraftingScreenController* inventoryScreen = nullptr;
 	AutoArmor();
 	~AutoArmor();
 

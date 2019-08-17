@@ -159,6 +159,10 @@ void Hooks::Init()
 	void* RakNetInstance__tick = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 55 57 41 54 41 56 41 57 ?? ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 ?? ?? ?? ?? ?? ?? ?? 48 8B F9 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 45 33 E4 41 8B F4"));
 	g_Hooks.RakNetInstance__tickHook = std::make_unique<FuncHook>(RakNetInstance__tick, Hooks::RakNetInstance__tick);
 	g_Hooks.RakNetInstance__tickHook->init();
+
+	void* inventoryScreen = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 55 57 41 56 48 8D 68 98 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 8B FA 48 8B F1"));
+	g_Hooks.inventoryScreen__tickHook = std::make_unique<FuncHook>(inventoryScreen, Hooks::inventoryScreen__tick);
+	g_Hooks.inventoryScreen__tickHook->init();
 }
 
 void Hooks::Restore()
@@ -189,7 +193,23 @@ void Hooks::Restore()
 	g_Hooks.MinecraftGame__onAppSuspendedHook->Restore();
 	g_Hooks.ladderUpHook->Restore();
 	g_Hooks.RakNetInstance__tickHook->Restore();
+	g_Hooks.inventoryScreen__tickHook->Restore();
 }
+
+__int64 __fastcall Hooks::inventoryScreen__tick(C_CraftingScreenController* a1, __int64 a2)
+{
+	static auto oFunc = g_Hooks.inventoryScreen__tickHook->GetOriginal<inventoryScreen__tick_t>();
+
+	static AutoArmor* AutoArmorMod = reinterpret_cast<AutoArmor*>(moduleMgr->getModule<AutoArmor>());
+	if (AutoArmorMod == nullptr)
+		AutoArmorMod = reinterpret_cast<AutoArmor*>(moduleMgr->getModule<AutoArmor>());
+	else {
+		AutoArmorMod->inventoryScreen = a1;
+	}
+
+	return oFunc(a1,a2);
+}
+
 
 void __fastcall Hooks::RakNetInstance__tick(C_RakNetInstance* _this)
 {

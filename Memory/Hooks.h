@@ -73,6 +73,7 @@ private:
 	static void __fastcall ladderUp(C_Entity* _this);
 	static void __fastcall Actor__startSwimming(C_Entity* _this);
 	static void __fastcall RakNetInstance__tick(C_RakNetInstance* _this);
+	static __int64 __fastcall inventoryScreen__tick(C_CraftingScreenController* a1, __int64 a2);
 	 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
@@ -107,6 +108,7 @@ private:
 	std::unique_ptr<FuncHook> ladderUpHook;
 	std::unique_ptr<FuncHook> Actor__startSwimmingHook;
 	std::unique_ptr<FuncHook> RakNetInstance__tickHook;
+	std::unique_ptr<FuncHook> inventoryScreen__tickHook;
 
 
 	typedef __int64(__fastcall* LevelRenderer_renderLevel_t)(__int64 a1, __int64 a2, __int64 a3);
@@ -141,6 +143,7 @@ private:
 	typedef void(__fastcall* ladderUp_t)(C_Entity* _this);
 	typedef void(__fastcall* Actor__startSwimming_t)(C_Entity* _this);
 	typedef void(__fastcall* RakNetInstance__tick_t)(C_RakNetInstance* _this);
+	typedef __int64(__fastcall* inventoryScreen__tick_t)(C_CraftingScreenController* a1, __int64 a2);
 };
 
 extern Hooks g_Hooks;
