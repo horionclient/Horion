@@ -3,6 +3,8 @@
 class ChestStealer :
 	public IModule
 {
+private:
+	int delay = 0;
 public:
 	C_ChestScreenController* chestScreenController = nullptr;
 	ChestStealer();
