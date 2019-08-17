@@ -58,7 +58,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new NoWeb());
 	this->moduleList.push_back(new FastLadder());
 	this->moduleList.push_back(new StackableItem());
-	this->moduleList.push_back(new AutoSneak());
+	//this->moduleList.push_back(new AutoSneak());
 	this->moduleList.push_back(new FastEat());
 	this->moduleList.push_back(new Jesus());
 	//this->moduleList.push_back(new AutoArmor());
