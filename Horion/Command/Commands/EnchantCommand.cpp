@@ -16,7 +16,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	assertTrue(args->size() > 1);
 	int enchantId = 0;
 	int enchantLevel = 1;
-	if (args->at(1) != "all")
+	if (strcmp(args->at(1).c_str(),"all") != 0)
 	{
 		enchantId = assertInt(args->at(1));
 		if (args->size() > 2)
@@ -43,7 +43,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 		int offset = *reinterpret_cast<int*>(sig);
 		getEnchantsFromUserData = reinterpret_cast<getEnchantsFromUserData_t>(sig + offset + 4);
 	}
-	if (args->at(1) == "all")
+	if (strcmp(args->at(1).c_str(), "all") == 0)
 	{
 		for (int i = 0; i < 32; i++)
 		{

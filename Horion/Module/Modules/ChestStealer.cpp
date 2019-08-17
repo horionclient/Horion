@@ -26,6 +26,8 @@ void ChestStealer::onTick(C_GameMode* gm)
 			chestScreenController->handleAutoPlace(0x7FFFFFFF,"container_items", i);
 		}
 	}
+	if(g_Data.getLocalPlayer()->isInventoryClosed() == 0 && chestScreenController != nullptr)
+		chestScreenController->leaveScreen();
 	chestScreenController = nullptr;
 }
 

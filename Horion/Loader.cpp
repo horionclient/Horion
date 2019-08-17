@@ -1,6 +1,6 @@
 #include "Loader.h"
 
-int bKillAura;
+
 SlimUtils::SlimMem mem;
 const SlimUtils::SlimModule* gameModule;
 bool isRunning = true;
@@ -150,9 +150,10 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 
 	logF("Starting threads...");
 	
+	
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE) keyThread, lpParam, NULL, NULL); // Checking Keypresses
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)analyticsThread, lpParam, NULL, NULL); // Checking Keypresses
-
+	//CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)analyticsThread, lpParam, NULL, NULL);
+	
 
 	ExitThread(0);
 }
