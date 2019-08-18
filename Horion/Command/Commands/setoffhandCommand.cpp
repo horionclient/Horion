@@ -39,7 +39,7 @@ bool setoffhandCommand::execute(std::vector<std::string>* args)
 	}
 
 
-	C_ItemStack* yot = reinterpret_cast<C_ItemStack*>(malloc(0x50));
+	C_ItemStack* yot = reinterpret_cast<C_ItemStack*>(malloc(0x88));
 	yot->ItemStackConstructor(*yeet->item, count, itemData);
 
 	g_Data.getLocalPlayer()->setOffhandSlot(yot);
