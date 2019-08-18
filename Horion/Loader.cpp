@@ -56,7 +56,12 @@ DWORD WINAPI analyticsThread(LPVOID lpParam) {
 		}
 	}
 	__except (EXCEPTION_EXECUTE_HANDLER) {
+#ifdef _DEBUG
 		logF("got some wierd error idk");
+		__debugbreak();
+#else
+		ExitThread(0);
+#endif
 	}
 	
 	logF("Analytics thread exitted");
