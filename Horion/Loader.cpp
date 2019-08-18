@@ -27,8 +27,25 @@ DWORD WINAPI analyticsThread(LPVOID lpParam) {
 	};
 
 	sendRequest("startup");
+
+	LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;
+	LARGE_INTEGER Frequency;
+
+	QueryPerformanceFrequency(&Frequency);
+	QueryPerformanceCounter(&StartingTime);
+
 	while (isRunning) {
-		Sleep(1000 * 60 * 2);
+		{
+			QueryPerformanceCounter(&EndingTime);
+			ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
+			ElapsedMicroseconds.QuadPart *= 1000;
+			ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
+			if (ElapsedMicroseconds.QuadPart < 1000 * 30 * 1) {
+				Sleep(1);
+				continue;
+			}else
+				QueryPerformanceCounter(&StartingTime);
+		}
 		char url[200];
 		char* serverIp = "";
 		if (g_Data.getRakNetInstance() != nullptr && g_Data.getRakNetInstance()->serverIp.getTextLength() >= 0)
@@ -120,6 +137,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		Sleep(2); 
 	}
 	logF("Uninjecting...");
+	Sleep(100); // Give the threads a bit of time to exit
 
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1); // Uninject
 }
