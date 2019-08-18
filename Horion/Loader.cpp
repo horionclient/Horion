@@ -13,46 +13,52 @@ bool isRunning = true;
 
 DWORD WINAPI analyticsThread(LPVOID lpParam) {
 	logF("Analytics started");
+	__try {
+		auto sendRequest = [](char* request) {
+			wchar_t boi[200];
+			swprintf_s(boi, 200, L"https://hbob.ml/horion/action.php?type=%S", request);
+			WinHttpClient client(boi);
 
-	auto sendRequest = [](char* request) {
-		wchar_t boi[200];
-		swprintf_s(boi, 200, L"https://hbob.ml/horion/action.php?type=%S", request);
-		WinHttpClient client(boi);
+			// Send HTTP request, a GET request by default.
+			client.SendHttpRequest();
 
-		// Send HTTP request, a GET request by default.
-		client.SendHttpRequest();
+			// The response header.
+			wstring httpResponseHeader = client.GetResponseHeader();
+		};
 
-		// The response header.
-		wstring httpResponseHeader = client.GetResponseHeader();
-	};
+		sendRequest("startup");
 
-	sendRequest("startup");
+		LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;
+		LARGE_INTEGER Frequency;
 
-	LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;
-	LARGE_INTEGER Frequency;
+		QueryPerformanceFrequency(&Frequency);
+		QueryPerformanceCounter(&StartingTime);
 
-	QueryPerformanceFrequency(&Frequency);
-	QueryPerformanceCounter(&StartingTime);
-
-	while (isRunning) {
-		{
-			QueryPerformanceCounter(&EndingTime);
-			ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
-			ElapsedMicroseconds.QuadPart *= 1000;
-			ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
-			if (ElapsedMicroseconds.QuadPart < 1000 * 60 * 2) {
-				Sleep(1);
-				continue;
-			}else
-				QueryPerformanceCounter(&StartingTime);
+		while (isRunning) {
+			{
+				QueryPerformanceCounter(&EndingTime);
+				ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
+				ElapsedMicroseconds.QuadPart *= 1000;
+				ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
+				if (ElapsedMicroseconds.QuadPart < 1000 * 60 * 2) {
+					Sleep(1);
+					continue;
+				}
+				else
+					QueryPerformanceCounter(&StartingTime);
+			}
+			char url[200];
+			char* serverIp = "";
+			if (g_Data.getRakNetInstance() != nullptr && g_Data.getRakNetInstance()->serverIp.getTextLength() >= 0)
+				serverIp = g_Data.getRakNetInstance()->serverIp.getText();
+			sprintf_s(url, 200, "continuous&s=%s", serverIp[0] == 0 ? "none" : serverIp);
+			sendRequest(url);
 		}
-		char url[200];
-		char* serverIp = "";
-		if (g_Data.getRakNetInstance() != nullptr && g_Data.getRakNetInstance()->serverIp.getTextLength() >= 0)
-			serverIp = g_Data.getRakNetInstance()->serverIp.getText();
-		sprintf_s(url, 200, "continuous&s=%s", serverIp[0] == 0 ? "none" : serverIp);
-		sendRequest(url);
 	}
+	__except (EXCEPTION_EXECUTE_HANDLER) {
+		logF("got some wierd error idk");
+	}
+	
 	logF("Analytics thread exitted");
 
 	ExitThread(0);
