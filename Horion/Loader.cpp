@@ -40,7 +40,7 @@ DWORD WINAPI analyticsThread(LPVOID lpParam) {
 			ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
 			ElapsedMicroseconds.QuadPart *= 1000;
 			ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
-			if (ElapsedMicroseconds.QuadPart < 1000 * 30 * 1) {
+			if (ElapsedMicroseconds.QuadPart < 1000 * 60 * 2) {
 				Sleep(1);
 				continue;
 			}else
