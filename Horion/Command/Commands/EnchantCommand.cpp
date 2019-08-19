@@ -16,12 +16,11 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	assertTrue(args->size() > 1);
 	int enchantId = 0;
 	int enchantLevel = 32767;
+	if (args->size() > 2)
+		enchantLevel = assertInt(args->at(2));
+
 	if (strcmp(args->at(1).c_str(),"all") != 0)
-	{
 		enchantId = assertInt(args->at(1));
-		if (args->size() > 2)
-			enchantLevel = assertInt(args->at(2));
-	}
 
 
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
