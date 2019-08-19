@@ -50,6 +50,7 @@
 #include "Modules/FastEat.h"
 #include "Modules/Jesus.h"
 #include "Modules/AutoArmor.h"
+#include "Modules/InfiniteBlockReach.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

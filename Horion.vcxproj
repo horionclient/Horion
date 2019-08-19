@@ -183,6 +183,7 @@
     <ClCompile Include="Horion\Module\Modules\FullBright.cpp" />
     <ClCompile Include="Horion\Module\Modules\HighJump.cpp" />
     <ClCompile Include="Horion\Module\Modules\Hitbox.cpp" />
+    <ClCompile Include="Horion\Module\Modules\InfiniteBlockReach.cpp" />
     <ClCompile Include="Horion\Module\Modules\InfiniteReach.cpp" />
     <ClCompile Include="Horion\Module\Modules\InstaBreak.cpp" />
     <ClCompile Include="Horion\Module\Modules\InventoryMove.cpp" />
@@ -261,6 +262,7 @@
     <ClInclude Include="Horion\Module\Modules\AutoTotem.h" />
     <ClInclude Include="Horion\Module\Modules\BedFucker.h" />
     <ClInclude Include="Horion\Module\Modules\Blink.h" />
+    <ClInclude Include="Horion\Module\Modules\InfiniteBlockReach.h" />
     <ClInclude Include="Horion\Module\Modules\ChestStealer.h" />
     <ClInclude Include="Horion\Module\Modules\ClickGuiMod.h" />
     <ClInclude Include="Horion\Module\Modules\FastEat.h" />

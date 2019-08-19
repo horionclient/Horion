@@ -85,6 +85,7 @@
     <ClCompile Include="Horion\Command\Commands\CoordsCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\SayCommand.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoArmor.cpp" />
+    <ClCompile Include="Horion\Module\Modules\InfiniteBlockReach.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -196,5 +197,6 @@
     <ClInclude Include="SDK\CRakNetInstance.h" />
     <ClInclude Include="Horion\Module\Modules\AutoArmor.h" />
     <ClInclude Include="Utils\Json.hpp" />
+    <ClInclude Include="Horion\Module\Modules\InfiniteBlockReach.h" />
   </ItemGroup>
 </Project>

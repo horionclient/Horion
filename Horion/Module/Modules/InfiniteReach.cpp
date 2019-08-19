@@ -1,6 +1,6 @@
 #include "InfiniteReach.h"
 
-InfiniteReach::InfiniteReach() : IModule('P', COMBAT) // <-- keybind
+InfiniteReach::InfiniteReach() : IModule(0x0, COMBAT) // <-- keybind
 {
 	this->registerBoolSetting("multiaura", &this->isMulti, this->isMulti);
 	this->registerFloatSetting("range", &this->range, this->range, 15, 100);
@@ -14,7 +14,7 @@ InfiniteReach::~InfiniteReach()
 
 const char* InfiniteReach::getModuleName()
 {
-	return ("InfiniteReach");
+	return ("InfiniteAura");
 }
 
 static std::vector <C_Entity*> targetList0;

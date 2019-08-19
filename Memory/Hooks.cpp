@@ -7,12 +7,23 @@ bool isTicked = false;
 void Hooks::Init()
 {
 	logF("Setting up Hooks...");
-	// GameMode::tick Signature
-	// CC 8B 41 ?? 89 41 ?? C3
-	//    ^^ Function starts here
-	void* func = reinterpret_cast<void*>(Utils::FindSignature("CC 8B 41 ?? 89 41 ?? C3") + 1);
-	g_Hooks.gameMode_tickHook = std::make_unique<FuncHook>(func, Hooks::GameMode_tick);
-	g_Hooks.gameMode_tickHook->init();
+
+	static uintptr_t** GameModeVtable = 0x0;
+	if (GameModeVtable == 0x0) {
+		uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 33 D2 48 C7 41 ??");
+		int offset = *reinterpret_cast<int*>(sigOffset + 3);
+		GameModeVtable = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
+		if (GameModeVtable == 0x0 || sigOffset == 0x0)
+			logF("C_GameMode signature not working!!!");
+		else
+		{
+			g_Hooks.gameMode_tickHook = std::make_unique<FuncHook>(GameModeVtable[9], Hooks::GameMode_tick);
+			g_Hooks.gameMode_tickHook->init();
+
+			g_Hooks.GameMode__getPickRangeHook = std::make_unique<FuncHook>(GameModeVtable[10], Hooks::GameMode__getPickRange);
+			g_Hooks.GameMode__getPickRangeHook->init();
+		}
+	}
 
 	// SurvivalMode::tick Sig
 	void* surv_tick = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 55 48 8D 68 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 10 48 89 70 18 48 89 78 20 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 8B F9 8B 41 ??"));
@@ -193,7 +204,20 @@ void Hooks::Restore()
 	g_Hooks.MinecraftGame__onAppSuspendedHook->Restore();
 	g_Hooks.ladderUpHook->Restore();
 	g_Hooks.RakNetInstance__tickHook->Restore();
+	g_Hooks.GameMode__getPickRangeHook->Restore();
 	//g_Hooks.inventoryScreen__tickHook->Restore();
+}
+
+float __fastcall Hooks::GameMode__getPickRange(C_GameMode* a1, __int64 a2, char a3)
+{
+	static auto oFunc = g_Hooks.GameMode__getPickRangeHook->GetOriginal<GameMode__getPickRange_t>();
+	static InfiniteBlockReach* InfiniteBlockReachModule = reinterpret_cast<InfiniteBlockReach*>(moduleMgr->getModule<InfiniteBlockReach>());
+	if (InfiniteBlockReachModule == nullptr)
+		InfiniteBlockReachModule = reinterpret_cast<InfiniteBlockReach*>(moduleMgr->getModule<InfiniteBlockReach>());
+	else if (InfiniteBlockReachModule->isEnabled()) 
+		return InfiniteBlockReachModule->getBlockReach();
+
+	return oFunc(a1, a2, a3);
 }
 
 __int64 __fastcall Hooks::inventoryScreen__tick(C_CraftingScreenController* a1, __int64 a2)
