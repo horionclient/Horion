@@ -15,7 +15,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 {
 	assertTrue(args->size() > 1);
 	int enchantId = 0;
-	int enchantLevel = 1;
+	int enchantLevel = 32767;
 	if (strcmp(args->at(1).c_str(),"all") != 0)
 	{
 		enchantId = assertInt(args->at(1));
@@ -66,9 +66,9 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 
 				g_Data.getLocalPlayer()->sendInventory();
 			}
-			clientMessageF("%sEnchant successful!", GREEN);
 			free(EnchantData);
 		}
+		clientMessageF("%sEnchant successful!", GREEN);
 	}
 	else
 	{

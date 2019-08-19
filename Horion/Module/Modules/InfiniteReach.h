@@ -5,7 +5,7 @@
 class InfiniteReach : public IModule
 {
 private:
-	int delay = 5;
+	int delay = 15;
 	int Odelay = 0;
 	bool isMulti = false;
 public:

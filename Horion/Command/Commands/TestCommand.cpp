@@ -13,31 +13,9 @@ TestCommand::~TestCommand()
 
 bool TestCommand::execute(std::vector<std::string>* args)
 {
-
-
-	// HTTP TEST
-
-#ifdef HTTP_TEST
-	{
-		WinHttpClient client(L"http://ip-api.com/line/");
-
-		// Send HTTP request, a GET request by default.
-		client.SendHttpRequest();
-
-		// The response header.
-		wstring httpResponseHeader = client.GetResponseHeader();
-
-		logF("%S", httpResponseHeader.c_str());
-
-		// The response content.
-		wstring httpResponseContent = client.GetResponseContent();
-
-		logF("%S", httpResponseContent.c_str());
-
-
-	}
-#endif
-
-
+	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
+	C_Inventory* inv = supplies->inventory;
+	C_ItemStack* yot = inv->getItemStack(0);
+	logF("stack %llX", yot);
 	return true;
 }
