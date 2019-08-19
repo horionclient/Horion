@@ -2,7 +2,7 @@
 
 
 
-GiveCommand::GiveCommand() : IMCCommand("give", "spawn items", "<itemID> <count> <itemData>") 
+GiveCommand::GiveCommand() : IMCCommand("give", "spawn items", "<itemName> <count> <itemData>") 
 {
 }
 
