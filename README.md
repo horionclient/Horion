@@ -1,8 +1,5 @@
 # Horion
 
-All necessary information is in the [wiki](https://github.com/SurvirvorHRG/Horion/wiki)
-# Horion
-
 **Horion** is a minecraft bedrock edition utility mod designed to enhance a users gameplay.
 If you want to contribute to this project, feel free to fork this repository and submit a pull request.
 
