@@ -558,7 +558,7 @@ void Hooks::Actor_lerpMotion(C_Entity * _this, vec3_t motVec)
 	oLerp(_this, motVec);
 }
 
-__int64 Hooks::AppPlatform_getGameEdition(__int64 _this)
+signed int Hooks::AppPlatform_getGameEdition(__int64 _this)
 {
 	static auto oGetEditon = g_Hooks.AppPlatform_getGameEditionHook->GetOriginal<AppPlatform_getGameEdition_t>();
 
