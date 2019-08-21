@@ -20,6 +20,9 @@ void Hooks::Init()
 			g_Hooks.gameMode_tickHook = std::make_unique<FuncHook>(GameModeVtable[9], Hooks::GameMode_tick);
 			g_Hooks.gameMode_tickHook->init();
 
+			g_Hooks.GameMode_startDestroyHook = std::make_unique<FuncHook>(GameModeVtable[1], Hooks::GameMode_startDestroyBlock);
+			g_Hooks.GameMode_startDestroyHook->init();
+
 			g_Hooks.GameMode__getPickRangeHook = std::make_unique<FuncHook>(GameModeVtable[10], Hooks::GameMode__getPickRange);
 			g_Hooks.GameMode__getPickRangeHook->init();
 		}
@@ -93,10 +96,6 @@ void Hooks::Init()
 	void* tick_entityList = reinterpret_cast<void*>(Utils::FindSignature("40 53 48 83 EC 20 48 8B D9 E8 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 49 8B C8 4D 85 C0 75 07"));
 	g_Hooks.MultiLevelPlayerHook = std::make_unique<FuncHook>(tick_entityList, Hooks::MultiLevelPlayer_tick);
 	g_Hooks.MultiLevelPlayerHook->init();
-
-	void* startDestroyBlockFunc = reinterpret_cast<void*>(Utils::FindSignature("40 55 53 56 57 41 56 41 57 48 8D 6C 24 D1 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 0F 29 ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 4D 8B F9 48 8B F2 48 8B F9 44 88 45 BF E8 ?? ?? ?? ?? 41 C6 07 00 84 C0 75 07 32 C0 E9 ?? ?? ?? ?? 48 8B 4F ?? 48 8B 01 FF 90 ?? ?? ?? ?? 84 C0"));
-	g_Hooks.GameMode_startDestroyHook = std::make_unique<FuncHook>(startDestroyBlockFunc, Hooks::GameMode_startDestroyBlock);
-	g_Hooks.GameMode_startDestroyHook->init();
 
 	void* keyMouseFunc = reinterpret_cast<void*>(Utils::FindSignature("40 55 56 57 41 54 41 55 41 56 41 57 48 8B EC 48 83 EC 70 48 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 F0 49 8B F0 48 8B F9 45 33 ED 41 8B DD 89 5D EC 49 8B C8"));
 	g_Hooks.HIDController_keyMouseHook = std::make_unique<FuncHook>(keyMouseFunc, Hooks::HIDController_keyMouse);
@@ -907,8 +906,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 		// Draw Horion logo
 		{
-			DrawUtils::drawText(vec2_t(2,windowSize.y - 20), &horionStr, nullptr, 1.5f);
-			DrawUtils::drawText(vec2_t(2.75f,windowSize.y - 8.75f), &dlStr, nullptr, 0.85f);
+			DrawUtils::drawText(vec2_t(windowSize.x - 2,windowSize.y - 20), &horionStr, nullptr, 1.5f);
+			DrawUtils::drawText(vec2_t(windowSize.x - 2.75f,windowSize.y - 8.75f), &dlStr, nullptr, 0.85f);
 		}
 
 		// Draw ArrayList
