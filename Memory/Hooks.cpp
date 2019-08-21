@@ -885,7 +885,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		static float disabledRcolors[4]; // Rainbow Colors, but for disabled modules
 		static std::string horionStr = std::string("Horion");					 // Static Horion logo / text
 		static float       horionStrWidth = DrawUtils::getTextWidth(&horionStr); // Graphical Width of Horion logo / text
-		static std::string dlStr = std::string("discord.gg/8CRYQWM");					 // Static Horion logo / text
+		static std::string dlStr = std::string("discord.gg/8CRYQWM");
+		static float       dlStrWidth = DrawUtils::getTextWidth(&horionStr);
 
 		float yOffset = 0; // Offset of next Text
 		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
@@ -906,8 +907,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 		// Draw Horion logo
 		{
-			DrawUtils::drawText(vec2_t(windowSize.x - 2,windowSize.y - 20), &horionStr, nullptr, 1.5f);
-			DrawUtils::drawText(vec2_t(windowSize.x - 2.75f,windowSize.y - 8.75f), &dlStr, nullptr, 0.85f);
+			DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth - 12.0f,windowSize.y - 20), &horionStr, nullptr, 1.5f);
+			DrawUtils::drawText(vec2_t(windowSize.x - dlStrWidth - 42.75f,windowSize.y - 8.75f), &dlStr, nullptr, 0.85f);
 		}
 
 		// Draw ArrayList
