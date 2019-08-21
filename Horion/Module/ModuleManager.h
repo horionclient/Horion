@@ -86,7 +86,7 @@ public:
 			return nullptr;
 		for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
 			IModule* mod = *it;
-			if (typeid(*mod) == typeid(TRet) || typeid(mod) == typeid(TRet))
+			if (TRet* type = dynamic_cast<TRet*>(mod))
 				return mod;
 		}
 		return nullptr;
