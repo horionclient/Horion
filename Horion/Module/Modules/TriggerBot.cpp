@@ -47,6 +47,5 @@ void TriggerBot::onTick(C_GameMode* gm)
 		Odelay = 0;
 		}
 	}
-}
 
 
