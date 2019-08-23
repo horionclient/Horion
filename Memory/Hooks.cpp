@@ -53,12 +53,12 @@ void Hooks::Init()
 	g_Hooks.renderTextHook = std::make_unique<FuncHook>(_shit, Hooks::renderText);
 	g_Hooks.renderTextHook->init();
 
-	void* setupRenderIdk = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B DA 48 8B F9 33 D2 ?? ?? ?? ?? ?? ?? 48 8D 4C 24 30 E8 ?? ?? ?? ?? 4C 8B CF 4C 8B C3 48 8B 57 ?? 48 8D 4C 24 ??"));
-	g_Hooks.setupRenderHook = std::make_unique<FuncHook>(setupRenderIdk, setupAndRender);
+	void* setupRender = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B DA 48 8B F9 33 D2 ?? ?? ?? ?? ?? ?? 48 8D 4C 24 30 E8 ?? ?? ?? ?? 4C 8B CF 4C 8B C3 48 8B 57 ?? 48 8D 4C 24 ??"));
+	g_Hooks.setupRenderHook = std::make_unique<FuncHook>(setupRender, Hooks::setupAndRender);
 	g_Hooks.setupRenderHook->init();
 
 	void* render = reinterpret_cast<void*>(Utils::FindSignature("40 56 57 41 56 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B FA 48 8B D9 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 30 41 8B 04 36 39 05 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 33 C0"));
-	g_Hooks.uiscene_RenderHook = std::make_unique<FuncHook>(render, uiscene_render);
+	g_Hooks.uiscene_RenderHook = std::make_unique<FuncHook>(render, Hooks::uiscene_render);
 	g_Hooks.uiscene_RenderHook->init();
 
 	void* fogColorFunc = reinterpret_cast<void*>(Utils::FindSignature("0F 28 C2 C7 42 0C 00 00 80 3F F3"));
@@ -155,8 +155,8 @@ void Hooks::Init()
 	g_Hooks.chestScreenController__tickHook->init();
 
 	void* fullbright = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC 40 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 89 74 24 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 33 C0 48 89 44 24 ?? 48 89 44 24 ?? 48 8B 01 48 8D 54 24 ??"));
-	g_Hooks.fullBrightIdk__Hook = std::make_unique<FuncHook>(fullbright, Hooks::fullBrightIdk);
-	g_Hooks.fullBrightIdk__Hook->init();
+	g_Hooks.fullBright__Hook = std::make_unique<FuncHook>(fullbright, Hooks::fullBright);
+	g_Hooks.fullBright__Hook->init();
 
 	void* jump = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC 40 48 8B 01 48 8B F9 FF 50 ?? 8B 08 89 ?? ?? ?? ?? ?? 8B 48 ?? 89"));
 	g_Hooks.jumpPowerHook = std::make_unique<FuncHook>(jump, Hooks::jumpPower);
@@ -197,7 +197,7 @@ void Hooks::Restore()
 	g_Hooks.clickHook->Restore();
 	g_Hooks.MoveInputHandler_tickHook->Restore();
 	g_Hooks.chestScreenController__tickHook->Restore();
-	g_Hooks.fullBrightIdk__Hook->Restore();
+	g_Hooks.fullBright__Hook->Restore();
 	g_Hooks.Actor__isInWaterHook->Restore();
 	g_Hooks.jumpPowerHook->Restore();
 	g_Hooks.MinecraftGame__onAppSuspendedHook->Restore();
@@ -305,9 +305,9 @@ bool __fastcall Hooks::Actor__isInWater(C_Entity* a1)
 	return oFunc(a1);
 }
 
-__int64 __fastcall Hooks::fullBrightIdk(__int64 a1)
+__int64 __fastcall Hooks::fullBright(__int64 a1)
 {
-	static auto oFunc = g_Hooks.fullBrightIdk__Hook->GetOriginal<fullbrightIdk_t>();
+	static auto oFunc = g_Hooks.fullBright__Hook->GetOriginal<fullbright_t>();
 
 	static FullBright* fullBrightModule = moduleMgr->getModule<FullBright>();
 	if (fullBrightModule == nullptr)
@@ -767,8 +767,8 @@ void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
 	using sub_140074FA0_t = void(__fastcall*)(__int64);
 	static sub_140074FA0_t sub_140074FA0 = reinterpret_cast<sub_140074FA0_t>(Utils::FindSignature("40 53 48 83 EC ?? 48 8B 51 ?? 48 8B D9 48 83 FA 10 72 ?? 48 8B 09 48 FF C2 48 81 FA 00 10 00 00 72 ?? 4C 8B 41 ?? 48 83 C2 ?? 49 2B C8 48 8D 41 ?? 48 83 F8 ?? 77 ?? 49 8B C8 E8 ?? ?? ?? ?? 48 C7 43 ?? 00 00 00 00"));
 
-	uintptr_t* idk = reinterpret_cast<uintptr_t*>(_this + 0x6C0);
-	if (*idk) {
+	uintptr_t* textLength = reinterpret_cast<uintptr_t*>(_this + 0x6C0);
+	if (*textLength) {
 		char* message = reinterpret_cast<char*>(_this + 0x6B0);
 		if (*reinterpret_cast<__int64*>(_this + 0x6C8) >= 0x10)
 			message = *reinterpret_cast<char**>(message);
@@ -792,7 +792,7 @@ void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
 
 			*reinterpret_cast<__int64*>(_this + 0x6C0) = 0i64;
 			*message = 0x0; // Remove command in textbox
-			*idk = 0x0; // text length
+			*textLength = 0x0; // text length
 			return;
 		}
 	}

@@ -66,7 +66,7 @@ private:
 	static void __fastcall clickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
 	static __int64 __fastcall MoveInputHandler_tick(C_MoveInputHandler* a1,C_Entity* a2);
 	static __int64 __fastcall chestScreenController__tick(C_ChestScreenController* a1);
-	static __int64 __fastcall fullBrightIdk(__int64 a1);
+	static __int64 __fastcall fullBright(__int64 a1);
 	static bool __fastcall Actor__isInWater(C_Entity* a1);
 	static void __fastcall jumpPower(C_Entity* a1, float a2);
 	static __int64 __fastcall MinecraftGame__onAppSuspended(__int64 _this);
@@ -102,7 +102,7 @@ private:
 	std::unique_ptr<FuncHook> clickHook;
 	std::unique_ptr<FuncHook> MoveInputHandler_tickHook;
 	std::unique_ptr<FuncHook> chestScreenController__tickHook;
-	std::unique_ptr<FuncHook> fullBrightIdk__Hook;
+	std::unique_ptr<FuncHook> fullBright__Hook;
 	std::unique_ptr<FuncHook> Actor__isInWaterHook;
 	std::unique_ptr<FuncHook> jumpPowerHook;
 	std::unique_ptr<FuncHook> MinecraftGame__onAppSuspendedHook;
@@ -138,7 +138,7 @@ private:
 	typedef __int64(__fastcall *clickFunc_t)(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
 	typedef __int64(__fastcall *MoveInputHandler_tick_t)(C_MoveInputHandler* a1, C_Entity* a2);
 	typedef __int64(__fastcall *chestScreenController__tick_t)(C_ChestScreenController* a1);
-	typedef __int64(__fastcall *fullbrightIdk_t)(__int64 a1);
+	typedef __int64(__fastcall *fullbright_t)(__int64 a1);
 	typedef bool(__fastcall * Actor__isInWater_t)(C_Entity *a1);
 	typedef __int64(__fastcall* jumpPower_t)(C_Entity* a1, float a2);
 	typedef __int64(__fastcall* MinecraftGame__onAppSuspended_t)(__int64 _this);

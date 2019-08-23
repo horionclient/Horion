@@ -3,11 +3,12 @@
 #include "TextHolder.h"
 
 class C_MinecraftUIRenderContext {
-public:
-	float idk[140];
+private:
+	float _[140];
 
+public:
 	virtual ~C_MinecraftUIRenderContext();
-	virtual float getLineLength(uintptr_t font, TextHolder* str, float textSize, bool idk);
+	virtual float getLineLength(uintptr_t font, TextHolder* str, float textSize, bool unknown);
 	virtual float getTextAlpha();
 	virtual void setTextAlpha(float alpha);
 	virtual __int64 drawDebugText(const float* pos, TextHolder* text, float* color, float alpha, unsigned int textAlignment, const float* textMeasureData, const void* caretMeasureData);

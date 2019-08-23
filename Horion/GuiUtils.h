@@ -1,8 +1,6 @@
 #pragma once
 #include"DrawUtils.h"
 
-// Place buttons in here idk
-
 class GuiUtils
 {
 public:
