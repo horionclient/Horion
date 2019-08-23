@@ -29,8 +29,8 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 	
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
-	C_BlockLegacy* legacy = nullptr;
-	C_Item* yeet = nullptr;
+	C_BlockLegacy* blockItem = nullptr;
+	C_Item* itemItem = nullptr;
 	C_ItemStack* yot = reinterpret_cast<C_ItemStack*>(malloc(0x88));
 	
 	static uintptr_t** VanillaBlocks__mStonePtr = 0x0;
@@ -64,20 +64,20 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 				if (VanillaBlocks__mStonePtr[i] != nullptr &&
 					strcmp(reinterpret_cast<C_BlockLegacy*>(VanillaBlocks__mStonePtr[i][0])->name.getText(), args->at(1).c_str()) == 0)
 				{
-					legacy = reinterpret_cast<C_BlockLegacy*>(VanillaBlocks__mStonePtr[i][0]);
+					blockItem = reinterpret_cast<C_BlockLegacy*>(VanillaBlocks__mStonePtr[i][0]);
 					break;
 				}
 			}
 		}
 
-		if (VanillaItems__mShovel_ironPtr != nullptr && legacy == nullptr)
+		if (VanillaItems__mShovel_ironPtr != nullptr && blockItem == nullptr)
 		{
 			for (int i = 0; i < 233; i++)
 			{
 				if (VanillaItems__mShovel_ironPtr[i] != nullptr &&
 					strcmp(reinterpret_cast<C_Item*>(VanillaItems__mShovel_ironPtr[i][0])->name.getText(), args->at(1).c_str()) == 0)
 				{
-					yeet = reinterpret_cast<C_Item*>(VanillaItems__mShovel_ironPtr[i][0]);
+					itemItem = reinterpret_cast<C_Item*>(VanillaItems__mShovel_ironPtr[i][0]);
 					break;
 				}
 			}
@@ -98,15 +98,15 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 		return true;
 	}
 
-	if (legacy == nullptr && yeet == nullptr)
+	if (blockItem == nullptr && itemItem == nullptr)
 	{
 		clientMessageF("%sInvalid Item!", RED);
 		return true;
 	}
-	else if (legacy != nullptr)
-		yot->ItemStackConstructor__1(legacy, count);
+	else if (blockItem != nullptr)
+		yot->ItemStackConstructor__1(blockItem, count);
 	else
-		yot->ItemStackConstructor(yeet, count, itemData);
+		yot->ItemStackConstructor(itemItem, count, itemData);
 	
 	if (yot != nullptr)
 		yot->count = count;

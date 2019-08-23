@@ -15,9 +15,9 @@ Glide::~Glide()
 const char* Glide::getModuleName()
 {
 	if (isEnabled()) {
-		static char yeet[30]; // This is kinda ghetto rn, there should be a better way to make this...
-		sprintf_s(yeet, 30, "Glide [%.2f]", glideModEffective);
-		return yeet;
+		static char modName[30]; // This is kinda ghetto rn, there should be a better way to make this...
+		sprintf_s(modName, 30, "Glide [%.2f]", glideModEffective);
+		return modName;
 	}
 	else
 		return ("Glide");

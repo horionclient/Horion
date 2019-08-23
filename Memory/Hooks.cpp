@@ -834,25 +834,19 @@ __int64 __fastcall Hooks::uiscene_render(C_UIScene * uiscene, __int64 screencont
 	return oRender(uiscene, screencontext);
 }
 
-__int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* renderCtx)
+__int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 {
 	static auto oText = g_Hooks.renderTextHook->GetOriginal<renderText_t>();
 	C_GuiData* dat = g_Data.getClientInstance()->getGuiData(); 
 	DrawUtils::setCtx(renderCtx, dat);
 	if(GameData::shouldHide())
-		return  oText(yeet, renderCtx);
-
-	//if (g_Hooks.shouldRender == false  && 
-	//	g_Data.getLocalPlayer() != NULL && g_Data.getLocalPlayer()->isInventoryClosed()==1)
-	//	return oText(yeet, renderCtx);
+		return  oText(a1, renderCtx);
 
 	// Call PreRender() functions
 	moduleMgr->onPreRender();
-	
-
 	DrawUtils::flush();
 
-	__int64 retval = oText(yeet, renderCtx);
+	__int64 retval = oText(a1, renderCtx);
 
 #ifdef PERFORMANCE_TEST
 	std::chrono::steady_clock::time_point beginPostRender = std::chrono::steady_clock::now();

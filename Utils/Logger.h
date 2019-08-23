@@ -51,7 +51,7 @@ public:
 };
 
 extern char logPath[200];
-extern bool yeet;
+extern bool initializedLogger;
 extern CRITICAL_SECTION loggerLock;
 extern CRITICAL_SECTION vecLock;
 extern std::vector<TextForPrint> stringPrintVector;

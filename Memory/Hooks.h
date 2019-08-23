@@ -47,7 +47,7 @@ private:
 	static HRESULT __stdcall d3d11_present(IDXGISwapChain * pSwapChain, UINT SyncInterval, UINT Flags);
 	static __int64 __fastcall setupAndRender(C_UIScene* uiscene, __int64 screencontext);
 	static __int64 __fastcall uiscene_render(C_UIScene* uiscene, __int64 screencontext);
-	static __int64 __fastcall renderText(__int64 yeet, C_MinecraftUIRenderContext* yote);
+	static __int64 __fastcall renderText(__int64 a1, C_MinecraftUIRenderContext* yote);
 	static char* __fastcall I8n_get(void*, char*);
 	static float* Dimension_getFogColor(__int64, float* color, float brightness);
 	static void ChestBlockActor_tick(C_ChestBlockActor*, void* a);

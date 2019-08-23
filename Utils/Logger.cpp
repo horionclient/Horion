@@ -1,7 +1,7 @@
 #include "Logger.h"
 
 char logPath[200]; 
-bool yeet = false;
+bool initializedLogger = false;
 bool loggerActive = true;
 CRITICAL_SECTION loggerLock;
 CRITICAL_SECTION vecLock;
@@ -42,8 +42,8 @@ void Logger::WriteLogFileF(const char * fmt, ...)
 #ifdef _DEBUG
 	FILE* pFile;
 
-	if (!yeet) {
-		yeet = true;
+	if (!initializedLogger) {
+		initializedLogger = true;
 		InitializeCriticalSection(&loggerLock);
 		EnterCriticalSection(&loggerLock);
 		InitializeCriticalSection(&vecLock);
