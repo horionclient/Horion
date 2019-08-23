@@ -76,13 +76,16 @@ void InfiniteReach::onTick(C_GameMode* gm)
 		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(),"mco.cubecraft.net") == 0)
 		{
 			vec3_t pos = *g_Data.getLocalPlayer()->getPos();
-			C_MovePlayerPacket* oof = new C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(oof);
-			delete oof;
+
+			C_MovePlayerPacket* movePlayerPacket = new C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(movePlayerPacket);
+			delete movePlayerPacket;
+
 			pos.y += 0.35f;
-			oof = new C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(oof);
-			delete oof;
+
+			movePlayerPacket = new C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(movePlayerPacket);
+			delete movePlayerPacket;
 		}
 		
 		// Attack all entitys in targetList 

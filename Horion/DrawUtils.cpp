@@ -148,7 +148,7 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color *color, floa
 	
 	TextHolder* text = new TextHolder(*textStr);
 	uintptr_t fontPtr = getFont(font);
-	static uintptr_t oof = 0xFFFFFFFF;
+	static uintptr_t caretMeasureData = 0xFFFFFFFF;
 
 	float* posF = new float[4]; // vec4_t(startX, startY, endX, endY);
 	posF[0] = pos.x;
@@ -158,7 +158,7 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color *color, floa
 
 	static float size = 1;
 	size = textSize;
-	renderCtx->drawText(fontPtr, posF, text, color->arr, 1, 0, &size, &oof);
+	renderCtx->drawText(fontPtr, posF, text, color->arr, 1, 0, &size, &caretMeasureData);
 
 	if (color->shouldDelete)
 		delete color;
