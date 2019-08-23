@@ -20,6 +20,9 @@ void Hooks::Init()
 			g_Hooks.gameMode_tickHook = std::make_unique<FuncHook>(GameModeVtable[9], Hooks::GameMode_tick);
 			g_Hooks.gameMode_tickHook->init();
 
+			g_Hooks.GameMode_startDestroyHook = std::make_unique<FuncHook>(GameModeVtable[1], Hooks::GameMode_startDestroyBlock);
+			g_Hooks.GameMode_startDestroyHook->init();
+
 			g_Hooks.GameMode__getPickRangeHook = std::make_unique<FuncHook>(GameModeVtable[10], Hooks::GameMode__getPickRange);
 			g_Hooks.GameMode__getPickRangeHook->init();
 		}
@@ -94,10 +97,6 @@ void Hooks::Init()
 	g_Hooks.MultiLevelPlayerHook = std::make_unique<FuncHook>(tick_entityList, Hooks::MultiLevelPlayer_tick);
 	g_Hooks.MultiLevelPlayerHook->init();
 
-	void* startDestroyBlockFunc = reinterpret_cast<void*>(Utils::FindSignature("40 55 53 56 57 41 56 41 57 48 8D 6C 24 D1 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 0F 29 ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 4D 8B F9 48 8B F2 48 8B F9 44 88 45 BF E8 ?? ?? ?? ?? 41 C6 07 00 84 C0 75 07 32 C0 E9 ?? ?? ?? ?? 48 8B 4F ?? 48 8B 01 FF 90 ?? ?? ?? ?? 84 C0"));
-	g_Hooks.GameMode_startDestroyHook = std::make_unique<FuncHook>(startDestroyBlockFunc, Hooks::GameMode_startDestroyBlock);
-	g_Hooks.GameMode_startDestroyHook->init();
-
 	void* keyMouseFunc = reinterpret_cast<void*>(Utils::FindSignature("40 55 56 57 41 54 41 55 41 56 41 57 48 8B EC 48 83 EC 70 48 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 F0 49 8B F0 48 8B F9 45 33 ED 41 8B DD 89 5D EC 49 8B C8"));
 	g_Hooks.HIDController_keyMouseHook = std::make_unique<FuncHook>(keyMouseFunc, Hooks::HIDController_keyMouse);
 	g_Hooks.HIDController_keyMouseHook->init();
@@ -125,7 +124,7 @@ void Hooks::Init()
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		localPlayerVtable = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
 		if (localPlayerVtable == 0x0 || sigOffset == 0x0)
-			logF("C_ signature not working!!!");
+			logF("C_LocalPlayer signature not working!!!");
 		else
 		{
 			g_Hooks.Actor__isInWaterHook = std::make_unique<FuncHook>(localPlayerVtable[59], Hooks::Actor__isInWater);
@@ -211,9 +210,9 @@ void Hooks::Restore()
 float __fastcall Hooks::GameMode__getPickRange(C_GameMode* a1, __int64 a2, char a3)
 {
 	static auto oFunc = g_Hooks.GameMode__getPickRangeHook->GetOriginal<GameMode__getPickRange_t>();
-	static InfiniteBlockReach* InfiniteBlockReachModule = reinterpret_cast<InfiniteBlockReach*>(moduleMgr->getModule<InfiniteBlockReach>());
+	static InfiniteBlockReach* InfiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
 	if (InfiniteBlockReachModule == nullptr)
-		InfiniteBlockReachModule = reinterpret_cast<InfiniteBlockReach*>(moduleMgr->getModule<InfiniteBlockReach>());
+		InfiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
 	else if (InfiniteBlockReachModule->isEnabled()) 
 		return InfiniteBlockReachModule->getBlockReach();
 
@@ -224,9 +223,9 @@ __int64 __fastcall Hooks::inventoryScreen__tick(C_CraftingScreenController* a1, 
 {
 	static auto oFunc = g_Hooks.inventoryScreen__tickHook->GetOriginal<inventoryScreen__tick_t>();
 
-	static AutoArmor* AutoArmorMod = reinterpret_cast<AutoArmor*>(moduleMgr->getModule<AutoArmor>());
+	static AutoArmor* AutoArmorMod = moduleMgr->getModule<AutoArmor>();
 	if (AutoArmorMod == nullptr)
-		AutoArmorMod = reinterpret_cast<AutoArmor*>(moduleMgr->getModule<AutoArmor>());
+		AutoArmorMod = moduleMgr->getModule<AutoArmor>();
 	else {
 		AutoArmorMod->inventoryScreen = a1;
 	}
@@ -280,9 +279,9 @@ __int64 __fastcall Hooks::MinecraftGame__onAppSuspended(__int64 _this)
 void __fastcall Hooks::jumpPower(C_Entity* a1, float a2)
 {
 	static auto oFunc = g_Hooks.jumpPowerHook->GetOriginal<jumpPower_t>();
-	static HighJump* HighJumpMod = reinterpret_cast<HighJump*>(moduleMgr->getModule<HighJump>());
+	static HighJump* HighJumpMod = moduleMgr->getModule<HighJump>();
 	if (HighJumpMod == nullptr)
-		HighJumpMod = reinterpret_cast<HighJump*>(moduleMgr->getModule<HighJump>());
+		HighJumpMod = moduleMgr->getModule<HighJump>();
 	else if (HighJumpMod->isEnabled() && g_Data.getLocalPlayer() == a1) {
 		a1->velocity.y = HighJumpMod->jumpPower;
 		return;
@@ -297,9 +296,9 @@ bool __fastcall Hooks::Actor__isInWater(C_Entity* a1)
 	if (g_Data.getLocalPlayer() != a1)
 		return oFunc(a1);
 
-	static AirSwim* AirSwimModule = reinterpret_cast<AirSwim*>(moduleMgr->getModule<AirSwim>());
+	static AirSwim* AirSwimModule = moduleMgr->getModule<AirSwim>();
 	if (AirSwimModule == nullptr)
-		AirSwimModule = reinterpret_cast<AirSwim*>(moduleMgr->getModule<AirSwim>());
+		AirSwimModule = moduleMgr->getModule<AirSwim>();
 	else if (AirSwimModule->isEnabled())
 		return true;
 
@@ -310,9 +309,9 @@ __int64 __fastcall Hooks::fullBrightIdk(__int64 a1)
 {
 	static auto oFunc = g_Hooks.fullBrightIdk__Hook->GetOriginal<fullbrightIdk_t>();
 
-	static FullBright* fullBrightModule = reinterpret_cast<FullBright*>(moduleMgr->getModule<FullBright>());
+	static FullBright* fullBrightModule = moduleMgr->getModule<FullBright>();
 	if (fullBrightModule == nullptr)
-		fullBrightModule = reinterpret_cast<FullBright*>(moduleMgr->getModule<FullBright>());
+		fullBrightModule = moduleMgr->getModule<FullBright>();
 
 	static __int64 v7 = 0;
 	if (v7 == 0) {
@@ -334,9 +333,9 @@ __int64 __fastcall Hooks::chestScreenController__tick(C_ChestScreenController* a
 {
 	static auto oFunc = g_Hooks.chestScreenController__tickHook->GetOriginal<chestScreenController__tick_t>();
 
-	static ChestStealer* ChestStealerMod = reinterpret_cast<ChestStealer*>(moduleMgr->getModule<ChestStealer>());
+	static ChestStealer* ChestStealerMod = moduleMgr->getModule<ChestStealer>();
 	if (ChestStealerMod == nullptr)
-		ChestStealerMod = reinterpret_cast<ChestStealer*>(moduleMgr->getModule<ChestStealer>());
+		ChestStealerMod = moduleMgr->getModule<ChestStealer>();
 	else {
 		ChestStealerMod->chestScreenController = a1;
 	}
@@ -388,9 +387,9 @@ __int64 __fastcall Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity
 {
 	static auto oTick = g_Hooks.MoveInputHandler_tickHook->GetOriginal<MoveInputHandler_tick_t>();
 
-	static InventoryMove* InventoryMoveMod = reinterpret_cast<InventoryMove*>(moduleMgr->getModule<InventoryMove>());
+	static InventoryMove* InventoryMoveMod = moduleMgr->getModule<InventoryMove>();
 	if (InventoryMoveMod == nullptr)
-		InventoryMoveMod = reinterpret_cast<InventoryMove*>(moduleMgr->getModule<InventoryMove>());
+		InventoryMoveMod = moduleMgr->getModule<InventoryMove>();
 	else{
 		InventoryMoveMod->inputHandler = a1;
 	}
@@ -472,11 +471,11 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face,
 {
 	static auto oFunc = g_Hooks.GameMode_startDestroyHook->GetOriginal<GameMode_startDestroyBlock_t>();
 
-	static Nuker* nukerModule = reinterpret_cast<Nuker*>(moduleMgr->getModule<Nuker>());
+	static Nuker* nukerModule = moduleMgr->getModule<Nuker>();
 	static IModule* instaBreakModule = moduleMgr->getModule<InstaBreak>();
 	if (nukerModule == nullptr || instaBreakModule == nullptr)
 	{
-		nukerModule = reinterpret_cast<Nuker*>(moduleMgr->getModule<Nuker>());
+		nukerModule = moduleMgr->getModule<Nuker>();
 		instaBreakModule = moduleMgr->getModule<InstaBreak>();
 	}
 	else {
@@ -539,9 +538,9 @@ void Hooks::Actor_lerpMotion(C_Entity * _this, vec3_t motVec)
 	if (g_Data.getLocalPlayer() != _this)
 		return oLerp(_this, motVec);
 
-	static NoKnockBack* mod = reinterpret_cast<NoKnockBack*>(moduleMgr->getModule<NoKnockBack>());
+	static NoKnockBack* mod = moduleMgr->getModule<NoKnockBack>();
 	if (mod == nullptr)
-		mod = reinterpret_cast<NoKnockBack*>(moduleMgr->getModule<NoKnockBack>());
+		mod = moduleMgr->getModule<NoKnockBack>();
 	else if (mod->isEnabled()) {
 		static void* networkSender = reinterpret_cast<void*>(Utils::FindSignature("41 80 BF ?? ?? ?? ?? 00 0F 85 ?? ?? ?? ?? FF"));
 		if (networkSender == 0x0)
@@ -559,13 +558,13 @@ void Hooks::Actor_lerpMotion(C_Entity * _this, vec3_t motVec)
 	oLerp(_this, motVec);
 }
 
-__int64 Hooks::AppPlatform_getGameEdition(__int64 _this)
+signed int Hooks::AppPlatform_getGameEdition(__int64 _this)
 {
 	static auto oGetEditon = g_Hooks.AppPlatform_getGameEditionHook->GetOriginal<AppPlatform_getGameEdition_t>();
 
-	static EditionFaker* mod = static_cast<EditionFaker*>(moduleMgr->getModule<EditionFaker>());
+	static EditionFaker* mod = moduleMgr->getModule<EditionFaker>();
 	if (mod == nullptr)
-		mod = static_cast<EditionFaker*>(moduleMgr->getModule<EditionFaker>());
+		mod = moduleMgr->getModule<EditionFaker>();
 	else if (mod->isEnabled()) {
 		// Do nothing i guess
 		// Do some stuff with modifiers here maybe
@@ -581,14 +580,14 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 
 	static IModule* mod = moduleMgr->getModule<Freecam>();
 	static IModule* mod2 = moduleMgr->getModule<NoFall>();
-	static Blink* mod3 = reinterpret_cast<Blink*>(moduleMgr->getModule<Blink>());
-	static NoPacket* No_Packet = reinterpret_cast<NoPacket*>(moduleMgr->getModule<NoPacket>());
+	static Blink* mod3 = moduleMgr->getModule<Blink>();
+	static NoPacket* No_Packet = moduleMgr->getModule<NoPacket>();
 
 	if (mod == nullptr || mod2 == nullptr || mod3 == nullptr || No_Packet == nullptr) {
 		mod = moduleMgr->getModule<Freecam>();
 		mod2 = moduleMgr->getModule<NoFall>();
-		mod3 = reinterpret_cast<Blink*>(moduleMgr->getModule<Blink>());
-		No_Packet = reinterpret_cast<NoPacket*>(moduleMgr->getModule<NoPacket>());
+		mod3 = moduleMgr->getModule<Blink>();
+		No_Packet = moduleMgr->getModule<NoPacket>();
 	}
 	else if (No_Packet->isEnabled()) {
 		return;
@@ -886,7 +885,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 		static float disabledRcolors[4]; // Rainbow Colors, but for disabled modules
 		static std::string horionStr = std::string("Horion");					 // Static Horion logo / text
 		static float       horionStrWidth = DrawUtils::getTextWidth(&horionStr); // Graphical Width of Horion logo / text
-		static std::string dlStr = std::string("discord.gg/8CRYQWM");					 // Static Horion logo / text
+		static std::string dlStr = std::string("discord.gg/8CRYQWM");
+		static float       dlStrWidth = DrawUtils::getTextWidth(&horionStr);
 
 		float yOffset = 0; // Offset of next Text
 		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
@@ -907,8 +907,8 @@ __int64 __fastcall Hooks::renderText(__int64 yeet, C_MinecraftUIRenderContext* r
 
 		// Draw Horion logo
 		{
-			DrawUtils::drawText(vec2_t(2,windowSize.y - 20), &horionStr, nullptr, 1.5f);
-			DrawUtils::drawText(vec2_t(2.75f,windowSize.y - 8.75f), &dlStr, nullptr, 0.85f);
+			DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth - 12.0f,windowSize.y - 20), &horionStr, nullptr, 1.5f);
+			DrawUtils::drawText(vec2_t(windowSize.x - dlStrWidth - 42.75f,windowSize.y - 8.75f), &dlStr, nullptr, 0.85f);
 		}
 
 		// Draw ArrayList

@@ -81,13 +81,12 @@ public:
 	 *	Check for nullptr directly after that call, as Hooks::init is called before ModuleManager::initModules !	
 	 */
 	template<typename TRet>
-	IModule* getModule() { 
+	TRet* getModule() {
 		if (!isInitialized())
 			return nullptr;
-		for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
-			IModule* mod = *it;
-			if (typeid(*mod) == typeid(TRet) || typeid(mod) == typeid(TRet))
-				return mod;
+		for (auto pMod : moduleList) {
+			if (auto pRet = dynamic_cast<std::remove_pointer<TRet>::type*>(pMod))
+				return pRet;
 		}
 		return nullptr;
 	};

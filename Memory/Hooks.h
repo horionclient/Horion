@@ -52,7 +52,7 @@ private:
 	static float* Dimension_getFogColor(__int64, float* color, float brightness);
 	static void ChestBlockActor_tick(C_ChestBlockActor*, void* a);
 	static void Actor_lerpMotion(C_Entity* _this, vec3_t);
-	static __int64 AppPlatform_getGameEdition(__int64 _this);
+	static signed int AppPlatform_getGameEdition(__int64 _this);
 	static void pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4);
 	static void sendToServer(C_LoopbackPacketSender* a, C_Packet* packet);
 	static float LevelRendererPlayer_getFov(__int64 a1, float a2, bool a3);
@@ -117,7 +117,7 @@ private:
 	typedef bool(__fastcall* mob_isAlive_T)(C_Entity* a1);
 	typedef float(__fastcall* getFov_t)(__int64 a1, float a2, bool a3);
 	typedef void(__fastcall* autoComplete_t)(__int64 a1, __int64 a2, TextHolder* text, int a4);
-	typedef __int64(__fastcall* AppPlatform_getGameEdition_t)(__int64);
+	typedef signed int(__fastcall* AppPlatform_getGameEdition_t)(__int64);
 	typedef void(__fastcall* Actor_lerpMotion_t)(C_Entity*, vec3_t);
 	typedef float*(__fastcall* Dimension_getFogColor_t)(__int64, float*, float);
 	typedef char*(__fastcall* I8n_get_t)(void*, char*);
