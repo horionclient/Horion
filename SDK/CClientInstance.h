@@ -54,9 +54,9 @@ public:
 	
 
 	void displayClientMessageVA(const char * fmt, va_list lis) {
-		char bigboi[300];
-		int numCharacters = vsprintf_s(bigboi, 300, fmt, lis);
-		displayClientMessage(&std::string(bigboi));
+		char message[300];
+		int numCharacters = vsprintf_s(message, 300, fmt, lis);
+		displayClientMessage(&std::string(message));
 	}
 
 	void displayClientMessageF(const char * fmt, ...) {

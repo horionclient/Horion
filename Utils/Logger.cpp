@@ -66,25 +66,25 @@ void Logger::WriteLogFileF(const char * fmt, ...)
 		std::stringstream ssTime;
 		Utils::ApplySystemTime(&ssTime);
 
-		char bigboi[300];
-		char smolBoi[20];
-		sprintf_s(smolBoi, 20, "%s", ssTime.str().c_str());
+		char logMessage[300];
+		char timeStamp[20];
+		sprintf_s(timeStamp, 20, "%s", ssTime.str().c_str());
 
 		va_list arg;
 		va_start(arg, fmt);
-		int numCharacters = vsprintf_s(bigboi, 300, fmt, arg);
+		int numCharacters = vsprintf_s(logMessage, 300, fmt, arg);
 		va_end(arg);
-		fprintf(pFile, "%s%s", smolBoi, bigboi);
+		fprintf(pFile, "%s%s", timeStamp, logMessage);
 		fprintf(pFile, "\n");
 
 		fclose(pFile);
 
 		if (numCharacters < 100) {
-			TextForPrint boeing747;
-			strcpy_s(boeing747.text, 100, bigboi);
-			strcpy_s(boeing747.time, 20, smolBoi);
+			TextForPrint textForPrint;
+			strcpy_s(textForPrint.text, 100, logMessage);
+			strcpy_s(textForPrint.time, 20, timeStamp);
 			EnterCriticalSection(&vecLock);
-			stringPrintVector.push_back(boeing747);
+			stringPrintVector.push_back(textForPrint);
 			LeaveCriticalSection(&vecLock);
 		}
 	}
