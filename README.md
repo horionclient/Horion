@@ -1,4 +1,5 @@
-# Horion
+# Horion 
+![](https://img.shields.io/github/downloads/Horionclient/Horion-Releases/total?label=Total%20Injections&style=for-the-badge)
 
 **Horion** is a minecraft bedrock edition utility mod designed to enhance a users gameplay.
 If you want to contribute to this project, feel free to fork this repository and submit a pull request.
@@ -19,6 +20,3 @@ More Information on setting everything up can be found in the **[wiki](https://g
 If you need any help with understanding our code, join the official discord server:
 
 [![](https://discordapp.com/api/guilds/605086182560235569/embed.png?style=banner2)](https://discord.gg/Yqm3PR9)
-
-## Stats
-![](https://img.shields.io/github/downloads/Horionclient/Horion-Releases/total?label=Total%20Injections&style=for-the-badge)
