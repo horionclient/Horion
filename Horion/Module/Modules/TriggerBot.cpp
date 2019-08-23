@@ -17,7 +17,6 @@ const char* TriggerBot::getModuleName()
 {
 	return ("TriggerBot");
 }
-static std::vector <C_Entity*> targetList0;
 void TriggerBot::onTick(C_GameMode* gm)
 {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
@@ -25,7 +24,7 @@ void TriggerBot::onTick(C_GameMode* gm)
 	Odelay++;
 	if (target != 0 && Odelay >= delay)
 	{
-		if (target == g_Data.getLocalPlayer()) // Skip Local player
+		if (target == localPlayer) // Skip Local player
 			return;
 
 		if (target == 0)
@@ -46,7 +45,7 @@ void TriggerBot::onTick(C_GameMode* gm)
 			localPlayer->swingArm();
 			gm->attack(target);
 		}
-			Odelay = 0;
+		Odelay = 0;
 		}
 	}
 }
