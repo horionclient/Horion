@@ -39,7 +39,6 @@ void TriggerBot::onTick(C_GameMode* gm)
 		if (!Target::isValidTarget(target))
 			return;
 
-		else {
 		if (localPlayer->getEntityTypeId() == target->getEntityTypeId())
 		{
 			localPlayer->swingArm();
