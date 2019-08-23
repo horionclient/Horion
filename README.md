@@ -1,10 +1,10 @@
 # Horion 
-![](https://img.shields.io/github/downloads/Horionclient/Horion-Releases/total?label=Total%20Injections&style=for-the-badge)
 
 **Horion** is a minecraft bedrock edition utility mod designed to enhance a users gameplay.
 If you want to contribute to this project, feel free to fork this repository and submit a pull request.
 
 [![Download the injector](https://img.shields.io/badge/DOWNLOAD-LATEST-brightgreen?style=for-the-badge "Download the injector")](https://horionclient.eu/files/HorionInjector.exe "Download the injector")
+![](https://img.shields.io/github/downloads/Horionclient/Horion-Releases/total?label=Total%20Injections&style=for-the-badge)
 
 ## Installation
 1. **Download the Injector** or directly download the `.dll` via the label:
