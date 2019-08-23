@@ -14,7 +14,7 @@
 #include <windows.h>
 #include <Winhttp.h>
 #include <string>
-using namespace std;
+//using namespace std;
 
 typedef bool (*PROGRESSPROC)(double);
 
@@ -25,34 +25,34 @@ static const int INT_BUFFERSIZE = 10240;    // Initial 10 KB temporary buffer, d
 class WinHttpClient
 {
 public:
-    inline WinHttpClient(const wstring &url, PROGRESSPROC progressProc = NULL);
+    inline WinHttpClient(const std::wstring &url, PROGRESSPROC progressProc = NULL);
     inline ~WinHttpClient(void);
 
     // It is a synchronized method and may take a long time to finish.
-    inline bool SendHttpRequest(const wstring &httpVerb = L"GET", bool disableAutoRedirect = false);
-    inline wstring GetResponseHeader(void);
-    inline wstring GetResponseContent(void);
-    inline wstring GetResponseCharset(void);
-    inline wstring GetResponseStatusCode(void);
-    inline wstring GetResponseLocation(void);
-    inline wstring GetRequestHost(void);
+    inline bool SendHttpRequest(const std::wstring &httpVerb = L"GET", bool disableAutoRedirect = false);
+    inline std::wstring GetResponseHeader(void);
+    inline std::wstring GetResponseContent(void);
+    inline std::wstring GetResponseCharset(void);
+    inline std::wstring GetResponseStatusCode(void);
+    inline std::wstring GetResponseLocation(void);
+    inline std::wstring GetRequestHost(void);
     inline const BYTE *GetRawResponseContent(void);
     inline unsigned int GetRawResponseContentLength(void);
     inline unsigned int GetRawResponseReceivedContentLength(void);
-    inline bool SaveResponseToFile(const wstring &filePath);
-    inline wstring GetResponseCookies(void);
-    inline bool SetAdditionalRequestCookies(const wstring &cookies);
+    inline bool SaveResponseToFile(const std::wstring &filePath);
+    inline std::wstring GetResponseCookies(void);
+    inline bool SetAdditionalRequestCookies(const std::wstring &cookies);
     inline bool SetAdditionalDataToSend(BYTE *data, unsigned int dataSize);
-    inline bool UpdateUrl(const wstring &url);
+    inline bool UpdateUrl(const std::wstring &url);
     inline bool ResetAdditionalDataToSend(void);
-    inline bool SetAdditionalRequestHeaders(const wstring &additionalRequestHeaders);
+    inline bool SetAdditionalRequestHeaders(const std::wstring &additionalRequestHeaders);
     inline bool SetRequireValidSslCertificates(bool require);
-    inline bool SetProxy(const wstring &proxy);
+    inline bool SetProxy(const std::wstring &proxy);
     inline DWORD GetLastError(void);
-    inline bool SetUserAgent(const wstring &userAgent);
-    inline bool SetForceCharset(const wstring &charset);
-    inline bool SetProxyUsername(const wstring &username);
-    inline bool SetProxyPassword(const wstring &password);
+    inline bool SetUserAgent(const std::wstring &userAgent);
+    inline bool SetForceCharset(const std::wstring &charset);
+    inline bool SetProxyUsername(const std::wstring &username);
+    inline bool SetProxyPassword(const std::wstring &password);
     inline bool SetTimeouts(unsigned int resolveTimeout = 0,
                             unsigned int connectTimeout = 60000,
                             unsigned int sendTimeout = 30000,
@@ -65,35 +65,35 @@ private:
 
     HINTERNET m_sessionHandle;
     bool m_requireValidSsl;
-    wstring m_requestURL;
-    wstring m_requestHost;
-    wstring m_responseHeader;
-    wstring m_responseContent;
-    wstring m_responseCharset;
+    std::wstring m_requestURL;
+    std::wstring m_requestHost;
+    std::wstring m_responseHeader;
+    std::wstring m_responseContent;
+    std::wstring m_responseCharset;
     BYTE *m_pResponse;
     unsigned int m_responseByteCountReceived;   // Up to 4GB.
     PROGRESSPROC m_pfProcessProc;
     unsigned int m_responseByteCount;
-    wstring m_responseCookies;
-    wstring m_additionalRequestCookies;
+    std::wstring m_responseCookies;
+    std::wstring m_additionalRequestCookies;
     BYTE *m_pDataToSend;
     unsigned int m_dataToSendSize;
-    wstring m_additionalRequestHeaders;
-    wstring m_proxy;
+    std::wstring m_additionalRequestHeaders;
+    std::wstring m_proxy;
     DWORD m_dwLastError;
-    wstring m_statusCode;
-    wstring m_userAgent;
+    std::wstring m_statusCode;
+    std::wstring m_userAgent;
     bool m_bForceCharset;
-    wstring m_proxyUsername;
-    wstring m_proxyPassword;
-    wstring m_location;
+    std::wstring m_proxyUsername;
+    std::wstring m_proxyPassword;
+    std::wstring m_location;
     unsigned int m_resolveTimeout;
     unsigned int m_connectTimeout;
     unsigned int m_sendTimeout;
     unsigned int m_receiveTimeout;
 };
 
-WinHttpClient::WinHttpClient(const wstring &url, PROGRESSPROC progressProc)
+WinHttpClient::WinHttpClient(const std::wstring &url, PROGRESSPROC progressProc)
     : m_requestURL(url),
       m_sessionHandle(NULL),
       m_requireValidSsl(false),
@@ -141,7 +141,7 @@ WinHttpClient::~WinHttpClient(void)
     }
 }
 
-bool WinHttpClient::SendHttpRequest(const wstring &httpVerb, bool disableAutoRedirect)
+bool WinHttpClient::SendHttpRequest(const std::wstring &httpVerb, bool disableAutoRedirect)
 {
     if (m_requestURL.size() <= 0)
     {
@@ -149,7 +149,7 @@ bool WinHttpClient::SendHttpRequest(const wstring &httpVerb, bool disableAutoRed
         return false;
     }
     // Make verb uppercase.
-    wstring verb = httpVerb;
+    std::wstring verb = httpVerb;
     if (_wcsicmp(verb.c_str(), L"GET") == 0)
     {
         verb = L"GET";
@@ -242,7 +242,7 @@ bool WinHttpClient::SendHttpRequest(const wstring &httpVerb, bool disableAutoRed
                     }
                     if (m_additionalRequestCookies.size() > 0)
                     {
-                        wstring cookies = L"Cookie: ";
+                        std::wstring cookies = L"Cookie: ";
                         cookies += m_additionalRequestCookies;
                         if (!::WinHttpAddRequestHeaders(hRequest, cookies.c_str(), (DWORD) cookies.size(), WINHTTP_ADDREQ_FLAG_COALESCE_WITH_SEMICOLON))
                         {
@@ -425,8 +425,8 @@ bool WinHttpClient::SendHttpRequest(const wstring &httpVerb, bool disableAutoRed
                                                               WINHTTP_NO_HEADER_INDEX))
                                     {
                                         m_responseHeader.assign(szHeader);
-                                        vector<wstring> result;
-                                        wstring regExp = L"";
+										std::vector<std::wstring> result;
+                                        std::wstring regExp = L"";
                                         if (!m_bForceCharset)
                                         {
                                             regExp = L"charset={[A-Za-z0-9\\-_]+}";
@@ -448,7 +448,7 @@ bool WinHttpClient::SendHttpRequest(const wstring &httpVerb, bool disableAutoRed
                                         regExp = L"Set-Cookie:\\b*{.+?}\\n";
                                         if (ParseRegExp(regExp, false, 1, m_responseHeader, result) && result.size() > 0)
                                         {
-                                            for (vector<wstring>::size_type i = 0; i < result.size(); i++)
+                                            for (std::vector<std::wstring>::size_type i = 0; i < result.size(); i++)
                                             {
                                                 m_responseCookies += result[i];
                                                 if (i != result.size() - 1)
@@ -602,8 +602,8 @@ bool WinHttpClient::SendHttpRequest(const wstring &httpVerb, bool disableAutoRed
                             // If the resposne html web page size is less than 200, retry.
                             if (verb == L"GET" && !disableAutoRedirect)
                             {
-                                wstring regExp = L"{<html>}";
-                                vector<wstring> result;
+                                std::wstring regExp = L"{<html>}";
+								std::vector<std::wstring> result;
                                 if (ParseRegExp(regExp, false, 1, m_responseContent, result) && result.size() > 0)
                                 {
                                     regExp = L"{</html>}";
@@ -636,27 +636,27 @@ bool WinHttpClient::SendHttpRequest(const wstring &httpVerb, bool disableAutoRed
     return bRetVal;
 }
 
-wstring WinHttpClient::GetResponseHeader(void)
+std::wstring WinHttpClient::GetResponseHeader(void)
 {
     return m_responseHeader;
 }
 
-wstring WinHttpClient::GetResponseContent(void)
+std::wstring WinHttpClient::GetResponseContent(void)
 {
     return m_responseContent;
 }
 
-wstring WinHttpClient::GetResponseCharset(void)
+std::wstring WinHttpClient::GetResponseCharset(void)
 {
     return m_responseCharset;
 }
 
-wstring WinHttpClient::GetRequestHost(void)
+std::wstring WinHttpClient::GetRequestHost(void)
 {
     return m_requestHost;
 }
 
-bool WinHttpClient::SaveResponseToFile(const wstring &filePath)
+bool WinHttpClient::SaveResponseToFile(const std::wstring &filePath)
 {
     if (m_pResponse == NULL || m_responseByteCountReceived <= 0)
     {
@@ -687,12 +687,12 @@ bool WinHttpClient::SetProgress(unsigned int byteCountReceived)
     return bReturn;
 }
 
-wstring WinHttpClient::GetResponseCookies(void)
+std::wstring WinHttpClient::GetResponseCookies(void)
 {
     return m_responseCookies;
 }
 
-bool WinHttpClient::SetAdditionalRequestCookies(const wstring &cookies)
+bool WinHttpClient::SetAdditionalRequestCookies(const std::wstring &cookies)
 {
     m_additionalRequestCookies = cookies;
 
@@ -737,7 +737,7 @@ bool WinHttpClient::ResetAdditionalDataToSend(void)
 }
 
 // Allow us to reset the url on subsequent requests
-bool WinHttpClient::UpdateUrl(const wstring &url)
+bool WinHttpClient::UpdateUrl(const std::wstring &url)
 {
     m_requestURL = url;
     ResetAdditionalDataToSend();
@@ -745,14 +745,14 @@ bool WinHttpClient::UpdateUrl(const wstring &url)
     return true;
 }
 
-bool WinHttpClient::SetAdditionalRequestHeaders(const wstring &additionalRequestHeaders)
+bool WinHttpClient::SetAdditionalRequestHeaders(const std::wstring &additionalRequestHeaders)
 {
     m_additionalRequestHeaders = additionalRequestHeaders;
 
     return true;
 }
 
-bool WinHttpClient::SetProxy(const wstring &proxy)
+bool WinHttpClient::SetProxy(const std::wstring &proxy)
 {
     m_proxy = proxy;
 
@@ -788,26 +788,26 @@ DWORD WinHttpClient::GetLastError(void)
     return m_dwLastError;
 }
 
-wstring WinHttpClient::GetResponseStatusCode(void)
+std::wstring WinHttpClient::GetResponseStatusCode(void)
 {
     return m_statusCode;
 }
 
-bool WinHttpClient::SetUserAgent(const wstring &userAgent)
+bool WinHttpClient::SetUserAgent(const std::wstring &userAgent)
 {
     m_userAgent = userAgent;
 
     return true;
 }
 
-bool WinHttpClient::SetForceCharset(const wstring &charset)
+bool WinHttpClient::SetForceCharset(const std::wstring &charset)
 {
     m_responseCharset = charset;
 
     return true;
 }
 
-bool WinHttpClient::SetProxyUsername(const wstring &username)
+bool WinHttpClient::SetProxyUsername(const std::wstring &username)
 {
     m_proxyUsername = username;
 
@@ -821,7 +821,7 @@ bool WinHttpClient::SetProxyPassword(const std::wstring &password)
     return true;
 }
     
-wstring WinHttpClient::GetResponseLocation(void)
+std::wstring WinHttpClient::GetResponseLocation(void)
 {
     return m_location;
 }

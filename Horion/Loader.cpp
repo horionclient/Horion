@@ -23,7 +23,7 @@ DWORD WINAPI analyticsThread(LPVOID lpParam) {
 			client.SendHttpRequest();
 
 			// The response header.
-			wstring httpResponseHeader = client.GetResponseHeader();
+			std::wstring httpResponseHeader = client.GetResponseHeader();
 		};
 
 		sendRequest("startup");

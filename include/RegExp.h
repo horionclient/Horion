@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-using namespace std;
+//using namespace std;
 
 #pragma warning(push)
 #pragma warning(disable: 6385 6011 4127)
@@ -33,7 +33,7 @@ using namespace std;
  *  1. RegExp = L"{ab}", source = L"abcabe", then result = L"ab", L"ab".
  *  2. RegExp = L"{ab}{cd}", source = L"abcdeabecd", then result = L"ab", L"cd", L"ab", L"cd".
 */
-inline bool ParseRegExp(const wstring &regExp, bool caseSensitive, int groupCount, const wstring &source, vector<wstring> &result, bool allowDuplicate = false)
+inline bool ParseRegExp(const std::wstring &regExp, bool caseSensitive, int groupCount, const std::wstring &source, std::vector<std::wstring> &result, bool allowDuplicate = false)
 {
     result.clear();
     if (regExp.size() <= 0)
@@ -72,13 +72,13 @@ inline bool ParseRegExp(const wstring &regExp, bool caseSensitive, int groupCoun
         {
             const wchar_t *pStart = NULL;
             const wchar_t *pEnd = NULL;
-            vector<wstring> tempMatch;
+			std::vector<std::wstring> tempMatch;
             for (int i = 0; i < groupCount; i++)
             {
                 mc.GetMatch(i, &pStart, &pEnd);
                 if (pStart != NULL && pEnd != NULL)
                 {
-                    wstring match(pStart, pEnd-pStart);
+					std::wstring match(pStart, pEnd-pStart);
                     tempMatch.push_back(match);
                 }
                 else
@@ -90,10 +90,10 @@ inline bool ParseRegExp(const wstring &regExp, bool caseSensitive, int groupCoun
             if (!allowDuplicate)
             {
                 // Check whether this match already exists in the vector.
-                for (vector<wstring>::iterator it = result.begin(); it != result.end();)
+                for (std::vector<std::wstring>::iterator it = result.begin(); it != result.end();)
                 {
                     bool bEqual = true;
-                    for (vector<wstring>::iterator tempMatchIt = tempMatch.begin(); tempMatchIt != tempMatch.end(); tempMatchIt++, it++)
+                    for (std::vector<std::wstring>::iterator tempMatchIt = tempMatch.begin(); tempMatchIt != tempMatch.end(); tempMatchIt++, it++)
                     {
                         bool bGroupEqual = true;
                         if (caseSensitive)
@@ -118,7 +118,7 @@ inline bool ParseRegExp(const wstring &regExp, bool caseSensitive, int groupCoun
             }
             if (bAdd)
             {
-                for (vector<wstring>::iterator tempMatchIt = tempMatch.begin(); tempMatchIt != tempMatch.end(); tempMatchIt++)
+                for (std::vector<std::wstring>::iterator tempMatchIt = tempMatch.begin(); tempMatchIt != tempMatch.end(); tempMatchIt++)
                 {
                     result.push_back(*tempMatchIt);
                 }
