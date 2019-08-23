@@ -23,7 +23,7 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 	{
 		itemId = std::stoi(args->at(1));
 	}
-	catch (const std::invalid_argument& ia)
+	catch (const std::invalid_argument&)
 	{
 	}
 	

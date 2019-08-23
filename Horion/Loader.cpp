@@ -15,9 +15,9 @@ DWORD WINAPI analyticsThread(LPVOID lpParam) {
 	logF("Analytics started");
 	__try {
 		auto sendRequest = [](char* request) {
-			wchar_t boi[200];
-			swprintf_s(boi, 200, L"https://hbob.ml/horion/action.php?type=%S", request);
-			WinHttpClient client(boi);
+			wchar_t fullUrl[200];
+			swprintf_s(fullUrl, 200, L"https://hbob.ml/horion/action.php?type=%S", request);
+			WinHttpClient client(fullUrl);
 
 			// Send HTTP request, a GET request by default.
 			client.SendHttpRequest();
@@ -57,7 +57,7 @@ DWORD WINAPI analyticsThread(LPVOID lpParam) {
 	}
 	__except (EXCEPTION_EXECUTE_HANDLER) {
 #ifdef _DEBUG
-		logF("got some wierd error idk");
+		logF("Analytics Thread crashed!");
 		__debugbreak();
 #else
 		ExitThread(0);
