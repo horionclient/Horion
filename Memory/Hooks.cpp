@@ -207,7 +207,7 @@ void Hooks::Restore()
 	//g_Hooks.inventoryScreen__tickHook->Restore();
 }
 
-float __fastcall Hooks::GameMode__getPickRange(C_GameMode* a1, __int64 a2, char a3)
+float __fastcall Hooks::GameMode__getPickRange(C_GameMode* _this, __int64 a2, char a3)
 {
 	static auto oFunc = g_Hooks.GameMode__getPickRangeHook->GetOriginal<GameMode__getPickRange_t>();
 	static InfiniteBlockReach* InfiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
@@ -216,10 +216,10 @@ float __fastcall Hooks::GameMode__getPickRange(C_GameMode* a1, __int64 a2, char 
 	else if (InfiniteBlockReachModule->isEnabled()) 
 		return InfiniteBlockReachModule->getBlockReach();
 
-	return oFunc(a1, a2, a3);
+	return oFunc(_this, a2, a3);
 }
 
-__int64 __fastcall Hooks::inventoryScreen__tick(C_CraftingScreenController* a1, __int64 a2)
+__int64 __fastcall Hooks::inventoryScreen__tick(C_CraftingScreenController* _this, __int64 a2)
 {
 	static auto oFunc = g_Hooks.inventoryScreen__tickHook->GetOriginal<inventoryScreen__tick_t>();
 
@@ -227,10 +227,10 @@ __int64 __fastcall Hooks::inventoryScreen__tick(C_CraftingScreenController* a1, 
 	if (AutoArmorMod == nullptr)
 		AutoArmorMod = moduleMgr->getModule<AutoArmor>();
 	else {
-		AutoArmorMod->inventoryScreen = a1;
+		AutoArmorMod->inventoryScreen = _this;
 	}
 
-	return oFunc(a1,a2);
+	return oFunc(_this,a2);
 }
 
 
@@ -289,12 +289,12 @@ void __fastcall Hooks::jumpPower(C_Entity* a1, float a2)
 	oFunc(a1, a2);
 }
 
-bool __fastcall Hooks::Actor__isInWater(C_Entity* a1)
+bool __fastcall Hooks::Actor__isInWater(C_Entity* _this)
 {
 	static auto oFunc = g_Hooks.Actor__isInWaterHook->GetOriginal<Actor__isInWater_t>();
 
-	if (g_Data.getLocalPlayer() != a1)
-		return oFunc(a1);
+	if (g_Data.getLocalPlayer() != _this)
+		return oFunc(_this);
 
 	static AirSwim* AirSwimModule = moduleMgr->getModule<AirSwim>();
 	if (AirSwimModule == nullptr)
@@ -302,7 +302,7 @@ bool __fastcall Hooks::Actor__isInWater(C_Entity* a1)
 	else if (AirSwimModule->isEnabled())
 		return true;
 
-	return oFunc(a1);
+	return oFunc(_this);
 }
 
 __int64 __fastcall Hooks::fullBright(__int64 a1)
@@ -429,7 +429,7 @@ BYTE* __fastcall Hooks::BlockLegacy_getLightEmission(C_BlockLegacy* a1, BYTE* a2
 	return oFunc(a1, a2);
 }
 
-__int64 Hooks::LevelRenderer_renderLevel(__int64 a1, __int64 a2, __int64 a3)
+__int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3)
 {
 	static auto oFunc = g_Hooks.LevelRenderer_renderLevelHook->GetOriginal<LevelRenderer_renderLevel_t>();
 
@@ -447,7 +447,7 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 a1, __int64 a2, __int64 a3)
 			unsigned long long *v5; // rdi
 			unsigned long long *i; // rbx
 
-			v5 = *(unsigned long long **)(a1 + 32);
+			v5 = *(unsigned long long **)(_this + 32);
 			for (i = (unsigned long long *)*v5; i != v5; i = (unsigned long long *)*i)
 				reloadShit(i[3]);
 		}
@@ -455,19 +455,19 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 a1, __int64 a2, __int64 a3)
 
 
 
-	return oFunc(a1, a2, a3);
+	return oFunc(_this, a2, a3);
 }
 
-void Hooks::HIDController_keyMouse(C_HIDController* a1, void* a2, void* a3)
+void Hooks::HIDController_keyMouse(C_HIDController* _this, void* a2, void* a3)
 {
 	static auto oFunc = g_Hooks.HIDController_keyMouseHook->GetOriginal<HIDController_keyMouse_t>();
-	GameData::setHIDController(a1);
+	GameData::setHIDController(_this);
 	isTicked = true;
-	oFunc(a1, a2, a3); // Call Original Func
+	oFunc(_this, a2, a3); // Call Original Func
 	return;
 }
 
-void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face, void* a4, void* a5)
+void Hooks::GameMode_startDestroyBlock(C_GameMode* _this, vec3_ti* a2, uint8_t face, void* a4, void* a5)
 {
 	static auto oFunc = g_Hooks.GameMode_startDestroyHook->GetOriginal<GameMode_startDestroyBlock_t>();
 
@@ -500,7 +500,7 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face,
 							uint8_t data = blok->data;
 							int id = (*(blok->blockLegacy))->blockId;
 							if(id != 0 && (!isVeinMiner || (id == selectedBlockId && data == selectedBlockData)))
-								a->destroyBlock(&tempPos, face);
+								_this->destroyBlock(&tempPos, face);
 						}
 					}
 				}
@@ -508,12 +508,12 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* a, vec3_ti* a2, uint8_t face,
 			return;
 		}
 		if (instaBreakModule->isEnabled()) {
-			a->destroyBlock(a2, face);
+			_this->destroyBlock(a2, face);
 			return;
 		}
 	}
 
-	oFunc(a, a2, face, a4, a5);
+	oFunc(_this, a2, face, a4, a5);
 }
 
 void __fastcall Hooks::MultiLevelPlayer_tick(C_EntityList * _this)
@@ -578,46 +578,46 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 {
 	static auto oFunc = g_Hooks.sendToServerHook->GetOriginal<sendToServer_tick_t>();
 
-	static IModule* mod = moduleMgr->getModule<Freecam>();
-	static IModule* mod2 = moduleMgr->getModule<NoFall>();
-	static Blink* mod3 = moduleMgr->getModule<Blink>();
+	static IModule* FreecamMod = moduleMgr->getModule<Freecam>();
+	static IModule* NoFallMod = moduleMgr->getModule<NoFall>();
+	static Blink* BlinkMod = moduleMgr->getModule<Blink>();
 	static NoPacket* No_Packet = moduleMgr->getModule<NoPacket>();
 
-	if (mod == nullptr || mod2 == nullptr || mod3 == nullptr || No_Packet == nullptr) {
-		mod = moduleMgr->getModule<Freecam>();
-		mod2 = moduleMgr->getModule<NoFall>();
-		mod3 = moduleMgr->getModule<Blink>();
+	if (FreecamMod == nullptr || NoFallMod == nullptr || BlinkMod == nullptr || No_Packet == nullptr) {
+		FreecamMod = moduleMgr->getModule<Freecam>();
+		NoFallMod = moduleMgr->getModule<NoFall>();
+		BlinkMod = moduleMgr->getModule<Blink>();
 		No_Packet = moduleMgr->getModule<NoPacket>();
 	}
 	else if (No_Packet->isEnabled()) {
 		return;
 	}
-	else if (mod->isEnabled() || mod3->isEnabled()) {
+	else if (FreecamMod->isEnabled() || BlinkMod->isEnabled()) {
 
 		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
 		if (frenchBoy.vTable == packet->vTable)
 		{
-			if (mod3->isEnabled())
+			if (BlinkMod->isEnabled())
 			{
 				C_MovePlayerPacket* meme = reinterpret_cast<C_MovePlayerPacket*>(packet);
 				meme->onGround = true; //Don't take Fall Damages when turned off
-				mod3->PacketMeme.push_back(new C_MovePlayerPacket(*meme)); // Saving the packets
+				BlinkMod->PacketMeme.push_back(new C_MovePlayerPacket(*meme)); // Saving the packets
 			}
 			return; // Dont call sendToServer
 		}
 	}
-	else if (!mod3->isEnabled() && mod3->PacketMeme.size() > 0) {
+	else if (!BlinkMod->isEnabled() && BlinkMod->PacketMeme.size() > 0) {
 
-		for (std::vector<C_MovePlayerPacket*>::iterator it = mod3->PacketMeme.begin(); it != mod3->PacketMeme.end(); ++it)
+		for (std::vector<C_MovePlayerPacket*>::iterator it = BlinkMod->PacketMeme.begin(); it != BlinkMod->PacketMeme.end(); ++it)
 		{
 			oFunc(a, (*it));
 			delete *it;
 			*it = nullptr;
 		}
-		mod3->PacketMeme.clear();
+		BlinkMod->PacketMeme.clear();
 		return;
 	}
-	else if (mod2->isEnabled()) {
+	else if (NoFallMod->isEnabled()) {
 		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
 		if (frenchBoy.vTable == packet->vTable) {
 			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
@@ -627,7 +627,7 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 	oFunc(a, packet);
 }
 
-float Hooks::LevelRendererPlayer_getFov(__int64 a1, float a2, bool a3)
+float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3)
 {
 	static auto oGetFov = g_Hooks.levelRendererPlayer_getFovHook->GetOriginal<getFov_t>();
 	static void* renderItemInHand = reinterpret_cast<void*>(Utils::FindSignature("F3 44 0F 10 2D ?? ?? ?? ?? F3 41 0F 59 C5 0F 28 DE F3"));
@@ -637,26 +637,26 @@ float Hooks::LevelRendererPlayer_getFov(__int64 a1, float a2, bool a3)
 		//static float yess = 0;
 		//yess += 0.03f;
 		//return 60 + 40 + sinf(yess) * 50;
-		return oGetFov(a1, a2, a3);
+		return oGetFov(_this, a2, a3);
 	}
 	if (_ReturnAddress() == setupCamera) {
-		return oGetFov(a1, a2, a3);
+		return oGetFov(_this, a2, a3);
 	}
 #ifdef _DEBUG
 	logF("LevelRendererPlayer_getFov Return Addres: %llX", _ReturnAddress());
 	__debugbreak(); // IF we reach here, a sig is broken
 #endif
-	return oGetFov(a1, a2, a3);
+	return oGetFov(_this, a2, a3);
 }
 
-bool Hooks::Mob_isAlive(C_Entity* a1)
+bool Hooks::Mob_isAlive(C_Entity* _this)
 {
 	static auto oIsAlive = g_Hooks.mob_isAliveHook->GetOriginal<mob_isAlive_T>();
 
 	//if (a1 == g_Data.getLocalPlayer())
 		//return true;
 
-	return oIsAlive(a1);
+	return oIsAlive(_this);
 }
 
 void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4)
@@ -1035,7 +1035,7 @@ char* __fastcall Hooks::I8n_get(void* f, char* str)
 	return oGet(f, str);
 }
 
-float * Hooks::Dimension_getFogColor(__int64 a1, float * color, float brightness)
+float * Hooks::Dimension_getFogColor(__int64 _this, float * color, float brightness)
 {
 	static auto oGetFogColor = g_Hooks.Dimension_getFogColorHook->GetOriginal<Dimension_getFogColor_t>();
 
@@ -1062,5 +1062,5 @@ float * Hooks::Dimension_getFogColor(__int64 a1, float * color, float brightness
 
 		return rcolors;
 	}
-	return oGetFogColor(a1, color, brightness);
+	return oGetFogColor(_this, color, brightness);
 }
