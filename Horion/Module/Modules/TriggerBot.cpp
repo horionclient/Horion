@@ -24,7 +24,7 @@ void TriggerBot::onTick(C_GameMode* gm)
 	Odelay++;
 	if (target != 0 && Odelay >= delay)
 	{
-		if (target == localPlayer) // Skip Local player
+		if (target == localPlayer()) // Skip Local player
 			return;
 
 		if (target == 0)
