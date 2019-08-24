@@ -45,7 +45,6 @@ void TriggerBot::onTick(C_GameMode* gm)
 			gm->attack(target);
 		}
 		Odelay = 0;
-		}
 	}
-
+}
 
