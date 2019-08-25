@@ -1,7 +1,5 @@
 #include "EnchantCommand.h"
-#include <map>
 
-std::map<std::string, int> enchantMap;
 
 EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enchantment> [level]")
 {
@@ -41,7 +39,6 @@ EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enc
 	enchantMap["lure"] = 24;
 }
 
-
 EnchantCommand::~EnchantCommand()
 {
 }
@@ -64,7 +61,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 		else
 			enchantId = assertInt(args->at(1));
 	}
-	catch (int param) {
+	catch (int) {
 		logF("exception while trying to get enchant string");
 		enchantId = assertInt(args->at(1));
 	}

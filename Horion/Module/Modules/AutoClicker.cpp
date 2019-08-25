@@ -19,8 +19,8 @@ const char* AutoClicker::getModuleName()
 
 void AutoClicker::onTick(C_GameMode* gm)
 {
-	if (!g_Data.isLeftClickDown() && Odelay != 0) Odelay = 0;
-	if (g_Data.isLeftClickDown() && GameData::canUseMoveKeys()) {
+	if (!GameData::isLeftClickDown() && Odelay != 0) Odelay = 0;
+	if (GameData::isLeftClickDown() && GameData::canUseMoveKeys()) {
 		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 		C_Entity* target = g_Data.getClientInstance()->getPointerStruct()->entityPtr;
 		Odelay++;
