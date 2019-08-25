@@ -13,15 +13,114 @@ EnchantCommand::~EnchantCommand()
 
 bool EnchantCommand::execute(std::vector<std::string>* args)
 {
-	assertTrue(args->size() > 1);
+	assertTrue(args->size() > 1); // this line stops the command from been run if the proper args are not given
+
 	int enchantId = 0;
 	int enchantLevel = 32767;
 	if (args->size() > 2)
 		enchantLevel = assertInt(args->at(2));
 
-	if (strcmp(args->at(1).c_str(),"all") != 0)
-		enchantId = assertInt(args->at(1));
+	if (strcmp(args->at(1).c_str(), "Protection") == 0)
+		enchantId = 0;
 
+	if (strcmp(args->at(1).c_str(), "Fire_Protection") == 0)
+		enchantId = 1;
+
+	if (strcmp(args->at(1).c_str(), "Feather_Falling") == 0)
+		enchantId = 2;
+
+	if (strcmp(args->at(1).c_str(), "Blast_Protection") == 0)
+		enchantId = 3;
+
+	if (strcmp(args->at(1).c_str(), "Projectile_Protection") == 0)
+		enchantId = 4;
+
+	if (strcmp(args->at(1).c_str(), "Thorns") == 0)
+		enchantId = 5;
+
+	if (strcmp(args->at(1).c_str(), "Respiration") == 0)
+		enchantId = 6;
+
+	if (strcmp(args->at(1).c_str(), "Depth_Strider") == 0)
+		enchantId = 7;
+
+	if (strcmp(args->at(1).c_str(), "Aqua_Infinity") == 0)
+		enchantId = 8;
+
+	if (strcmp(args->at(1).c_str(), "Frost_walker") == 0)
+		enchantId = 25;
+
+	if (strcmp(args->at(1).c_str(), "Sharpness") == 0)
+		enchantId = 9;
+
+	if (strcmp(args->at(1).c_str(), "Smite") == 0)
+		enchantId = 10;
+
+	if (strcmp(args->at(1).c_str(), "Bane_of_Arthropods") == 0)
+		enchantId = 11;
+
+	if (strcmp(args->at(1).c_str(), "Knockback") == 0)
+		enchantId = 12;
+
+	if (strcmp(args->at(1).c_str(), "Fire_Aspect") == 0)
+		enchantId = 13;
+
+	if (strcmp(args->at(1).c_str(), "Looting") == 0)
+		enchantId = 14;
+
+	if (strcmp(args->at(1).c_str(), "Channeling") == 0)
+		enchantId = 32;
+
+	if (strcmp(args->at(1).c_str(), "Impaling") == 0)
+		enchantId = 29;
+
+	if (strcmp(args->at(1).c_str(), "Loyalty") == 0)
+		enchantId = 31;
+
+	if (strcmp(args->at(1).c_str(), "Riptide") == 0)
+		enchantId = 30;
+
+	if (strcmp(args->at(1).c_str(), "SilkTouch") == 0)
+		enchantId = 16;
+
+	if (strcmp(args->at(1).c_str(), "Fortune") == 0)
+		enchantId = 18;
+
+	if (strcmp(args->at(1).c_str(), "Unbreaking") == 0)
+		enchantId = 17;
+
+	if (strcmp(args->at(1).c_str(), "Efficiency") == 0)
+		enchantId = 15;
+
+	if (strcmp(args->at(1).c_str(), "Mending") == 0)
+		enchantId = 26;
+
+	if (strcmp(args->at(1).c_str(), "Power") == 0)
+		enchantId = 19;
+
+	if (strcmp(args->at(1).c_str(), "Punch") == 0)
+		enchantId = 20;
+
+	if (strcmp(args->at(1).c_str(), "Flame") == 0)
+		enchantId = 21;
+
+	if (strcmp(args->at(1).c_str(), "Infinity") == 0)
+		enchantId = 22;
+
+	if (strcmp(args->at(1).c_str(), "Multishot") == 0)
+		enchantId = 33;
+
+	if (strcmp(args->at(1).c_str(), "Quick_Charge") == 0)
+		enchantId = 35;
+
+	if (strcmp(args->at(1).c_str(), "Piercing") == 0)
+		enchantId = 34;
+
+	if (strcmp(args->at(1).c_str(), "Luck_of_Sea") == 0)
+		enchantId = 23;
+
+	if (strcmp(args->at(1).c_str(), "Lure") == 0)
+		enchantId = 24;
 
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
