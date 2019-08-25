@@ -34,6 +34,7 @@ public:
 	static bool canUseMoveKeys();
 	static bool isKeyDown(int key);
 	static bool isKeyPressed(int key);
+	static bool isRightClickDown();
 	static bool isLeftClickDown();
 	static bool shouldTerminate();
 	static bool shouldHide();
