@@ -38,6 +38,9 @@ void TriggerBot::onTick(C_GameMode* gm)
 
 		if (!Target::isValidTarget(target))
 			return;
+		
+		if (sword && !(localPlayer->itemId == 268 || localPlayer->itemId == 267 || localPlayer->itemId == 272 || localPlayer->itemId == 276 || localPlayer->itemId == 283 /*swords*/ || localPlayer->itemId == 271 || localPlayer->itemId == 275 || localPlayer->itemId == 279 || localPlayer->itemId == 286 || localPlayer->itemId == 258 /*axes*/))
+			return;
 
 		if (localPlayer->getEntityTypeId() == target->getEntityTypeId())
 		{
