@@ -5,11 +5,11 @@ std::map<std::string, int> enchantMap;
 
 EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enchantment> [level]")
 {
-	enchantMap["Protection"] = 0;
-	enchantMap["Fire_Protection"] = 1;
-	enchantMap["Feather_Falling"] = 2;
-	enchantMap["Blast_Protection"] = 3;
-	enchantMap["Projectile_Protection"] = 4;
+	enchantMap["protection"] = 0;
+	enchantMap["fire_protection"] = 1;
+	enchantMap["feather_falling"] = 2;
+	enchantMap["blast_protection"] = 3;
+	enchantMap["projectile_protection"] = 4;
 	enchantMap["thorns"] = 5;
 	enchantMap["respiration"] = 6;
 	enchantMap["depth_strider"] = 7;
@@ -48,7 +48,7 @@ EnchantCommand::~EnchantCommand()
 
 bool EnchantCommand::execute(std::vector<std::string>* args)
 {
-	assertTrue(args->size() > 1); // this line stops the command from been run if the proper args are not given
+	assertTrue(args->size() > 1); 
 
 	int enchantId = 0;
 	int enchantLevel = 32767;
@@ -56,9 +56,8 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	try {
 		// convert string to back to lower case
 		std::string data = args->at(1);
-		std::for_each(data.begin(), data.end(), [](char& c) {
-			c = ::tolower(c);
-		});
+		std::transform(data.begin(), data.end(), data.begin(), ::tolower);
+
 		auto convertedString = enchantMap.find(data);
 		if (convertedString != enchantMap.end())
 			enchantId = convertedString->second;
