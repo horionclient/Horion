@@ -89,8 +89,11 @@ private:
 	char pad_0x0204[0x14]; //0x204
 public:
 	float web; //0x218
+	// 21C
+	char pad_0x021C[0x2];
+	bool didEnterWaterBool; // 0x21E
 private:
-	char pad_0x021C[0x4C]; //0x21C
+	char pad_0x021D[0x48]; //0x21D
 public:
 	int ticksAlive; //0x0268 
 private:
@@ -461,7 +464,9 @@ private:
 	virtual __int64 checkInsideBlocks(float);
 	virtual __int64 pushOutOfBlocks(vec3_t const&);
 	virtual __int64 updateWaterState(void);
+public:
 	virtual __int64 doWaterSplashEffect(void);
+private:
 	virtual __int64 spawnTrailBubbles(void);
 	virtual __int64 updateInsideBlock(void);
 	virtual __int64 getLootTable(void);

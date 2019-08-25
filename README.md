@@ -5,6 +5,7 @@ If you want to contribute to this project, feel free to fork this repository and
 
 [![Download the injector](https://img.shields.io/badge/DOWNLOAD-LATEST-brightgreen?style=for-the-badge "Download the injector")](https://horionclient.eu/files/HorionInjector.exe "Download the injector")
 ![](https://img.shields.io/github/downloads/Horionclient/Horion-Releases/total?label=Total%20Injections&style=for-the-badge)
+[![Build Status](https://dev.azure.com/godsoftcommunity/horion-dev-releases/_apis/build/status/Godsoft029.Horion?branchName=master)](https://dev.azure.com/godsoftcommunity/horion-dev-releases/_build/latest?definitionId=2&branchName=master)
 
 ## Installation
 1. **Download the Injector** or directly download the `.dll` via the label:
@@ -20,3 +21,5 @@ More Information on setting everything up can be found in the **[wiki](https://g
 If you need any help with understanding our code, join the official discord server:
 
 [![](https://discordapp.com/api/guilds/605086182560235569/embed.png?style=banner2)](https://discord.gg/Yqm3PR9)
+ 
+ 

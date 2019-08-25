@@ -15,3 +15,11 @@ const char* AirSwim::getModuleName()
 {
 	return ("AirSwim");
 }
+
+void AirSwim::onEnable()
+{
+	if (g_Data.getLocalPlayer() == nullptr)
+		return;
+	g_Data.getLocalPlayer()->didEnterWaterBool = true;
+	g_Data.getLocalPlayer()->doWaterSplashEffect();
+}
