@@ -10,35 +10,35 @@ EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enc
 	enchantMap["Feather_Falling"] = 2;
 	enchantMap["Blast_Protection"] = 3;
 	enchantMap["Projectile_Protection"] = 4;
-	enchantMap["Thorns"] = 5;
-	enchantMap["Respiration"] = 6;
-	enchantMap["Depth_Strider"] = 7;
-	enchantMap["Aqua_Infinity"] = 8;
-	enchantMap["Frost_walker"] = 25;
-	enchantMap["Sharpness"] = 9;
-	enchantMap["Smite"] = 10;
-	enchantMap["Bane_of_Arthropods"] = 11;
-	enchantMap["Knockback"] = 12;
-	enchantMap["Fire_Aspect"] = 13;
-	enchantMap["Looting"] = 14;
-	enchantMap["Channeling"] = 32;
-	enchantMap["Impaling"] = 29;
-	enchantMap["Loyalty"] = 31;
-	enchantMap["Riptide"] = 30;
-	enchantMap["SilkTouch"] = 16;
-	enchantMap["Fortune"] = 18;
-	enchantMap["Unbreaking"] = 17;
-	enchantMap["Efficiency"] = 15;
-	enchantMap["Mending"] = 26;
-	enchantMap["Power"] = 19;
-	enchantMap["Punch"] = 20;
-	enchantMap["Flame"] = 21;
-	enchantMap["Infinity"] = 22;
-	enchantMap["Multishot"] = 33;
-	enchantMap["Quick_Charge"] = 35;
-	enchantMap["Piercing"] = 34;
-	enchantMap["Luck_of_Sea"] = 23;
-	enchantMap["Lure"] = 24;
+	enchantMap["thorns"] = 5;
+	enchantMap["respiration"] = 6;
+	enchantMap["depth_strider"] = 7;
+	enchantMap["aqua_infinity"] = 8;
+	enchantMap["frost_walker"] = 25;
+	enchantMap["sharpness"] = 9;
+	enchantMap["smite"] = 10;
+	enchantMap["bane_of_arthropods"] = 11;
+	enchantMap["knockback"] = 12;
+	enchantMap["fire_aspect"] = 13;
+	enchantMap["looting"] = 14;
+	enchantMap["channeling"] = 32;
+	enchantMap["impaling"] = 29;
+	enchantMap["loyalty"] = 31;
+	enchantMap["riptide"] = 30;
+	enchantMap["silktouch"] = 16;
+	enchantMap["fortune"] = 18;
+	enchantMap["unbreaking"] = 17;
+	enchantMap["efficiency"] = 15;
+	enchantMap["mending"] = 26;
+	enchantMap["power"] = 19;
+	enchantMap["punch"] = 20;
+	enchantMap["flame"] = 21;
+	enchantMap["infinity"] = 22;
+	enchantMap["multishot"] = 33;
+	enchantMap["quick_charge"] = 35;
+	enchantMap["piercing"] = 34;
+	enchantMap["luck_of_sea"] = 23;
+	enchantMap["lure"] = 24;
 }
 
 
@@ -52,8 +52,27 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 
 	int enchantId = 0;
 	int enchantLevel = 32767;
-	
-	enchantId = enchantMap.find(args->at(1))->second;
+
+	try {
+		// convert string to back to lower case
+		std::string data = args->at(1);
+		std::for_each(data.begin(), data.end(), [](char& c) {
+			c = ::tolower(c);
+		});
+		auto convertedString = enchantMap.find(data);
+		if (convertedString != enchantMap.end())
+			enchantId = convertedString->second;
+		else
+			enchantId = assertInt(args->at(1));
+	}
+	catch (int param) {
+		logF("exception while trying to get enchant string");
+		enchantId = assertInt(args->at(1));
+	}
+
+
+	if (args->size() > 2)
+		enchantLevel = assertInt(args->at(2));
 
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
