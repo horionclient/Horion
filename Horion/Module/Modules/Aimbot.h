@@ -5,8 +5,14 @@
 class Aimbot : public IModule
 {
 private:
-	float range = 6;
-	float smoothNess = 7;
+	float range = 4;
+	bool vertical = true;
+	bool sword = true;
+	bool click = true;
+	int horizontalspeed = 50;
+	int verticalspeed = 50;
+	int verticalrange = 40;
+	int horizontalrange = 60;
 public:
 	Aimbot();
 	~Aimbot();
