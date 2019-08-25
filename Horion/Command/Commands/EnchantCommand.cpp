@@ -50,22 +50,24 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	int enchantId = 0;
 	int enchantLevel = 32767;
 
-	try {
-		// convert string to back to lower case
-		std::string data = args->at(1);
-		std::transform(data.begin(), data.end(), data.begin(), ::tolower);
+	if (args->at(1) != "all")
+	{
+		try {
+			// convert string to back to lower case
+			std::string data = args->at(1);
+			std::transform(data.begin(), data.end(), data.begin(), ::tolower);
 
-		auto convertedString = enchantMap.find(data);
-		if (convertedString != enchantMap.end())
-			enchantId = convertedString->second;
-		else
+			auto convertedString = enchantMap.find(data);
+			if (convertedString != enchantMap.end())
+				enchantId = convertedString->second;
+			else
+				enchantId = assertInt(args->at(1));
+		}
+		catch (int) {
+			logF("exception while trying to get enchant string");
 			enchantId = assertInt(args->at(1));
+		}
 	}
-	catch (int) {
-		logF("exception while trying to get enchant string");
-		enchantId = assertInt(args->at(1));
-	}
-
 
 	if (args->size() > 2)
 		enchantLevel = assertInt(args->at(2));
