@@ -42,8 +42,6 @@ void Aimbot::onPostRender()
 		return;
 	size_t listSize = entList->getListSize();
 
-	C_Entity* lastTarget;
-
 	if (listSize > 1000) {
 #ifdef _DEBUG
 		logF("Big ent list wtf men %i", listSize);
@@ -75,16 +73,7 @@ void Aimbot::onPostRender()
 		if (!(currentEntity->getNameTag()->getTextLength() > 0))
 			continue;
 
-		if (currentEntity == lastTarget) {
-			targetList.push_back(currentEntity);
-			break;
-		}
-
 		if (currentEntity->height == 1.8f && currentEntity->width == 0.6f) {
-
-			// i want to hit villagers ok
-	//		if (localPlayer->entityType2 != currentEntity->entityType2)
-	//			continue;
 
 			float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());;
 
@@ -119,7 +108,6 @@ void Aimbot::onPostRender()
 			appl.x = 0;
 		localPlayer->applyTurnDelta(&appl);
 	}
-		lastTarget = targetList[0];
 	}
 	
 }
