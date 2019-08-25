@@ -9,10 +9,10 @@ private:
 	bool vertical = true;
 	bool sword = true;
 	bool click = true;
-	int horizontalspeed = 50;
-	int verticalspeed = 50;
-	int verticalrange = 40;
-	int horizontalrange = 60;
+	float horizontalspeed = 50.f;
+	float verticalspeed = 50.f;
+	float verticalrange = 40.f;
+	float horizontalrange = 60.f;
 public:
 	Aimbot();
 	~Aimbot();

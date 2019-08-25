@@ -7,7 +7,6 @@ private:
 	int delay = 0;
 	int Odelay = 0;
 	bool sword = true;
-	//bool debug = false;
 public:
 	AutoClicker();
 	~AutoClicker();
