@@ -4,6 +4,7 @@ class BowAimbot :
 	public IModule
 {
 public:
+	bool requireClick = false;
 	BowAimbot();
 	~BowAimbot();
 
