@@ -66,6 +66,7 @@ public:
 	static void rainbow(float* rcolors);
 	static void drawBox(vec3_t lower, vec3_t upper, float lineWidth);
 	static void drawEntityBox(C_Entity* ent, float lineWidth);
+	static void drawNameTags(C_Entity* ent, float textSize,bool drawHealth = false);
 	static void wirebox(AABB aabb);
 
 	static vec2_t worldToScreen(vec3_t world);

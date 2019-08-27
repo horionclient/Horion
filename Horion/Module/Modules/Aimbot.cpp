@@ -76,6 +76,9 @@ void Aimbot::onPostRender()
 		if (currentEntity->height < 1.5f || currentEntity->width < 0.5f || currentEntity->height > 2.1f || currentEntity->width > 0.9f)
 			continue;
 
+		if (*currentEntity->getPos() == *currentEntity->getPosOld() && reinterpret_cast<C_Player*>(currentEntity)->getSupplies()->inventory->isEmpty())
+			continue;
+
 		float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
 
 		if (dist < range)
