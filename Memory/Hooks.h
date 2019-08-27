@@ -36,7 +36,7 @@ class Hooks {
 private:
 	bool shouldRender = true;
 public:
-	
+	static void ToggleAutoNoPacket();
 	static void Init();
 	static void Restore();
 

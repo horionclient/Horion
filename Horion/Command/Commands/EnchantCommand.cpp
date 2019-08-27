@@ -1,5 +1,5 @@
 #include "EnchantCommand.h"
-
+#include "../../../Memory/Hooks.h"
 
 EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enchantment> [level]")
 {
@@ -45,6 +45,7 @@ EnchantCommand::~EnchantCommand()
 
 bool EnchantCommand::execute(std::vector<std::string>* args)
 {
+	Hooks::ToggleAutoNoPacket();
 	assertTrue(args->size() > 1); 
 
 	int enchantId = 0;
@@ -136,14 +137,16 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 					*(unsigned long long*)(proxy + 168),
 					*(unsigned int*)(proxy + 16),
 					item);// Player::selectItem
-
-			g_Data.getLocalPlayer()->sendInventory();
+			g_Data.getLocalPlayer()->setOffhandSlot(item);
+			//g_Data.getLocalPlayer()->sendInventory();
 			clientMessageF("%sEnchant successful!", GREEN);
 		}
 		else
+			Hooks::ToggleAutoNoPacket();
 			clientMessageF("%sEnchant failed, try using a lower enchant-level", RED);
 
 		free(EnchantData);
 	}
+	Hooks::ToggleAutoNoPacket();
 	return true;
 }

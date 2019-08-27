@@ -3,6 +3,7 @@
 
 Hooks    g_Hooks;
 bool isTicked = false;
+bool autoNopacket = false;
 
 void Hooks::Init()
 {
@@ -574,6 +575,12 @@ signed int Hooks::AppPlatform_getGameEdition(__int64 _this)
 	return oGetEditon(_this);
 }
 
+//code wip
+void Hooks::ToggleAutoNoPacket()
+{
+	autoNopacket = !autoNopacket;
+}
+
 void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 {
 	static auto oFunc = g_Hooks.sendToServerHook->GetOriginal<sendToServer_tick_t>();
@@ -590,6 +597,9 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 		No_Packet = moduleMgr->getModule<NoPacket>();
 	}
 	else if (No_Packet->isEnabled()) {
+		return;
+	}
+	else if (autoNopacket == true) {
 		return;
 	}
 	else if (FreecamMod->isEnabled() || BlinkMod->isEnabled()) {
