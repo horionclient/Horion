@@ -138,12 +138,12 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 					*(unsigned int*)(proxy + 16),
 					item);// Player::selectItem
 			g_Data.getLocalPlayer()->setOffhandSlot(item);
-			//g_Data.getLocalPlayer()->sendInventory();
 			clientMessageF("%sEnchant successful!", GREEN);
 		}
 		else
 			Hooks::ToggleAutoNoPacket();
-			clientMessageF("%sEnchant failed, try using a lower enchant-level", RED);
+			//clientMessageF("%sEnchant failed, try using a lower enchant-level", RED);
+			//above line commented out because can occur when enchant is successful
 
 		free(EnchantData);
 	}
