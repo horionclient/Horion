@@ -105,7 +105,11 @@ private:
 public:
 	PointingStruct* pointingAt; //0x0D08 
 private:
-	char pad_0x0D10[0xD8]; //0x0D10
+	char pad_0x0D10[0xB0]; //0x0D10
+public:
+	uintptr_t* attribute;//0xDC0
+private:
+	char pad_0x0DC8[0x20];//0xDC8
 public:
 	AABB aabb; //0x0DE8 
 private:
@@ -394,10 +398,10 @@ private:
 	virtual __int64 buildDebugInfo(std::string &)const;
 	virtual __int64 getCommandPermissionLevel(void)const;
 	virtual __int64 getMutableAttribute(__int64 const&);
-	virtual __int64 getAttribute(__int64 const&)const;
+public:
+	virtual __int64 getAttribute(int*)const;
 	virtual __int64 getDeathTime(void)const;
 	virtual __int64 heal(int);
-public:
 	virtual bool isInvertedHealAndHarm(void)const;
 	virtual bool canBeAffected(int)const;
 	virtual bool canBeAffected(__int64 const&)const;

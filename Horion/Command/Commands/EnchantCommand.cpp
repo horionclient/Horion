@@ -11,7 +11,7 @@ EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enc
 	enchantMap["thorns"] = 5;
 	enchantMap["respiration"] = 6;
 	enchantMap["depth_strider"] = 7;
-	enchantMap["aqua_infinity"] = 8;
+	enchantMap["aqua_affinity"] = 8;
 	enchantMap["frost_walker"] = 25;
 	enchantMap["sharpness"] = 9;
 	enchantMap["smite"] = 10;
@@ -51,7 +51,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	int enchantId = 0;
 	int enchantLevel = 32767;
 
-	if (args->at(1) != "all")
+	if (args->at(1) != "all") 
 	{
 		try {
 			// convert string to back to lower case

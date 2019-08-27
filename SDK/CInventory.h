@@ -193,6 +193,15 @@ class C_Inventory {
 private:
 	virtual ~C_Inventory();
 public:
+	bool isEmpty()
+	{
+		for (int i = 0; i < 36; i++)
+		{
+			if (this->getItemStack(i)->item != nullptr)
+				return false;
+		}
+		return true;
+	}
 	virtual __int64 init();
 	virtual __int64 addContentChangeListener(__int64 a2);
 	virtual __int64 removeContentChangeListener(__int64 a2);
