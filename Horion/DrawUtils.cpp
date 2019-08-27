@@ -216,14 +216,9 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)
 	vec2_t Screen1;
 	vec2_t Screen2;
 
-	vec2_t test;
 	for (int i = 0; i < 24; i += 2)
 		if (refdef->OWorldToScreen(origin, cornerList[i], Screen1, fov, screenSize) && refdef->OWorldToScreen(origin, cornerList[i + 1], Screen2, fov, screenSize)) {
-			//std::cout << Screen1.x << " : " << Screen1.y << std::endl;
-			if (i == 18)
-				test = Screen2;
 			drawLine(Screen1, Screen2, lineWidth);
-			
 		}
 	
 	static Tracer* mod = moduleMgr->getModule<Tracer>();
@@ -232,8 +227,8 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)
 	else if (mod->isEnabled()) {
 		// REWORK ASAP
 		vec2_t yeet(((g_Data.getClientInstance()->getGuiData()->widthGame) / 2), ((g_Data.getClientInstance()->getGuiData()->heightGame) / 2));
-		if(test.y > 0)
-			DrawUtils::drawLine(yeet, test, lineWidth);
+		if(Screen2.y > 0)
+			DrawUtils::drawLine(yeet, Screen2, lineWidth);
 	}
 }
 
