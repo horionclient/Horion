@@ -12,14 +12,15 @@ bool Target::isValidTarget(C_Entity * ent)
 	if (ent == 0)
 		return false;
 
-	static Hitbox* hitboxMod = static_cast<Hitbox*>(moduleMgr->getModule<Hitbox>());
+	static Hitbox* hitboxMod = moduleMgr->getModule<Hitbox>();
 	if (hitboxMod == 0)
-		hitboxMod = static_cast<Hitbox*>(moduleMgr->getModule<Hitbox>());
+		hitboxMod = moduleMgr->getModule<Hitbox>();
 
 	const bool isPlayer = ent->getEntityTypeId() == 63;
 
 	if (isPlayer)
 		return false;
+
 	if (ent->getNameTag()->getTextLength() <= 1)
 		return false;
 
@@ -29,7 +30,11 @@ bool Target::isValidTarget(C_Entity * ent)
 
 	if (ent->isInvisible() && ent->getEntityTypeId() != 33) // Exception for kitmap.sylphhcf.net they use a creeper as hitbox
 		return false;
+
 	if (!(*localPlayer)->canAttack(ent, false))
+		return false;
+
+	if (*ent->getPos() == *ent->getPosOld() && reinterpret_cast<C_Player*>(ent)->getSupplies()->inventory->isEmpty())
 		return false;
 	
 	return true;

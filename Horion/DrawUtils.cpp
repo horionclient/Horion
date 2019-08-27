@@ -216,24 +216,45 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)
 	vec2_t Screen1;
 	vec2_t Screen2;
 
-
+	vec2_t test;
 	for (int i = 0; i < 24; i += 2)
 		if (refdef->OWorldToScreen(origin, cornerList[i], Screen1, fov, screenSize) && refdef->OWorldToScreen(origin, cornerList[i + 1], Screen2, fov, screenSize)) {
 			//std::cout << Screen1.x << " : " << Screen1.y << std::endl;
+			if (i == 18)
+				test = Screen2;
 			drawLine(Screen1, Screen2, lineWidth);
 			
 		}
 	
-	static Tracer* mod = static_cast<Tracer*>(moduleMgr->getModule<Tracer>());
+	static Tracer* mod = moduleMgr->getModule<Tracer>();
 	if (mod == nullptr)
-		mod = static_cast<Tracer*>(moduleMgr->getModule<Tracer>());
+		mod = moduleMgr->getModule<Tracer>();
 	else if (mod->isEnabled()) {
 		// REWORK ASAP
 		vec2_t yeet(((g_Data.getClientInstance()->getGuiData()->widthGame) / 2), ((g_Data.getClientInstance()->getGuiData()->heightGame) / 2));
-		if(Screen2.y > 0)
-			DrawUtils::drawLine(yeet, Screen2, lineWidth);
+		if(test.y > 0)
+			DrawUtils::drawLine(yeet, test, lineWidth);
 	}
 }
+
+void DrawUtils::drawNameTags(C_Entity* ent, float textSize,bool drawHealth)
+{
+	vec3_t diff;
+	vec3_t lower = ent->getAABB()->lower;
+	vec3_t upper = ent->getAABB()->upper;
+	diff.x = upper.x - lower.x;
+	diff.y = upper.y - lower.y;
+	diff.z = upper.z - lower.z;
+
+	vec2_t textPos;
+	std::string text = ent->getNameTag()->getText();
+	if (refdef->OWorldToScreen(origin, vec3_t(lower.x, lower.y + diff.y, lower.z), textPos, fov, screenSize)) {
+		textPos.y -= 10.f;
+		drawText(textPos, &text,nullptr, textSize);
+	}
+}
+
+
 void DrawUtils::rainbow(float* rcolors)
 {
 	if (rcolors[3] < 1) {
@@ -253,9 +274,9 @@ void DrawUtils::rainbow(float* rcolors)
 }
 void DrawUtils::drawEntityBox(C_Entity * ent, float lineWidth)
 {
-	vec3_t upper = vec3_t((*ent->getAABB()).upper);
+	vec3_t upper = vec3_t(ent->getAABB()->upper);
 	upper.y += 0.1f; // more premium
-	drawBox((*ent->getAABB()).lower, upper, lineWidth);
+	drawBox(ent->getAABB()->lower, upper, lineWidth);
 }
 
 void DrawUtils::wirebox(AABB aabb){
