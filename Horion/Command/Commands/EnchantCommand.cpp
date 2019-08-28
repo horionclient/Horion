@@ -72,10 +72,10 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 		enchantLevel = assertInt(args->at(2));
 
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
-	C_Inventory* inv = supplies->inventory;
+	C_Inventory* inv = supplies->inventory; //get player inventory
 
-	int selectedSlot = supplies->selectedHotbarSlot;
-	C_ItemStack* item = (inv->getItemStack(selectedSlot));
+	int selectedSlot = supplies->selectedHotbarSlot;//get hotbar slot
+	C_ItemStack* item = (inv->getItemStack(selectedSlot));//get selected item
 
 	using getEnchantsFromUserData_t = void(__fastcall*)(C_ItemStack*, void*);
 	using addEnchant_t              = bool(__fastcall*)(void*, __int64);
