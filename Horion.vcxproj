@@ -143,7 +143,6 @@
     <ClCompile Include="Horion\Command\Commands\EnchantCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\FriendListCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\GameModeCommand.cpp" />
-    <ClCompile Include="Horion\Command\Commands\GiveCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\HelpCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\HideCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ICommand.cpp" />
@@ -232,7 +231,6 @@
     <ClInclude Include="Horion\Command\Commands\EnchantCommand.h" />
     <ClInclude Include="Horion\Command\Commands\FriendListCommand.h" />
     <ClInclude Include="Horion\Command\Commands\GameModeCommand.h" />
-    <ClInclude Include="Horion\Command\Commands\GiveCommand.h" />
     <ClInclude Include="Horion\Command\Commands\HelpCommand.h" />
     <ClInclude Include="Horion\Command\Commands\HideCommand.h" />
     <ClInclude Include="Horion\Command\Commands\ICommand.h" />

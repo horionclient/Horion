@@ -29,7 +29,6 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new ModulesCommand());
 	commandList.push_back(new PanicCommand());
 	commandList.push_back(new HideCommand());
-	commandList.push_back(new GiveCommand());
 	commandList.push_back(new BruhCommand()); 
 	commandList.push_back(new setoffhandCommand());
 	commandList.push_back(new CoordsCommand());

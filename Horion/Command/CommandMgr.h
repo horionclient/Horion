@@ -17,7 +17,6 @@
 #include "Commands/ModulesCommand.h"
 #include "Commands/PanicCommand.h"
 #include "Commands/HideCommand.h"
-#include "Commands/GiveCommand.h"
 #include "Commands/BruhCommand.h"
 #include "Commands/setoffhandCommand.h"
 #include "Commands/CoordsCommand.h"
