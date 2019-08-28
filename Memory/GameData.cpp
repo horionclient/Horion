@@ -70,6 +70,12 @@ bool GameData::isKeyPressed(int key) {
 	return false;
 }
 
+bool GameData::isRightClickDown() {
+	if (g_Data.hidController == 0)
+		return false;
+	return g_Data.hidController->rightClickDown;
+}
+
 bool GameData::isLeftClickDown() {
 	if (g_Data.hidController == 0)
 		return false;

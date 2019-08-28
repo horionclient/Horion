@@ -51,6 +51,8 @@
 #include "Modules/Jesus.h"
 #include "Modules/AutoArmor.h"
 #include "Modules/InfiniteBlockReach.h"
+#include "Modules/AutoClicker.h"
+#include "Modules/NameTags.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

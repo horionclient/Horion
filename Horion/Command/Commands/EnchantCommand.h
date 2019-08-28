@@ -3,6 +3,8 @@
 class EnchantCommand :
 	public IMCCommand
 {
+private:
+	std::map<std::string, int> enchantMap;
 public:
 	EnchantCommand();
 	~EnchantCommand();
