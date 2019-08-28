@@ -36,6 +36,7 @@ class Hooks {
 private:
 	bool shouldRender = true;
 public:
+
 	static void Init();
 	static void Restore();
 
