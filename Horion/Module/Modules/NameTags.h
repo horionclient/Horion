@@ -6,7 +6,10 @@
 
 class NameTags : public IModule
 {
+private:
+	bool DisplayHealth = true;
 public:
+	inline bool shouldDisplayHealth() { return DisplayHealth; };
 	NameTags();
 	~NameTags();
 

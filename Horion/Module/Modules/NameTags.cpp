@@ -4,6 +4,7 @@
 
 NameTags::NameTags() : IModule(0x0, VISUAL)
 {
+	this->registerBoolSetting("Display Health", &this->DisplayHealth, this->DisplayHealth);
 }
 
 
@@ -18,11 +19,13 @@ const char* NameTags::getModuleName()
 
 void drawNameTags(C_Entity* ent, bool isRegularEntitie) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
+	static NameTags* NameTagsMod = moduleMgr->getModule<NameTags>();
+
 	if (ent != localPlayer) {
 
 		if (ent->timeSinceDeath > 0)
 			return;
-		if (Target::isValidTarget(ent))
+		if (Target::isValidTarget(ent) && NameTagsMod != nullptr)
 			DrawUtils::drawNameTags(ent, 0.95f);
 	}
 }
