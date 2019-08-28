@@ -14,7 +14,6 @@ GiveCommand::~GiveCommand()
 bool GiveCommand::execute(std::vector<std::string>* args)
 {
 	assertTrue(args->size() > 2);
-	moduleMgr->getModule<NoPacket>()->setEnabled(true);
 	int itemId = 0;
 	char  count = assertInt(args->at(2));
 	char itemData = 0;
@@ -92,22 +91,18 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 		if (cStack->item == NULL)
 		{
 			clientMessageF("%sInvalid item ID!", RED);
-			moduleMgr->getModule<NoPacket>()->setEnabled(false);
 			return true;
 		}
 		yot->ItemStackConstructor(*cStack->item, count, itemData);
-//		inv->addItemToFirstEmptySlot(yot);
 		
 		g_Data.getLocalPlayer()->setOffhandSlot(yot);
 		clientMessageF("%sSuccessfully given item!", GREEN);
-		moduleMgr->getModule<NoPacket>()->setEnabled(false);
 		return true;
 	}
 
 	if (blockItem == nullptr && itemItem == nullptr)
 	{
 		clientMessageF("%sInvalid Item!", RED);
-		moduleMgr->getModule<NoPacket>()->setEnabled(false);
 		return true;
 	}
 	else if (blockItem != nullptr)
@@ -121,6 +116,5 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 
 	g_Data.getLocalPlayer()->setOffhandSlot(yot);
 	clientMessageF("%sSuccessfully given item!", GREEN);
-	moduleMgr->getModule<NoPacket>()->setEnabled(false);
 	return true;
 }
