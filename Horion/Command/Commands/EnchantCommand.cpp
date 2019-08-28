@@ -149,3 +149,4 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	moduleMgr->getModule<NoPacket>()->setEnabled(false);
 	return true;
 }
+//the code needs documentation ill do that after this gets pulled
