@@ -45,7 +45,6 @@ EnchantCommand::~EnchantCommand()
 
 bool EnchantCommand::execute(std::vector<std::string>* args)
 {
-	moduleMgr->getModuleByName("noPacket")->setEnabled(true);
 	assertTrue(args->size() > 1);
 
 	int enchantId = 0;
@@ -94,6 +93,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	}
 	if (strcmp(args->at(1).c_str(), "all") == 0)
 	{
+		moduleMgr->getModuleByName("noPacket")->setEnabled(true);
 		for (int i = 0; i < 32; i++)
 		{
 			void* EnchantData = malloc(0x60);
@@ -121,6 +121,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	}
 	else
 	{
+		moduleMgr->getModuleByName("noPacket")->setEnabled(true);
 		void* EnchantData = malloc(0x60);
 		if (EnchantData != nullptr)
 			memset(EnchantData, 0x0, 0x60);
