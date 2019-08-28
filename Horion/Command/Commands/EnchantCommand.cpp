@@ -1,5 +1,4 @@
 #include "EnchantCommand.h"
-#include "../../../Memory/Hooks.h"
 
 EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enchantment> [level]")
 {
@@ -93,7 +92,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	}
 	if (strcmp(args->at(1).c_str(), "all") == 0)
 	{
-		moduleMgr->getModuleByName("noPacket")->setEnabled(true);
+		moduleMgr->getModule<NoPacket>()->setEnabled(true);
 		for (int i = 0; i < 32; i++)
 		{
 			void* EnchantData = malloc(0x60);
@@ -121,7 +120,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	}
 	else
 	{
-		moduleMgr->getModuleByName("noPacket")->setEnabled(true);
+		moduleMgr->getModule<NoPacket>()->setEnabled(true);
 		void* EnchantData = malloc(0x60);
 		if (EnchantData != nullptr)
 			memset(EnchantData, 0x0, 0x60);
@@ -147,6 +146,6 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 
 		free(EnchantData);
 	}
-	moduleMgr->getModuleByName("noPacket")->setEnabled(false);
+	moduleMgr->getModule<NoPacket>()->setEnabled(false);
 	return true;
 }
