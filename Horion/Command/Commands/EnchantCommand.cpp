@@ -45,8 +45,8 @@ EnchantCommand::~EnchantCommand()
 
 bool EnchantCommand::execute(std::vector<std::string>* args)
 {
-	Hooks::ToggleAutoNoPacket();
-	assertTrue(args->size() > 1); 
+	moduleMgr->getModuleByName("noPacket")->setEnabled(true);
+	assertTrue(args->size() > 1);
 
 	int enchantId = 0;
 	int enchantLevel = 32767;
@@ -113,7 +113,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 						*(unsigned int*)(proxy + 16),
 						item);// Player::selectItem
 
-				g_Data.getLocalPlayer()->sendInventory();
+				g_Data.getLocalPlayer()->setOffhandSlot(item);
 			}
 			free(EnchantData);
 		}
@@ -141,12 +141,11 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 			clientMessageF("%sEnchant successful!", GREEN);
 		}
 		else
-			Hooks::ToggleAutoNoPacket();
 			//clientMessageF("%sEnchant failed, try using a lower enchant-level", RED);
 			//above line commented out because can occur when enchant is successful
 
 		free(EnchantData);
 	}
-	Hooks::ToggleAutoNoPacket();
+	moduleMgr->getModuleByName("noPacket")->setEnabled(false);
 	return true;
 }
