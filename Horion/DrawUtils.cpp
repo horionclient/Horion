@@ -234,17 +234,14 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)
 
 void DrawUtils::drawNameTags(C_Entity* ent, float textSize,bool drawHealth)
 {
-	vec3_t diff;
-	vec3_t lower = ent->getAABB()->lower;
-	vec3_t upper = ent->getAABB()->upper;
-	diff.x = upper.x - lower.x;
-	diff.y = upper.y - lower.y;
-	diff.z = upper.z - lower.z;
-
 	vec2_t textPos;
 	std::string text = ent->getNameTag()->getText();
-	if (refdef->OWorldToScreen(origin, vec3_t(lower.x, lower.y + diff.y, lower.z), textPos, fov, screenSize)) {
+
+	float textStr = getTextWidth(&text);
+
+	if (refdef->OWorldToScreen(origin,ent->eyePos0, textPos, fov, screenSize)) {
 		textPos.y -= 10.f;
+		textPos.x -= textStr / 2.f;
 		drawText(textPos, &text,nullptr, textSize);
 	}
 }
