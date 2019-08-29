@@ -7,6 +7,7 @@
 setoffhandCommand::setoffhandCommand() : IMCCommand("setoffhand", "Puts any item into offhand", "<ItemName> <count> <itemData>")
 {
 	registerAlias("soh");
+	registerAlias("give");
 }
 
 

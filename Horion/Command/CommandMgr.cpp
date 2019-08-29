@@ -51,7 +51,7 @@ std::vector<IMCCommand*>* CommandMgr::getCommandList()
 void CommandMgr::execute(char * message)
 {
 	if (message != nullptr) {
-		std::vector<std::string>* args = new std::vector<std::string>(); // Stolen from https://stackoverflow.com/questions/5888022/split-string-by-single-spaces
+		std::vector<std::string>* args = new std::vector<std::string>(); // Stolen from https://stackoverflow.com/questions/5888022/split-string-by-single-spaces why do we need to know that?
 		std::string msgStr = message + 1;
 		size_t pos = msgStr.find(" "), initialPos = 0;
 		while (pos != std::string::npos) {
