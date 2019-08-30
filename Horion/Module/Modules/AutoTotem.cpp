@@ -1,5 +1,4 @@
 #include "AutoTotem.h"
-#include "../../Command/Commands/setoffhandCommand.h"
 
 AutoTotem::AutoTotem() : IModule(0x0, PLAYER)
 {
@@ -35,22 +34,22 @@ void AutoTotem::onTick(C_GameMode* gm) {
 
 				void* ItemPtr = malloc(0x8);
 				C_ItemStack* cStack = getItemFromId(ItemPtr, itemId);
-				C_ItemStack* yot = reinterpret_cast<C_ItemStack*>(malloc(0x88));
-				yot->ItemStackConstructor(*cStack->item, count, itemData);
-				g_Data.getLocalPlayer()->setOffhandSlot(yot);
+				C_ItemStack* sohItem = reinterpret_cast<C_ItemStack*>(malloc(0x88));
+				sohItem->ItemStackConstructor(*cStack->item, count, itemData);
+				g_Data.getLocalPlayer()->setOffhandSlot(sohItem);
 				delay = 0;
 			}
 			else if (isSOH == false)
 			{
 				C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
-				C_Inventory* a = supplies->inventory;
+				C_Inventory* playerInventory = supplies->inventory;
 				for (int i = 0; i < 36; i++) {
-					C_ItemStack* test = a->getItemStack(i);
-					if (test->item != NULL) {
-						C_Item* yikes = *test->item;
-						if (yikes->itemId == 450) {
+					C_ItemStack* currentSlot = playerInventory->getItemStack(i);
+					if (currentSlot->item != NULL) {
+						C_Item* maybeTotem = *currentSlot->item;
+						if (maybeTotem->itemId == 450) {
 							g_Data.getLocalPlayer()->consumeTotem();
-							g_Data.getLocalPlayer()->setOffhandSlot(test);
+							g_Data.getLocalPlayer()->setOffhandSlot(currentSlot);
 						}
 
 					}
