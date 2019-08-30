@@ -22,7 +22,7 @@ void AutoTotem::onTick(C_GameMode* gm) {
 	if (g_Data.getLocalPlayer() != nullptr) 
 	{
 		C_ItemStack* i = g_Data.getLocalPlayer()->getEquippedTotem();
-		if (delay > tickDelay) 
+		if (delay > tickDelay && i->item == NULL) 
 		{
 			if (isSOH == true)
 			{
@@ -40,7 +40,7 @@ void AutoTotem::onTick(C_GameMode* gm) {
 				g_Data.getLocalPlayer()->setOffhandSlot(yot);
 				delay = 0;
 			}
-			else if (isSOH == false && i->item == NULL)
+			else if (isSOH == false)
 			{
 				C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 				C_Inventory* a = supplies->inventory;
