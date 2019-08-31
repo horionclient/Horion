@@ -2,22 +2,33 @@
 #include "../Utils/HMath.h"
 #include "../Utils/Logger.h"
 #include "TextHolder.h"
+#include "CComplexInventoryTransaction.h"
 
 class C_Packet {
 public:
 	uintptr_t** vTable; //0x0000
 };
 
-class C_InteractPacket : public C_Packet
+class C_InventoryTransactionPacket : public C_Packet
 {
-private:
-	char filler[0x20]; //x0x00008
 public:
-	__int64 entityRuntimeID; //0x28
-	vec3_t pos; //0x30
+	C_InventoryTransactionPacket() {
+		static uintptr_t** InventoryTransactionPacketVtable = 0x0;
+		if (InventoryTransactionPacketVtable == 0x0) {
+			uintptr_t sigOffset = Utils::FindSignature("48 8D 15 ?? ?? ?? ?? 49 89 53 C0 49 89 43 E0");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			InventoryTransactionPacketVtable = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
+			if (InventoryTransactionPacketVtable == 0x0 || sigOffset == 0x0)
+				logF("C_InventoryTransactionPacketVtable signature not working!!!");
+		}
+		memset(this, 0, sizeof(C_InventoryTransactionPacket)); // Avoid overwriting vtable
+		vTable = InventoryTransactionPacketVtable;
+	}
+private:
+	char pad_0x8[0x18]; //0x8
+public:
+	C_ComplexInventoryTransaction* transaction; //0x20
 };
-
-
 
 
 class C_TextPacket : public C_Packet

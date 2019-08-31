@@ -145,5 +145,6 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 
 		free(EnchantData);
 	}
+	g_Data.getLocalPlayer()->setOffhandSlot(item);
 	return true;
 }

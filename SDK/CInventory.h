@@ -1,3 +1,4 @@
+#pragma once
 #include "CEntity.h"
 
 class C_Item;

@@ -202,5 +202,6 @@
     <ClInclude Include="Horion\Module\Modules\InfiniteBlockReach.h" />
     <ClInclude Include="Horion\Module\Modules\AutoClicker.h" />
     <ClInclude Include="Horion\Module\Modules\NameTags.h" />
+    <ClInclude Include="SDK\CComplexInventoryTransaction.h" />
   </ItemGroup>
 </Project>

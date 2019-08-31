@@ -329,6 +329,7 @@
     <ClInclude Include="SDK\CLoopbackPacketSender.h" />
     <ClInclude Include="SDK\CRakNetInstance.h" />
     <ClInclude Include="SDK\CUIScene.h" />
+    <ClInclude Include="SDK\CComplexInventoryTransaction.h" />
     <ClInclude Include="Utils\Json.hpp" />
     <ClInclude Include="Utils\Target.h" />
     <ClInclude Include="Utils\TextFormat.h" />
