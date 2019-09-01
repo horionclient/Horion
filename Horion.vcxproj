@@ -323,6 +323,7 @@
     <ClInclude Include="SDK\CGameSettingsInput.h" />
     <ClInclude Include="SDK\CHIDController.h" />
     <ClInclude Include="SDK\CInventory.h" />
+    <ClInclude Include="SDK\CInventoryTransaction.h" />
     <ClInclude Include="SDK\CMinecraftUIRenderContext.h" />
     <ClInclude Include="SDK\CMoveInputHandler.h" />
     <ClInclude Include="SDK\CPacket.h" />

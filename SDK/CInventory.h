@@ -10,21 +10,36 @@ private:
 	char pad_0x008[0x12];//0x8
 public:
 	char count; //0x1A
-	void ItemStackConstructor(C_Item* item,int count, int itemData)
+private:
+	char pad_0x1B[0x6D];//0x1B
+public:
+	C_ItemStack() = default;
+
+	C_ItemStack(C_Item* item, int count, int itemData)
 	{
-		using ItemStackContructor_t = C_ItemStack*(__fastcall*)(C_ItemStack*, C_Item*,int,int);
+		memset(this, 0x0, sizeof(C_ItemStack));
+		using ItemStackContructor_t = C_ItemStack * (__fastcall*)(C_ItemStack*, C_Item*, int, int);
 		static ItemStackContructor_t  ItemStackContructor = reinterpret_cast<ItemStackContructor_t>(Utils::FindSignature("40 53 48 83 EC 40 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B D9 48 89 4C 24 ?? 33 C0 48 89 01 48 89 41 ?? 48 89 41 ?? C7 41 ?? ?? ?? ?? ?? 48 89 41 ?? 48 ?? ?? ?? ?? ?? ?? ?? C6 41 ?? 01 48 89 41 ?? 48 89 41 ?? 48 89 41 ?? 48 89 41 ?? 48 89 41 ?? 48 89 41 ?? 48 89 41 ?? 48 89 41 ?? 48 89 41 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 44 24 ?? E8 ?? ?? ?? ?? 90 48 8B C3 48 83 C4 40 5B C3 CC CC CC CC CC CC 40 53 48 83 EC 40 48"));
 		if (ItemStackContructor != 0)
 			ItemStackContructor(this, item, count, itemData);
 	}
-	void ItemStackConstructor__1(C_BlockLegacy* legacy, int count)
+
+	C_ItemStack(C_BlockLegacy* legacy, int count)
 	{
-		using ItemStackContructor_t = C_ItemStack*(__fastcall*)(C_ItemStack*, C_BlockLegacy*);
+		memset(this, 0x0, sizeof(C_ItemStack));
+		using ItemStackContructor_t = C_ItemStack * (__fastcall*)(C_ItemStack*, C_BlockLegacy*);
 		static ItemStackContructor_t  ItemStackContructor = reinterpret_cast<ItemStackContructor_t>(Utils::FindSignature("40 53 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B D9 48 89 4C 24 28 33 C9 48 89 0B 48 89 4B 08 ?? ?? ?? ?? ?? ?? ?? 48 89 43 10 C7 43 ?? ?? ?? ?? ?? 48 89 4B 20 48 ?? ?? ?? ?? ?? ?? ?? C6 43 30 01 48 89 4B 38 48 89 4B 40 48 89 4B 48 48 89 4B 50 48 89 4B 58 48 89 4B 60 48 89 4B 68 48 89 4B 70 48 89 4B 78 ?? ?? ?? ?? ?? ?? ?? 44 8D 41 01 48 8B CB E8"));
 		if (ItemStackContructor != 0)
-		{
 			ItemStackContructor(this, legacy);
-		}
+	}
+
+	C_ItemStack(C_ItemStack const& item)
+	{
+		memset(this, 0x0, sizeof(C_ItemStack));
+		using ItemStackCopyContructor_t = void(__fastcall*)(C_ItemStack&,C_ItemStack const&);
+		static ItemStackCopyContructor_t  ItemStackCopyContructor = reinterpret_cast<ItemStackCopyContructor_t>(Utils::FindSignature("40 53 48 83 EC 40 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B D9 48 89 4C 24 38 48 8B 4C 24 70 33 C0 48 89 03 48 89 43 08 48 89 43 10 C7 43 ?? ?? ?? ?? ?? 48 89 43 20 48 ?? ?? ?? ?? ?? ?? ?? C6 43 30 01 48 89 43 38 48 89 43 40 48 89 43 48 48 89 43 50 48 89 43 58 48 89 43 60 48 89 43 68 48 89 43 70 48 89 43 78 ?? ?? ?? ?? ?? ?? ?? 48 89 4C 24 20 48 8B CB E8 ?? ?? ?? ?? 90 48 8B C3 48 83 C4 40 5B C3") + 100);
+		if (ItemStackCopyContructor != 0)
+			ItemStackCopyContructor(*this,item);
 	}
 };
 

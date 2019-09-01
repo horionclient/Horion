@@ -203,5 +203,6 @@
     <ClInclude Include="Horion\Module\Modules\AutoClicker.h" />
     <ClInclude Include="Horion\Module\Modules\NameTags.h" />
     <ClInclude Include="SDK\CComplexInventoryTransaction.h" />
+    <ClInclude Include="SDK\CInventoryTransaction.h" />
   </ItemGroup>
 </Project>

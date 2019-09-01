@@ -27,7 +27,7 @@ public:
 private:
 	char pad_0x8[0x18]; //0x8
 public:
-	C_ComplexInventoryTransaction* transaction; //0x20
+	C_ComplexInventoryTransaction* complexTransaction; //0x20
 };
 
 
