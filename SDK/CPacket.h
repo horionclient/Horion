@@ -9,6 +9,47 @@ public:
 	uintptr_t** vTable; //0x0000
 };
 
+class C_MobEquipmentPacket : public C_Packet
+{
+public:
+	C_MobEquipmentPacket()
+	{
+		static uintptr_t** MobEquipmentPacketVtable = 0x0;
+		if (MobEquipmentPacketVtable == 0x0) {
+			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 48 89 51 ?? 48 83 C1 28 49 8B D0");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			MobEquipmentPacketVtable = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
+			if (MobEquipmentPacketVtable == 0x0 || sigOffset == 0x0)
+				logF("C_MobEquipmentPacketVtable signature not working!!!");
+		}
+		memset(this, 0, sizeof(C_MobEquipmentPacket)); // Avoid overwriting vtable
+		vTable = MobEquipmentPacketVtable;
+	}
+	C_MobEquipmentPacket(__int64 entityRuntimeId,C_ItemStack& item, int hotbarSlot, int inventorySlot)
+	{
+		memset(this, 0x0, sizeof(C_MobEquipmentPacket));
+		using MobEquimentPacketConstructor_t = void(__fastcall*)(C_MobEquipmentPacket*,__int64, C_ItemStack&, int, int, char);
+		static MobEquimentPacketConstructor_t MobEquimentPacketConstructor = reinterpret_cast<MobEquimentPacketConstructor_t>(Utils::FindSignature("48 89 4C 24 08 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 48 41 8B D9 48 8B F9 C7 41 ?? ?? ?? ?? ?? C7 41 ?? ?? ?? ?? ?? C6 41 ?? 00 48 ?? ?? ?? ?? ?? ?? ?? 48 8D 05 ?? ?? ?? ??"));
+		if (MobEquimentPacketConstructor != 0)
+			MobEquimentPacketConstructor(this, entityRuntimeId,item, hotbarSlot, inventorySlot, 0);
+	}
+private:
+	char pad_0x8[0x18];//0x0
+public:
+	__int64 entityRuntimeId;//0x20
+	C_ItemStack item;//0x28
+	int inventorySlot; //0xB0
+	int hotbarSlot;//0xB4
+	char windowId;//0xB8
+private:
+	char unknown[0x2];//0xB9
+public:
+	char hotbarSlot1;//0xBA
+	char inventorySlot1;//0xBB
+private:
+	char unknown1;//0xBC
+};
+
 class C_InventoryTransactionPacket : public C_Packet
 {
 public:
