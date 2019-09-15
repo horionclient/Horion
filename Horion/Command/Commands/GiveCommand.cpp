@@ -2,7 +2,7 @@
 
 
 
-GiveCommand::GiveCommand() : IMCCommand("give", "spawn items", "<itemName> <count> <itemData>") 
+GiveCommand::GiveCommand() : IMCCommand("give", "spawn items", "<itemName> <count> <itemData> <mode: auto / manual : 1/0>")
 {
 }
 
@@ -15,10 +15,14 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 {
 	assertTrue(args->size() > 2);
 	int itemId = 0;
-	char  count = assertInt(args->at(2));
+	char  count = static_cast<char>(assertInt(args->at(2)));
 	char itemData = 0;
+	bool isAuto = true;
 	if (args->size() > 3)
-		itemData = assertInt(args->at(3));
+		itemData = static_cast<char>(assertInt(args->at(3)));
+	if (args->size() > 4)
+		isAuto = static_cast<bool>(assertInt(args->at(4)));
+
 	try
 	{
 		itemId = std::stoi(args->at(1));
@@ -26,13 +30,13 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 	catch (const std::invalid_argument&)
 	{
 	}
-	
+
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
 	C_BlockLegacy* blockItem = nullptr;
 	C_Item* itemItem = nullptr;
 	C_ItemStack* yot = nullptr;
-	
+
 	static uintptr_t** VanillaBlocks__mStonePtr = 0x0;
 	static uintptr_t** VanillaItems__mShovel_ironPtr = 0x0;
 
@@ -57,7 +61,7 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 
 	if (itemId == 0)
 	{
-		if (VanillaBlocks__mStonePtr != nullptr)
+		if (VanillaBlocks__mStonePtr != nullptr && VanillaItems__mShovel_ironPtr != nullptr)
 		{
 			for (int i = 0; i < 465; i++)
 			{
@@ -67,14 +71,7 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 					blockItem = reinterpret_cast<C_BlockLegacy*>(VanillaBlocks__mStonePtr[i][0]);
 					break;
 				}
-			}
-		}
-
-		if (VanillaItems__mShovel_ironPtr != nullptr && blockItem == nullptr)
-		{
-			for (int i = 0; i < 233; i++)
-			{
-				if (VanillaItems__mShovel_ironPtr[i] != nullptr &&
+				else if (VanillaItems__mShovel_ironPtr[i] != nullptr &&
 					strcmp(reinterpret_cast<C_Item*>(VanillaItems__mShovel_ironPtr[i][0])->name.getText(), args->at(1).c_str()) == 0)
 				{
 					itemItem = reinterpret_cast<C_Item*>(VanillaItems__mShovel_ironPtr[i][0]);
@@ -92,7 +89,7 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 			clientMessageF("%sInvalid item ID!", RED);
 			return true;
 		}
-		yot =  new C_ItemStack(*cStack->item, count, itemData);
+		yot = new C_ItemStack(*cStack->item, count, itemData);
 		inv->addItemToFirstEmptySlot(yot);
 		clientMessageF("%sSuccessfully given item!", GREEN);
 		return true;
@@ -104,13 +101,31 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 		return true;
 	}
 	else if (blockItem != nullptr)
-		yot= new C_ItemStack(blockItem, count);
+		yot = new C_ItemStack(blockItem, count);
 	else
 		yot = new C_ItemStack(itemItem, count, itemData);
-	
+
 	if (yot != nullptr)
 		yot->count = count;
-		
+
+	if (isAuto)
+	{
+
+		C_InventoryAction firt = C_InventoryAction(2, yot, nullptr, 32766, 100);
+		C_InventoryAction sezcond = C_InventoryAction(inv->getFirstEmptySlot(), nullptr, yot);
+		C_InventoryTransaction tr = C_InventoryTransaction();
+		tr.addInventoryAction(&firt);
+		tr.addInventoryAction(&sezcond);
+		std::unique_ptr<C_InventoryTransactionPacket> packet  = std::make_unique<C_InventoryTransactionPacket>();
+
+
+		packet->complexTransaction = new C_ComplexInventoryTransaction(tr);
+		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(packet.get());
+		delete packet->complexTransaction;
+
+		clientMessageF("%sSuccessfully given item!", GREEN);
+		return true;
+	}
 
 	inv->addItemToFirstEmptySlot(yot);
 	clientMessageF("%sSuccessfully given item!", GREEN);

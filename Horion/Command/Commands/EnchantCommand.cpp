@@ -1,7 +1,7 @@
 #include "EnchantCommand.h"
 
 
-EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enchantment> [level]")
+EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enchantment> [level] <mode: auto / manual : 1/0>")
 {
 	enchantMap["protection"] = 0;
 	enchantMap["fire_protection"] = 1;
@@ -49,6 +49,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 
 	int enchantId = 0;
 	int enchantLevel = 32767;
+	bool isAuto = true;
 
 	if (args->at(1) != "all") 
 	{
@@ -71,12 +72,14 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 
 	if (args->size() > 2)
 		enchantLevel = assertInt(args->at(2));
+	if (args->size() > 3)
+		isAuto = static_cast<bool>(assertInt(args->at(3)));
 
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
 
 	int selectedSlot = supplies->selectedHotbarSlot;
-	C_ItemStack* item = (inv->getItemStack(selectedSlot));
+	C_ItemStack* item = inv->getItemStack(selectedSlot);
 
 	using getEnchantsFromUserData_t = void(__fastcall*)(C_ItemStack*, void*);
 	using addEnchant_t              = bool(__fastcall*)(void*, __int64);
@@ -85,6 +88,8 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	static getEnchantsFromUserData_t getEnchantsFromUserData = 0x0;
 	static addEnchant_t              addEnchant = reinterpret_cast<addEnchant_t>(Utils::FindSignature("48 89 5C 24 ?? 48 89 54 24 ?? 57 48 83 EC ?? 45 0F"));
 	static saveEnchantsToUserData_t  saveEnchantsToUserData = reinterpret_cast<saveEnchantsToUserData_t>(Utils::FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 8B FA 4C 8B C1 48 8B 01 48 85 C0"));
+
+	
 
 	if (getEnchantsFromUserData == 0x0) {
 		uintptr_t sig = Utils::FindSignature("24 ?? 48 8D 95 ?? ?? ?? ?? 48 8D 8D ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 45 33 C0 48") + 17;
@@ -145,6 +150,5 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 
 		free(EnchantData);
 	}
-	g_Data.getLocalPlayer()->setOffhandSlot(item);
 	return true;
 }

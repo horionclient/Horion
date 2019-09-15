@@ -65,6 +65,19 @@ public:
 		memset(this, 0, sizeof(C_InventoryTransactionPacket)); // Avoid overwriting vtable
 		vTable = InventoryTransactionPacketVtable;
 	}
+	C_InventoryTransactionPacket(C_ComplexInventoryTransaction* transac) {
+		static uintptr_t** InventoryTransactionPacketVtable = 0x0;
+		if (InventoryTransactionPacketVtable == 0x0) {
+			uintptr_t sigOffset = Utils::FindSignature("48 8D 15 ?? ?? ?? ?? 49 89 53 C0 49 89 43 E0");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			InventoryTransactionPacketVtable = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
+			if (InventoryTransactionPacketVtable == 0x0 || sigOffset == 0x0)
+				logF("C_InventoryTransactionPacketVtable signature not working!!!");
+		}
+		memset(this, 0, sizeof(C_InventoryTransactionPacket)); // Avoid overwriting vtable
+		vTable = InventoryTransactionPacketVtable;
+		this->complexTransaction = transac;
+	}
 private:
 	char pad_0x8[0x18]; //0x8
 public:
