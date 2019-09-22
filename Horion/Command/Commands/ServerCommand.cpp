@@ -3,6 +3,7 @@
 
 ServerCommand::ServerCommand() : IMCCommand("server", "Show information about the server you're playing on", "")
 {
+	registerAlias("ip");
 }
 
 
