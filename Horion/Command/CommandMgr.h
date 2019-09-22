@@ -19,6 +19,7 @@
 #include "Commands/HideCommand.h"
 #include "Commands/GiveCommand.h"
 #include "Commands/BruhCommand.h"
+#include "Commands/ServerCommand.h"
 #include "Commands/setoffhandCommand.h"
 #include "Commands/CoordsCommand.h"
 #include "Commands/SayCommand.h"
