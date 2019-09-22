@@ -110,18 +110,22 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 
 	if (isAuto)
 	{
+		C_InventoryAction firtAction = C_InventoryAction(0, yot, nullptr, 32766, 100);
+		C_InventoryAction secondAction = C_InventoryAction(inv->getFirstEmptySlot(), nullptr, yot);
+		C_InventoryTransaction transac = C_InventoryTransaction();
+		transac.addInventoryAction(&firtAction);
+		transac.addInventoryAction(&secondAction);
 
-		C_InventoryAction firt = C_InventoryAction(2, yot, nullptr, 32766, 100);
-		C_InventoryAction sezcond = C_InventoryAction(inv->getFirstEmptySlot(), nullptr, yot);
-		C_InventoryTransaction tr = C_InventoryTransaction();
-		tr.addInventoryAction(&firt);
-		tr.addInventoryAction(&sezcond);
-		std::unique_ptr<C_InventoryTransactionPacket> packet  = std::make_unique<C_InventoryTransactionPacket>();
-
-
-		packet->complexTransaction = new C_ComplexInventoryTransaction(tr);
+		std::unique_ptr<C_InventoryTransactionPacket> packet = std::make_unique<C_InventoryTransactionPacket>();
+		packet->complexTransaction = new C_ComplexInventoryTransaction(transac);
 		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(packet.get());
 		delete packet->complexTransaction;
+
+		
+		C_ItemUseInventoryTransaction* use = new C_ItemUseInventoryTransaction(inv->getFirstEmptySlot(), yot, { 0,0,0 }, 255, 0);
+		std::unique_ptr<C_InventoryTransactionPacket> packet1 = std::make_unique<C_InventoryTransactionPacket>(use);
+		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(packet1.get());
+		delete use;
 
 		clientMessageF("%sSuccessfully given item!", GREEN);
 		return true;

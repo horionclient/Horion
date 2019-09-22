@@ -3,6 +3,7 @@
 
 Hooks    g_Hooks;
 bool isTicked = false;
+//#define TEST_DEBUG
 
 void Hooks::Init()
 {
@@ -212,7 +213,9 @@ void Hooks::Restore()
 	//g_Hooks.inventoryScreen__tickHook->Restore();
 }
 
-//int ofa = 0;
+#ifdef TEST_DEBUG
+	int ofa = 0;
+#endif
 
 void __fastcall Hooks::InventoryTransactionManager__addAction(C_InventoryTransactionManager* a1, C_InventoryAction* a2)
 {

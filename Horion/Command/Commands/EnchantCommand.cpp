@@ -81,6 +81,24 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	int selectedSlot = supplies->selectedHotbarSlot;
 	C_ItemStack* item = inv->getItemStack(selectedSlot);
 
+	C_InventoryAction* firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, item, nullptr);
+	C_InventoryAction* secondAction = new C_InventoryAction(0, nullptr, item, 32766, 100);
+
+	C_InventoryTransaction* transac = new C_InventoryTransaction();
+	transac->addInventoryAction(firstAction);
+	transac->addInventoryAction(secondAction);
+	delete firstAction;
+	delete secondAction;
+
+	C_InventoryTransactionPacket* packet = new C_InventoryTransactionPacket();
+
+
+	packet->complexTransaction = new C_ComplexInventoryTransaction(*transac);
+	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(packet);
+	delete packet->complexTransaction;
+	delete packet;
+	delete transac;
+
 	using getEnchantsFromUserData_t = void(__fastcall*)(C_ItemStack*, void*);
 	using addEnchant_t              = bool(__fastcall*)(void*, __int64);
 	using saveEnchantsToUserData_t  = void(__fastcall*)(C_ItemStack*, void*);
@@ -88,8 +106,6 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	static getEnchantsFromUserData_t getEnchantsFromUserData = 0x0;
 	static addEnchant_t              addEnchant = reinterpret_cast<addEnchant_t>(Utils::FindSignature("48 89 5C 24 ?? 48 89 54 24 ?? 57 48 83 EC ?? 45 0F"));
 	static saveEnchantsToUserData_t  saveEnchantsToUserData = reinterpret_cast<saveEnchantsToUserData_t>(Utils::FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 8B FA 4C 8B C1 48 8B 01 48 85 C0"));
-
-	
 
 	if (getEnchantsFromUserData == 0x0) {
 		uintptr_t sig = Utils::FindSignature("24 ?? 48 8D 95 ?? ?? ?? ?? 48 8D 8D ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 45 33 C0 48") + 17;
@@ -150,5 +166,21 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 
 		free(EnchantData);
 	}
+	
+	firstAction = new C_InventoryAction(0, item, nullptr, 32766, 100);
+	secondAction = new C_InventoryAction(supplies->selectedHotbarSlot, nullptr, item);
+	transac = new C_InventoryTransaction();
+
+	transac->addInventoryAction(firstAction);
+	transac->addInventoryAction(secondAction);
+
+	packet = new C_InventoryTransactionPacket();
+
+	packet->complexTransaction = new C_ComplexInventoryTransaction(*transac);
+	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(packet);
+
+	delete packet->complexTransaction;
+	delete packet;
+	delete transac;
 	return true;
 }
