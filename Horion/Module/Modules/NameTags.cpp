@@ -4,7 +4,8 @@
 
 NameTags::NameTags() : IModule(0x0, VISUAL)
 {
-	this->registerBoolSetting("Display Health", &this->DisplayHealth, this->DisplayHealth);
+	this->registerBoolSetting("Display Health", &this->displayHealth, this->displayHealth);
+	this->registerBoolSetting("Use Unicode font", &this->useUnicodeFont, this->useUnicodeFont);
 }
 
 
@@ -26,7 +27,7 @@ void drawNameTags(C_Entity* ent, bool isRegularEntitie) {
 		if (ent->timeSinceDeath > 0)
 			return;
 		if (Target::isValidTarget(ent) && NameTagsMod != nullptr)
-			DrawUtils::drawNameTags(ent, 0.95f);
+			DrawUtils::drawNameTags(ent, 0.95f, NameTagsMod->displayHealth, NameTagsMod->useUnicodeFont);
 	}
 }
 

@@ -6,10 +6,9 @@
 
 class NameTags : public IModule
 {
-private:
-	bool DisplayHealth = true;
 public:
-	inline bool shouldDisplayHealth() { return DisplayHealth; };
+	bool displayHealth = true;
+	bool useUnicodeFont = false;
 	NameTags();
 	~NameTags();
 
