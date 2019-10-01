@@ -53,21 +53,21 @@ public:
 
 	/*C_ItemStack& operator=(C_ItemStack const& src)
 	{
-		using Destructor_t = void(__fastcall*)(C_ItemStack*);
-		static Destructor_t Destructor = reinterpret_cast<Destructor_t>(Utils::FindSignature("40 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 40 48 8B D9 ?? ?? ?? ?? ?? ?? ?? 48 85 FF 74 17 48 8B CF E8 ?? ?? ?? ?? 90 BA ?? ?? ?? ?? 48 8B CF E8 ?? ?? ?? ?? 90 48 8D 4B ?? E8 ?? ?? ?? ?? 90 48 8D 4B 38 E8 ?? ?? ?? ?? 90"));
-		if (Destructor != 0)
-			Destructor(this);
+		using Destructor_t0 = void(__fastcall*)(C_ItemStack*);
+		static Destructor_t0 Destruc = reinterpret_cast<Destructor_t0>(Utils::FindSignature("40 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 40 48 8B D9 ?? ?? ?? ?? ?? ?? ?? 48 85 FF 74 17 48 8B CF E8 ?? ?? ?? ?? 90 BA ?? ?? ?? ?? 48 8B CF E8 ?? ?? ?? ?? 90 48 8D 4B ?? E8 ?? ?? ?? ?? 90 48 8D 4B 38 E8 ?? ?? ?? ?? 90"));
+		if (Destruc != 0)
+			Destruc(this);
 		memset(this, 0x0, sizeof(C_ItemStack));
-		using ItemStackCopyContructor_t = void(__fastcall*)(C_ItemStack&, C_ItemStack const&);
-		static ItemStackCopyContructor_t  ItemStackCopyContructor = 0x0;
-		if (ItemStackCopyContructor == 0x0) {
+		using ItemStackCopyContructor_t0 = void(__fastcall*)(C_ItemStack&, C_ItemStack const&);
+		static ItemStackCopyContructor_t0  ItemStackCopyContruct = 0x0;
+		if (ItemStackCopyContruct == 0x0) {
 			uintptr_t sigOffset = Utils::FindSignature("E8 ?? ?? ?? ?? 90 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 F2 0F 10 44 24 ??");
 			if (sigOffset != 0x0) {
 				int offset = *reinterpret_cast<int*>((sigOffset + 1)); // Get Offset from code
-				ItemStackCopyContructor = reinterpret_cast<ItemStackCopyContructor_t>(sigOffset + offset + 5);
+				ItemStackCopyContruct = reinterpret_cast<ItemStackCopyContructor_t0>(sigOffset + offset + 5);
 			}
-			if (ItemStackCopyContructor != 0)
-				ItemStackCopyContructor(*this, src);
+			if (ItemStackCopyContruct != 0)
+				ItemStackCopyContruct(*this, src);
 		}
 		return *this;
 	}*/

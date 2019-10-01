@@ -6,6 +6,7 @@
 #include "CEntityList.h"
 #include "CBlockLegacy.h"
 #include "CInventory.h"
+#include "CInventoryTransaction.h"
 
 class C_GameMode;
 
@@ -154,8 +155,9 @@ public:
 	short itemData; //0x1920
 	short itemId; //0x1922
 private:
-	char pad_0x193C[0x290]; //0x1924
+	char pad_0x193C[0x1FC]; //0x1924
 public:
+	C_InventoryTransactionManager transactionManager;//0x1B20
 	int gamemode; //0x1BB4 
 private:
 	char pad_0x1BD0[0x60]; //0x1BD0

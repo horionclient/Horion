@@ -84,20 +84,8 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	C_InventoryAction* firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, item, nullptr);
 	C_InventoryAction* secondAction = new C_InventoryAction(0, nullptr, item, 32766, 100);
 
-	C_InventoryTransaction* transac = new C_InventoryTransaction();
-	transac->addInventoryAction(firstAction);
-	transac->addInventoryAction(secondAction);
-	delete firstAction;
-	delete secondAction;
-
-	C_InventoryTransactionPacket* packet = new C_InventoryTransactionPacket();
-
-
-	packet->complexTransaction = new C_ComplexInventoryTransaction(*transac);
-	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(packet);
-	delete packet->complexTransaction;
-	delete packet;
-	delete transac;
+	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(*firstAction);
+	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(*secondAction);
 
 	using getEnchantsFromUserData_t = void(__fastcall*)(C_ItemStack*, void*);
 	using addEnchant_t              = bool(__fastcall*)(void*, __int64);
@@ -169,18 +157,9 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	
 	firstAction = new C_InventoryAction(0, item, nullptr, 32766, 100);
 	secondAction = new C_InventoryAction(supplies->selectedHotbarSlot, nullptr, item);
-	transac = new C_InventoryTransaction();
 
-	transac->addInventoryAction(firstAction);
-	transac->addInventoryAction(secondAction);
+	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(*firstAction);
+	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(*secondAction);
 
-	packet = new C_InventoryTransactionPacket();
-
-	packet->complexTransaction = new C_ComplexInventoryTransaction(*transac);
-	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(packet);
-
-	delete packet->complexTransaction;
-	delete packet;
-	delete transac;
 	return true;
 }

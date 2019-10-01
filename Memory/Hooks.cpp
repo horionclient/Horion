@@ -175,9 +175,11 @@ void Hooks::Init()
 	g_Hooks.inventoryScreen__tickHook = std::make_unique<FuncHook>(inventoryScreen, Hooks::inventoryScreen__tick);
 	g_Hooks.inventoryScreen__tickHook->init();*/
 
+#ifdef TEST_DEBUG
 	void* addAction = reinterpret_cast<void*>(Utils::FindSignature("40 55 56 57 41 56 41 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 8B EA 4C 8B F1 4C 8B C2 48 8B 51 ?? 48 8B 49 ?? E8"));
 	g_Hooks.InventoryTransactionManager__addActionHook = std::make_unique<FuncHook>(addAction, Hooks::InventoryTransactionManager__addAction);
 	g_Hooks.InventoryTransactionManager__addActionHook->init();
+#endif
 }
 
 void Hooks::Restore()
