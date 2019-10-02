@@ -2,7 +2,7 @@
 
 
 
-GiveCommand::GiveCommand() : IMCCommand("give", "spawn items", "<itemName> <count> <itemData> <mode: auto / manual : 1/0>")
+GiveCommand::GiveCommand() : IMCCommand("give", "spawn items", "<itemName> <count> <itemData>")
 {
 }
 
@@ -17,11 +17,8 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 	int itemId = 0;
 	char  count = static_cast<char>(assertInt(args->at(2)));
 	char itemData = 0;
-	bool isAuto = true;
 	if (args->size() > 3)
 		itemData = static_cast<char>(assertInt(args->at(3)));
-	if (args->size() > 4)
-		isAuto = static_cast<bool>(assertInt(args->at(4)));
 
 	try
 	{
@@ -79,6 +76,15 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 				}
 			}
 		}
+		if (blockItem == nullptr && itemItem == nullptr)
+		{
+			clientMessageF("%sInvalid Item!", RED);
+			return true;
+		}
+		else if (blockItem != nullptr && yot == nullptr)
+			yot = new C_ItemStack(blockItem, count);
+		else if (itemItem != nullptr && yot == nullptr)
+			yot = new C_ItemStack(itemItem, count, itemData);
 	}
 	else
 	{
@@ -90,39 +96,47 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 			return true;
 		}
 		yot = new C_ItemStack(*cStack->item, count, itemData);
-		inv->addItemToFirstEmptySlot(yot);
-		clientMessageF("%sSuccessfully given item!", GREEN);
-		return true;
 	}
-
-	if (blockItem == nullptr && itemItem == nullptr)
-	{
-		clientMessageF("%sInvalid Item!", RED);
-		return true;
-	}
-	else if (blockItem != nullptr)
-		yot = new C_ItemStack(blockItem, count);
-	else
-		yot = new C_ItemStack(itemItem, count, itemData);
 
 	if (yot != nullptr)
 		yot->count = count;
 
-	if (isAuto)
+	int slot = inv->getFirstEmptySlot();
+	
+	if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.cubecraft.net") == 0)
 	{
-		C_InventoryAction firtAction = C_InventoryAction(inv->getFirstEmptySlot(), nullptr, yot, 32512);
-		C_InventoryAction secondAction = C_InventoryAction(2,yot,nullptr,156,100);
+		(*yot->item)->setStackedByData(true);
+		(*yot->item)->setMaxStackSize(64);
+		if (count == 1)
+			yot->count += 2;
+
+		*inv->getItemStack(slot) = *yot;
 		
-		g_Data.getLocalPlayer()->transactionManager.addInventoryAction(firtAction);
-		g_Data.getLocalPlayer()->transactionManager.addInventoryAction(secondAction);
+		inv->dropSlot(slot);
 
-		*inv->getItemStack(inv->getFirstEmptySlot()) = *yot;
+		C_ItemStack newItem(*yot->item,count,itemData);
 
+		C_InventoryAction firtAction1 = C_InventoryAction(slot, inv->getItemStack(slot), nullptr);
+		C_InventoryAction secondAction1 = C_InventoryAction(slot, nullptr,inv->getItemStack(slot));
+		g_Data.getLocalPlayer()->transactionManager.addInventoryAction(firtAction1);
+		g_Data.getLocalPlayer()->transactionManager.addInventoryAction(secondAction1);
+
+		delete yot;
+
+		*inv->getItemStack(slot) = newItem;
 		clientMessageF("%sSuccessfully given item!", GREEN);
 		return true;
 	}
 
-	inv->addItemToFirstEmptySlot(yot);
+
+	C_InventoryAction firtAction = C_InventoryAction(slot, nullptr, yot, 32512);
+	C_InventoryAction secondAction = C_InventoryAction(0, yot, nullptr, 156, 100);
+
+	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(firtAction);
+	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(secondAction);
+
+	*inv->getItemStack(slot) = *yot;
+
 	clientMessageF("%sSuccessfully given item!", GREEN);
 	return true;
 }

@@ -77,15 +77,27 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
+	C_InventoryTransactionManager* manager = &g_Data.getLocalPlayer()->transactionManager;
 
 	int selectedSlot = supplies->selectedHotbarSlot;
 	C_ItemStack* item = inv->getItemStack(selectedSlot);
 
-	C_InventoryAction* firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, item, nullptr);
-	C_InventoryAction* secondAction = new C_InventoryAction(0, nullptr, item, 32766, 100);
+	C_InventoryAction* firstAction = nullptr;
+	C_InventoryAction* secondAction = nullptr;
 
-	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(*firstAction);
-	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(*secondAction);
+	if (isAuto)
+	{
+		if(strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.cubecraft.net") == 0)
+		{
+		}
+		else
+		{
+			firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, item, nullptr);
+			secondAction = new C_InventoryAction(0, nullptr, item, 32766, 100);
+			manager->addInventoryAction(*firstAction);
+			manager->addInventoryAction(*secondAction);
+		}
+	}
 
 	using getEnchantsFromUserData_t = void(__fastcall*)(C_ItemStack*, void*);
 	using addEnchant_t              = bool(__fastcall*)(void*, __int64);
@@ -155,11 +167,29 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 		free(EnchantData);
 	}
 	
-	firstAction = new C_InventoryAction(0, item, nullptr, 32766, 100);
-	secondAction = new C_InventoryAction(supplies->selectedHotbarSlot, nullptr, item);
+	if (isAuto)
+	{
+		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.cubecraft.net") == 0)
+		{
+			(*item->item)->setStackedByData(true);
+			(*item->item)->setMaxStackSize(64);
+			if (item->count == 1)
+				item->count += 2;
 
-	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(*firstAction);
-	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(*secondAction);
+			inv->dropSlot(supplies->selectedHotbarSlot);
 
+			firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, inv->getItemStack(supplies->selectedHotbarSlot), nullptr);
+			secondAction = new C_InventoryAction(supplies->selectedHotbarSlot, nullptr, inv->getItemStack(supplies->selectedHotbarSlot));
+			manager->addInventoryAction(*firstAction);
+			manager->addInventoryAction(*secondAction);
+		}
+		else
+		{
+			firstAction = new C_InventoryAction(0, item, nullptr, 32766, 100);
+			secondAction = new C_InventoryAction(supplies->selectedHotbarSlot, nullptr, item);
+			manager->addInventoryAction(*firstAction);
+			manager->addInventoryAction(*secondAction);
+		}
+	}
 	return true;
 }
