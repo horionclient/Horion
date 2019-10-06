@@ -2,7 +2,7 @@
 
 
 
-BindCommand::BindCommand() : IMCCommand("bind", "Binds Modules to specific keys", "<module> <key>")
+BindCommand::BindCommand() : IMCCommand("bind", "Binds modules to specific keys", "<module> <key>")
 {
 	registerAlias("b");
 }
@@ -25,6 +25,14 @@ bool BindCommand::execute(std::vector<std::string>* args)
 		std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 		const char* needle = key.c_str();
 
+		IModule* mod = moduleMgr->getModuleByName(moduleName);
+
+		if (key == "none") {
+			mod->setKeybind(0x0);
+			clientMessageF("%sSuccessfully unbound %s!", GREEN, mod->getModuleName());
+			return true;
+		}
+
 		for(int i = 0; i < 190; i++)
 		{
 			const char* haystack = KeyNames[i];
@@ -33,24 +41,21 @@ bool BindCommand::execute(std::vector<std::string>* args)
 			for (int i = 0; i < len; i++)
 				haystackLowercase[i] = tolower(haystack[i]);
 
-			//clientMessageF("%s", needleLowercase);
-
 			if(strcmp(needle, haystackLowercase) == 0)
 			{
-				IModule* mod = moduleMgr->getModuleByName(moduleName);
 				if (mod == nullptr) {
-					clientMessageF("%sCould not find Module with name: %s", RED, moduleName.c_str());
+					clientMessageF("%sCould not find module with name: %s", RED, moduleName.c_str());
 				}
 				else {
 					mod->setKeybind(i);
-					clientMessageF("%sThe Keybind of %s is now '%s'", GREEN, mod->getModuleName(), haystack);
+					clientMessageF("%sThe keybind of %s is now '%s'", GREEN, mod->getModuleName(), haystack);
 				}
 				delete[] haystackLowercase;
 				return true;
 			}
 			delete[] haystackLowercase;
 		}
-		clientMessageF("%sInvalid Key!", RED);
+		clientMessageF("%sInvalid key!", RED);
 		return true;
 	}
 
@@ -61,7 +66,7 @@ bool BindCommand::execute(std::vector<std::string>* args)
 	if (keyCode >= 0x30 && keyCode <= 0x5A) {
 		IModule* mod = moduleMgr->getModuleByName(moduleName);
 		if (mod == nullptr) {
-			clientMessageF("%sCould not find Module with name: %s", RED, moduleName.c_str());
+			clientMessageF("%sCould not find module with name: %s", RED, moduleName.c_str());
 		}
 		else {
 			mod->setKeybind(keyCode);
