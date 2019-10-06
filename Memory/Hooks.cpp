@@ -636,11 +636,13 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 		CriticalsMod = moduleMgr->getModule<Criticals>();
 	else if(CriticalsMod->isEnabled())
 	{
-		C_MovePlayerPacket movePacket = C_MovePlayerPacket();
-		if (movePacket.vTable == packet->vTable) {
-			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
-			if(g_Data.getLocalPlayer()->onGround)
-				p->onGround = false;
+		if (g_Data.getClientInstance()->getLocalPlayer() != nullptr) {
+			C_MovePlayerPacket movePacket = C_MovePlayerPacket();
+			if (movePacket.vTable == packet->vTable) {
+				C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
+				if (g_Data.getLocalPlayer()->onGround)
+					p->onGround = false;
+			}
 		}
 	}
 
