@@ -88,6 +88,8 @@
     <ClCompile Include="Horion\Module\Modules\InfiniteBlockReach.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoClicker.cpp" />
     <ClCompile Include="Horion\Module\Modules\NameTags.cpp" />
+    <ClCompile Include="Horion\Command\Commands\ServerCommand.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Criticals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -204,5 +206,7 @@
     <ClInclude Include="Horion\Module\Modules\NameTags.h" />
     <ClInclude Include="SDK\CComplexInventoryTransaction.h" />
     <ClInclude Include="SDK\CInventoryTransaction.h" />
+    <ClInclude Include="Horion\Command\Commands\ServerCommand.h" />
+    <ClInclude Include="Horion\Module\Modules\Criticals.h" />
   </ItemGroup>
 </Project>

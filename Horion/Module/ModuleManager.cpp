@@ -65,6 +65,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new InfiniteBlockReach());
 	this->moduleList.push_back(new AutoClicker());
 	this->moduleList.push_back(new NameTags());
+	this->moduleList.push_back(new Criticals());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);

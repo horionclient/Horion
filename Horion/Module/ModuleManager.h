@@ -53,6 +53,7 @@
 #include "Modules/InfiniteBlockReach.h"
 #include "Modules/AutoClicker.h"
 #include "Modules/NameTags.h"
+#include "Modules/Criticals.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

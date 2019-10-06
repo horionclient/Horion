@@ -171,10 +171,6 @@ void Hooks::Init()
 	g_Hooks.RakNetInstance__tickHook = std::make_unique<FuncHook>(RakNetInstance__tick, Hooks::RakNetInstance__tick);
 	g_Hooks.RakNetInstance__tickHook->init();
 
-	/*void* inventoryScreen = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 55 57 41 56 48 8D 68 98 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 8B FA 48 8B F1"));
-	g_Hooks.inventoryScreen__tickHook = std::make_unique<FuncHook>(inventoryScreen, Hooks::inventoryScreen__tick);
-	g_Hooks.inventoryScreen__tickHook->init();*/
-
 #ifdef TEST_DEBUG
 	void* addAction = reinterpret_cast<void*>(Utils::FindSignature("40 55 56 57 41 56 41 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 8B EA 4C 8B F1 4C 8B C2 48 8B 51 ?? 48 8B 49 ?? E8"));
 	g_Hooks.InventoryTransactionManager__addActionHook = std::make_unique<FuncHook>(addAction, Hooks::InventoryTransactionManager__addAction);
@@ -212,7 +208,6 @@ void Hooks::Restore()
 	g_Hooks.RakNetInstance__tickHook->Restore();
 	g_Hooks.GameMode__getPickRangeHook->Restore();
 	g_Hooks.InventoryTransactionManager__addActionHook->Restore();
-	//g_Hooks.inventoryScreen__tickHook->Restore();
 }
 
 #ifdef TEST_DEBUG
@@ -246,21 +241,6 @@ float __fastcall Hooks::GameMode__getPickRange(C_GameMode* _this, __int64 a2, ch
 
 	return oFunc(_this, a2, a3);
 }
-
-__int64 __fastcall Hooks::inventoryScreen__tick(C_CraftingScreenController* _this, __int64 a2)
-{
-	static auto oFunc = g_Hooks.inventoryScreen__tickHook->GetOriginal<inventoryScreen__tick_t>();
-
-	static AutoArmor* AutoArmorMod = moduleMgr->getModule<AutoArmor>();
-	if (AutoArmorMod == nullptr)
-		AutoArmorMod = moduleMgr->getModule<AutoArmor>();
-	else {
-		AutoArmorMod->inventoryScreen = _this;
-	}
-
-	return oFunc(_this,a2);
-}
-
 
 void __fastcall Hooks::RakNetInstance__tick(C_RakNetInstance* _this)
 {
@@ -608,6 +588,7 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 	static IModule* NoFallMod = moduleMgr->getModule<NoFall>();
 	static Blink* BlinkMod = moduleMgr->getModule<Blink>();
 	static NoPacket* No_Packet = moduleMgr->getModule<NoPacket>();
+	static Criticals* CriticalsMod = moduleMgr->getModule<Criticals>();
 
 	if (FreecamMod == nullptr || NoFallMod == nullptr || BlinkMod == nullptr || No_Packet == nullptr) {
 		FreecamMod = moduleMgr->getModule<Freecam>();
@@ -650,6 +631,19 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 			p->onGround = true;
 		}
 	}
+
+	if (CriticalsMod == nullptr)
+		CriticalsMod = moduleMgr->getModule<Criticals>();
+	else if(CriticalsMod->isEnabled())
+	{
+		C_MovePlayerPacket movePacket = C_MovePlayerPacket();
+		if (movePacket.vTable == packet->vTable) {
+			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
+			if(g_Data.getLocalPlayer()->onGround)
+				p->onGround = false;
+		}
+	}
+
 #ifdef TEST_DEBUG
 	C_InventoryTransactionPacket Packet0 = C_InventoryTransactionPacket();
 	if (packet->vTable == Packet0.vTable)

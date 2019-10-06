@@ -635,6 +635,121 @@ public:
 	C_ServerPlayer* getServerPlayer() {
 		return *reinterpret_cast<C_ServerPlayer**>(reinterpret_cast<__int64>(this) + 0x1BC0);
 	};
+private:
+	virtual __int64 frameUpdate(__int64&);
+	virtual __int64 getTickingOffsets(void)const;
+	virtual __int64 moveView(void);
+	virtual __int64 moveSpawnView(vec3_t const&);
+public:
+	virtual void setName(std::string const&);
+private:
+	virtual __int64 checkMovementStats(vec3_t const&);
+	virtual __int64 getCurrentStructureFeature(void)const;
+	virtual __int64 respawn(void);
+	virtual __int64 resetRot(void);
+	virtual __int64 resetPos(bool);
+public:
+	virtual bool isInTrialMode(void);
+	virtual bool hasResource(int);
+private:
+	virtual __int64 completeUsingItem(void);
+public:
+	virtual void setPermissions(int);
+private:
+	virtual __int64 startCrafting(vec3_ti const&, bool);
+	virtual __int64 startStonecutting(vec3_ti const&);
+	virtual __int64 startDestroying(void);
+	virtual __int64 stopDestroying(void);
+	virtual __int64 openContainer(vec3_ti const&);
+	virtual __int64 openContainer(__int64 const&);
+	virtual __int64 openFurnace(vec3_ti const&);
+	virtual __int64 openBlastFurnace(vec3_ti const&);
+	virtual __int64 openSmoker(vec3_ti const&);
+	virtual __int64 openEnchanter(vec3_ti const&);
+	virtual __int64 openAnvil(vec3_ti const&);
+	virtual __int64 openGrindstone(vec3_ti const&);
+	virtual __int64 openBrewingStand(vec3_ti const&);
+	virtual __int64 openHopper(vec3_ti const&);
+	virtual __int64 openHopper(__int64 const&);
+	virtual __int64 openDispenser(vec3_ti const&, bool);
+	virtual __int64 openBeacon(vec3_ti const&);
+	virtual __int64 openPortfolio(void);
+	virtual __int64 openBook(int, bool, int, __int64*);
+	virtual __int64 openCommandBlock(vec3_ti const&);
+	virtual __int64 openCommandBlockMinecart(__int64 const&);
+	virtual __int64 openHorseInventory(__int64 const&);
+	virtual __int64 openTrading(__int64 const&, bool);
+public:
+	virtual bool canOpenContainerScreen(void);
+private:
+	virtual __int64 openChalkboard(__int64&, bool);
+	virtual __int64 openNpcInteractScreen(C_Entity&);
+	virtual __int64 openInventory(void);
+	virtual __int64 openStructureEditor(vec3_ti const&);
+	virtual __int64 openLabTable(vec3_ti const&);
+	virtual __int64 openElementConstructor(vec3_ti const&);
+	virtual __int64 openCompoundCreator(vec3_ti const&);
+	virtual __int64 openMaterialReducer(vec3_ti const&);
+	virtual __int64 openLoom(vec3_ti const&);
+	virtual __int64 openStonecutter(vec3_ti const&);
+	virtual __int64 openCartographyTable(vec3_ti const&);
+	virtual __int64 displayChatMessage(std::string const&, std::string const&);
+	virtual __int64 displayClientMessage(std::string const&);
+	virtual __int64 displayLocalizableMessage(std::string const&, __int64 const&);
+	virtual __int64 displayTextObjectMessage(__int64 const&, std::string const&, std::string const&);
+	virtual __int64 displayWhisperMessage(std::string const&, std::string const&, std::string const&, std::string const&);
+	virtual __int64 startSleepInBed(vec3_ti const&);
+	virtual __int64 stopSleepInBed(bool, bool);
+public:
+	virtual bool canStartSleepInBed(void);
+private:
+	virtual __int64 getSleepTimer(void)const;
+	virtual __int64 getPreviousTickSleepTimer(void)const;
+	virtual __int64 openSign(vec3_ti const&);
+public:
+	virtual bool isLocalC_Player(void)const;
+	virtual bool isHostingC_Player(void)const;
+	virtual bool isLoading(void)const;
+	virtual bool isC_PlayerInitialized(void)const;
+private:
+	virtual __int64 stopLoading(void);
+	virtual __int64 registerTrackedBoss(__int64);
+	virtual __int64 unRegisterTrackedBoss(__int64);
+public:
+	virtual void setC_PlayerGameType(int);
+	virtual __int64 _crit(C_Entity*);
+private:
+	virtual __int64 getEventing(void)const;
+	virtual __int64 getUserId(void)const;
+	virtual __int64 sendEventPacket(__int64&)const;
+	virtual __int64 addExperience(int);
+	virtual __int64 addLevels(int);
+public:
+	virtual void setContainerData(__int64&, int, int);
+private:
+	virtual __int64 slotChanged(__int64&, int, C_ItemStack const&, C_ItemStack const&, bool);
+	virtual __int64 inventoryChanged(__int64&, int, C_ItemStack const&, C_ItemStack const&);
+	virtual __int64 refreshContainer(__int64&);
+	virtual __int64 deleteContainerManager(void);
+public:
+	virtual void setFieldOfViewModifier(float);
+	virtual bool isPositionRelevant(__int64, int, vec3_ti const&);
+	virtual bool isEntityRelevant(C_Entity const&);
+	virtual bool isTeacher(void)const;
+private:
+	virtual __int64 onSuspension(void);
+	virtual __int64 onLinkedSlotsChanged(void);
+	virtual __int64 startCooldown(C_Item const*);
+	virtual __int64 getItemCooldownLeft(int)const;
+public:
+	virtual bool isItemInCooldown(int)const;
+private:
+	virtual __int64 sendInventoryTransaction(__int64 const&)const;
+	virtual __int64 sendComplexInventoryTransaction(__int64,__int64)const;
+	virtual __int64 sendNetworkPacket(__int64&)const;
+	virtual __int64 chorusFruitTeleport(vec3_t&);
+	virtual __int64 getC_PlayerEventCoordinator(void);
+	virtual __int64 onMoveC_PlayerPacketNormal(vec3_t const&, vec2_t const&, float);
 };
 
 class C_ServerPlayer : public C_Player {
