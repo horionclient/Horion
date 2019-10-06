@@ -34,12 +34,12 @@ bool UnbindCommand::execute(std::vector<std::string>* args)
 				}
 			}
 			else {
-				clientMessageF("%sCould not find Module with name: %s", RED, moduleName.c_str());
+				clientMessageF("%sCould not find module with name: %s", RED, moduleName.c_str());
 			}
 		}
 		else {
 			mod->setKeybind(0x0);
-			clientMessageF("%sThe keybind of the %s module is now none'", GREEN, mod->getModuleName());
+			clientMessageF("%sSuccessfully unbound %s!", GREEN, mod->getModuleName());
 		}
 	}
 	else {
