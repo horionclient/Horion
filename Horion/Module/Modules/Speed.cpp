@@ -48,5 +48,6 @@ void Speed::onEnable()
 
 void Speed::onDisable()
 {
-	*reinterpret_cast<float*>(g_Data.getLocalPlayer()->getSpeed() + 0x84) = origSpeed;
+	if (g_Data.getLocalPlayer() != nullptr)
+		*reinterpret_cast<float*>(g_Data.getLocalPlayer()->getSpeed() + 0x84) = origSpeed;
 }
