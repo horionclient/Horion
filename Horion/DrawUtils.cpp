@@ -232,7 +232,7 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)
 	}
 }
 
-void DrawUtils::drawNameTags(C_Entity* ent, float textSize,bool drawHealth)
+void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, bool useUnicodeFont)
 {
 	vec2_t textPos;
 	std::string text = ent->getNameTag()->getText();
@@ -242,7 +242,7 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize,bool drawHealth)
 	if (refdef->OWorldToScreen(origin,ent->eyePos0, textPos, fov, screenSize)) {
 		textPos.y -= 10.f;
 		textPos.x -= textStr / 2.f;
-		drawText(textPos, &text,nullptr, textSize);
+		drawText(textPos, &text, nullptr, textSize, useUnicodeFont ? UNICOD : SMOOTH);
 	}
 }
 
