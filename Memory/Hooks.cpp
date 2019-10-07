@@ -399,6 +399,12 @@ __int64 __fastcall Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity
 	else{
 		InventoryMoveMod->inputHandler = a1;
 	}
+	static Bhop* bhopMod = moduleMgr->getModule<Bhop>();
+	if (bhopMod == nullptr)
+		bhopMod = moduleMgr->getModule<Bhop>();
+	else {
+		bhopMod->inputHandler = a1;
+	}
 	return oTick(a1, a2);
 }
 
