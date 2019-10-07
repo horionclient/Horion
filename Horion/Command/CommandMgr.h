@@ -23,6 +23,7 @@
 #include "Commands/setoffhandCommand.h"
 #include "Commands/CoordsCommand.h"
 #include "Commands/SayCommand.h"
+#include "Commands/SpamCommand.h"
 
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"

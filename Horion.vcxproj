@@ -154,6 +154,7 @@
     <ClCompile Include="Horion\Command\Commands\RelativeTeleportCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\SayCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\setoffhandCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\SpamCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\TeleportCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\TestCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ToggleCommand.cpp" />
@@ -245,6 +246,7 @@
     <ClInclude Include="Horion\Command\Commands\RelativeTeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\SayCommand.h" />
     <ClInclude Include="Horion\Command\Commands\setoffhandCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\SpamCommand.h" />
     <ClInclude Include="Horion\Command\Commands\TeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\TestCommand.h" />
     <ClInclude Include="Horion\Command\Commands\ToggleCommand.h" />
