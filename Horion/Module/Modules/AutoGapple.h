@@ -1,12 +1,14 @@
 #pragma once
 #include "Module.h"
 
-class AntiImmobile : public IModule
+class AutoGapple : public IModule
 {
+private:
+	int health;
 public:
 	C_MoveInputHandler* inputHandler = nullptr;
-	AntiImmobile();
-	~AntiImmobile();
+	AutoGapple();
+	~AutoGapple();
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;

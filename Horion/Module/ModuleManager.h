@@ -55,7 +55,8 @@
 #include "Modules/NameTags.h"
 #include "Modules/Criticals.h"
 #include "Modules/Bhop.h"
-#include "Modules/AntiImmobile.h"
+#include "Modules/Tower.h"
+#include "Modules/AutoGapple.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

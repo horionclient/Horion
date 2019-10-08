@@ -67,7 +67,8 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new NameTags());
 	this->moduleList.push_back(new Criticals());
 	this->moduleList.push_back(new Bhop());
-	// this->moduleList.push_back(new AntiImmobile());
+	this->moduleList.push_back(new Tower());
+	// this->moduleList.push_back(new AutoGapple());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);

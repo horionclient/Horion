@@ -3,15 +3,15 @@
 
 class Tower : public IModule
 {
+private:
+	float motion = 0.5f;
+	bool tryTower(vec3_t blockBelow);
 public:
 	Tower();
 	~Tower();
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
-	virtual void onTick(C_GameMode* gm) override;
-	virtual void onEnable() override;
-	virtual void onDisable() override;
-	int delay;
+	virtual void onPostRender() override;
 };
 
