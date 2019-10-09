@@ -3,6 +3,7 @@
 
 AutoClicker::AutoClicker() : IModule(0x0, COMBAT) // <-- keybind
 {
+	this->registerBoolSetting("rightclick", &this->rightclick, rightclick);
 	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
 	this->registerBoolSetting("only swords/axes", &this->sword, this->sword);
 }
@@ -38,6 +39,19 @@ void AutoClicker::onTick(C_GameMode* gm)
 			if (target != 0)
 				gm->attack(target);
 			Odelay = 0;
+		}
+	}
+
+	if (rightclick) {
+		if (!GameData::isRightClickDown() && Odelay != 0) Odelay = 0;
+		if (GameData::isRightClickDown() && GameData::canUseMoveKeys()) {
+			PointingStruct* pstruct = g_Data.getClientInstance()->getPointerStruct();
+			Odelay++;
+			if (Odelay >= delay)
+			{
+				gm->buildBlock(new vec3_ti(pstruct->block), pstruct->blockSide);
+				Odelay = 0;
+			}
 		}
 	}
 }
