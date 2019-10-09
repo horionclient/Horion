@@ -3,6 +3,8 @@
 #include "../ModuleManager.h"
 class AirJump : public IModule
 {
+private:
+	int hasJumped = 0;
 public:
 	AirJump();
 	~AirJump();
