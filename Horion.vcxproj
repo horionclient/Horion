@@ -180,6 +180,7 @@
     <ClCompile Include="Horion\Module\Modules\BedFucker.cpp" />
     <ClCompile Include="Horion\Module\Modules\Bhop.cpp" />
     <ClCompile Include="Horion\Module\Modules\Blink.cpp" />
+    <ClCompile Include="Horion\Module\Modules\BugUp.cpp" />
     <ClCompile Include="Horion\Module\Modules\ChestStealer.cpp" />
     <ClCompile Include="Horion\Module\Modules\ClickGuiMod.cpp" />
     <ClCompile Include="Horion\Module\Modules\Criticals.cpp" />
@@ -275,6 +276,7 @@
     <ClInclude Include="Horion\Module\Modules\BedFucker.h" />
     <ClInclude Include="Horion\Module\Modules\Bhop.h" />
     <ClInclude Include="Horion\Module\Modules\Blink.h" />
+    <ClInclude Include="Horion\Module\Modules\BugUp.h" />
     <ClInclude Include="Horion\Module\Modules\Criticals.h" />
     <ClInclude Include="Horion\Module\Modules\InfiniteBlockReach.h" />
     <ClInclude Include="Horion\Module\Modules\ChestStealer.h" />

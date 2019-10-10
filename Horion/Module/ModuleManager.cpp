@@ -69,6 +69,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Bhop());
 	this->moduleList.push_back(new Tower());
 	// this->moduleList.push_back(new AutoGapple());
+	this->moduleList.push_back(new BugUp());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);
