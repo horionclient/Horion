@@ -64,7 +64,15 @@ void AutoArmor::onTick(C_GameMode* gm)
 
 	C_InventoryAction* first = nullptr;
 	C_InventoryAction* second = nullptr;
-	C_ItemStack* emptyItemStack = reinterpret_cast<C_ItemStack*>(0x7FF60B097E40);
+	static C_ItemStack* emptyItemStack = nullptr;
+
+	if (emptyItemStack == 0x0) {
+		uintptr_t sigOffset = Utils::FindSignature("48 8D 0D ?? ?? ?? ?? 40 38 71 ?? 0F 84 ?? ?? ?? ?? 48 8B 11 48 85 D2 0F 84");
+		int offset = *reinterpret_cast<int*>(sigOffset + 3);
+		emptyItemStack = reinterpret_cast<C_ItemStack*>(sigOffset + offset + /*length of instruction*/ 7);
+		if (emptyItemStack == 0x0 || sigOffset == 0x0)
+			logF("emptyItemStack sig not working!!!");
+	}
 
 	std::vector<ArmorStruct> armorList;
 
