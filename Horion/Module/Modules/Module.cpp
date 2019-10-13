@@ -90,6 +90,22 @@ void IModule::registerBoolSetting(std::string name, bool * boolPtr, bool default
 	settings.push_back(setting); // Add to list
 }
 
+void IModule::registerStringSetting(std::string name, char* textPtr, std::string defaultText)
+{
+	SettingEntry* setting = new SettingEntry();
+	setting->valueType = TEXT_T;
+
+	setting->value = reinterpret_cast<SettingValue*>(textPtr); // Actual value
+
+	SettingValue* defaultVal = new SettingValue(); // Default Value
+	defaultVal->text = &defaultText;
+	setting->defaultValue = defaultVal;
+
+	strcpy_s(setting->name, 19, name.c_str()); // Name
+
+	settings.push_back(setting); // Add to list
+}
+
 IModule::~IModule()
 {
 }

@@ -4,7 +4,7 @@
 
 Bhop::Bhop() : IModule(0x0, MOVEMENT)
 {
-	registerFloatSetting("Speed", &this->speed, 0.4, 0.1f, 0.8f);
+	registerFloatSetting("Speed", &this->speed, 0.4f, 0.1f, 0.8f);
 }
 
 

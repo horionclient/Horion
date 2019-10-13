@@ -284,7 +284,7 @@ struct vec4_t
 		struct { float x, y, z, w; };
 		float v[4];
 	};
-	vec4_t() {}
+	vec4_t() { x = 0, y = 0, z = 0, w = 0;}
 	explicit vec4_t(const vec3_t &p, float w = 0) : x(p.x), y(p.y), z(p.z), w(w) {};
 	vec4_t(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {};
 	float &operator[](int i) { return v[i]; };

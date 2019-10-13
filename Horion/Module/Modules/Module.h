@@ -85,6 +85,7 @@ protected:
 	void registerFloatSetting(std::string name, float* floatPtr, float defaultValue, float minValue, float maxValue);
 	void registerIntSetting(std::string name, int* intpTr, int defaultValue, int minValue, int maxValue);
 	void registerBoolSetting(std::string name, bool* boolPtr, bool defaultValue);
+	void registerStringSetting(std::string name, char* textPtr,std::string defaultText);
 public:
 	~IModule();
 

@@ -23,32 +23,6 @@ public:
 
 }; //Size=0x0598
 
-struct _ptr2 {
-	char pad_0x0000[0x10]; //0x0000
-	C_EntityList* entityList; //0x0010 
-	char pad_0x0018[0x50]; //0x0018
-	C_MobEntityList* MobList; //0x0068
-};
-
-struct _ptr1 {
-	char pad_0x0000[0x30]; //0x0000
-	_ptr2* ptrToEntList; //0x0030 
-};
-
-struct _1ptr3 {
-	char pad_0x0000[0x8B8];
-	C_GameMode* cGameMode; //0x08B8
-};
-
-struct _1ptr2 {
-	char pad_0x0000[0x18]; //0x0000
-	_1ptr3* ptrToCGameMode; //0x0018 
-};
-
-struct _1ptr1 {
-	char pad_0x0000[0x238]; //0x0000
-	_1ptr2* ptrToPtrToCGameMode; //0x0238 
-};
 
 class C_Player;
 
@@ -56,7 +30,7 @@ class C_Entity
 {
 public:
 	//uintptr_t** vTable; //0x0000
-	_ptr1* ptrToPtrToEntList; //0x0008 
+	uintptr_t* ptrToPtrToEntList; //0x0008 
 private:
 	char pad_0x0010[0xD0]; //0x0010
 public:
@@ -335,9 +309,9 @@ private:
 	virtual __int64 killed(C_Entity&);
 	virtual __int64 awardKillScore(C_Entity &, int);
 public:
-	virtual void setArmor(__int64, __int64 const&);
+	virtual void setArmor(int,C_ItemStack const&);
+	virtual C_ItemStack* getArmor(int)const;
 private:
-	virtual __int64 getArmor(__int64)const;
 	virtual __int64 getArmorMaterialTypeInSlot(__int64)const;
 	virtual __int64 getArmorMaterialTextureTypeInSlot(__int64)const;
 	virtual __int64 getArmorColorInSlot(__int64, int)const;
@@ -743,9 +717,9 @@ private:
 	virtual __int64 getItemCooldownLeft(int)const;
 public:
 	virtual bool isItemInCooldown(int)const;
-private:
 	virtual __int64 sendInventoryTransaction(__int64 const&)const;
-	virtual __int64 sendComplexInventoryTransaction(__int64,__int64)const;
+	virtual __int64 sendComplexInventoryTransaction(__int64, __int64)const;
+private:
 	virtual __int64 sendNetworkPacket(__int64&)const;
 	virtual __int64 chorusFruitTeleport(vec3_t&);
 	virtual __int64 getC_PlayerEventCoordinator(void);

@@ -61,7 +61,7 @@ void ModuleManager::initModules()
 	//this->moduleList.push_back(new AutoSneak());
 	this->moduleList.push_back(new FastEat());
 	this->moduleList.push_back(new Jesus());
-	//this->moduleList.push_back(new AutoArmor());
+	this->moduleList.push_back(new AutoArmor());
 	this->moduleList.push_back(new InfiniteBlockReach());
 	this->moduleList.push_back(new AutoClicker());
 	this->moduleList.push_back(new NameTags());
