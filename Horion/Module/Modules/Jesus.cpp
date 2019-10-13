@@ -16,7 +16,7 @@ const char* Jesus::getModuleName()
 
 void Jesus::onTick(C_GameMode* gm)
 {
-	if (gm->player != nullptr) {
+	if (gm->player != nullptr && gm->player->isSneaking == false) {
 		
 		if (gm->player->hasEnteredWater()) {
 			gm->player->velocity.y = 0.06f;
