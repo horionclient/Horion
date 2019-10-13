@@ -17,8 +17,8 @@ const char* NoFall::getModuleName()
 }
 
 void NoFall::onTick(C_GameMode* gm) {
-	if (gm->player != nullptr) {
-		gm->player->fallDistance = 0.5;
-	}
+    if (gm->player != nullptr && gm->player->fallDistance > 0) {
+        gm->player->fallDistance = 0.5;
+    }
 }
 
