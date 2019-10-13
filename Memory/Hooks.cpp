@@ -632,9 +632,15 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 	}
 	else if (NoFallMod->isEnabled()) {
 		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
+		C_ActorFallPacket fall = C_ActorFallPacket();
 		if (frenchBoy.vTable == packet->vTable) {
 			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
 			p->onGround = true;
+		}
+		else if (fall.vTable == packet->vTable)
+		{
+			C_ActorFallPacket* p = reinterpret_cast<C_ActorFallPacket*>(packet);
+			p->fallDistance = 0.f;
 		}
 	}
 
