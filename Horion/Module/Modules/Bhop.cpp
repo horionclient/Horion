@@ -23,7 +23,7 @@ void Bhop::onTick(C_GameMode* gm) {
 
 	if (gm->player->isInLava() == 1 || gm->player->isInWater() == 1) return;
 
-	if (g_Data.getLocalPlayer()->isInventoryClosed() == 0 && moduleMgr->getModuleByName("InventoryMove")->isEnabled() == 1) return;
+	if(!GameData::canUseMoveKeys()) return;
 
 	if (input == nullptr) return;
 	
