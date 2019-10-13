@@ -2,7 +2,7 @@
 #include "../../DrawUtils.h"
 
 
-Tower::Tower() : IModule(VK_NUMPAD9, BUILD)
+Tower::Tower() : IModule(VK_NUMPAD8, BUILD)
 {
 	registerFloatSetting("motion", &this->motion, this->motion, 0.3f, 1);
 }
