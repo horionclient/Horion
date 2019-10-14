@@ -24,6 +24,7 @@
 #include "Commands/CoordsCommand.h"
 #include "Commands/SayCommand.h"
 #include "Commands/SpamCommand.h"
+#include "Commands/DupeCommand.h"
 
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"
