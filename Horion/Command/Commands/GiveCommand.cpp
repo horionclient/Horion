@@ -56,6 +56,7 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 			logF("VanillaItems sig not working!!!");
 	}
 
+	try {
 	if (itemId == 0)
 	{
 		if (VanillaBlocks__mStonePtr != nullptr && VanillaItems__mShovel_ironPtr != nullptr)
@@ -128,7 +129,6 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 		return true;
 	}
 
-
 	C_InventoryAction firtAction = C_InventoryAction(slot, nullptr, yot, 32512);
 	C_InventoryAction secondAction = C_InventoryAction(0, yot, nullptr, 156, 100);
 
@@ -139,4 +139,8 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 
 	clientMessageF("%sSuccessfully given item!", GREEN);
 	return true;
+	}catch (std::exception e){
+		clientMessageF("%sUh oh! Stinky ID!", RED);
+		return false;
+	}
 }
