@@ -54,7 +54,7 @@ void Logger::WriteLogFileF(const char * fmt, ...)
 		try {
 			remove(logPath);
 		}
-		catch (std::exception e) {
+		catch (std::exception const &e) {
 		}
 
 	}
