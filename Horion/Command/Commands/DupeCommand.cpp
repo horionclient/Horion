@@ -16,7 +16,7 @@ bool DupeCommand::execute(std::vector<std::string>* args)
 	int selectedSlot = supplies->selectedHotbarSlot;
 	C_ItemStack* item = inv->getItemStack(selectedSlot);
 
-	g_Data.getLocalPlayer()->setOffhandSlot(item); // Items with NBT tags don't really work well with normal item giving method
+	g_Data.getLocalPlayer()->setOffhandSlot(item); // Items with NBT tags really don't work well with normal item giving method
 
 	clientMessageF("%sSuccessfully duplicated the item!", GREEN);
 	return true;
