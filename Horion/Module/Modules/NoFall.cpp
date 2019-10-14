@@ -13,6 +13,6 @@ NoFall::~NoFall()
 
 const char* NoFall::getModuleName()
 {
-    return ("NoFall");
+        return ("NoFall");
 }
 
