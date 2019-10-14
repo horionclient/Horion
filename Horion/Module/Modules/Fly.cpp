@@ -16,7 +16,7 @@ const char* Fly::getModuleName()
 	return ("Fly");
 }
 
-void Fly::onEnable()
+/* void Fly::onEnable()
 {
 	if (g_Data.getLocalPlayer() != nullptr)
 	{
@@ -31,3 +31,4 @@ void Fly::onDisable()
 	if (g_Data.getLocalPlayer() != nullptr)
 		g_Data.getLocalPlayer()->setGameModeType(oldGameMode);
 }
+*/ 
