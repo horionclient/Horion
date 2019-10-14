@@ -21,7 +21,7 @@ void Fly::onEnable()
 	if (g_Data.getLocalPlayer() != nullptr)
 	{
 		oldGameMode = g_Data.getLocalPlayer()->gamemode;
-		g_Data.getLocalPlayer()->setGameModeType(1);
+		g_Data.getLocalPlayer()->setGameModeType(0);
 		g_Data.getLocalPlayer()->gamemode = 0;
 	}
 }
