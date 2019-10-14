@@ -207,6 +207,7 @@
     <ClCompile Include="Horion\Module\Modules\Glide.cpp" />
     <ClCompile Include="Horion\Module\Modules\Jetpack.cpp" />
     <ClCompile Include="Horion\Module\Modules\Killaura.cpp" />
+    <ClCompile Include="Horion\Module\Modules\MidClick.cpp" />
     <ClCompile Include="Horion\Module\Modules\Module.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoKnockBack.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoPacket.cpp" />
@@ -304,6 +305,7 @@
     <ClInclude Include="Horion\Module\Modules\Glide.h" />
     <ClInclude Include="Horion\Module\Modules\Jetpack.h" />
     <ClInclude Include="Horion\Module\Modules\Killaura.h" />
+    <ClInclude Include="Horion\Module\Modules\MidClick.h" />
     <ClInclude Include="Horion\Module\Modules\Module.h" />
     <ClInclude Include="Horion\Module\Modules\NoKnockBack.h" />
     <ClInclude Include="Horion\Module\Modules\NoPacket.h" />

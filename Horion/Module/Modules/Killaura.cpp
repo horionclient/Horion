@@ -36,9 +36,6 @@ void findEntity(C_Entity* currentEntity,bool isRegularEntitie) {
 		if (currentEntity->timeSinceDeath > 0 || currentEntity->damageTime >= 7)
 			return;
 
-		if (FriendList::findPlayer(currentEntity->getNameTag()->getText())) // Skip Friend
-			return;
-
 		if (killauraMod->isMobAura && !isRegularEntitie)
 		{
 			if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)

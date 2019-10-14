@@ -36,6 +36,7 @@ public:
 	static bool isKeyPressed(int key);
 	static bool isRightClickDown();
 	static bool isLeftClickDown();
+	static bool isWheelDown();
 	static bool shouldTerminate();
 	static bool shouldHide();
 	static void hide();

@@ -82,6 +82,12 @@ bool GameData::isLeftClickDown() {
 	return g_Data.hidController->leftClickDown;
 }
 
+bool GameData::isWheelDown() {
+	if (g_Data.hidController == 0)
+		return false;
+	return g_Data.hidController->wheelDown;
+}
+
 bool GameData::shouldTerminate()
 {
 	return g_Data.shouldTerminateB;
