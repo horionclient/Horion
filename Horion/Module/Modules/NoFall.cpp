@@ -15,3 +15,4 @@ const char* NoFall::getModuleName()
 {
     return ("NoFall");
 }
+
