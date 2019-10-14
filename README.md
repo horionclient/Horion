@@ -12,9 +12,12 @@ If you want to contribute to this project, feel free to fork this repository and
 1. **Download the Injector** or directly download the `.dll` via the label:
 [![Latest release](https://img.shields.io/github/v/release/Horionclient/Horion-Releases?include_prereleases&label=Download%20latest%20stable%20release&sort=semver&style=for-the-badge)](https://github.com/Horionclient/Horion-Releases/releases/latest/)
 
+
 2. **Launch the injector and press "Inject"** (If you chose to download the dll, put the dev mode switch on and locate the dll manually. Any other Injector may be used for this, too).
 
+
 3. In-Game, use the Tab-GUI or Click-GUI (opened by pressing *INSERT*) to navigate through all features.
+
 
 ## Contributing
 To contribute, simply **fork the repository**, edit the things you want to and **submit a pull request**.
