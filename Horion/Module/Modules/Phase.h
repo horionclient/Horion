@@ -3,6 +3,9 @@
 
 class Phase : public IModule
 {
+private:
+	bool hasYiked = false;
+	bool hasYot = false;
 public:
 	Phase();
 	~Phase();

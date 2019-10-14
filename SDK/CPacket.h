@@ -9,6 +9,29 @@ public:
 	uintptr_t** vTable; //0x0000
 };
 
+
+class C_ActorFallPacket : public C_Packet
+{
+private:
+	char pad_0x8[0x18];//0x8
+public:
+	C_ActorFallPacket()
+	{
+		static uintptr_t** ActorFallPacketVtable = 0x0;
+		if (ActorFallPacketVtable == 0x0) {
+			uintptr_t sigOffset = Utils::FindSignature("48 8D 0D ?? ?? ?? ?? 48 89 4D CF 48 89 45 EF F3 44 0F 11 45 F7 88 5D FB");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			ActorFallPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+			if (ActorFallPacketVtable == 0x0 || sigOffset == 0x0)
+				logF("C_ActorFallPacketVtable signature not working!!!");
+		}
+		memset(this, 0, sizeof(C_ActorFallPacket)); // Avoid overwriting vtable
+		vTable = ActorFallPacketVtable;
+	}
+	__int64 runtimeId;
+	float fallDistance;
+};
+
 class C_MobEquipmentPacket : public C_Packet
 {
 public:

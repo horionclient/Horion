@@ -1,0 +1,23 @@
+name: ASP.NET CI
+on: [push]
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Setup VSBT pt1
+      working-directory: ./
+      run: npm install --global windows-build-tools
+    
+    - name: Setup VSBT pt2
+      working-directory: ./
+      run: npm install --global --production windows-build-tools@4.0.0
+      
+    - name: Setup MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+
+    - name: MSBuild
+      working-directory: ./
+      run: msbuild Horion.vcxproj

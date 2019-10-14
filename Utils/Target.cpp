@@ -2,6 +2,7 @@
 #include "../Horion/Module/ModuleManager.h"
 
 C_LocalPlayer** localPlayer;
+std::vector<std::string> validEntities;
 
 void Target::init(C_LocalPlayer** cl) {
 	localPlayer = cl;
@@ -33,6 +34,23 @@ bool Target::isValidTarget(C_Entity * ent)
 
 	if (!(*localPlayer)->canAttack(ent, false))
 		return false;
+
+	if (validEntities.size() > 2)
+	{
+		for (auto it : validEntities)
+		{
+			if (it.find(ent->uuid.getText()) != std::string::npos)
+				return true;
+		}
+	}
+
+	if (*ent->getPos() == *ent->getPosOld()/* && reinterpret_cast<C_Player*>(ent)->getSupplies()->inventory == NULL*/)
+		return false;
+	
+	validEntities.push_back(ent->uuid.getText());
+
+	if (validEntities.size() >= 100)
+		validEntities.clear();
 
 	return true;
 }

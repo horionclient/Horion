@@ -35,7 +35,7 @@ void AutoTotem::onTick(C_GameMode* gm) {
 				void* ItemPtr = malloc(0x8);
 				C_ItemStack* cStack = getItemFromId(ItemPtr, itemId);
 				C_ItemStack* sohItem = reinterpret_cast<C_ItemStack*>(malloc(0x88));
-				sohItem->ItemStackConstructor(*cStack->item, count, itemData);
+				sohItem = new C_ItemStack(*cStack->item, count, itemData);
 				g_Data.getLocalPlayer()->setOffhandSlot(sohItem);
 				delay = 0;
 			}
