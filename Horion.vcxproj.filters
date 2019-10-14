@@ -44,6 +44,7 @@
     <ClCompile Include="Horion\Module\Modules\BedFucker.cpp" />
     <ClCompile Include="Utils\Target.cpp" />
     <ClCompile Include="Horion\Command\Commands\BindCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\DupeCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\EjectCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\EnchantCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\FriendListCommand.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="Utils\Target.h" />
     <ClInclude Include="SDK\CInventory.h" />
     <ClInclude Include="Horion\Command\Commands\BindCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\DupeCommand.h" />
     <ClInclude Include="Horion\Command\Commands\EjectCommand.h" />
     <ClInclude Include="Horion\Command\Commands\EnchantCommand.h" />
     <ClInclude Include="Horion\Command\Commands\FriendListCommand.h" />
