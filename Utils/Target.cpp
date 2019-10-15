@@ -15,6 +15,9 @@ bool Target::isValidTarget(C_Entity * ent)
 	if (ent == g_Data.getLocalPlayer())
 		return false;
 
+	if (ent->getEntityTypeId() > 60 && ent->getEntityTypeId() < 104 && ent->getEntityTypeId() != 63) // check for non mob entity ids
+		return false;
+
 	static Hitbox* hitboxMod = moduleMgr->getModule<Hitbox>();
 	if (hitboxMod == NULL)
 		hitboxMod = moduleMgr->getModule<Hitbox>();

@@ -9,6 +9,7 @@ private:
 	bool isMulti = true;
 	int delay = 0;
 	int Odelay = 0;
+	bool autoweapon = false;
 public:
 	bool isMobAura = false;
 	float range = 6;

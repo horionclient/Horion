@@ -4,10 +4,11 @@
 
 Killaura::Killaura() : IModule('P', COMBAT) // <-- keybind
 {
-	this->registerBoolSetting("multiaura", &this->isMulti, this->isMulti);
+	this->registerBoolSetting("MultiAura", &this->isMulti, this->isMulti);
 	this->registerBoolSetting("MobAura", &this->isMobAura, this->isMobAura);
 	this->registerFloatSetting("range", &this->range, this->range, 2, 8);
 	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
+	this->registerBoolSetting("AutoWeapon", &this->autoweapon, this->autoweapon);
 }
 
 
@@ -41,9 +42,6 @@ void findEntity(C_Entity* currentEntity,bool isRegularEntitie) {
 			if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)
 				return;
 
-			if (currentEntity->isInvisible() && currentEntity->getEntityTypeId() != 33) // Exception for kitmap.sylphhcf.net they use a creeper as hitbox
-				return;
-
 			if (!g_Data.getLocalPlayer()->canAttack(currentEntity, false))
 				return;
 		}
@@ -63,6 +61,26 @@ void findEntity(C_Entity* currentEntity,bool isRegularEntitie) {
 	
 }
 
+void findWeapon() {
+	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
+	C_Inventory* inv = supplies->inventory;
+	int damage = 0;
+	int slot = supplies->selectedHotbarSlot;
+	for (int n = 0; n < 9; n++)
+	{
+		C_ItemStack* stack = inv->getItemStack(n);
+		if (stack->item != NULL)
+		{
+			int currentDamage = (*stack->item)->getAttackDamage();
+			if (currentDamage > damage) {
+				damage = currentDamage;
+				slot = n;
+			}
+		}
+	}
+	supplies->selectedHotbarSlot = slot;
+}
+
 void Killaura::onTick(C_GameMode* gm)
 {
 	if (!g_Data.isInGame())
@@ -72,8 +90,11 @@ void Killaura::onTick(C_GameMode* gm)
 	targetList.clear();
 
 	g_Data.forEachEntity(findEntity);
+
 	Odelay++;
 	if (targetList.size() > 0 && Odelay >= delay) {
+		if (autoweapon) findWeapon();
+
 		g_Data.getLocalPlayer()->swingArm();
 
 		// Attack all entitys in targetList 
