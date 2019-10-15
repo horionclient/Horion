@@ -4,6 +4,7 @@
 
 Step::Step() : IModule('B', MOVEMENT)
 {
+	registerIntSetting("height", &this->height, this->height, 1, 10);
 }
 
 
@@ -18,7 +19,7 @@ const char* Step::getModuleName()
 
 void Step::onTick(C_GameMode* gm) {
 	if(gm->player != nullptr)
-		gm->player->stepHeight = 10;
+		gm->player->stepHeight = height;
 }
 void Step::onDisable() {
 	if (g_Data.getLocalPlayer() != nullptr) 

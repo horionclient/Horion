@@ -19,6 +19,9 @@ const char* ClickTP::getModuleName()
 
 void ClickTP::onTick(C_GameMode* gm)
 {
+	C_GameSettingsInput* input = g_Data.getGameSettingsInput();
+	if (input == nullptr)
+		return;
 	if (gm->player == nullptr)
 		return;
 	vec3_ti block = g_Data.getClientInstance()->getPointerStruct()->block;
@@ -26,12 +29,13 @@ void ClickTP::onTick(C_GameMode* gm)
 	pos.y += gm->player->height;
 	pos.y += 1.f;
 
-	if (GameData::isLeftClickDown() || GameData::isRightClickDown() && !hasClicked && GameData::canUseMoveKeys()) {
+	if (GameData::isRightClickDown() && !hasClicked && GameData::canUseMoveKeys()) {
+		std::string coords = "X: " + std::to_string(pos.x) + " Y: " + std::to_string(pos.y) + " Z: " + std::to_string(pos.z);
 		gm->player->setPos(pos);
-		g_Data.getGuiData()->displayClientMessageF("%sSuccessfully teleported!", GREEN);
+		g_Data.getGuiData()->displayClientMessageF("%sTeleported to %s%s%s.", GREEN, GRAY, coords.c_str(), GREEN);
 		hasClicked = true;
 	}
-	else if (!GameData::isRightClickDown() && !GameData::isLeftClickDown()) {
+	else if (!GameData::isRightClickDown()) {
 		hasClicked = false;
 	}
 }

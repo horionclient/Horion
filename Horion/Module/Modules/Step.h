@@ -3,11 +3,11 @@
 class Step :
 	public IModule
 {
+private:
+	int height = 2;
 public:
 	Step();
 	~Step();
-
-
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
