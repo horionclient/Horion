@@ -44,7 +44,6 @@
     <ClCompile Include="Horion\Module\Modules\BedFucker.cpp" />
     <ClCompile Include="Utils\Target.cpp" />
     <ClCompile Include="Horion\Command\Commands\BindCommand.cpp" />
-    <ClCompile Include="Horion\Command\Commands\DupeCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\EjectCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\EnchantCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\FriendListCommand.cpp" />
@@ -91,6 +90,7 @@
     <ClCompile Include="Horion\Module\Modules\NameTags.cpp" />
     <ClCompile Include="Horion\Command\Commands\ServerCommand.cpp" />
     <ClCompile Include="Horion\Module\Modules\Criticals.cpp" />
+    <ClCompile Include="Horion\Command\Commands\DupeCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -151,7 +151,6 @@
     <ClInclude Include="Utils\Target.h" />
     <ClInclude Include="SDK\CInventory.h" />
     <ClInclude Include="Horion\Command\Commands\BindCommand.h" />
-    <ClInclude Include="Horion\Command\Commands\DupeCommand.h" />
     <ClInclude Include="Horion\Command\Commands\EjectCommand.h" />
     <ClInclude Include="Horion\Command\Commands\EnchantCommand.h" />
     <ClInclude Include="Horion\Command\Commands\FriendListCommand.h" />
@@ -210,5 +209,6 @@
     <ClInclude Include="SDK\CInventoryTransaction.h" />
     <ClInclude Include="Horion\Command\Commands\ServerCommand.h" />
     <ClInclude Include="Horion\Module\Modules\Criticals.h" />
+    <ClInclude Include="Horion\Command\Commands\DupeCommand.h" />
   </ItemGroup>
 </Project>

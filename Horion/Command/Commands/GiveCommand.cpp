@@ -135,7 +135,7 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(firtAction);
 	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(secondAction);
 
-	*inv->getItemStack(slot) = *yot;
+	inv->addItemToFirstEmptySlot(yot);
 
 	clientMessageF("%sSuccessfully given item!", GREEN);
 	return true;
