@@ -58,7 +58,6 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new NoWeb());
 	this->moduleList.push_back(new FastLadder());
 	this->moduleList.push_back(new StackableItem());
-	//this->moduleList.push_back(new AutoSneak());
 	this->moduleList.push_back(new FastEat());
 	this->moduleList.push_back(new Jesus());
 	this->moduleList.push_back(new AutoArmor());
@@ -68,10 +67,10 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Criticals());
 	this->moduleList.push_back(new Bhop());
 	this->moduleList.push_back(new Tower());
-	// this->moduleList.push_back(new AutoGapple());
 	this->moduleList.push_back(new BugUp());
 	this->moduleList.push_back(new MidClick());
 	this->moduleList.push_back(new ClickTP());
+	this->moduleList.push_back(new NoFriends());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);

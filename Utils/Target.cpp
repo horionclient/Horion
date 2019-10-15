@@ -19,7 +19,7 @@ bool Target::isValidTarget(C_Entity * ent)
 	if (hitboxMod == NULL)
 		hitboxMod = moduleMgr->getModule<Hitbox>();
 
-	if (FriendList::findPlayer(ent->getNameTag()->getText()))
+	if (FriendList::findPlayer(ent->getNameTag()->getText()) && !moduleMgr->getModule<NoFriends>()->isEnabled())
 		return false;
 
 	if (ent->getNameTag()->getTextLength() <= 1)
