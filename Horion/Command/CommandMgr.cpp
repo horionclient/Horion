@@ -37,6 +37,7 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new SayCommand());
 	commandList.push_back(new SpamCommand());
 	commandList.push_back(new DupeCommand());
+	commandList.push_back(new DamageCommand());
 
 #ifdef _DEBUG
 	commandList.push_back(new TestCommand());

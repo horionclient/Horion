@@ -25,6 +25,7 @@
 #include "Commands/SayCommand.h"
 #include "Commands/SpamCommand.h"
 #include "Commands/DupeCommand.h"
+#include "Commands/DamageCommand.h"
 
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"

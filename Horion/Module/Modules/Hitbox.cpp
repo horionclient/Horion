@@ -33,9 +33,6 @@ void findTarget(C_Entity* currentEntity,bool isRegularEntitie) {
 		if (currentEntity->timeSinceDeath > 0 || currentEntity->damageTime >= 7)
 			return;
 
-		if (FriendList::findPlayer(currentEntity->getNameTag()->getText())) // Skip Friend
-			return;
-
 		if (!Target::isValidTarget(currentEntity))
 			return;
 		

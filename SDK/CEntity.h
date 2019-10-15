@@ -350,7 +350,9 @@ private:
 	virtual __int64 changeDimension(__int64 const&);
 	virtual __int64 getControllingC_Player(void)const;
 	virtual __int64 checkFallDamage(float, bool);
-	virtual __int64 causeFallDamage(float);
+public:
+	virtual void causeFallDamage(float);
+private:
 	virtual __int64 handleFallDistanceOnServer(float, bool);
 	virtual __int64 playSynchronizedSound(__int64, vec3_t const&, __int64 const&, bool);
 	virtual __int64 playSynchronizedSound(__int64, vec3_t const&, int, bool);
