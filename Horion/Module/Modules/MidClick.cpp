@@ -1,6 +1,6 @@
 #include "MidClick.h"
 
-MidClick::MidClick() : IModule(0, MOVEMENT)
+MidClick::MidClick() : IModule(0, PLAYER)
 {
 }
 

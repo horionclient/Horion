@@ -238,6 +238,11 @@ float __fastcall Hooks::GameMode__getPickRange(C_GameMode* _this, __int64 a2, ch
 		InfiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
 	else if (InfiniteBlockReachModule->isEnabled()) 
 		return InfiniteBlockReachModule->getBlockReach();
+	static ClickTP* clickTP = moduleMgr->getModule<ClickTP>();
+	if (clickTP == nullptr)
+		clickTP = moduleMgr->getModule<ClickTP>();
+	else if (clickTP->isEnabled() && !InfiniteBlockReachModule->isEnabled())
+		return 255;
 
 	return oFunc(_this, a2, a3);
 }

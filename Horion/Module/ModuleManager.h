@@ -59,6 +59,7 @@
 #include "Modules/AutoGapple.h"
 #include "Modules/BugUp.h"
 #include "Modules/MidClick.h"
+#include "Modules/ClickTP.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;

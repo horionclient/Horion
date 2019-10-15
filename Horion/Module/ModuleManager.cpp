@@ -71,6 +71,7 @@ void ModuleManager::initModules()
 	// this->moduleList.push_back(new AutoGapple());
 	this->moduleList.push_back(new BugUp());
 	this->moduleList.push_back(new MidClick());
+	this->moduleList.push_back(new ClickTP());
 	initialized = true;
 
 	this->getModule<RainbowSky>()->setEnabled(true);
