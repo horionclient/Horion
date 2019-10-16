@@ -6,7 +6,7 @@
 
 Scaffold::Scaffold() : IModule(VK_NUMPAD1, BUILD)
 {
-	// registerBoolSetting("AutoSelect", &this->autoselect, this->autoselect);
+	registerBoolSetting("AutoSelect", &this->autoselect, this->autoselect);
 }
 
 
@@ -56,7 +56,6 @@ bool Scaffold::tryScaffold(vec3_t blockBelow)
 			{
 				// Found a solid block to click
 				foundCandidate = true;
-				// if (autoselect) findBlock();
 				blok->set(calc);
 				delete calc;
 				break;
@@ -65,7 +64,15 @@ bool Scaffold::tryScaffold(vec3_t blockBelow)
 			i++;
 		}
 		if (foundCandidate) {
-			g_Data.getCGameMode()->buildBlock(blok, i);
+			if (autoselect) {
+				int slot = g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot;
+				findBlock();
+				g_Data.getCGameMode()->buildBlock(blok, i);
+				g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = slot;
+			}
+			else {
+				g_Data.getCGameMode()->buildBlock(blok, i);
+			}
 			delete blok;
 			
 			return true;
@@ -89,7 +96,7 @@ bool Scaffold::findBlock() {
 			}
 		}
 	}
-	return true;
+	return false;
 }
 
 void Scaffold::onPostRender()
