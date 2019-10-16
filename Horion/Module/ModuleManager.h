@@ -4,6 +4,7 @@
 #include <typeinfo>
 #include "../../Memory/GameData.h"
 #include "Modules/Module.h"
+#include "Modules/HudModule.h"
 #include "Modules/Killaura.h"
 #include "Modules/ESP.h"
 #include "Modules/Aimbot.h"
@@ -35,7 +36,6 @@
 #include "Modules/AutoTotem.h"
 #include "Modules/ClickGuiMod.h"
 #include "Modules/ChestStealer.h"
-#include "Modules/TabGuiMod.h"
 #include "Modules/Fly.h"
 #include "Modules/Hitbox.h"
 #include "Modules/Reach.h"

@@ -903,11 +903,12 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 	// Call PostRender() functions
 	{
 		moduleMgr->onPostRender();
-		static IModule* TabGuiModule = moduleMgr->getModule<TabGuiMod>();
-		if (TabGuiModule == nullptr)
-			TabGuiModule = moduleMgr->getModule<TabGuiMod>();
-		else if (TabGuiModule->isEnabled()) {
-			TabGui::render();
+		static HudModule* hud = moduleMgr->getModule<HudModule>();
+		if (hud == nullptr)
+			hud = moduleMgr->getModule<HudModule>();
+		else {
+			if(hud->tabgui && hud->isEnabled()) TabGui::render();
+			shouldRenderArrayList = hud->arraylist && hud->isEnabled();
 		}
 		
 		static IModule* ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
@@ -947,9 +948,12 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 		}
 
 		// Draw Horion logo
-		{
-			DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth - 12.0f,windowSize.y - 20), &horionStr, nullptr, 1.5f);
-			DrawUtils::drawText(vec2_t(windowSize.x - dlStrWidth - 42.75f,windowSize.y - 8.75f), &dlStr, nullptr, 0.85f);
+		static HudModule* hud = moduleMgr->getModule<HudModule>();
+		if (hud == nullptr)
+			hud = moduleMgr->getModule<HudModule>();
+		else if(hud->watermark && hud->isEnabled()) {
+			DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth - 12.0f, windowSize.y - 20), &horionStr, nullptr, 1.5f);
+			DrawUtils::drawText(vec2_t(windowSize.x - dlStrWidth - 42.75f, windowSize.y - 8.75f), &dlStr, nullptr, 0.85f);
 		}
 
 		// Draw ArrayList
@@ -1015,8 +1019,10 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 				std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
 
 				for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
-					if (extendedArraylist || (*it)->isEnabled())
-						modContainerList.emplace(IModuleContainer(*it));
+					if (extendedArraylist || (*it)->isEnabled()) {
+						HudModule* hud = moduleMgr->getModule<HudModule>();
+						if ((*it) != hud) modContainerList.emplace(IModuleContainer(*it));
+					}
 				}
 			}
 
