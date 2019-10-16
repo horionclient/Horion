@@ -58,7 +58,7 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 
 	if (itemId == 0)
 	{
-		if (VanillaBlocks__mStonePtr != nullptr && VanillaItems__mShovel_ironPtr != nullptr)
+		if (VanillaBlocks__mStonePtr != nullptr)
 		{
 			for (int i = 0; i < 465; i++)
 			{
@@ -68,7 +68,14 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 					blockItem = reinterpret_cast<C_BlockLegacy*>(VanillaBlocks__mStonePtr[i][0]);
 					break;
 				}
-				else if (VanillaItems__mShovel_ironPtr[i] != nullptr &&
+			}
+		}
+
+		if (VanillaItems__mShovel_ironPtr != nullptr && blockItem == nullptr)
+		{
+			for (int i = 0; i < 233; i++)
+			{
+				if (VanillaItems__mShovel_ironPtr[i] != nullptr &&
 					strcmp(reinterpret_cast<C_Item*>(VanillaItems__mShovel_ironPtr[i][0])->name.getText(), args->at(1).c_str()) == 0)
 				{
 					itemItem = reinterpret_cast<C_Item*>(VanillaItems__mShovel_ironPtr[i][0]);
@@ -135,7 +142,7 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(firtAction);
 	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(secondAction);
 
-	*inv->getItemStack(slot) = *yot;
+	inv->addItemToFirstEmptySlot(yot);
 
 	clientMessageF("%sSuccessfully given item!", GREEN);
 	return true;
