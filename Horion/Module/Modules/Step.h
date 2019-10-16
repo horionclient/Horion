@@ -4,7 +4,7 @@ class Step :
 	public IModule
 {
 private:
-	int height = 2;
+	float height = 2.f;
 public:
 	Step();
 	~Step();

@@ -136,10 +136,10 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 	}
 
 
-	C_InventoryAction firtAction = C_InventoryAction(slot, nullptr, yot, 32512);
+	C_InventoryAction firstAction = C_InventoryAction(slot, nullptr, yot, 32512);
 	C_InventoryAction secondAction = C_InventoryAction(0, yot, nullptr, 156, 100);
 
-	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(firtAction);
+	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(firstAction);
 	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(secondAction);
 
 	inv->addItemToFirstEmptySlot(yot);

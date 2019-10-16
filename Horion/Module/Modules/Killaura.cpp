@@ -64,14 +64,14 @@ void findEntity(C_Entity* currentEntity,bool isRegularEntitie) {
 void findWeapon() {
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
-	int damage = 0;
+	float damage = 0;
 	int slot = supplies->selectedHotbarSlot;
 	for (int n = 0; n < 9; n++)
 	{
 		C_ItemStack* stack = inv->getItemStack(n);
 		if (stack->item != NULL)
 		{
-			int currentDamage = (*stack->item)->getAttackDamage();
+			float currentDamage = (*stack->item)->getAttackDamage();
 			if (currentDamage > damage) {
 				damage = currentDamage;
 				slot = n;

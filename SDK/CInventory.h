@@ -124,7 +124,7 @@ public:
 	virtual bool isStackedByData(void)const;
 public:
 	virtual __int64 getMaxDamage(void)const;
-	virtual __int64 getAttackDamage(void)const;
+	virtual float getAttackDamage(void)const;
 public:
 	virtual bool isHandEquipped(void)const;
 	virtual bool isArmor(void)const;

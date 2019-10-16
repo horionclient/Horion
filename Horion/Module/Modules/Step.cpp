@@ -4,7 +4,7 @@
 
 Step::Step() : IModule('B', MOVEMENT)
 {
-	registerIntSetting("height", &this->height, this->height, 1, 10);
+	registerFloatSetting("height", &this->height, this->height, 1.f, 10.f);
 }
 
 
