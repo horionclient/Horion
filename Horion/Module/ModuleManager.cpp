@@ -16,6 +16,7 @@ ModuleManager::~ModuleManager()
 
 void ModuleManager::initModules()
 {
+	this->moduleList.push_back(new HudModule());
 	this->moduleList.push_back(new Killaura());
 	this->moduleList.push_back(new ESP());
 	this->moduleList.push_back(new Jetpack());
@@ -48,7 +49,6 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new ClickGuiMod());
 	this->moduleList.push_back(new ChestStealer());
 	this->moduleList.push_back(new Fly());
-	this->moduleList.push_back(new TabGuiMod());
 	this->moduleList.push_back(new Hitbox());
 	this->moduleList.push_back(new Reach());
 	this->moduleList.push_back(new FullBright());
@@ -73,8 +73,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new NoFriends());
 	initialized = true;
 
-	this->getModule<RainbowSky>()->setEnabled(true);
-	this->getModule<TabGuiMod>()->setEnabled(true);
+	this->getModule<HudModule>()->setEnabled(true);
 }
 
 void ModuleManager::disable()

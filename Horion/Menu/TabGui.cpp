@@ -171,8 +171,8 @@ void TabGui::render()
 		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
 			IModule* mod = *it;
 			if (selected[0] == mod->getCategory()) {
-				auto yikes = mod->getModuleName();
-				renderLabel(yikes, mod);
+				auto name = mod->getModuleName();
+				renderLabel(name, mod);
 			}
 		}
 		renderLevel();

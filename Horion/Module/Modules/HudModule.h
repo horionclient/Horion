@@ -1,14 +1,17 @@
 #pragma once
 #include "Module.h"
 
-class TabGuiMod :
+class HudModule :
 	public IModule
 {
 public:
-	TabGuiMod();
-	~TabGuiMod();
+	HudModule();
+	~HudModule();
+
+	bool tabgui = true;
+	bool arraylist = true;
+	bool watermark = true;
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 };
-
