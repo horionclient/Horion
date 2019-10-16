@@ -6,6 +6,7 @@
 
 Scaffold::Scaffold() : IModule(VK_NUMPAD1, BUILD)
 {
+	// registerBoolSetting("AutoSelect", &this->autoselect, this->autoselect);
 }
 
 
@@ -55,6 +56,7 @@ bool Scaffold::tryScaffold(vec3_t blockBelow)
 			{
 				// Found a solid block to click
 				foundCandidate = true;
+				// if (autoselect) findBlock();
 				blok->set(calc);
 				delete calc;
 				break;
@@ -73,13 +75,30 @@ bool Scaffold::tryScaffold(vec3_t blockBelow)
 	return false;
 }
 
+bool Scaffold::findBlock() {
+	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
+	C_Inventory* inv = supplies->inventory;
+	int slot = supplies->selectedHotbarSlot;
+	for (int n = 0; n < 9; n++)
+	{
+		C_ItemStack* stack = inv->getItemStack(n);
+		if (stack->item != NULL) {
+			if ((*stack->item)->itemId < 256 && (*stack->item)->itemId != 0) {
+				supplies->selectedHotbarSlot = n;
+				return true;
+			}
+		}
+	}
+	return true;
+}
+
 void Scaffold::onPostRender()
 {
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	if (!g_Data.canUseMoveKeys())
 		return;
-	if (g_Data.getLocalPlayer()->itemId == 0 || g_Data.getLocalPlayer()->itemId > 255) // Block in hand?
+	if ((g_Data.getLocalPlayer()->itemId == 0 || g_Data.getLocalPlayer()->itemId > 255) && !autoselect) // Block in hand?
 		return;
 
 	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0; // Block below the player
