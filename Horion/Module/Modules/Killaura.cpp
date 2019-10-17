@@ -2,7 +2,7 @@
 
 
 
-Killaura::Killaura() : IModule('P', COMBAT) // <-- keybind
+Killaura::Killaura() : IModule('P', COMBAT, "Attacks entities around you automatically")
 {
 	this->registerBoolSetting("MultiAura", &this->isMulti, this->isMulti);
 	this->registerBoolSetting("MobAura", &this->isMobAura, this->isMobAura);
@@ -61,17 +61,17 @@ void findEntity(C_Entity* currentEntity,bool isRegularEntitie) {
 	
 }
 
-void findWeapon() {
+void Killaura::findWeapon() {
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
-	float damage = 0;
+	int damage = 0;
 	int slot = supplies->selectedHotbarSlot;
 	for (int n = 0; n < 9; n++)
 	{
 		C_ItemStack* stack = inv->getItemStack(n);
 		if (stack->item != NULL)
 		{
-			float currentDamage = (*stack->item)->getAttackDamage();
+			int currentDamage = (*stack->item)->getAttackDamage();
 			if (currentDamage > damage) {
 				damage = currentDamage;
 				slot = n;

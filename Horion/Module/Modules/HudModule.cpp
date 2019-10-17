@@ -1,6 +1,6 @@
 #include "HudModule.h"
 
-HudModule::HudModule() : IModule(0x0, VISUAL)
+HudModule::HudModule() : IModule(0x0, VISUAL, "Displays ArrayList/TabGUI")
 {
 	registerBoolSetting("TabGui", &this->tabgui, this->tabgui);
 	registerBoolSetting("ArrayList", &this->arraylist, this->arraylist);

@@ -2,7 +2,7 @@
 
 
 
-Speed::Speed() : IModule(VK_NUMPAD2, MOVEMENT)
+Speed::Speed() : IModule(VK_NUMPAD2, MOVEMENT, "Speed up!")
 {
 	registerFloatSetting("speed", &this->speed, 1, 0.1f, 3.f);
 }

@@ -2,7 +2,7 @@
 
 
 
-NoWeb::NoWeb() : IModule(0x0, MOVEMENT)
+NoWeb::NoWeb() : IModule(0x0, MOVEMENT, "Ignore cobwebs slowdown")
 {
 }
 

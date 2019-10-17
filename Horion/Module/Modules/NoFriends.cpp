@@ -1,6 +1,6 @@
 #include "NoFriends.h"
 
-NoFriends::NoFriends() : IModule(0x0, PLAYER)
+NoFriends::NoFriends() : IModule(0x0, PLAYER, "Ignores friend list check")
 {
 }
 

@@ -2,7 +2,7 @@
 
 
 
-BedFucker::BedFucker() : IModule(VK_NUMPAD9, EXPLOITS)
+BedFucker::BedFucker() : IModule(VK_NUMPAD9, EXPLOITS, "Destroys beds around you")
 {
 }
 

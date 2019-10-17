@@ -26,6 +26,7 @@ bool SpamCommand::execute(std::vector<std::string>* args)
 		C_TextPacket* textPacket = new C_TextPacket();
 		textPacket->message.setText(os.str() + " | " + random_string());
 		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(textPacket);
+		delete textPacket;	
 	}
 	return true;
 }

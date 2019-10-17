@@ -2,7 +2,7 @@
 
 
 
-Glide::Glide() : IModule('U', MOVEMENT)
+Glide::Glide() : IModule('U', MOVEMENT, "Float down")
 {
 	this->registerFloatSetting("value", &this->glideMod, this->glideMod, -2, 1);
 }

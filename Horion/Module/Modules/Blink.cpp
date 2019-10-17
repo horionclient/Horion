@@ -2,7 +2,7 @@
 
 
 
-Blink::Blink() : IModule('L', EXPLOITS)
+Blink::Blink() : IModule('L', EXPLOITS, "Stops you from sending packets and then sends them in a bunch")
 {
 }
 

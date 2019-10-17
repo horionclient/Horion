@@ -2,7 +2,7 @@
 
 
 
-ESP::ESP() : IModule('O', VISUAL)
+ESP::ESP() : IModule('O', VISUAL, "Makes it easier to find entities around you")
 {
 	this->registerBoolSetting("rainbow", &this->doRainbow, this->doRainbow);
 	this->registerBoolSetting("MobEsp", &this->isMobEsp, this->isMobEsp);
