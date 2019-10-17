@@ -226,9 +226,9 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)
 		mod = moduleMgr->getModule<Tracer>();
 	else if (mod->isEnabled()) {
 		// REWORK ASAP
-		vec2_t yeet(((g_Data.getClientInstance()->getGuiData()->widthGame) / 2), ((g_Data.getClientInstance()->getGuiData()->heightGame) / 2));
+		vec2_t vect1(((g_Data.getClientInstance()->getGuiData()->widthGame) / 2), ((g_Data.getClientInstance()->getGuiData()->heightGame) / 2));
 		if(Screen2.y > 0)
-			DrawUtils::drawLine(yeet, Screen2, lineWidth);
+			DrawUtils::drawLine(vect1, Screen2, lineWidth);
 	}
 }
 
