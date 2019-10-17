@@ -2,7 +2,7 @@
 
 
 
-StackableItem::StackableItem() : IModule(0x0, PLAYER)
+StackableItem::StackableItem() : IModule(0x0, PLAYER, "Stack items you normally wouldn't be able to stack (e. g. swords)")
 {
 }
 

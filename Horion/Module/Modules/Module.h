@@ -77,15 +77,15 @@ private:
 	int keybind = 0x0;
 	bool extended = false;
 	Category category;
+	const char* tooltip;
 
 	std::vector<SettingEntry*> settings;
 protected:
-	IModule(int key, Category c);
+	IModule(int key, Category c, const char* tooltip);
 
 	void registerFloatSetting(std::string name, float* floatPtr, float defaultValue, float minValue, float maxValue);
 	void registerIntSetting(std::string name, int* intpTr, int defaultValue, int minValue, int maxValue);
 	void registerBoolSetting(std::string name, bool* boolPtr, bool defaultValue);
-	void registerStringSetting(std::string name, char* textPtr,std::string defaultText);
 public:
 	~IModule();
 
@@ -111,5 +111,6 @@ public:
 	virtual void setEnabled(bool enabled);
 	virtual void toggle();
 	virtual bool isEnabled();
+	const char* getTooltip();
 };
 

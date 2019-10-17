@@ -34,6 +34,7 @@ private:
 	inline static std::shared_ptr<ClickModule> getClickModule(std::shared_ptr<ClickWindow> window, const char* id);
 
 	static void renderLabel(const char* text);
+	static void renderTooltip(std::string* text, vec2_t mousepos);
 
 	static void renderCategory(Category category);
 	inline static void getModuleListByCategory(Category category, std::vector<IModule*>* modList);

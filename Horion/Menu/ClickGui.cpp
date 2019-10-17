@@ -113,6 +113,21 @@ void ClickGui::renderLabel(const char * text)
 
 }
 
+void ClickGui::renderTooltip(std::string* text, vec2_t mousepos) {		
+	vec2_t textPos = vec2_t(
+		mousepos.x + textPadding,
+		mousepos.y + textPadding
+	);
+	vec4_t rectPos = vec4_t(
+		mousepos.x,
+		mousepos.y,
+		mousepos.x + paddingRight,
+		mousepos.y + textHeight + (textPadding * 2)
+	);
+	DrawUtils::fillRectangle(rectPos, MC_Color(0.5f, 1.0f, 1.0f, 1.0f), 1.0f);
+	DrawUtils::drawText(textPos, text, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), 0.8f);
+}
+
 void ClickGui::renderCategory(Category category)
 {
 	const char* categoryName;
@@ -254,6 +269,8 @@ void ClickGui::renderCategory(Category category)
 			{
 				if (rectPos.contains(&mousePos)) { // Is the Mouse hovering above us?
 					DrawUtils::fillRectangle(rectPos, selectedModuleColor, 0.8f);
+					std::string tooltip = mod->getTooltip();
+					renderTooltip(&tooltip, mousePos);
 					if (shouldToggleLeftClick) { // Are we being clicked?
 						mod->toggle();
 						shouldToggleLeftClick = false;

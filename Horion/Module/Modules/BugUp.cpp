@@ -2,7 +2,7 @@
 
 
 
-BugUp::BugUp() : IModule(0x0, MOVEMENT)
+BugUp::BugUp() : IModule(0x0, MOVEMENT, "Automatically teleports you back up if you fall down more than X blocks")
 {
 	registerIntSetting("distance", &this->distance, this->distance, 1, 20);
 }

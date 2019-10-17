@@ -3,7 +3,7 @@
 
 std::vector <C_Entity*> targetList;
 
-BowAimbot::BowAimbot() : IModule('C', COMBAT)
+BowAimbot::BowAimbot() : IModule('C', COMBAT, "Aimbot, but for bows")
 {
 }
 

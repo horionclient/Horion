@@ -10,6 +10,7 @@ private:
 	int delay = 0;
 	int Odelay = 0;
 	bool autoweapon = false;
+	void findWeapon();
 public:
 	bool isMobAura = false;
 	float range = 6;

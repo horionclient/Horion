@@ -1,6 +1,6 @@
 #include "Jesus.h"
 
-Jesus::Jesus() : IModule(0, MOVEMENT)
+Jesus::Jesus() : IModule(0, MOVEMENT, "Walk over wather, like Jesus")
 {
 }
 
@@ -18,6 +18,8 @@ void Jesus::onTick(C_GameMode* gm)
 {
 	if (gm->player != nullptr) {
 		
+		if (gm->player->isSneaking()) return;
+
 		if (gm->player->hasEnteredWater()) {
 			gm->player->velocity.y = 0.06f;
 			gm->player->onGround = true;

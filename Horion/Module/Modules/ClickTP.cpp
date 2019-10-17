@@ -2,7 +2,7 @@
 
 
 
-ClickTP::ClickTP() : IModule(0x0, EXPLOITS)
+ClickTP::ClickTP() : IModule(0x0, EXPLOITS, "Click a block to teleport to it")
 {
 }
 

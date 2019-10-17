@@ -2,7 +2,7 @@
 
 
 
-InfiniteBlockReach::InfiniteBlockReach() : IModule(0x0, PLAYER)
+InfiniteBlockReach::InfiniteBlockReach() : IModule(0x0, PLAYER, "Infinite reach for placing/breaking blocks")
 {
 	this->registerFloatSetting(std::string("reach"), &this->blockReach, this->blockReach, 7, 100);
 }

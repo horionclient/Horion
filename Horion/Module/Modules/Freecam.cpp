@@ -2,7 +2,7 @@
 
 
 
-Freecam::Freecam() : IModule('V', EXPLOITS)
+Freecam::Freecam() : IModule('V', EXPLOITS, "Move your cam without moving the player")
 {
 }
 

@@ -2,7 +2,7 @@
 
 
 
-FullBright::FullBright() : IModule(0x0, VISUAL)
+FullBright::FullBright() : IModule(0x0, VISUAL, "Puts your gamma to max")
 {
 }
 
