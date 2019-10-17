@@ -29,8 +29,8 @@ void AutoTotem::onTick(C_GameMode* gm) {
 			for (int i = 0; i < 36; i++) {
 				C_ItemStack* test = a->getItemStack(i);
 				if (test->item != NULL) {
-					C_Item* yikes = *test->item;
-					if (yikes->itemId == 450) {
+					C_Item* totem = *test->item;
+					if (totem->itemId == 450) {
 						g_Data.getLocalPlayer()->consumeTotem();
 						g_Data.getLocalPlayer()->setOffhandSlot(test);
 					}
