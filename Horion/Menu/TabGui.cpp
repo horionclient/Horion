@@ -90,12 +90,12 @@ void TabGui::renderLevel()
 						else
 							DrawUtils::fillRectangle(rectPos, MC_Color(0.2f, 0.2f, 0.2f, 1.0f), alphaVal);
 					}
-					vec4_t reee = rectPos;
-					reee.x += 0.5f;
-					reee.y += 0.5f;
-					reee.z -= 0.5f;
-					reee.w -= 0.5f;
-					DrawUtils::drawRectangle(reee, MC_Color(0.118f, 0.827f, 0.764f, 1.0f), 1, 1.f); // Border around Text
+					vec4_t rect = rectPos;
+					rect.x += 0.5f;
+					rect.y += 0.5f;
+					rect.z -= 0.5f;
+					rect.w -= 0.5f;
+					DrawUtils::drawRectangle(rect, MC_Color(0.118f, 0.827f, 0.764f, 1.0f), 1, 1.f); // Border around Text
 
 					static bool lastVal = toggleCurrentSelection;
 
