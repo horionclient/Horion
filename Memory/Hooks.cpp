@@ -975,9 +975,9 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 					if (keybind == 0x0)
 						moduleName = moduleNameChr;
 					else {
-						char yikes[50];
-						sprintf_s(yikes, 50, "%s [%s]", moduleNameChr, Utils::getKeybindName(keybind));
-						moduleName = yikes;
+						char x[50];
+						sprintf_s(x, 50, "%s [%s]", moduleNameChr, Utils::getKeybindName(keybind));
+						moduleName = x;
 					}
 
 					this->textWidth = DrawUtils::getTextWidth(&moduleName);
