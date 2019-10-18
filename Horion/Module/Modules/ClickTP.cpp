@@ -4,6 +4,7 @@
 
 ClickTP::ClickTP() : IModule(0x0, EXPLOITS, "Click a block to teleport to it")
 {
+	registerBoolSetting("Only Hand", &this->onlyHand, this->onlyHand);
 }
 
 
@@ -24,7 +25,9 @@ void ClickTP::onTick(C_GameMode* gm)
 		return;
 	if (gm->player == nullptr)
 		return;
+	if (onlyHand && g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot)->item != nullptr) return;
 	vec3_ti block = g_Data.getClientInstance()->getPointerStruct()->block;
+	if (block == vec3_ti(0, 0, 0)) return;
 	vec3_t pos = block.toFloatVector();
 	pos.y += gm->player->height;
 	pos.y += 1.f;
