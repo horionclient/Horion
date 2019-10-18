@@ -23,7 +23,7 @@
 #include "Commands/setoffhandCommand.h"
 #include "Commands/CoordsCommand.h"
 #include "Commands/SayCommand.h"
-#include "Commands/SpamCommand.h"
+#include "Commands/SpammerCommand.h"
 #include "Commands/DupeCommand.h"
 #include "Commands/DamageCommand.h"
 

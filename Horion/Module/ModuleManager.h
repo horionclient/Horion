@@ -61,6 +61,7 @@
 #include "Modules/MidClick.h"
 #include "Modules/ClickTP.h"
 #include "Modules/NoFriends.h"
+#include "Modules/Spammer.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;
