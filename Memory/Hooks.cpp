@@ -784,13 +784,13 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 				text->setText(firstResult.cmdAlias); // Set text
 				// now sync with the UI thread that shows the cursor n stuff
 				// If we loose this sig we are kinda fucked
-				using syncShit = void(__fastcall*)(TextHolder*, TextHolder*);
-				static syncShit sync = reinterpret_cast<syncShit>(0);
+				using syncStash = void(__fastcall*)(TextHolder*, TextHolder*);
+				static syncStash sync = reinterpret_cast<syncStash>(0);
 				if (sync == 0) {
 					uintptr_t sigOffset = Utils::FindSignature("E8 ?? ?? ?? ?? 48 8D 8B ?? ?? ?? ?? 0F 57 C0");
 					if (sigOffset != 0x0) {
 						int offset = *reinterpret_cast<int*>((sigOffset + 1)); // Get Offset from code
-						sync = reinterpret_cast<syncShit>(sigOffset + offset + /*length of instruction*/ 5); // Offset is relative
+						sync = reinterpret_cast<syncShash>(sigOffset + offset + /*length of instruction*/ 5); // Offset is relative
 					}
 				}else
 					sync(text, text);
