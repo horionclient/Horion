@@ -5,6 +5,7 @@ class ClickTP :
 {
 private:
 	bool hasClicked = false;
+	bool onlyHand = false;
 public:
 	C_ChestScreenController* chestScreenController = nullptr;
 	ClickTP();
