@@ -19,9 +19,9 @@ void ChestAura::onTick(C_GameMode* gm) {
 	if (gm->player == nullptr) return;
 	if (g_Data.getLocalPlayer()->getSupplies()->inventory->isFull()) return;
 	vec3_t* pos = gm->player->getPos();
-	for (int x = std::abs(pos->x) - 3; x < std::abs(pos->x) + 3; x++) {
-	for (int z = std::abs(pos->z) - 3; z < std::abs(pos->z) + 3; z++) {
-	for (int y = std::abs(pos->y) - 3; y < std::abs(pos->y) + 3; y++) {
+	for (int x = pos->x - 3; x < pos->x + 3; x++) {
+	for (int z = pos->z - 3; z < pos->z + 3; z++) {
+	for (int y = pos->y - 3; y < pos->y + 3; y++) {
 		vec3_ti pos = vec3_ti(x, y, z);
 		C_Block* block = gm->player->region->getBlock(pos);
 		if (block != nullptr && g_Data.canUseMoveKeys()) {

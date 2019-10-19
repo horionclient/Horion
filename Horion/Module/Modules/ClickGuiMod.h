@@ -8,6 +8,8 @@ public:
 	ClickGuiMod();
 	~ClickGuiMod();
 
+	bool showTooltips = true;
+
 	// Inherited via IModule
 	virtual void onPostRender() override;
 	virtual const char* getModuleName() override;

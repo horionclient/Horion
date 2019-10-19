@@ -612,8 +612,8 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 	}
 	else if (FreecamMod->isEnabled() || BlinkMod->isEnabled()) {
 
-		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
-		if (frenchBoy.vTable == packet->vTable)
+		C_MovePlayerPacket movePacket = C_MovePlayerPacket();
+		if (movePacket.vTable == packet->vTable)
 		{
 			if (BlinkMod->isEnabled())
 			{
@@ -646,20 +646,6 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 		{
 			C_ActorFallPacket* p = reinterpret_cast<C_ActorFallPacket*>(packet);
 			p->fallDistance = 0.f;
-		}
-	}
-
-	if (CriticalsMod == nullptr)
-		CriticalsMod = moduleMgr->getModule<Criticals>();
-	else if(CriticalsMod->isEnabled())
-	{
-		if (g_Data.getClientInstance()->getLocalPlayer() != nullptr) {
-			C_MovePlayerPacket movePacket = C_MovePlayerPacket();
-			if (movePacket.vTable == packet->vTable) {
-				C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
-				if (g_Data.getLocalPlayer()->onGround)
-					p->onGround = false;
-			}
 		}
 	}
 

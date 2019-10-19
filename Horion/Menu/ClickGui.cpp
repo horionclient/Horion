@@ -270,7 +270,8 @@ void ClickGui::renderCategory(Category category)
 				if (rectPos.contains(&mousePos)) { // Is the Mouse hovering above us?
 					DrawUtils::fillRectangle(rectPos, selectedModuleColor, 0.8f);
 					std::string tooltip = mod->getTooltip();
-					renderTooltip(&tooltip, mousePos);
+					ClickGuiMod* clickgui = moduleMgr->getModule<ClickGuiMod>();
+					if(clickgui->showTooltips) renderTooltip(&tooltip, mousePos);
 					if (shouldToggleLeftClick) { // Are we being clicked?
 						mod->toggle();
 						shouldToggleLeftClick = false;
