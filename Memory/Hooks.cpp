@@ -50,8 +50,8 @@ void Hooks::Init()
 		g_Hooks.d3d11_presentHook->init();
 	}
 
-	void* _shit = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 ?? 0F 29  70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 8985 ?? ?? ?? ?? 48 89 54 24"));
-	g_Hooks.renderTextHook = std::make_unique<FuncHook>(_shit, Hooks::renderText);
+	void* textRender = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 ?? 0F 29  70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 8985 ?? ?? ?? ?? 48 89 54 24"));
+	g_Hooks.renderTextHook = std::make_unique<FuncHook>(textRender, Hooks::renderText);
 	g_Hooks.renderTextHook->init();
 
 	void* setupRender = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B DA 48 8B F9 33 D2 ?? ?? ?? ?? ?? ?? 48 8D 4C 24 30 E8 ?? ?? ?? ?? 4C 8B CF 4C 8B C3 48 8B 57 ?? 48 8D 4C 24 ??"));
@@ -612,33 +612,33 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 	}
 	else if (FreecamMod->isEnabled() || BlinkMod->isEnabled()) {
 
-		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
-		if (frenchBoy.vTable == packet->vTable)
+		C_MovePlayerPacket moveplayerPacket1 = C_MovePlayerPacket();
+		if (moveplayerPacket1.vTable == packet->vTable)
 		{
 			if (BlinkMod->isEnabled())
 			{
-				C_MovePlayerPacket* meme = reinterpret_cast<C_MovePlayerPacket*>(packet);
-				meme->onGround = true; //Don't take Fall Damages when turned off
-				BlinkMod->PacketMeme.push_back(new C_MovePlayerPacket(*meme)); // Saving the packets
+				C_MovePlayerPacket* moveplayerPacket2 = reinterpret_cast<C_MovePlayerPacket*>(packet);
+				moveplayerPacket2->onGround = true; //Don't take Fall Damages when turned off
+				BlinkMod->PacketBlink.push_back(new C_MovePlayerPacket(*moveplayerPacket2)); // Saving the packets
 			}
 			return; // Dont call sendToServer
 		}
 	}
-	else if (!BlinkMod->isEnabled() && BlinkMod->PacketMeme.size() > 0) {
+	else if (!BlinkMod->isEnabled() && BlinkMod->PacketBlink.size() > 0) {
 
-		for (std::vector<C_MovePlayerPacket*>::iterator it = BlinkMod->PacketMeme.begin(); it != BlinkMod->PacketMeme.end(); ++it)
+		for (std::vector<C_MovePlayerPacket*>::iterator it = BlinkMod->PacketBlink.begin(); it != BlinkMod->PacketBlink.end(); ++it)
 		{
 			oFunc(a, (*it));
 			delete *it;
 			*it = nullptr;
 		}
-		BlinkMod->PacketMeme.clear();
+		BlinkMod->PacketBlink.clear();
 		return;
 	}
 	else if (NoFallMod->isEnabled()) {
-		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
+		C_MovePlayerPacket moveplayerPacket1 = C_MovePlayerPacket();
 		C_ActorFallPacket fall = C_ActorFallPacket();
-		if (frenchBoy.vTable == packet->vTable) {
+		if (moveplayerPacket1.vTable == packet->vTable) {
 			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
 			p->onGround = true;
 		}
@@ -790,7 +790,7 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 					uintptr_t sigOffset = Utils::FindSignature("E8 ?? ?? ?? ?? 48 8D 8B ?? ?? ?? ?? 0F 57 C0");
 					if (sigOffset != 0x0) {
 						int offset = *reinterpret_cast<int*>((sigOffset + 1)); // Get Offset from code
-						sync = reinterpret_cast<syncShash>(sigOffset + offset + /*length of instruction*/ 5); // Offset is relative
+						sync = reinterpret_cast<syncStash>(sigOffset + offset + /*length of instruction*/ 5); // Offset is relative
 					}
 				}else
 					sync(text, text);
