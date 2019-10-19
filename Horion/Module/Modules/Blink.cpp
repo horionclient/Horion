@@ -9,7 +9,7 @@ Blink::Blink() : IModule('L', EXPLOITS, "Stops you from sending packets and then
 
 Blink::~Blink()
 {
-	this->PacketMeme.clear();
+	this->PacketBlink.clear();
 }
 
 const char* Blink::getModuleName()
