@@ -1,7 +1,7 @@
 #include "Hitbox.h"
 
 
-Hitbox::Hitbox() : IModule(0x0, COMBAT) // <-- keybind
+Hitbox::Hitbox() : IModule(0x0, COMBAT, "Increase an entitys hitbox size")
 {
 	this->registerFloatSetting("Height", &this->height, this->height, 1.8f, 10);
 	this->registerFloatSetting("Width", &this->width, this->width, 0.6f, 10);

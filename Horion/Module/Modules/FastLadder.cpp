@@ -2,7 +2,7 @@
 
 
 
-FastLadder::FastLadder() : IModule(0x0, MOVEMENT)
+FastLadder::FastLadder() : IModule(0x0, MOVEMENT, "Climb up ladders faster")
 {
 }
 

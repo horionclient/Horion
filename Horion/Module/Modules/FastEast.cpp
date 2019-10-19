@@ -2,7 +2,7 @@
 
 
 
-FastEat::FastEat() : IModule(0x0, PLAYER)
+FastEat::FastEat() : IModule(0x0, PLAYER, "Eat food almost instant")
 {
 }
 

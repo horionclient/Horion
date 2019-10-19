@@ -2,7 +2,7 @@
 
 
 
-ClickGuiMod::ClickGuiMod() : IModule(VK_INSERT, VISUAL)
+ClickGuiMod::ClickGuiMod() : IModule(VK_INSERT, VISUAL, "The clickgui - toggle everything by just clicking on it!")
 {
 }
 

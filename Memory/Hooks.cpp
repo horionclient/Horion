@@ -450,8 +450,8 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3)
 {
 	static auto oFunc = g_Hooks.LevelRenderer_renderLevelHook->GetOriginal<LevelRenderer_renderLevel_t>();
 
-	using reloadShit_t = void(__fastcall*)(__int64);
-	static reloadShit_t reloadShit = reinterpret_cast<reloadShit_t>(Utils::FindSignature("48 8B C4 56 57 41 54 41 56 41 57 48 83 EC ?? 48 C7 40 ?? FE FF FF FF 48 89 58 ?? 48 89 68 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B F9 4C"));
+	using reload_t = void(__fastcall*)(__int64);
+	static reload_t reload = reinterpret_cast<reload_t>(Utils::FindSignature("48 8B C4 56 57 41 54 41 56 41 57 48 83 EC ?? 48 C7 40 ?? FE FF FF FF 48 89 58 ?? 48 89 68 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B F9 4C"));
 
 	static IModule* xray = moduleMgr->getModule<Xray>();
 	if (xray == nullptr) {
@@ -466,7 +466,7 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3)
 
 			v5 = *(unsigned long long **)(_this + 32);
 			for (i = (unsigned long long *)*v5; i != v5; i = (unsigned long long *)*i)
-				reloadShit(i[3]);
+				reload(i[3]);
 		}
 	}
 
@@ -784,13 +784,13 @@ void Hooks::pleaseAutoComplete(__int64 a1, __int64 a2, TextHolder * text, int a4
 				text->setText(firstResult.cmdAlias); // Set text
 				// now sync with the UI thread that shows the cursor n stuff
 				// If we loose this sig we are kinda fucked
-				using syncShit = void(__fastcall*)(TextHolder*, TextHolder*);
-				static syncShit sync = reinterpret_cast<syncShit>(0);
+				using syncStash = void(__fastcall*)(TextHolder*, TextHolder*);
+				static syncStash sync = reinterpret_cast<syncStash>(0);
 				if (sync == 0) {
 					uintptr_t sigOffset = Utils::FindSignature("E8 ?? ?? ?? ?? 48 8D 8B ?? ?? ?? ?? 0F 57 C0");
 					if (sigOffset != 0x0) {
 						int offset = *reinterpret_cast<int*>((sigOffset + 1)); // Get Offset from code
-						sync = reinterpret_cast<syncShit>(sigOffset + offset + /*length of instruction*/ 5); // Offset is relative
+						sync = reinterpret_cast<syncShash>(sigOffset + offset + /*length of instruction*/ 5); // Offset is relative
 					}
 				}else
 					sync(text, text);
@@ -975,9 +975,9 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 					if (keybind == 0x0)
 						moduleName = moduleNameChr;
 					else {
-						char yikes[50];
-						sprintf_s(yikes, 50, "%s [%s]", moduleNameChr, Utils::getKeybindName(keybind));
-						moduleName = yikes;
+						char modPL[50];
+						sprintf_s(modPL, 50, "%s [%s]", moduleNameChr, Utils::getKeybindName(keybind));
+						moduleName = modPL;
 					}
 
 					this->textWidth = DrawUtils::getTextWidth(&moduleName);

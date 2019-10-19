@@ -71,9 +71,11 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new MidClick());
 	this->moduleList.push_back(new ClickTP());
 	this->moduleList.push_back(new NoFriends());
+	this->moduleList.push_back(new Spammer());
 	initialized = true;
 
 	this->getModule<HudModule>()->setEnabled(true);
+	this->getModule<ClickGuiMod>()->setEnabled(false);
 }
 
 void ModuleManager::disable()

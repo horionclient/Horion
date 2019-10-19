@@ -1,7 +1,7 @@
 #include "Reach.h"
 
 
-Reach::Reach() : IModule(0x0, COMBAT) // <-- keybind
+Reach::Reach() : IModule(0x0, COMBAT, "Increases your reach")
 {
 	this->registerFloatSetting("Reach Value", &this->reachValue, this->reachValue,3,7);
 }

@@ -2,7 +2,7 @@
 
 
 
-Step::Step() : IModule('B', MOVEMENT)
+Step::Step() : IModule('B', MOVEMENT, "Increases your step height")
 {
 	registerFloatSetting("height", &this->height, this->height, 1.f, 10.f);
 }

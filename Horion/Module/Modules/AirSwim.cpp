@@ -2,7 +2,7 @@
 
 
 
-AirSwim::AirSwim() : IModule(0x0, MOVEMENT)
+AirSwim::AirSwim() : IModule(0x0, MOVEMENT, "Swim even though your in air")
 {
 }
 

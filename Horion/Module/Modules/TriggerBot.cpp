@@ -3,7 +3,7 @@
 
 
 
-TriggerBot::TriggerBot() : IModule('K', COMBAT) // <-- keybind
+TriggerBot::TriggerBot() : IModule('K', COMBAT, "Attacks entities you're looking at")
 {
 	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
 }

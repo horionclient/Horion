@@ -2,7 +2,7 @@
 
 
 
-NoFall::NoFall() : IModule(VK_NUMPAD3, MOVEMENT)
+NoFall::NoFall() : IModule(VK_NUMPAD3, MOVEMENT, "Prevents you from taking falldamage")
 {
 }
 

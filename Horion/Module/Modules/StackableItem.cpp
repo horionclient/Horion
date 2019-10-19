@@ -2,7 +2,7 @@
 
 
 
-StackableItem::StackableItem() : IModule(0x0, PLAYER)
+StackableItem::StackableItem() : IModule(0x0, PLAYER, "Stack items you normally wouldn't be able to stack (e. g. swords)")
 {
 }
 
@@ -25,9 +25,9 @@ void StackableItem::onTick(C_GameMode* gm) {
 		for (int i = 0; i < 36; i++) {
 			C_ItemStack* test = a->getItemStack(i);
 			if (test->item != NULL) {
-				C_Item* yikes = *test->item;
-				yikes->setStackedByData(true);
-				yikes->setMaxStackSize(64);
+				C_Item* selectedItem = *test->item;
+				selectedItem->setStackedByData(true);
+				selectedItem->setMaxStackSize(64);
 			}
 		}
 	}
