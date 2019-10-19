@@ -4,7 +4,7 @@ class Blink :
 	public IModule
 {
 public:
-	std::vector<C_MovePlayerPacket*> PacketMeme;
+	std::vector<C_MovePlayerPacket*> PacketBlink;
 	Blink();
 	~Blink();
 
@@ -12,4 +12,3 @@ public:
 	virtual const char* getModuleName() override;
 	virtual const char* getRawModuleName() override;
 };
-
