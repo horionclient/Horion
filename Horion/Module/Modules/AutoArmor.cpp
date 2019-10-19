@@ -4,9 +4,9 @@
 class ArmorStruct
 {
 public:
-	ArmorStruct(C_ItemStack* item,C_ArmorItem* yot, int slot)
+	ArmorStruct(C_ItemStack* item,C_ArmorItem* armorPL, int slot)
 	{
-		armor = yot;
+		armor = armorPL;
 		m_slot = slot;	
 		m_item = item;
 	}
