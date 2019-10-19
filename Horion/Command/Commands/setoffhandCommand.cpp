@@ -34,7 +34,7 @@ bool setoffhandCommand::execute(std::vector<std::string>* args)
 	C_Inventory* inv = supplies->inventory;
 	C_BlockLegacy* blockItem = nullptr;
 	C_Item* itemItem = nullptr;
-	C_ItemStack* yot = nullptr;
+	C_ItemStack* stackItem = nullptr;
 
 	static uintptr_t** VanillaBlocks__mStonePtr = 0x0;
 	static uintptr_t** VanillaItems__mShovel_ironPtr = 0x0;
@@ -95,8 +95,8 @@ bool setoffhandCommand::execute(std::vector<std::string>* args)
 			clientMessageF("%sInvalid item ID!", RED);
 			return true;
 		}
-		yot = new C_ItemStack(*cStack->item, count, itemData);
-		g_Data.getLocalPlayer()->setOffhandSlot(yot);
+		stackItem = new C_ItemStack(*cStack->item, count, itemData);
+		g_Data.getLocalPlayer()->setOffhandSlot(stackItem);
 		clientMessageF("%sSet item as offhand!", BLUE);
 		return true;
 	}
@@ -107,14 +107,14 @@ bool setoffhandCommand::execute(std::vector<std::string>* args)
 		return true;
 	}
 	else if (blockItem != nullptr)
-		yot = new C_ItemStack(blockItem, count);
+		stackItem = new C_ItemStack(blockItem, count);
 	else
-		yot = new C_ItemStack(itemItem, count, itemData);
+		stackItem = new C_ItemStack(itemItem, count, itemData);
 
-	if (yot != nullptr)
-		yot->count = count;
+	if (stackItem != nullptr)
+		stackItem->count = count;
 
-	g_Data.getLocalPlayer()->setOffhandSlot(yot);
+	g_Data.getLocalPlayer()->setOffhandSlot(stackItem);
 	clientMessageF("%sSet item as offhand!", BLUE);
 	return true;
 }
