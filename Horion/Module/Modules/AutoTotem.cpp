@@ -20,13 +20,13 @@ void AutoTotem::onTick(C_GameMode* gm) {
 	
 	if (g_Data.getLocalPlayer() != nullptr) 
 	{
-		C_ItemStack* i = g_Data.getLocalPlayer()->getEquippedTotem();
+		C_ItemStack* offhandTotem = g_Data.getLocalPlayer()->getEquippedTotem();
 
-		if (i->item == NULL && delay > 3) 
+		if (offhandTotem->item == NULL && delay > 3) 
 		{
 			C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 			C_Inventory* a = supplies->inventory;
-			for (int i = 0; i < 36; i++) {
+			for (int offhandTotem = 0; offhandTotem < 36; i++) {
 				C_ItemStack* test = a->getItemStack(i);
 				if (test->item != NULL) {
 					C_Item* totem = *test->item;
