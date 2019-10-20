@@ -247,6 +247,17 @@ class C_Inventory {
 private:
 	virtual ~C_Inventory();
 public:
+	bool isFull()
+	{
+		int fullslots = 0;
+		for (int i = 0; i < 36; i++)
+		{
+			if (this->getItemStack(i)->item != nullptr)
+				fullslots++;
+		}
+		if (fullslots == 36) return true;
+		return false;
+	}
 	int getFirstEmptySlot()
 	{
 		for (int i = 0; i < 36; i++)

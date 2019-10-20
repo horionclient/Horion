@@ -25,11 +25,6 @@ void Jesus::onTick(C_GameMode* gm)
 			gm->player->onGround = true;
 			wasInWater = true;
 		}
-		else if (gm->player->isImmersedInWater()) {
-			gm->player->velocity.y = 0.3f;
-			gm->player->onGround = true;
-			wasInWater = true;
-		}
 		else if (gm->player->isInWater() || gm->player->isInLava()) {
 			gm->player->velocity.y = 0.1f;
 			gm->player->onGround = true;

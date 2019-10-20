@@ -614,7 +614,7 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 
 		C_MovePlayerPacket moveplayerPacket1 = C_MovePlayerPacket();
 		if (moveplayerPacket1.vTable == packet->vTable)
-		{
+    {
 			if (BlinkMod->isEnabled())
 			{
 				C_MovePlayerPacket* moveplayerPacket2 = reinterpret_cast<C_MovePlayerPacket*>(packet);
@@ -646,20 +646,6 @@ void Hooks::sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
 		{
 			C_ActorFallPacket* p = reinterpret_cast<C_ActorFallPacket*>(packet);
 			p->fallDistance = 0.f;
-		}
-	}
-
-	if (CriticalsMod == nullptr)
-		CriticalsMod = moduleMgr->getModule<Criticals>();
-	else if(CriticalsMod->isEnabled())
-	{
-		if (g_Data.getClientInstance()->getLocalPlayer() != nullptr) {
-			C_MovePlayerPacket movePacket = C_MovePlayerPacket();
-			if (movePacket.vTable == packet->vTable) {
-				C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
-				if (g_Data.getLocalPlayer()->onGround)
-					p->onGround = false;
-			}
 		}
 	}
 
