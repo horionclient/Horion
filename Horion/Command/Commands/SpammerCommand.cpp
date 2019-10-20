@@ -56,9 +56,10 @@ bool SpammerCommand::execute(std::vector<std::string>* args)
 			os << args->at(i);
 		}
 		std::string text = os.str().substr(1);
+		Spammer* spammer = moduleMgr->getModule<Spammer>();
 		for (int i = 0; i < times; i++) {
 			C_TextPacket* textPacket = new C_TextPacket();
-			textPacket->message.setText(text);
+			textPacket->message.setText(text + (spammer->bypass ? (" | " + spammer->random()) : ""));
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(textPacket);
 			delete textPacket;
 		}
