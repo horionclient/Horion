@@ -135,22 +135,22 @@ void ClickGui::renderCategory(Category category)
 	// Get Category Name
 	{
 		switch (category) {
-		case COMBAT:
+		case Category::COMBAT:
 			categoryName = "Combat";
 			break;
-		case VISUAL:
+		case Category::VISUAL:
 			categoryName = "Visual";
 			break;
-		case MOVEMENT:
+		case Category::MOVEMENT:
 			categoryName = "Movement";
 			break;
-		case PLAYER:
+		case Category::PLAYER:
 			categoryName = "Player";
 			break;
-		case BUILD:
+		case Category::BUILD:
 			categoryName = "Build";
 			break;
-		case EXPLOITS:
+		case Category::EXPLOITS:
 			categoryName = "Exploits";
 			break;
 		}
@@ -162,22 +162,22 @@ void ClickGui::renderCategory(Category category)
 	if (resetStartPos) {
 		ourWindow->pos.y = 4;
 		switch (category) {
-		case COMBAT:
+		case Category::COMBAT:
 			ourWindow->pos.x = 100;
 			break;
-		case VISUAL:
+		case Category::VISUAL:
 			ourWindow->pos.x = 200;
 			break;
-		case MOVEMENT:
+		case Category::MOVEMENT:
 			ourWindow->pos.x = 300;
 			break;
-		case PLAYER:
+		case Category::PLAYER:
 			ourWindow->pos.x = 400;
 			break;
-		case BUILD:
+		case Category::BUILD:
 			ourWindow->pos.x = 500;
 			break;
-		case EXPLOITS:
+		case Category::EXPLOITS:
 			ourWindow->pos.x = 600;
 			break;
 		}
@@ -705,12 +705,12 @@ void ClickGui::render()
 	}
 
 	// Render all categorys
-	renderCategory(COMBAT);
-	renderCategory(VISUAL);
-	renderCategory(MOVEMENT);
-	renderCategory(PLAYER);
-	renderCategory(BUILD);
-	renderCategory(EXPLOITS);
+	renderCategory(Category::COMBAT);
+	renderCategory(Category::VISUAL);
+	renderCategory(Category::MOVEMENT);
+	renderCategory(Category::PLAYER);
+	renderCategory(Category::BUILD);
+	renderCategory(Category::EXPLOITS);
 
 	shouldToggleLeftClick = false;
 	shouldToggleRightClick = false;

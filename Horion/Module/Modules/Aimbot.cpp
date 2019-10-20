@@ -2,7 +2,7 @@
 
 
 
-Aimbot::Aimbot() : IModule('M', COMBAT, "Automatically aims at the nearest entity")
+Aimbot::Aimbot() : IModule('M', Category::COMBAT, "Automatically aims at the nearest entity")
 {
 	this->registerFloatSetting("range", &this->range, this->range, 3.f, 8.f);
 	this->registerBoolSetting("Require click", &this->click, this->click);

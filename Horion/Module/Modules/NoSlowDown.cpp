@@ -2,7 +2,7 @@
 
 
 
-NoSlowDown::NoSlowDown() : IModule(0x0, MOVEMENT, "Don't get slowed down when blocking or eating")
+NoSlowDown::NoSlowDown() : IModule(0x0, Category::MOVEMENT, "Don't get slowed down when blocking or eating")
 {
 }
 

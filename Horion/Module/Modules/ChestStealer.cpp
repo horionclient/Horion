@@ -2,7 +2,7 @@
 
 
 
-ChestStealer::ChestStealer() : IModule(0x0, PLAYER, "Automatically takes all items out of a chest")
+ChestStealer::ChestStealer() : IModule(0x0, Category::PLAYER, "Automatically takes all items out of a chest")
 {
 }
 

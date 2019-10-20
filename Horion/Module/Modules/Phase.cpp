@@ -2,7 +2,7 @@
 
 
 
-Phase::Phase() : IModule('I', MOVEMENT, "Walk through walls")
+Phase::Phase() : IModule('I', Category::MOVEMENT, "Walk through walls")
 {
 }
 

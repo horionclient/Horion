@@ -2,7 +2,7 @@
 
 
 
-RainbowSky::RainbowSky() : IModule('N', VISUAL, "Makes your sky look rainbow!")
+RainbowSky::RainbowSky() : IModule('N', Category::VISUAL, "Makes your sky look rainbow!")
 {
 }
 

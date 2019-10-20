@@ -2,7 +2,7 @@
 
 
 
-Killaura::Killaura() : IModule('P', COMBAT, "Attacks entities around you automatically")
+Killaura::Killaura() : IModule('P', Category::COMBAT, "Attacks entities around you automatically")
 {
 	this->registerBoolSetting("MultiAura", &this->isMulti, this->isMulti);
 	this->registerBoolSetting("MobAura", &this->isMobAura, this->isMobAura);

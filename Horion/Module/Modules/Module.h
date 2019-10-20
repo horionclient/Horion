@@ -7,7 +7,7 @@
 
 using json = nlohmann::json;
 
-enum Category {
+enum class Category {
 	COMBAT = 0,
 	VISUAL = 1,
 	MOVEMENT = 2,
@@ -39,10 +39,10 @@ struct SettingValue {
 struct SettingEntry {
 	char name[0x20];
 	ValueType valueType;
-	SettingValue* value;
-	SettingValue* defaultValue;
-	SettingValue* minValue;
-	SettingValue* maxValue;
+	SettingValue* value = nullptr;
+	SettingValue* defaultValue = nullptr;
+	SettingValue* minValue = nullptr;
+	SettingValue* maxValue = nullptr;
 
 	// ClickGui Data
 	bool isDragging = false; // This is incredibly hacky and i wanted to avoid this as much as possible but i want to get this clickgui done

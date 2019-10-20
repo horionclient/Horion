@@ -2,7 +2,7 @@
 
 
 
-AutoTotem::AutoTotem() : IModule(0x0, PLAYER, "Automatically puts Totems into your offhand")
+AutoTotem::AutoTotem() : IModule(0x0, Category::PLAYER, "Automatically puts Totems into your offhand")
 {
 }
 

@@ -2,7 +2,7 @@
 #include <random>
 #include <string>
 
-Spammer::Spammer() : IModule(0x0, EXPLOITS, "Spams a message in a specified delay")
+Spammer::Spammer() : IModule(0x0, Category::EXPLOITS, "Spams a message in a specified delay")
 {
 	registerIntSetting("delay", &this->delay, this->delay, 1, 10);
 	registerBoolSetting("bypass", &this->bypass, this->bypass);

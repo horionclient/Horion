@@ -2,7 +2,7 @@
 
 
 
-EditionFaker::EditionFaker() : IModule('X', EXPLOITS, "Fakes your device to android")
+EditionFaker::EditionFaker() : IModule('X', Category::EXPLOITS, "Fakes your device to android")
 {
 }
 

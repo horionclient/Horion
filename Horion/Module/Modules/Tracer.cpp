@@ -2,7 +2,7 @@
 
 
 
-Tracer::Tracer() : IModule('R', VISUAL, "Draws lines to ESP highlighted entities")
+Tracer::Tracer() : IModule('R', Category::VISUAL, "Draws lines to ESP highlighted entities")
 {
 }
 

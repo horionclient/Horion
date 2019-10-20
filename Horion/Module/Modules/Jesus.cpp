@@ -1,6 +1,6 @@
 #include "Jesus.h"
 
-Jesus::Jesus() : IModule(0, MOVEMENT, "Walk over wather, like Jesus")
+Jesus::Jesus() : IModule(0, Category::MOVEMENT, "Walk over wather, like Jesus")
 {
 }
 

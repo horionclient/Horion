@@ -43,7 +43,7 @@ public:
 
 
 
-AutoArmor::AutoArmor() : IModule(0x0, PLAYER, "Automatically equips the best armor")
+AutoArmor::AutoArmor() : IModule(0x0, Category::PLAYER, "Automatically equips the best armor")
 {
 }
 
