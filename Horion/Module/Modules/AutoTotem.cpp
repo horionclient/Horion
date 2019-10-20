@@ -13,34 +13,35 @@ AutoTotem::~AutoTotem()
 
 const char* AutoTotem::getModuleName()
 {
-    return ("AutoTotem");
+	return ("AutoTotem");
 }
 
 void AutoTotem::onTick(C_GameMode* gm) {
-    
-    if (g_Data.getLocalPlayer() != nullptr) 
-    {
-        C_ItemStack* offhandTotem = g_Data.getLocalPlayer()->getEquippedTotem();
 
-        if (offHandTotem->item == NULL && delay > 3) 
-        {
-            C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
-            C_Inventory* inventory = supplies->inventory;
-            for (int slot = 0; slot < 36; slot++) {
-                C_ItemStack* slotItem = slot->getItemStack(i);
-                if (slotItem->item != NULL) {
-                    C_Item* slotItemId = *slotItem->item;
-                    if (slotItemId->item == 450) {
-                        g_Data.getLocalPlayer()->consumeTotem();
-                        g_Data.getLocalPlayer()->setOffhandSlot(test);
-                    }
-                }
-            }
-            delay = 0;
-        }
+	if (g_Data.getLocalPlayer() != nullptr)
+	{
+		C_ItemStack* i = g_Data.getLocalPlayer()->getEquippedTotem();
 
-        delay++;
-    }
+		if (i->item == NULL && delay > 3)
+		{
+			C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
+			C_Inventory* a = supplies->inventory;
+			for (int i = 0; i < 36; i++) {
+				C_ItemStack* test = a->getItemStack(i);
+				if (test->item != NULL) {
+					C_Item* totemPL = *test->item;
+					if (totemPL->itemId == 450) {
+						g_Data.getLocalPlayer()->consumeTotem();
+						g_Data.getLocalPlayer()->setOffhandSlot(test);
+					}
+
+				}
+			}
+			delay = 0;
+		}
+
+		delay++;
+	}
 }
 
 
