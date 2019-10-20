@@ -2,8 +2,9 @@
 #include <random>
 #include <string>
 
-SpammerCommand::SpammerCommand() : IMCCommand("spammer", "Edit spammer delay/text", "<message/delay/bypass> <string/int/bool>")
+SpammerCommand::SpammerCommand() : IMCCommand("spammer", "Edit spammer delay/text", "<message/delay/bypass/manual> <string/int/bool>")
 {
+	registerAlias("spam");
 }
 
 SpammerCommand::~SpammerCommand()
@@ -43,7 +44,24 @@ bool SpammerCommand::execute(std::vector<std::string>* args)
 		std::transform(data.begin(), data.end(), data.begin(), ::tolower);
 		bool state = (data == "true") ? true : false;
 		moduleMgr->getModule<Spammer>()->bypass = state;
-		clientMessageF("%sBypass set to %s%s%s!", GREEN, GRAY, std::to_string(state).c_str(), GREEN);
+		clientMessageF("%sBypass set to %s%s%s!", GREEN, GRAY, state ? "true" : "false", GREEN);
+		return true;
+	}
+	else if (option == "manual") {
+		int times = assertInt(args->at(2));
+		std::ostringstream os;
+		for (int i = 3; i < args->size(); i++) {
+			if (i > 1)
+				os << " ";
+			os << args->at(i);
+		}
+		std::string text = os.str().substr(1);
+		for (int i = 0; i < times; i++) {
+			C_TextPacket* textPacket = new C_TextPacket();
+			textPacket->message.setText(text);
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(textPacket);
+			delete textPacket;
+		}
 		return true;
 	}
 	return false;
