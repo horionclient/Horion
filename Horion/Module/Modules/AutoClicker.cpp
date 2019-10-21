@@ -1,7 +1,7 @@
 #include "AutoClicker.h"
 
 
-AutoClicker::AutoClicker() : IModule(0x0, COMBAT, "A simple autoclicker, automatically clicks for you.")
+AutoClicker::AutoClicker() : IModule(0x0, Category::COMBAT, "A simple autoclicker, automatically clicks for you.")
 {
 	this->registerBoolSetting("rightclick", &this->rightclick, rightclick);
 	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);

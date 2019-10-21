@@ -170,7 +170,7 @@ void TabGui::render()
 		std::vector<IModule*>* modules = moduleMgr->getModuleList();
 		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
 			IModule* mod = *it;
-			if (selected[0] == mod->getCategory()) {
+			if (selected[0] == static_cast<int>(mod->getCategory())) {
 				auto name = mod->getModuleName();
 				renderLabel(name, mod);
 			}

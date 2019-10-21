@@ -11,6 +11,7 @@ public:
 	bool tabgui = true;
 	bool arraylist = true;
 	bool watermark = true;
+	bool coordinates = false;
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;

@@ -2,7 +2,7 @@
 
 
 
-ClickTP::ClickTP() : IModule(0x0, EXPLOITS, "Click a block to teleport to it")
+ClickTP::ClickTP() : IModule(0x0, Category::EXPLOITS, "Click a block to teleport to it")
 {
 	registerBoolSetting("Only Hand", &this->onlyHand, this->onlyHand);
 }

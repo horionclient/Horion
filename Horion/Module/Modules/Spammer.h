@@ -5,11 +5,11 @@ class Spammer : public IModule
 {
 private:
 	int Odelay = 0;
-	std::string random();
 public:
 	Spammer();
 	~Spammer();
 
+	std::string random();
 	bool bypass = true;
 	int delay = 2;
 	std::string message = "Horion - the best minecraft bedrock utility mod - horionclient.eu";

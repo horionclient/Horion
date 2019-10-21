@@ -114,18 +114,20 @@ void ClickGui::renderLabel(const char * text)
 }
 
 void ClickGui::renderTooltip(std::string* text, vec2_t mousepos) {		
+
+	float textWidth = DrawUtils::getTextWidth(text,1.25f);
 	vec2_t textPos = vec2_t(
-		mousepos.x + textPadding,
+		mousepos.x + textPadding + 12.f,
 		mousepos.y + textPadding
 	);
 	vec4_t rectPos = vec4_t(
-		mousepos.x,
+		mousepos.x + 12.f,
 		mousepos.y,
-		mousepos.x + paddingRight,
+		mousepos.x + paddingRight + textWidth,
 		mousepos.y + textHeight + (textPadding * 2)
 	);
-	DrawUtils::fillRectangle(rectPos, MC_Color(0.5f, 1.0f, 1.0f, 1.0f), 1.0f);
-	DrawUtils::drawText(textPos, text, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), 0.8f);
+	DrawUtils::fillRectangle(rectPos, MC_Color(0.2f, 0.2f, 0.2f, 1.0f), 1.0f);
+	DrawUtils::drawText(textPos, text, new MC_Color(0.118f, 0.827f, 0.812f, 1.0f),1.05f);
 }
 
 void ClickGui::renderCategory(Category category)
@@ -135,22 +137,22 @@ void ClickGui::renderCategory(Category category)
 	// Get Category Name
 	{
 		switch (category) {
-		case COMBAT:
+		case Category::COMBAT:
 			categoryName = "Combat";
 			break;
-		case VISUAL:
+		case Category::VISUAL:
 			categoryName = "Visual";
 			break;
-		case MOVEMENT:
+		case Category::MOVEMENT:
 			categoryName = "Movement";
 			break;
-		case PLAYER:
+		case Category::PLAYER:
 			categoryName = "Player";
 			break;
-		case BUILD:
+		case Category::BUILD:
 			categoryName = "Build";
 			break;
-		case EXPLOITS:
+		case Category::EXPLOITS:
 			categoryName = "Exploits";
 			break;
 		}
@@ -162,22 +164,22 @@ void ClickGui::renderCategory(Category category)
 	if (resetStartPos) {
 		ourWindow->pos.y = 4;
 		switch (category) {
-		case COMBAT:
+		case Category::COMBAT:
 			ourWindow->pos.x = 100;
 			break;
-		case VISUAL:
+		case Category::VISUAL:
 			ourWindow->pos.x = 200;
 			break;
-		case MOVEMENT:
+		case Category::MOVEMENT:
 			ourWindow->pos.x = 300;
 			break;
-		case PLAYER:
+		case Category::PLAYER:
 			ourWindow->pos.x = 400;
 			break;
-		case BUILD:
+		case Category::BUILD:
 			ourWindow->pos.x = 500;
 			break;
-		case EXPLOITS:
+		case Category::EXPLOITS:
 			ourWindow->pos.x = 600;
 			break;
 		}
@@ -705,12 +707,12 @@ void ClickGui::render()
 	}
 
 	// Render all categorys
-	renderCategory(COMBAT);
-	renderCategory(VISUAL);
-	renderCategory(MOVEMENT);
-	renderCategory(PLAYER);
-	renderCategory(BUILD);
-	renderCategory(EXPLOITS);
+	renderCategory(Category::COMBAT);
+	renderCategory(Category::VISUAL);
+	renderCategory(Category::MOVEMENT);
+	renderCategory(Category::PLAYER);
+	renderCategory(Category::BUILD);
+	renderCategory(Category::EXPLOITS);
 
 	shouldToggleLeftClick = false;
 	shouldToggleRightClick = false;

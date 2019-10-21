@@ -886,6 +886,7 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 #endif
 
 	bool shouldRenderArrayList = true;
+	bool shouldRenderCoords = false;
 	// Call PostRender() functions
 	{
 		moduleMgr->onPostRender();
@@ -895,6 +896,7 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 		else {
 			if(hud->tabgui && hud->isEnabled()) TabGui::render();
 			shouldRenderArrayList = hud->arraylist && hud->isEnabled();
+			shouldRenderCoords = hud->coordinates && hud->isEnabled();
 		}
 		
 		static IModule* ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
@@ -903,6 +905,7 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 		else if (ClickGuiModule->isEnabled()) {
 			ClickGui::render();
 			shouldRenderArrayList = false;
+			shouldRenderCoords = false;
 		}
 	}
 
@@ -1050,6 +1053,13 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 				yOffset += textHeight + (textPadding * 2);
 			}
 			modContainerList.clear();
+		}
+
+		// Draw coordinates
+		if (moduleMgr->isInitialized() && shouldRenderCoords && g_Data.getLocalPlayer() != nullptr) {
+			vec3_t* pos = g_Data.getLocalPlayer()->getPos();
+			std::string coords = "XYZ: " + std::to_string((int)pos->x) + " / " + std::to_string((int)pos->y) + " / " + std::to_string((int)pos->z);
+			DrawUtils::drawText(vec2_t(5.f,  2.f), &coords, nullptr, 1.f);
 		}
 	}
 	

@@ -2,7 +2,7 @@
 
 
 
-NameTags::NameTags() : IModule(0x0, VISUAL, "Shows better nametags above players that can be seen from a lot more far aways")
+NameTags::NameTags() : IModule(0x0, Category::VISUAL, "Shows better nametags above players that can be seen from a lot more far aways")
 {
 	this->registerBoolSetting("Display Health", &this->displayHealth, this->displayHealth);
 	this->registerBoolSetting("Use Unicode font", &this->useUnicodeFont, this->useUnicodeFont);
