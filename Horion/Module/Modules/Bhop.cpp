@@ -4,7 +4,8 @@
 
 Bhop::Bhop() : IModule(0x0, Category::MOVEMENT, "Hop around like a bunny!")
 {
-	registerFloatSetting("Speed", &this->speed, 0.4f, 0.1f, 0.8f);
+	registerFloatSetting("Speed", &this->speed, this->speed, 0.1f, 0.8f);
+	registerFloatSetting("Height", &this->height, this->height, 0.1f, 0.8f);
 }
 
 
@@ -96,9 +97,9 @@ void Bhop::onTick(C_GameMode* gm) {
 	float calcYaw = (yaw + 90) * (PI / 180);
 	float calcPitch = (gm->player->pitch) * -(PI / 180);
 	vec3_t moveVec;
-	moveVec.x = cos(calcYaw) * cos(calcPitch) * speed;
+	moveVec.x = cos(calcYaw) * speed;
 	moveVec.y = gm->player->velocity.y;
-	moveVec.z = sin(calcYaw) * cos(calcPitch) * speed;
+	moveVec.z = sin(calcYaw) * speed;
 	if (keyPressed)
 	{
 		gm->player->lerpMotion(moveVec);

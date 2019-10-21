@@ -299,6 +299,13 @@ void __fastcall Hooks::jumpPower(C_Entity* a1, float a2)
 		a1->velocity.y = HighJumpMod->jumpPower;
 		return;
 	}
+	static Bhop* bhopMod = moduleMgr->getModule<Bhop>();
+	if (bhopMod == nullptr)
+		bhopMod = moduleMgr->getModule<Bhop>();
+	else if (bhopMod->isEnabled() && g_Data.getLocalPlayer() == a1) {
+		a1->velocity.y = bhopMod->height;
+		return;
+	}
 	oFunc(a1, a2);
 }
 
