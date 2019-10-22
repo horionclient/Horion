@@ -63,7 +63,7 @@ void ConfigManager::loadConfig(std::string name, bool create)
 
 		moduleMgr->onLoadConfig(&currentConfigObj);
 
-		if (!(&currentConfigObj)->at("commandPrefix").is_null()) cmdMgr->prefix = std::string{ (std::string) (&currentConfigObj)->at("commandPrefix") }.at(0);
+		if ((&currentConfigObj)->contains("commandPrefix") && !(&currentConfigObj)->at("commandPrefix").is_null()) cmdMgr->prefix = std::string{ (std::string) (&currentConfigObj)->at("commandPrefix") }.at(0);
 
 		if (create) {
 			saveConfig();

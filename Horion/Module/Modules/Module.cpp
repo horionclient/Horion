@@ -95,6 +95,11 @@ IModule::~IModule()
 {
 }
 
+const char* IModule::getModuleName()
+{
+	return "Module";
+}
+
 const char* IModule::getRawModuleName()
 {
 	return getModuleName();

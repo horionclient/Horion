@@ -78,10 +78,10 @@ void CommandMgr::execute(char * message)
 				if (*it == cmd) {
 					try {
 						if (!c->execute(args))
-							g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s%s%s %s", RED, BOLD, RESET, std::string{ cmdMgr->prefix }.c_str(), c->getCommand(), c->getUsage());
+							g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s%c%s %s", RED, BOLD, RESET, cmdMgr->prefix, c->getCommand(), c->getUsage());
 					}
 					catch (...) {
-						g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s%s%s %s", RED, BOLD, RESET, std::string{ cmdMgr->prefix }.c_str(), c->getCommand(), c->getUsage());
+						g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s%c%s %s", RED, BOLD, RESET, cmdMgr->prefix, c->getCommand(), c->getUsage());
 					}
 					goto done;
 				}

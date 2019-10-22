@@ -153,7 +153,14 @@ void ModuleManager::onPostRender()
 
 std::vector<IModule*>* ModuleManager::getModuleList()
 {
-	return &moduleList;
+	std::vector<IModule*>* sortedList = &moduleList;
+	std::sort(sortedList->begin(), sortedList->end(), [](const IModule* lhs, const IModule* rhs)
+		{
+			IModule* current = const_cast<IModule*>(lhs);
+			IModule* other = const_cast<IModule*>(rhs);
+			return std::string{ *current->getModuleName() } < std::string{ *other->getModuleName() };
+		});
+	return sortedList;
 }
 
 ModuleManager* moduleMgr = new ModuleManager(&g_Data);

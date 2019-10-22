@@ -3,6 +3,7 @@
 
 ChestAura::ChestAura() : IModule(0x0,Category::PLAYER, "Aura for opening chests")
 {
+	registerIntSetting("Range", &this->range, this->range, 1, 10);
 }
 
 
@@ -19,9 +20,9 @@ void ChestAura::onTick(C_GameMode* gm) {
 	if (gm->player == nullptr) return;
 	if (g_Data.getLocalPlayer()->getSupplies()->inventory->isFull()) return;
 	vec3_t* pos = gm->player->getPos();
-	for (int x = (int)pos->x - 3; x < pos->x + 3; x++) {
-	for (int z = (int)pos->z - 3; z < pos->z + 3; z++) {
-	for (int y = (int)pos->y - 3; y < pos->y + 3; y++) {
+	for (int x = (int)pos->x - range; x < pos->x + range; x++) {
+	for (int z = (int)pos->z - range; z < pos->z + range; z++) {
+	for (int y = (int)pos->y - range; y < pos->y + range; y++) {
 		vec3_ti pos = vec3_ti(x, y, z);
 		C_Block* block = gm->player->region->getBlock(pos);
 		if (block != nullptr && g_Data.canUseMoveKeys()) {
