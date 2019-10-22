@@ -63,6 +63,8 @@ void ConfigManager::loadConfig(std::string name, bool create)
 
 		moduleMgr->onLoadConfig(&currentConfigObj);
 
+		if (!(&currentConfigObj)->at("commandPrefix").is_null()) cmdMgr->prefix = std::string{ (std::string) (&currentConfigObj)->at("commandPrefix") }.at(0);
+
 		if (create) {
 			saveConfig();
 		}
@@ -78,6 +80,9 @@ void ConfigManager::saveConfig()
 	sprintf_s(fullPath, allocSize, "%S\\%s.h", roamingFolder.c_str(), currentConfig.c_str());
 
 	moduleMgr->onSaveConfig(&currentConfigObj);
+
+	if ((&currentConfigObj)->contains("commandPrefix")) (&currentConfigObj)->erase("commandPrefix");
+	&currentConfigObj.emplace("commandPrefix", std::string{ cmdMgr->prefix });
 
 	std::ofstream o(fullPath, std::ifstream::binary);
 	o << std::setw(4) << currentConfigObj << std::endl;

@@ -37,6 +37,5 @@ void Freecam::onDisable()
 	if (g_Data.getLocalPlayer() != nullptr) {
 		g_Data.getLocalPlayer()->setPos(oldPos);
 		g_Data.getLocalPlayer()->setGameModeType(oldGameMode);
-		g_Data.getLocalPlayer()->aabb.upper.y += 1.8f;
 	}
 }

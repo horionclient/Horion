@@ -13,6 +13,7 @@
 #pragma comment(lib,"runtimeobject")
 
 #include "../Module/ModuleManager.h"
+#include "../Command/CommandMgr.h"
 #include "../../Utils/Json.hpp"
 
 using namespace ABI::Windows::Storage;

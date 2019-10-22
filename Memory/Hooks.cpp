@@ -813,7 +813,7 @@ void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t * _this)
 		if (*reinterpret_cast<__int64*>(_this + 0x6C8) >= 0x10)
 			message = *reinterpret_cast<char**>(message);
 
-		if (*message == '.') {
+		if (*message == cmdMgr->prefix) {
 			cmdMgr->execute(message);
 
 			__int64* i = 0;

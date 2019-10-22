@@ -26,6 +26,7 @@
 #include "Commands/SpammerCommand.h"
 #include "Commands/DupeCommand.h"
 #include "Commands/DamageCommand.h"
+#include "Commands/SetprefixCommand.h"
 
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"
@@ -43,6 +44,8 @@ public:
 	CommandMgr(GameData* gm);
 	~CommandMgr();
 	
+	char prefix = '.';
+
 	void initCommands();
 	void disable();
 	std::vector<IMCCommand*>* getCommandList();

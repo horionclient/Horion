@@ -38,6 +38,7 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new SpammerCommand());
 	commandList.push_back(new DupeCommand());
 	commandList.push_back(new DamageCommand());
+	commandList.push_back(new SetprefixCommand());
 
 #ifdef _DEBUG
 	commandList.push_back(new TestCommand());
@@ -56,7 +57,7 @@ std::vector<IMCCommand*>* CommandMgr::getCommandList()
 void CommandMgr::execute(char * message)
 {
 	if (message != nullptr) {
-		std::vector<std::string>* args = new std::vector<std::string>(); // Stolen from https://stackoverflow.com/questions/5888022/split-string-by-single-spaces
+		std::vector<std::string>* args = new std::vector<std::string>();
 		std::string msgStr = message + 1;
 		size_t pos = msgStr.find(" "), initialPos = 0;
 		while (pos != std::string::npos) {
@@ -68,7 +69,7 @@ void CommandMgr::execute(char * message)
 		args->push_back(msgStr.substr(initialPos, min(pos, msgStr.size()) - initialPos + 1));
 
 		std::string cmd = ((*args)[0]);
-		std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
+		std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);	
 		
 		for (std::vector<IMCCommand*>::iterator it = this->commandList.begin(); it != this->commandList.end(); ++it) {
 			IMCCommand* c = *it;
@@ -77,10 +78,10 @@ void CommandMgr::execute(char * message)
 				if (*it == cmd) {
 					try {
 						if (!c->execute(args))
-							g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s.%s %s", RED, BOLD, RESET, c->getCommand(), c->getUsage());
+							g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s%s%s %s", RED, BOLD, RESET, std::string{ cmdMgr->prefix }.c_str(), c->getCommand(), c->getUsage());
 					}
 					catch (...) {
-						g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s.%s %s", RED, BOLD, RESET, c->getCommand(), c->getUsage());
+						g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s%s%s %s", RED, BOLD, RESET, std::string{ cmdMgr->prefix }.c_str(), c->getCommand(), c->getUsage());
 					}
 					goto done;
 				}
