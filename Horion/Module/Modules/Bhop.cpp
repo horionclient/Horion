@@ -5,7 +5,6 @@
 Bhop::Bhop() : IModule(0x0, Category::MOVEMENT, "Hop around like a bunny!")
 {
 	registerFloatSetting("Speed", &this->speed, this->speed, 0.1f, 0.8f);
-	registerFloatSetting("Height", &this->height, this->height, 0.1f, 0.8f);
 }
 
 

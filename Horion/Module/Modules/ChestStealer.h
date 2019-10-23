@@ -5,6 +5,7 @@ class ChestStealer :
 {
 private:
 	int delay = 0;
+	int setDelay = 7;
 public:
 	C_ChestScreenController* chestScreenController = nullptr;
 	ChestStealer();

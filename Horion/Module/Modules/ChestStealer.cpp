@@ -4,6 +4,7 @@
 
 ChestStealer::ChestStealer() : IModule(0x0, Category::PLAYER, "Automatically takes all items out of a chest")
 {
+	registerIntSetting("Close Delay", &this->setDelay, this->setDelay, 3, 20);
 }
 
 
@@ -27,7 +28,7 @@ void ChestStealer::onTick(C_GameMode* gm)
 		}
 		delay++;
 	}
-	if (g_Data.getLocalPlayer()->isInventoryClosed() == 0 && chestScreenController != nullptr && delay > 7)
+	if (g_Data.getLocalPlayer()->isInventoryClosed() == 0 && chestScreenController != nullptr && delay > setDelay)
 	{
 		chestScreenController->leaveScreen();
 		delay = 0;

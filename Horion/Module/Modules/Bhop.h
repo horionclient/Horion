@@ -12,8 +12,6 @@ public:
 	Bhop();
 	~Bhop();
 
-	float height = 0.325f;
-
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;

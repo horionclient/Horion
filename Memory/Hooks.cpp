@@ -299,13 +299,6 @@ void __fastcall Hooks::jumpPower(C_Entity* a1, float a2)
 		a1->velocity.y = HighJumpMod->jumpPower;
 		return;
 	}
-	static Bhop* bhopMod = moduleMgr->getModule<Bhop>();
-	if (bhopMod == nullptr)
-		bhopMod = moduleMgr->getModule<Bhop>();
-	else if (bhopMod->isEnabled() && g_Data.getLocalPlayer() == a1) {
-		a1->velocity.y = bhopMod->height;
-		return;
-	}
 	oFunc(a1, a2);
 }
 
@@ -893,6 +886,7 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 #endif
 
 	bool shouldRenderArrayList = true;
+	bool shouldRenderTabGui = true;
 	bool shouldRenderCoords = false;
 	// Call PostRender() functions
 	{
@@ -901,9 +895,16 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 		if (hud == nullptr)
 			hud = moduleMgr->getModule<HudModule>();
 		else {
-			if(hud->tabgui && hud->isEnabled()) TabGui::render();
+			shouldRenderTabGui = hud->tabgui && hud->isEnabled();
 			shouldRenderArrayList = hud->arraylist && hud->isEnabled();
 			shouldRenderCoords = hud->coordinates && hud->isEnabled();
+		}
+
+		if(g_Data.getLocalPlayer() != nullptr)
+		if (!hud->alwaysShow && !g_Data.getClientInstance()->isInGame()) {
+			shouldRenderTabGui = false;
+			shouldRenderArrayList = false;
+			shouldRenderCoords = false;
 		}
 		
 		static IModule* ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
@@ -914,6 +915,8 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 			shouldRenderArrayList = false;
 			shouldRenderCoords = false;
 		}
+
+		if(shouldRenderTabGui) TabGui::render();
 	}
 
 	{
@@ -1066,7 +1069,7 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 		if (moduleMgr->isInitialized() && shouldRenderCoords && g_Data.getLocalPlayer() != nullptr) {
 			vec3_t* pos = g_Data.getLocalPlayer()->getPos();
 			std::string coords = "XYZ: " + std::to_string((int)pos->x) + " / " + std::to_string((int)pos->y) + " / " + std::to_string((int)pos->z);
-			DrawUtils::drawText(vec2_t(5.f,  2.f), &coords, nullptr, 1.f);
+			DrawUtils::drawText(vec2_t(5.f,  shouldRenderTabGui ? windowSize.y - 12.f : 2.f), &coords, nullptr, 1.f);
 		}
 	}
 	
