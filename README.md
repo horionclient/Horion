@@ -23,4 +23,4 @@ If you are clueless about what you could start with, [we collected some issues f
 More Information on setting everything up can be found in the **[wiki](https://github.com/horionclient/Horion/wiki "wiki")**!
 If you need any help with understanding our code, join the official discord server:
 
-[![](https://discordapp.com/api/guilds/605086182560235569/embed.png?style=banner2)](https://discord.gg/Yqm3PR9)
+[![](https://discordapp.com/api/guilds/605086182560235569/embed.png?style=banner2)](https://discord.gg/horion)

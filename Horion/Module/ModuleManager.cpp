@@ -73,6 +73,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new NoFriends());
 	this->moduleList.push_back(new Spammer());
 	this->moduleList.push_back(new ChestAura());
+	this->moduleList.push_back(new AntiBot());
 	initialized = true;
 
 	this->getModule<HudModule>()->setEnabled(true);

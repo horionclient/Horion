@@ -82,7 +82,7 @@ void ConfigManager::saveConfig()
 	moduleMgr->onSaveConfig(&currentConfigObj);
 
 	if ((&currentConfigObj)->contains("commandPrefix")) (&currentConfigObj)->erase("commandPrefix");
-	&currentConfigObj.emplace("commandPrefix", std::string{ cmdMgr->prefix });
+	(&currentConfigObj)->emplace("commandPrefix", std::string{ cmdMgr->prefix });
 
 	std::ofstream o(fullPath, std::ifstream::binary);
 	o << std::setw(4) << currentConfigObj << std::endl;

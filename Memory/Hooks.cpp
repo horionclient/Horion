@@ -888,6 +888,7 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 	bool shouldRenderArrayList = true;
 	bool shouldRenderTabGui = true;
 	bool shouldRenderCoords = false;
+
 	// Call PostRender() functions
 	{
 		moduleMgr->onPostRender();
@@ -899,13 +900,14 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 			shouldRenderArrayList = hud->arraylist && hud->isEnabled();
 			shouldRenderCoords = hud->coordinates && hud->isEnabled();
 		}
-
-		if(g_Data.getLocalPlayer() != nullptr)
-		if (!hud->alwaysShow && !g_Data.getClientInstance()->isInGame()) {
+		
+		/* Unfinished, crashes the game
+		
+		if (!hud->alwaysShow && g_Data.getClientInstance()->isShowingMenu()) {
 			shouldRenderTabGui = false;
 			shouldRenderArrayList = false;
 			shouldRenderCoords = false;
-		}
+		} */
 		
 		static IModule* ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 		if (ClickGuiModule == nullptr)
@@ -926,7 +928,7 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 		static float disabledRcolors[4]; // Rainbow Colors, but for disabled modules
 		static std::string horionStr = std::string("Horion");					 // Static Horion logo / text
 		static float       horionStrWidth = DrawUtils::getTextWidth(&horionStr); // Graphical Width of Horion logo / text
-		static std::string dlStr = std::string("discord.gg/8CRYQWM");
+		static std::string dlStr = std::string("discord.gg/horion");
 		static float       dlStrWidth = DrawUtils::getTextWidth(&horionStr);
 
 		float yOffset = 0; // Offset of next Text

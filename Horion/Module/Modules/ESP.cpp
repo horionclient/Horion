@@ -28,8 +28,6 @@ void doRenderStuff(C_Entity* ent,bool isRegularEntitie) {
 		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 		if (ent != localPlayer) {
 			
-			if (ent->timeSinceDeath > 0)
-				return;
 			if (Target::isValidTarget(ent)) {
 				
 				if(espMod->doRainbow)
@@ -42,7 +40,7 @@ void doRenderStuff(C_Entity* ent,bool isRegularEntitie) {
 				if (ent->getNameTag()->getTextLength() <= 1 && ent->getEntityTypeId() == 63)
 					return;
 
-				if (ent->isInvisible() && ent->getEntityTypeId() != 33) // Exception for kitmap.sylphhcf.net they use a creeper as hitbox
+				if (ent->isInvisible())
 					return;
 
 				if (!g_Data.getLocalPlayer()->canAttack(ent, false))
