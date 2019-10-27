@@ -20,9 +20,9 @@ bool TeleportCommand::execute(std::vector<std::string>* args)
 	assertTrue(args->size() >= 4);
 
 	vec3_t pos;
-	pos.x = assertFloat(args->at(1));
-	pos.y = assertFloat(args->at(2));
-	pos.z = assertFloat(args->at(3));
+	pos.x = assertFloat(args->at(1))+0.5;
+	pos.y = assertFloat(args->at(2))+1.5;
+	pos.z = assertFloat(args->at(3))+0.5;
 
 	g_Data.getLocalPlayer()->setPos(pos);
 	clientMessageF("%sTeleported!", GREEN);
