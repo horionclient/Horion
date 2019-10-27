@@ -8,22 +8,21 @@ void Hooks::Init()
 {
 	logF("Setting up Hooks...");
 
-	static uintptr_t** GameModeVtable = 0x0;
-	if (GameModeVtable == 0x0) {
+	// GameMode::vtable
+	{
 		uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 33 D2 48 C7 41 ??");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
-		GameModeVtable = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
-		if (GameModeVtable == 0x0 || sigOffset == 0x0)
+		uintptr_t** gameModeVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+		if (gameModeVtable == 0x0 || sigOffset == 0x0)
 			logF("C_GameMode signature not working!!!");
-		else
-		{
-			g_Hooks.GameMode_tickHook = std::make_unique<FuncHook>(GameModeVtable[9], Hooks::GameMode_tick);
+		else {
+			g_Hooks.GameMode_tickHook = std::make_unique<FuncHook>(gameModeVtable[9], Hooks::GameMode_tick);
 			g_Hooks.GameMode_tickHook->init();
 
-			g_Hooks.GameMode_startDestroyBlockHook = std::make_unique<FuncHook>(GameModeVtable[1], Hooks::GameMode_startDestroyBlock);
+			g_Hooks.GameMode_startDestroyBlockHook = std::make_unique<FuncHook>(gameModeVtable[1], Hooks::GameMode_startDestroyBlock);
 			g_Hooks.GameMode_startDestroyBlockHook->init();
 
-			g_Hooks.GameMode_getPickRangeHook = std::make_unique<FuncHook>(GameModeVtable[10], Hooks::GameMode_getPickRange);
+			g_Hooks.GameMode_getPickRangeHook = std::make_unique<FuncHook>(gameModeVtable[10], Hooks::GameMode_getPickRange);
 			g_Hooks.GameMode_getPickRangeHook->init();
 		}
 	}
@@ -84,15 +83,14 @@ void Hooks::Init()
 	g_Hooks.HIDController_keyMouseHook = std::make_unique<FuncHook>(keyMouseFunc, Hooks::HIDController_keyMouse);
 	g_Hooks.HIDController_keyMouseHook->init();
 
-	static uintptr_t** blockLegacyVtable = 0x0;
-	if (blockLegacyVtable == 0x0) {
+	// BlockLegacy::vtable
+	{
 		uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 4C 39 72");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
-		blockLegacyVtable = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
+		uintptr_t** blockLegacyVtable = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
 		if (blockLegacyVtable == 0x0 || sigOffset == 0x0)
 			logF("C_BlockLegacy signature not working!!!");
-		else
-		{
+		else {
 			g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(blockLegacyVtable[115], Hooks::BlockLegacy_getRenderLayer);
 			g_Hooks.BlockLegacy_getRenderLayerHook->init();
 
@@ -101,23 +99,22 @@ void Hooks::Init()
 		}
 	}
 
-	static uintptr_t** localPlayerVtable = 0x0;
-	if (localPlayerVtable == 0x0) {
+	// LocalPlayer::vtable
+	{
 		uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 49 89 45 00 49 8D 8D");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
-		localPlayerVtable = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
+		uintptr_t** localPlayerVtable = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
 		if (localPlayerVtable == 0x0 || sigOffset == 0x0)
 			logF("C_LocalPlayer signature not working!!!");
-		else
-		{
+		else {
 			g_Hooks.Actor_isInWaterHook = std::make_unique<FuncHook>(localPlayerVtable[59], Hooks::Actor_isInWater);
 			g_Hooks.Actor_isInWaterHook->init();
 
 			g_Hooks.Actor_startSwimmingHook = std::make_unique<FuncHook>(localPlayerVtable[180], Hooks::Actor_isInWater);
 			g_Hooks.Actor_startSwimmingHook->init();
 
-			g_Hooks.LadderUpHook = std::make_unique<FuncHook>(localPlayerVtable[323], Hooks::LadderUp);
-			g_Hooks.LadderUpHook->init();
+			g_Hooks.Actor_ladderUpHook = std::make_unique<FuncHook>(localPlayerVtable[323], Hooks::Actor_ladderUp);
+			g_Hooks.Actor_ladderUpHook->init();
 		}
 	}
 
@@ -183,7 +180,7 @@ void Hooks::Restore()
 	g_Hooks.Actor_isInWaterHook->Restore();
 	g_Hooks.JumpPowerHook->Restore();
 	g_Hooks.MinecraftGame_onAppSuspendedHook->Restore();
-	g_Hooks.LadderUpHook->Restore();
+	g_Hooks.Actor_ladderUpHook->Restore();
 	g_Hooks.RakNetInstance_tickHook->Restore();
 	g_Hooks.GameMode_getPickRangeHook->Restore();
 	g_Hooks.InventoryTransactionManager_addActionHook->Restore();
@@ -998,9 +995,9 @@ __int64 Hooks::MinecraftGame_onAppSuspended(__int64 _this)
 	return oFunc(_this);
 }
 
-void Hooks::LadderUp(C_Entity* _this)
+void Hooks::Actor_ladderUp(C_Entity* _this)
 {
-	static auto oFunc = g_Hooks.LadderUpHook->GetFastcall<void, C_Entity*>();
+	static auto oFunc = g_Hooks.Actor_ladderUpHook->GetFastcall<void, C_Entity*>();
 
 	static IModule* FastLadderModule = moduleMgr->getModule<FastLadder>();
 	if (FastLadderModule == nullptr)
