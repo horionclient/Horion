@@ -140,7 +140,6 @@
     <ClCompile Include="Horion\Command\Commands\*.cpp" />
     <ClCompile Include="Horion\Config\ConfigManager.cpp" />
     <ClCompile Include="Horion\Command\CommandMgr.cpp" />
-    <ClCompile Include="Directx\Directx.cpp" />
     <ClCompile Include="Horion\DrawUtils.cpp" />
     <ClCompile Include="Horion\FriendList\FriendList.cpp" />
     <ClCompile Include="Horion\GuiUtils.cpp" />
@@ -160,7 +159,6 @@
     <ClInclude Include="Horion\Command\Commands\*.h" />
     <ClInclude Include="Horion\Config\ConfigManager.h" />
     <ClInclude Include="Horion\Command\CommandMgr.h" />
-    <ClInclude Include="Directx\Directx.h" />
     <ClInclude Include="Horion\DrawUtils.h" />
     <ClInclude Include="Horion\FriendList\FriendList.h" />
     <ClInclude Include="Horion\GuiUtils.h" />

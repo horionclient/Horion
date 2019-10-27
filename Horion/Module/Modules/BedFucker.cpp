@@ -30,49 +30,42 @@ void BedFucker::onEnable(){
 void BedFucker::onTick(C_GameMode* gm) {
 
 	this->delay++;
-	int x = (int) g_Data.getLocalPlayer()->aabb.lower.x;
-	int y = (int) g_Data.getLocalPlayer()->aabb.lower.y;
-	int z = (int) g_Data.getLocalPlayer()->aabb.lower.z;
 
 	if (this->delay >= 5) {
+
 		this->delay = 0;
-		for (int px = x - range; px < x + range; px++)
-		{
-			for (int py = y - range; py < y + range; py++)
-			{
-				for (int pz = z - range; pz < z + range; pz++)
-				{
-					vec3_ti* bedPos = new vec3_ti(px, py, pz);
 
-					bool destroy = false;
+		vec3_t* pos = gm->player->getPos();
+		for (int x = (int)pos->x - range; x < pos->x + range; x++) {
+		for (int z = (int)pos->z - range; z < pos->z + range; z++) {
+		for (int y = (int)pos->y - range; y < pos->y + range; y++) {
+			vec3_ti blockPos = vec3_ti(x, y, z);
+			bool destroy = false;
 
-					if (g_Data.getLocalPlayer()->region->getBlock(vec3_ti(*bedPos))->toLegacy()->blockId == 26 && this->beds) destroy = true; // Beds
-					if (g_Data.getLocalPlayer()->region->getBlock(vec3_ti(*bedPos))->toLegacy()->blockId == 122 && this->eggs) destroy = true; // Dragon Eggs
-					if (g_Data.getLocalPlayer()->region->getBlock(vec3_ti(*bedPos))->toLegacy()->blockId == 92 && this->cakes)  destroy = true; // Cakes
-					{
-						g_Data.getCGameMode()->destroyBlock(bedPos, 0);
-						g_Data.getLocalPlayer()->swingArm();
-						delete bedPos;
-						return;
+			if (g_Data.getLocalPlayer()->region->getBlock(blockPos)->toLegacy()->blockId == 26 && this->beds) destroy = true; // Beds
+			if (g_Data.getLocalPlayer()->region->getBlock(blockPos)->toLegacy()->blockId == 122 && this->eggs) destroy = true; // Dragon Eggs
+			if (g_Data.getLocalPlayer()->region->getBlock(blockPos)->toLegacy()->blockId == 92 && this->cakes)  destroy = true; // Cakes
 
-					}
-					delete bedPos;
-				}
-
+			if (destroy) {
+				g_Data.getCGameMode()->destroyBlock(&blockPos, 0);
+				g_Data.getLocalPlayer()->swingArm();
+				return;
 			}
 		}
+		}
+		}
+
 		if (this->treasures) {
 			g_Data.forEachEntity([](C_Entity* ent, bool b) {
 				std::string name = ent->getNameTag()->getText();
 				int id = ent->getEntityTypeId();
-				if (name.find("Treasure") != std::string::npos && id == 319) {
+				if (name.find("Treasure") != std::string::npos && id == 319 && g_Data.getLocalPlayer()->getPos()->dist(*ent->getPos()) <= 5) {
 					g_Data.getCGameMode()->attack(ent);
 					g_Data.getLocalPlayer()->swingArm();
 				}
 				});
 		}
 	}
-	
 }
 
 void BedFucker::onDisable() {

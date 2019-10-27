@@ -6,7 +6,7 @@ AntiBot::AntiBot() : IModule(0x0, Category::EXPLOITS, "Enable this module to fil
 	registerBoolSetting("Name Check", &this->nameCheck, this->nameCheck);
 	registerBoolSetting("Invisible Check", &this->invisibleCheck, this->invisibleCheck);
 	registerBoolSetting("EntityID Check", &this->entityIdCheck, this->entityIdCheck);
-	registerBoolSetting("Ommbile Check", &this->immobileCheck, this->immobileCheck);
+	registerBoolSetting("Immobile Check", &this->immobileCheck, this->immobileCheck);
 }
 
 AntiBot::~AntiBot()

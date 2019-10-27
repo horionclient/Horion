@@ -1,5 +1,4 @@
 #include "Hooks.h"
-#include "../Directx/Directx.h"
 
 Hooks    g_Hooks;
 bool isTicked = false;
@@ -40,15 +39,6 @@ void Hooks::Init()
 	void* _sendChatMessage = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC 20 48 83 B9 ?? ?? ?? ?? 00 48 8B F9 0F 85"));
 	g_Hooks.chatScreen_sendMessageHook = std::make_unique<FuncHook>(_sendChatMessage, Hooks::ChatScreenController_sendChatMessage);
 	g_Hooks.chatScreen_sendMessageHook->init();
-
-	//IDXGISwapChain::present;
-	// using vtable found with dummy thing
-	void** swapChainVtable = static_cast<void**>(getSwapChain());
-	if (swapChainVtable != nullptr) {
-		void* presentFunc = swapChainVtable[8];
-		g_Hooks.d3d11_presentHook = std::make_unique<FuncHook>(presentFunc, Hooks::d3d11_present);
-		g_Hooks.d3d11_presentHook->init();
-	}
 
 	void* _shit = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 ?? 0F 29  70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 8985 ?? ?? ?? ?? 48 89 54 24"));
 	g_Hooks.renderTextHook = std::make_unique<FuncHook>(_shit, Hooks::renderText);
@@ -929,7 +919,7 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 		static std::string horionStr = std::string("Horion");					 // Static Horion logo / text
 		static float       horionStrWidth = DrawUtils::getTextWidth(&horionStr); // Graphical Width of Horion logo / text
 		static std::string dlStr = std::string("discord.gg/horion");
-		static float       dlStrWidth = DrawUtils::getTextWidth(&horionStr);
+		static float       dlStrWidth = DrawUtils::getTextWidth(&dlStr);
 
 		float yOffset = 0; // Offset of next Text
 		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
@@ -953,8 +943,8 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 		if (hud == nullptr)
 			hud = moduleMgr->getModule<HudModule>();
 		else if(hud->watermark && hud->isEnabled()) {
-			DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth - 12.0f, windowSize.y - 20), &horionStr, nullptr, 1.5f);
-			DrawUtils::drawText(vec2_t(windowSize.x - dlStrWidth - 42.75f, windowSize.y - 8.75f), &dlStr, nullptr, 0.85f);
+			DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth * 1.5f - 2.f, windowSize.y - 22.f), &horionStr, nullptr, 1.5f);
+			DrawUtils::drawText(vec2_t(windowSize.x - dlStrWidth * 0.85f - 2.f, windowSize.y - 10.75f), &dlStr, nullptr, 0.85f);
 		}
 
 		// Draw ArrayList
@@ -1026,6 +1016,8 @@ __int64 __fastcall Hooks::renderText(__int64 a1, C_MinecraftUIRenderContext* ren
 					}
 				}
 			}
+
+			int c = 0;
 
 			// Loop through mods to display Labels
 			for (std::set<IModuleContainer>::iterator it = modContainerList.begin(); it != modContainerList.end(); ++it) {

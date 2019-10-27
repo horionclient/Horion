@@ -88,6 +88,9 @@ public:
 	bool isInitialized() { return initialized; };
 	std::vector<IModule*>* getModuleList();
 
+	int getModuleCount();
+	int getEnabledModuleCount();
+
 	/*
 	 *	Use as follows: 
 	 *		IModule* mod = moduleMgr.getModule<NoKnockBack>(); 

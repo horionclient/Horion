@@ -34,9 +34,7 @@ void Jetpack::onTick(C_GameMode * gm)
 		moveVec.y = sin(calcPitch)				  * speedMod;
 		moveVec.z = sin(calcYaw) * cos(calcPitch) * speedMod;
 
-		C_GameMode* m = gm;
-		C_Entity* p = m->player;
-		p->lerpMotion(moveVec);
+		gm->player->lerpMotion(moveVec);
 	}
 	else{
 		delay++;

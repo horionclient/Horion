@@ -1,4 +1,4 @@
-#include "Target.h"
+﻿#include "Target.h"
 #include "../Horion/Module/ModuleManager.h"
 
 C_LocalPlayer** localPlayer;
@@ -20,10 +20,10 @@ bool Target::isValidTarget(C_Entity * ent)
 	static Hitbox* hitboxMod = moduleMgr->getModule<Hitbox>();
 	if (hitboxMod == NULL) hitboxMod = moduleMgr->getModule<Hitbox>();
 
-	if (ent->getEntityTypeId() > 60 && ent->getEntityTypeId() < 104 && ent->getEntityTypeId() != 63) // check for non mob entity ids
+	if (ent->getEntityTypeId() < 122 && ent->getEntityTypeId() != 63)
 		return false;
 
-	if ((ent->getNameTag()->getTextLength() <= 1 || std::string{ent->getNameTag()->getText()}.find("\n") != std::string::npos) && antibot->isNameCheckEnabled())
+	if ((ent->getNameTag()->getTextLength() <= 1 || std::string{ent->getNameTag()->getText()}.find("\n") != std::string::npos || std::string{ ent->getNameTag()->getText() }.find(u8"\u2800") != std::string::npos) && antibot->isNameCheckEnabled())
 		return false;
 
 	if (FriendList::findPlayer(ent->getNameTag()->getText()) && !moduleMgr->getModule<NoFriends>()->isEnabled())
@@ -36,7 +36,7 @@ bool Target::isValidTarget(C_Entity * ent)
 		return false;
 
 	if(!hitboxMod->isEnabled() && antibot->isHitboxCheckEnabled())
-	if ((ent->height < 1.5f || ent->width < 0.5f || ent->height > 2.1f || ent->width > 0.9f))
+	if ((ent->height < 1.5f || ent->width < 0.49f || ent->height > 2.1f || ent->width > 0.9f))
 		return false;
 
 	if (!(*localPlayer)->canAttack(ent, false))

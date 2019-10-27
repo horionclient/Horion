@@ -164,4 +164,19 @@ std::vector<IModule*>* ModuleManager::getModuleList()
 	return sortedList;
 }
 
+int ModuleManager::getModuleCount()
+{
+	return (int)(&moduleList)->size();
+}
+
+int ModuleManager::getEnabledModuleCount()
+{
+	int i = 0;
+	for (auto it = (&moduleList)->begin(); it != (&moduleList)->end(); ++it) {
+		IModule* mod = *it;
+		if ((*it)->isEnabled()) i++;
+	}
+	return i;
+}
+
 ModuleManager* moduleMgr = new ModuleManager(&g_Data);

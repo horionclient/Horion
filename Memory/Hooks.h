@@ -10,7 +10,6 @@
 #include "../SDK/CBlockLegacy.h"
 #include "GameData.h"
 #include "../Horion/Config/ConfigManager.h"
-#include "../Directx/Directx.h"
 #include "../SDK/TextHolder.h"
 #include "../SDK/CMinecraftUIRenderContext.h"
 #include "../Horion/Module/ModuleManager.h"

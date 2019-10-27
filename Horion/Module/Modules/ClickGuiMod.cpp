@@ -4,7 +4,7 @@
 
 ClickGuiMod::ClickGuiMod() : IModule(VK_INSERT, Category::VISUAL, "The clickgui - toggle everything by just clicking on it!")
 {
-	// registerBoolSetting("Show Tooltips", &this->showTooltips, this->showTooltips); Disabled due to crashes
+	registerBoolSetting("Show Tooltips", &this->showTooltips, this->showTooltips);
 }
 
 
