@@ -43,11 +43,9 @@ private:
 	static void __fastcall GameMode_tick(C_GameMode* _this);
 	static void __fastcall SurvivalMode_tick(C_GameMode* _this);
 	static void __fastcall ChatScreenController_sendChatMessage(uint8_t* _this);
-	static HRESULT __stdcall d3d11_present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags);
 	static __int64 __fastcall setupAndRender(C_UIScene* uiscene, __int64 screencontext);
 	static __int64 __fastcall uiscene_render(C_UIScene* uiscene, __int64 screencontext);
-	static __int64 __fastcall renderText(__int64 a1, C_MinecraftUIRenderContext* yote);
-	static char* __fastcall I8n_get(void*, char*);
+	static __int64 __fastcall renderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx);
 	static float* Dimension_getFogColor(__int64, float* color, float brightness);
 	static void ChestBlockActor_tick(C_ChestBlockActor*, void* a);
 	static void Actor_lerpMotion(C_Entity* _this, vec3_t);
@@ -55,7 +53,6 @@ private:
 	static void pleaseAutoComplete(__int64 _this, __int64 a2, TextHolder* text, int a4);
 	static void sendToServer(C_LoopbackPacketSender* a, C_Packet* packet);
 	static float LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3);
-	static bool Mob_isAlive(C_Entity* a1);
 	static void MultiLevelPlayer_tick(C_EntityList* entityList);
 	static void GameMode_startDestroyBlock(C_GameMode* _this, vec3_ti* a2, uint8_t face, void* a4, void* a5);
 	static void HIDController_keyMouse(C_HIDController* _this, void* a2, void* a3);
@@ -64,7 +61,7 @@ private:
 	static __int64 LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3);
 	static void __fastcall clickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
 	static __int64 __fastcall MoveInputHandler_tick(C_MoveInputHandler* _this, C_Entity* a2);
-	static __int64 __fastcall chestScreenController__tick(C_ChestScreenController* _this);
+	static __int64 __fastcall ChestScreenController__tick(C_ChestScreenController* _this);
 	static __int64 __fastcall fullBright(__int64 a1);
 	static bool __fastcall Actor__isInWater(C_Entity* _this);
 	static void __fastcall jumpPower(C_Entity* _this, float a2);
@@ -72,7 +69,6 @@ private:
 	static void __fastcall ladderUp(C_Entity* _this);
 	static void __fastcall Actor__startSwimming(C_Entity* _this);
 	static void __fastcall RakNetInstance__tick(C_RakNetInstance* _this);
-	static __int64 __fastcall inventoryScreen__tick(C_CraftingScreenController* _this, __int64 a2);
 	static float __fastcall GameMode__getPickRange(C_GameMode* _this, __int64 a2, char a3);
 	static void __fastcall InventoryTransactionManager__addAction(C_InventoryTransactionManager* a1, C_InventoryAction* a2);
 
@@ -188,6 +184,13 @@ public:
 	Type GetOriginal()
 	{
 		return reinterpret_cast<Type>(funcReal);
+	};
+
+	template<typename TRet, typename ... TArgs>
+	auto* GetFastcall()
+	{
+		using Fn = TRet(__fastcall*)(TArgs...);
+		return reinterpret_cast<Fn>(funcReal);
 	};
 };
 
