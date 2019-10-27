@@ -28,14 +28,10 @@ void Hooks::Init()
 		}
 	}
 
-	// SurvivalMode::tick Sig
 	void* surv_tick = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 55 48 8D 68 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 10 48 89 70 18 48 89 78 20 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 8B F9 8B 41 ??"));
 	g_Hooks.survivalMode_tickHook = std::make_unique<FuncHook>(surv_tick, Hooks::SurvivalMode_tick);
 	g_Hooks.survivalMode_tickHook->init();
 
-	// ChatScreenController::_sendChatMessage
-	// 40 57 48 83 EC 20 48 83 B9 ?? ?? ?? ?? 00 48 8B F9 0F 85
-	// ^^ 
 	void* _sendChatMessage = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC 20 48 83 B9 ?? ?? ?? ?? 00 48 8B F9 0F 85"));
 	g_Hooks.chatScreen_sendMessageHook = std::make_unique<FuncHook>(_sendChatMessage, Hooks::ChatScreenController_sendChatMessage);
 	g_Hooks.chatScreen_sendMessageHook->init();
@@ -168,9 +164,7 @@ void Hooks::Restore()
 {
 	g_Hooks.gameMode_tickHook->Restore();
 	g_Hooks.chatScreen_sendMessageHook->Restore();
-	g_Hooks.d3d11_presentHook->Restore();
 	g_Hooks.renderTextHook->Restore();
-	//g_Hooks.I8n_getHook->Restore();
 	g_Hooks.AppPlatform_getGameEditionHook->Restore();
 	g_Hooks.autoComplete_Hook->Restore();
 	g_Hooks.levelRendererPlayer_getFovHook->Restore();

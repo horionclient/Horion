@@ -75,11 +75,9 @@ private:
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
 	std::unique_ptr<FuncHook> chatScreen_sendMessageHook;
-	std::unique_ptr<FuncHook> d3d11_presentHook;
 	std::unique_ptr<FuncHook> renderTextHook;
 	std::unique_ptr<FuncHook> setupRenderHook;
 	std::unique_ptr<FuncHook> uiscene_RenderHook;
-	std::unique_ptr<FuncHook> I8n_getHook;
 	std::unique_ptr<FuncHook> Dimension_getFogColorHook;
 	std::unique_ptr<FuncHook> ChestBlockActor_tickHook;
 	std::unique_ptr<FuncHook> Actor_lerpMotionHook;
@@ -108,43 +106,6 @@ private:
 	std::unique_ptr<FuncHook> inventoryScreen__tickHook;
 	std::unique_ptr<FuncHook> GameMode__getPickRangeHook;
 	std::unique_ptr<FuncHook> InventoryTransactionManager__addActionHook;
-
-
-	typedef __int64(__fastcall* LevelRenderer_renderLevel_t)(__int64 _this, __int64 a2, __int64 a3);
-	typedef bool(__fastcall* mob_isAlive_T)(C_Entity* _this);
-	typedef float(__fastcall* getFov_t)(__int64 _this, float a2, bool a3);
-	typedef void(__fastcall* autoComplete_t)(__int64 a1, __int64 a2, TextHolder* text, int a4);
-	typedef signed int(__fastcall* AppPlatform_getGameEdition_t)(__int64);
-	typedef void(__fastcall* Actor_lerpMotion_t)(C_Entity*, vec3_t);
-	typedef float* (__fastcall* Dimension_getFogColor_t)(__int64, float*, float);
-	typedef char* (__fastcall* I8n_get_t)(void*, char*);
-	typedef __int64(__fastcall* uirender_t)(C_UIScene*, __int64);
-	typedef __int64(__fastcall* setupRender_t)(C_UIScene*, __int64);
-	typedef __int64(__fastcall* renderText_t)(__int64, C_MinecraftUIRenderContext*);
-	typedef void(__fastcall* GameMode_tick_t)(C_GameMode* _this);
-	typedef void(__fastcall* SurvivalMode_tick_t)(C_GameMode* _this);
-	typedef void(__fastcall* ChatScreen_sendChatMessage_t)(void* _this);
-	typedef HRESULT(__stdcall* d3d11_present_t)(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags);
-	typedef void(__fastcall* ChestBlockActor_tick_t)(void* _this, void*);
-	typedef void(__fastcall* sendToServer_tick_t)(C_LoopbackPacketSender* _this, C_Packet* packet);
-	typedef void(__fastcall* MultiLevelPlayer_tick_t)(C_EntityList* entityList);
-	typedef void(__fastcall* GameMode_startDestroyBlock_t)(C_GameMode* _this, vec3_ti* a2, uint8_t face, void* a4, void* a5);
-	typedef void(__fastcall* HIDController_keyMouse_t)(C_HIDController* _this, void* a2, void* a3);
-	typedef int(__fastcall* BlockLegacy_getRenderLayer_t)(C_BlockLegacy* _this);
-	typedef BYTE* (__fastcall* BlockLegacy_getLightEmission_t)(C_BlockLegacy* _this, BYTE* a2);
-	typedef __int64(__fastcall* clickFunc_t)(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
-	typedef __int64(__fastcall* MoveInputHandler_tick_t)(C_MoveInputHandler* _this, C_Entity* a2);
-	typedef __int64(__fastcall* chestScreenController__tick_t)(C_ChestScreenController* _this);
-	typedef __int64(__fastcall* fullbright_t)(__int64 a1);
-	typedef bool(__fastcall* Actor__isInWater_t)(C_Entity* _this);
-	typedef __int64(__fastcall* jumpPower_t)(C_Entity* _this, float a2);
-	typedef __int64(__fastcall* MinecraftGame__onAppSuspended_t)(__int64 _this);
-	typedef void(__fastcall* ladderUp_t)(C_Entity* _this);
-	typedef void(__fastcall* Actor__startSwimming_t)(C_Entity* _this);
-	typedef void(__fastcall* RakNetInstance__tick_t)(C_RakNetInstance* _this);
-	typedef __int64(__fastcall* inventoryScreen__tick_t)(C_CraftingScreenController* _this, __int64 a2);
-	typedef float(__fastcall* GameMode__getPickRange_t)(C_GameMode* _this, __int64 a2, char a3);
-	typedef void(__fastcall* InventoryTransactionManager__addAction_t)(C_InventoryTransactionManager* a1, C_InventoryAction* a2);
 };
 
 extern Hooks g_Hooks;
@@ -179,12 +140,6 @@ public:
 		if(this != nullptr && funcPtr != nullptr)
 			MH_DisableHook(funcPtr);
 	}
-
-	template<class Type>
-	Type GetOriginal()
-	{
-		return reinterpret_cast<Type>(funcReal);
-	};
 
 	template<typename TRet, typename ... TArgs>
 	auto* GetFastcall()
