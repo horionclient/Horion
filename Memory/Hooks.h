@@ -40,12 +40,12 @@ public:
 	static void Restore();
 
 private:
-	static void __fastcall GameMode_tick(C_GameMode* _this);
-	static void __fastcall SurvivalMode_tick(C_GameMode* _this);
-	static void __fastcall ChatScreenController_sendChatMessage(uint8_t* _this);
-	static __int64 __fastcall UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext);
-	static __int64 __fastcall UIScene_render(C_UIScene* uiscene, __int64 screencontext);
-	static __int64 __fastcall RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx);
+	static void GameMode_tick(C_GameMode* _this);
+	static void SurvivalMode_tick(C_GameMode* _this);
+	static void ChatScreenController_sendChatMessage(uint8_t* _this);
+	static __int64 UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext);
+	static __int64 UIScene_render(C_UIScene* uiscene, __int64 screencontext);
+	static __int64 RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx);
 	static float* Dimension_getFogColor(__int64, float* color, float brightness);
 	static void ChestBlockActor_tick(C_ChestBlockActor*, void* a);
 	static void Actor_lerpMotion(C_Entity* _this, vec3_t);
@@ -56,21 +56,21 @@ private:
 	static void MultiLevelPlayer_tick(C_EntityList* entityList);
 	static void GameMode_startDestroyBlock(C_GameMode* _this, vec3_ti* a2, uint8_t face, void* a4, void* a5);
 	static void HIDController_keyMouse(C_HIDController* _this, void* a2, void* a3);
-	static int __fastcall BlockLegacy_getRenderLayer(C_BlockLegacy* a1);
-	static BYTE* __fastcall BlockLegacy_getLightEmission(C_BlockLegacy* _this, BYTE* a2);
+	static int BlockLegacy_getRenderLayer(C_BlockLegacy* a1);
+	static BYTE* BlockLegacy_getLightEmission(C_BlockLegacy* _this, BYTE* a2);
 	static __int64 LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3);
-	static void __fastcall ClickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
-	static __int64 __fastcall MoveInputHandler_tick(C_MoveInputHandler* _this, C_Entity* a2);
-	static __int64 __fastcall ChestScreenController_tick(C_ChestScreenController* _this);
-	static __int64 __fastcall GetGamma(__int64 a1);
-	static bool __fastcall Actor_isInWater(C_Entity* _this);
-	static void __fastcall JumpPower(C_Entity* _this, float a2);
-	static __int64 __fastcall MinecraftGame_onAppSuspended(__int64 _this);
-	static void __fastcall LadderUp(C_Entity* _this);
-	static void __fastcall Actor_startSwimming(C_Entity* _this);
-	static void __fastcall RakNetInstance_tick(C_RakNetInstance* _this);
-	static float __fastcall GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3);
-	static void __fastcall InventoryTransactionManager_addAction(C_InventoryTransactionManager* a1, C_InventoryAction* a2);
+	static void ClickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
+	static __int64 MoveInputHandler_tick(C_MoveInputHandler* _this, C_Entity* a2);
+	static __int64 ChestScreenController_tick(C_ChestScreenController* _this);
+	static __int64 GetGamma(__int64 a1);
+	static bool Actor_isInWater(C_Entity* _this);
+	static void JumpPower(C_Entity* _this, float a2);
+	static __int64 MinecraftGame_onAppSuspended(__int64 _this);
+	static void LadderUp(C_Entity* _this);
+	static void Actor_startSwimming(C_Entity* _this);
+	static void RakNetInstance_tick(C_RakNetInstance* _this);
+	static float GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3);
+	static void InventoryTransactionManager_addAction(C_InventoryTransactionManager* a1, C_InventoryAction* a2);
 
 	std::unique_ptr<FuncHook> GameMode_tickHook;
 	std::unique_ptr<FuncHook> SurvivalMode_tickHook;
@@ -116,7 +116,7 @@ public:
 	FuncHook(void* func, void* hooked) {
 		funcPtr = func;
 		
-		int ret = MH_CreateHook(func, hooked, &funcReal);
+		MH_STATUS ret = MH_CreateHook(func, hooked, &funcReal);
 		if (ret == MH_OK && (__int64)func > 10) {
 			
 		}else
@@ -144,59 +144,4 @@ public:
 		using Fn = TRet(__fastcall*)(TArgs...);
 		return reinterpret_cast<Fn>(funcReal);
 	};
-};
-
-class VMTHook
-{
-public:
-	VMTHook(void* ppClass)
-	{
-		this->ppBaseClass = static_cast<std::uintptr_t**>(ppClass);
-
-		// loop through all valid class indexes. When it will hit invalid (not existing) it will end the loop
-		while (static_cast<std::uintptr_t*>(*this->ppBaseClass)[this->indexCount])
-			++this->indexCount;
-
-		const std::size_t kSizeTable = this->indexCount * sizeof(std::uintptr_t);
-
-		this->pOriginalVMT = *this->ppBaseClass;
-		this->pNewVMT = std::make_unique<std::uintptr_t[]>(this->indexCount);
-
-		// copy original vtable to our local copy of it
-		std::memcpy(this->pNewVMT.get(), this->pOriginalVMT, kSizeTable);
-
-		// replace original class with our local copy
-		*this->ppBaseClass = this->pNewVMT.get();
-	};
-	~VMTHook() { *this->ppBaseClass = this->pOriginalVMT; };
-
-	template<class Type>
-	Type GetOriginal(const std::size_t index)
-	{
-		return reinterpret_cast<Type>(this->pOriginalVMT[index]);
-	};
-
-	HRESULT Hook(const std::size_t index, void* fnNew)
-	{
-		if (index > this->indexCount)   // check if given index is valid
-			return E_INVALIDARG;
-
-		this->pNewVMT[index] = reinterpret_cast<std::uintptr_t>(fnNew);
-		return S_OK;
-	};
-
-	HRESULT Unhook(const std::size_t index)
-	{
-		if (index > this->indexCount)
-			return E_INVALIDARG;
-
-		this->pNewVMT[index] = this->pOriginalVMT[index];
-		return S_OK;
-	};
-
-private:
-	std::unique_ptr<std::uintptr_t[]> pNewVMT = nullptr;    // Actual used vtable
-	std::uintptr_t** ppBaseClass = nullptr; // Saved pointer to original class
-	std::uintptr_t*  pOriginalVMT = nullptr; // Saved original pointer to the VMT
-	std::size_t      indexCount = 0;       // Count of indexes inside out f-ction
 };
