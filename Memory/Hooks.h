@@ -134,8 +134,8 @@ public:
 			logF("MH_CreateHook = %i", ret);
 	};
 
-	void init() {
-		int ret = MH_EnableHook(funcPtr);
+	void enableHook(bool enable = true) {
+		int ret = enable ? MH_EnableHook(funcPtr) : MH_DisableHook(funcPtr);
 		if (ret != MH_OK)
 			logF("MH_EnableHook = %i", ret);
 	}
