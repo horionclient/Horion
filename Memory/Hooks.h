@@ -123,6 +123,17 @@ public:
 			logF("MH_CreateHook = %i", ret);
 	};
 
+	FuncHook(uintptr_t func, void* hooked) {
+		funcPtr = reinterpret_cast<void*>(func);
+
+		MH_STATUS ret = MH_CreateHook(funcPtr, hooked, &funcReal);
+		if (ret == MH_OK && (__int64)funcPtr > 10) {
+
+		}
+		else
+			logF("MH_CreateHook = %i", ret);
+	};
+
 	void init() {
 		int ret = MH_EnableHook(funcPtr);
 		if (ret != MH_OK)
@@ -139,7 +150,7 @@ public:
 	}
 
 	template<typename TRet, typename ... TArgs>
-	auto* GetFastcall()
+	inline auto* GetFastcall()
 	{
 		using Fn = TRet(__fastcall*)(TArgs...);
 		return reinterpret_cast<Fn>(funcReal);

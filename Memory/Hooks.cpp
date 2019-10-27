@@ -189,7 +189,7 @@ void Hooks::Restore()
 	g_Hooks.InventoryTransactionManager_addActionHook->Restore();
 }
 
-void __fastcall Hooks::GameMode_tick(C_GameMode* _this)
+void Hooks::GameMode_tick(C_GameMode* _this)
 {
 	static auto oTick = g_Hooks.GameMode_tickHook->GetFastcall<void, C_GameMode*>();
 	oTick(_this);
@@ -200,7 +200,7 @@ void __fastcall Hooks::GameMode_tick(C_GameMode* _this)
 	}
 }
 
-void __fastcall Hooks::SurvivalMode_tick(C_GameMode* _this)
+void Hooks::SurvivalMode_tick(C_GameMode* _this)
 {
 	static auto oTick = g_Hooks.SurvivalMode_tickHook->GetFastcall<void, C_GameMode*>();
 	oTick(_this);
@@ -210,7 +210,7 @@ void __fastcall Hooks::SurvivalMode_tick(C_GameMode* _this)
 	}
 }
 
-void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t* _this)
+void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this)
 {
 	static auto oSendMessage = g_Hooks.ChatScreenController_sendChatMessageHook->GetFastcall<void, void*>();
 
@@ -252,7 +252,7 @@ void __fastcall Hooks::ChatScreenController_sendChatMessage(uint8_t* _this)
 	oSendMessage(_this);
 }
 
-__int64 __fastcall Hooks::UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext)
+__int64 Hooks::UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext)
 {
 	static auto oSetup = g_Hooks.UIScene_setupAndRenderHook->GetFastcall<__int64, C_UIScene*, __int64>();
 
@@ -261,7 +261,7 @@ __int64 __fastcall Hooks::UIScene_setupAndRender(C_UIScene* uiscene, __int64 scr
 	return oSetup(uiscene, screencontext);
 }
 
-__int64 __fastcall Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext)
+__int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext)
 {
 	static auto oRender = g_Hooks.UIScene_renderHook->GetFastcall<__int64, C_UIScene*, __int64>();
 
@@ -280,7 +280,7 @@ __int64 __fastcall Hooks::UIScene_render(C_UIScene* uiscene, __int64 screenconte
 	return oRender(uiscene, screencontext);
 }
 
-__int64 __fastcall Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
+__int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 {
 	static auto oText = g_Hooks.RenderTextHook->GetFastcall<__int64, __int64, C_MinecraftUIRenderContext*>();
 	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
@@ -532,7 +532,7 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightnes
 	return oGetFogColor(_this, color, brightness);
 }
 
-void __fastcall Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a)
+void Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a)
 {
 	static auto oTick = g_Hooks.ChestBlockActor_tickHook->GetFastcall<void, C_ChestBlockActor*, void*>();
 	oTick(_this, a);
@@ -766,7 +766,7 @@ float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3)
 	return oGetFov(_this, a2, a3);
 }
 
-void __fastcall Hooks::MultiLevelPlayer_tick(C_EntityList* _this)
+void Hooks::MultiLevelPlayer_tick(C_EntityList* _this)
 {
 	static auto oTick = g_Hooks.MultiLevelPlayer_tickHook->GetFastcall<void, C_EntityList*>();
 	oTick(_this);
@@ -831,7 +831,7 @@ void Hooks::HIDController_keyMouse(C_HIDController* _this, void* a2, void* a3)
 	return;
 }
 
-int __fastcall Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1)
+int Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1)
 {
 	static auto oFunc = g_Hooks.BlockLegacy_getRenderLayerHook->GetFastcall<int, C_BlockLegacy*>();
 
@@ -848,7 +848,7 @@ int __fastcall Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1)
 	return oFunc(a1);
 }
 
-BYTE* __fastcall Hooks::BlockLegacy_getLightEmission(C_BlockLegacy* a1, BYTE* a2)
+BYTE* Hooks::BlockLegacy_getLightEmission(C_BlockLegacy* a1, BYTE* a2)
 {
 	static auto oFunc = g_Hooks.BlockLegacy_getLightEmissionHook->GetFastcall<BYTE*, C_BlockLegacy*, BYTE*>();
 
@@ -889,7 +889,7 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3)
 	return oFunc(_this, a2, a3);
 }
 
-void __fastcall Hooks::ClickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8) {
+void Hooks::ClickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8) {
 
 	static auto oFunc = g_Hooks.ClickFuncHook->GetFastcall<void, __int64, char, char, __int16, __int16, __int16, __int16, char>();
 	static IModule* clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
@@ -905,7 +905,7 @@ void __fastcall Hooks::ClickFunc(__int64 a1, char a2, char a3, __int16 a4, __int
 	oFunc(a1, a2, a3, a4, a5, a6, a7, a8);
 }
 
-__int64 __fastcall Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity* a2)
+__int64 Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity* a2)
 {
 	static auto oTick = g_Hooks.MoveInputHandler_tickHook->GetFastcall<__int64, C_MoveInputHandler*, C_Entity*>();
 
@@ -924,7 +924,7 @@ __int64 __fastcall Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity
 	return oTick(a1, a2);
 }
 
-__int64 __fastcall Hooks::ChestScreenController_tick(C_ChestScreenController* a1)
+__int64 Hooks::ChestScreenController_tick(C_ChestScreenController* a1)
 {
 	static auto oFunc = g_Hooks.ChestScreenController_tickHook->GetFastcall<__int64, C_ChestScreenController*>();
 
@@ -938,7 +938,7 @@ __int64 __fastcall Hooks::ChestScreenController_tick(C_ChestScreenController* a1
 	return oFunc(a1);
 }
 
-__int64 __fastcall Hooks::GetGamma(__int64 a1)
+__int64 Hooks::GetGamma(__int64 a1)
 {
 	static auto oFunc = g_Hooks.GetGammaHook->GetFastcall<__int64, __int64>();
 
@@ -962,7 +962,7 @@ __int64 __fastcall Hooks::GetGamma(__int64 a1)
 	return oFunc(a1);
 }
 
-bool __fastcall Hooks::Actor_isInWater(C_Entity* _this)
+bool Hooks::Actor_isInWater(C_Entity* _this)
 {
 	static auto oFunc = g_Hooks.Actor_isInWaterHook->GetFastcall<bool, C_Entity*>();
 
@@ -978,7 +978,7 @@ bool __fastcall Hooks::Actor_isInWater(C_Entity* _this)
 	return oFunc(_this);
 }
 
-void __fastcall Hooks::JumpPower(C_Entity* a1, float a2)
+void Hooks::JumpPower(C_Entity* a1, float a2)
 {
 	static auto oFunc = g_Hooks.JumpPowerHook->GetFastcall<void, C_Entity*, float>();
 	static HighJump* HighJumpMod = moduleMgr->getModule<HighJump>();
@@ -991,14 +991,14 @@ void __fastcall Hooks::JumpPower(C_Entity* a1, float a2)
 	oFunc(a1, a2);
 }
 
-__int64 __fastcall Hooks::MinecraftGame_onAppSuspended(__int64 _this)
+__int64 Hooks::MinecraftGame_onAppSuspended(__int64 _this)
 {
 	static auto oFunc = g_Hooks.MinecraftGame_onAppSuspendedHook->GetFastcall<__int64, __int64>();
 	configMgr->saveConfig();
 	return oFunc(_this);
 }
 
-void __fastcall Hooks::LadderUp(C_Entity* _this)
+void Hooks::LadderUp(C_Entity* _this)
 {
 	static auto oFunc = g_Hooks.LadderUpHook->GetFastcall<void, C_Entity*>();
 
@@ -1013,7 +1013,7 @@ void __fastcall Hooks::LadderUp(C_Entity* _this)
 
 }
 
-void __fastcall Hooks::Actor_startSwimming(C_Entity* _this)
+void Hooks::Actor_startSwimming(C_Entity* _this)
 {
 	static auto oFunc = g_Hooks.Actor_startSwimmingHook->GetFastcall<void, C_Entity*>();
 
@@ -1026,14 +1026,14 @@ void __fastcall Hooks::Actor_startSwimming(C_Entity* _this)
 	oFunc(_this);
 }
 
-void __fastcall Hooks::RakNetInstance_tick(C_RakNetInstance* _this)
+void Hooks::RakNetInstance_tick(C_RakNetInstance* _this)
 {
 	static auto oTick = g_Hooks.RakNetInstance_tickHook->GetFastcall<void, C_RakNetInstance*>();
 	GameData::setRakNetInstance(_this);
 	oTick(_this);
 }
 
-float __fastcall Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3)
+float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3)
 {
 	static auto oFunc = g_Hooks.GameMode_getPickRangeHook->GetFastcall<float, C_GameMode*, __int64, char>();
 	static InfiniteBlockReach* InfiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
@@ -1050,7 +1050,7 @@ float __fastcall Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, cha
 	return oFunc(_this, a2, a3);
 }
 
-void __fastcall Hooks::InventoryTransactionManager_addAction(C_InventoryTransactionManager* a1, C_InventoryAction* a2)
+void Hooks::InventoryTransactionManager_addAction(C_InventoryTransactionManager* a1, C_InventoryAction* a2)
 {
 	static auto Func = g_Hooks.InventoryTransactionManager_addActionHook->GetFastcall<void, C_InventoryTransactionManager*, C_InventoryAction*>();
 	Func(a1, a2);
