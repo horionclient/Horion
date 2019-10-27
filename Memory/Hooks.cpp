@@ -566,7 +566,7 @@ void Hooks::Actor_lerpMotion(C_Entity* _this, vec3_t motVec)
 	oLerp(_this, motVec);
 }
 
-signed int Hooks::AppPlatform_getGameEdition(__int64 _this)
+int Hooks::AppPlatform_getGameEdition(__int64 _this)
 {
 	static auto oGetEditon = g_Hooks.AppPlatform_getGameEditionHook->GetFastcall<signed int, __int64>();
 
@@ -848,9 +848,9 @@ int Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1)
 	return oFunc(a1);
 }
 
-BYTE* Hooks::BlockLegacy_getLightEmission(C_BlockLegacy* a1, BYTE* a2)
+__int8* Hooks::BlockLegacy_getLightEmission(C_BlockLegacy* a1, __int8* a2)
 {
-	static auto oFunc = g_Hooks.BlockLegacy_getLightEmissionHook->GetFastcall<BYTE*, C_BlockLegacy*, BYTE*>();
+	static auto oFunc = g_Hooks.BlockLegacy_getLightEmissionHook->GetFastcall<__int8*, C_BlockLegacy*, __int8*>();
 
 	static IModule* XrayModule = moduleMgr->getModule<Xray>();
 	if (XrayModule == nullptr)
