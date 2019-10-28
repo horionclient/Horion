@@ -64,6 +64,7 @@
 #include "Modules/Spammer.h"
 #include "Modules/ChestAura.h"
 #include "Modules/AntiBot.h"
+#include "Modules/OffhandFixer.h"
 #include "../../Utils/Json.hpp"
 
 using json = nlohmann::json;
