@@ -32,8 +32,16 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+- task: CmdLine@2
+  inputs:
+    script: 'ls'
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: './x64/Release/Horion/Horion.dll'
+    ArtifactName: 'Horion$(Build.BuildId)'
+    publishLocation: 'Container'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: './x86/Release/Horion/Horion.dll'
     ArtifactName: 'Horion$(Build.BuildId)'
     publishLocation: 'Container'
