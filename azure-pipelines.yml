@@ -34,6 +34,6 @@ steps:
     configuration: '$(buildConfiguration)'
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: './x64/Release/Horion'
+    PathtoPublish: './x64/Release/Horion/Horion.dll'
     ArtifactName: 'Horion$(Build.BuildId)'
     publishLocation: 'Container'
