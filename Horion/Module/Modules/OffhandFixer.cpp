@@ -2,7 +2,7 @@
 
 
 
-OffhandFixer::OffhandFixer() : IModule('I', MOVEMENT)
+OffhandFixer::OffhandFixer() : IModule(0x0, PLAYER)
 {
 }
 
