@@ -19,10 +19,8 @@ using tess_end_t = void(__fastcall*)(__int64, __int64 tesselator, __int64*);
 
 // 0.12.x: 48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 80 B9 ?? ?? ?? ?? 00 41 0F
 tess_begin_t tess_begin = reinterpret_cast<tess_begin_t>(0);
-// 0.12.x: 4C 8B DC 55 53 49 8D 6B ?? 48 81 EC ?? ?? ?? ?? 41
-tess_vertex_t tess_vertex = reinterpret_cast<tess_vertex_t>(0);
-// 0.12.x: 40 53 56 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F0 48 8B DA 48 8B F9 80
-tess_end_t tess_end = reinterpret_cast<tess_end_t>(0);
+tess_vertex_t tess_vertex = reinterpret_cast<tess_vertex_t>(Utils::FindSignature("48 8B C4 48 89 78 ?? 55 48 8D 68"));
+tess_end_t tess_end = reinterpret_cast<tess_end_t>(Utils::FindSignature("40 53 56 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 49 8B F0 48 8B DA 48 8B F9"));
 
 
 void DrawUtils::setCtx(C_MinecraftUIRenderContext * ctx, C_GuiData* gui)
@@ -42,7 +40,8 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext * ctx, C_GuiData* gui)
 		origin = g_Data.getClientInstance()->levelRenderer->origin;
 
 	if (tess_end_base == 0x0) {
-		uintptr_t sigOffset = Utils::FindSignature("FF 50 08 4C 8D 05") + 3;
+		// 2 Sigs, wanted one comes first
+		uintptr_t sigOffset = Utils::FindSignature("4C 8D 05 ?? ?? ?? ?? 48 8B D3 48 8B CF 48 8B 5C 24 ?? 0F 28 7C 24 ?? 44 0F 28 44 24 ?? 48") + 3;
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		tess_end_base = reinterpret_cast<__int64*>(sigOffset + offset + 7);
 	}
@@ -104,7 +103,7 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth)
 	modX *= lineWidth;
 	modY *= lineWidth;
 
-	tess_begin(tesselator, 3, 0, 1, 0); 
+	/*tess_begin(tesselator, 3, 0, 1, 0); 
 
 	tess_vertex(tesselator, start.x + modX, start.y + modY, 0);
 	tess_vertex(tesselator, start.x - modX, start.y - modY, 0);
@@ -114,7 +113,7 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth)
 	tess_vertex(tesselator, end.x + modX, end.y + modY, 0);
 	tess_vertex(tesselator, end.x - modX, end.y - modY, 0);
 
-	tess_end(a2, tesselator, tess_end_base);
+	tess_end(a2, tesselator, tess_end_base);*/
 
 }
 
