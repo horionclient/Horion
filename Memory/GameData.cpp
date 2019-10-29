@@ -209,7 +209,7 @@ void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::
 	g_Data.gameModule = gameModule;
 	g_Data.slimMem = slimMem;
 	retrieveClientInstance();
-	retrieveGameSettingsInput();
+	//retrieveGameSettingsInput();
 #ifdef _DEBUG
 	logF("base: %llX", g_Data.getModule()->ptrBase);
 	logF("clientInstance %llX", g_Data.clientInstance);

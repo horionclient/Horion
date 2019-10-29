@@ -17,9 +17,12 @@ using tess_begin_t = void(__fastcall*)(__int64 _this, char one, int four, char z
 using tess_vertex_t = void(__fastcall*)(__int64 _this, float v1, float v2, float v3);
 using tess_end_t = void(__fastcall*)(__int64, __int64 tesselator, __int64*);
 
-tess_begin_t tess_begin = reinterpret_cast<tess_begin_t>(Utils::FindSignature("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 80 B9 ?? ?? ?? ?? 00 41 0F"));
-tess_vertex_t tess_vertex = reinterpret_cast<tess_vertex_t>(Utils::FindSignature("4C 8B DC 55 53 49 8D 6B ?? 48 81 EC ?? ?? ?? ?? 41"));
-tess_end_t tess_end = reinterpret_cast<tess_end_t>(Utils::FindSignature("40 53 56 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F0 48 8B DA 48 8B F9 80"));
+// 0.12.x: 48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 80 B9 ?? ?? ?? ?? 00 41 0F
+tess_begin_t tess_begin = reinterpret_cast<tess_begin_t>(0);
+// 0.12.x: 4C 8B DC 55 53 49 8D 6B ?? 48 81 EC ?? ?? ?? ?? 41
+tess_vertex_t tess_vertex = reinterpret_cast<tess_vertex_t>(0);
+// 0.12.x: 40 53 56 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F0 48 8B DA 48 8B F9 80
+tess_end_t tess_end = reinterpret_cast<tess_end_t>(0);
 
 
 void DrawUtils::setCtx(C_MinecraftUIRenderContext * ctx, C_GuiData* gui)
