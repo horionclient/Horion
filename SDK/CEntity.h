@@ -15,13 +15,21 @@ class PointingStruct
 private:
 	char pad_0x0000[0x630]; //0x0000
 public:
-	int rayHitType; //0x0570 
-	int blockSide; //0x0574 
-	vec3_ti block; //0x0578 
-	vec3_t rayHitVec; //0x0584 
-	C_Entity* entityPtr; //0x0590 
+	int rayHitType; //0x0630
+	int blockSide; //0x0634
+	vec3_ti block; //0x0638
+	vec3_t rayHitVec; //0x0644
+	C_Entity* entityPtr; //0x0650
 
 }; //Size=0x0598
+
+
+class nameStruct
+{
+	char pad_0x0[0x358]; //0x0
+public:
+	TextHolder name; //0x358
+};
 
 
 class C_Player;
@@ -104,7 +112,11 @@ private:
 public:
 	TextHolder N00000653; //0x0EC0 
 private:
-	char pad_0x0EE0[0x2E8]; //0x0EE0
+	char pad_0x0EE0[0x1C8]; //0x0EE0
+public:
+	nameStruct** ptr; //0x10A8
+private:
+	char pad_0x10B0[0x118]; //0x10B0
 public:
 	float bodyYaw; //0x11C8 
 	float oldBodyYaw; //0x11CC 

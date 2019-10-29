@@ -2,7 +2,7 @@
 
 
 
-ESP::ESP() : IModule('O', Category::VISUAL, "Makes it easier to find entities around you")
+ESP::ESP() : IModule('O', Category::VISUAL,"Makes it easier to find entities around you")
 {
 	this->registerBoolSetting("rainbow", &this->doRainbow, this->doRainbow);
 	this->registerBoolSetting("MobEsp", &this->isMobEsp, this->isMobEsp);
@@ -20,17 +20,19 @@ const char* ESP::getModuleName()
 
 static float rcolors[4];
 
-void doRenderStuff(C_Entity* ent,bool isRegularEntitie) {
+void doRenderStuff(C_Entity* ent, bool isRegularEntitie) {
 	static ESP* espMod = reinterpret_cast<ESP*>(moduleMgr->getModule<ESP>());
-	if(espMod == nullptr)
+	if (espMod == nullptr)
 		espMod = reinterpret_cast<ESP*>(moduleMgr->getModule<ESP>());
 	else {
 		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 		if (ent != localPlayer) {
-			
+
+			if (ent->timeSinceDeath > 0)
+				return;
 			if (Target::isValidTarget(ent)) {
-				
-				if(espMod->doRainbow)
+
+				if (espMod->doRainbow)
 					DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
 				else
 					DrawUtils::setColor(0.9f, 0.9f, 0.9f, max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
@@ -40,7 +42,7 @@ void doRenderStuff(C_Entity* ent,bool isRegularEntitie) {
 				if (ent->getNameTag()->getTextLength() <= 1 && ent->getEntityTypeId() == 63)
 					return;
 
-				if (ent->isInvisible())
+				if (ent->isInvisible() && ent->getEntityTypeId() != 33) // Exception for kitmap.sylphhcf.net they use a creeper as hitbox
 					return;
 
 				if (!g_Data.getLocalPlayer()->canAttack(ent, false))
@@ -56,11 +58,11 @@ void doRenderStuff(C_Entity* ent,bool isRegularEntitie) {
 }
 
 void ESP::onPostRender() {
-	
+
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
-	
+
 	if (localPlayer != nullptr && GameData::canUseMoveKeys()) {
-		
+
 		// Rainbow colors
 		{
 			if (rcolors[3] < 1) {
