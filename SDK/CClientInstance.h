@@ -79,7 +79,7 @@ class C_ClientInstance {
 private:
 	char firstPad[0x40]; //0x0000
 public:
-	MinecraftGame* minecraftGame; //0x0040 
+	MinecraftGame* minecraftGame; //0x0048 
 private:
 	MinecraftGame* N0000080C; //0x0048 
 	MinecraftGame* N0000080D; //0x0050 
