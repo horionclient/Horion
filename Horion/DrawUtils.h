@@ -55,6 +55,7 @@ public:
 	static void setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* guiData);
 	static void flush();
 	static void setColor(float r, float g, float b, float a); // rgba, values from 0 to 1
+	static void tess__begin(__int64 tesselator);
 	static uintptr_t getFont(Fonts font);
 	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = SMOOTH);
 	
