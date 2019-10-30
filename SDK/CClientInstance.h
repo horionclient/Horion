@@ -67,7 +67,7 @@ public:
 	}
 	void displayClientMessage(std::string* a2) {
 		using displayClientMessage = void(__thiscall*)(void*, TextHolder); // This signature actually exists 2 times but we got luck that our function is the first in memory
-		static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(Utils::FindSignature("40 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 4C 8B FA 4C 8B E9 48 89 4C 24 ?? 48 C7 45 ?? 0F 00 00 00 33 C0 48 89 45 ?? 88 45"));
+		static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(Utils::FindSignature("4C 8B DC 53 48 ?? ?? ?? ?? ?? ?? 49 ?? ?? ?? ?? ?? ?? ?? 48 8B D9 49 ?? ?? ?? ?? ?? ?? ?? 33 C0 49 89 43 D8 41 88 43 C8 49"));
 		
 		TextHolder text = TextHolder(*a2);
 		
@@ -77,31 +77,31 @@ public:
 
 class C_ClientInstance {
 private:
-	char firstPad[0x40]; //0x0000
+	char firstPad[0x40]; //0x0008
 public:
 	MinecraftGame* minecraftGame; //0x0048 
 private:
-	MinecraftGame* N0000080C; //0x0048 
-	MinecraftGame* N0000080D; //0x0050 
-	MinecraftGame* N0000080E; //0x0058 
+	MinecraftGame* N0000080C; //0x0050 
+	MinecraftGame* N0000080D; //0x0058
+	MinecraftGame* N0000080E; //0x0060
 public:
-	Minecraft* minecraft; //0x0060 
+	Minecraft* minecraft; //0x0068
 private:
-	char pad_0x0068[0x8]; //0x0068
+	char pad_0x0068[0x8]; //0x0070
 public:
-	LevelRenderer* levelRenderer; //0x0070 
+	LevelRenderer* levelRenderer; //0x0078
 private:
-	char pad_0x0078[0x8]; //0x0078
+	char pad_0x0078[0x8]; //0x0080
 public:
-	C_LoopbackPacketSender* loopbackPacketSender; //0x0080 
+	C_LoopbackPacketSender* loopbackPacketSender; //0x0088
 private:
-	char pad_0x0088[0x28]; //0x0088
+	char pad_0x0088[0x28]; //0x0090
 public:
-	HitDetectSystem* hitDetectSystem; //0x00B0 
+	HitDetectSystem* hitDetectSystem; //0x00B8
 private:
-	char pad_0x00B8[0x28]; //0x00B8
+	char pad_0x00B8[0x30]; //0x00C0
 public:
-	C_LocalPlayer* localPlayer; //0x00E0 
+	C_LocalPlayer* localPlayer; //0x00F0
 
 
 private:

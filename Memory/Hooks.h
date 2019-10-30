@@ -68,7 +68,7 @@ private:
 	static __int64	MinecraftGame_onAppSuspended(__int64 _this);
 	static void		Actor_ladderUp(C_Entity* _this);
 	static void		Actor_startSwimming(C_Entity* _this);
-	static void		RakNetInstance_tick(C_RakNetInstance* _this);
+	static void		RakNetInstance_tick(C_RakNetInstance* _this,__int64 a2,__int64 a3);
 	static float	GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3);
 	static void		InventoryTransactionManager_addAction(C_InventoryTransactionManager* a1, C_InventoryAction* a2);
 
