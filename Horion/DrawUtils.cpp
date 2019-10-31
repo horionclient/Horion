@@ -27,7 +27,7 @@ void DrawUtils::tess__begin(__int64 tesselator)
 {
 	if (!*(BYTE*)(tesselator + 0x1FC) && !*(BYTE*)(tesselator + 0x1B5))
 	{
-		mce__VertexFormat__disableHalfFloats(tesselator,1,1); //guessed with tess_begin in 1.12
+		mce__VertexFormat__disableHalfFloats(tesselator,0,0); //guessed with tess_begin in 1.12
 		*(BYTE*)(tesselator + 8) = 3;
 		*(BYTE*)(tesselator + 0x1B4) = 0;
 		*(WORD*)(tesselator + 0x1FC) = 1;

@@ -18,7 +18,7 @@ const char* FastLadder::getModuleName()
 
 void FastLadder::onEnable()
 {
-	if (opcode == 0) {
+	/*if (opcode == 0) {
 		static uintptr_t sigOffset = Utils::FindSignature("C7 87 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 07 48 8B CF FF 90 ?? ?? ?? ?? 84 C0 74 10");
 		opcode = reinterpret_cast<float*>(sigOffset + 6);
 	}
@@ -34,13 +34,13 @@ void FastLadder::onEnable()
 	else {
 		*opcode = -0.4f;
 		VirtualProtect(opcode, 4, oldProtect, &oldProtect);
-	}
+	}*/
 
 }
 
 void FastLadder::onDisable()
 {
-	if (opcode == 0) {
+	/*if (opcode == 0) {
 		static uintptr_t sigOffset = Utils::FindSignature("C7 87 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 07 48 8B CF FF 90 ?? ?? ?? ?? 84 C0 74 10");
 		opcode = reinterpret_cast<float*>(sigOffset + 6);
 	}
@@ -54,5 +54,5 @@ void FastLadder::onDisable()
 	else {
 		*opcode = -0.2f;
 		VirtualProtect(opcode, 4, oldProtect, &oldProtect);
-	};
+	};*/
 }

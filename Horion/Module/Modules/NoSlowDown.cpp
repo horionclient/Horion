@@ -18,8 +18,8 @@ const char* NoSlowDown::getModuleName()
 
 void NoSlowDown::onEnable()
 {
-	if (opcode == 0)
-		opcode = reinterpret_cast<uint8_t*>(Utils::FindSignature("2F 48 85 DB ?? 2A F3") - 1);
+	/*if (opcode == 0)
+		opcode = reinterpret_cast<uint8_t*>(Utils::FindSignature("2F 48 85 DB ?? 2A F3") - 1); //Broken
 
 	DWORD oldProtect = 0;
 	if (!VirtualProtect(opcode, 1, PAGE_EXECUTE_READWRITE, &oldProtect)) {
@@ -31,13 +31,13 @@ void NoSlowDown::onEnable()
 	else {
 		*opcode = 0xEB;
 		VirtualProtect(opcode, 1, oldProtect, &oldProtect);
-	}
+	}*/
 	
 }
 
 void NoSlowDown::onDisable()
 {
-	if (opcode == 0)
+/*	if (opcode == 0)
 		opcode = reinterpret_cast<uint8_t*>(Utils::FindSignature("2F 48 85 DB ?? 2A F3") - 1);
 
 	DWORD oldProtect = 0;
@@ -50,5 +50,5 @@ void NoSlowDown::onDisable()
 	else {
 		*opcode = 0x75;
 		VirtualProtect(opcode, 1, oldProtect, &oldProtect);
-	};
+	};*/
 }
