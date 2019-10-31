@@ -199,7 +199,7 @@ void ClickGui::renderCategory(Category category)
 	{
 		for (auto it = moduleList.begin(); it != moduleList.end(); ++it) {
 			std::string label = (*it)->getModuleName();
-			windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&label, textSize, SMOOTH));
+			windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&label, textSize, Fonts::SMOOTH));
 		}
 	}
 

@@ -76,17 +76,17 @@ void DrawUtils::setColor(float r, float g, float b, float a)
 uintptr_t DrawUtils::getFont(Fonts font)
 {
 	switch (font) {
-	case SMOOTH:
+	case Fonts::SMOOTH:
 		return g_Data.getClientInstance()->minecraftGame->getTheGoodFontThankYou();
 		break;
-	case UNICOD:
-		return g_Data.getClientInstance()->getUnicodeFont();
+	case Fonts::UNICOD:
+		return g_Data.getClientInstance()->_getUnicodeFont();
 		break;
-	case RUNE:
-		return g_Data.getClientInstance()->getRuneFont();
+	case Fonts::RUNE:
+		return g_Data.getClientInstance()->_getRuneFont();
 		break;
 	default:
-		return g_Data.getClientInstance()->getFont();
+		return g_Data.getClientInstance()->_getFont();
 		break;
 	}
 }
@@ -261,7 +261,7 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 	if (refdef->OWorldToScreen(origin,ent->eyePos0, textPos, fov, screenSize)) {
 		textPos.y -= 10.f;
 		textPos.x -= textStr / 2.f;
-		drawText(textPos, &text, nullptr, textSize, useUnicodeFont ? UNICOD : SMOOTH);
+		drawText(textPos, &text, nullptr, textSize, useUnicodeFont ? Fonts::UNICOD : Fonts::SMOOTH);
 	}
 }
 

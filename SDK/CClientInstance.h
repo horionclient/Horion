@@ -131,6 +131,7 @@ private:
 public:
 	virtual void setupClientGame(__int64 &&, bool); //21
 private:
+	virtual __int64 sub_1400C5D00(void) const;
 	virtual __int64 getLocalC_Player(void); //22
 	virtual __int64 getLocalC_Player(void)const; //23
 	virtual __int64 getCameraEntity(void)const; //24
@@ -143,6 +144,7 @@ public:
 	virtual bool isLeavingGame(void)const; //28
 	virtual bool isDestroyingGame(void)const; //29
 private:
+	virtual __int64 sub_1400C98E0(void) const;
 	virtual __int64 useLowFrequencyUIRender(void)const; //30
 public:
 	virtual bool isSplitScreenActive(void)const; //31
@@ -169,6 +171,7 @@ public:
 	virtual bool isPlatformNX(void)const; //50
 	virtual bool isLocalSplitscreenWith(__int64 const&)const; //51
 	virtual bool isValidCrossPlatformSkin(void)const; //52
+	virtual __int64 sub_1400C9B70(void);
 private:
 	virtual __int64 getSplitScreenInfo(void)const; //53
 	virtual __int64 getCurrentMaxGUIScaleIndex(void)const; //54
@@ -179,6 +182,9 @@ private:
 	virtual __int64 getRealityModeToggleTriggered(void)const; //57
 public:
 	virtual void setRealityModeToggleTriggered(bool); //58
+private:
+	virtual bool sub_1400C9C50(void);
+public:
 	virtual void setOpenControllerDisconnectScreen(bool); //59
 private:
 	virtual __int64 getClientPlayMode(void)const; //60
@@ -203,6 +209,9 @@ private:
 	virtual __int64 getAutomationClient(void)const; //74
 	virtual __int64 getScreenshotStreamer(void)const; //75
 	virtual __int64 getEventing(void)const; //76
+	virtual __int64 sub_1400CA2E0(__int64 a1);
+	virtual __int64 sub_1400CA2E8(__int64 a1);
+	virtual __int64 sub_1400CA2F0(__int64 a1);
 	virtual __int64 getFont(void)const; //77
 	virtual __int64 getRuneFont(void)const; //78
 	virtual __int64 getUnicodeFont(void)const; //79
@@ -211,12 +220,9 @@ private:
 	virtual __int64 getLocalServerLevel(void); //82
 	virtual __int64 getResourcePackRepository(void)const; //83
 	virtual __int64 getResourcePackManager(void)const; //84
-	virtual __int64 getPackManifestFactory(void); //85 
-	virtual __int64 getKeyProvider(void); //86 
-	virtual __int64 getResourcePacksInfoData(void);//87
-	virtual __int64 getSkinGeometryGroup(void)const; //88
 	virtual __int64 getSkinRepository(void)const; //89
 	virtual __int64 getSkinRepositoryClientInterface(void)const; //90
+	virtual __int64 sub_1400CA400(void) const;
 	virtual __int64 getTextures(void)const; //91
 	virtual __int64 getStoreCacheTextures(void)const; //92
 	virtual __int64 getMinecraftGraphics(void)const; //93
@@ -239,6 +245,7 @@ private:
 	virtual __int64 navigateToServersScreen(bool); //108
 	virtual __int64 navigateToHowToPlayScreen(std::string const&); //109
 	virtual __int64 tryPushLeaveGameScreen(void); //110
+	virtual char sub_1400D16A0(void) const;
 public:
 	virtual bool isReadyToRender(void)const; //111
 private:
@@ -252,6 +259,7 @@ private:
 	virtual __int64 onClientCreatedLevel(__int64); //117
 	virtual __int64 getClientRandomId(void)const; //118
 	virtual __int64 getUserAuthentication(void); //119
+	virtual __int64 sub_1400CAC50(__int64* a2);
 	virtual __int64 registerToUserManager(__int64 &, int); //120
 	virtual __int64 resumeWithUserManager(__int64 &, int); //121
 	virtual __int64 createUserAuthentication(std::string); //122
@@ -281,12 +289,6 @@ public:
 	virtual bool isEduMode(void)const; //140
 	virtual bool isGamepadCursorEnabled(void)const; //141
 private:
-	virtual void unknown0(void)const;
-	virtual void unknown1(void)const;
-	virtual void unknown2(void)const;
-	virtual void unknown3(void)const;
-	virtual void unknown4(void)const;
-	virtual void unknown5(void)const;
 	virtual __int64 getServerData(void); //142 //148
 	virtual __int64 getServerData(void)const; //143
 public:
@@ -305,6 +307,8 @@ private:
 	virtual __int64 getHolosceneRenderer(void)const; //155
 	virtual __int64 getLevelRenderer(void)const; //156
 	virtual __int64 getLevelRendererCameraProxy(void)const; //157
+	virtual __int64 sub_1400CCC00(void) const;
+	virtual __int64 sub_1400CCC08(void) const;
 	virtual __int64 getLightTexture(void); //158
 public:
 	virtual void setupLevelRendering(__int64 &, C_Entity &); //159
@@ -333,6 +337,8 @@ private:
 	virtual __int64 clearGraphicsCache(void); //173
 	virtual __int64 getNormalizedUICursorTransform(__int64 &, float); //174
 	virtual __int64 shouldRenderUICursor(void)const; //175
+	virtual bool sub_1400CD3B0(void);
+	virtual bool sub_1400CD3B1(void);
 	virtual __int64 onLatencyUpdated(std::chrono::duration<long long, std::ratio<1ll, 1000ll>> const&); //176
 	virtual __int64 getGuiScale(void)const; //177
 	virtual __int64 getGuiScaleOption(void)const; //178
@@ -341,10 +347,6 @@ public:
 	virtual void setGuiScaleOffset(int); //780
 private:
 	virtual __int64 renderEditorGui(__int64 &, bool); //181
-	virtual void unknown6(void)const;
-	virtual void unknown7(void)const;
-	virtual void unknown8(void)const;
-	virtual void unknown9(void)const;
 public:
 	virtual C_GuiData* getGuiData(void); //182       //*1.13 //192
 	virtual C_GuiData* getGuiData(void)const; 
@@ -459,11 +461,13 @@ private:
 	virtual __int64 startExternalNetworkWorld(__int64, std::string const&, bool);
 	virtual __int64 checkForPiracy(void);
 	virtual __int64 updateChatFilterStatus(void);
+	virtual void sub_1400D2A20(void);
 public:
 	virtual void setBehaviorCommandCallback(__int64);
 	virtual void setBehaviorCommandStatus(std::string, __int64);
 private:
 	virtual __int64 requestScreenshot(__int64 &);
+	virtual void sub_1400BE0A0(char a2);
 	virtual __int64 getDevConsoleLogger(void)const;
 	virtual __int64 requestImageFromUrl(std::string const&, __int64);
 	virtual __int64 initializeRenderResources(void);
@@ -560,18 +564,18 @@ public:
 		return fov;
 	}
 
-	uintptr_t getFont() {
+	uintptr_t _getFont() {
 		
-		return Utils::CallVFunc<73, uintptr_t>(this);
+		return this->getFont();
 	}
 
-	uintptr_t getRuneFont() {
+	uintptr_t _getRuneFont() {
 
-		return Utils::CallVFunc<74, uintptr_t>(this);
+		return this->getRuneFont();
 	}
 
-	uintptr_t getUnicodeFont() {
+	uintptr_t _getUnicodeFont() {
 
-		return Utils::CallVFunc<75, uintptr_t>(this);
+		return this->getUnicodeFont();
 	}
 };
