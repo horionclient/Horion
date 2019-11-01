@@ -14,7 +14,7 @@ vec3_t origin;
 static __int64* tess_end_base = 0x0;
 
 using tess_vertex_t = void(__fastcall*)(__int64 _this, float v1, float v2, float v3);
-using tess_end_t = void(__fastcall*)(__int64, __int64 tesselator, __int64*);
+using tess_end_t = void(__fastcall*)(__int64, __int64 tesselator,__int64*);
 using  mce__VertexFormat__disableHalfFloats_t = void(__fastcall*)(__int64, int,int);
 using Tessellator__initializeFormat_t = void(__fastcall*)(__int64, __int64);
 
@@ -45,7 +45,7 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext * ctx, C_GuiData* gui)
 	guiData = gui;
 	renderCtx = ctx;
 	a2 = reinterpret_cast<__int64*>(renderCtx)[2];
-	tesselator = *reinterpret_cast<__int64*>(a2 + 0x90);
+	tesselator = *reinterpret_cast<__int64*>(a2 + 0xA8);
 	colorHolder = *reinterpret_cast<float**>(a2 + 0x30);
 
 	glmatrixf* badrefdef = g_Data.getClientInstance()->getRefDef();
@@ -58,7 +58,7 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext * ctx, C_GuiData* gui)
 
 	if (tess_end_base == 0x0) {
 		// 2 Sigs, wanted one comes first
-		uintptr_t sigOffset = Utils::FindSignature("4C 8D 05 ?? ?? ?? ?? 48 8B D3 48 8B CF 48 8B 5C 24 ?? 0F 28 7C 24 ?? 44 0F 28 44 24 ?? 48") + 3;
+		uintptr_t sigOffset = Utils::FindSignature("4C 8D 05 ?? ?? ?? ?? 48 8B D3 48 8B CF 48 8B 5C 24 ?? 0F 28 7C 24 ?? 44 0F 28 44 24 ?? 48");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		tess_end_base = reinterpret_cast<__int64*>(sigOffset + offset + 7);
 	}
@@ -130,8 +130,7 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth)
 	tess_vertex(tesselator, end.x + modX, end.y + modY, 0);
 	tess_vertex(tesselator, end.x - modX, end.y - modY, 0);
 
-	tess_end(a2, tesselator, tess_end_base);
-
+	tess_end(a2, tesselator,tess_end_base);
 }
 
 void DrawUtils::fillRectangle(vec4_t pos, const MC_Color col, float alpha)

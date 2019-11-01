@@ -104,7 +104,7 @@ void Hooks::Init()
 		void* sendtoServer = reinterpret_cast<void*>(Utils::FindSignature("48 89 5C 24 08 57 48 ?? ?? ?? ?? ?? ?? 0F B6 41 ?? 48 8B FA 88 42 ?? 48 8D 54 24 ?? 48 8B 59 ?? 48 8B CB E8 ?? ?? ?? ?? 45 33 C9"));
 		g_Hooks.LoopbackPacketSender_sendToServerHook = std::make_unique <FuncHook>(sendtoServer, Hooks::LoopbackPacketSender_sendToServer);
 
-		void* getFov = reinterpret_cast<void*>(Utils::FindSignature("40 53 48 83 EC ?? 0F 29 74 24 ?? 0F 29 7C 24 ?? 44 0F 29"));
+		void* getFov = reinterpret_cast<void*>(Utils::FindSignature("40 53 48 83 EC ?? 0F 29 74 24 ?? 0F 29 7C 24 ?? 44 0F 29 44 24 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ??"));
 		g_Hooks.LevelRendererPlayer_getFovHook = std::make_unique<FuncHook>(getFov, Hooks::LevelRendererPlayer_getFov);
 
 		void* tick_entityList = reinterpret_cast<void*>(Utils::FindSignature("48 89 ?? ?? ?? 57 48 83 EC ?? 48 8B ?? E8 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B D8 ?? ?? ?? ?? ?? ?? 48 99"));
@@ -732,8 +732,8 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3)
 {
 	static auto oGetFov = g_Hooks.LevelRendererPlayer_getFovHook->GetFastcall<float, __int64, float, bool>();
-	static void* renderItemInHand = reinterpret_cast<void*>(Utils::FindSignature("F3 44 0F 10 2D ?? ?? ?? ?? F3 41 0F 59 C5 0F 28 DE F3"));
-	static void* setupCamera = reinterpret_cast<void*>(Utils::FindSignature("48 8B 8B ?? ?? ?? ?? 0F 28 F8"));
+	static void* renderItemInHand = reinterpret_cast<void*>(Utils::FindSignature("0F 28 F0 F3 44 0F 10 3D ?? ?? ?? ?? F3 41 0F 59 F7"));
+	static void* setupCamera = reinterpret_cast<void*>(Utils::FindSignature("44 0F 28 D8 F3 44 0F 59 1D ?? ?? ?? ?? 41 0F B6 4E ??"));
 
 	if (_ReturnAddress() == renderItemInHand) {
 		return oGetFov(_this, a2, a3);
