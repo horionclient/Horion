@@ -150,18 +150,18 @@ private:
 public:
 	TextHolder uuid; //0x1C30 
 
-
+public:
+	virtual bool hasComponent(__int64 const&)const;
 private:
 	virtual __int64 reloadHardcoded(__int64, __int64 const&);
 	virtual __int64 reloadHardcodedClient(__int64, __int64 const&);
 	virtual __int64 initializeComponents(__int64, __int64 const&);
 	virtual __int64 reloadComponents(__int64, __int64 const&);
-public:
-	virtual bool hasComponent(__int64 const&)const;
 private:
 	virtual void destructor();
 	// Duplicate destructor
 	virtual __int64 reset(void);
+	virtual __int64 getOnDeathExperience(void);
 	virtual __int64 getOwnerEntityType(void);
 	virtual __int64 remove(void);
 public:
