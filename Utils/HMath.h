@@ -102,7 +102,7 @@ struct vec3_t
 	float squaredlen() const { return x * x + y * y + z * z; }
 	float squaredxzlen() const { return x * x + z * z; }
 
-	vec3_t lerp(const vec3_t other, float val) {
+	inline vec3_t lerp(const vec3_t other, float val) {
 		vec3_t ne;
 		ne.x = x + val * (other.x - x);
 		ne.y = y + val * (other.y - y);
@@ -110,7 +110,7 @@ struct vec3_t
 		return ne;
 	}
 
-	vec3_t lerp(const vec3_t* other, float val) {
+	inline vec3_t lerp(const vec3_t* other, float val) {
 		vec3_t ne;
 		ne.x = x + val * (other->x - x);
 		ne.y = y + val * (other->y - y);

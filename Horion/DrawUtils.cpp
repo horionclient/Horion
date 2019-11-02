@@ -305,9 +305,6 @@ void DrawUtils::drawEntityBox(C_Entity * ent, float lineWidth)
 	vec3_t lerped = start->lerp(end, lerpT);
 
 	AABB render(lerped, ent->width, ent->height, end->y - ent->aabb.lower.y);
-	if (end->y - ent->aabb.lower.y > 1.63f || end->y - ent->aabb.lower.y < 1.61f)
-		if (start->y - ent->aabb.lower.y < 1.63f && start->y - ent->aabb.lower.y > 1.61f)
-			logF("odd %.4f", end->y - ent->aabb.lower.y);
 
 	drawBox(render.lower, render.upper, lineWidth);
 }
