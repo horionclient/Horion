@@ -7,9 +7,9 @@
 class Minecraft;
 class LevelRenderer {
 private:
-	char pad_0x0000[0x850]; //0x0000
+	char pad_0x0000[0x864]; //0x0000
 public:
-	vec3_t origin; //0x0850
+	vec3_t origin; //0x0864
 };
 class HitDetectSystem;
 
