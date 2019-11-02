@@ -119,6 +119,7 @@ void GameData::updateGameData(C_GameMode * gameMode)
 
 	if (gameMode->player == g_Data.localPlayer) { // GameMode::tick might also be run on the local server
 		g_Data.gameMode = gameMode;
+		QueryPerformanceCounter(&g_Data.lastUpdate);
 		
 		if (g_Data.localPlayer != nullptr ) {
 			C_GuiData* guiData = g_Data.clientInstance->getGuiData();

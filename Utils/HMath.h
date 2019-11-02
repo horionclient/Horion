@@ -110,6 +110,14 @@ struct vec3_t
 		return ne;
 	}
 
+	vec3_t lerp(const vec3_t* other, float val) {
+		vec3_t ne;
+		ne.x = x + val * (other->x - x);
+		ne.y = y + val * (other->y - y);
+		ne.z = z + val * (other->z - z);
+		return ne;
+	}
+
 	float sqrxy() const { return x * x + y * y; }
 
 	float dot(const vec3_t &o) const { return x * o.x + y * o.y + z * o.z; }
@@ -484,6 +492,10 @@ struct AABB {
 	AABB(const AABB &aabb) {
 		lower = vec3_t(aabb.lower);
 		upper = vec3_t(aabb.upper);
+	}
+	AABB(vec3_t lower, float width, float height, float eyeHeight) {
+		this->lower = lower.sub(vec3_t(width, eyeHeight * 2, width).div(2));
+		upper = vec3_t(lower.x + width, lower.y + height, lower.z + width);
 	}
 
 	bool operator==(const AABB &rhs) const {

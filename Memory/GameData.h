@@ -28,6 +28,7 @@ private:
 	SlimUtils::SlimMem* slimMem;
 	bool shouldTerminateB = false;
 	bool shouldHideB = false;
+	LARGE_INTEGER lastUpdate;
 	static void retrieveClientInstance();
 	static void retrieveGameSettingsInput();
 public:
@@ -75,6 +76,8 @@ public:
 	C_HIDController** getHIDController() { return &hidController; };
 	C_RakNetInstance* getRakNetInstance() { return raknetInstance; };
 	std::set<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
+
+	inline LARGE_INTEGER getLastUpdateTime() { return lastUpdate; };
 
 	void forEachEntity(void(*callback) (C_Entity*,bool));
 };

@@ -10,6 +10,7 @@ glmatrixf* refdef;
 vec2_t fov;
 vec2_t screenSize;
 vec3_t origin;
+float lerpT;
 
 static __int64* tess_end_base = 0x0;
 
@@ -42,6 +43,20 @@ void DrawUtils::tess__begin(__int64 tesselator)
 
 void DrawUtils::setCtx(C_MinecraftUIRenderContext * ctx, C_GuiData* gui)
 {
+	LARGE_INTEGER EndingTime, ElapsedMicroseconds;
+	LARGE_INTEGER Frequency;
+	QueryPerformanceFrequency(&Frequency);
+	QueryPerformanceCounter(&EndingTime);
+	ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - g_Data.getLastUpdateTime().QuadPart;
+
+	ElapsedMicroseconds.QuadPart *= 1000000;
+	ElapsedMicroseconds.QuadPart /= Frequency.QuadPart / 20;
+	lerpT = (ElapsedMicroseconds.QuadPart / 1000000.f);
+	if (lerpT > 1)
+		lerpT = 1;
+	else if (lerpT < 0)
+		lerpT = 0;
+
 	guiData = gui;
 	renderCtx = ctx;
 	a2 = reinterpret_cast<__int64*>(renderCtx)[2];
@@ -284,9 +299,17 @@ void DrawUtils::rainbow(float* rcolors)
 }
 void DrawUtils::drawEntityBox(C_Entity * ent, float lineWidth)
 {
-	vec3_t upper = vec3_t(ent->getAABB()->upper);
-	upper.y += 0.1f; // more premium
-	drawBox(ent->getAABB()->lower, upper, lineWidth);
+	vec3_t* start = ent->getPosOld();
+	vec3_t* end = ent->getPos();
+	
+	vec3_t lerped = start->lerp(end, lerpT);
+
+	AABB render(lerped, ent->width, ent->height, end->y - ent->aabb.lower.y);
+	if (end->y - ent->aabb.lower.y > 1.63f || end->y - ent->aabb.lower.y < 1.61f)
+		if (start->y - ent->aabb.lower.y < 1.63f && start->y - ent->aabb.lower.y > 1.61f)
+			logF("odd %.4f", end->y - ent->aabb.lower.y);
+
+	drawBox(render.lower, render.upper, lineWidth);
 }
 
 void DrawUtils::wirebox(AABB aabb){
