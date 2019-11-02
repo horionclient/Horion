@@ -58,20 +58,19 @@ public:
 			MobEquimentPacketConstructor(this, entityRuntimeId,item, hotbarSlot, inventorySlot, 0);
 	}
 private:
-	char pad_0x8[0x18];//0x0
-public:
-	__int64 entityRuntimeId;//0x20
-	C_ItemStack item;//0x28
-	int inventorySlot; //0xB0
-	int hotbarSlot;//0xB4
-	char windowId;//0xB8
+	char pad_0x8[0x20];//0x0
+//public:
+	__int64 entityRuntimeId;//0x28
+	C_ItemStack item;//0x30
+	int inventorySlot; // 0xB8
+	int hotbarSlot; // 0xBC
+	char windowId;//0xC0
+	char windowId1;//0xC0
+	char inventorySlot1; //0xC4
+	char hotbarSlot1; //0xC3
+	char windowId2;//0xC4 ALL OF THIS IS PROBABLY BROKEN, DONT USE
 private:
-	char unknown[0x2];//0xB9
-public:
-	char hotbarSlot1;//0xBA
-	char inventorySlot1;//0xBB
-private:
-	char unknown1;//0xBC
+	char unknown1;
 };
 
 class C_InventoryTransactionPacket : public C_Packet
