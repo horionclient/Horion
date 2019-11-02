@@ -104,7 +104,7 @@ public:
 	C_TextPacket() {
 		static uintptr_t** textPacketVtable = 0x0;
 		if (textPacketVtable == 0x0) {
-			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 85 ?? ?? ?? ?? C6 85 ?? ?? ?? ?? 01 4C");
+			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 8B F9 48 89 01 48 83 C1 ?? E8 ?? ?? ?? ?? 48 8D 8F");
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
 			textPacketVtable = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
 			if (textPacketVtable == 0x0 || sigOffset == 0x0)
@@ -116,18 +116,17 @@ public:
 		messageType = 1; // TYPE_CHAT
 	}
 
-	unsigned char gap0[24];
-	unsigned __int8 messageType;
+	unsigned char gap0[0x20];
+	unsigned __int8 messageType; // 0x28
 
-	unsigned char gap[3];
-	unsigned char field_24[4];
+	unsigned char gap[7]; 
 	
-	TextHolder sourceName;
-	TextHolder message;
-	unsigned char field_24222[24];
-	bool translationNeeded = false;
+	TextHolder sourceName;  // 0x30
+	TextHolder message; // 0x50
+	unsigned char field_24222[24]; // 0x70
+	bool translationNeeded = false; // 0x88
 
-	unsigned char ga2p[7];
+	unsigned char ga2p[7]; // 0x89
 	TextHolder xboxUserId;
 	TextHolder platformChatId;
 };
@@ -173,18 +172,18 @@ public:
 
 	//uintptr_t** vTable;		// 0x0
 private:
-	char filler[0x18];		// 0x8
+	char filler[0x20];		// 0x8
 public:
-	__int64 entityRuntimeID;// 0x20
-	vec3_t Position;		// 0x28
-	float pitch;			// 0x34
-	float yaw;				// 0x38
-	float headYaw;			// 0x3C
-	uint8_t mode;			// 0x40
-	bool onGround;			// 0x41
-	__int64 ridingEid;		// 0x48 // works because aligning
-	int int1;				// 0x50
-	int int2;				// 0x50
+	__int64 entityRuntimeID;
+	vec3_t Position;		
+	float pitch;			
+	float yaw;				
+	float headYaw;			
+	uint8_t mode;			
+	bool onGround;			
+	__int64 ridingEid;		
+	int int1;				
+	int int2;				
 };
 
 #pragma pack(pop)

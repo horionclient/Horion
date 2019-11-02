@@ -639,7 +639,6 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 				static syncShit_t syncShit = nullptr;
 				static __int64* winrt_ptr;
 				if (syncShit == nullptr) {
-					__debugbreak();
 					uintptr_t sigOffset = Utils::FindSignature("48 8B 0D ?? ?? ?? ?? 48 8B 01 49 8B D6 FF 90 ?? ?? ?? ??");
 					int offset = *reinterpret_cast<int*>(sigOffset + 3);
 					winrt_ptr = *reinterpret_cast<__int64**>(sigOffset + offset + 7);

@@ -727,26 +727,26 @@ public:
 	}
 
 	void swingArm() {
-		using SwingArm = void(__thiscall*)(void*);
-		static SwingArm swingFunc = reinterpret_cast<SwingArm>(Utils::FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B D9 80 B9"));
-		swingFunc(this);
+		//using SwingArm = void(__thiscall*)(void*);
+		//static SwingArm swingFunc = reinterpret_cast<SwingArm>(Utils::FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B D9 80 B9"));
+		//swingFunc(this);
+		this->swing();
 	}
-	void localPlayerTurn(vec2_t* viewAngles) {
+	/*void localPlayerTurn(vec2_t* viewAngles) {
 		using Turn = void(__thiscall*)(void*, vec2_t*);
 		static Turn TurnFunc = reinterpret_cast<Turn>(Utils::FindSignature("4C 8B DC 55 57 ?? ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? 45 ?? ?? ?? ?? ?? ?? ?? 48 8B 05 D6 D4 A5 01 48 33 C4 48 89 45 ?? 49 89 5B ?? 48 8B F9 ?? ?? ?? ?? ?? ?? ?? 48 8B DA 4D 89 73 E8 41 0F 29 73 D8 41 0F 29 7B C8 48 8B 01 FF 90 ?? ?? ?? ?? F2 0F 10 03"));
 		TurnFunc(this, viewAngles);
-	}
+	}*/
 	void applyTurnDelta(vec2_t* viewAngleDelta)
 	{
 		using applyTurnDelta = void(__thiscall*)(void*, vec2_t*);
-		//	static applyTurnDelta TurnDelta = reinterpret_cast<applyTurnDelta>(Utils::FindSignature("48 89 5C 24 10 57 48 83 EC ?? 0F 29 74 24 ?? 48 8B FA F3 0F 10 35 16 AA 35 01 48 8B D9 0F 29 7C 24 ?? 0F 28 CE F3 0F 10 7A ?? 0F 28 C7 44 0F 29 44 24 ?? F3 ?? ?? ?? ?? ?? ?? ?? F3 44 0F 10 05 88 A9 35 01 44 0F 29 4C 24 ?? F3 41 0F 58 C0"));
-		static applyTurnDelta TurnDelta = reinterpret_cast<applyTurnDelta>(Utils::FindSignature("48 89 5C 24 10 57 48 83 EC ?? 0F 29 74 24 ?? 48 8B FA F3 ?? ?? ?? ?? ?? ?? ?? 48 8B D9 0F 29 7C 24 ?? 0F 28 CE F3 0F 10 7A ?? 0F 28 C7 44 0F 29 44 24 ?? F3 ?? ?? ?? ?? ?? ?? ?? F3 ?? ?? ?? ?? ?? ?? ?? ?? 44 0F 29 4C 24 ?? F3 41 0F 58 C0"));
+		static applyTurnDelta TurnDelta = reinterpret_cast<applyTurnDelta>(Utils::FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B D9 0F 29 74 24 ?? 48 8B 89 ?? ?? ?? ?? 48 8B ?? 0F 29 7C 24 ?? 44 0F"));
 		TurnDelta(this, viewAngleDelta);
 	}
-	void setGameModeType(int GameMode)
+	void setGameModeType(int gma)
 	{
-		using setGameMode = void(__thiscall*)(void*,int);
-		static setGameMode Game_Mode = reinterpret_cast<setGameMode>(Utils::FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 89 74 24 ?? 8B DA 48 8B F9 8B"));
-		Game_Mode(this,GameMode);
+		using setGameMode = void(__thiscall*)(void*, int);
+		static setGameMode Game_Mode = reinterpret_cast<setGameMode>(Utils::FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 89 ?? 24 ?? 48 89 ?? 24 ?? 8B FA 48 8B D9 8B B1"));
+		Game_Mode(this, gma);
 	}
 };
