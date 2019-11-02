@@ -172,18 +172,18 @@ public:
 
 	//uintptr_t** vTable;		// 0x0
 private:
-	char filler[0x18];		// 0x8
+	char filler[0x20];		// 0x8
 public:
-	__int64 entityRuntimeID;// 0x20
-	vec3_t Position;		// 0x28
-	float pitch;			// 0x34
-	float yaw;				// 0x38
-	float headYaw;			// 0x3C
-	uint8_t mode;			// 0x40
-	bool onGround;			// 0x41
-	__int64 ridingEid;		// 0x48 // works because aligning
-	int int1;				// 0x50
-	int int2;				// 0x50
+	__int64 entityRuntimeID;
+	vec3_t Position;		
+	float pitch;			
+	float yaw;				
+	float headYaw;			
+	uint8_t mode;			
+	bool onGround;			
+	__int64 ridingEid;		
+	int int1;				
+	int int2;				
 };
 
 #pragma pack(pop)
