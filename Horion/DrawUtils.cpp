@@ -305,6 +305,7 @@ void DrawUtils::drawEntityBox(C_Entity * ent, float lineWidth)
 	vec3_t lerped = start->lerp(end, lerpT);
 
 	AABB render(lerped, ent->width, ent->height, end->y - ent->aabb.lower.y);
+	render.upper.y += 0.1f;
 
 	drawBox(render.lower, render.upper, lineWidth);
 }

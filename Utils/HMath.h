@@ -96,8 +96,8 @@ struct vec3_t
 		return *this;
 	};
 
-	vec3_t &add(const vec3_t &o) { x += o.x; y += o.y; z += o.z; return *this; }
-	vec3_t &sub(const vec3_t &o) { x -= o.x; y -= o.y; z -= o.z; return *this; }
+	__forceinline vec3_t &add(const vec3_t &o) { x += o.x; y += o.y; z += o.z; return *this; }
+	__forceinline vec3_t &sub(const vec3_t &o) { x -= o.x; y -= o.y; z -= o.z; return *this; }
 
 	float squaredlen() const { return x * x + y * y + z * z; }
 	float squaredxzlen() const { return x * x + z * z; }
@@ -327,8 +327,8 @@ struct glmatrixf
 	};
 	
 
-	float operator[](int i) const { return v[i]; }
-	float &operator[](int i) { return v[i]; }
+	__forceinline float operator[](int i) const { return v[i]; }
+	__forceinline float &operator[](int i) { return v[i]; }
 
 #define MULMAT(row, col) v[col + row] = x[row]*y[col] + x[row + 4]*y[col + 1] + x[row + 8]*y[col + 2] + x[row + 12]*y[col + 3];
 
@@ -355,7 +355,7 @@ struct glmatrixf
 		return newMatPtr;
 	};
 
-	bool OWorldToScreen(vec3_t origin, vec3_t pos, vec2_t &screen, vec2_t fov, vec2_t displaySize)
+	inline bool OWorldToScreen(vec3_t origin, vec3_t pos, vec2_t &screen, vec2_t fov, vec2_t displaySize)
 	{
 		pos = pos.sub(origin);
 
@@ -375,31 +375,31 @@ struct glmatrixf
 		return true;
 	}
 
-	void mul(const glmatrixf &x, const glmatrixf &y)
+	inline void mul(const glmatrixf &x, const glmatrixf &y)
 	{
 		mul(x.v, y.v);
 	}
 
-	void translate(float x, float y, float z)
+	inline void translate(float x, float y, float z)
 	{
 		v[12] += x;
 		v[13] += y;
 		v[14] += z;
 	}
 
-	void translate(const vec3_t &o)
+	inline void translate(const vec3_t &o)
 	{
 		translate(o.x, o.y, o.z);
 	}
 
-	void scale(float x, float y, float z)
+	inline void scale(float x, float y, float z)
 	{
 		v[0] *= x; v[1] *= x; v[2] *= x; v[3] *= x;
 		v[4] *= y; v[5] *= y; v[6] *= y; v[7] *= y;
 		v[8] *= z; v[9] *= z; v[10] *= z; v[11] *= z;
 	}
 
-	void invertnormal(vec3_t &dir) const
+	inline void invertnormal(vec3_t &dir) const
 	{
 		vec3_t n(dir);
 		dir.x = n.x*v[0] + n.y*v[1] + n.z*v[2];
@@ -407,7 +407,7 @@ struct glmatrixf
 		dir.z = n.x*v[8] + n.y*v[9] + n.z*v[10];
 	}
 
-	void invertvertex(vec3_t &pos) const
+	inline void invertvertex(vec3_t &pos) const
 	{
 		vec3_t p(pos);
 		p.x -= v[12];
@@ -418,7 +418,7 @@ struct glmatrixf
 		pos.z = p.x*v[8] + p.y*v[9] + p.z*v[10];
 	}
 
-	void transform(const vec3_t &in, vec4_t &out) const
+	inline void transform(const vec3_t &in, vec4_t &out) const
 	{
 		out.x = transformx(in);
 		out.y = transformy(in);
@@ -426,27 +426,27 @@ struct glmatrixf
 		out.w = transformw(in);
 	}
 
-	float transformx(const vec3_t &p) const
+	__forceinline float transformx(const vec3_t &p) const
 	{
 		return p.x*v[0] + p.y*v[4] + p.z*v[8] + v[12];
 	}
 
-	float transformy(const vec3_t &p) const
+	__forceinline float transformy(const vec3_t &p) const
 	{
 		return p.x*v[1] + p.y*v[5] + p.z*v[9] + v[13];
 	}
 
-	float transformz(const vec3_t &p) const
+	__forceinline float transformz(const vec3_t &p) const
 	{
 		return p.x*v[2] + p.y*v[6] + p.z*v[10] + v[14];
 	}
 
-	float transformw(const vec3_t &p) const
+	__forceinline float transformw(const vec3_t &p) const
 	{
 		return p.x*v[3] + p.y*v[7] + p.z*v[11] + v[15];
 	}
 
-	vec3_t gettranslation() const
+	__forceinline vec3_t gettranslation() const
 	{
 		return vec3_t(v[12], v[13], v[14]);
 	}
