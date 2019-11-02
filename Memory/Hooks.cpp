@@ -635,20 +635,19 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 					firstResult.cmdAlias.append(" ");
 				text->setText(firstResult.cmdAlias); // Set text
 				// now sync with the UI thread that shows the cursor n stuff
-				// If we loose this sig we are kinda fucked
-				using syncShit = void(__fastcall*)(TextHolder*, TextHolder*);
-				static syncShit sync = reinterpret_cast<syncShit>(0);
-				if (sync == 0) {
-					uintptr_t sigOffset = Utils::FindSignature("E8 ?? ?? ?? ?? 48 8D 8B ?? ?? ?? ?? 0F 57 C0");
-					if (sigOffset != 0x0) {
-						int offset = *reinterpret_cast<int*>((sigOffset + 1)); // Get Offset from code
-						sync = reinterpret_cast<syncShit>(sigOffset + offset + /*length of instruction*/ 5); // Offset is relative
-					}
+				using syncShit_t = void(__fastcall*)(__int64*, TextHolder*);
+				static syncShit_t syncShit = nullptr;
+				static __int64* winrt_ptr;
+				if (syncShit == nullptr) {
+					__debugbreak();
+					uintptr_t sigOffset = Utils::FindSignature("48 8B 0D ?? ?? ?? ?? 48 8B 01 49 8B D6 FF 90 ?? ?? ?? ??");
+					int offset = *reinterpret_cast<int*>(sigOffset + 3);
+					winrt_ptr = *reinterpret_cast<__int64**>(sigOffset + offset + 7);
+					syncShit = reinterpret_cast<syncShit_t>(*reinterpret_cast<__int64*>(*winrt_ptr + 0x460));
 				}
-				else
-					sync(text, text);
-			}
 
+				syncShit(winrt_ptr, text);
+			}
 		}
 
 		return;
