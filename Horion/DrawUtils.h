@@ -8,7 +8,7 @@
 #include "../Utils/Utils.h"
 #include "../Utils/Logger.h"
 #include "../Utils/HMath.h"
-enum class Fonts { DEFAULT, UNICOD, SMOOTH, RUNE };
+enum class Fonts { DEFAULT, UNICOD, SMOOTH, RUNE , GAMER };
 
 struct MC_Color {
 	union {
@@ -57,13 +57,13 @@ public:
 	static void setColor(float r, float g, float b, float a); // rgba, values from 0 to 1
 	static void tess__begin(__int64 tesselator);
 	static uintptr_t getFont(Fonts font);
-	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = Fonts::SMOOTH);
+	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = Fonts::GAMER);
 	
 	static void drawLine(vec2_t start, vec2_t end, float lineWidth); // rgba
 	static void fillRectangle(vec4_t pos, const MC_Color col, float alpha);
 	static void drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineWidth = 1.0f);
 
-	static void drawText(vec2_t pos, std::string* text, MC_Color *color = nullptr, float textSize = 1, Fonts font = Fonts::SMOOTH);
+	static void drawText(vec2_t pos, std::string* text, MC_Color *color = nullptr, float textSize = 1, Fonts font = Fonts::GAMER);
 	static void rainbow(float* rcolors);
 	static void drawBox(vec3_t lower, vec3_t upper, float lineWidth);
 	static void drawEntityBox(C_Entity* ent, float lineWidth);

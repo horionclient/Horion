@@ -7,14 +7,14 @@ void GameData::retrieveClientInstance()
 	
 	static uintptr_t clientInstanceOffset = 0x0;
 	if (clientInstanceOffset == 0x0) {
-		uintptr_t sigOffset = Utils::FindSignature("4C 8B F8 48 8B 0D ?? ?? ?? ?? 48 8B 11 ?? ?? ?? ?? ?? ?? 48 89");
+		uintptr_t sigOffset = Utils::FindSignature("4C 8B 2D ?? ?? ?? ?? 49 8D 43 ?? 48 89 44 24 ??");
 		if (sigOffset != 0x0) {
-			int offset = *reinterpret_cast<int*>((sigOffset + 6)); // Get Offset from code
-			clientInstanceOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instruction*/ 7 + 3; // Offset is relative
+			int offset = *reinterpret_cast<int*>((sigOffset + 3)); // Get Offset from code
+			clientInstanceOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instruction*/ 7; // Offset is relative
 			logF("clinet: %llX", clientInstanceOffset);
 		} 
 	}
-	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + clientInstanceOffset, { 0x0, 0x378, 0x10 }));
+	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + clientInstanceOffset, { 0x0, 0x30}));
 #ifdef _DEBUG
 	if (g_Data.clientInstance == 0)
 		throw std::exception("Client Instance is 0");
