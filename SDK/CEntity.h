@@ -13,15 +13,14 @@ class C_GameMode;
 class PointingStruct
 {
 private:
-	char pad_0x0000[0x630]; //0x0000
+	char pad_0x0000[0x850]; //0x0000
 public:
-	int rayHitType; //0x0630
-	int blockSide; //0x0634
-	vec3_ti block; //0x0638
-	vec3_t rayHitVec; //0x0644
-	C_Entity* entityPtr; //0x0650
-
-}; //Size=0x0598
+	int rayHitType; //0x0850
+	int blockSide; //0x0854
+	vec3_ti block; //0x0858
+	vec3_t rayHitVec; //0x0864
+	C_Entity* entityPtr; //0x0870
+};
 
 
 class nameStruct
@@ -37,118 +36,98 @@ class C_Player;
 class C_Entity
 {
 public:
-	//uintptr_t** vTable; //0x0000
-	uintptr_t* ptrToPtrToEntList; //0x0008 
+	uintptr_t* ptrToPtrToEntList; //0x0008
 private:
-	char pad_0x0010[0xD0]; //0x0010
+	char pad_0010[0xE0]; //0x0010
 public:
 	union {
 		struct {
-			float pitch; //0x00E0
-			float yaw; //0x00E4
+			float pitch; //0x00F0
+			float yaw; //0x00F4
 		};
 		vec2_t viewAngles;
 	};
+	float pitch2; //0x00F8
+	float yaw2; //0x00FC
+private:
+	char pad_0100[0x10]; //0x0100
+public:
+	vec3_t eyePos0; //0x0110
+private:
+	char pad_0x11C[0x5C]; //0x11C
+public:
+	bool onGround; //0x0178
+private:
+	char pad_0x179[0x1B]; //0x179
+public:
+	float fallDistance; //0x194
+private:
+	char pad_0x198[0x7C]; //0x0198
+public:
+	float spectatorMode; //0x0214
+private:
+	char pad_0x218[0x8]; //0x218
+public:
+	float stepHeight; //0x0220
+private:
+	char pad_0x228[0x14]; //0x224
+public:
+	float web; //0x0238
+private:
+	char pad_0x23C[0x1]; //0x023C
+public:
+	bool didEnterWaterBool; //0x023D
+private:
+	char pad_023E[0x4E]; //0x023E
+public:
+	int ticksAlive; //0x028C
+private:
+	char pad_0290[0xB8]; //0x0290
+public:
+	C_BlockSource* region; //0x348
+private:
+	char pad_0x350[0xE0]; //0x350
+public:
+	AABB aabb; //0x0430
+private:
+	char pad_0x448[0x4]; //0x0448
+public:
+	float width; //0x044C
+	float height; //0x0450
+	vec3_t eyePos1; //0x0454
+	vec3_t eyePos2; //0x0460
+	vec3_t velocity; //0x046C
+private:
+	char pad_0x0478[0x58]; //0x478
+public:
+	__int64 entityRuntimeId; //0x4D0
+private:
+	char pad_0478[0x338]; //0x04D8
+public:
+	float bodyYaw; //0x0810
+	float oldBodyYaw; //0x0814
+	float yawUnused1; //0x0818
+	float yawUnused2; //0x081C
+	int damageTime; //0x0820
+private:
+	char pad_0824[0x88]; //0x0824
+public:
+	int timeSinceDeath; //0x08AC
+private:
+	char pad_08B0[0x810]; //0x08B0
+public:
+	int16_t itemData; //0x10C0
+	int16_t itemId; //0x10C2
+private:
+	char pad_10CC[0xC3C]; //0x10C4
+public:
+	C_InventoryTransactionManager transactionManager; //0x1D00
+	int gamemode; //0x1D94
+private:
+	char pad_1DA4[0x198]; //0x1D98
+public:
+	TextHolder uuid; //0x1F30
 
-	float pitch2; //0x00E8 
-	float yaw2; //0x00EC 
-private:
-	char pad_0x00F0[0x10]; //0x00F0
-public:
-	vec3_t eyePos0; //0x0100 
-private:
-	char pad_0x010C[0x5C]; //0x010C
-public:
-	bool onGround; //0x0168 
-private:
-	char pad_0x0169[0xF]; //0x0169
-public:
-	float fallDistance; //0x0178 
-private:
-	char pad_0x017C[0x84]; //0x017C
-public:
-	float stepHeight; //0x0200 
-private:
-	char pad_0x0204[0x14]; //0x204
-public:
-	float web; //0x218
-	// 21C
-	char pad_0x021C[0x2];
-	bool didEnterWaterBool; // 0x21E
-private:
-	char pad_0x021D[0x48]; //0x21D
-public:
-	int ticksAlive; //0x0268 
-private:
-	char pad_0x026C[0xA8C]; //0x026C
-public:
-	C_BlockSource* region; //0x0CF8 
-private:
-	char pad_0x0D00[0x8]; //0x0D00
-public:
-	PointingStruct* pointingAt; //0x0D08 
-private:
-	char pad_0x0D10[0xB0]; //0x0D10
-public:
-	uintptr_t* attribute;//0xDC0
-private:
-	char pad_0x0DC8[0x20];//0xDC8
-public:
-	AABB aabb; //0x0DE8 
-private:
-	char pad_0x0E00[0x4]; //0x0E00
-public:
-	float width; //0x0E04 
-	float height; //0x0E08 
-	vec3_t velocity; //0x0E0C 
-	vec3_t eyePos1; //0x0E18 
-	vec3_t eyePos2; //0x0E24 
-private:
-	char pad_0x0E30[0x58]; //0x0E30
-public:
-	uintptr_t entityRuntimeId; //0x0E88 
-private:
-	char pad_0x0E90[0x30]; //0x0E90
-public:
-	TextHolder N00000653; //0x0EC0 
-private:
-	char pad_0x0EE0[0x1C8]; //0x0EE0
-public:
-	nameStruct** ptr; //0x10A8
-private:
-	char pad_0x10B0[0x118]; //0x10B0
-public:
-	float bodyYaw; //0x11C8 
-	float oldBodyYaw; //0x11CC 
-	float yawUnused1; //0x11D0 
-	float yawUnused2; //0x11D4 
-	int damageTime; //0x11D8 
-private:
-	char pad_0x11DC[0x70]; //0x11DC
-public:
-	int swingInt; //0x124C 
-private:
-	char pad_0x1250[0x14]; //0x1250
-public:
-	int timeSinceDeath; //0x1264 
-private:
-	char pad_0x1268[0x198]; //0x1268
-public:
-	TextHolder name2; //0x1400 
-private:
-	char pad_0x1420[0x500]; //0x1420
-public:
-	short itemData; //0x1920
-	short itemId; //0x1922
-private:
-	char pad_0x193C[0x1FC]; //0x1924
-public:
-	C_InventoryTransactionManager transactionManager;//0x1B20
-	int gamemode; //0x1BB4 
-private:
-	char pad_0x1BD0[0x60]; //0x1BD0
-public:
-	TextHolder uuid; //0x1C30 
 
 public:
 	virtual bool hasComponent(__int64 const&)const;
@@ -190,6 +169,7 @@ private:
 	virtual __int64 moveRelative(float, float, float, float);
 	virtual __int64 teleportTo(vec3_t const&, bool, int, int);
 	virtual __int64 tryTeleportTo(vec3_t const&, bool, bool, int, int);
+	virtual void chorusFruitTeleport(vec3_t&);
 	virtual __int64 lerpTo(vec3_t const&, vec2_t const&, int);
 public:
 	virtual void lerpMotion(vec3_t const&);
@@ -251,11 +231,8 @@ private:
 	virtual __int64 getBrightness(float)const;
 	virtual __int64 interactPreventDefault(void);
 	virtual __int64 playerTouch(C_Player &);
-	virtual __int64 push(C_Entity&, bool);
-	virtual __int64 push(vec3_t const&);
 	virtual __int64 onAboveBubbleColumn(bool);
 	virtual __int64 onInsideBubbleColumn(bool);
-	virtual __int64 partialPush(vec3_t const&);
 public:
 	virtual bool isImmobile(void)const;
 	virtual bool isSilent(void);
@@ -263,9 +240,8 @@ public:
 	virtual bool isFishable(void)const;
 	virtual bool isPushable(void)const;
 	virtual bool isPushableByPiston(void)const;
-	virtual bool isSleeping(void)const;
-	virtual bool isShootable(void);
 	virtual bool isSneaking(void)const;
+	virtual void setSneaking(bool);
 	virtual bool isBlocking(void)const;
 	virtual bool isDamageBlocked(__int64 const&)const;
 	virtual bool isAlive(void)const;
@@ -282,7 +258,9 @@ public:
 	virtual bool isValidTarget(C_Entity*)const;
 private:
 	virtual __int64 attack(C_Entity &);
+	virtual void performRangedAttack(C_Entity&, float);
 	virtual __int64 adjustDamageAmount(int &)const;
+	virtual __int64 getEquipmentCount(void)const;
 public:
 	virtual void setOwner(__int64);
 	virtual void setSitting(bool);
@@ -305,6 +283,7 @@ private:
 public:
 	virtual bool isInvulnerableTo(__int64 const&)const;
 private:
+	virtual void actuallyHurt(int, __int64 const*, bool);
 	virtual __int64 animateHurt(void);
 	virtual __int64 doFireHurt(int);
 	virtual __int64 onLightningHit(void);
@@ -400,6 +379,7 @@ private:
 	virtual __int64 onEffectAdded(__int64 &);
 	virtual __int64 onEffectUpdated(__int64 const&);
 	virtual __int64 onEffectRemoved(__int64 &);
+	virtual __int64 getAnimationComponent(void);
 	virtual __int64 openContainerComponent(C_Player &);
 public:
 	virtual __int64 swing(void);
@@ -449,7 +429,6 @@ private:
 	virtual __int64 outOfWorld(void);
 	virtual __int64 _hurt(__int64 const&, int, bool, bool);
 	virtual __int64 markHurt(void);
-	virtual __int64 lavaHurt(void);
 	virtual __int64 readAdditionalSaveData(__int64 const&, __int64 &);
 	virtual __int64 addAdditionalSaveData(__int64 &);
 	virtual __int64 _playStepSound(vec3_ti const&, __int64 const&);
@@ -472,11 +451,10 @@ private:
 	virtual __int64 resolveDeathLoot(int, __int64 const&);
 	virtual __int64 spawnAnim(void);
 public:
-	virtual void setSneaking(bool);
+	virtual void setSleeping(bool);
 	virtual bool isSprinting(void)const;
 	virtual void setSprinting(bool);
 private:
-	virtual __int64 getVoicePitch(void);
 	virtual __int64 playAmbientSound(void);
 	virtual __int64 getAmbientSound(void);
 	virtual __int64 getAmbientSoundPostponeTicks(void);
@@ -489,7 +467,6 @@ private:
 	virtual __int64 hurtEffects(__int64 const&, int, bool, bool);
 	virtual __int64 getMeleeWeaponDamageBonus(__int64*);
 	virtual __int64 getMeleeKnockbackBonus(void);
-	virtual __int64 actuallyHurt(int, __int64 const*, bool);
 	virtual __int64 travel(float, float, float);
 	virtual __int64 applyFinalFriction(float, bool);
 	virtual __int64 updateWalkAnim(void);
@@ -503,7 +480,6 @@ private:
 	virtual __int64 checkSpawnObstruction(void)const;
 	virtual __int64 shouldDespawn(void)const;
 	virtual __int64 getAttackAnim(float);
-	virtual __int64 performRangedAttack(C_Entity &, float);
 	virtual __int64 getItemUseDuration(void);
 	virtual __int64 getItemUseStartupProgress(void);
 	virtual __int64 getItemUseIntervalProgress(void);
@@ -515,9 +491,9 @@ private:
 public:
 	virtual void setLastHurtByMob(__int64*);
 private:
-	virtual __int64 getLastHurtByC_Player(void);
+	virtual __int64 getLastHurtByPlayer(void);
 public:
-	virtual void setLastHurtByC_Player(C_Player *);
+	virtual void setLastHurtByPlayer(C_Player *);
 private:
 	virtual __int64 getLastHurtMob(void);
 public:
@@ -534,7 +510,6 @@ public:
 	virtual bool hasCaravanTail(void)const;
 private:
 	virtual __int64 getCaravanHead(void)const;
-	virtual __int64 getEquipmentCount(void)const;
 	virtual __int64 getArmorValue(void);
 	virtual __int64 getArmorCoverPercentage(void)const;
 	virtual __int64 hurtArmor(int);
@@ -562,6 +537,7 @@ private:
 public:
 	virtual bool canExistWhenDisallowMob(void)const;
 private:
+	virtual void unknown(void)const;
 	virtual __int64 ascendLadder(void);
 	virtual __int64 ascendScaffolding(void);
 	virtual __int64 descendScaffolding(void);
@@ -574,12 +550,10 @@ private:
 	virtual __int64 _serverAiMobStep(void);
 	virtual __int64 getDamageAfterEnchantReduction(__int64 const&, int);
 	virtual __int64 getDamageAfterArmorAbsorb(__int64 const&, int);
-	virtual __int64 getExperienceReward(void)const;
 	virtual __int64 dropEquipment(__int64 const&, int);
 	virtual __int64 dropEquipment(void);
 	virtual __int64 dropBags(void);
 	virtual __int64 dropContainer(void);
-	virtual __int64 useNewAi(void)const;
 	virtual __int64 tickDeath(void);
 	virtual __int64 _endJump(void);
 	virtual __int64 updateGliding(void);
@@ -594,21 +568,11 @@ private:
 public:
 
 	AABB* getAABB() {
-		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
-		static int AABBOffset = 0x0;
-		if (AABBOffset == 0x0) {
-			uintptr_t sigOffset = Utils::FindSignature("F3 ?? ?? ?? ?? ?? ?? ?? 41 0F 2F 00 F3 0F 10 2A");
-			if (sigOffset != 0x0) {
-				AABBOffset = *reinterpret_cast<int*>((sigOffset + 4)); // Get Offset from code
-			}
-		}
-		AABB* aabb;
-		aabb = reinterpret_cast<AABB*>(_this + AABBOffset);
-		return aabb;
+		return &this->aabb;
 	}
 
 	bool isInventoryClosed(){
-		return Utils::CallVFunc<387,bool>(this);
+		return Utils::CallVFunc<388,bool>(this);
 	};
 };
 
@@ -617,7 +581,7 @@ class C_ServerPlayer;
 class C_Player : public C_Entity {
 public:
 	C_PlayerInventoryProxy* getSupplies() {
-		return *reinterpret_cast<C_PlayerInventoryProxy**>(reinterpret_cast<__int64>(this) + 0x17A8);
+		return *reinterpret_cast<C_PlayerInventoryProxy**>(reinterpret_cast<__int64>(this) + 0x1FB8);
 	};
 
 	C_ServerPlayer* getServerPlayer() {
@@ -735,7 +699,6 @@ public:
 	virtual __int64 sendComplexInventoryTransaction(__int64, __int64)const;
 private:
 	virtual __int64 sendNetworkPacket(__int64&)const;
-	virtual __int64 chorusFruitTeleport(vec3_t&);
 	virtual __int64 getC_PlayerEventCoordinator(void);
 	virtual __int64 onMoveC_PlayerPacketNormal(vec3_t const&, vec2_t const&, float);
 };

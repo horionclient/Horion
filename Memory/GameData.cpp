@@ -162,11 +162,11 @@ void GameData::forEachEntity(void(*callback)(C_Entity *,bool))
 		// MultiplayerLevel::directTickEntities
 		// 48 89 5C 24 08 48 89 74  24 18 57 48 83 EC 20 48 8B 7A 20 48 8B F2 48 8B  BF F8 01 00 00 48 8B 1F
 		__int64 region = reinterpret_cast<__int64>(g_Data.getLocalPlayer()->region);
-		__int64* entityIdMap = *(__int64 **)(*(__int64 *)(region + 0x20) + 0x1F8i64);
+		__int64* entityIdMap = *(__int64 **)(*(__int64 *)(region + 0x20) + 0x148i64);
 		for (__int64 *i = (__int64 *)*entityIdMap; i != entityIdMap; i = (__int64 *)*i)
 		{
 			__int64 actor = i[3];
-			if (actor && !*(char *)(actor + 0xD11) && !*(char *)(actor + 0xD12)) {
+			if (actor && !*(char *)(actor + 0x361) && !*(char *)(actor + 0x362)) {
 				C_Entity* ent = reinterpret_cast<C_Entity*>(actor);
 				callback(ent,false);
 			}

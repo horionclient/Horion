@@ -42,8 +42,8 @@ bool Target::isValidTarget(C_Entity* ent)
 	if (!(*localPlayer)->canAttack(ent, false))
 		return false;
 
-	if (strcmp(ent->getNameTag()->getText(), (*ent->ptr)->name.getText()) != 0)
-		return false;
+	/*if (strcmp(ent->getNameTag()->getText(), (*ent->ptr)->name.getText()) != 0)
+		return false;*/
 
 	return true;
 }
