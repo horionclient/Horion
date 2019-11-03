@@ -33,6 +33,7 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 	C_BlockLegacy* blockItem = nullptr;
 	C_Item* itemItem = nullptr;
 	C_ItemStack* yot = nullptr;
+	auto transactionManager = g_Data.getLocalPlayer()->getTransactionManager();
 
 	static uintptr_t** VanillaBlocks__mStonePtr = 0x0;
 	static uintptr_t** VanillaItems__mShovel_ironPtr = 0x0;
@@ -125,8 +126,8 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 
 		C_InventoryAction firtAction1 = C_InventoryAction(slot, inv->getItemStack(slot), nullptr);
 		C_InventoryAction secondAction1 = C_InventoryAction(slot, nullptr,inv->getItemStack(slot));
-		g_Data.getLocalPlayer()->transactionManager.addInventoryAction(firtAction1);
-		g_Data.getLocalPlayer()->transactionManager.addInventoryAction(secondAction1);
+		transactionManager->addInventoryAction(firtAction1);
+		transactionManager->addInventoryAction(secondAction1);
 
 		delete yot;
 
@@ -139,8 +140,9 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 	C_InventoryAction firstAction = C_InventoryAction(slot, nullptr, yot, 32512);
 	C_InventoryAction secondAction = C_InventoryAction(0, yot, nullptr, 156, 100);
 
-	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(firstAction);
-	g_Data.getLocalPlayer()->transactionManager.addInventoryAction(secondAction);
+	
+	transactionManager->addInventoryAction(firstAction);
+	transactionManager->addInventoryAction(secondAction);
 
 	inv->addItemToFirstEmptySlot(yot);
 

@@ -4,24 +4,27 @@
 class C_Item;
 
 class C_ItemStack {
-public:
-	C_Item** item;//0x0
 private:
-	char pad_0x008[0x12];//0x8
+	void** vftable;  // 0x0
 public:
-	char count; //0x1A
+	C_Item** item;   //0x08
 private:
-	char pad_0x1B[0x6D];//0x1B
+	char pad_0x008[0x12]; //0x10
+public:
+	char count; //0x22
+private:
+	char pad_0x1B[0x65];//0x23
 public:
 	C_ItemStack() = default;
 
 	C_ItemStack(C_Item* item, int count, int itemData)
 	{
+		__debugbreak();
 		memset(this, 0x0, sizeof(C_ItemStack));
 		using ItemStackContructor_t = void(__fastcall*)(C_ItemStack*, C_Item*, int, int);
-		uintptr_t sigOffset = Utils::FindSignature("48 8B 13 ?? ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 48 8B D0 ?? ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? 90") + 0xA;
+		uintptr_t sigOffset = Utils::FindSignature("48 89 85 ?? ?? ?? ?? 48 8D 95 ?? ?? ?? ?? 48 8D 8D ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 48 8D 8D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48") + 0x15;
 		int offset = *reinterpret_cast<int*>((sigOffset + 1)); // Get Offset from code
-		static ItemStackContructor_t  ItemStackContructor = reinterpret_cast<ItemStackContructor_t>(sigOffset + offset +5);
+		static ItemStackContructor_t  ItemStackContructor = reinterpret_cast<ItemStackContructor_t>(sigOffset + offset + 5);
 		if (ItemStackContructor != 0)
 			ItemStackContructor(this, item, count, itemData);
 	}
@@ -269,8 +272,9 @@ public:
 	}
 	void dropSlot(int slot)
 	{
+		// FillingContainer::dropSlot
 		using drop_t = void(__fastcall*)(C_Inventory*, int, bool, bool, bool);
-		static drop_t func = reinterpret_cast<drop_t>(Utils::FindSignature("85 D2 0F 88 ?? ?? ?? ?? 55 56 57 41 54 41 55 41 56 41 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 ?? ?? ?? ?? ?? ?? ?? ?? 45 0F B6 D0 48 63 EA"));
+		static drop_t func = reinterpret_cast<drop_t>(Utils::FindSignature("85 D2 0F 88 ?? ?? ?? ?? 55 56 57 41 54 41 55 41 56 41 57 48"));
 		if (func != 0)
 			func(this, slot,0,0,0);
 	}
@@ -278,6 +282,7 @@ public:
 	virtual __int64 addContentChangeListener(__int64 a2);
 	virtual __int64 removeContentChangeListener(__int64 a2);
 	virtual C_ItemStack* getItemStack(int slot);
+	virtual bool hasRoomForItem(C_ItemStack*);
 	virtual __int64 addItem(C_ItemStack*);
 	virtual __int64 addItemToFirstEmptySlot(C_ItemStack*);
 };

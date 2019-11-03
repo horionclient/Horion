@@ -77,7 +77,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
-	C_InventoryTransactionManager* manager = &g_Data.getLocalPlayer()->transactionManager;
+	C_InventoryTransactionManager* manager = g_Data.getLocalPlayer()->getTransactionManager();
 
 	int selectedSlot = supplies->selectedHotbarSlot;
 	C_ItemStack* item = inv->getItemStack(selectedSlot);

@@ -20,8 +20,8 @@ public:
 	int getEnchantValue(int enchantId)
 	{
 		using getEnchantsLevel_t = int(__fastcall*)(int, C_ItemStack*);
-		static getEnchantsLevel_t getEnchantsLevel = reinterpret_cast<getEnchantsLevel_t>(Utils::FindSignature("48 8B C4 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B F2 8B F9 33 DB 48 8B 4A ?? 48 85 C9 0F 84"));
-		return getEnchantsLevel(enchantId,this->m_item);
+		static getEnchantsLevel_t getEnchantsLevel = reinterpret_cast<getEnchantsLevel_t>(Utils::FindSignature("48 8B C4 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B F2 8B ?? 33 ?? 48 8B"));
+		return getEnchantsLevel(enchantId, this->m_item);
 	}
 
 	float getArmorValue()
@@ -60,14 +60,14 @@ void AutoArmor::onTick(C_GameMode* gm)
 {
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
-	C_InventoryTransactionManager* manager = &g_Data.getLocalPlayer()->transactionManager;
+	C_InventoryTransactionManager* manager = g_Data.getLocalPlayer()->getTransactionManager();
 
 	C_InventoryAction* first = nullptr;
 	C_InventoryAction* second = nullptr;
 	static C_ItemStack* emptyItemStack = nullptr;
 
 	if (emptyItemStack == 0x0) {
-		uintptr_t sigOffset = Utils::FindSignature("48 8D 0D ?? ?? ?? ?? 40 38 71 ?? 0F 84 ?? ?? ?? ?? 48 8B 11 48 85 D2 0F 84");
+		uintptr_t sigOffset = Utils::FindSignature("48 8D ?? ?? ?? ?? ?? 40 38 ?? ?? 0F 84 ?? ?? ?? ?? 48 8B 4A");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		emptyItemStack = reinterpret_cast<C_ItemStack*>(sigOffset + offset + /*length of instruction*/ 7);
 		if (emptyItemStack == 0x0 || sigOffset == 0x0)
@@ -89,6 +89,7 @@ void AutoArmor::onTick(C_GameMode* gm)
 		for (int n = 0; n < 36; n++)
 		{
 			C_ItemStack* stack = inv->getItemStack(n);
+			
 			if (stack->item != NULL && (*stack->item)->isArmor() && reinterpret_cast<C_ArmorItem*>(*stack->item)->ArmorSlot == i)
 			{
 				armorList.push_back(ArmorStruct(stack,reinterpret_cast<C_ArmorItem*>(*stack->item),n));

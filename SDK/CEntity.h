@@ -119,15 +119,15 @@ public:
 	int16_t itemData; //0x10C0
 	int16_t itemId; //0x10C2
 private:
-	char pad_10CC[0xC3C]; //0x10C4
+	char pad_10CC[0xC3C + 0x30]; //0x10C4
+
+	C_InventoryTransactionManager transactionManager; //0x1D30
 public:
-	C_InventoryTransactionManager transactionManager; //0x1D00
 	int gamemode; //0x1D94
 private:
 	char pad_1DA4[0x198]; //0x1D98
 public:
 	TextHolder uuid; //0x1F30
-
 
 public:
 	virtual bool hasComponent(__int64 const&)const;
@@ -566,6 +566,14 @@ private:
 	virtual __int64 changeDimensionWithCredits(__int64);
 	virtual __int64 tickWorld(__int64 const&);
 public:
+	C_InventoryTransactionManager* getTransactionManager() {
+		static unsigned int offset = 0;
+		if (offset == 0) {
+			// EnchantCommand::execute
+			offset = *reinterpret_cast<int*>(Utils::FindSignature("48 8D 8B ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 48 8D 8D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8D 8D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B ?? ?? ?? 8B") + 3);
+		}
+		return reinterpret_cast<C_InventoryTransactionManager*>(reinterpret_cast<__int64>(this) + offset);
+	}
 
 	AABB* getAABB() {
 		return &this->aabb;
@@ -581,11 +589,11 @@ class C_ServerPlayer;
 class C_Player : public C_Entity {
 public:
 	C_PlayerInventoryProxy* getSupplies() {
-		return *reinterpret_cast<C_PlayerInventoryProxy**>(reinterpret_cast<__int64>(this) + 0x1FB8);
-	};
-
-	C_ServerPlayer* getServerPlayer() {
-		return *reinterpret_cast<C_ServerPlayer**>(reinterpret_cast<__int64>(this) + 0x1BC0);
+		static unsigned int offset = 0;
+		if (offset == 0) {
+			offset = *reinterpret_cast<int*>(Utils::FindSignature("4C 8B 82 ?? ?? ?? ?? 48 8B B2") + 3); // GameMode::startDestroyBlock -> GameMode::_canDestroy -> getSupplies
+		}
+		return *reinterpret_cast<C_PlayerInventoryProxy**>(reinterpret_cast<__int64>(this) + offset);
 	};
 private:
 	virtual __int64 frameUpdate(__int64&);

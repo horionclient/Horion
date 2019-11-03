@@ -63,6 +63,7 @@ public:
 	C_InventoryTransaction transac; //0x8
 private:
 	int unknown; //0x60
+	// Total size: 0x68
 public:
 	void addInventoryAction(C_InventoryAction const& action)
 	{
