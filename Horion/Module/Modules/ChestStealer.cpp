@@ -20,7 +20,7 @@ const char* ChestStealer::getModuleName()
 
 void ChestStealer::onTick(C_GameMode* gm)
 {
-	if (g_Data.getLocalPlayer()->isInventoryClosed() == 0 && chestScreenController != nullptr)
+	if (g_Data.getLocalPlayer()->canOpenContainerScreen() == 0 && chestScreenController != nullptr)
 	{ 
 		for (int i = 0; i < 54; i++)
 		{
@@ -28,7 +28,7 @@ void ChestStealer::onTick(C_GameMode* gm)
 		}
 		delay++;
 	}
-	if (g_Data.getLocalPlayer()->isInventoryClosed() == 0 && chestScreenController != nullptr && delay > setDelay)
+	if (g_Data.getLocalPlayer()->canOpenContainerScreen() == 0 && chestScreenController != nullptr && delay > setDelay)
 	{
 		chestScreenController->leaveScreen();
 		delay = 0;

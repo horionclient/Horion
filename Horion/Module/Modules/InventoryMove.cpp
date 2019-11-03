@@ -18,7 +18,7 @@ const char* InventoryMove::getModuleName()
 
 void InventoryMove::onTick(C_GameMode* gm)
 {
-	if (g_Data.getLocalPlayer()->isInventoryClosed() == 1)
+	if (g_Data.getLocalPlayer()->canOpenContainerScreen() == 1)
 		return;
 	C_GameSettingsInput* input = g_Data.getGameSettingsInput();
 

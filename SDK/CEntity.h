@@ -578,10 +578,6 @@ public:
 	AABB* getAABB() {
 		return &this->aabb;
 	}
-
-	bool isInventoryClosed(){
-		return Utils::CallVFunc<388,bool>(this);
-	};
 };
 
 class C_ServerPlayer;
@@ -604,7 +600,8 @@ public:
 	virtual void setName(std::string const&);
 private:
 	virtual __int64 checkMovementStats(vec3_t const&);
-	virtual __int64 getCurrentStructureFeature(void)const;
+	virtual __int64 unknown20(void)const;
+	virtual __int64 unknown21(void)const;
 	virtual __int64 respawn(void);
 	virtual __int64 resetRot(void);
 	virtual __int64 resetPos(bool);

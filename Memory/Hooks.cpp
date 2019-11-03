@@ -34,7 +34,7 @@ void Hooks::Init()
 			if (blockLegacyVtable == 0x0 || sigOffset == 0x0)
 				logF("C_BlockLegacy signature not working!!!");
 			else {
-				g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(blockLegacyVtable[115], Hooks::BlockLegacy_getRenderLayer);
+				g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(blockLegacyVtable[117], Hooks::BlockLegacy_getRenderLayer);
 
 				g_Hooks.BlockLegacy_getLightEmissionHook = std::make_unique<FuncHook>(blockLegacyVtable[14], Hooks::BlockLegacy_getLightEmission);
 			}
@@ -209,7 +209,7 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this)
 			cmdMgr->execute(message);
 
 			__int64* a1 = (__int64*)(*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0x668) + 0x30i64) + 0x950i64))(*(__int64*)(*(__int64*)(_this + 0x668) + 0x30i64));
-			addCommandToChatHistory(a1, (char*)a1 + 0x700); // This will put the command in the chat history (Arrow up/down)
+			addCommandToChatHistory(a1, (char*)(_this + 0x700)); // This will put the command in the chat history (Arrow up/down)
 
 			__int64 v17 = 0;
 			__int64* v15 = *(__int64**)(*(__int64*)(_this + 0x668) + 0x30i64);
