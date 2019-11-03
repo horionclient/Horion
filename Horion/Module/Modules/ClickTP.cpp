@@ -15,27 +15,28 @@ ClickTP::~ClickTP()
 
 const char* ClickTP::getModuleName()
 {
-	return ("ClickTP");
+	return "ClickTP";
 }
 
 void ClickTP::onTick(C_GameMode* gm)
 {
-	C_GameSettingsInput* input = g_Data.getGameSettingsInput();
-	if (input == nullptr)
-		return;
 	if (gm->player == nullptr)
 		return;
-	if (onlyHand && g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot)->item != nullptr) return;
+	if (onlyHand && g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot)->item != nullptr) 
+		return;
 	vec3_ti block = g_Data.getClientInstance()->getPointerStruct()->block;
-	if (block == vec3_ti(0, 0, 0)) return;
+	if (block == vec3_ti(0, 0, 0)) 
+		return;
 	vec3_t pos = block.toFloatVector();
-	pos.y += gm->player->height;
-	pos.y += 1.f;
+	
 
 	if (GameData::isRightClickDown() && !hasClicked && GameData::canUseMoveKeys()) {
-		std::string coords = "X: " + std::to_string(pos.x) + " Y: " + std::to_string(pos.y) + " Z: " + std::to_string(pos.z);
+		
+		g_Data.getGuiData()->displayClientMessageF("%sTeleported to %sX: %.1f Y: %.1f Z: %.1f%s.", GREEN, GRAY, pos.x, pos.y, pos.z, GREEN);
+		pos.y += (gm->player->getPos()->y - gm->player->getAABB()->lower.y) + 1; // eye height + 1
+		pos.x += 0.5f;
+		pos.z += 0.5f;
 		gm->player->setPos(pos);
-		g_Data.getGuiData()->displayClientMessageF("%sTeleported to %s%s%s.", GREEN, GRAY, coords.c_str(), GREEN);
 		hasClicked = true;
 	}
 	else if (!GameData::isRightClickDown()) {
