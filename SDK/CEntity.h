@@ -745,6 +745,7 @@ public:
 	}
 	void setGameModeType(int gma)
 	{
+		// Player::setPlayerGameType
 		using setGameMode = void(__thiscall*)(void*, int);
 		static setGameMode Game_Mode = reinterpret_cast<setGameMode>(Utils::FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 89 ?? 24 ?? 48 89 ?? 24 ?? 8B FA 48 8B D9 8B B1"));
 		Game_Mode(this, gma);
