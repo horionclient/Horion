@@ -35,22 +35,22 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 	C_ItemStack* yot = nullptr;
 	auto transactionManager = g_Data.getLocalPlayer()->getTransactionManager();
 
-	static uintptr_t** VanillaBlocks__mStonePtr = 0x0;
+	static uintptr_t** VanillaBlocks__mDirtPtr = 0x0;
 	static uintptr_t** VanillaItems__mShovel_ironPtr = 0x0;
 
-	using getItemFromId_t = C_ItemStack * (__fastcall*)(void*, int itemID);
-	static getItemFromId_t  getItemFromId = reinterpret_cast<getItemFromId_t>(Utils::FindSignature("40 53 48 83 EC 30 48 8B D9 66 85 D2 0F 84 ?? ?? ?? ?? 44 0F BF CA 48 8D 4C 24 ?? 44 89 4C 24 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 66 0F 1F 44 00 00 0F B6 01 48 8D 49 ??"));
+	using getItemFromId_t = C_Item***(__fastcall*)(void*, int itemID);
+	static getItemFromId_t  getItemFromId = reinterpret_cast<getItemFromId_t>(Utils::FindSignature("40 53 48 83 EC ?? 48 8B D9 66 85 D2 0F 84 ?? ?? ?? ?? 44 0F BF C2 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 44 89 44 24 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 41 0F B6 D0 48 33 D0 0F B6 44 24 ??"));
 
-	if (VanillaBlocks__mStonePtr == 0x0) {
-		uintptr_t sigOffset = Utils::FindSignature("48 8B 05 ?? ?? ?? ?? 4C 8B 00 4D 39 01 75 13");
+	if (VanillaBlocks__mDirtPtr == 0x0) {
+		uintptr_t sigOffset = Utils::FindSignature("48 8B 05 ?? ?? ?? ?? 48 8B 08 48 8D 42 FF ?? ?? ?? ?? ?? ?? 49 3B C0 ");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
-		VanillaBlocks__mStonePtr = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
-		if (VanillaBlocks__mStonePtr == 0x0 || sigOffset == 0x0)
+		VanillaBlocks__mDirtPtr = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
+		if (VanillaBlocks__mDirtPtr == 0x0 || sigOffset == 0x0)
 			logF("VanillaBlocks sig not working!!!");
 	}
 
 	if (VanillaItems__mShovel_ironPtr == 0x0) {
-		uintptr_t sigOffset = Utils::FindSignature("48 8B 05 ?? ?? ?? ?? 48 85 C0 74 05 4C 8B 00 EB 03 4C 8B C3 49 3B F0 74 32 48 8B 05 ?? ?? ?? ?? 48 85 C0 74 05 4C 8B 00 EB 03 4C 8B C3 49 3B F0 74 19 48 8B 05 ?? ?? ?? ?? 48 85 C0 74 05 4C 8B 00 EB 03 4C 8B C3 49 3B F0 75 62 4D 8B 45 ?? 48 8B 01 49 39 00 75 56 49 8B 49 ?? 48 8B 02 48 39 01 75 4A 48 89 5F ??");
+		uintptr_t sigOffset = Utils::FindSignature("48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 ?? ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 ?? ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 ?? ?? ?? ?? ?? ?? ?? E8");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		VanillaItems__mShovel_ironPtr = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
 		if (VanillaItems__mShovel_ironPtr == 0x0 || sigOffset == 0x0)
@@ -59,14 +59,14 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 
 	if (itemId == 0)
 	{
-		if (VanillaBlocks__mStonePtr != nullptr)
+		if (VanillaBlocks__mDirtPtr != nullptr)
 		{
 			for (int i = 0; i < 465; i++)
 			{
-				if (VanillaBlocks__mStonePtr[i] != nullptr &&
-					strcmp(reinterpret_cast<C_BlockLegacy*>(VanillaBlocks__mStonePtr[i][0])->name.getText(), args->at(1).c_str()) == 0)
+				if (VanillaBlocks__mDirtPtr[i] != nullptr &&
+					strcmp(reinterpret_cast<C_BlockLegacy*>(VanillaBlocks__mDirtPtr[i][0])->name.getText(), args->at(1).c_str()) == 0)
 				{
-					blockItem = reinterpret_cast<C_BlockLegacy*>(VanillaBlocks__mStonePtr[i][0]);
+					blockItem = reinterpret_cast<C_BlockLegacy*>(VanillaBlocks__mDirtPtr[i][0]);
 					break;
 				}
 			}
@@ -74,7 +74,7 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 
 		if (VanillaItems__mShovel_ironPtr != nullptr && blockItem == nullptr)
 		{
-			for (int i = 0; i < 233; i++)
+			for (int i = 0; i < 234; i++)
 			{
 				if (VanillaItems__mShovel_ironPtr[i] != nullptr &&
 					strcmp(reinterpret_cast<C_Item*>(VanillaItems__mShovel_ironPtr[i][0])->name.getText(), args->at(1).c_str()) == 0)
@@ -90,20 +90,20 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 			return true;
 		}
 		else if (blockItem != nullptr && yot == nullptr)
-			yot = new C_ItemStack(blockItem, count);
+			yot = new C_ItemStack(*blockItem, count);
 		else if (itemItem != nullptr && yot == nullptr)
-			yot = new C_ItemStack(itemItem, count, itemData);
+			yot = new C_ItemStack(*itemItem, count, itemData);
 	}
 	else
 	{
 		void* ItemPtr = malloc(0x8);
-		C_ItemStack* cStack = getItemFromId(ItemPtr, itemId);
-		if (cStack->item == NULL)
+		C_Item*** cStack = getItemFromId(ItemPtr, itemId);
+		if (**cStack == NULL)
 		{
 			clientMessageF("%sInvalid item ID!", RED);
 			return true;
 		}
-		yot = new C_ItemStack(*cStack->item, count, itemData);
+		yot = new C_ItemStack(***cStack, count, itemData);
 	}
 
 	if (yot != nullptr)
@@ -111,38 +111,12 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 
 	int slot = inv->getFirstEmptySlot();
 	
-	if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.cubecraft.net") == 0)
-	{
-		(*yot->item)->setStackedByData(true);
-		(*yot->item)->setMaxStackSize(64);
-		if (count == 1)
-			yot->count += 2;
-
-		*inv->getItemStack(slot) = *yot;
-		
-		inv->dropSlot(slot);
-
-		C_ItemStack newItem(*yot->item,count,itemData);
-
-		C_InventoryAction firtAction1 = C_InventoryAction(slot, inv->getItemStack(slot), nullptr);
-		C_InventoryAction secondAction1 = C_InventoryAction(slot, nullptr,inv->getItemStack(slot));
-		transactionManager->addInventoryAction(firtAction1);
-		transactionManager->addInventoryAction(secondAction1);
-
-		delete yot;
-
-		*inv->getItemStack(slot) = newItem;
-		clientMessageF("%sSuccessfully given item!", GREEN);
-		return true;
-	}
-
-
-	C_InventoryAction firstAction = C_InventoryAction(slot, nullptr, yot, 32512);
-	C_InventoryAction secondAction = C_InventoryAction(0, yot, nullptr, 156, 100);
+	C_InventoryAction* firstAction = new C_InventoryAction(slot, nullptr, yot, 32512);
+	C_InventoryAction* secondAction = new C_InventoryAction(0, yot, nullptr, 156, 100);
 
 	
-	transactionManager->addInventoryAction(firstAction);
-	transactionManager->addInventoryAction(secondAction);
+	transactionManager->addInventoryAction(*firstAction);
+	transactionManager->addInventoryAction(*secondAction);
 
 	inv->addItemToFirstEmptySlot(yot);
 
