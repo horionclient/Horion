@@ -13,17 +13,66 @@ public:
 };
 class HitDetectSystem;
 
+
+struct PtrToSmoothFont2
+{
+private:
+	char pad_0x0000[0x18]; //0x0000
+public:
+	uintptr_t smoothFont; //0x0018
+};
+
+
+struct PtrToSmoothFont1
+{
+private:
+	char pad_0x0000[0xF8]; //0x0000
+public:
+	PtrToSmoothFont2** ptr; //0x00F8
+};
+
+struct PtrToGamerFont2
+{
+private:
+	char pad_0x0000[0x70]; //0x0000
+public:
+	uintptr_t gamerFont; //0x0070
+};
+
+struct PtrToGamerFont1
+{
+private:
+	char pad_0x0000[0x30]; //0x0000
+public:
+	PtrToGamerFont2* ptr;//0x0030
+};
+
 class MinecraftGame {
 private:
-	char filler[0xA0];//0x0000
-	uintptr_t goodFont;//0x00A0
-	char pad_0x00A8[0x170]; //0x00A8
-	bool canUseKeys;//0x0218
+	char filler[0x88];//0x0000
 public:
-	
+	PtrToSmoothFont1* ptr0;//0x0088
+private:
+	char pad_0x0090[0x10]; //0x0090
+public:
+	uintptr_t defaultFont;//0x00A0
+private:
+	char pad_0x00A8[0x10]; //0x00A8
+public:
+	PtrToGamerFont1* ptr;//0x00B8
+private:
+	char pad_0x00C0[0x158]; //0x00C0
+public:
+	bool canUseKeys;//0x0218
+
 	uintptr_t getTheGoodFontThankYou() {
-		return goodFont;
+		return (*ptr0->ptr)->smoothFont;
 	};
+
+	uintptr_t getGamerFont()
+	{
+		return ptr->ptr->gamerFont;
+	}
 
 	const bool canUseKeybinds() {
 		return canUseKeys;
@@ -82,7 +131,9 @@ public:
 	MinecraftGame* minecraftGame; //0x0048 
 private:
 	MinecraftGame* N0000080C; //0x0050 
+public:
 	MinecraftGame* N0000080D; //0x0058
+private:
 	MinecraftGame* N0000080E; //0x0060
 public:
 	Minecraft* minecraft; //0x0068

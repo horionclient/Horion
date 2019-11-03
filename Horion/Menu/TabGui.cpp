@@ -47,7 +47,7 @@ void TabGui::renderLevel()
 	for (auto it = labelList.begin(); it != labelList.end(); ++it) {
 		labelListLength++;
 		std::string label = it->text;
-		maxLength = max(maxLength, DrawUtils::getTextWidth(&label, textSize, Fonts::SMOOTH));
+		maxLength = max(maxLength, DrawUtils::getTextWidth(&label, textSize, Fonts::GAMER));
 	}
 
 	if (selected[renderedLevel] < 0)
@@ -131,7 +131,7 @@ void TabGui::renderLevel()
 			
 		//DrawUtils::drawRectangle(rectPos, MC_Color(0.0f, 0.0f, 0.0f, 1.0f), 1, 0.3f); // Border around Text
 
-		DrawUtils::drawText(vec2_t(xOffset + 1.5f, yOffset /*+ 0.5f*/), &std::string(label.text), /* White Color*/ nullptr, textSize, Fonts::SMOOTH);
+		DrawUtils::drawText(vec2_t(xOffset + 1.5f, yOffset /*+ 0.5f*/), &std::string(label.text), /* White Color*/ nullptr, textSize, Fonts::GAMER);
 
 		yOffset += textHeight;
 		i++;
