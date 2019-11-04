@@ -11,7 +11,7 @@ public:
 	ChestAura();
 	~ChestAura();
 
-	std::list<vec3_ti> chestlist;
+	std::vector<vec3_ti> chestlist;
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;

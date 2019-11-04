@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <typeinfo>
+#include "../../Utils/Json.hpp"
 #include "../../Memory/GameData.h"
 #include "Modules/Module.h"
 #include "Modules/HudModule.h"
@@ -64,7 +65,7 @@
 #include "Modules/Spammer.h"
 #include "Modules/ChestAura.h"
 #include "Modules/AntiBot.h"
-#include "../../Utils/Json.hpp"
+#include "Modules/InventoryCleaner.h"
 
 using json = nlohmann::json;
 

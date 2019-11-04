@@ -30,6 +30,7 @@ void ChestAura::onTick(C_GameMode* gm) {
 				if (!(std::find(chestlist.begin(), chestlist.end(), pos) != chestlist.end())) {
 					g_Data.getCGameMode()->buildBlock(&pos, 0);
 					chestlist.push_back(pos);
+					return;
 				}
 			}
 		}

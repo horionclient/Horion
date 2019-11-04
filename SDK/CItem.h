@@ -188,7 +188,9 @@ private:
 	virtual __int64 readUserData(C_ItemStack&, __int64&, __int64&)const;
 	virtual __int64 writeUserData(__int64 const&, __int64&)const;
 	virtual __int64 writeUserData(C_ItemStack const&, __int64&)const;
-	virtual __int64 getMaxStackSize(__int64 const&)const;
+public:
+	virtual int getMaxStackSize(void)const;
+private:
 	virtual __int64 inventoryTick(C_ItemStack&, __int64&, C_Entity&, int, bool)const;
 	virtual __int64 refreshedInContainer(C_ItemStack&, __int64&)const;
 	virtual __int64 refreshedInContainer(__int64&, __int64&)const;
@@ -229,6 +231,38 @@ private:
 	virtual __int64 _calculatePlacePos(C_ItemStack&, C_Entity&, unsigned char&, vec3_ti&)const;
 	virtual __int64 _useOn(__int64&, C_Entity&, vec3_ti, unsigned char, float, float, float)const;
 	virtual __int64 _useOn(C_ItemStack&, C_Entity&, vec3_ti, unsigned char, float, float, float)const;
+
+
+public:
+	bool isTool(void) {
+		if (getAttackDamage() > 0) return true; // Does Attack Damage
+		if (itemId == 261 || itemId == 262) return true; // Bow
+		if (itemId == 259) return true; // Flint n Steel
+		return false;
+	}
+	bool isFood(void) {
+		if (itemId == 322 || itemId == 466) return true; // Golden Apple
+		if (itemId == 260) return true; // Apple
+		if (itemId == 282) return true; // Mushroom Stew
+		if (itemId == 297) return true; // Bread
+		if (itemId == 319 || itemId == 320) return true; // Porkchop
+		if (itemId == 349 || itemId == 350 || itemId == 460 || itemId == 461 || itemId == 462 || itemId == 463) return true; // Fish
+		if (itemId == 357) return true; // Cookie
+		if (itemId == 360) return true; // Melon
+		if (itemId == 363 || itemId == 364) return true; // Beef
+		if (itemId == 365 || itemId == 366) return true; // Chicken
+		if (itemId == 391) return true; // Carrot
+		if (itemId == 392 || itemId == 393) return true; // Potato
+		if (itemId == 400) return true; // Pumpkin Pie
+		if (itemId == 411 || itemId == 412 || itemId == 413) return true; // Rabbit thing
+		if (itemId == 423 || itemId == 424) return true; // Mutton
+		if (itemId == 450) return true;
+		return false;
+	}
+	bool isBlock(void) {
+		if (itemId != 0 && itemId < 255) return true;
+		return false;
+	}
 };
 
 class C_ArmorItem : public C_Item
