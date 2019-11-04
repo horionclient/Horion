@@ -13,7 +13,7 @@ FullBright::~FullBright()
 
 const char* FullBright::getModuleName()
 {
-	return ("Fullbright");
+	return "Fullbright";
 }
 
 void FullBright::onTick(C_GameMode* gm)

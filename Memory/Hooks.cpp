@@ -924,11 +924,11 @@ __int64 Hooks::GetGamma(__int64 a1)
 
 	static __int64 v7 = 0;
 	if (v7 == 0) {
-		__int64 v6 = oFunc(a1);
-		if (*(bool*)(v6 + 0xF01))
-			v7 = *(__int64*)(v6 + 0x7B8);
+		__int64 v6 = oFunc(a1); // Calls to ClientInstance, returns options ptr
+		if (*(bool*)(v6 + 0x1001))
+			v7 = *(__int64*)(v6 + 0x7D8);
 		else
-			v7 = *(__int64*)(v6 + 0x128);
+			v7 = *(__int64*)(v6 + 0x138);
 	}
 	else {
 		if (fullBrightModule != nullptr)
