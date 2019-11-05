@@ -22,47 +22,20 @@ public:
 
 	~C_ItemStack()
 	{
-		memset(this, 0x0, sizeof(C_ItemStack));
-		using destructor_t = void(__fastcall*)(C_ItemStack*);
-		static destructor_t func = reinterpret_cast<destructor_t>(0x0);
-		if (!func)
-		{
-			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 45 ?? 41 B2 01 80 7D C0 ?? 0F 84 ?? ?? ?? ?? 45 84 E4 0F 84");
-			int offset = *reinterpret_cast<int*>(sigOffset + 3);
-			uintptr_t** vTable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
-			func = reinterpret_cast<destructor_t>(vTable[0]);
-		}
-		func(this);
+		if(this->vTable != nullptr)
+			Utils::CallVFunc<0, void>(this);
 	}
 
 	C_ItemStack(C_BlockLegacy& legacy, int count)
 	{
 		memset(this, 0x0, sizeof(C_ItemStack));
-		using reinit_t = void(__fastcall*)(C_ItemStack*, C_BlockLegacy&, int);
-		static reinit_t func = reinterpret_cast<reinit_t>(0x0);
-		if (!func)
-		{
-			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 45 ?? 41 B2 01 80 7D C0 ?? 0F 84 ?? ?? ?? ?? 45 84 E4 0F 84");
-			int offset = *reinterpret_cast<int*>(sigOffset + 3);
-			uintptr_t** vTable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
-			func = reinterpret_cast<reinit_t>(vTable[1]);
-		}
-		func(this, legacy, count);
+		reinit(legacy, count);
 	}
 
 	C_ItemStack(C_Item& item, int count, int itemData)
 	{
 		memset(this, 0x0, sizeof(C_ItemStack));
-		using reinitItem_t = void(__fastcall*)(C_ItemStack*, C_Item&, int,int);
-		static reinitItem_t func = reinterpret_cast<reinitItem_t>(0x0);
-		if (func == 0x0)
-		{
-			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 45 ?? 41 B2 01 80 7D C0 ?? 0F 84 ?? ?? ?? ?? 45 84 E4 0F 84");
-			int offset = *reinterpret_cast<int*>(sigOffset + 3);
-			uintptr_t** vTable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
-			func = reinterpret_cast<reinitItem_t>(vTable[2]);
-		}
-		func(this,item, count, itemData);
+		reinit(item, count, itemData);
 	}
 
 	C_ItemStack(C_ItemStack const& src)
@@ -71,6 +44,23 @@ public:
 		using ItemStackCopyConstructor_t = void(__fastcall*)(C_ItemStack&, C_ItemStack const&);
 		static ItemStackCopyConstructor_t  ItemStackCopyConstructor = reinterpret_cast<ItemStackCopyConstructor_t>(Utils::FindSignature("48 8B C4 56 57 41 54 41 56 41 57 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 68 ?? 48 8B FA 48 8B D9 48 89 48 ??"));
 		ItemStackCopyConstructor(*this, src);
+		this->setVtable();
+	}
+
+	void reinit(C_BlockLegacy& legacy, int count)
+	{
+		this->setVtable();
+		Utils::CallVFunc<1, void>(this, &legacy, count);
+	}
+
+	void reinit(C_Item& item, int count, int itemData)
+	{
+		this->setVtable();
+		Utils::CallVFunc<2, void>(this, &item, count, itemData);
+	}
+private:
+	inline void setVtable(void)
+	{
 		static uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 45 ?? 41 B2 01 80 7D C0 ?? 0F 84 ?? ?? ?? ?? 45 84 E4 0F 84");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		this->vTable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
