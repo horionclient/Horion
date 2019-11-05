@@ -119,13 +119,15 @@ public:
 	int16_t itemData; //0x10C0
 	int16_t itemId; //0x10C2
 private:
-	char pad_10CC[0xC3C + 0x30]; //0x10C4
-
-	C_InventoryTransactionManager transactionManager; //0x1D30
+	char pad_10CC[0x1FC]; //0x10C4
+public:
+	C_InventoryTransactionManager transac; //0x12C0
+private:
+	char pad_0x1324[0xA70]; //0x1324
 public:
 	int gamemode; //0x1D94
 private:
-	char pad_1DA4[0x198]; //0x1D98
+	char pad_1DA4[0x198]; //0x1D98 
 public:
 	TextHolder uuid; //0x1F30
 
