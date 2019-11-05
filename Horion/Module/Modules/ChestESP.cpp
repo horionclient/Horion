@@ -18,7 +18,7 @@ const char* ChestESP::getModuleName()
 
 void ChestESP::onPostRender() {
 
-	if (!g_Data.isInGame() || !GameData::canUseMoveKeys())
+	if (!g_Data.isInGame() || !GameData::canUseMoveKeys() || g_Data.getLocalPlayer() == nullptr)
 		return;
 	//if (listSize < 1000 && listSize > 1) {
 	static float rcolors[4];
