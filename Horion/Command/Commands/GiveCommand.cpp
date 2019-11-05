@@ -111,11 +111,11 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 
 	int slot = inv->getFirstEmptySlot();
 
-	C_InventoryAction firstAction =  C_InventoryAction(0, yot, nullptr, 507, 99999);
-	C_InventoryAction secondAction =  C_InventoryAction(slot, nullptr, yot);
+	C_InventoryAction* firstAction =  new C_InventoryAction(0, yot, nullptr, 507, 99999);
+	C_InventoryAction* secondAction =  new C_InventoryAction(slot, nullptr, yot);
 
-	transactionManager->addInventoryAction(firstAction);
-	transactionManager->addInventoryAction(secondAction);
+	transactionManager->addInventoryAction(*firstAction);
+	transactionManager->addInventoryAction(*secondAction);
 
 	inv->addItemToFirstEmptySlot(yot);
 
