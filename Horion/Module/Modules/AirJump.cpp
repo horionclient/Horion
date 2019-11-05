@@ -17,17 +17,15 @@ const char* AirJump::getModuleName()
 
 void AirJump::onTick(C_GameMode* gm) {
 
-	C_GameSettingsInput* input = g_Data.getGameSettingsInput();
-
-	if (gm->player == nullptr || input == nullptr)
+	if (gm->player == nullptr)
 		return;
 	
-	if (GameData::isKeyDown(*input->spaceBarKey) && hasJumped == 0)
+	if (GameData::isKeyDown(VK_SPACE) && hasJumped == 0)
 	{
 		gm->player->onGround = true;
 		hasJumped = 1;
 	} 
-	else if (!GameData::isKeyDown(*input->spaceBarKey)) {
+	else if (!GameData::isKeyDown(VK_SPACE)) {
 		hasJumped = 0;
 	}
 }

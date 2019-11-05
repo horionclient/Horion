@@ -19,11 +19,6 @@ const char* Tower::getModuleName()
 
 bool Tower::tryTower(vec3_t blockBelow)
 {
-	C_GameSettingsInput* input = g_Data.getGameSettingsInput();
-	
-	if (input == nullptr)
-		return false;
-	
 	blockBelow = blockBelow.floor();
 
 	DrawUtils::drawBox(blockBelow, vec3_t(blockBelow).add(1), 0.4f);
@@ -66,7 +61,7 @@ bool Tower::tryTower(vec3_t blockBelow)
 			delete calc;
 			i++;
 		}
-		if (foundCandidate && GameData::isKeyDown(*input->spaceBarKey)) {
+		if (foundCandidate && GameData::isKeyDown(VK_SPACE)) {
 			vec3_t moveVec;
 			moveVec.x = g_Data.getLocalPlayer()->velocity.x;
 			moveVec.y = motion;
