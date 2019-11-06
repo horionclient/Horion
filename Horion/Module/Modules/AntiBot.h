@@ -8,7 +8,7 @@ private:
 	bool nameCheck = true;
 	bool invisibleCheck = true;
 	bool entityIdCheck = true;
-	bool immobileCheck = true;
+	bool otherCheck = true;
 public:
 	AntiBot();
 	~AntiBot();
@@ -25,8 +25,8 @@ public:
 	bool isEntityIdCheckEnabled() {
 		return entityIdCheck && this->isEnabled();
 	}
-	bool isImmobileCheckEnabled() {
-		return immobileCheck && this->isEnabled();
+	bool isOtherCheckEnabled() {
+		return otherCheck && this->isEnabled();
 	}
 
 	// Inherited via IModule

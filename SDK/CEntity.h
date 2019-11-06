@@ -500,7 +500,7 @@ private:
 	virtual __int64 getLastHurtMob(void);
 public:
 	virtual void setLastHurtMob(C_Entity *);
-	virtual bool isAlliedTo(__int64*);
+	virtual bool isAlliedTo(C_Entity *);
 private:
 	virtual __int64 doHurtTarget(C_Entity *);
 public:

@@ -50,7 +50,7 @@ void InventoryCleaner::findStackableItems() {
 					if (i2 == i) continue;
 					C_ItemStack* itemStack2 = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(i2);
 					if ((*itemStack2->item)->getMaxStackSize() > itemStack->count) {
-						if (*itemStack2->item == *itemStack2->item) {
+						if (*itemStack->item == *itemStack2->item) {
 							if (!(std::find(stackableSlot.begin(), stackableSlot.end(), i2) != stackableSlot.end())) stackableSlot.push_back(i2);
 							if (!(std::find(stackableSlot.begin(), stackableSlot.end(), i) != stackableSlot.end())) stackableSlot.push_back(i);
 						}
@@ -68,7 +68,13 @@ void InventoryCleaner::findUselessItems() {
 		if (itemStack->item != nullptr) {
 			if (!stackIsUseful(itemStack)) {
 				if (!(std::find(items.begin(), items.end(), (*itemStack->item)) != items.end())) uselessItems.push_back(i);
-				items.push_back((*itemStack->item));
+			}
+			items.push_back((*itemStack->item));
+			for (C_Item* item : items) {
+				if ((*itemStack->item)->isTool() && (*itemStack->item)->getAttackDamage() <= item->getAttackDamage())
+					if(!isLastItem(*itemStack->item)) uselessItems.push_back(i);
+				if ((*itemStack->item)->isArmor() && (*itemStack->item)->getArmorValue() <= item->getArmorValue() && !isLastItem((*itemStack->item)))
+					if (!isLastItem(*itemStack->item)) uselessItems.push_back(i);
 			}
 		}
 	}
@@ -82,4 +88,18 @@ bool InventoryCleaner::stackIsUseful(C_ItemStack* itemStack) {
 	if (keepBlocks && (*itemStack->item)->isBlock()) return true; // Block
 	if (keepTools && (*itemStack->item)->itemId == 368) return true; // Ender Pearl
 	return false;
+}
+
+bool InventoryCleaner::isLastItem(C_Item* item) {
+	std::vector<C_Item*> items;
+	for (int i = 0; i < 36; i++) {
+		C_ItemStack* stack = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(i);
+		if (stack->item != nullptr) items.push_back((*stack->item));
+	}
+	int count = 0;
+	for (C_Item* a : items) {
+		if (a == item) count++;
+	}
+	if (count > 1) return false;
+	return true;
 }

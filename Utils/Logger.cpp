@@ -49,7 +49,7 @@ void Logger::WriteLogFileF(const char * fmt, ...)
 		InitializeCriticalSection(&vecLock);
 
 		std::wstring roam = GetRoamingFolderPath();
-		sprintf_s(logPath, 200, "%S\\boi.txt", roam.c_str());
+		sprintf_s(logPath, 200, "%S\\logs.txt", roam.c_str());
 
 		try {
 			remove(logPath);
