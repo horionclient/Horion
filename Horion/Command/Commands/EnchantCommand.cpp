@@ -45,13 +45,13 @@ EnchantCommand::~EnchantCommand()
 
 bool EnchantCommand::execute(std::vector<std::string>* args)
 {
-	assertTrue(args->size() > 1); 
+	assertTrue(args->size() > 1);
 
 	int enchantId = 0;
 	int enchantLevel = 32767;
 	bool isAuto = true;
 
-	if (args->at(1) != "all") 
+	if (args->at(1) != "all")
 	{
 		try {
 			// convert string to back to lower case
@@ -87,31 +87,22 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 
 	if (isAuto)
 	{
-		if(strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.cubecraft.net") == 0)
-		{
-		}
-		else
 		{
 			firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, item, nullptr);
-			secondAction = new C_InventoryAction(0, nullptr, item, 32766, 100);
+			secondAction = new C_InventoryAction(0, nullptr, item, 507, 99999);
 			manager->addInventoryAction(*firstAction);
 			manager->addInventoryAction(*secondAction);
 		}
 	}
 
 	using getEnchantsFromUserData_t = void(__fastcall*)(C_ItemStack*, void*);
-	using addEnchant_t              = bool(__fastcall*)(void*, __int64);
-	using saveEnchantsToUserData_t  = void(__fastcall*)(C_ItemStack*, void*);
+	using addEnchant_t = bool(__fastcall*)(void*, __int64);
+	using saveEnchantsToUserData_t = void(__fastcall*)(C_ItemStack*, void*);
 
-	static getEnchantsFromUserData_t getEnchantsFromUserData = 0x0;
+	static getEnchantsFromUserData_t getEnchantsFromUserData = reinterpret_cast<getEnchantsFromUserData_t>(Utils::FindSignature("48 8B C4 55 57 41 54 41 56 41 57 48 8D 68 ?? 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 0F 29 70 C8 4C 8B E2 4C 8B F9 48 89 54 24 ?? 33 F6"));
 	static addEnchant_t              addEnchant = reinterpret_cast<addEnchant_t>(Utils::FindSignature("48 89 5C 24 ?? 48 89 54 24 ?? 57 48 83 EC ?? 45 0F"));
-	static saveEnchantsToUserData_t  saveEnchantsToUserData = reinterpret_cast<saveEnchantsToUserData_t>(Utils::FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 8B FA 4C 8B C1 48 8B 01 48 85 C0"));
+	static saveEnchantsToUserData_t  saveEnchantsToUserData = reinterpret_cast<saveEnchantsToUserData_t>(Utils::FindSignature("48 8B C4 55 57 41 56 48 8D 68 ?? 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B FA 4C 8B C1 48 8B 41 ?? 48 85 C0 74 25"));
 
-	if (getEnchantsFromUserData == 0x0) {
-		uintptr_t sig = Utils::FindSignature("24 ?? 48 8D 95 ?? ?? ?? ?? 48 8D 8D ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 45 33 C0 48") + 17;
-		int offset = *reinterpret_cast<int*>(sig);
-		getEnchantsFromUserData = reinterpret_cast<getEnchantsFromUserData_t>(sig + offset + 4);
-	}
 	if (strcmp(args->at(1).c_str(), "all") == 0)
 	{
 		for (int i = 0; i < 32; i++)
@@ -128,7 +119,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 				saveEnchantsToUserData(item, EnchantData);
 				__int64 proxy = reinterpret_cast<__int64>(g_Data.getLocalPlayer()->getSupplies());
 				if (!*(uint8_t*)(proxy + 160))
-					(*(void(__fastcall * *)(unsigned long long, unsigned long long, C_ItemStack*))(**(unsigned long long**)(proxy + 168) + 64i64))(
+					(*(void(__fastcall**)(unsigned long long, unsigned long long, C_ItemStack*))(**(unsigned long long**)(proxy + 168) + 64i64))(
 						*(unsigned long long*)(proxy + 168),
 						*(unsigned int*)(proxy + 16),
 						item);// Player::selectItem
@@ -153,7 +144,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 			saveEnchantsToUserData(item, EnchantData);
 			__int64 proxy = reinterpret_cast<__int64>(g_Data.getLocalPlayer()->getSupplies());
 			if (!*(uint8_t*)(proxy + 160))
-				(*(void(__fastcall * *)(unsigned long long, unsigned long long, C_ItemStack*))(**(unsigned long long**)(proxy + 168) + 64i64))(
+				(*(void(__fastcall**)(unsigned long long, unsigned long long, C_ItemStack*))(**(unsigned long long**)(proxy + 168) + 64i64))(
 					*(unsigned long long*)(proxy + 168),
 					*(unsigned int*)(proxy + 16),
 					item);// Player::selectItem
@@ -166,30 +157,14 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 
 		free(EnchantData);
 	}
-	
+
 	if (isAuto)
 	{
-		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.cubecraft.net") == 0)
-		{
-			(*item->item)->setStackedByData(true);
-			(*item->item)->setMaxStackSize(64);
-			if (item->count == 1)
-				item->count += 2;
-
-			inv->dropSlot(supplies->selectedHotbarSlot);
-
-			firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, inv->getItemStack(supplies->selectedHotbarSlot), nullptr);
-			secondAction = new C_InventoryAction(supplies->selectedHotbarSlot, nullptr, inv->getItemStack(supplies->selectedHotbarSlot));
-			manager->addInventoryAction(*firstAction);
-			manager->addInventoryAction(*secondAction);
-		}
-		else
-		{
-			firstAction = new C_InventoryAction(0, item, nullptr, 32766, 100);
-			secondAction = new C_InventoryAction(supplies->selectedHotbarSlot, nullptr, item);
-			manager->addInventoryAction(*firstAction);
-			manager->addInventoryAction(*secondAction);
-		}
+		firstAction = new C_InventoryAction(0, item, nullptr, 507, 99999);
+		secondAction = new C_InventoryAction(supplies->selectedHotbarSlot, nullptr, item);
+		manager->addInventoryAction(*firstAction);
+		manager->addInventoryAction(*secondAction);
 	}
+
 	return true;
 }
