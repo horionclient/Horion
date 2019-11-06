@@ -6,7 +6,6 @@ class InventoryMove :
 private:
 	bool keyPressed = false;
 public:
-	C_MoveInputHandler* inputHandler = nullptr;
 	InventoryMove();
 	~InventoryMove();
 

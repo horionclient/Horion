@@ -24,21 +24,6 @@ void GameData::retrieveClientInstance()
 	// 1.11.1 : 0x0250A2D0
 }
 
-void GameData::retrieveGameSettingsInput()
-{
-
-	static uintptr_t gameSettingsInputOffset = 0x0;
-	if (gameSettingsInputOffset == 0x0) {
-		uintptr_t sigOffset = Utils::FindSignature("48 8B 35 ?? ?? ?? ?? 45 33 FF EB 06 45 33 FF 41 8B F7");
-		if (sigOffset != 0x0) {
-			int offset = *reinterpret_cast<int*>((sigOffset + 3)); // Get Offset from code
-			gameSettingsInputOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instruction*/ 7; // Offset is relative
-			logF("settingsInput: %llX", gameSettingsInputOffset);
-		}
-	}
-	g_Data.gameSettingsInput = reinterpret_cast<C_GameSettingsInput*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + gameSettingsInputOffset, { 0x0, 0xC8,0xF98,0x0,0x8}));
-}
-
 bool GameData::canUseMoveKeys()
 {
 	MinecraftGame* mc = g_Data.clientInstance->minecraftGame;
@@ -214,11 +199,9 @@ void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::
 	g_Data.gameModule = gameModule;
 	g_Data.slimMem = slimMem;
 	retrieveClientInstance();
-	//retrieveGameSettingsInput();
 #ifdef _DEBUG
 	logF("base: %llX", g_Data.getModule()->ptrBase);
 	logF("clientInstance %llX", g_Data.clientInstance);
-	logF("gameSettingsInput %llX", g_Data.gameSettingsInput);
 	logF("localPlayer %llX", g_Data.getLocalPlayer());
 	if (g_Data.clientInstance != nullptr)
 		logF("minecraftGame: %llX", g_Data.clientInstance->minecraftGame);

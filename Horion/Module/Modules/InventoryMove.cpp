@@ -20,17 +20,14 @@ void InventoryMove::onTick(C_GameMode* gm)
 {
 	if (g_Data.getLocalPlayer()->canOpenContainerScreen() == 1)
 		return;
-	C_GameSettingsInput* input = g_Data.getGameSettingsInput();
+	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 
 	if (input == nullptr)
-		return;
-	else if (inputHandler == nullptr)
 		return;
 
 	float speed = 0.325f;
 	float yaw = gm->player->yaw;
 
-	inputHandler->ClearMovementState();
 
 	if (GameData::isKeyDown(*input->spaceBarKey) && gm->player->onGround)
 		gm->player->jumpFromGround();
@@ -40,52 +37,40 @@ void InventoryMove::onTick(C_GameMode* gm)
 	else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey))
 	{
 		yaw += 45.f;
-		inputHandler->isMovingForward = true;
-		inputHandler->isMovingRight = true;
 		keyPressed = true;
 	}
 	else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->leftKey) &&!GameData::isKeyDown(*input->rightKey))
 	{
 		yaw -= 45.f;
-		inputHandler->isMovingForward = true;
-		inputHandler->isMovingLeft = true;
 		keyPressed = true;
 	}
 	else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey))
 	{
 		yaw += 135.f;
-		inputHandler->isMovingBackward = true;
-		inputHandler->isMovingRight = true;
 		keyPressed = true;
 	}
 	else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey))
 	{
 		yaw -= 135.f;
-		inputHandler->isMovingBackward = true;
-		inputHandler->isMovingLeft = true;
 		keyPressed = true;
 	}
 	else if (GameData::isKeyDown(*input->forwardKey))
 	{
-		inputHandler->isMovingForward = true;
 		keyPressed = true;
 	}
 	else if (GameData::isKeyDown(*input->backKey))
 	{
 		yaw += 180.f;
-		inputHandler->isMovingBackward = true;
 		keyPressed = true;
 	}
 	else if (GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey))
 	{
 		yaw += 90.f;
-		inputHandler->isMovingRight = true;
 		keyPressed = true;
 	}
 	else if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey))
 	{
 		yaw -= 90.f;
-		inputHandler->isMovingLeft = true;
 		keyPressed = true;
 	}
 	if (yaw >= 180)

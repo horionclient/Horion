@@ -6,7 +6,6 @@
 #include "../SDK/CChestBlockActor.h"
 #include "../SDK/CHIDController.h"
 #include "../SDK/CMoveInputHandler.h"
-#include "../SDK/CGameSettingsInput.h"
 #include "../SDK/CRakNetInstance.h"
 #include "../Utils/TextFormat.h"
 #include "SlimMem.h"
@@ -20,7 +19,6 @@ private:
 	C_GameMode* gameMode = 0;
 	C_EntityList* entityList = 0;
 	C_HIDController* hidController = 0;
-	C_GameSettingsInput* gameSettingsInput = 0;
 	C_RakNetInstance* raknetInstance = 0;
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
 	
@@ -30,7 +28,6 @@ private:
 	bool shouldHideB = false;
 	LARGE_INTEGER lastUpdate;
 	static void retrieveClientInstance();
-	static void retrieveGameSettingsInput();
 public:
 	static bool canUseMoveKeys();
 	static bool isKeyDown(int key);
@@ -50,7 +47,6 @@ public:
 	static void setRakNetInstance(C_RakNetInstance* raknet);
 
 	inline C_ClientInstance* getClientInstance() { return clientInstance; };
-	inline C_GameSettingsInput* getGameSettingsInput() { return gameSettingsInput; };
 	inline C_GuiData* getGuiData() { return clientInstance->getGuiData(); };
 	inline C_LocalPlayer* getLocalPlayer() {
 		

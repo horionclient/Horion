@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CEntity.h"
+#include "CGameSettingsInput.h"
 #include "CLoopbackPacketSender.h"
 #include "TextHolder.h"
 
@@ -124,6 +125,30 @@ public:
 	};
 };
 
+struct PtrToGameSettings3
+{
+private:
+	char pad_0x0000[0x18]; //0x0000
+public:
+	C_GameSettingsInput* settingsInput;
+};
+
+struct PtrToGameSettings2
+{
+private:
+	char pad_0x0000[0x148]; //0x0000
+public:
+	PtrToGameSettings3* ptr;
+};
+
+struct PtrToGameSettings1
+{
+private:
+	char pad_0x0000[0x18]; //0x0000
+public:
+	PtrToGameSettings2* ptr;
+};
+
 class C_ClientInstance {
 private:
 	char firstPad[0x40]; //0x0008
@@ -146,7 +171,11 @@ private:
 public:
 	C_LoopbackPacketSender* loopbackPacketSender; //0x0088
 private:
-	char pad_0x0088[0x28]; //0x0090
+	char pad_0x0088[0x18]; //0x0090
+public:
+	PtrToGameSettings1* ptr; //0x00A8
+private:
+	char pad_0x00B0[0x8]; //0x00B0
 public:
 	HitDetectSystem* hitDetectSystem; //0x00B8
 private:
@@ -629,4 +658,6 @@ public:
 
 		return this->getUnicodeFont();
 	}
+
+	inline C_GameSettingsInput* getGameSettingsInput() { return this->ptr->ptr->ptr->settingsInput; };
 };

@@ -884,19 +884,6 @@ void Hooks::ClickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __in
 __int64 Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity* a2)
 {
 	static auto oTick = g_Hooks.MoveInputHandler_tickHook->GetFastcall<__int64, C_MoveInputHandler*, C_Entity*>();
-
-	static InventoryMove* InventoryMoveMod = moduleMgr->getModule<InventoryMove>();
-	if (InventoryMoveMod == nullptr)
-		InventoryMoveMod = moduleMgr->getModule<InventoryMove>();
-	else {
-		InventoryMoveMod->inputHandler = a1;
-	}
-	static Bhop* bhopMod = moduleMgr->getModule<Bhop>();
-	if (bhopMod == nullptr)
-		bhopMod = moduleMgr->getModule<Bhop>();
-	else {
-		bhopMod->inputHandler = a1;
-	}
 	return oTick(a1, a2);
 }
 

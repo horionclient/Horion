@@ -19,7 +19,7 @@ const char* Tower::getModuleName()
 
 bool Tower::tryTower(vec3_t blockBelow)
 {
-	C_GameSettingsInput* input = g_Data.getGameSettingsInput();
+	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	
 	if (input == nullptr)
 		return false;

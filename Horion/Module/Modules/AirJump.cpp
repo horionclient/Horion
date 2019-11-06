@@ -17,7 +17,7 @@ const char* AirJump::getModuleName()
 
 void AirJump::onTick(C_GameMode* gm) {
 
-	C_GameSettingsInput* input = g_Data.getGameSettingsInput();
+	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 
 	if (gm->player == nullptr || input == nullptr)
 		return;

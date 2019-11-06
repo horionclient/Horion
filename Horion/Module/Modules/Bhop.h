@@ -8,7 +8,6 @@ private:
 	bool keyPressed = false;
 	float speed = 0.325f;
 public:
-	C_MoveInputHandler* inputHandler = nullptr;
 	Bhop();
 	~Bhop();
 
