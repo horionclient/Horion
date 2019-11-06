@@ -66,6 +66,7 @@
 #include "Modules/ChestAura.h"
 #include "Modules/AntiBot.h"
 #include "Modules/InventoryCleaner.h"
+#include "Modules/Derp.h"
 
 using json = nlohmann::json;
 

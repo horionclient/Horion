@@ -75,6 +75,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new ChestAura());
 	this->moduleList.push_back(new AntiBot());
 	this->moduleList.push_back(new InventoryCleaner());
+	this->moduleList.push_back(new Derp());
 	initialized = true;
 
 	this->getModule<HudModule>()->setEnabled(true);

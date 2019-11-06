@@ -28,7 +28,6 @@ void Bhop::onTick(C_GameMode* gm) {
 	if(!GameData::canUseMoveKeys()) return;
 
 	if (input == nullptr) return;
-	
 
 	float yaw = gm->player->yaw;
 
@@ -79,7 +78,6 @@ void Bhop::onTick(C_GameMode* gm) {
 		yaw -= 360.f;
 
 	float calcYaw = (yaw + 90) * (PI / 180);
-	float calcPitch = (gm->player->pitch) * -(PI / 180);
 	vec3_t moveVec;
 	moveVec.x = cos(calcYaw) * speed;
 	moveVec.y = gm->player->velocity.y;
