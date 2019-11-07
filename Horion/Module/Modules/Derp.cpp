@@ -20,8 +20,8 @@ const char* Derp::getModuleName()
 void Derp::onTick(C_GameMode* gm)
 {
 	if (gm->player == nullptr) return;
-	gm->player->pitch = c;
-	gm->player->bodyYaw = c;
+	gm->player->pitch = (float) c;
+	gm->player->bodyYaw = (float) c;
 	if (c < 360) c++;
 	else c = 0;
 }

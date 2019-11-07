@@ -42,7 +42,7 @@ void InventoryCleaner::onTick(C_GameMode* gm)
 }
 
 void InventoryCleaner::findStackableItems() {
-	for (int i = 0; i < 36; i++) {
+	for (int i = 0; i < 40; i++) {
 		C_ItemStack* itemStack = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(i);
 		if (itemStack->item != nullptr) {
 			if ((*itemStack->item)->getMaxStackSize() > itemStack->count) {

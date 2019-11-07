@@ -292,14 +292,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 			shouldRenderCoords = hud->coordinates && hud->isEnabled();
 		}
 
-		/* Unfinished, crashes the game
-
-		if (!hud->alwaysShow && g_Data.getClientInstance()->isShowingMenu()) {
-			shouldRenderTabGui = false;
-			shouldRenderArrayList = false;
-			shouldRenderCoords = false;
-		} */
-
 		static IModule* ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 		if (ClickGuiModule == nullptr)
 			ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
@@ -367,9 +359,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 					if (keybind == 0x0)
 						moduleName = moduleNameChr;
 					else {
-						char yikes[50];
-						sprintf_s(yikes, 50, "%s [%s]", moduleNameChr, Utils::getKeybindName(keybind));
-						moduleName = yikes;
+						char text[50];
+						sprintf_s(text, 50, "%s [%s]", moduleNameChr, Utils::getKeybindName(keybind));
+						moduleName = text;
 					}
 
 					this->textWidth = DrawUtils::getTextWidth(&moduleName);
