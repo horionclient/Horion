@@ -25,7 +25,8 @@ bool DupeCommand::execute(std::vector<std::string>* args)
 	if (args->size() > 2)
 		isGive = static_cast<bool>(assertInt(args->at(2)));
 
-	if (isGive) {
+	if (isGive)
+	{
 		int slot = inv->getFirstEmptySlot();
 
 		C_InventoryAction* firstAction = new C_InventoryAction(0, item, nullptr, 507, 99999);
@@ -39,7 +40,9 @@ bool DupeCommand::execute(std::vector<std::string>* args)
 		transactionManager->addInventoryAction(*secondAction);
 
 		inv->addItemToFirstEmptySlot(item);
-	} else {
+	}
+	else
+	{
 		g_Data.getLocalPlayer()->setOffhandSlot(item);
 	}
 
