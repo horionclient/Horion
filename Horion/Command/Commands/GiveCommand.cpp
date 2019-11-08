@@ -111,8 +111,13 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 
 	int slot = inv->getFirstEmptySlot();
 
-	C_InventoryAction* firstAction =  new C_InventoryAction(0, yot, nullptr, 507, 99999);
-	C_InventoryAction* secondAction =  new C_InventoryAction(slot, nullptr, yot);
+	C_InventoryAction* firstAction = new C_InventoryAction(0, yot, nullptr, 507, 99999);
+	C_InventoryAction* secondAction = new C_InventoryAction(slot, nullptr, yot);
+	if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0)
+	{
+		firstAction = new C_InventoryAction(slot, nullptr, yot, 32512);
+		secondAction = new C_InventoryAction(0, yot, nullptr, 156, 100);
+	}
 
 	transactionManager->addInventoryAction(*firstAction);
 	transactionManager->addInventoryAction(*secondAction);
