@@ -309,6 +309,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 		static constexpr bool isOnRightSide = true;
 		static float rcolors[4]; // Rainbow color array RGBA
 		static float disabledRcolors[4]; // Rainbow Colors, but for disabled modules
+		static float currColor[4]; // ArrayList collors
 		static std::string horionStr = std::string("Horion");					 // Static Horion logo / text
 		static float       horionStrWidth = DrawUtils::getTextWidth(&horionStr); // Graphical Width of Horion logo / text
 		static std::string dlStr = std::string("discord.gg/horion");
@@ -411,8 +412,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 			}
 
 			int a = 0;
+			int b = 0;
 			int c = 0;
-			int d = 0;
 
 			// Loop through mods to display Labels
 			for (std::set<IModuleContainer>::iterator it = modContainerList.begin(); it != modContainerList.end(); ++it) {
@@ -434,42 +435,26 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 					isOnRightSide ? windowSize.x : textWidth + (textPadding * 2),
 					yOffset + textPadding * 2 + textHeight
 				);
-				d++;
-				if (d < 20) a = moduleMgr->getEnabledModuleCount();
-				else d = 0;
-
-				// Here comes some premium code
-				float currColor[4];
+				// Here comes some premium code (thank you lemon for explaining a bit)
+				c++;
+				b++;
+				if (b < 20) a = moduleMgr->getEnabledModuleCount() * 2;
+				else b = 0;
 				{
 					currColor[0] = rcolors[0];
 					currColor[1] = rcolors[1];
 					currColor[2] = rcolors[2];
 					currColor[3] = rcolors[3];
 				}
-				c++;
 				Utils::ColorConvertRGBtoHSV(currColor[0], currColor[1], currColor[2], currColor[0], currColor[1], currColor[2]);
-				currColor[0] = 1.f / a * c;
-				if (currColor[0] >= 1)
-					currColor[0] = 0;
+				currColor[0] += 1.f / a * c;
 				Utils::ColorConvertHSVtoRGB(currColor[0], currColor[1], currColor[2], currColor[0], currColor[1], currColor[2]);
-				if (c >= a) c = 0;
 
 				DrawUtils::drawText(textPos, &textStr, new MC_Color(currColor), textSize);
-				if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos)) {
-
-					if (leftMouseDown) {
-						DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 0.1f), it->enabled ? 0.6f : 0.6f);
-						if (executeClick)
-							it->backingModule->toggle();
-					}
-					else
-						DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.7f, 0.3f, 0.1f), it->enabled ? 0.4f : 0.15f);
-				}
-				/*else
-					DrawUtils::fillRectangle(rectPos, MC_Color(0.f, 0.1f, 0.1f, 0.1f), it->enabled ? 0.4f : 0.15f);*/
 
 				yOffset += textHeight + (textPadding * 2);
 			}
+			c = 0;
 			modContainerList.clear();
 		}
 

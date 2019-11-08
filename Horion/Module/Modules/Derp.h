@@ -6,7 +6,6 @@ class Derp :
 private:
 	int c = 0;
 public:
-	C_ChestScreenController* chestScreenController = nullptr;
 	Derp();
 	~Derp();
 
