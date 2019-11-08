@@ -58,22 +58,7 @@ void Aimbot::onPostRender()
 	{
 		C_Entity* currentEntity = entList->get(i);
 
-		if (currentEntity == 0)
-			break;
-
-		if (currentEntity == localPlayer) // Skip Local player
-			continue;
-
-		if (FriendList::findPlayer(currentEntity->getNameTag()->getText())) //Skip Friend
-			continue;
-
-		if (localPlayer->getEntityTypeId() != currentEntity->getEntityTypeId()) // Skip Invalid Entity
-			continue;
-
-		if (!(currentEntity->getNameTag()->getTextLength() > 0))
-			continue;
-
-		if (currentEntity->height < 1.5f || currentEntity->width < 0.5f || currentEntity->height > 2.1f || currentEntity->width > 0.9f)
+		if (!Target::isValidTarget(currentEntity))
 			continue;
 
 		float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
@@ -97,7 +82,7 @@ void Aimbot::onPostRender()
 			if (sword && !(localPlayer->itemId == 268 || localPlayer->itemId == 267 || localPlayer->itemId == 272 || localPlayer->itemId == 276 || localPlayer->itemId == 283 /*swords*/ || localPlayer->itemId == 271 || localPlayer->itemId == 275 || localPlayer->itemId == 279 || localPlayer->itemId == 286 || localPlayer->itemId == 258 /*axes*/))
 				return;
 
-			if (click && !g_Data.isRightClickDown()) return;
+			if (click && !g_Data.isLeftClickDown()) return;
 			appl.x /= (100.f - verticalspeed);
 			appl.y /= (100.f - horizontalspeed);
 			if (appl.x >= 1 || appl.x <= -1) appl.div(abs(appl.x));
