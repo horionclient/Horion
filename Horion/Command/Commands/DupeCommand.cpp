@@ -43,7 +43,8 @@ bool DupeCommand::execute(std::vector<std::string>* args)
 		g_Data.getLocalPlayer()->setOffhandSlot(item);
 	}
 
-	item->count = count;
+	if (args->size() > 1)
+		item->count = count;
 
 	clientMessageF("%sSuccessfully duplicated the item!", GREEN);
 	return true;
