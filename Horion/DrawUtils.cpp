@@ -294,7 +294,7 @@ void DrawUtils::rainbow(float* rcolors)
 
 	Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]); // perfect code, dont question this
 
-	rcolors[0] += 0.001f;
+	rcolors[0] += 0.003f;
 	if (rcolors[0] >= 1)
 		rcolors[0] = 0;
 

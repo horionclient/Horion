@@ -336,8 +336,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 		if (hud == nullptr)
 			hud = moduleMgr->getModule<HudModule>();
 		else if (hud->watermark && hud->isEnabled()) {
-		//	DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth * 1.5f - 2.f, windowSize.y - 22.f), &horionStr, nullptr, 1.5f);
-		//	DrawUtils::drawText(vec2_t(windowSize.x - dlStrWidth * 0.85f - 2.f, windowSize.y - 10.75f), &dlStr, nullptr, 0.85f);
+		DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth * 1.5f - 2.f, windowSize.y - 22.f), &horionStr, nullptr, 1.5f);
+		DrawUtils::drawText(vec2_t(windowSize.x - dlStrWidth * 0.85f - 2.f, windowSize.y - 10.75f), &dlStr, nullptr, 0.85f);
 		}
 
 		// Draw ArrayList
@@ -410,7 +410,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 				}
 			}
 
+			int a = 0;
 			int c = 0;
+			int d = 0;
 
 			// Loop through mods to display Labels
 			for (std::set<IModuleContainer>::iterator it = modContainerList.begin(); it != modContainerList.end(); ++it) {
@@ -432,8 +434,27 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 					isOnRightSide ? windowSize.x : textWidth + (textPadding * 2),
 					yOffset + textPadding * 2 + textHeight
 				);
+				d++;
+				if (d < 20) a = moduleMgr->getEnabledModuleCount();
+				else d = 0;
 
-				DrawUtils::drawText(textPos, &textStr, new MC_Color(it->enabled ? rcolors : disabledRcolors), textSize);
+				// Here comes some premium code
+				float currColor[4];
+				{
+					currColor[0] = rcolors[0];
+					currColor[1] = rcolors[1];
+					currColor[2] = rcolors[2];
+					currColor[3] = rcolors[3];
+				}
+				c++;
+				Utils::ColorConvertRGBtoHSV(currColor[0], currColor[1], currColor[2], currColor[0], currColor[1], currColor[2]);
+				currColor[0] = 1.f / a * c;
+				if (currColor[0] >= 1)
+					currColor[0] = 0;
+				Utils::ColorConvertHSVtoRGB(currColor[0], currColor[1], currColor[2], currColor[0], currColor[1], currColor[2]);
+				if (c >= a) c = 0;
+
+				DrawUtils::drawText(textPos, &textStr, new MC_Color(currColor), textSize);
 				if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos)) {
 
 					if (leftMouseDown) {
