@@ -22,15 +22,6 @@ public:
 	C_Entity* entityPtr; //0x0870
 };
 
-
-class nameStruct
-{
-	char pad_0x0[0x358]; //0x0
-public:
-	TextHolder name; //0x358
-};
-
-
 class C_Player;
 
 class C_Entity
@@ -114,7 +105,11 @@ private:
 public:
 	int timeSinceDeath; //0x08AC
 private:
-	char pad_08B0[0x810]; //0x08B0
+	char pad_08B0[0x1E4]; //0x08B0
+public:
+	bool canFly; //0x0A94
+private:
+	char pad_0x0A95[0x62B]; //0x0A95
 public:
 	int16_t itemData; //0x10C0
 	int16_t itemId; //0x10C2

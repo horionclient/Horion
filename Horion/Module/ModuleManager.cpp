@@ -80,6 +80,7 @@ void ModuleManager::initModules()
 
 	this->getModule<HudModule>()->setEnabled(true);
 	this->getModule<ClickGuiMod>()->setEnabled(false);
+	this->getModule<AntiBot>()->setEnabled(true);
 }
 
 void ModuleManager::disable()

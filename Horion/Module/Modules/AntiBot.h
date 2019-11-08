@@ -5,7 +5,7 @@ class AntiBot :
 {
 private:
 	bool hitboxCheck = true;
-	bool nameCheck = true;
+	bool nameCheck = false;
 	bool invisibleCheck = true;
 	bool entityIdCheck = true;
 	bool otherCheck = true;

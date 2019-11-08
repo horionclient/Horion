@@ -25,7 +25,10 @@ void Bhop::onTick(C_GameMode* gm) {
 
 	if (gm->player->isSneaking()) return;
 
-	if(!GameData::canUseMoveKeys()) return;
+	if (GameData::canUseMoveKeys() || g_Data.getLocalPlayer()->canOpenContainerScreen() != 1)
+	{ }
+	else
+		return;
 
 	if (input == nullptr) return;
 

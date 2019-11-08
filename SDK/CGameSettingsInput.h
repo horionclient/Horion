@@ -6,7 +6,11 @@ private:
 public:
 	int* spaceBarKey;//0x3E0
 private:
-	char pad_0x370[0xB8];//0x3E8
+	char pad_0x370[0x38];//0x3E8
+public:
+	int* sneakKey; //0x420
+private:
+	char pad_0x0428[0x78]; //0x0428
 public:
 	int* leftKey;//0x4A0
 private:

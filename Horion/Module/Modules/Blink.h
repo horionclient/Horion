@@ -9,6 +9,7 @@ public:
 	~Blink();
 
 	// Inherited via IModule
+	virtual void onTick(C_GameMode* gm);
 	virtual const char* getModuleName() override;
 	virtual const char* getRawModuleName() override;
 };
