@@ -9,6 +9,8 @@ BedFucker::BedFucker() : IModule(VK_NUMPAD9, Category::EXPLOITS, "Destroys beds 
 	registerBoolSetting("Eggs", &this->eggs, this->eggs);
 	registerBoolSetting("Cakes", &this->cakes, this->cakes);
 	registerBoolSetting("Treasures", &this->treasures, this->treasures);
+	registerBoolSetting("Chests", &this->chests, this->chests);
+	registerBoolSetting("Barrels", &this->barrels, this->barrels);
 }
 
 
@@ -45,6 +47,8 @@ void BedFucker::onTick(C_GameMode* gm) {
 			if (g_Data.getLocalPlayer()->region->getBlock(blockPos)->toLegacy()->blockId == 26 && this->beds) destroy = true; // Beds
 			if (g_Data.getLocalPlayer()->region->getBlock(blockPos)->toLegacy()->blockId == 122 && this->eggs) destroy = true; // Dragon Eggs
 			if (g_Data.getLocalPlayer()->region->getBlock(blockPos)->toLegacy()->blockId == 92 && this->cakes)  destroy = true; // Cakes
+			if (g_Data.getLocalPlayer()->region->getBlock(blockPos)->toLegacy()->blockId == 54 && this->chests) destroy = true; // Chests
+			if (g_Data.getLocalPlayer()->region->getBlock(blockPos)->toLegacy()->blockId == 458 && this->barrels) destroy = true; // Barrels
 
 			if (destroy) {
 				g_Data.getCGameMode()->destroyBlock(&blockPos, 0);
