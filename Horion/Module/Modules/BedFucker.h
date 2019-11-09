@@ -9,6 +9,8 @@ private:
 	bool eggs = true;
 	bool cakes = true;
 	bool treasures = true;
+	bool chests = false;
+	bool barrels = false;
 public:
 	BedFucker();
 	~BedFucker();
