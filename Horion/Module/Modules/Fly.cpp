@@ -24,5 +24,6 @@ void Fly::onTick(C_GameMode* gm) {
 void Fly::onDisable()
 {
 	if (g_Data.getLocalPlayer() != nullptr)
-		g_Data.getLocalPlayer()->canFly = false;
+		if (g_Data.getLocalPlayer()->gamemode != 1)
+			g_Data.getLocalPlayer()->canFly = false;
 }

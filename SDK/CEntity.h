@@ -118,7 +118,7 @@ private:
 public:
 	C_InventoryTransactionManager transac; //0x12C0
 private:
-	char pad_0x1324[0xA70]; //0x1324
+	char pad_0x1324[0xA6C]; //0x1324
 public:
 	int gamemode; //0x1D94
 private:

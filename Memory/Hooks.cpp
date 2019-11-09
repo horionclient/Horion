@@ -48,11 +48,11 @@ void Hooks::Init()
 			if (localPlayerVtable == 0x0 || sigOffset == 0x0)
 				logF("C_LocalPlayer signature not working!!!");
 			else {
-				g_Hooks.Actor_isInWaterHook = std::make_unique<FuncHook>(localPlayerVtable[59], Hooks::Actor_isInWater);
+				g_Hooks.Actor_isInWaterHook = std::make_unique<FuncHook>(localPlayerVtable[61], Hooks::Actor_isInWater);
 
-				g_Hooks.Actor_startSwimmingHook = std::make_unique<FuncHook>(localPlayerVtable[180], Hooks::Actor_isInWater);
+				g_Hooks.Actor_startSwimmingHook = std::make_unique<FuncHook>(localPlayerVtable[181], Hooks::Actor_startSwimming);
 
-				g_Hooks.Actor_ladderUpHook = std::make_unique<FuncHook>(localPlayerVtable[323], Hooks::Actor_ladderUp);
+				g_Hooks.Actor_ladderUpHook = std::make_unique<FuncHook>(localPlayerVtable[321], Hooks::Actor_ladderUp);
 			}
 		}
 
@@ -451,6 +451,16 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 				Utils::ColorConvertHSVtoRGB(currColor[0], currColor[1], currColor[2], currColor[0], currColor[1], currColor[2]);
 
 				DrawUtils::drawText(textPos, &textStr, new MC_Color(currColor), textSize);
+				if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos)) {
+
+					if (leftMouseDown) {
+						DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 0.1f), it->enabled ? 0.6f : 0.6f);
+						if (executeClick)
+							it->backingModule->toggle();
+					}
+					else
+						DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.7f, 0.3f, 0.1f), it->enabled ? 0.4f : 0.15f);
+				}
 
 				yOffset += textHeight + (textPadding * 2);
 			}
@@ -657,14 +667,13 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	static auto oFunc = g_Hooks.LoopbackPacketSender_sendToServerHook->GetFastcall<void, C_LoopbackPacketSender*, C_Packet*>();
 
 	static IModule* FreecamMod = moduleMgr->getModule<Freecam>();
-	static IModule* NoFallMod = moduleMgr->getModule<NoFall>();
+	static NoFall* NoFallMod = moduleMgr->getModule<NoFall>();
 	static Blink* BlinkMod = moduleMgr->getModule<Blink>();
 	static NoPacket* No_Packet = moduleMgr->getModule<NoPacket>();
 	static Criticals* CriticalsMod = moduleMgr->getModule<Criticals>();
 
-	if (FreecamMod == nullptr || NoFallMod == nullptr || BlinkMod == nullptr || No_Packet == nullptr) {
+	if (FreecamMod == nullptr || BlinkMod == nullptr || No_Packet == nullptr) {
 		FreecamMod = moduleMgr->getModule<Freecam>();
-		NoFallMod = moduleMgr->getModule<NoFall>();
 		BlinkMod = moduleMgr->getModule<Blink>();
 		No_Packet = moduleMgr->getModule<NoPacket>();
 	}
@@ -696,6 +705,9 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 		BlinkMod->PacketMeme.clear();
 		return;
 	}
+
+	if (NoFallMod == nullptr)
+		NoFallMod = moduleMgr->getModule<NoFall>();
 	else if (NoFallMod->isEnabled()) {
 		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
 		C_ActorFallPacket fall = C_ActorFallPacket();
@@ -967,7 +979,7 @@ void Hooks::Actor_ladderUp(C_Entity* _this)
 	if (FastLadderModule == nullptr)
 		FastLadderModule = moduleMgr->getModule<FastLadder>();
 	else if (FastLadderModule->isEnabled() && g_Data.getLocalPlayer() == _this) {
-		_this->velocity.y = 0.4f;
+		_this->velocity.y = 0.6f;
 		return;
 	}
 	return oFunc(_this);
@@ -980,7 +992,7 @@ void Hooks::Actor_startSwimming(C_Entity* _this)
 
 	static IModule* JesusModule = moduleMgr->getModule<Jesus>();
 	if (JesusModule == nullptr)
-		JesusModule = moduleMgr->getModule<Xray>();
+		JesusModule = moduleMgr->getModule<Jesus>();
 	else if (JesusModule->isEnabled() && g_Data.getLocalPlayer() == _this) {
 		return;
 	}

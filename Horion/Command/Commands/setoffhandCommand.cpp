@@ -98,6 +98,7 @@ bool setoffhandCommand::execute(std::vector<std::string>* args)
 		yot = new C_ItemStack(***cStack, count, itemData);
 		g_Data.getLocalPlayer()->setOffhandSlot(yot);
 		clientMessageF("%sSet item as offhand!", BLUE);
+		free(ItemPtr);
 		return true;
 	}
 
@@ -107,7 +108,12 @@ bool setoffhandCommand::execute(std::vector<std::string>* args)
 		return true;
 	}
 	else if (blockItem != nullptr)
-		yot = new C_ItemStack(*blockItem, count);
+	{
+		void* ItemPtr = malloc(0x8);
+		C_Item*** cStack = getItemFromId(ItemPtr, blockItem->blockId);
+		yot = new C_ItemStack(***cStack, count, itemData);
+		free(ItemPtr);
+	}
 	else
 		yot = new C_ItemStack(*itemItem, count, itemData);
 

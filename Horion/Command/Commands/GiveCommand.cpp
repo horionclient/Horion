@@ -90,7 +90,12 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 			return true;
 		}
 		else if (blockItem != nullptr && yot == nullptr)
-			yot = new C_ItemStack(*blockItem, count);
+		{
+			void* ItemPtr = malloc(0x8);
+			C_Item*** cStack = getItemFromId(ItemPtr, blockItem->blockId);
+			yot = new C_ItemStack(***cStack, count, itemData);
+			free(ItemPtr);
+		}
 		else if (itemItem != nullptr && yot == nullptr)
 			yot = new C_ItemStack(*itemItem, count, itemData);
 	}
@@ -104,6 +109,7 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 			return true;
 		}
 		yot = new C_ItemStack(***cStack, count, itemData);
+		free(ItemPtr);
 	}
 
 	if (yot != nullptr)
@@ -111,12 +117,17 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 
 	int slot = inv->getFirstEmptySlot();
 
-	C_InventoryAction* firstAction = new C_InventoryAction(0, yot, nullptr, 507, 99999);
-	C_InventoryAction* secondAction = new C_InventoryAction(slot, nullptr, yot);
+	C_InventoryAction* firstAction = nullptr;
+	C_InventoryAction* secondAction = nullptr;
 	if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0)
 	{
 		firstAction = new C_InventoryAction(slot, nullptr, yot, 32512);
 		secondAction = new C_InventoryAction(0, yot, nullptr, 156, 100);
+	}
+	else
+	{
+		firstAction = new C_InventoryAction(0, yot, nullptr, 507, 99999);
+		secondAction = new C_InventoryAction(slot, nullptr, yot);
 	}
 
 	transactionManager->addInventoryAction(*firstAction);
