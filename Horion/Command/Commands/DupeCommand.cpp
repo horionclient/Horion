@@ -49,9 +49,7 @@ bool DupeCommand::execute(std::vector<std::string>* args)
 		inv->addItemToFirstEmptySlot(item);
 	}
 	else
-	{
 		g_Data.getLocalPlayer()->setOffhandSlot(item);
-	}
 
 	if (args->size() > 1)
 		item->count = count;
