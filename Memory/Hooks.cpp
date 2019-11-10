@@ -711,7 +711,8 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	else if (NoFallMod->isEnabled()) {
 		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
 		C_ActorFallPacket fall = C_ActorFallPacket();
-		if (frenchBoy.vTable == packet->vTable) {
+		if (frenchBoy.vTable == packet->vTable && g_Data.getLocalPlayer() != nullptr && !g_Data.getLocalPlayer()->onGround
+			&& g_Data.getLocalPlayer()->fallDistance > 2.5f) {
 			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
 			p->onGround = true;
 		}
@@ -719,6 +720,18 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 		{
 			C_ActorFallPacket* p = reinterpret_cast<C_ActorFallPacket*>(packet);
 			p->fallDistance = 0.f;
+		}
+	}
+
+	if (CriticalsMod == nullptr)
+		CriticalsMod = moduleMgr->getModule<Criticals>();
+	else if (CriticalsMod->isEnabled()) {
+		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
+		if (frenchBoy.vTable == packet->vTable && g_Data.getLocalPlayer() != nullptr 
+			&& g_Data.getLocalPlayer()->fallDistance == 0.f)
+		{
+			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
+			p->onGround = false;
 		}
 	}
 

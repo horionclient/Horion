@@ -91,10 +91,15 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 		}
 		else if (blockItem != nullptr && yot == nullptr)
 		{
-			void* ItemPtr = malloc(0x8);
-			C_Item*** cStack = getItemFromId(ItemPtr, blockItem->blockId);
-			yot = new C_ItemStack(***cStack, count, itemData);
-			free(ItemPtr);
+			if (itemData != 0)
+				yot = new C_ItemStack(*blockItem, count);
+			else
+			{
+				void* ItemPtr = malloc(0x8);
+				C_Item*** cStack = getItemFromId(ItemPtr, blockItem->blockId);
+				yot = new C_ItemStack(***cStack, count, itemData);
+				free(ItemPtr);
+			}
 		}
 		else if (itemItem != nullptr && yot == nullptr)
 			yot = new C_ItemStack(*itemItem, count, itemData);
@@ -132,6 +137,9 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 
 	transactionManager->addInventoryAction(*firstAction);
 	transactionManager->addInventoryAction(*secondAction);
+
+	delete firstAction;
+	delete secondAction;
 
 	inv->addItemToFirstEmptySlot(yot);
 

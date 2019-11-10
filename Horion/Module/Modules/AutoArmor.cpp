@@ -117,6 +117,9 @@ void AutoArmor::onTick(C_GameMode* gm)
 				manager->addInventoryAction(*first);
 				manager->addInventoryAction(*second);
 
+				delete first;
+				delete second;
+
 
 				first = new C_InventoryAction(armorList[0].m_slot,armorList[0].m_item,nullptr);
 				second= new C_InventoryAction(i, nullptr, armorList[0].m_item,632);
@@ -127,6 +130,9 @@ void AutoArmor::onTick(C_GameMode* gm)
 
 				manager->addInventoryAction(*first);
 				manager->addInventoryAction(*second);
+
+				delete first;
+				delete second;
 			}
 			if (armorItem->item == nullptr)
 			{
@@ -139,6 +145,9 @@ void AutoArmor::onTick(C_GameMode* gm)
 
 				manager->addInventoryAction(*first);
 				manager->addInventoryAction(*second);
+
+				delete first;
+				delete second;
 			}
 		}
 		armorList.clear();

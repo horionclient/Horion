@@ -20,12 +20,6 @@ public:
 		memset(this, 0x0, sizeof(C_ItemStack));
 	}
 
-	~C_ItemStack()
-	{
-		if(this->vTable != nullptr)
-			Utils::CallVFunc<0, void>(this);
-	}
-
 	C_ItemStack(C_BlockLegacy& legacy, int count)
 	{
 		memset(this, 0x0, sizeof(C_ItemStack));
