@@ -12,6 +12,7 @@ public:
 	bool arraylist = true;
 	bool watermark = true;
 	bool coordinates = false;
+	bool keybinds = true;
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;

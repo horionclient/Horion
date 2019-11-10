@@ -361,7 +361,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 						moduleName = moduleNameChr;
 					else {
 						char text[50];
-						sprintf_s(text, 50, "%s [%s]", moduleNameChr, Utils::getKeybindName(keybind));
+						sprintf_s(text, 50, "%s%s", moduleNameChr, hud->keybinds ? std::string(" [" + std::string(Utils::getKeybindName(keybind)) + "]").c_str() : "");
 						moduleName = text;
 					}
 
@@ -440,13 +440,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 				b++;
 				if (b < 20) a = moduleMgr->getEnabledModuleCount() * 2;
 				else b = 0;
-				{
-					currColor[0] = rcolors[0];
-					currColor[1] = rcolors[1];
-					currColor[2] = rcolors[2];
-					currColor[3] = rcolors[3];
-				}
-				Utils::ColorConvertRGBtoHSV(currColor[0], currColor[1], currColor[2], currColor[0], currColor[1], currColor[2]);
+				currColor[3] = rcolors[3];
+				Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[1], rcolors[2], currColor[0], currColor[1], currColor[2]);
 				currColor[0] += 1.f / a * c;
 				Utils::ColorConvertHSVtoRGB(currColor[0], currColor[1], currColor[2], currColor[0], currColor[1], currColor[2]);
 
@@ -727,7 +722,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 		CriticalsMod = moduleMgr->getModule<Criticals>();
 	else if (CriticalsMod->isEnabled()) {
 		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
-		if (frenchBoy.vTable == packet->vTable && g_Data.getLocalPlayer() != nullptr 
+		if (frenchBoy.vTable == packet->vTable && g_Data.getLocalPlayer() != nullptr
 			&& g_Data.getLocalPlayer()->fallDistance == 0.f)
 		{
 			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
