@@ -14,8 +14,9 @@ private:
 public:
 	virtual TextHolder* getLocalIps(TextHolder*);
 	virtual TextHolder* getLocalIp(TextHolder*);
+public:
+	virtual unsigned int getPort(void)const;
 private:
-	virtual __int64 getPort(void)const;
 	virtual __int64 getRefinedLocalIps(void)const;
 	virtual __int64 getConnectedGameInfo(void)const;
 public:

@@ -674,7 +674,9 @@ public:
 	virtual __int64 _crit(C_Entity*);
 private:
 	virtual __int64 getEventing(void)const;
+public:
 	virtual __int64 getUserId(void)const;
+private:
 	virtual __int64 sendEventPacket(__int64&)const;
 	virtual __int64 addExperience(int);
 	virtual __int64 addLevels(int);

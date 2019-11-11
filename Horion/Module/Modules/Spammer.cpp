@@ -24,6 +24,8 @@ void Spammer::onTick(C_GameMode* gm)
 	if (Odelay > delay * 20) {
 		C_TextPacket* textPacket = new C_TextPacket();
 		textPacket->message.setText(bypass ? (message + " | " + random()) : message);
+		textPacket->sourceName = *g_Data.getLocalPlayer()->getNameTag();
+		textPacket->xboxUserId = *new TextHolder(std::to_string(g_Data.getLocalPlayer()->getUserId()));
 		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(textPacket);
 		delete textPacket;
 		Odelay = 0;
