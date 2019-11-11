@@ -67,6 +67,7 @@
 #include "Modules/AntiBot.h"
 #include "Modules/InventoryCleaner.h"
 #include "Modules/Derp.h"
+#include "Modules/PacketLogger.h"
 
 using json = nlohmann::json;
 

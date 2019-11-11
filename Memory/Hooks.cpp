@@ -666,6 +666,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	static Blink* BlinkMod = moduleMgr->getModule<Blink>();
 	static NoPacket* No_Packet = moduleMgr->getModule<NoPacket>();
 	static Criticals* CriticalsMod = moduleMgr->getModule<Criticals>();
+	static PacketLogger* PacketLoggerMod = moduleMgr->getModule<PacketLogger>();
 
 	if (FreecamMod == nullptr || BlinkMod == nullptr || No_Packet == nullptr) {
 		FreecamMod = moduleMgr->getModule<Freecam>();
@@ -728,6 +729,14 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
 			p->onGround = false;
 		}
+	}
+
+	if (PacketLoggerMod == nullptr)
+		PacketLoggerMod = moduleMgr->getModule<PacketLogger>();
+	else if (PacketLoggerMod->isEnabled())
+	{
+		TextHolder* text = packet->getName(new TextHolder());
+		g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s", text->getText());
 	}
 
 #ifdef TEST_DEBUG

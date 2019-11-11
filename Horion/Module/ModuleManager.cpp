@@ -76,6 +76,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new AntiBot());
 	this->moduleList.push_back(new InventoryCleaner());
 	this->moduleList.push_back(new Derp());
+	this->moduleList.push_back(new PacketLogger());
 	initialized = true;
 
 	this->getModule<HudModule>()->setEnabled(true);

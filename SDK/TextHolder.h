@@ -35,7 +35,6 @@ public:
 
 	~TextHolder() {
 		if (textLength >= 16 && pText != nullptr) {
-			memset(pText, 0x0, alignedTextLength + 1);
 			free(pText);
 		}
 	}

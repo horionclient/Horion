@@ -7,6 +7,10 @@
 class C_Packet {
 public:
 	uintptr_t** vTable; //0x0000
+	TextHolder* getName(TextHolder* text)
+	{
+		return Utils::CallVFunc<2, TextHolder*>(this, text);
+	}
 };
 
 
