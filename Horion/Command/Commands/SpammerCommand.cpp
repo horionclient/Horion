@@ -60,6 +60,8 @@ bool SpammerCommand::execute(std::vector<std::string>* args)
 		for (int i = 0; i < times; i++) {
 			C_TextPacket* textPacket = new C_TextPacket();
 			textPacket->message.setText(text + (spammer->bypass ? (" | " + spammer->random()) : ""));
+			textPacket->sourceName = *g_Data.getLocalPlayer()->getNameTag();
+			textPacket->xboxUserId = *new TextHolder(std::to_string(g_Data.getLocalPlayer()->getUserId()));
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(textPacket);
 			delete textPacket;
 		}

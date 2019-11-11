@@ -17,10 +17,11 @@ bool SayCommand::execute(std::vector<std::string>* args)
 		if (i > 1)
 			os << " ";
 		os << args->at(i);
-	}
-	
+	}	
 	C_TextPacket* textPacket = new C_TextPacket();
 	textPacket->message.setText(os.str());
+	textPacket->sourceName = *g_Data.getLocalPlayer()->getNameTag();
+	textPacket->xboxUserId = *new TextHolder(std::to_string(g_Data.getLocalPlayer()->getUserId()));
 	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(textPacket);
 	delete textPacket;
 
