@@ -7,12 +7,57 @@
 class C_Packet {
 public:
 	uintptr_t** vTable; //0x0000
-	TextHolder* getName(TextHolder* text)
+	TextHolder* getName()
 	{
-		return Utils::CallVFunc<2, TextHolder*>(this, text);
+		return Utils::CallVFunc<2, TextHolder*>(this, new TextHolder());
 	}
 };
 
+class PlayerAuthInputPacket : public C_Packet
+{
+private:
+	char pad_0x0000[0x18]; //0x0008
+public:
+	__int64 entityRuntimeId; //0x0020
+	float pitch; //0x0028
+	float yaw; //0x002C
+	vec3_t pos; //0x0030
+	float yawUnused;//0x003C
+private:
+	char pad_0x0040[0x20]; //0x0040
+public:
+	PlayerAuthInputPacket()
+	{
+		static uintptr_t** PlayerAuthInputPacketVtable = 0x0;
+		if (PlayerAuthInputPacketVtable == 0x0) {
+			uintptr_t sigOffset = Utils::FindSignature("48 8D 15 ?? ?? ?? ?? 48 89 11 48 89 79 ?? 48 89 79 ?? 89 79 ?? 48 89 79 ?? 48 89 79 ??");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			PlayerAuthInputPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+			if (PlayerAuthInputPacketVtable == 0x0 || sigOffset == 0x0)
+				logF("PlayerAuthInputPacketVtable signature not working!!!");
+		}
+		memset(this, 0, sizeof(PlayerAuthInputPacket)); // Avoid overwriting vtable
+		vTable = PlayerAuthInputPacketVtable;
+	}
+	PlayerAuthInputPacket(__int64 entityRuntimeId,vec3_t pos,float pitch,float yaw,float yawUnused)
+	{
+		static uintptr_t** PlayerAuthInputPacketVtable = 0x0;
+		if (PlayerAuthInputPacketVtable == 0x0) {
+			uintptr_t sigOffset = Utils::FindSignature("48 8D 15 ?? ?? ?? ?? 48 89 11 48 89 79 ?? 48 89 79 ?? 89 79 ?? 48 89 79 ?? 48 89 79 ??");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			PlayerAuthInputPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+			if (PlayerAuthInputPacketVtable == 0x0 || sigOffset == 0x0)
+				logF("PlayerAuthInputPacketVtable signature not working!!!");
+		}
+		memset(this, 0, sizeof(PlayerAuthInputPacket)); // Avoid overwriting vtable
+		vTable = PlayerAuthInputPacketVtable;
+		this->pos = pos;
+		this->pitch = pitch;
+		this->yaw = yaw;
+		this->yawUnused = yawUnused;
+		this->entityRuntimeId = entityRuntimeId;
+	}
+};
 
 class C_ActorFallPacket : public C_Packet
 {
@@ -178,12 +223,12 @@ public:
 private:
 	char filler[0x20];		// 0x8
 public:
-	__int64 entityRuntimeID;
-	vec3_t Position;		
-	float pitch;			
-	float yaw;				
-	float headYaw;			
-	uint8_t mode;			
+	__int64 entityRuntimeID;//0x28
+	vec3_t Position;		//0x30
+	float pitch;			//0x3c
+	float yaw;				//0x40
+	float headYaw;			//0x44
+	uint8_t mode;			//0x48
 	bool onGround;			
 	__int64 ridingEid;		
 	int int1;				

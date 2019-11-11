@@ -2,7 +2,7 @@
 
 
 
-PacketLogger::PacketLogger() : IModule(0x0, Category::EXPLOITS, "X-Ray view!")
+PacketLogger::PacketLogger() : IModule(0x0, Category::EXPLOITS, "Logging Packets !")
 {
 }
 

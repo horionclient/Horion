@@ -678,28 +678,49 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	}
 	else if (FreecamMod->isEnabled() || BlinkMod->isEnabled()) {
 
-		C_MovePlayerPacket movePacket = C_MovePlayerPacket();
-		if (movePacket.vTable == packet->vTable)
+		if (strcmp(packet->getName()->getText(),"MovePlayerPacket") == 0 || 
+			strcmp(packet->getName()->getText(),"PlayerAuthInputPacket") == 0)
 		{
 			if (BlinkMod->isEnabled())
 			{
-				C_MovePlayerPacket* meme = reinterpret_cast<C_MovePlayerPacket*>(packet);
-				meme->onGround = true; //Don't take Fall Damages when turned off
-				BlinkMod->PacketMeme.push_back(new C_MovePlayerPacket(*meme)); // Saving the packets
+				if (strcmp(packet->getName()->getText(),"MovePlayerPacket") == 0)
+				{
+					C_MovePlayerPacket* meme = reinterpret_cast<C_MovePlayerPacket*>(packet);
+					meme->onGround = true; //Don't take Fall Damages when turned off
+					BlinkMod->getMovePlayerPacketHolder()->push_back(new C_MovePlayerPacket(*meme)); // Saving the packets
+				}
+				else
+				{
+					BlinkMod->getPlayerAuthInputPacketHolder()->push_back(new PlayerAuthInputPacket(*reinterpret_cast<PlayerAuthInputPacket*>(packet)));
+				}
 			}
 			return; // Dont call LoopbackPacketSender_sendToServer
 		}
 	}
-	else if (!BlinkMod->isEnabled() && BlinkMod->PacketMeme.size() > 0) {
+	else if (!BlinkMod->isEnabled()) {
 
-		for (std::vector<C_MovePlayerPacket*>::iterator it = BlinkMod->PacketMeme.begin(); it != BlinkMod->PacketMeme.end(); ++it)
+		if (BlinkMod->getMovePlayerPacketHolder()->size() > 0)
 		{
-			oFunc(a, (*it));
-			delete* it;
-			*it = nullptr;
+			for (auto it : *BlinkMod->getMovePlayerPacketHolder())
+			{
+				oFunc(a, (it));
+				delete it;
+				it = nullptr;
+			}
+			BlinkMod->getMovePlayerPacketHolder()->clear();
+			return;
 		}
-		BlinkMod->PacketMeme.clear();
-		return;
+		if (BlinkMod->getPlayerAuthInputPacketHolder()->size() > 0)
+		{
+			for (auto it : *BlinkMod->getPlayerAuthInputPacketHolder())
+			{
+				oFunc(a, (it));
+				delete it;
+				it = nullptr;
+			}
+			BlinkMod->getPlayerAuthInputPacketHolder()->clear();
+			return;
+		}
 	}
 
 	if (NoFallMod == nullptr)
@@ -735,7 +756,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 		PacketLoggerMod = moduleMgr->getModule<PacketLogger>();
 	else if (PacketLoggerMod->isEnabled())
 	{
-		TextHolder* text = packet->getName(new TextHolder());
+		TextHolder* text = packet->getName();
 		g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s", text->getText());
 	}
 
