@@ -4,7 +4,8 @@ class Derp :
 	public IModule
 {
 private:
-	int c = 0;
+	int counter = 0;
+	bool epicStroke = false;
 public:
 	Derp();
 	~Derp();
