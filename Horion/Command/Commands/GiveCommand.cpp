@@ -15,7 +15,7 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 {
 	assertTrue(args->size() > 2);
 	int itemId = 0;
-	char  count = static_cast<char>(assertInt(args->at(2)));
+	char count = static_cast<char>(assertInt(args->at(2)));
 	char itemData = 0;
 	if (args->size() > 3)
 		itemData = static_cast<char>(assertInt(args->at(3)));
@@ -91,7 +91,7 @@ bool GiveCommand::execute(std::vector<std::string>* args)
 		}
 		else if (blockItem != nullptr && yot == nullptr)
 		{
-			if (itemData != 0)
+			if (itemData == 0)
 				yot = new C_ItemStack(*blockItem, count);
 			else
 			{
