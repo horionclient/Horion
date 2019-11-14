@@ -77,6 +77,15 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new InventoryCleaner());
 	this->moduleList.push_back(new Derp());
 	this->moduleList.push_back(new PacketLogger());
+
+	// Sort module alphabetically
+	std::sort(moduleList.begin(), moduleList.end(), [](const IModule* lhs, const IModule* rhs)
+	{
+		IModule* current = const_cast<IModule*>(lhs);
+		IModule* other = const_cast<IModule*>(rhs);
+		return std::string{ *current->getModuleName() } < std::string{ *other->getModuleName() };
+	});
+
 	initialized = true;
 
 	this->getModule<HudModule>()->setEnabled(true);
@@ -158,14 +167,7 @@ void ModuleManager::onPostRender()
 
 std::vector<IModule*>* ModuleManager::getModuleList()
 {
-	std::vector<IModule*>* sortedList = &moduleList;
-	std::sort(sortedList->begin(), sortedList->end(), [](const IModule* lhs, const IModule* rhs)
-		{
-			IModule* current = const_cast<IModule*>(lhs);
-			IModule* other = const_cast<IModule*>(rhs);
-			return std::string{ *current->getModuleName() } < std::string{ *other->getModuleName() };
-		});
-	return sortedList;
+	return &this->moduleList;
 }
 
 int ModuleManager::getModuleCount()

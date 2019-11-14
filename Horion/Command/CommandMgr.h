@@ -26,7 +26,6 @@
 #include "Commands/SpammerCommand.h"
 #include "Commands/DupeCommand.h"
 #include "Commands/DamageCommand.h"
-#include "Commands/SetprefixCommand.h"
 
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"

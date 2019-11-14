@@ -5,6 +5,7 @@
 Derp::Derp() : IModule(0x0, Category::EXPLOITS, "lol you stupid")
 {
 	this->registerBoolSetting("ihaveastroke", &this->epicStroke, this->epicStroke);
+	this->registerBoolSetting("packet mode", &this->packetMode, this->packetMode);
 }
 
 
@@ -20,15 +21,29 @@ const char* Derp::getModuleName()
 
 void Derp::onTick(C_GameMode* gm)
 {
-
 	if (gm->player == nullptr) return;
-	if (epicStroke) {
-		gm->player->pitch = (float)(rand() % 360);
-		gm->player->bodyYaw = (float)(rand() % 360);
+
+	if (packetMode) {
+		C_MovePlayerPacket* p = new C_MovePlayerPacket();
+		if (epicStroke) {
+			p->pitch = (float)(rand() % 360);
+			p->yaw = (float)(rand() % 360);
+		}
+		else {
+			p->pitch = (float)(counter % 360);
+			p->yaw = (float)(counter % 360);
+		}
+		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(p);
 	}
 	else {
-		gm->player->pitch = (float)(counter % 360);
-		gm->player->bodyYaw = (float)(counter % 360);
+		if (epicStroke) {
+			gm->player->pitch = (float)(rand() % 360);
+			gm->player->bodyYaw = (float)(rand() % 360);
+		}
+		else {
+			gm->player->pitch = (float)(counter % 360);
+			gm->player->bodyYaw = (float)(counter % 360);
+		}
 	}
 	
 

@@ -6,6 +6,7 @@ class Derp :
 private:
 	int counter = 0;
 	bool epicStroke = false;
+	bool packetMode = false;
 public:
 	Derp();
 	~Derp();
