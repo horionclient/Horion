@@ -11,8 +11,8 @@ private:
 
 	void findUselessItems();
 	bool stackIsUseful(C_ItemStack* itemStack);
-	void findStackableItems();
 	bool isLastItem(C_Item* item);
+	void findStackableItems();
 
 	bool keepTools = true;
 	bool keepArmor = true;

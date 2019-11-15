@@ -14,6 +14,8 @@ private:
 public:
 	FriendList();
 	~FriendList();
+	
+	static std::vector<std::string> getList();
 	static bool findPlayer(std::string Name);
 	static void addPlayerToList(std::string name);
 	static bool removePlayer(std::string& g);

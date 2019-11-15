@@ -25,14 +25,14 @@ void doRenderStuff(C_Entity* ent, bool isRegularEntitie) {
 	if (espMod == nullptr)
 		espMod = reinterpret_cast<ESP*>(moduleMgr->getModule<ESP>());
 	else {
-		DrawUtils::setColor(0.f, 0.f, 0.f, 0.f);
 		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 		if (ent != localPlayer) {
-
 			if (ent->timeSinceDeath > 0)
 				return;
-			if (Target::isValidTarget(ent)) {
-
+			if (FriendList::findPlayer(ent->getNameTag()->getText()) && !moduleMgr->getModule<NoFriends>()->isEnabled()) {
+				DrawUtils::setColor(0.1f, 0.9f, 0.1f, max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
+			}
+			else if (Target::isValidTarget(ent)) {
 				if (espMod->doRainbow)
 					DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
 				else
@@ -50,6 +50,7 @@ void doRenderStuff(C_Entity* ent, bool isRegularEntitie) {
 					return;
 				DrawUtils::setColor(0.2f, 0.2f, 0.9f, max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
 			}
+			else DrawUtils::setColor(0.f, 0.f, 0.f, 0.f);
 			DrawUtils::drawEntityBox(ent, max(0.2f, 1 / max(1, (*localPlayer->getPos()).dist(*ent->getPos())))); // Fancy math to give an illusion of good esp
 		}
 	}

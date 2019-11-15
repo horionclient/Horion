@@ -1,4 +1,5 @@
 #include "InventoryCleaner.h"
+#include "../ModuleManager.h"
 
 InventoryCleaner::InventoryCleaner() : IModule(0x0, Category::PLAYER, "Automatically throws not needed stuff out of your inventory")
 {
@@ -20,8 +21,10 @@ const char* InventoryCleaner::getModuleName()
 
 void InventoryCleaner::onTick(C_GameMode* gm)
 {
-	if (gm->player == nullptr) return;
+	if (g_Data.getLocalPlayer() == nullptr) return;
+	if (g_Data.getLocalPlayer()->canOpenContainerScreen() || moduleMgr->getModule<ChestStealer>()->chestScreenController != nullptr) return;
 
+	items.clear();
 	uselessItems.clear();
 	stackableSlot.clear();
 
@@ -42,7 +45,7 @@ void InventoryCleaner::onTick(C_GameMode* gm)
 }
 
 void InventoryCleaner::findStackableItems() {
-	for (int i = 0; i < 40; i++) {
+	for (int i = 0; i < 36; i++) {
 		C_ItemStack* itemStack = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(i);
 		if (itemStack->item != nullptr) {
 			if ((*itemStack->item)->getMaxStackSize() > itemStack->count) {
@@ -62,19 +65,88 @@ void InventoryCleaner::findStackableItems() {
 }
 
 void InventoryCleaner::findUselessItems() {
-	items.clear();
-	for (int i = 0; i < 36; i++) {
-		C_ItemStack* itemStack = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(i);
-		if (itemStack->item != nullptr) {
-			if (!stackIsUseful(itemStack)) {
-				if (!(std::find(items.begin(), items.end(), (*itemStack->item)) != items.end())) uselessItems.push_back(i);
+	// Filter bad stuff in general
+	{
+		for (int i = 0; i < 36; i++) {
+			C_ItemStack* itemStack = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(i);
+			if (itemStack->item != nullptr) {
+				if (!stackIsUseful(itemStack)) {
+					if (!(std::find(items.begin(), items.end(), (*itemStack->item)) != items.end())) uselessItems.push_back(i);
+				}	
+				items.push_back((*itemStack->item));
 			}
-			items.push_back((*itemStack->item));
-			for (C_Item* item : items) {
-				if ((*itemStack->item)->isTool() && (*itemStack->item)->getAttackDamage() <= item->getAttackDamage())
-					if(!isLastItem(*itemStack->item)) uselessItems.push_back(i);
-				if ((*itemStack->item)->isArmor() && (*itemStack->item)->getArmorValue() <= item->getArmorValue() && !isLastItem((*itemStack->item)))
-					if (!isLastItem(*itemStack->item)) uselessItems.push_back(i);
+		}
+		/*
+		for (int i = 0; i < 4; i++) {
+			if (g_Data.getLocalPlayer()->getArmor(i)->item != nullptr)
+				items.push_back(reinterpret_cast<C_Item*>(*g_Data.getLocalPlayer()->getArmor(i)->item));
+		}
+		*/
+	}
+	// Filter bad weapons
+	{
+		std::sort(items.begin(), items.end(), [](const C_Item* lhs, const C_Item* rhs)
+			{
+				C_Item* current = const_cast<C_Item*>(lhs);
+				C_Item* other = const_cast<C_Item*>(rhs);
+				return current->getAttackDamage() > other->getAttackDamage();
+			});
+
+		for (int i = 0; i < 36; i++) {
+			C_ItemStack* itemStack = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(i);
+			if (itemStack->item != nullptr) {
+				for (C_Item* item : items) {
+					if ((*itemStack->item)->isTool() && (*itemStack->item)->getAttackDamage() <= item->getAttackDamage())
+						if (*itemStack->item != items.at(0) || !isLastItem(item)) uselessItems.push_back(i);
+				}
+			}
+		}
+	}
+	// Filter bad armor
+	{
+		std::vector<C_Item*> helmets;
+		std::vector<C_Item*> chestplates;
+		std::vector<C_Item*> leggins;
+		std::vector<C_Item*> boots;
+
+		std::sort(items.begin(), items.end(), [](const C_Item* lhs, const C_Item* rhs)
+		{
+			C_Item* current = const_cast<C_Item*>(lhs);
+			C_Item* other = const_cast<C_Item*>(rhs);
+			return current->getArmorValue() > other->getArmorValue();
+		});
+		
+		for (C_Item* item : items)
+		{
+				if (item->isHelmet()) helmets.push_back(item);
+				else if (item->isChestplate()) chestplates.push_back(item);
+				else if (item->isLeggins()) leggins.push_back(item);
+				else if (item->isBoots()) boots.push_back(item);
+		}
+
+		for (int i = 0; i < 36; i++) {
+			C_ItemStack* itemStack = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(i);
+			if (itemStack->item != nullptr) {
+				if ((*itemStack->item)->isHelmet()) {
+					for (C_Item* item : helmets) {
+						if ((*itemStack->item) != helmets.at(0) || !isLastItem(*itemStack->item)) uselessItems.push_back(i);
+					}
+				}
+				else if ((*itemStack->item)->isChestplate()) {
+					for (C_Item* item : chestplates) {
+						if ((*itemStack->item) != chestplates.at(0) || !isLastItem(*itemStack->item)) uselessItems.push_back(i);
+					}
+				}
+				else if ((*itemStack->item)->isLeggins()) {
+					for (C_Item* item : leggins) {
+						if ((*itemStack->item) != leggins.at(0) || !isLastItem(*itemStack->item)) uselessItems.push_back(i);
+					}
+				}
+				else if ((*itemStack->item)->isBoots()) {
+					for (C_Item* item : boots) {
+						if ((*itemStack->item) != boots.at(0) || !isLastItem(*itemStack->item)) uselessItems.push_back(i);
+					}
+				}
 			}
 		}
 	}
