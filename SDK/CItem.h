@@ -247,6 +247,18 @@ public:
 		if (itemId != 0 && itemId < 255) return true;
 		return false;
 	}
+	bool isHelmet() {
+		return (itemId == 298 || itemId == 302 || itemId == 306 || itemId == 310 || itemId == 314);
+	}
+	bool isChestplate() {
+		return (itemId == 299 || itemId == 303 || itemId == 307 || itemId == 311 || itemId == 315);
+	}
+	bool isLeggins() {
+		return (itemId == 300 || itemId == 304 || itemId == 308 || itemId == 312 || itemId == 316);
+	}
+	bool isBoots() {
+		return (itemId == 301 || itemId == 305 || itemId == 309 || itemId == 313 || itemId == 317);
+	}
 };
 
 class C_ArmorItem : public C_Item

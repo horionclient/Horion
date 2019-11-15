@@ -17,6 +17,10 @@ void FriendList::addPlayerToList(std::string Name)
 	g_friend.List.push_back(Name);
 }
 
+std::vector<std::string> FriendList::getList() {
+	return g_friend.List;
+}
+
 bool FriendList::findPlayer(std::string name)
 {
 	//std::transform(name.begin(), name.end(), name.begin(), ::tolower);
