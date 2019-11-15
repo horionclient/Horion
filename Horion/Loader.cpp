@@ -167,7 +167,7 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	gameModule = mem.GetModule(L"Minecraft.Windows.exe"); // Get Module for Base Address
 
 	MH_Initialize();
-	GameData::initGameData(gameModule, &mem);
+	GameData::initGameData(gameModule, &mem, (HMODULE) lpParam);
 	Target::init(g_Data.getPtrLocalPlayer());
 
 	TabGui::init();

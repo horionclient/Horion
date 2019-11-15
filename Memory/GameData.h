@@ -20,6 +20,7 @@ private:
 	C_EntityList* entityList = 0;
 	C_HIDController* hidController = 0;
 	C_RakNetInstance* raknetInstance = 0;
+	HMODULE hDllInst = 0;
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
 	
 	const SlimUtils::SlimModule* gameModule = 0;
@@ -40,12 +41,13 @@ public:
 	static void hide();
 	static void terminate();
 	static void updateGameData(C_GameMode* gameMode);
-	static void initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem);
+	static void initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem, HMODULE hDllInst);
 	static void addChestToList(C_ChestBlockActor * ChestBlock2);
 	static void EntityList_tick(C_EntityList * list);
 	static void setHIDController(C_HIDController* Hid);
 	static void setRakNetInstance(C_RakNetInstance* raknet);
 
+	inline HMODULE getDllModule() { return hDllInst; };
 	inline C_ClientInstance* getClientInstance() { return clientInstance; };
 	inline C_GuiData* getGuiData() { return clientInstance->getGuiData(); };
 	inline C_LocalPlayer* getLocalPlayer() {

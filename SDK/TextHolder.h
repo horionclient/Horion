@@ -33,6 +33,16 @@ public:
 		}
 	}
 
+	TextHolder(void* ptr, size_t sizeOfData) {
+		memset(this, 0, sizeof(TextHolder));
+		textLength = sizeOfData;
+		alignedTextLength = sizeOfData;
+		if (textLength < 16)
+			memcpy(inlineText, ptr, sizeOfData);
+		else
+			pText = reinterpret_cast<char*>(ptr);
+	}
+
 	~TextHolder() {
 		if (textLength >= 16 && pText != nullptr) {
 			free(pText);
@@ -65,5 +75,9 @@ public:
 
 			pText = ptr;
 		}
+	}
+
+	void resetWithoutDelete() {
+		memset(this, 0, sizeof(TextHolder));
 	}
 };

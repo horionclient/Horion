@@ -1,0 +1,4 @@
+#include "resource.h"
+
+IDR_TEXT1               TEXT                    "resources\\coolroblox.json"
+IDR_STEVE               RCDATA                    "resources\\Steve.dat"

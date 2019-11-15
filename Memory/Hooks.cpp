@@ -134,6 +134,9 @@ void Hooks::Init()
 		void* RakNetInstance__tick = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 55 41 56 41 57 ?? ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 89 78 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 ?? ?? ?? ?? ?? ?? ?? 48 8B F1 80 B9 ?? ?? ?? ?? ?? 74 51 C6 81 ?? ?? ?? ?? ?? 66 ?? ?? ?? ?? ?? ?? ?? 74 40 48 8D 45"));
 		g_Hooks.RakNetInstance_tickHook = std::make_unique<FuncHook>(RakNetInstance__tick, Hooks::RakNetInstance_tick);
 
+		void* ConnectionRequest__create = reinterpret_cast<void*>(Utils::FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D ?? ?? ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 ?? ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 49 8B D9 4C"));
+		g_Hooks.ConnectionRequest_createHook = std::make_unique<FuncHook>(ConnectionRequest__create, Hooks::ConnectionRequest_create);
+
 #ifdef TEST_DEBUG
 		void* addAction = reinterpret_cast<void*>(Utils::FindSignature("40 55 56 57 41 56 41 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 8B EA 4C 8B F1 4C 8B C2 48 8B 51 ?? 48 8B 49 ?? E8"));
 		g_Hooks.InventoryTransactionManager__addActionHook = std::make_unique<FuncHook>(addAction, Hooks::InventoryTransactionManager__addAction);
@@ -1059,6 +1062,49 @@ float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3)
 		return 255;
 
 	return oFunc(_this, a2, a3);
+}
+
+__int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager, void* a3, TextHolder* selfSignedId, TextHolder* serverAddress, __int64 clientRandomId, TextHolder* skinId, SkinData* skinData, __int64 capeData, __int64 animatedImageDataArr, TextHolder* skinResourcePatch, TextHolder* skinGeometryData, TextHolder* skinAnimationData, bool isPremiumSkin, bool isPersonaSkin, TextHolder* deviceId, int inputMode, int uiProfile, int guiScale, TextHolder* languageCode, bool sendEduModeParams, TextHolder* tenantId, __int64 unused, TextHolder* platformUserId, TextHolder* thirdPartyName, bool thirdPartyNameOnly, TextHolder* platformOnlineId, TextHolder* platformOfflineId, bool isCapeOnClassicSkin, TextHolder* capeId)
+{
+	static auto oFunc = g_Hooks.ConnectionRequest_createHook->GetFastcall<__int64, __int64, __int64, void*, TextHolder*, TextHolder*, __int64, TextHolder*, SkinData*, __int64, __int64, TextHolder*, TextHolder*, TextHolder*, bool, bool, TextHolder*, int, int, int, TextHolder*, bool, TextHolder*, __int64, TextHolder*, TextHolder*, bool, TextHolder*, TextHolder*, bool, TextHolder*>();
+
+	logF("Connection Request: InputMode: %i UiProfile: %i GuiScale: %i", inputMode, uiProfile, guiScale);
+	logF("Geometry size: %d", skinGeometryData->getTextLength());
+	//Logger::WriteBigLogFileF(skinGeometryData->getTextLength() + 20, "Geometry: %s", skinGeometryData->getText());
+	auto hResourceGeometry = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_TEXT1), "TEXT");
+	auto hMemoryGeometry = LoadResource(g_Data.getDllModule(), hResourceGeometry);
+
+	auto sizeGeometry = SizeofResource(g_Data.getDllModule(), hResourceGeometry);
+	auto ptrGeometry = LockResource(hMemoryGeometry);
+
+	auto hResourceSteve = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_STEVE), (char*)RT_RCDATA);
+	auto hMemorySteve = LoadResource(g_Data.getDllModule(), hResourceSteve);
+
+	auto sizeSteve = SizeofResource(g_Data.getDllModule(), hResourceSteve);
+	auto ptrSteve = LockResource(hMemorySteve);
+
+	TextHolder* newGeometryData = new TextHolder(ptrGeometry, sizeGeometry);
+	SkinData* newSkinData = new SkinData();
+	newSkinData->SkinWidth = 64;
+	newSkinData->SkinHeight = 64;
+	newSkinData->skinData = ptrSteve;
+	newSkinData->skinSize = sizeSteve;
+	//Logger::WriteBigLogFileF(newGeometryData->getTextLength() + 20, "Geometry: %s", newGeometryData->getText());
+	//TextHolder* newSkinResourcePatch = new TextHolder("ewogICAiZ2VvbWV0cnkiIDogewogICAgICAiZGVmYXVsdCIgOiAiZ2VvbWV0cnkuaHVtYW5vaWQuY3VzdG9tIgogICB9Cn0K");
+
+	__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, newSkinData, capeData, animatedImageDataArr, skinResourcePatch, newGeometryData, skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, thirdPartyName, thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
+
+	if(hMemoryGeometry)
+		FreeResource(hMemoryGeometry);
+	if (hMemorySteve)
+		FreeResource(hMemorySteve);
+
+	newGeometryData->resetWithoutDelete();
+	delete newGeometryData;
+	delete newSkinData;
+	//delete newSkinResourcePatch;
+
+	return res;
 }
 
 void Hooks::InventoryTransactionManager_addAction(C_InventoryTransactionManager* a1, C_InventoryAction* a2)

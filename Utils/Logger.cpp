@@ -66,7 +66,7 @@ void Logger::WriteLogFileF(const char * fmt, ...)
 		std::stringstream ssTime;
 		Utils::ApplySystemTime(&ssTime);
 
-		char logMessage[300];
+		char logMessage[500];
 		char timeStamp[20];
 		sprintf_s(timeStamp, 20, "%s", ssTime.str().c_str());
 
@@ -87,6 +87,64 @@ void Logger::WriteLogFileF(const char * fmt, ...)
 			stringPrintVector.push_back(textForPrint);
 			LeaveCriticalSection(&vecLock);
 		}
+	}
+	LeaveCriticalSection(&loggerLock);
+#endif
+}
+
+void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...)
+{
+	if (!loggerActive)
+		return;
+#ifdef _DEBUG
+	FILE* pFile;
+
+	if (!initializedLogger) {
+		initializedLogger = true;
+		InitializeCriticalSection(&loggerLock);
+		EnterCriticalSection(&loggerLock);
+		InitializeCriticalSection(&vecLock);
+
+		std::wstring roam = GetRoamingFolderPath();
+		sprintf_s(logPath, 200, "%S\\logs.txt", roam.c_str());
+
+		try {
+			remove(logPath);
+		}
+		catch (std::exception e) {
+		}
+
+	}
+	else EnterCriticalSection(&loggerLock);
+
+	pFile = _fsopen(logPath, "a", _SH_DENYWR); // Open File with DENY_WRITE so other programs can only read stuff from log
+	if (pFile != nullptr)
+	{
+		std::stringstream ssTime;
+		Utils::ApplySystemTime(&ssTime);
+
+		char* logMessage = new char[maxSize + 1];
+		char timeStamp[20];
+		sprintf_s(timeStamp, 20, "%s", ssTime.str().c_str());
+
+		va_list arg;
+		va_start(arg, fmt);
+		int numCharacters = vsprintf_s(logMessage, maxSize + 1, fmt, arg);
+		va_end(arg);
+		fprintf(pFile, "%s%s", timeStamp, logMessage);
+		fprintf(pFile, "\n");
+
+		fclose(pFile);
+
+		if (numCharacters < 100) {
+			TextForPrint textForPrint;
+			strcpy_s(textForPrint.text, 100, logMessage);
+			strcpy_s(textForPrint.time, 20, timeStamp);
+			EnterCriticalSection(&vecLock);
+			stringPrintVector.push_back(textForPrint);
+			LeaveCriticalSection(&vecLock);
+		}
+		delete[] logMessage;
 	}
 	LeaveCriticalSection(&loggerLock);
 #endif

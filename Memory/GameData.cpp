@@ -194,10 +194,11 @@ void GameData::addChestToList(C_ChestBlockActor * chest)
 	g_Data.chestList.insert(toAdd);
 }
 
-void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem)
+void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem, HMODULE hDllInst)
 {
 	g_Data.gameModule = gameModule;
 	g_Data.slimMem = slimMem;
+	g_Data.hDllInst = hDllInst;
 	retrieveClientInstance();
 #ifdef _DEBUG
 	logF("base: %llX", g_Data.getModule()->ptrBase);

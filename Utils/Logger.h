@@ -44,6 +44,7 @@ private:
 	static std::wstring GetRoamingFolderPath();
 public:
 	static void WriteLogFileF(const char* fmt, ...);
+	static void WriteBigLogFileF(size_t maxSize, const char* fmt, ...);
 	static std::vector<TextForPrint>* GetTextToPrint();
 	static CRITICAL_SECTION* GetTextToPrintSection();
 	//static std::vector<TextForPrint*> stringPrintVector;

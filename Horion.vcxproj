@@ -175,6 +175,7 @@
     <ClInclude Include="Memory\GameData.h" />
     <ClInclude Include="Memory\Hooks.h" />
     <ClInclude Include="Memory\MinHook.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SDK\CBlockLegacy.h" />
     <ClInclude Include="SDK\CChestBlockActor.h" />
     <ClInclude Include="SDK\CClientInstance.h" />
@@ -202,6 +203,12 @@
     <ClInclude Include="Utils\Logger.h" />
     <ClInclude Include="Memory\SlimMem.h" />
     <ClInclude Include="Utils\Utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Horion.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\coolroblox.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
