@@ -97,7 +97,7 @@ void InventoryCleaner::findUselessItems() {
 			if (itemStack->item != nullptr) {
 				for (C_Item* item : items) {
 					if ((*itemStack->item)->isTool() && (*itemStack->item)->getAttackDamage() <= item->getAttackDamage())
-						if (*itemStack->item != items.at(0) || !isLastItem(item)) uselessItems.push_back(i);
+						if (*itemStack->item != items.at(0) && !isLastItem(item)) uselessItems.push_back(i);
 				}
 			}
 		}
@@ -129,22 +129,22 @@ void InventoryCleaner::findUselessItems() {
 			if (itemStack->item != nullptr) {
 				if ((*itemStack->item)->isHelmet()) {
 					for (C_Item* item : helmets) {
-						if ((*itemStack->item) != helmets.at(0) || !isLastItem(*itemStack->item)) uselessItems.push_back(i);
+						if ((*itemStack->item) != helmets.at(0) && !isLastItem(*itemStack->item)) uselessItems.push_back(i);
 					}
 				}
 				else if ((*itemStack->item)->isChestplate()) {
 					for (C_Item* item : chestplates) {
-						if ((*itemStack->item) != chestplates.at(0) || !isLastItem(*itemStack->item)) uselessItems.push_back(i);
+						if ((*itemStack->item) != chestplates.at(0) && !isLastItem(*itemStack->item)) uselessItems.push_back(i);
 					}
 				}
 				else if ((*itemStack->item)->isLeggins()) {
 					for (C_Item* item : leggins) {
-						if ((*itemStack->item) != leggins.at(0) || !isLastItem(*itemStack->item)) uselessItems.push_back(i);
+						if ((*itemStack->item) != leggins.at(0) && !isLastItem(*itemStack->item)) uselessItems.push_back(i);
 					}
 				}
 				else if ((*itemStack->item)->isBoots()) {
 					for (C_Item* item : boots) {
-						if ((*itemStack->item) != boots.at(0) || !isLastItem(*itemStack->item)) uselessItems.push_back(i);
+						if ((*itemStack->item) != boots.at(0) && !isLastItem(*itemStack->item)) uselessItems.push_back(i);
 					}
 				}
 			}
