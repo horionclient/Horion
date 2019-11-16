@@ -5,11 +5,8 @@ class InventoryCleaner :
 {
 private:
 	bool sorted = false;
-	std::vector<int> uselessItems;
-	std::vector<C_Item*> items;
-	std::vector<int> stackableSlot;
 
-	void findUselessItems();
+	std::vector<int> findUselessItems();
 	bool stackIsUseful(C_ItemStack* itemStack);
 	bool isLastItem(C_Item* item);
 	void findStackableItems();

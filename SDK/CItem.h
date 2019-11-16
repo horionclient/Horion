@@ -146,11 +146,11 @@ private:
 	virtual __int64 getSecondaryColor(C_ItemStack const&)const;
 	virtual __int64 saveAdditionalData(__int64 const&, __int64&)const;
 	virtual __int64 saveAdditionalData(C_ItemStack const&, __int64&)const;
-	virtual __int64 readAdditionalData(C_ItemStack&, __int64 const&)const;
+/*	virtual __int64 readAdditionalData(C_ItemStack&, __int64 const&)const;
 	virtual __int64 readAdditionalData(__int64&, __int64 const&)const;
 public:
 	virtual bool isTintable(void)const;
-private:
+private:*/
 	virtual __int64 use(C_ItemStack&, C_Entity&)const;
 	virtual __int64 dispense(C_BlockSource&, __int64&, int, vec3_t const&, unsigned char)const;
 	virtual __int64 useTimeDepleted(__int64&, __int64*, C_Entity*)const;
@@ -162,21 +162,21 @@ private:
 	virtual __int64 hurtEnemy(C_ItemStack&, __int64*, __int64*)const;
 	virtual __int64 mineC_Block(__int64&, C_Block const&, int, int, int, C_Entity*)const;
 	virtual __int64 mineC_Block(C_ItemStack&, C_Block const&, int, int, int, C_Entity*)const;
-	virtual __int64 buildDescriptionId(__int64 const&)const;
+	//virtual __int64 buildDescriptionId(__int64 const&)const;
 	virtual __int64 buildDescriptionId(C_ItemStack const&)const;
-	virtual __int64 buildEffectDescriptionName(__int64 const&)const;
+	//virtual __int64 buildEffectDescriptionName(__int64 const&)const;
 	virtual __int64 buildEffectDescriptionName(C_ItemStack const&)const;
-	virtual __int64 buildCategoryDescriptionName(__int64 const&)const;
+	//virtual __int64 buildCategoryDescriptionName(__int64 const&)const;
 	virtual __int64 buildCategoryDescriptionName(C_ItemStack const&)const;
 	virtual __int64 readUserData(__int64&, __int64&, __int64&)const;
 	virtual __int64 readUserData(C_ItemStack&, __int64&, __int64&)const;
-	virtual __int64 writeUserData(__int64 const&, __int64&)const;
+	//virtual __int64 writeUserData(__int64 const&, __int64&)const;
 	virtual __int64 writeUserData(C_ItemStack const&, __int64&)const;
 public:
 	virtual int getMaxStackSize(void)const;
 private:
 	virtual __int64 inventoryTick(C_ItemStack&, __int64&, C_Entity&, int, bool)const;
-	virtual __int64 refreshedInContainer(C_ItemStack&, __int64&)const;
+	//virtual __int64 refreshedInContainer(C_ItemStack&, __int64&)const;
 	virtual __int64 refreshedInContainer(__int64&, __int64&)const;
 	virtual __int64 getCooldownType(void)const;
 	virtual __int64 getCooldownTime(void)const;

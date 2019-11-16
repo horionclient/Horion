@@ -29,11 +29,21 @@ public:
 	void dropSlot(int slot)
 	{
 		// FillingContainer::dropSlot
-		using drop_t = void(__fastcall*)(C_Inventory*, int, bool, bool, bool);
+		using drop_t = void(__fastcall*)(C_Inventory*, int, char);
 		static drop_t func = reinterpret_cast<drop_t>(Utils::FindSignature("85 D2 0F 88 ?? ?? ?? ?? 55 56 57 41 54 41 55 41 56 41 57 48"));
 		if (func != 0)
-			func(this, slot,0,0,0);
+			func(this, slot,0);
 	}
+
+	// DROPS WHOLE INVENTORY doesnt work tho
+	void dropAll(int slot) {
+		// FillingContainer::dropAll
+		using dropAll_t = void(__fastcall*)(C_Inventory*, int, int, char);
+		static dropAll_t func = reinterpret_cast<dropAll_t>(Utils::FindSignature("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 41 56 48 83 EC ?? 48 8B 01 41 0F"));
+		if (func != 0)
+			func(this, slot, 0, 0);
+	}
+
 	virtual __int64 init();
 	virtual __int64 addContentChangeListener(__int64 a2);
 	virtual __int64 removeContentChangeListener(__int64 a2);
