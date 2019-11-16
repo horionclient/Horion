@@ -42,11 +42,19 @@
 					"pivot": [0, 24, 3]
 				},
 				{
+					"name": "wand",
+					"parent": "body",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{"origin": [-33, 48, 0], "size": [66, 33, 1], "uv": [0, 74]}
+					]
+				},
+				{
 					"name": "leftArm",
 					"parent": "body",
 					"pivot": [5, 22, 0],
 					"cubes": [
-						{"origin": [11, 14, -2], "size": [4, 12, 4], "inflate": 1, "uv": [32, 48]}
+						{"origin": [12, 16, -2], "size": [4, 12, 4], "inflate": 2.5, "uv": [32, 48]}
 					]
 				},
 				{
@@ -67,7 +75,7 @@
 					"parent": "body",
 					"pivot": [-5, 22, 0],
 					"cubes": [
-						{"origin": [-15, 14, -2], "size": [4, 12, 4], "inflate": 1, "uv": [40, 16]}
+						{"origin": [-16, 16, -2], "size": [4, 12, 4], "inflate": 2.5, "uv": [40, 16]}
 					]
 				},
 				{
@@ -129,8 +137,8 @@
 			],
          "description" : {
             "identifier" : "geometry.persona_4cdbbfaca24a968e_0_0",
-            "texture_height" : 64.0,
-            "texture_width" : 64.0
+            "texture_height" : 128.0,
+            "texture_width" : 128.0
          }
       },
       {
@@ -199,8 +207,8 @@
          ],
          "description" : {
             "identifier" : "geometry.animated_face_persona_4cdbbfaca24a968e_0_0",
-            "texture_height" : 64.0,
-            "texture_width" : 64.0
+            "texture_height" : 128.0,
+            "texture_width" : 128.0
          }
       }
    ]

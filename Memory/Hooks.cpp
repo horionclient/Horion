@@ -1096,8 +1096,8 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 
 	TextHolder* newGeometryData = new TextHolder(ptrGeometry, sizeGeometry);
 	SkinData* newSkinData = new SkinData();
-	newSkinData->SkinWidth = 64;
-	newSkinData->SkinHeight = 64;
+	newSkinData->SkinWidth = 128;
+	newSkinData->SkinHeight = 128;
 	newSkinData->skinData = ptrSteve;
 	newSkinData->skinSize = sizeSteve;
 	//Logger::WriteBigLogFileF(newGeometryData->getTextLength() + 20, "Geometry: %s", newGeometryData->getText());
