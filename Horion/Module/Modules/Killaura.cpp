@@ -91,19 +91,25 @@ void Killaura::onTick(C_GameMode* gm)
 
 	g_Data.forEachEntity(findEntity);
 
+	hasTarget = !targetList.empty();
+
 	Odelay++;
-	if (targetList.size() > 0 && Odelay >= delay) {
+	if (hasTarget && Odelay >= delay) {
 		if (autoweapon) findWeapon();
 
 		g_Data.getLocalPlayer()->swing();
 
 		// Attack all entitys in targetList 
 		if (isMulti) {
-			for (int i = 0; i < targetList.size(); i++)
+			for (int i = 0; i < targetList.size(); i++) {
+				angle = g_Data.getClientInstance()->levelRenderer->origin.CalcAngle(*targetList[i]->getPos());
 				g_Data.getCGameMode()->attack(targetList[i]);
+			}
 		}
-		else
+		else {
+			angle = g_Data.getClientInstance()->levelRenderer->origin.CalcAngle(*targetList[0]->getPos());
 			g_Data.getCGameMode()->attack(targetList[0]);
+		}
 		Odelay = 0;
 	}
 }

@@ -665,6 +665,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	static auto oFunc = g_Hooks.LoopbackPacketSender_sendToServerHook->GetFastcall<void, C_LoopbackPacketSender*, C_Packet*>();
 
 	static IModule* FreecamMod = moduleMgr->getModule<Freecam>();
+	static Killaura* killauraMod = moduleMgr->getModule<Killaura>();
 	static NoFall* NoFallMod = moduleMgr->getModule<NoFall>();
 	static Blink* BlinkMod = moduleMgr->getModule<Blink>();
 	static NoPacket* No_Packet = moduleMgr->getModule<NoPacket>();
@@ -725,7 +726,17 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 			return;
 		}
 	}
-
+	if (killauraMod == nullptr)
+		killauraMod = moduleMgr->getModule<Killaura>();
+	else if (killauraMod->isEnabled() && g_Data.getLocalPlayer() != nullptr && strcmp(packet->getName()->getText(), "MovePlayerPacket") == 0) {
+		vec2_t angle = killauraMod->angle;
+		if (killauraMod->hasTarget) {
+			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
+			p->pitch = angle.x;
+			p->headYaw = angle.y;
+			p->yaw = angle.y;
+		}
+	}
 	if (NoFallMod == nullptr)
 		NoFallMod = moduleMgr->getModule<NoFall>();
 	else if (NoFallMod->isEnabled()) {
