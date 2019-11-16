@@ -18,7 +18,7 @@ If you want to contribute to this project, feel free to fork this repository and
 
 ## Contributing
 To contribute, simply **fork the repository**, edit the things you want to and **submit a pull request**.
-We then just check your pull request and accept/deny it.
+We will then check your pull request and accept/deny it.
 If you are clueless about what you could start with, [we collected some issues for you](https://github.com/horionclient/Horion/contribute).
 More Information on setting everything up can be found in the **[wiki](https://github.com/horionclient/Horion/wiki "wiki")**!
 If you need any help with understanding our code, join the official discord server:
