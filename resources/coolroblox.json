@@ -128,7 +128,7 @@
 				}
 			],
          "description" : {
-            "identifier" : "geometry.persona_74e3bab46bdb04c7_0_1",
+            "identifier" : "geometry.persona_4cdbbfaca24a968e_0_0",
             "texture_height" : 64.0,
             "texture_width" : 64.0
          }
@@ -198,7 +198,7 @@
             }
          ],
          "description" : {
-            "identifier" : "geometry.animated_face_persona_74e3bab46bdb04c7_0_1",
+            "identifier" : "geometry.animated_face_persona_4cdbbfaca24a968e_0_0",
             "texture_height" : 64.0,
             "texture_width" : 64.0
          }
