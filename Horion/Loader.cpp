@@ -154,9 +154,52 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1); // Uninject
 }
 
+DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
+	logF("Injector Connection Thread started");
+
+	struct MemoryBoi {
+		short protocolVersion;
+		bool isPresent;
+		bool isUnread;
+		int clientVersion;
+		int params[5];
+		char data[3000];
+	};
+
+	unsigned char magicValues[16] = { 0x00, 0x4F, 0x52, 0x00, 0x49, 0x4F, 0x4E, 0x23, 0x9C, 0x47, 0xFB, 0xFF, 0x7D, 0x9C, 0x42, 0x57 };
+	char* magicArray = new char[sizeof(magicValues) + sizeof(uintptr_t) * 2];
+	memcpy(magicArray, magicValues, sizeof(magicValues));
+	magicArray[0] = 0x48; //Only find this allocated one, not the one in the thread stack
+	
+	MemoryBoi** horionToInjector = reinterpret_cast<MemoryBoi**>(magicArray + sizeof(magicValues));
+	MemoryBoi** injectorToHorion = reinterpret_cast<MemoryBoi**>(magicArray + sizeof(magicValues) + sizeof(uintptr_t));
+ 
+	*horionToInjector = new MemoryBoi();
+	(*horionToInjector)->isPresent = true;
+	(*horionToInjector)->protocolVersion = 1;
+	*injectorToHorion = new MemoryBoi();
+
+	while (isRunning) {
+		Sleep(10);
+		bool isConnected = (*horionToInjector)->isPresent && (*injectorToHorion)->isPresent && (*horionToInjector)->protocolVersion == (*injectorToHorion)->protocolVersion;
+		g_Data.setInjectorConnectionActive(isConnected);
+		if (isConnected) {
+
+		}
+		else
+			Sleep(50);
+	}
+
+	memset(magicArray, 0, sizeof(magicValues + sizeof(uintptr_t) * 2));
+	delete[] magicArray;
+
+	ExitThread(0);
+}
+
 DWORD WINAPI startCheat(LPVOID lpParam)
 {
 	logF("Starting up...");
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)injectorConnectionThread, lpParam, NULL, NULL);
 	init();
 
 	DWORD procId = GetCurrentProcessId();
@@ -174,16 +217,21 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	TabGui::init();
 	ClickGui::init();
 	Hooks::Init();
+
+	logF("Waiting for injector");
+	while (!g_Data.isInjectorConnectionActive()) {
+		Sleep(10);
+	}
+	logF("Injector found");
+
 	cmdMgr->initCommands();
 	moduleMgr->initModules();
 	configMgr->init();
 
 	logF("Starting threads...");
 	
-	
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE) keyThread, lpParam, NULL, NULL); // Checking Keypresses
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)analyticsThread, lpParam, NULL, NULL);
-	
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE) analyticsThread, lpParam, NULL, NULL);
 
 	ExitThread(0);
 }

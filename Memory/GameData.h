@@ -23,6 +23,7 @@ private:
 	HMODULE hDllInst = 0;
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
 	
+	bool injectorConnectionActive = false;
 	const SlimUtils::SlimModule* gameModule = 0;
 	SlimUtils::SlimMem* slimMem;
 	bool shouldTerminateB = false;
@@ -47,6 +48,8 @@ public:
 	static void setHIDController(C_HIDController* Hid);
 	static void setRakNetInstance(C_RakNetInstance* raknet);
 
+	inline bool isInjectorConnectionActive() { return injectorConnectionActive; };
+	inline void setInjectorConnectionActive(bool isActive) { injectorConnectionActive = isActive; };
 	inline HMODULE getDllModule() { return hDllInst; };
 	inline C_ClientInstance* getClientInstance() { return clientInstance; };
 	inline C_GuiData* getGuiData() { return clientInstance->getGuiData(); };
