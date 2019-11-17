@@ -269,6 +269,18 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 	if (GameData::shouldHide())
 		return oText(a1, renderCtx);
 
+	if (!g_Data.isInjectorConnectionActive()) {
+		__int64 retval = oText(a1, renderCtx);
+
+		vec2_t windowSize = dat->windowSize;
+		std::string text = "Download the new injector at http://horionbeta.club";
+		DrawUtils::fillRectangle(vec4_t(0, 0, windowSize.x, windowSize.y), MC_Color(0.2f, 0.2f, 0.2f, 1.f), 0.8f);
+		DrawUtils::drawText(vec2_t(windowSize.x / 2 - DrawUtils::getTextWidth(&text) / 2, windowSize.y / 2), &text);
+		DrawUtils::flush();
+
+		return retval;
+	}
+
 	// Call PreRender() functions
 	moduleMgr->onPreRender();
 	DrawUtils::flush();

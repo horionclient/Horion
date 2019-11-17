@@ -10,7 +10,20 @@
 #include "../Utils/TextFormat.h"
 #include "SlimMem.h"
 #include <map>
+#include <queue>
 
+enum DATAPACKET_CMD {
+	CMD_INIT = 0,
+	CMD_PING,
+	CMD_PONG
+};
+
+struct HorionDataPacket {
+	DATAPACKET_CMD cmd;
+	int params[5];
+	int dataArraySize;
+	unsigned char* data;
+};
 
 class GameData {
 private:
@@ -22,12 +35,14 @@ private:
 	C_RakNetInstance* raknetInstance = 0;
 	HMODULE hDllInst = 0;
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
-	
+	std::queue<HorionDataPacket> horionToInjectorQueue;
+
 	bool injectorConnectionActive = false;
 	const SlimUtils::SlimModule* gameModule = 0;
 	SlimUtils::SlimMem* slimMem;
 	bool shouldTerminateB = false;
 	bool shouldHideB = false;
+	bool isAllowingWIPFeatures = false;
 	LARGE_INTEGER lastUpdate;
 	static void retrieveClientInstance();
 public:
@@ -48,8 +63,39 @@ public:
 	static void setHIDController(C_HIDController* Hid);
 	static void setRakNetInstance(C_RakNetInstance* raknet);
 
+	inline void sendPacketToInjector(HorionDataPacket horionDataPack) {
+		if (!isInjectorConnectionActive())
+			throw std::exception("Horion injector connection not active");
+		if (horionDataPack.dataArraySize >= 3000)
+			throw std::exception("Data packet data too big");
+		horionToInjectorQueue.push(horionDataPack);
+	}
+	inline bool allowWIPFeatures() {
+#ifdef _DEBUG
+		return true;
+#elif defined _BETA
+		return isAllowingWIPFeatures;
+#else
+		return false;
+#endif
+	}
+	inline void setAllowWIPFeatures(bool enable = false) { isAllowingWIPFeatures = enable; };
 	inline bool isInjectorConnectionActive() { return injectorConnectionActive; };
-	inline void setInjectorConnectionActive(bool isActive) { injectorConnectionActive = isActive; };
+	inline void setInjectorConnectionActive(bool isActive) { 
+		if (injectorConnectionActive && !isActive) {
+			std::queue<HorionDataPacket> empty;
+			horionToInjectorQueue.swap(empty);
+		} 
+		injectorConnectionActive = isActive; 
+	};
+	inline bool isPacketToInjectorQueueEmpty() { return horionToInjectorQueue.empty(); };
+	inline HorionDataPacket getPacketToInjector() {
+		if (isPacketToInjectorQueueEmpty())
+			throw std::exception("Packet send queue is empty");
+		HorionDataPacket pk = horionToInjectorQueue.front();
+		horionToInjectorQueue.pop();
+		return pk;
+	};
 	inline HMODULE getDllModule() { return hDllInst; };
 	inline C_ClientInstance* getClientInstance() { return clientInstance; };
 	inline C_GuiData* getGuiData() { return clientInstance->getGuiData(); };

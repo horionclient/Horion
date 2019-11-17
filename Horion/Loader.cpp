@@ -162,8 +162,10 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 		bool isPresent;
 		bool isUnread;
 		int clientVersion;
+		DATAPACKET_CMD cmd;
 		int params[5];
-		char data[3000];
+		int dataSize;
+		unsigned char data[3000];
 	};
 
 	unsigned char magicValues[16] = { 0x00, 0x4F, 0x52, 0x00, 0x49, 0x4F, 0x4E, 0x23, 0x9C, 0x47, 0xFB, 0xFF, 0x7D, 0x9C, 0x42, 0x57 };
@@ -171,25 +173,92 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	memcpy(magicArray, magicValues, sizeof(magicValues));
 	magicArray[0] = 0x48; //Only find this allocated one, not the one in the thread stack
 	
-	MemoryBoi** horionToInjector = reinterpret_cast<MemoryBoi**>(magicArray + sizeof(magicValues));
-	MemoryBoi** injectorToHorion = reinterpret_cast<MemoryBoi**>(magicArray + sizeof(magicValues) + sizeof(uintptr_t));
- 
-	*horionToInjector = new MemoryBoi();
-	(*horionToInjector)->isPresent = true;
-	(*horionToInjector)->protocolVersion = 1;
-	*injectorToHorion = new MemoryBoi();
+	MemoryBoi** horionToInjectorPtr = reinterpret_cast<MemoryBoi**>(magicArray + sizeof(magicValues));
+	MemoryBoi** injectorToHorionPtr = reinterpret_cast<MemoryBoi**>(magicArray + sizeof(magicValues) + sizeof(uintptr_t));
+
+	*horionToInjectorPtr = new MemoryBoi();
+	MemoryBoi* horionToInjector = *horionToInjectorPtr;
+	horionToInjector->isPresent = true;
+	horionToInjector->protocolVersion = 1;
+
+	*injectorToHorionPtr = new MemoryBoi();
+	MemoryBoi* injectorToHorion = *injectorToHorionPtr;
+
+	LARGE_INTEGER frequency, timeSinceLastMessage, timeSinceLastPing;
+	QueryPerformanceFrequency(&frequency);
+	QueryPerformanceCounter(&timeSinceLastMessage);
+	QueryPerformanceCounter(&timeSinceLastPing);
 
 	while (isRunning) {
-		Sleep(10);
-		bool isConnected = (*horionToInjector)->isPresent && (*injectorToHorion)->isPresent && (*horionToInjector)->protocolVersion == (*injectorToHorion)->protocolVersion;
+		Sleep(5);
+		LARGE_INTEGER endTime;
+		QueryPerformanceCounter(&endTime);
+		bool isConnected = horionToInjector->isPresent && injectorToHorion->isPresent && horionToInjector->protocolVersion == injectorToHorion->protocolVersion;
+		{
+			__int64 elapsed = endTime.QuadPart - timeSinceLastMessage.QuadPart;
+			elapsed /= frequency.QuadPart;
+			if (elapsed > 5) {
+				isConnected = false;
+			}
+		}
 		g_Data.setInjectorConnectionActive(isConnected);
-		if (isConnected) {
 
+		if (isConnected) {
+			// Send Ping every 2 seconds to keep connection alive
+			{
+				__int64 elapsedPing = endTime.QuadPart - timeSinceLastPing.QuadPart;
+				elapsedPing /= frequency.QuadPart;
+				if (elapsedPing > 2) {
+					HorionDataPacket pingPacket;
+					pingPacket.cmd = CMD_PING;
+					pingPacket.params[0] = 0x1333337;
+					g_Data.sendPacketToInjector(pingPacket);
+					QueryPerformanceCounter(&timeSinceLastPing);
+				}
+			}
+			
+
+			if (injectorToHorion->isUnread) { // They sent us a message
+				QueryPerformanceCounter(&timeSinceLastMessage);
+
+				switch(injectorToHorion->cmd) {
+				case CMD_PING:
+				{
+					HorionDataPacket pongPacket;
+					pongPacket.cmd = CMD_PONG;
+					pongPacket.params[0] = injectorToHorion->params[0];
+					g_Data.sendPacketToInjector(pongPacket);
+					break;
+				}
+				case CMD_PONG:
+				{
+					logF("Received Pong");
+					break;
+				}
+				}
+
+				injectorToHorion->isUnread = false;
+			}
+
+			if (!horionToInjector->isUnread && !g_Data.isPacketToInjectorQueueEmpty()) {
+				QueryPerformanceCounter(&timeSinceLastMessage);
+				// They read the message, lets send the next one
+				HorionDataPacket nextDataPack = g_Data.getPacketToInjector();
+				if (nextDataPack.dataArraySize >= 3000)
+					throw std::exception("Data packet too big on send");
+				horionToInjector->cmd = nextDataPack.cmd;
+				memcpy(horionToInjector->params, nextDataPack.params, sizeof(int) * 5);
+				if(nextDataPack.dataArraySize > 0)
+					memcpy(horionToInjector->data, nextDataPack.data, nextDataPack.dataArraySize);
+				horionToInjector->dataSize = nextDataPack.dataArraySize;
+				horionToInjector->isUnread = true;
+			}
 		}
 		else
-			Sleep(50);
+			Sleep(30);
 	}
 
+	memset(magicValues, 0, sizeof(magicValues));
 	memset(magicArray, 0, sizeof(magicValues + sizeof(uintptr_t) * 2));
 	delete[] magicArray;
 
