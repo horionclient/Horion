@@ -102,11 +102,9 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 
 		C_RakNetInstance* rakInstance = g_Data.getRakNetInstance();
 		if (rakInstance != nullptr && rakInstance->serverIp.getTextLength() > 5 &&
-			(strcmp(rakInstance->serverIp.getText(),"play.valeanetwork.eu") == 0 ||
-			strcmp(rakInstance->serverIp.getText(), "137.74.152.142") == 0 ||
-			strcmp(rakInstance->serverIp.getText(), "pvp.valeanetwork.eu") == 0)
-			)
-		{
+				(strcmp(rakInstance->serverIp.getText(),"play.valeanetwork.eu") == 0 ||
+				strcmp(rakInstance->serverIp.getText(), "137.74.152.142") == 0 ||
+				strcmp(rakInstance->serverIp.getText(), "pvp.valeanetwork.eu") == 0)) {
 
 			C_GuiData* guiData = g_Data.getClientInstance()->getGuiData();
 
@@ -143,13 +141,12 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			memcpy(reinterpret_cast<void*>(clickMap), &(*hidController)->leftClickDown, 5);
 		}
 		
-
 		memcpy_s(keyMap, 0xFF * 4, keyMapAddr, 0xFF * 4);
 		
 		Sleep(2); 
 	}
-	logF("Alright bro I'm boutta head out");
-	Sleep(100); // Give the threads a bit of time to exit
+	logF("Aight bro I'm boutta head out");
+	Sleep(150); // Give the threads a bit of time to exit
 
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1); // Uninject
 }
@@ -173,6 +170,8 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	memcpy(magicArray, magicValues, sizeof(magicValues));
 	magicArray[0] = 0x48; //Only find this allocated one, not the one in the thread stack
 	
+	logF("Magic array at %llX", magicArray);
+
 	MemoryBoi** horionToInjectorPtr = reinterpret_cast<MemoryBoi**>(magicArray + sizeof(magicValues));
 	MemoryBoi** injectorToHorionPtr = reinterpret_cast<MemoryBoi**>(magicArray + sizeof(magicValues) + sizeof(uintptr_t));
 
@@ -193,12 +192,15 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 		Sleep(5);
 		LARGE_INTEGER endTime;
 		QueryPerformanceCounter(&endTime);
-		bool isConnected = horionToInjector->isPresent && injectorToHorion->isPresent && horionToInjector->protocolVersion == injectorToHorion->protocolVersion;
+		bool isConnected = horionToInjector->isPresent && injectorToHorion->isPresent && horionToInjector->protocolVersion >= injectorToHorion->protocolVersion;
+		if(isConnected)
 		{
 			__int64 elapsed = endTime.QuadPart - timeSinceLastMessage.QuadPart;
-			elapsed /= frequency.QuadPart;
-			if (elapsed > 5) {
+			float realElapsed = (float) elapsed / frequency.QuadPart;
+			if (realElapsed > 2.5f) {
 				isConnected = false;
+				logF("Disconnected due to timeout");
+				QueryPerformanceCounter(&timeSinceLastMessage);
 			}
 		}
 		g_Data.setInjectorConnectionActive(isConnected);
@@ -207,8 +209,8 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 			// Send Ping every 2 seconds to keep connection alive
 			{
 				__int64 elapsedPing = endTime.QuadPart - timeSinceLastPing.QuadPart;
-				elapsedPing /= frequency.QuadPart;
-				if (elapsedPing > 2) {
+				float realPing = (float)elapsedPing / frequency.QuadPart;
+				if (realPing > 1) {
 					HorionDataPacket pingPacket;
 					pingPacket.cmd = CMD_PING;
 					pingPacket.params[0] = 0x1333337;
@@ -216,7 +218,6 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 					QueryPerformanceCounter(&timeSinceLastPing);
 				}
 			}
-			
 
 			if (injectorToHorion->isUnread) { // They sent us a message
 				QueryPerformanceCounter(&timeSinceLastMessage);
@@ -232,7 +233,6 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 				}
 				case CMD_PONG:
 				{
-					logF("Received Pong");
 					break;
 				}
 				}
@@ -260,6 +260,8 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 
 	memset(magicValues, 0, sizeof(magicValues));
 	memset(magicArray, 0, sizeof(magicValues + sizeof(uintptr_t) * 2));
+	delete *horionToInjectorPtr;
+	delete *injectorToHorionPtr;
 	delete[] magicArray;
 
 	ExitThread(0);
@@ -287,6 +289,9 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	ClickGui::init();
 	Hooks::Init();
 
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL); // Checking Keypresses
+
+
 	logF("Waiting for injector");
 	while (!g_Data.isInjectorConnectionActive()) {
 		Sleep(10);
@@ -299,7 +304,6 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 
 	logF("Starting threads...");
 	
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE) keyThread, lpParam, NULL, NULL); // Checking Keypresses
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE) analyticsThread, lpParam, NULL, NULL);
 
 	ExitThread(0);
