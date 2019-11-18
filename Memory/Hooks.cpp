@@ -172,6 +172,8 @@ void Hooks::Restore()
 	g_Hooks.RakNetInstance_tickHook->Restore();
 	g_Hooks.GameMode_getPickRangeHook->Restore();
 	g_Hooks.InventoryTransactionManager_addActionHook->Restore();
+	MH_DisableHook(MH_ALL_HOOKS);
+	Sleep(10);
 }
 
 void Hooks::GameMode_tick(C_GameMode* _this)

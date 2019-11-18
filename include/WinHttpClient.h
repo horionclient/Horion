@@ -18,7 +18,7 @@
 
 typedef bool (*PROGRESSPROC)(double);
 
-static const unsigned int INT_RETRYTIMES = 3;
+static const unsigned int INT_RETRYTIMES = 1;
 static wchar_t *SZ_AGENT = L"WinHttpClient";
 static const int INT_BUFFERSIZE = 10240;    // Initial 10 KB temporary buffer, double if it is not enough.
 
@@ -179,7 +179,7 @@ bool WinHttpClient::SendHttpRequest(const std::wstring &httpVerb, bool disableAu
         }
     }
 
-    ::WinHttpSetTimeouts(m_sessionHandle,
+    bool timSet = ::WinHttpSetTimeouts(m_sessionHandle,
                          m_resolveTimeout,
                          m_connectTimeout,
                          m_sendTimeout,
@@ -297,6 +297,7 @@ bool WinHttpClient::SendHttpRequest(const std::wstring &httpVerb, bool disableAu
                                              NULL))
                     {
                         bSendRequestSucceed = true;
+						
                     }
                     else
                     {

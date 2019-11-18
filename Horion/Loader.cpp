@@ -113,7 +113,6 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			isRunning = false;
 			break;
 		}
-
 		
 		for (uintptr_t i = 0; i < 0xFF; i++) {
 			bool* newKey = keyMapAddr + (4 * i); 
@@ -163,6 +162,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 		int params[5];
 		int dataSize;
 		unsigned char data[3000];
+		unsigned char zeroByte = 0;
 	};
 
 	unsigned char magicValues[16] = { 0x00, 0x4F, 0x52, 0x00, 0x49, 0x4F, 0x4E, 0x23, 0x9C, 0x47, 0xFB, 0xFF, 0x7D, 0x9C, 0x42, 0x57 };
@@ -197,9 +197,10 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 		{
 			__int64 elapsed = endTime.QuadPart - timeSinceLastMessage.QuadPart;
 			float realElapsed = (float) elapsed / frequency.QuadPart;
-			if (realElapsed > 2.5f) {
+			if (realElapsed > 3.5f) {
 				isConnected = false;
-				logF("Disconnected due to timeout");
+				logF("Disconnected from injector due to timeout");
+				injectorToHorion->isPresent = false;
 				QueryPerformanceCounter(&timeSinceLastMessage);
 			}
 		}
@@ -223,6 +224,22 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 				QueryPerformanceCounter(&timeSinceLastMessage);
 
 				switch(injectorToHorion->cmd) {
+				case CMD_INIT:
+				{
+					logF("Got CMD_INIT from injector");
+					int flags = injectorToHorion->params[0];
+					if (flags & (1 << 0) && injectorToHorion->dataSize > 0 && injectorToHorion->dataSize < sizeof(injectorToHorion->data)) { // Has Json data
+						injectorToHorion->data[sizeof(injectorToHorion->data) - 1] = '\0';
+						json data = json::parse(reinterpret_cast<char*>(injectorToHorion->data));
+						if (data.at("discordAuth").is_string() && data.at("serial").is_number_integer()) {
+							logF("Got discord auth token from injector");
+							g_Data.setAccountInformation(AccountInformation::fromToken(data.at("discordAuth").get<std::string>(), data.at("serial").get<unsigned int>()));
+						}
+					}
+					if (flags & (1 << 2)) // WIP Features
+						g_Data.setAllowWIPFeatures(true);
+					break;
+				}
 				case CMD_PING:
 				{
 					HorionDataPacket pongPacket;
@@ -245,7 +262,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 				// They read the message, lets send the next one
 				HorionDataPacket nextDataPack = g_Data.getPacketToInjector();
 				if (nextDataPack.dataArraySize >= 3000)
-					throw std::exception("Data packet too big on send");
+					throw std::exception("Horion Data packet too big to send");
 				horionToInjector->cmd = nextDataPack.cmd;
 				memcpy(horionToInjector->params, nextDataPack.params, sizeof(int) * 5);
 				if(nextDataPack.dataArraySize > 0)
@@ -295,6 +312,8 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	logF("Waiting for injector");
 	while (!g_Data.isInjectorConnectionActive()) {
 		Sleep(10);
+		if (!isRunning)
+			ExitThread(0);
 	}
 	logF("Injector found");
 
@@ -325,6 +344,7 @@ DllMain(HMODULE hModule,
 	break;
 	case DLL_PROCESS_DETACH:
 		isRunning = false;
+		
 		configMgr->saveConfig();
 		moduleMgr->disable();
 		cmdMgr->disable();

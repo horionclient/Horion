@@ -8,6 +8,7 @@
 #include "../SDK/CMoveInputHandler.h"
 #include "../SDK/CRakNetInstance.h"
 #include "../Utils/TextFormat.h"
+#include "../Horion/Config/AccountInformation.h"
 #include "SlimMem.h"
 #include <map>
 #include <queue>
@@ -44,6 +45,7 @@ private:
 	bool shouldHideB = false;
 	bool isAllowingWIPFeatures = false;
 	LARGE_INTEGER lastUpdate;
+	AccountInformation accountInformation = AccountInformation::asGuest();
 	static void retrieveClientInstance();
 public:
 	static bool canUseMoveKeys();
@@ -63,6 +65,11 @@ public:
 	static void setHIDController(C_HIDController* Hid);
 	static void setRakNetInstance(C_RakNetInstance* raknet);
 
+	inline AccountInformation getAccountInformation() { return this->accountInformation; };
+	inline void setAccountInformation(AccountInformation newAcc) {
+		if (newAcc.verify())
+			this->accountInformation = newAcc;
+	}
 	inline void sendPacketToInjector(HorionDataPacket horionDataPack) {
 		if (!isInjectorConnectionActive())
 			throw std::exception("Horion injector connection not active");
