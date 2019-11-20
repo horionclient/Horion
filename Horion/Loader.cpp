@@ -102,11 +102,9 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 
 		C_RakNetInstance* rakInstance = g_Data.getRakNetInstance();
 		if (rakInstance != nullptr && rakInstance->serverIp.getTextLength() > 5 &&
-			(strcmp(rakInstance->serverIp.getText(),"play.valeanetwork.eu") == 0 ||
-			strcmp(rakInstance->serverIp.getText(), "137.74.152.142") == 0 ||
-			strcmp(rakInstance->serverIp.getText(), "pvp.valeanetwork.eu") == 0)
-			)
-		{
+				(strcmp(rakInstance->serverIp.getText(),"play.valeanetwork.eu") == 0 ||
+				strcmp(rakInstance->serverIp.getText(), "137.74.152.142") == 0 ||
+				strcmp(rakInstance->serverIp.getText(), "pvp.valeanetwork.eu") == 0)) {
 
 			C_GuiData* guiData = g_Data.getClientInstance()->getGuiData();
 
@@ -115,7 +113,6 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			isRunning = false;
 			break;
 		}
-
 		
 		for (uintptr_t i = 0; i < 0xFF; i++) {
 			bool* newKey = keyMapAddr + (4 * i); 
@@ -143,20 +140,162 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 			memcpy(reinterpret_cast<void*>(clickMap), &(*hidController)->leftClickDown, 5);
 		}
 		
-
 		memcpy_s(keyMap, 0xFF * 4, keyMapAddr, 0xFF * 4);
 		
 		Sleep(2); 
 	}
-	logF("Alright bro I'm boutta head out");
-	Sleep(100); // Give the threads a bit of time to exit
+	logF("Aight bro I'm boutta head out");
+	Sleep(150); // Give the threads a bit of time to exit
 
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1); // Uninject
+}
+
+DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
+	logF("Injector Connection Thread started");
+
+	struct MemoryBoi {
+		short protocolVersion;
+		bool isPresent;
+		bool isUnread;
+		int clientVersion;
+		DATAPACKET_CMD cmd;
+		int params[5];
+		int dataSize;
+		unsigned char data[3000];
+		unsigned char zeroByte = 0;
+	};
+
+	unsigned char magicValues[16] = { 0x00, 0x4F, 0x52, 0x00, 0x49, 0x4F, 0x4E, 0x23, 0x9C, 0x47, 0xFB, 0xFF, 0x7D, 0x9C, 0x42, 0x57 };
+	char* magicArray = new char[sizeof(magicValues) + sizeof(uintptr_t) * 2];
+	memcpy(magicArray, magicValues, sizeof(magicValues));
+	magicArray[0] = 0x48; //Only find this allocated one, not the one in the thread stack
+	
+	logF("Magic array at %llX", magicArray);
+
+	MemoryBoi** horionToInjectorPtr = reinterpret_cast<MemoryBoi**>(magicArray + sizeof(magicValues));
+	MemoryBoi** injectorToHorionPtr = reinterpret_cast<MemoryBoi**>(magicArray + sizeof(magicValues) + sizeof(uintptr_t));
+
+	*horionToInjectorPtr = new MemoryBoi();
+	MemoryBoi* horionToInjector = *horionToInjectorPtr;
+	horionToInjector->isPresent = true;
+	horionToInjector->protocolVersion = 1;
+
+	*injectorToHorionPtr = new MemoryBoi();
+	MemoryBoi* injectorToHorion = *injectorToHorionPtr;
+
+	LARGE_INTEGER frequency, timeSinceLastMessage, timeSinceLastPing;
+	QueryPerformanceFrequency(&frequency);
+	QueryPerformanceCounter(&timeSinceLastMessage);
+	QueryPerformanceCounter(&timeSinceLastPing);
+
+	while (isRunning) {
+		Sleep(5);
+		LARGE_INTEGER endTime;
+		QueryPerformanceCounter(&endTime);
+		bool isConnected = horionToInjector->isPresent && injectorToHorion->isPresent && horionToInjector->protocolVersion >= injectorToHorion->protocolVersion;
+		if(isConnected)
+		{
+			__int64 elapsed = endTime.QuadPart - timeSinceLastMessage.QuadPart;
+			float realElapsed = (float) elapsed / frequency.QuadPart;
+			if (realElapsed > 3.5f) {
+				isConnected = false;
+				logF("Disconnected from injector due to timeout");
+				injectorToHorion->isPresent = false;
+				QueryPerformanceCounter(&timeSinceLastMessage);
+			}
+		}
+		g_Data.setInjectorConnectionActive(isConnected);
+
+		if (isConnected) {
+			// Send Ping every 2 seconds to keep connection alive
+			{
+				__int64 elapsedPing = endTime.QuadPart - timeSinceLastPing.QuadPart;
+				float realPing = (float)elapsedPing / frequency.QuadPart;
+				if (realPing > 1) {
+					HorionDataPacket pingPacket;
+					pingPacket.cmd = CMD_PING;
+					pingPacket.params[0] = 0x1333337;
+					g_Data.sendPacketToInjector(pingPacket);
+					QueryPerformanceCounter(&timeSinceLastPing);
+				}
+			}
+
+			if (injectorToHorion->isUnread) { // They sent us a message
+				QueryPerformanceCounter(&timeSinceLastMessage);
+
+				switch(injectorToHorion->cmd) {
+				case CMD_INIT:
+				{
+					logF("Got CMD_INIT from injector");
+					int flags = injectorToHorion->params[0];
+					if (flags & (1 << 0) && injectorToHorion->dataSize > 0 && injectorToHorion->dataSize < sizeof(injectorToHorion->data)) { // Has Json data
+						injectorToHorion->data[sizeof(injectorToHorion->data) - 1] = '\0';
+						json data = json::parse(reinterpret_cast<char*>(injectorToHorion->data));
+						if (data.at("discordAuth").is_string() && data.at("serial").is_number_integer()) {
+							logF("Got discord auth token from injector");
+							g_Data.setAccountInformation(AccountInformation::fromToken(data.at("discordAuth").get<std::string>(), data.at("serial").get<unsigned int>()));
+						}
+					}
+					if (flags & (1 << 2)) // WIP Features
+						g_Data.setAllowWIPFeatures(true);
+
+					break;
+				}
+				case CMD_PING:
+				{
+					HorionDataPacket pongPacket;
+					pongPacket.cmd = CMD_PONG;
+					pongPacket.params[0] = injectorToHorion->params[0];
+					g_Data.sendPacketToInjector(pongPacket);
+					break;
+				}
+				case CMD_PONG:
+				{
+					break;
+				}
+				}
+
+				injectorToHorion->isUnread = false;
+			}
+
+			if (!horionToInjector->isUnread && !g_Data.isPacketToInjectorQueueEmpty()) {
+				QueryPerformanceCounter(&timeSinceLastMessage);
+				// They read the message, lets send the next one
+				HorionDataPacket nextDataPack = g_Data.getPacketToInjector();
+				if (nextDataPack.dataArraySize >= 3000) {
+					delete[] nextDataPack.data;
+					throw std::exception("Horion Data packet too big to send");
+				}
+					
+				horionToInjector->cmd = nextDataPack.cmd;
+				memcpy(horionToInjector->params, nextDataPack.params, sizeof(int) * 5);
+				if (nextDataPack.dataArraySize > 0) {
+					memcpy(horionToInjector->data, nextDataPack.data, nextDataPack.dataArraySize);
+					delete[] nextDataPack.data;
+				}
+					
+				horionToInjector->dataSize = nextDataPack.dataArraySize;
+				
+				horionToInjector->isUnread = true;
+			}
+		}
+		else
+			Sleep(30);
+	}
+
+	memset(magicValues, 0, sizeof(magicValues));
+	memset(magicArray, 0, sizeof(magicValues + sizeof(uintptr_t) * 2));
+	delete *horionToInjectorPtr;
+	delete *injectorToHorionPtr;
+	delete[] magicArray;
+
+	ExitThread(0);
 }
 
 DWORD WINAPI startCheat(LPVOID lpParam)
 {
 	logF("Starting up...");
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)injectorConnectionThread, lpParam, NULL, NULL);
 	init();
 
 	DWORD procId = GetCurrentProcessId();
@@ -174,16 +313,25 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	TabGui::init();
 	ClickGui::init();
 	Hooks::Init();
+
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL); // Checking Keypresses
+
+
+	logF("Waiting for injector");
+	while (!g_Data.isInjectorConnectionActive()) {
+		Sleep(10);
+		if (!isRunning)
+			ExitThread(0);
+	}
+	logF("Injector found");
+
 	cmdMgr->initCommands();
 	moduleMgr->initModules();
 	configMgr->init();
 
 	logF("Starting threads...");
 	
-	
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE) keyThread, lpParam, NULL, NULL); // Checking Keypresses
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)analyticsThread, lpParam, NULL, NULL);
-	
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE) analyticsThread, lpParam, NULL, NULL);
 
 	ExitThread(0);
 }
@@ -204,6 +352,7 @@ DllMain(HMODULE hModule,
 	break;
 	case DLL_PROCESS_DETACH:
 		isRunning = false;
+		
 		configMgr->saveConfig();
 		moduleMgr->disable();
 		cmdMgr->disable();
