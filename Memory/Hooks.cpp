@@ -271,16 +271,41 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 	if (GameData::shouldHide())
 		return oText(a1, renderCtx);
 
-	if (!g_Data.isInjectorConnectionActive()) {
-		__int64 retval = oText(a1, renderCtx);
+	{
+		static bool wasConnectedBefore = false;
+		static LARGE_INTEGER start;
+		static LARGE_INTEGER frequency;
+		if (frequency.QuadPart == 0) {
+			QueryPerformanceFrequency(&frequency);
+			QueryPerformanceCounter(&start);
+		}
 
-		vec2_t windowSize = dat->windowSize;
-		std::string text = "Download the new injector at http://horionbeta.club";
-		DrawUtils::fillRectangle(vec4_t(0, 0, windowSize.x, windowSize.y), MC_Color(0.2f, 0.2f, 0.2f, 1.f), 0.8f);
-		DrawUtils::drawText(vec2_t(windowSize.x / 2 - DrawUtils::getTextWidth(&text) / 2, windowSize.y / 2), &text);
-		DrawUtils::flush();
+		if (!g_Data.isInjectorConnectionActive()) {
+			__int64 retval = oText(a1, renderCtx);
 
-		return retval;
+			LARGE_INTEGER end, elapsed;
+			QueryPerformanceCounter(&end);
+			elapsed.QuadPart = end.QuadPart - start.QuadPart;
+			elapsed.QuadPart /= frequency.QuadPart;
+			if (elapsed.QuadPart > 1) {
+				vec2_t windowSize = dat->windowSize;
+				
+				DrawUtils::fillRectangle(vec4_t(0, 0, windowSize.x, windowSize.y), MC_Color(0.2f, 0.2f, 0.2f, 1.f), 0.8f);
+
+				std::string text = "Download the new injector at http://horionbeta.club/";
+				if(!wasConnectedBefore)
+					DrawUtils::drawText(vec2_t(windowSize.x / 2 - DrawUtils::getTextWidth(&text, 1.5f) / 2, windowSize.y * 0.4f), &text, nullptr, 1.5f);
+				text = "Remember to keep the injector open while playing";
+				DrawUtils::drawText(vec2_t(windowSize.x / 2 - DrawUtils::getTextWidth(&text, wasConnectedBefore ? 1.5f : 0.7f) / 2, windowSize.y * (wasConnectedBefore ? 0.5f : 0.7f)), &text, nullptr, wasConnectedBefore ? 1.5f : 0.7f);
+				text = "Close this window by holding down CTRL + L";
+				DrawUtils::drawText(vec2_t(windowSize.x / 2 - DrawUtils::getTextWidth(&text, 0.7f) / 2, windowSize.y * 0.8f), &text, nullptr, 0.7f);
+
+				DrawUtils::flush();
+			}
+
+			return retval;
+		}else
+			wasConnectedBefore = true;
 	}
 
 	// Call PreRender() functions

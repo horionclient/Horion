@@ -238,6 +238,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 					}
 					if (flags & (1 << 2)) // WIP Features
 						g_Data.setAllowWIPFeatures(true);
+
 					break;
 				}
 				case CMD_PING:
@@ -261,13 +262,20 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 				QueryPerformanceCounter(&timeSinceLastMessage);
 				// They read the message, lets send the next one
 				HorionDataPacket nextDataPack = g_Data.getPacketToInjector();
-				if (nextDataPack.dataArraySize >= 3000)
+				if (nextDataPack.dataArraySize >= 3000) {
+					delete[] nextDataPack.data;
 					throw std::exception("Horion Data packet too big to send");
+				}
+					
 				horionToInjector->cmd = nextDataPack.cmd;
 				memcpy(horionToInjector->params, nextDataPack.params, sizeof(int) * 5);
-				if(nextDataPack.dataArraySize > 0)
+				if (nextDataPack.dataArraySize > 0) {
 					memcpy(horionToInjector->data, nextDataPack.data, nextDataPack.dataArraySize);
+					delete[] nextDataPack.data;
+				}
+					
 				horionToInjector->dataSize = nextDataPack.dataArraySize;
+				
 				horionToInjector->isUnread = true;
 			}
 		}

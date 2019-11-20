@@ -13,10 +13,11 @@
 #include <map>
 #include <queue>
 
-enum DATAPACKET_CMD {
+enum DATAPACKET_CMD : int {
 	CMD_INIT = 0,
 	CMD_PING,
-	CMD_PONG
+	CMD_PONG,
+	CMD_OPENBROWSER
 };
 
 struct HorionDataPacket {
