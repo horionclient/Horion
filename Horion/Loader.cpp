@@ -41,7 +41,7 @@ DWORD WINAPI analyticsThread(LPVOID lpParam) {
 				ElapsedMicroseconds.QuadPart *= 1000;
 				ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
 				if (ElapsedMicroseconds.QuadPart < 1000 * 60 * 2) {
-					Sleep(1);
+					Sleep(500);
 					continue;
 				}
 				else
@@ -168,7 +168,6 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	unsigned char magicValues[16] = { 0x00, 0x4F, 0x52, 0x00, 0x49, 0x4F, 0x4E, 0x23, 0x9C, 0x47, 0xFB, 0xFF, 0x7D, 0x9C, 0x42, 0x57 };
 	char* magicArray = new char[sizeof(magicValues) + sizeof(uintptr_t) * 2];
 	memcpy(magicArray, magicValues, sizeof(magicValues));
-	magicArray[0] = 0x48; //Only find this allocated one, not the one in the thread stack
 	
 	logF("Magic array at %llX", magicArray);
 
@@ -183,6 +182,11 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	*injectorToHorionPtr = new MemoryBoi();
 	MemoryBoi* injectorToHorion = *injectorToHorionPtr;
 
+	magicArray[0] = 0x48; //Only find this allocated one, not the one in the thread stack
+
+	logF("horionToInjectorPtr at %llX", horionToInjector);
+	logF("injectorToHorionPtr at %llX", injectorToHorion);
+
 	LARGE_INTEGER frequency, timeSinceLastMessage, timeSinceLastPing;
 	QueryPerformanceFrequency(&frequency);
 	QueryPerformanceCounter(&timeSinceLastMessage);
@@ -193,11 +197,12 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 		LARGE_INTEGER endTime;
 		QueryPerformanceCounter(&endTime);
 		bool isConnected = horionToInjector->isPresent && injectorToHorion->isPresent && horionToInjector->protocolVersion >= injectorToHorion->protocolVersion;
-		if(isConnected)
+
+		if(isConnected && !injectorToHorion->isUnread)
 		{
 			__int64 elapsed = endTime.QuadPart - timeSinceLastMessage.QuadPart;
 			float realElapsed = (float) elapsed / frequency.QuadPart;
-			if (realElapsed > 3.5f) {
+			if (realElapsed > 4.f) {
 				isConnected = false;
 				logF("Disconnected from injector due to timeout");
 				injectorToHorion->isPresent = false;
@@ -222,7 +227,6 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 
 			if (injectorToHorion->isUnread) { // They sent us a message
 				QueryPerformanceCounter(&timeSinceLastMessage);
-
 				switch(injectorToHorion->cmd) {
 				case CMD_INIT:
 				{
@@ -282,7 +286,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 		else
 			Sleep(30);
 	}
-
+	logF("Quitting connection thread");
 	memset(magicValues, 0, sizeof(magicValues));
 	memset(magicArray, 0, sizeof(magicValues + sizeof(uintptr_t) * 2));
 	delete *horionToInjectorPtr;
@@ -315,7 +319,6 @@ DWORD WINAPI startCheat(LPVOID lpParam)
 	Hooks::Init();
 
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL); // Checking Keypresses
-
 
 	logF("Waiting for injector");
 	while (!g_Data.isInjectorConnectionActive()) {

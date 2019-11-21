@@ -9,6 +9,9 @@ bool AccountInformation::verify()
 		return true;
 	if (discordToken.size() < 10)
 		return false;
+	if (didVerify)
+		return isValid;
+	didVerify = true;
 
 	wchar_t fullUrl[200];
 	swprintf_s(fullUrl, 200, L"http://www.horionbeta.club:50451/api/beta/check?client=%S&serial=%u", discordToken.c_str(), serialNum);
@@ -28,6 +31,7 @@ bool AccountInformation::verify()
 
 		if (data.contains("status") && data["status"].is_string() && data["status"].get<std::string>() == "success" || data["status"].get<std::string>() == "nobeta") {
 			logF("Account verified");
+			isValid = true;
 			return true;
 		}
 	}

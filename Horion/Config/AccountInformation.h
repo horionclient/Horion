@@ -9,6 +9,8 @@ class AccountInformation
 {
 private:
 	bool isGuest;
+	bool didVerify = false; // Did check if its verified?
+	bool isValid = false;    // Is it a verified account
 	std::string name;
 	std::string discordToken;
 	unsigned int serialNum = 0;
