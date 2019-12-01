@@ -35,7 +35,7 @@ bool Target::isValidTarget(C_Entity* ent)
 	if (ent->isInvisible() && antibot->isInvisibleCheckEnabled())
 		return false;
 
-	if ((ent->isSilent() || ent->isImmobile() || ent->getNameTag()->getTextLength() < 1 || std::string(ent->getNameTag()->getText()).find(std::string("\n")) != std::string::npos) && antibot->isOtherCheckEnabled())
+	if ((ent->isSilent() || ent->isImmobile() /*ent->getNameTag()->getTextLength() < 1*/ || std::string(ent->getNameTag()->getText()).find(std::string("\n")) != std::string::npos) && antibot->isOtherCheckEnabled())
 		return false;
 
 	if (!hitboxMod->isEnabled() && antibot->isHitboxCheckEnabled())
@@ -43,6 +43,9 @@ bool Target::isValidTarget(C_Entity* ent)
 			return false;
 
 	if (!(*localPlayer)->canAttack(ent, false))
+		return false;
+
+	if (!ent->canShowNameTag())
 		return false;
 
 	return true;
