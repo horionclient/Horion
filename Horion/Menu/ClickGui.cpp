@@ -333,7 +333,7 @@ void ClickGui::renderCategory(Category category)
 
 
 							switch (setting->valueType) {
-							case BOOL_T:
+							case ValueType::BOOL_T:
 							{
 								rectPos.w = currentYOffset + textHeight + (textPadding * 2);
 								DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
@@ -394,7 +394,7 @@ void ClickGui::renderCategory(Category category)
 								}
 							}
 								break;
-							case FLOAT_T:
+							case ValueType::FLOAT_T:
 							{
 								// Text
 								{
@@ -492,7 +492,7 @@ void ClickGui::renderCategory(Category category)
 								}
 							}
 								break;
-							case INT_T:
+							case ValueType::INT_T:
 							{
 								// Text
 								{

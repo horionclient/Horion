@@ -87,6 +87,7 @@ public:
 	void onKeyUpdate(int key, bool isDown);
 	void onPreRender();
 	void onPostRender();
+	void onSendPacket(C_Packet*);
 
 	bool isInitialized() { return initialized; };
 	std::vector<IModule*>* getModuleList();

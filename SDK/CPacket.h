@@ -11,6 +11,15 @@ public:
 	{
 		return Utils::CallVFunc<2, TextHolder*>(this, new TextHolder());
 	}
+	template <class T>
+	bool isInstanceOf()
+	{
+		T packet;
+		if (packet.vTable == this->vTable)
+			return true;
+		else
+			return false;
+	}
 };
 
 class PlayerAuthInputPacket : public C_Packet

@@ -6,7 +6,7 @@ Killaura::Killaura() : IModule('P', Category::COMBAT, "Attacks entities around y
 {
 	this->registerBoolSetting("MultiAura", &this->isMulti, this->isMulti);
 	this->registerBoolSetting("MobAura", &this->isMobAura, this->isMobAura);
-	this->registerFloatSetting("range", &this->range, this->range, 2, 8);
+	this->registerFloatSetting("range", &this->range, this->range, 2.f, 20.f);
 	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
 	this->registerBoolSetting("AutoWeapon", &this->autoweapon, this->autoweapon);
 }
@@ -118,5 +118,19 @@ void Killaura::onEnable()
 {
 	if (g_Data.getLocalPlayer() == nullptr) 
 		this->setEnabled(false);
+}
+
+void Killaura::onSendPacket(C_Packet* packet)
+{
+	if (packet->isInstanceOf<C_MovePlayerPacket>())
+	{
+		vec2_t angle = this->angle;
+		if (this->hasTarget) {
+			C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+			movePacket->pitch = angle.x;
+			movePacket->headYaw = angle.y;
+			movePacket->yaw = angle.y;
+		}
+	}
 }
 

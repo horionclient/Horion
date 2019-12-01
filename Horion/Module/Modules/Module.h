@@ -16,7 +16,7 @@ enum class Category {
 	EXPLOITS = 5
 };
 
-enum ValueType {
+enum class ValueType {
 	FLOAT_T,
 	DOUBLE_T,
 	INT64_T,
@@ -37,7 +37,7 @@ struct SettingValue {
 };
 
 struct SettingEntry {
-	char name[0x20];
+	char name[0x20] = "";
 	ValueType valueType;
 	SettingValue* value = nullptr;
 	SettingValue* defaultValue = nullptr;
@@ -49,19 +49,19 @@ struct SettingEntry {
 
 	void makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
 		switch (valueType) {
-		case TEXT_T:
-		case BOOL_T:
+		case ValueType::TEXT_T:
+		case ValueType::BOOL_T:
 			break;
-		case INT64_T:
+		case ValueType::INT64_T:
 			value->int64 = max(minValue->int64, min(maxValue->int64, value->int64));
 			break;
-		case DOUBLE_T:
+		case ValueType::DOUBLE_T:
 			value->_double = max(minValue->_double, min(maxValue->_double, value->_double));
 			break;
-		case FLOAT_T:
+		case ValueType::FLOAT_T:
 			value->_float = max(minValue->_float, min(maxValue->_float, value->_float));
 			break;
-		case INT_T:
+		case ValueType::INT_T:
 			value->_int = max(minValue->_int, min(maxValue->_int, value->_int));
 			break;
 		default:
@@ -111,6 +111,7 @@ public:
 	virtual void setEnabled(bool enabled);
 	virtual void toggle();
 	virtual bool isEnabled();
+	virtual void onSendPacket(C_Packet*);
 	const char* getTooltip();
 };
 

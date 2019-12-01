@@ -19,7 +19,7 @@ void IModule::registerFloatSetting(std::string name, float* floatPtr, float defa
 #endif
 
 	SettingEntry* setting = new SettingEntry();
-	setting->valueType = FLOAT_T;
+	setting->valueType = ValueType::FLOAT_T;
 	
 	setting->value = reinterpret_cast<SettingValue*>(floatPtr);
 
@@ -51,7 +51,7 @@ void IModule::registerIntSetting(std::string name, int * intPtr, int defaultValu
 #endif
 
 	SettingEntry* setting = new SettingEntry();
-	setting->valueType = INT_T;
+	setting->valueType = ValueType::INT_T;
 	setting->value = reinterpret_cast<SettingValue*>(intPtr); // Actual Value
 
 	// Default Value
@@ -78,7 +78,7 @@ void IModule::registerIntSetting(std::string name, int * intPtr, int defaultValu
 void IModule::registerBoolSetting(std::string name, bool * boolPtr, bool defaultValue)
 {
 	SettingEntry* setting = new SettingEntry();
-	setting->valueType = BOOL_T;
+	setting->valueType = ValueType::BOOL_T;
 
 	setting->value = reinterpret_cast<SettingValue*>(boolPtr); // Actual value
 
@@ -150,6 +150,10 @@ void IModule::onPostRender()
 {
 }
 
+void IModule::onSendPacket(C_Packet*)
+{
+}
+
 void IModule::onLoadConfig(json * conf)
 {
 	if (conf->contains(this->getRawModuleName())) {
@@ -164,22 +168,22 @@ void IModule::onLoadConfig(json * conf)
 					continue;
 				try {
 					switch (sett->valueType) {
-					case FLOAT_T:
+					case ValueType::FLOAT_T:
 						sett->value->_float = value.get<float>();
 						break;
-					case DOUBLE_T:
+					case ValueType::DOUBLE_T:
 						sett->value->_double = value.get<double>();
 						break;
-					case INT64_T:
+					case ValueType::INT64_T:
 						sett->value->int64 = value.get<__int64>();
 						break;
-					case INT_T:
+					case ValueType::INT_T:
 						sett->value->_int = value.get<int>();
 						break;
-					case BOOL_T:
+					case ValueType::BOOL_T:
 						sett->value->_bool = value.get<bool>();
 						break;
-					case TEXT_T:
+					case ValueType::TEXT_T:
 						sett->value->text = &value.get<std::string>();
 						break;
 					}
@@ -209,22 +213,22 @@ void IModule::onSaveConfig(json * conf)
 	for (auto it = this->settings.begin(); it != this->settings.end(); ++it) {
 		SettingEntry* sett = *it;
 		switch (sett->valueType) {
-		case FLOAT_T:
+		case ValueType::FLOAT_T:
 			obj.emplace(sett->name, sett->value->_float);
 			break;
-		case DOUBLE_T:
+		case ValueType::DOUBLE_T:
 			obj.emplace(sett->name, sett->value->_double);
 			break;
-		case INT64_T:
+		case ValueType::INT64_T:
 			obj.emplace(sett->name, sett->value->int64);
 			break;
-		case INT_T:
+		case ValueType::INT_T:
 			obj.emplace(sett->name, sett->value->_int);
 			break;
-		case BOOL_T:
+		case ValueType::BOOL_T:
 			obj.emplace(sett->name, sett->value->_bool);
 			break;
-		case TEXT_T:
+		case ValueType::TEXT_T:
 			obj.emplace(sett->name, *sett->value->text);
 			break;
 		}

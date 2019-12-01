@@ -279,7 +279,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 			QueryPerformanceFrequency(&frequency);
 			QueryPerformanceCounter(&start);
 		}
-
 		if (!g_Data.isInjectorConnectionActive()) {
 			__int64 retval = oText(a1, renderCtx);
 
@@ -488,7 +487,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 				Utils::ColorConvertHSVtoRGB(currColor[0], currColor[1], currColor[2], currColor[0], currColor[1], currColor[2]);
 
 				DrawUtils::drawText(textPos, &textStr, new MC_Color(currColor), textSize);
-				/*if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos)) {
+				if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos)) {
 
 					if (leftMouseDown) {
 						DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 0.1f), it->enabled ? 0.6f : 0.6f);
@@ -497,7 +496,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 					}
 					else
 						DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.7f, 0.3f, 0.1f), it->enabled ? 0.4f : 0.15f);
-				}*/
+				}
 
 				yOffset += textHeight + (textPadding * 2);
 			}
@@ -703,13 +702,9 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 {
 	static auto oFunc = g_Hooks.LoopbackPacketSender_sendToServerHook->GetFastcall<void, C_LoopbackPacketSender*, C_Packet*>();
 
-	static IModule* FreecamMod = moduleMgr->getModule<Freecam>();
-	static Killaura* killauraMod = moduleMgr->getModule<Killaura>();
-	static NoFall* NoFallMod = moduleMgr->getModule<NoFall>();
+	static Freecam* FreecamMod = moduleMgr->getModule<Freecam>();
 	static Blink* BlinkMod = moduleMgr->getModule<Blink>();
 	static NoPacket* No_Packet = moduleMgr->getModule<NoPacket>();
-	static Criticals* CriticalsMod = moduleMgr->getModule<Criticals>();
-	static PacketLogger* PacketLoggerMod = moduleMgr->getModule<PacketLogger>();
 
 	if (FreecamMod == nullptr || BlinkMod == nullptr || No_Packet == nullptr) {
 		FreecamMod = moduleMgr->getModule<Freecam>();
@@ -721,12 +716,11 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	}
 	else if (FreecamMod->isEnabled() || BlinkMod->isEnabled()) {
 
-		if (strcmp(packet->getName()->getText(),"MovePlayerPacket") == 0 || 
-			strcmp(packet->getName()->getText(),"PlayerAuthInputPacket") == 0)
+		if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>())
 		{
 			if (BlinkMod->isEnabled())
 			{
-				if (strcmp(packet->getName()->getText(),"MovePlayerPacket") == 0)
+				if (packet->isInstanceOf<C_MovePlayerPacket>())
 				{
 					C_MovePlayerPacket* meme = reinterpret_cast<C_MovePlayerPacket*>(packet);
 					meme->onGround = true; //Don't take Fall Damages when turned off
@@ -765,54 +759,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 			return;
 		}
 	}
-	if (killauraMod == nullptr)
-		killauraMod = moduleMgr->getModule<Killaura>();
-	else if (killauraMod->isEnabled() && g_Data.getLocalPlayer() != nullptr && strcmp(packet->getName()->getText(), "MovePlayerPacket") == 0) {
-		vec2_t angle = killauraMod->angle;
-		if (killauraMod->hasTarget) {
-			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
-			p->pitch = angle.x;
-			p->headYaw = angle.y;
-			p->yaw = angle.y;
-		}
-	}
-	if (NoFallMod == nullptr)
-		NoFallMod = moduleMgr->getModule<NoFall>();
-	else if (NoFallMod->isEnabled()) {
-		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
-		C_ActorFallPacket fall = C_ActorFallPacket();
-		if (frenchBoy.vTable == packet->vTable && g_Data.getLocalPlayer() != nullptr && !g_Data.getLocalPlayer()->onGround
-			&& g_Data.getLocalPlayer()->fallDistance > 2.5f) {
-			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
-			p->onGround = true;
-		}
-		else if (fall.vTable == packet->vTable)
-		{
-			C_ActorFallPacket* p = reinterpret_cast<C_ActorFallPacket*>(packet);
-			p->fallDistance = 0.f;
-		}
-	}
-
-	if (CriticalsMod == nullptr)
-		CriticalsMod = moduleMgr->getModule<Criticals>();
-	else if (CriticalsMod->isEnabled()) {
-		C_MovePlayerPacket frenchBoy = C_MovePlayerPacket();
-		if (frenchBoy.vTable == packet->vTable && g_Data.getLocalPlayer() != nullptr
-			&& g_Data.getLocalPlayer()->fallDistance == 0.f)
-		{
-			C_MovePlayerPacket* p = reinterpret_cast<C_MovePlayerPacket*>(packet);
-			p->onGround = false;
-		}
-	}
-
-	if (PacketLoggerMod == nullptr)
-		PacketLoggerMod = moduleMgr->getModule<PacketLogger>();
-	else if (PacketLoggerMod->isEnabled())
-	{
-		TextHolder* text = packet->getName();
-		g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s", text->getText());
-	}
-
+	moduleMgr->onSendPacket(packet);
 #ifdef TEST_DEBUG
 	C_InventoryTransactionPacket Packet0 = C_InventoryTransactionPacket();
 	if (packet->vTable == Packet0.vTable)

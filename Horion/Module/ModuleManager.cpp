@@ -165,6 +165,16 @@ void ModuleManager::onPostRender()
 	}
 }
 
+void ModuleManager::onSendPacket(C_Packet* packet)
+{
+	if (!isInitialized())
+		return;
+	for (auto it : moduleList) {
+		if (it->isEnabled())
+			it->onSendPacket(packet);
+	}
+}
+
 std::vector<IModule*>* ModuleManager::getModuleList()
 {
 	return &this->moduleList;
