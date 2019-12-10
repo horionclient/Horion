@@ -208,6 +208,7 @@ static const char* const KeyNames[] = {
 #include <chrono>
 #include <algorithm>
 #include <vector>
+#include "Logger.h"
 
 #define INRANGE(x,a,b)   (x >= a && x <= b)
 #define GET_BYTE( x )    (GET_BITS(x[0]) << 4 | GET_BITS(x[1]))
@@ -383,9 +384,16 @@ public:
 		const char* sig = szSignature; // Put sig in here to access it in debugger
 		// This will not get optimized away because we are in debug
 		// Leave this in here to quickly find bad signatures in case of updates
+#ifdef SIG_DEBUG
+#ifdef logF
+		logF("Signature dead: %s", szSignature);
+#endif
+#else
 		char* msgToTheOverwhelmedDebugger = "SIGNATURE NOT FOUND";
 		__debugbreak();
+
 		throw std::exception("Signature not found");
+#endif
 #endif
 		return 0u;
 	}
