@@ -185,250 +185,252 @@ public:
 
 
 private:
-	virtual __int64 destructorClientInstance(); //1
+	virtual __int64 destructorClientInstance(); 
 	// Duplicate destructor
-	virtual __int64 onInitMinecraftGame(void); //2
-	virtual __int64 onDestroyMinecraftGame(void); //3
-	virtual __int64 init(__int64 *, __int64 &, __int64 &, __int64 &, __int64 &, int); //4
-	virtual __int64 initSceneFactory(__int64 *); //5
-	virtual __int64 initGraphics(void); //6
-	virtual __int64 stop(void); //7
-	virtual __int64 teardown(void); //8
-	virtual __int64 preShutDown(void); //9
-	virtual __int64 requestLeaveGame(bool, bool); //10
-	virtual __int64 stopPlayScreen(void); //11
+	virtual __int64 onInitMinecraftGame(void);
+	virtual __int64 onDestroyMinecraftGame(void); 
+	virtual __int64 init(__int64 *, __int64 &, __int64 &, __int64 &, __int64 &, int);
+	virtual __int64 initSceneFactory(__int64 *); 
+	virtual __int64 initGraphics(void); 
+	virtual __int64 stop(void);
+	virtual __int64 teardown(void); 
+	virtual __int64 preShutDown(void); 
+	virtual __int64 requestLeaveGame(bool, bool); 
+	virtual __int64 stopPlayScreen(void); 
 public:
-	virtual bool isLeaveGameDone(void)const; //12
-	virtual void setupPlayScreenForLeaveGame(void); //13
+	virtual bool isLeaveGameDone(void)const; 
+	virtual void setupPlayScreenForLeaveGame(void); 
 private:
-	virtual __int64 resetPrimaryClient(void); //14
-	virtual __int64 resetGameSession(void); //15
-	virtual __int64 tick(void); //16
-	virtual __int64 frameUpdate(__int64 &); //17
-	virtual __int64 update(bool); //18
-	virtual __int64 endFrame(void); //19
-	virtual __int64 startSubClientLateJoin(bool); //20
+	virtual __int64 resetPrimaryClient(void); 
+	virtual __int64 resetGameSession(void); 
+	virtual __int64 tick(void); 
+	virtual __int64 frameUpdate(__int64 &); 
+	virtual __int64 update(bool);
+	virtual __int64 endFrame(void); 
+	virtual __int64 startSubClientLateJoin(bool);
 public:
-	virtual void setupClientGame(__int64 &&, bool); //21
+	virtual void setupClientGame(__int64 &&, bool); 
 private:
 	virtual __int64 sub_1400C5D00(void) const;
-	virtual __int64 getLocalC_Player(void); //22
-	virtual __int64 getLocalC_Player(void)const; //23
-	virtual __int64 getCameraEntity(void)const; //24
+	virtual __int64 getLocalC_Player(void); 
+	virtual __int64 getLocalC_Player(void)const; 
+	virtual __int64 getCameraEntity(void)const; 
 public:
-	virtual void setCameraEntity(C_Entity *); //25
+	virtual void setCameraEntity(C_Entity *); 
 private:
-	virtual __int64 getCameraTargetEntity(void)const; //26
+	virtual __int64 getCameraTargetEntity(void)const; 
 public:
-	virtual void setCameraTargetEntity(C_Entity *); //27
-	virtual bool isLeavingGame(void)const; //28
-	virtual bool isDestroyingGame(void)const; //29
+	virtual void setCameraTargetEntity(C_Entity *);
+	virtual bool isLeavingGame(void)const; 
+	virtual bool isDestroyingGame(void)const;
 private:
 	virtual __int64 sub_1400C98E0(void) const;
-	virtual __int64 useLowFrequencyUIRender(void)const; //30
+	virtual __int64 useLowFrequencyUIRender(void)const; 
 public:
-	virtual bool isSplitScreenActive(void)const; //31
-	virtual bool isVRClient(void)const; //32
-	virtual bool isARClient(void)const; //33
-	virtual bool isARVRClient(void)const; //34
-	virtual bool isHoloviewerMode(void)const; //35
-	virtual bool isHoloscreenMode(void)const; //36
-	virtual bool isLivingroomMode(void)const; //37
-	virtual bool isExitingLevel(void)const; //38
-	virtual bool isNotVLRMode(void)const; //39
-	virtual bool isHoloRealityMode(void)const; //40
-	virtual bool isRealityFullVRMode(void)const; //41
-	virtual bool isInBedScreen(void)const; //42
-	virtual bool isKeyboardEnabled(void)const; //43
-	virtual bool isVRTransitioning(void)const; //44
-	virtual bool hasCommands(void)const; //45
-	virtual bool isScriptingEnabled(void)const; //46
+	virtual bool isSplitScreenActive(void)const; 
+	virtual bool isVRClient(void)const; 
+	virtual bool isARClient(void)const; 
+	virtual bool isARVRClient(void)const; 
+	virtual bool isHoloviewerMode(void)const; 
+	virtual bool isHoloscreenMode(void)const; 
+	virtual bool isLivingroomMode(void)const; 
+	virtual bool isExitingLevel(void)const; 
+	virtual bool isNotVLRMode(void)const; 
+	virtual bool isHoloRealityMode(void)const; 
+	virtual bool isRealityFullVRMode(void)const; 
+	virtual bool isInBedScreen(void)const; 
+	virtual bool isKeyboardEnabled(void)const; 
+	virtual bool isVRTransitioning(void)const; 
+	virtual bool hasCommands(void)const; 
+	virtual bool isScriptingEnabled(void)const; 
 private:
-	virtual __int64 getHoloviewerScale(void)const; //47
-	virtual __int64 getSplitScreenCount(void)const; //48
+	virtual __int64 getHoloviewerScale(void)const;
+	virtual __int64 getSplitScreenCount(void)const; 
 public:
-	virtual bool isStereoRendering(void)const; //49
-	virtual bool isPlatformNX(void)const; //50
-	virtual bool isLocalSplitscreenWith(__int64 const&)const; //51
-	virtual bool isValidCrossPlatformSkin(void)const; //52
+	virtual bool isStereoRendering(void)const; 
+	virtual bool isPlatformNX(void)const; 
+	virtual bool isLocalSplitscreenWith(__int64 const&)const; 
+	virtual bool isValidCrossPlatformSkin(void)const; 
 	virtual __int64 sub_1400C9B70(void);
 private:
-	virtual __int64 getSplitScreenInfo(void)const; //53
-	virtual __int64 getCurrentMaxGUIScaleIndex(void)const; //54
-	virtual __int64 getRealityModeFrameFactor(void)const;  //55
+	virtual __int64 getSplitScreenInfo(void)const; 
+	virtual __int64 getCurrentMaxGUIScaleIndex(void)const; 
+	virtual __int64 getRealityModeFrameFactor(void)const;  
 public:
-	virtual void setRealityModeFrameFactor(float const&); //56
+	virtual void setRealityModeFrameFactor(float const&); 
 private:
-	virtual __int64 getRealityModeToggleTriggered(void)const; //57
+	virtual __int64 getRealityModeToggleTriggered(void)const; 
 public:
-	virtual void setRealityModeToggleTriggered(bool); //58
+	virtual void setRealityModeToggleTriggered(bool); 
 private:
 	virtual bool sub_1400C9C50(void);
 public:
-	virtual void setOpenControllerDisconnectScreen(bool); //59
+	virtual void setOpenControllerDisconnectScreen(bool);
 private:
-	virtual __int64 getClientPlayMode(void)const; //60
+	virtual __int64 getClientPlayMode(void)const; 
 public:
-	virtual void setClientPlayMode(__int64 const&); //61
+	virtual void setClientPlayMode(__int64 const&); 
 private:
-	virtual __int64 getLivingRoomForCredits(void)const; //62
+	virtual __int64 getLivingRoomForCredits(void)const;
 public:
-	virtual void setLivingRoomForCredits(bool); //63
+	virtual void setLivingRoomForCredits(bool); 
 private:
-	virtual __int64 getCreditsCallback(void); //64
+	virtual __int64 getCreditsCallback(void); 
 public:
-	virtual void setCreditsCallback(__int64); //65
-	virtual void setupTransitionForCredits(__int64); //66
+	virtual void setCreditsCallback(__int64); 
+	virtual void setupTransitionForCredits(__int64);
 private:
-	virtual __int64 refreshScreenSizeData(void); //67
-	virtual __int64 onScreenSizeChanged(int, int, float); //68
-	virtual __int64 onGuiScaleOffsetChanged(void); //70
-	virtual __int64 onSafeZoneChanged(void); //71
-	virtual __int64 quit(std::string const&, std::string const&); //72
-	virtual __int64 getMinecraftGame(void)const; //73
-	virtual __int64 getAutomationClient(void)const; //74
-	virtual __int64 getScreenshotStreamer(void)const; //75
-	virtual __int64 getEventing(void)const; //76
+	virtual __int64 refreshScreenSizeData(void); 
+	virtual __int64 onScreenSizeChanged(int, int, float); 
+	virtual __int64 onGuiScaleOffsetChanged(void); 
+	virtual __int64 onSafeZoneChanged(void); 
+	virtual __int64 quit(std::string const&, std::string const&);
+	virtual __int64 getMinecraftGame(void)const; 
+	virtual __int64 getAutomationClient(void)const; 
+	virtual __int64 getScreenshotStreamer(void)const; 
+	virtual __int64 getEventing(void)const; 
 	virtual __int64 sub_1400CA2E0(__int64 a1);
 	virtual __int64 sub_1400CA2E8(__int64 a1);
 	virtual __int64 sub_1400CA2F0(__int64 a1);
-	virtual __int64 getFont(void)const; //77
-	virtual __int64 getRuneFont(void)const; //78
-	virtual __int64 getUnicodeFont(void)const; //79
-	virtual __int64 getGeometryGroup(void)const; //80
-	virtual __int64 getMultiplayerServiceManager(void)const; //81
-	virtual __int64 getLocalServerLevel(void); //82
-	virtual __int64 getResourcePackRepository(void)const; //83
-	virtual __int64 getResourcePackManager(void)const; //84
-	virtual __int64 getSkinRepository(void)const; //89
-	virtual __int64 getSkinRepositoryClientInterface(void)const; //90
+	virtual __int64 getFont(void)const;
+	virtual __int64 getRuneFont(void)const;
+	virtual __int64 getUnicodeFont(void)const; 
+	virtual __int64 getGeometryGroup(void)const; 
+	virtual __int64 getMultiplayerServiceManager(void)const; 
+	virtual __int64 getLocalServerLevel(void); 
+	virtual __int64 getResourcePackRepository(void)const; 
+	virtual __int64 getResourcePackManager(void)const; 
+	virtual __int64 getSkinRepository(void)const; 
+	virtual __int64 getSkinRepositoryClientInterface(void)const; 
 	virtual __int64 sub_1400CA400(void) const;
-	virtual __int64 getTextures(void)const; //91
-	virtual __int64 getStoreCacheTextures(void)const; //92
-	virtual __int64 getMinecraftGraphics(void)const; //93
-	virtual __int64 getUIRepository(void)const; //94
-	virtual __int64 getUserManager(void)const; //95
-	virtual __int64 wantToQuit(void)const; //96
+	virtual __int64 getTextures(void)const;
+	virtual __int64 getStoreCacheTextures(void)const; 
+	virtual __int64 getMinecraftGraphics(void)const; 
+	virtual __int64 getUIRepository(void)const; 
+	virtual __int64 getUserManager(void)const;
+	virtual __int64 wantToQuit(void)const; 
 public:
-	virtual bool isPrimaryLevelCrossPlatformMultiplayer(void)const; //97
-	virtual bool isPrimaryLevelMultiplayer(void)const; //98
-	virtual bool isAdhocEnabled(void)const; //99
+	virtual bool isPrimaryLevelCrossPlatformMultiplayer(void)const; 
+	virtual bool isPrimaryLevelMultiplayer(void)const; 
+	virtual bool isAdhocEnabled(void)const; 
 private:
-	virtual __int64 linkToOffer(std::string const&, bool, std::string const&, __int64); // 100
-	virtual __int64 linkToAllOffers(std::string const&, std::string const&, bool, std::string const&, bool);//101
-	virtual __int64 navigateToBrazeScreen(std::string const&, std::string const&, std::string const&, std::string const&, std::string const&, std::string const&, std::string const&); //102
-	virtual __int64 navigateToStoreHomeScreen(void); //103
-	virtual __int64 navigateToCoinPurchaseScreen(int, __int64); //104
-	virtual __int64 navigateToPurchaseOfferScreen(__int64, bool); //105
-	virtual __int64 navigateToOfferCollectionScreen(__int64 &); //106
-	virtual __int64 navigateToStoreSeeAllByCreatorScreen(std::string const&, bool); //107
-	virtual __int64 navigateToServersScreen(bool); //108
-	virtual __int64 navigateToHowToPlayScreen(std::string const&); //109
-	virtual __int64 tryPushLeaveGameScreen(void); //110
+	virtual __int64 linkToOffer(std::string const&, bool, std::string const&, __int64); 
+	virtual __int64 linkToAllOffers(std::string const&, std::string const&, bool, std::string const&, bool);
+	virtual __int64 navigateToBrazeScreen(std::string const&, std::string const&, std::string const&, std::string const&, std::string const&, std::string const&, std::string const&); 
+	virtual __int64 navigateToStoreHomeScreen(void); 
+	virtual __int64 navigateToCoinPurchaseScreen(int, __int64); 
+	virtual __int64 navigateToPurchaseOfferScreen(__int64, bool); 
+	virtual __int64 navigateToOfferCollectionScreen(__int64 &); 
+	virtual __int64 navigateToStoreSeeAllByCreatorScreen(std::string const&, bool); 
+	virtual __int64 navigateToServersScreen(bool); 
+	virtual __int64 navigateToHowToPlayScreen(std::string const&); 
+	virtual __int64 tryPushLeaveGameScreen(void); 
 	virtual char sub_1400D16A0(void) const;
 public:
-	virtual bool isReadyToRender(void)const; //111
+	virtual bool isReadyToRender(void)const; 
 private:
-	virtual __int64 onDimensionChanged(void); //112
-	virtual __int64 onGameEventNotification(__int64); //113
-	virtual __int64 getTopScreenName(void)const; //114
+	virtual __int64 onDimensionChanged(void);
+	virtual __int64 onGameEventNotification(__int64); 
+	virtual __int64 getTopScreenName(void)const; 
 public:
-	virtual void setLeaveGameInProgressAsReadyToContinue(void); //115
+	virtual void setLeaveGameInProgressAsReadyToContinue(void); 
 private:
-	virtual __int64 stopDestroying(void); //116
-	virtual __int64 onClientCreatedLevel(__int64); //117
-	virtual __int64 getClientRandomId(void)const; //118
-	virtual __int64 getUserAuthentication(void); //119
+	virtual __int64 stopDestroying(void); 
+	virtual __int64 onClientCreatedLevel(__int64); 
+	virtual __int64 getClientRandomId(void)const; 
+	virtual __int64 getUserAuthentication(void); 
 	virtual __int64 sub_1400CAC50(__int64* a2);
-	virtual __int64 registerToUserManager(__int64 &, int); //120
-	virtual __int64 resumeWithUserManager(__int64 &, int); //121
-	virtual __int64 createUserAuthentication(std::string); //122
-	virtual __int64 createUserAuthentication(unsigned long long, std::string const&); //123
-	virtual __int64 getPlatformId(void)const; //124
-	virtual __int64 getPlatformOnlineId(void)const; //124
+	virtual __int64 registerToUserManager(__int64 &, int); 
+	virtual __int64 resumeWithUserManager(__int64 &, int); 
+	virtual __int64 createUserAuthentication(std::string); 
+	virtual __int64 createUserAuthentication(unsigned long long, std::string const&); 
+	virtual __int64 getPlatformId(void)const; 
+	virtual __int64 getPlatformOnlineId(void)const; 
 public:
-	virtual bool isHoloCursorNeeded(void)const; //125
+	virtual bool isHoloCursorNeeded(void)const; 
 private:
-	virtual __int64 useController(void)const; //126
-	virtual __int64 useTouchscreen(void)const; //127
-	virtual __int64 getMouseGrabbed(void)const; //128
-	virtual __int64 currentInputModeIsGamePadOrMotionController(void)const; //129
-	virtual __int64 currentInputModeIsMouseAndKeyboard(void)const; //130
-	virtual __int64 getForceMonoscopic(void)const; //131
-	virtual __int64 allowPicking(void)const; //132
+	virtual __int64 useController(void)const; 
+	virtual __int64 useTouchscreen(void)const; 
+	virtual __int64 getMouseGrabbed(void)const; 
+	virtual __int64 currentInputModeIsGamePadOrMotionController(void)const; 
+	virtual __int64 currentInputModeIsMouseAndKeyboard(void)const; 
+	virtual __int64 getForceMonoscopic(void)const; 
+	virtual __int64 allowPicking(void)const; 
 public:
-	virtual bool isShowingMenu(void)const; //133
-	virtual bool isShowingProgressScreen(void)const; //134
-	virtual bool isScreenReplaceable(void)const; //135
-	virtual bool isInGame(void)const; //136
-	virtual bool isInRealm(void); //137
+	virtual bool isShowingMenu(void)const; 
+	virtual bool isShowingProgressScreen(void)const; 
+	virtual bool isShowingWorldProgressScreen(void)const;
+	virtual bool isShowingDeathScreen(void)const;
+	virtual bool isScreenReplaceable(void)const;
+	virtual bool isInGame(void)const; 
+	virtual bool isInRealm(void);
 private:
-	virtual __int64 readyForShutdown(void)const; //138
+	virtual __int64 readyForShutdown(void)const; 
 public:
-	virtual bool isPrimaryClient(void)const; //139
-	virtual bool isEduMode(void)const; //140
-	virtual bool isGamepadCursorEnabled(void)const; //141
+	virtual bool isPrimaryClient(void)const; 
+	virtual bool isEduMode(void)const; 
+	virtual bool isGamepadCursorEnabled(void)const; 
 private:
-	virtual __int64 getServerData(void); //142 //148
-	virtual __int64 getServerData(void)const; //143
+	virtual __int64 getServerData(void); 
+	virtual __int64 getServerData(void)const;
 public:
-	virtual PointingStruct* getLevel(void); //144
-	virtual PointingStruct* getLevel(void)const; //145
-	virtual bool isPreGame(void)const; //146
-	virtual bool isInMultiplayerGame(void)const; // 147
-	virtual bool isMultiC_PlayerClient(void)const; //148
+	virtual PointingStruct* getLevel(void); 
+	virtual PointingStruct* getLevel(void)const; 
+	virtual bool isPreGame(void)const; 
+	virtual bool isInMultiplayerGame(void)const; 
+	virtual bool isMultiC_PlayerClient(void)const;
 private:
-	virtual __int64 getOptions(void); //149
-	virtual __int64 getOptions(void)const; //150
-	virtual __int64 getOptionsPtr(void); //151
-	virtual __int64 getUser(void); //152
-	virtual __int64 getUser(void)const; //153
-	virtual __int64 getGameRenderer(void)const; //154
-	virtual __int64 getHolosceneRenderer(void)const; //155
-	virtual __int64 getLevelRenderer(void)const; //156
-	virtual __int64 getLevelRendererCameraProxy(void)const; //157
+	virtual __int64 getOptions(void); 
+	virtual __int64 getOptions(void)const; 
+	virtual __int64 getOptionsPtr(void); 
+	virtual __int64 getUser(void); 
+	virtual __int64 getUser(void)const; 
+	virtual __int64 getGameRenderer(void)const;
+	virtual __int64 getHolosceneRenderer(void)const; 
+	virtual __int64 getLevelRenderer(void)const;
+	virtual __int64 getLevelRendererCameraProxy(void)const; 
 	virtual __int64 sub_1400CCC00(void) const;
 	virtual __int64 sub_1400CCC08(void) const;
-	virtual __int64 getLightTexture(void); //158
+	virtual __int64 getLightTexture(void); 
 public:
-	virtual void setupLevelRendering(__int64 &, C_Entity &); //159
+	virtual void setupLevelRendering(__int64 &, C_Entity &); 
 private:
-	virtual __int64 getViewportInfo(void)const; //160
+	virtual __int64 getViewportInfo(void)const;
 public:
-	virtual void setViewportInfo(__int64 const&); //161
+	virtual void setViewportInfo(__int64 const&);
 private:
-	virtual __int64 getNormalizedViewportSize(void)const; //162
-	virtual __int64 updateChunkRadius(void); //163
+	virtual __int64 getNormalizedViewportSize(void)const; 
+	virtual __int64 updateChunkRadius(void);
 public:
-	virtual void setUITexture(__int64 *); //164
+	virtual void setUITexture(__int64 *); 
 private:
-	virtual __int64 getUITexture(void); //165
+	virtual __int64 getUITexture(void); 
 public:
-	virtual void setLevelTexture(__int64*); //166
+	virtual void setLevelTexture(__int64*); 
 private:
-	virtual __int64 getLevelTexture(void); //167
+	virtual __int64 getLevelTexture(void); 
 public:
-	virtual void setUICursorTexture(__int64); //168
+	virtual void setUICursorTexture(__int64); 
 private:
-	virtual __int64 getUICursorTexture(void)const; //169
-	virtual __int64 getCamera(void); //170
-	virtual __int64 getShaderColor(void); //171
-	virtual __int64 getDarkShaderColor(void); //172
-	virtual __int64 clearGraphicsCache(void); //173
-	virtual __int64 getNormalizedUICursorTransform(__int64 &, float); //174
-	virtual __int64 shouldRenderUICursor(void)const; //175
+	virtual __int64 getUICursorTexture(void)const; 
+	virtual __int64 getCamera(void); 
+	virtual __int64 getShaderColor(void);
+	virtual __int64 getDarkShaderColor(void);
+	virtual __int64 clearGraphicsCache(void); 
+	virtual __int64 getNormalizedUICursorTransform(__int64 &, float);
+	virtual __int64 shouldRenderUICursor(void)const;
 	virtual bool sub_1400CD3B0(void);
 	virtual bool sub_1400CD3B1(void);
-	virtual __int64 onLatencyUpdated(std::chrono::duration<long long, std::ratio<1ll, 1000ll>> const&); //176
-	virtual __int64 getGuiScale(void)const; //177
-	virtual __int64 getGuiScaleOption(void)const; //178
-	virtual __int64 getGuiScaleOffset(void)const; //179
+	virtual __int64 onLatencyUpdated(std::chrono::duration<long long, std::ratio<1ll, 1000ll>> const&);
+	virtual __int64 getGuiScale(void)const;
+	virtual __int64 getGuiScaleOption(void)const; 
+	virtual __int64 getGuiScaleOffset(void)const; 
 public:
-	virtual void setGuiScaleOffset(int); //780
+	virtual void setGuiScaleOffset(int); 
 private:
-	virtual __int64 renderEditorGui(__int64 &, bool); //181
+	virtual __int64 renderEditorGui(__int64 &, bool); 
 public:
-	virtual C_GuiData* getGuiData(void); //182       //*1.13 //192
+	virtual C_GuiData* getGuiData(void);   
 	virtual C_GuiData* getGuiData(void)const; 
 private:
 	virtual __int64 getGuidedFlowManager(void); 
@@ -633,7 +635,7 @@ public:
 
 	vec2_t* getMousePos(){
 		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
-		return reinterpret_cast<vec2_t*>(_this + 0x3D0);
+		return reinterpret_cast<vec2_t*>(_this + 0x400);
 	}
 
 	vec2_t getFov() {
