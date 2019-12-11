@@ -71,7 +71,7 @@ void Hooks::Init()
 	
 	// Signatures
 	{
-		void* surv_tick = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 55 48 8D 68 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 10 48 89 70 18 48 89 78 20 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 8B F9 8B 41 ??"));
+		void* surv_tick = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 55 57 41 56 48 8D 68 A1 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 8B F9 8B 41"));
 		g_Hooks.SurvivalMode_tickHook = std::make_unique<FuncHook>(surv_tick, Hooks::SurvivalMode_tick);
 
 		void* _sendChatMessage = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? 00 00 48 8B D9 48 83 B9"));
@@ -125,10 +125,10 @@ void Hooks::Init()
 		void* fullbright = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC 40 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 89 74 24 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 33 C0 48 89 44 24 ?? 48 89 44 24 ?? 48 8B 01 48 8D 54 24 ??"));
 		g_Hooks.GetGammaHook = std::make_unique<FuncHook>(fullbright, Hooks::GetGamma);
 
-		void* jump = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC 40 48 8B 01 48 8B F9 FF 50 ?? 8B 08 89 ?? ?? ?? ?? ?? 8B 48 ?? 89"));
+		void* jump = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B 01 48 8B F9 0F 29 74 24"));
 		g_Hooks.JumpPowerHook = std::make_unique<FuncHook>(jump, Hooks::JumpPower);
 
-		void* onAppSuspended = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 68 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B F1 ?? ?? ?? ?? ?? ?? ?? 48 85 C9"));
+		void* onAppSuspended = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 55 48 8B EC 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 89 78 ?? 48 8B F1 ?? ?? ?? ?? ?? ?? ?? 48 83 3F"));
 		g_Hooks.MinecraftGame_onAppSuspendedHook = std::make_unique<FuncHook>(onAppSuspended, Hooks::MinecraftGame_onAppSuspended);
 
 		void* RakNetInstance__tick = reinterpret_cast<void*>(Utils::FindSignature("48 8B C4 55 41 56 41 57 ?? ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 89 78 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 ?? ?? ?? ?? ?? ?? ?? 48 8B F1 80 B9 ?? ?? ?? ?? ?? 74 51 C6 81 ?? ?? ?? ?? ?? 66 ?? ?? ?? ?? ?? ?? ?? 74 40 48 8D 45"));
@@ -213,17 +213,17 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this)
 		if (*message == cmdMgr->prefix) {
 			cmdMgr->execute(message);
 
-			__int64* a1 = (__int64*)(*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0x668) + 0x30i64) + 0x950i64))(*(__int64*)(*(__int64*)(_this + 0x668) + 0x30i64));
+			__int64* a1 = (__int64*)(*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0x668) + 0x20i64) + 0x960i64))(*(__int64*)(*(__int64*)(_this + 0x668) + 0x20i64));
 			addCommandToChatHistory(a1, (char*)(_this + 0x700)); // This will put the command in the chat history (Arrow up/down)
 
 			__int64 v17 = 0;
-			__int64* v15 = *(__int64**)(*(__int64*)(_this + 0x668) + 0x30i64);
+			__int64* v15 = *(__int64**)(*(__int64*)(_this + 0x668) + 0x20i64);
 			__int64 v16 = *v15;
 
 			if (*(BYTE*)(_this + 0x72A))
-				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x958))(v15);
+				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x968))(v15);
 			else
-				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x950))(v15);
+				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x960))(v15);
 			*(DWORD*)(_this + 0x724) = *(DWORD*)(v17 + 0x20);
 
 			*reinterpret_cast<__int64*>(_this + 0x710) = 0i64;
