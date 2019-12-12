@@ -18,10 +18,11 @@ bool setoffhandCommand::execute(std::vector<std::string>* args)
 {
 	assertTrue(args->size() > 2);
 	int itemId = 0;
-	char  count = assertInt(args->at(2));
+	char count = static_cast<char>(assertInt(args->at(2)));
 	char itemData = 0;
 	if (args->size() > 3)
-		itemData = assertInt(args->at(3));
+		itemData = static_cast<char>(assertInt(args->at(3)));
+
 	try
 	{
 		itemId = std::stoi(args->at(1));
@@ -35,17 +36,18 @@ bool setoffhandCommand::execute(std::vector<std::string>* args)
 	C_BlockLegacy* blockItem = nullptr;
 	C_Item* itemItem = nullptr;
 	C_ItemStack* yot = nullptr;
+	auto transactionManager = g_Data.getLocalPlayer()->getTransactionManager();
 
 	static uintptr_t** VanillaBlocks__mDirtPtr = 0x0;
 	static uintptr_t** VanillaItems__mShovel_ironPtr = 0x0;
 
-	using getItemFromId_t = C_Item***(__fastcall*)(void*, int itemID);
+	using getItemFromId_t = C_Item * **(__fastcall*)(void*, int itemID);
 	static getItemFromId_t  getItemFromId = reinterpret_cast<getItemFromId_t>(Utils::FindSignature("40 53 48 83 EC ?? 48 8B D9 66 85 D2 0F 84 ?? ?? ?? ?? 44 0F BF C2 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 44 89 44 24 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 41 0F B6 D0 48 33 D0 0F B6 44 24 ??"));
 
 	if (VanillaBlocks__mDirtPtr == 0x0) {
 		uintptr_t sigOffset = Utils::FindSignature("48 8B 05 ?? ?? ?? ?? 48 8B 08 48 8D 42 FF ?? ?? ?? ?? ?? ?? 49 3B C0");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
-		VanillaBlocks__mDirtPtr = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
+		VanillaBlocks__mDirtPtr = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 		if (VanillaBlocks__mDirtPtr == 0x0 || sigOffset == 0x0)
 			logF("VanillaBlocks sig not working!!!");
 	}
@@ -53,7 +55,7 @@ bool setoffhandCommand::execute(std::vector<std::string>* args)
 	if (VanillaItems__mShovel_ironPtr == 0x0) {
 		uintptr_t sigOffset = Utils::FindSignature("48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 ?? ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 ?? ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 ?? ?? ?? ?? ?? ?? ?? E8");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
-		VanillaItems__mShovel_ironPtr = reinterpret_cast<uintptr_t * *>(sigOffset + offset + /*length of instruction*/ 7);
+		VanillaItems__mShovel_ironPtr = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 		if (VanillaItems__mShovel_ironPtr == 0x0 || sigOffset == 0x0)
 			logF("VanillaItems sig not working!!!");
 	}
@@ -85,6 +87,25 @@ bool setoffhandCommand::execute(std::vector<std::string>* args)
 				}
 			}
 		}
+		if (blockItem == nullptr && itemItem == nullptr)
+		{
+			clientMessageF("%sInvalid Item!", RED);
+			return true;
+		}
+		else if (blockItem != nullptr && yot == nullptr)
+		{
+			if (itemData == 0)
+				yot = new C_ItemStack(*blockItem, count);
+			else
+			{
+				void* ItemPtr = malloc(0x8);
+				C_Item*** cStack = getItemFromId(ItemPtr, blockItem->blockId);
+				yot = new C_ItemStack(***cStack, count, itemData);
+				free(ItemPtr);
+			}
+		}
+		else if (itemItem != nullptr && yot == nullptr)
+			yot = new C_ItemStack(*itemItem, count, itemData);
 	}
 	else
 	{
@@ -96,34 +117,12 @@ bool setoffhandCommand::execute(std::vector<std::string>* args)
 			return true;
 		}
 		yot = new C_ItemStack(***cStack, count, itemData);
-		g_Data.getLocalPlayer()->setOffhandSlot(yot);
-		clientMessageF("%sSet item as offhand!", BLUE);
 		free(ItemPtr);
-		return true;
 	}
-
-	if (blockItem == nullptr && itemItem == nullptr)
-	{
-		clientMessageF("%sInvalid Item!", RED);
-		return true;
-	}
-	else if (blockItem != nullptr)
-	{
-		if (itemData != 0)
-			yot = new C_ItemStack(*blockItem, count);
-		else
-		{
-			void* ItemPtr = malloc(0x8);
-			C_Item*** cStack = getItemFromId(ItemPtr, blockItem->blockId);
-			yot = new C_ItemStack(***cStack, count, itemData);
-			free(ItemPtr);
-		}
-	}
-	else
-		yot = new C_ItemStack(*itemItem, count, itemData);
 
 	if (yot != nullptr)
 		yot->count = count;
+
 
 	g_Data.getLocalPlayer()->setOffhandSlot(yot);
 	clientMessageF("%sSet item as offhand!", BLUE);
