@@ -208,6 +208,7 @@ static const char* const KeyNames[] = {
 #include <chrono>
 #include <algorithm>
 #include <vector>
+#include <random>
 #include "Logger.h"
 
 #define INRANGE(x,a,b)   (x >= a && x <= b)
@@ -325,6 +326,14 @@ public:
 			}
 		}
 		return out;
+	}
+
+	static std::string randomString(const int size) {
+		std::string str("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+		std::random_device rd;
+		std::mt19937 generator(rd());
+		std::shuffle(str.begin(), str.end(), generator);
+		return str.substr(0, size);
 	}
 
 	static uintptr_t FindSignatureModule(const char* szModule, const char* szSignature)

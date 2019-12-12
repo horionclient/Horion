@@ -1,6 +1,5 @@
 #include "Spammer.h"
-#include <random>
-#include <string>
+
 
 Spammer::Spammer() : IModule(0x0, Category::EXPLOITS, "Spams a message in a specified delay")
 {
@@ -23,19 +22,12 @@ void Spammer::onTick(C_GameMode* gm)
 	Odelay++;
 	if (Odelay > delay * 20) {
 		C_TextPacket* textPacket = new C_TextPacket();
-		textPacket->message.setText(bypass ? (message + " | " + random()) : message);
+		textPacket->message.setText(bypass ? (message + " | " + Utils::randomString(8)) : message);
 		textPacket->sourceName = *g_Data.getLocalPlayer()->getNameTag();
-		textPacket->xboxUserId = *new TextHolder(std::to_string(g_Data.getLocalPlayer()->getUserId()));
+		textPacket->xboxUserId = TextHolder(std::to_string(g_Data.getLocalPlayer()->getUserId()));
 		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(textPacket);
 		delete textPacket;
 		Odelay = 0;
 	}
 }
 
-std::string Spammer::random() {
-	std::string str("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
-	std::random_device rd;
-	std::mt19937 generator(rd());
-	std::shuffle(str.begin(), str.end(), generator);
-	return str.substr(0, 8);
-}

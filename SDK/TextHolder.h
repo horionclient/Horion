@@ -18,6 +18,42 @@ public:
 		memset(this, 0, sizeof(TextHolder));
 	}
 
+	TextHolder(TextHolder const& copy)
+	{
+		memset(this, 0, sizeof(TextHolder));
+		textLength = copy.textLength;
+		alignedTextLength = copy.alignedTextLength;
+		if(copy.textLength < 16)
+			strcpy_s(inlineText, 16, copy.inlineText);
+		else {
+			size_t size = strlen(copy.pText) + 1;
+			pText = reinterpret_cast<char*>(malloc(size));
+			if (pText != 0x0 && copy.pText != 0x0) {
+				strcpy_s(pText, size, copy.pText);
+			}
+		}
+	}
+
+	TextHolder& operator=(TextHolder const& copy)
+	{
+		if (textLength >= 16 && pText != nullptr) {
+			free(pText);
+		}
+		memset(this, 0, sizeof(TextHolder));
+		textLength = copy.textLength;
+		alignedTextLength = copy.alignedTextLength;
+		if (copy.textLength < 16)
+			strcpy_s(inlineText, 16, copy.inlineText);
+		else {
+			size_t size = strlen(copy.pText) + 1;
+			pText = reinterpret_cast<char*>(malloc(size));
+			if (pText != 0x0 && copy.pText != 0x0) {
+				strcpy_s(pText, size, copy.pText);
+			}
+		}
+		return *this;
+	}
+
 	TextHolder(std::string str) {
 		memset(this, 0, sizeof(TextHolder));
 		textLength = str.size();
@@ -26,7 +62,7 @@ public:
 			strcpy_s(inlineText, 16, str.c_str());
 		else {
 			size_t size = str.size();
-			pText = reinterpret_cast<char*>(malloc(alignedTextLength + 1));
+			pText = reinterpret_cast<char*>(malloc(size + 1));
 			if (pText != 0x0) {
 				strcpy_s(pText, size + 1, str.c_str());
 			}
@@ -68,7 +104,7 @@ public:
 			strcpy_s(inlineText, 16, str.c_str());
 		else {
 			size_t size = str.size();
-			char* ptr = reinterpret_cast<char*>(malloc(alignedTextLength + 1));
+			char* ptr = reinterpret_cast<char*>(malloc(size + 1));
 			if (ptr != 0x0) {
 				strcpy_s(ptr, size + 1, str.c_str());
 			}

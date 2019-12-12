@@ -1,6 +1,5 @@
 #include "SpammerCommand.h"
-#include <random>
-#include <string>
+
 
 SpammerCommand::SpammerCommand() : IMCCommand("spammer", "Edit spammer delay/text", "<message/delay/bypass/manual> <string/int/bool>")
 {
@@ -24,7 +23,7 @@ bool SpammerCommand::execute(std::vector<std::string>* args)
 			os << args->at(i);
 		}
 		std::string text = os.str().substr(1);
-		moduleMgr->getModule<Spammer>()->message = text;
+		moduleMgr->getModule<Spammer>()->getMessage() = text;
 		clientMessageF("%sSpammer message set to %s%s%s!", GREEN, GRAY, text.c_str(),GREEN);
 		return true;
 	}
@@ -35,7 +34,7 @@ bool SpammerCommand::execute(std::vector<std::string>* args)
 			return true;
 		}
 		else {
-			moduleMgr->getModule<Spammer>()->delay = delay;
+			moduleMgr->getModule<Spammer>()->getDelay() = delay;
 			return true;
 		}
 	}
@@ -43,7 +42,7 @@ bool SpammerCommand::execute(std::vector<std::string>* args)
 		std::string data = args->at(2);
 		std::transform(data.begin(), data.end(), data.begin(), ::tolower);
 		bool state = (data == "true") ? true : false;
-		moduleMgr->getModule<Spammer>()->bypass = state;
+		moduleMgr->getModule<Spammer>()->getBypass() = state;
 		clientMessageF("%sBypass set to %s%s%s!", GREEN, GRAY, state ? "true" : "false", GREEN);
 		return true;
 	}
@@ -59,9 +58,9 @@ bool SpammerCommand::execute(std::vector<std::string>* args)
 		Spammer* spammer = moduleMgr->getModule<Spammer>();
 		for (int i = 0; i < times; i++) {
 			C_TextPacket* textPacket = new C_TextPacket();
-			textPacket->message.setText(text + (spammer->bypass ? (" | " + spammer->random()) : ""));
+			textPacket->message.setText(text + (spammer->getBypass() ? (" | " + Utils::randomString(8)) : ""));
 			textPacket->sourceName = *g_Data.getLocalPlayer()->getNameTag();
-			textPacket->xboxUserId = *new TextHolder(std::to_string(g_Data.getLocalPlayer()->getUserId()));
+			textPacket->xboxUserId = TextHolder(std::to_string(g_Data.getLocalPlayer()->getUserId()));
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(textPacket);
 			delete textPacket;
 		}

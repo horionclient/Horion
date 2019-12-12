@@ -8,9 +8,9 @@
 class Minecraft;
 class LevelRenderer {
 private:
-	char pad_0x0000[0x864]; //0x0000
+	char pad_0x0000[0x860]; //0x0000
 public:
-	vec3_t origin; //0x0864
+	vec3_t origin; //0x0860
 };
 class HitDetectSystem;
 
@@ -630,7 +630,7 @@ public:
 	glmatrixf* getRefDef() {
 		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
 		//logF("refderf %llX", _this + 0x258);
-		return reinterpret_cast<glmatrixf*>(_this + 0x268);
+		return reinterpret_cast<glmatrixf*>(_this + 0x298);
 	};
 
 	vec2_t* getMousePos(){
@@ -641,8 +641,8 @@ public:
 	vec2_t getFov() {
 		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
 		vec2_t fov;
-		fov.x = *reinterpret_cast<float*>(_this + 0x5D0);
-		fov.y = *reinterpret_cast<float*>(_this + 0x5E4);
+		fov.x = *reinterpret_cast<float*>(_this + 0x600);
+		fov.y = *reinterpret_cast<float*>(_this + 0x614);
 		return fov;
 	}
 

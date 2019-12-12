@@ -9,6 +9,7 @@ private:
 	bool invisibleCheck = true;
 	bool entityIdCheck = true;
 	bool otherCheck = true;
+	bool extraCheck = false;
 public:
 	AntiBot();
 	~AntiBot();
@@ -27,6 +28,10 @@ public:
 	}
 	bool isOtherCheckEnabled() {
 		return otherCheck && this->isEnabled();
+	}
+	bool isExtraCheckEnabled()
+	{
+		return this->extraCheck;
 	}
 
 	// Inherited via IModule

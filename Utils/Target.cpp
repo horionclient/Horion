@@ -45,7 +45,7 @@ bool Target::isValidTarget(C_Entity* ent)
 	if (!(*localPlayer)->canAttack(ent, false))
 		return false;
 
-	if (!ent->canShowNameTag())
+	if (antibot->isExtraCheckEnabled() && !ent->canShowNameTag())
 		return false;
 
 	return true;
