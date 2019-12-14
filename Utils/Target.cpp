@@ -23,7 +23,7 @@ bool Target::isValidTarget(C_Entity* ent)
 	if (!ent->isAlive())
 		return false;
 
-	if (ent->getEntityTypeId() < 122 && ent->getEntityTypeId() != 63)
+	if (ent->getEntityTypeId() <= 122 && ent->getEntityTypeId() != 63 && antibot->isEntityIdCheckEnabled())
 		return false;
 
 	if (!Target::containsOnlyASCII(ent->getNameTag()->getText()) && antibot->isNameCheckEnabled())
