@@ -37,10 +37,10 @@ void InventoryCleaner::onTick(C_GameMode* gm)
 	std::vector<int> dropSlots = findUselessItems();
 	if (!dropSlots.empty()) {
 		for (int i : dropSlots) {
-			logF("Dropping %d", i);
+			logF("Dropping slot: %i", i);
 			g_Data.getLocalPlayer()->getSupplies()->inventory->dropSlot(i); 
 		}
-		logF("################");
+		logF("########");
 	}
 }
 
@@ -67,53 +67,49 @@ void InventoryCleaner::findStackableItems() {
 std::vector<int> InventoryCleaner::findUselessItems() {
 	// Filter by options
 
-
 	std::vector<int> uselessItems;
-	std::vector<C_Item*> items;
+	std::vector<C_ItemStack*> items;
 
 	{
 		for (int i = 0; i < 36; i++) {
 			C_ItemStack* itemStack = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(i);
 			if (itemStack->item != nullptr) {
 				if (!stackIsUseful(itemStack)) {
-					if (std::find(items.begin(), items.end(), *itemStack->item) == items.end())
+					if (std::find(items.begin(), items.end(), itemStack) == items.end())
 						uselessItems.push_back(i);
 					else
-						items.push_back(*itemStack->item);
-				}else if (std::find(items.begin(), items.end(), *itemStack->item) == items.end())
-					items.push_back(*itemStack->item);
+						items.push_back(itemStack);
+				}else if (std::find(items.begin(), items.end(), itemStack) == items.end())
+					items.push_back(itemStack);
 			}
 		}
-		/*
+		
 		for (int i = 0; i < 4; i++) {
 			if (g_Data.getLocalPlayer()->getArmor(i)->item != nullptr)
-				items.push_back(reinterpret_cast<C_Item*>(*g_Data.getLocalPlayer()->getArmor(i)->item));
+				items.push_back(g_Data.getLocalPlayer()->getArmor(i));
 		}
-		*/
+		
 	}
 	// Filter weapons
-	
+	if(items.size() > 0)
 	{
 		// Filter by attack damage
-		std::sort(items.begin(), items.end(), [](const C_Item* lhs, const C_Item* rhs)
-			{
-				C_Item* current = const_cast<C_Item*>(lhs);
-				C_Item* other = const_cast<C_Item*>(rhs);
-				return current->getAttackDamage() > other->getAttackDamage();
-			});
+		std::sort(items.begin(), items.end(), [](const C_ItemStack* lhs, const C_ItemStack* rhs) {
+				C_ItemStack* current = const_cast<C_ItemStack*>(lhs);
+				C_ItemStack* other = const_cast<C_ItemStack*>(rhs);
+				return current->getAttackingDamageWithEnchants() > other->getAttackingDamageWithEnchants();
+		});
 
 		bool hadTheBestItem = false;
-		C_Item* bestItem = items.at(0);
+		C_ItemStack* bestItem = items.at(0);
 		for (int i = 0; i < 36; i++) {
 			if (std::find(uselessItems.begin(), uselessItems.end(), i) != uselessItems.end())
 				continue;
 			C_ItemStack* itemStack = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(i);
-			
-			if (itemStack->item != nullptr) {
-				if ((*itemStack->item)->getAttackDamage() < bestItem->getAttackDamage()) {
+			if (itemStack->item != nullptr && itemStack->getAttackingDamageWithEnchants() > 1) {
+				if (itemStack->getAttackingDamageWithEnchants() < bestItem->getAttackingDamageWithEnchants()) {
 					uselessItems.push_back(i);
-				}
-				else {
+				} else {
 					// Damage same as bestItem
 					if (hadTheBestItem)
 						uselessItems.push_back(i);
@@ -123,60 +119,88 @@ std::vector<int> InventoryCleaner::findUselessItems() {
 			}
 		}
 	}
-	
 	// Filter armor
 	{
-		std::vector<C_Item*> helmets;
-		std::vector<C_Item*> chestplates;
-		std::vector<C_Item*> leggins;
-		std::vector<C_Item*> boots;
+		std::vector<C_ItemStack*> helmets;
+		std::vector<C_ItemStack*> chestplates;
+		std::vector<C_ItemStack*> leggins;
+		std::vector<C_ItemStack*> boots;
 
 		// Filter by armor value
-		std::sort(items.begin(), items.end(), [](const C_Item* lhs, const C_Item* rhs)
+		std::sort(items.begin(), items.end(), [](const C_ItemStack* lhs, const C_ItemStack* rhs)
 		{
-			C_Item* current = const_cast<C_Item*>(lhs);
-			C_Item* other = const_cast<C_Item*>(rhs);
-			return current->getArmorValue() > other->getArmorValue();
+			C_ItemStack* current = const_cast<C_ItemStack*>(lhs);
+			C_ItemStack* other = const_cast<C_ItemStack*>(rhs);
+			return current->getArmorValueWithEnchants() > other->getArmorValueWithEnchants();
 		});
 		
 		// Put armor items in their respective vectors
-		for (C_Item* item : items)
+		for (C_ItemStack* itemsteck : items)
 		{
-			if (item->isHelmet()) helmets.push_back(item);
-			else if (item->isChestplate()) chestplates.push_back(item);
-			else if (item->isLeggins()) leggins.push_back(item);
-			else if (item->isBoots()) boots.push_back(item);
+			C_Item* item = itemsteck->getItem();
+			if (item->isArmor()) {
+				C_ArmorItem* armorItem = reinterpret_cast<C_ArmorItem*>(item);
+				if (armorItem->isHelmet()) helmets.push_back(itemsteck);
+				else if (armorItem->isChestplate()) chestplates.push_back(itemsteck);
+				else if (armorItem->isLeggins()) leggins.push_back(itemsteck);
+				else if (armorItem->isBoots()) boots.push_back(itemsteck);
+			}
 		}
-
-		bool hadBest[4];
+		bool hadBest[4] = { 0, 0, 0, 0 };
+		for (int i = 0; i < 4; i++) {
+			C_ItemStack* itemsteck = g_Data.getLocalPlayer()->getArmor(i);
+			C_Item** item = itemsteck->item;
+			if (item != nullptr) {
+				C_ArmorItem* armor = reinterpret_cast<C_ArmorItem*>(*item);
+				float testArmorValue = 0;
+				switch (armor->ArmorSlot) {
+				case 0:
+					if(helmets.size() > 0)
+						testArmorValue = helmets.at(0)->getArmorValueWithEnchants();
+					break;
+				case 1:
+					if (chestplates.size() > 0)
+						testArmorValue = chestplates.at(0)->getArmorValueWithEnchants();
+					break;
+				case 2:
+					if (leggins.size() > 0)
+						testArmorValue = leggins.at(0)->getArmorValueWithEnchants();
+					break;
+				case 3:
+					if (boots.size() > 0)
+						testArmorValue = boots.at(0)->getArmorValueWithEnchants();
+					break;
+				}
+				if (armor->getArmorValue() >= testArmorValue)
+					hadBest[armor->ArmorSlot] = true;
+			}
+		}
 		for (int i = 0; i < 36; i++) {
 			if (std::find(uselessItems.begin(), uselessItems.end(), i) != uselessItems.end())
-				continue;
+				continue; // item already useless
 			C_ItemStack* itemStack = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(i);
-			if (itemStack->item != nullptr) {
-				if ((*itemStack->item)->isHelmet()) {
-					if (hadBest[0] || (*itemStack->item) != helmets.at(0)) {
-						logF("%llX != %llX  %d %d", (*itemStack->item), helmets.at(0), (*itemStack->item)->getArmorValue(), helmets.at(0)->getArmorValue());
+			if (itemStack->item != nullptr && (*itemStack->item)->isArmor()) {
+				C_ArmorItem* armor = reinterpret_cast<C_ArmorItem*>(*itemStack->item);
+				if (armor->isHelmet()) {
+					if (hadBest[0] || itemStack->getArmorValueWithEnchants() < helmets.at(0)->getArmorValueWithEnchants()) {
 						uselessItems.push_back(i);
-					}
-						
-					else 
+					}else 
 						hadBest[0] = true;
 				}
-				else if ((*itemStack->item)->isChestplate()) {
-					if (hadBest[1] || (*itemStack->item) != chestplates.at(0))
+				else if (armor->isChestplate()) {
+					if (hadBest[1] || itemStack->getArmorValueWithEnchants() < chestplates.at(0)->getArmorValueWithEnchants())
 						uselessItems.push_back(i);
 					else
 						hadBest[1] = true;
 				}
-				else if ((*itemStack->item)->isLeggins()) {
-					if (hadBest[2] || (*itemStack->item) != leggins.at(0))
+				else if (armor->isLeggins()) {
+					if (hadBest[2] || itemStack->getArmorValueWithEnchants() < leggins.at(0)->getArmorValueWithEnchants())
 						uselessItems.push_back(i);
 					else
 						hadBest[2] = true;
 				}
-				else if ((*itemStack->item)->isBoots()) {
-					if (hadBest[3] || (*itemStack->item) != boots.at(0))
+				else if (armor->isBoots()) {
+					if (hadBest[3] || itemStack->getArmorValueWithEnchants() < boots.at(0)->getArmorValueWithEnchants())
 						uselessItems.push_back(i);
 					else
 						hadBest[3] = true;

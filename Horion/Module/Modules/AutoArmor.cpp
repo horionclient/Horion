@@ -12,36 +12,20 @@ public:
 	}
 	bool isEqual(ArmorStruct& src)
 	{
-		if (this->getArmorValue() == src.getArmorValue())
+		if (this->m_item->getArmorValueWithEnchants() == src.m_item->getArmorValueWithEnchants())
 			return true;
 		else
 			return false;
 	}
-	int getEnchantValue(int enchantId)
-	{
-		using getEnchantsLevel_t = int(__fastcall*)(int, C_ItemStack*);
-		static getEnchantsLevel_t getEnchantsLevel = reinterpret_cast<getEnchantsLevel_t>(Utils::FindSignature("48 8B C4 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B F2 8B ?? 33 ?? 48 8B"));
-		return getEnchantsLevel(enchantId, this->m_item);
-	}
-
-	float getArmorValue()
-	{
-		return (float)((armor->getArmorValue() + ((this->getEnchantValue(0) * 5 /*Protection*/
-			+ this->getEnchantValue(5) * 4  /*Thorns*/
-			+ this->getEnchantValue(3) * 3 /*Blast Protection*/
-			+ this->getEnchantValue(1) * 2 /*Fire Protection*/
-			+ this->getEnchantValue(4))))); /*Projectile Protection*/
-	}
+	
 	bool operator() (ArmorStruct lhs, ArmorStruct rhs)
 	{
-		return (lhs.getArmorValue() > rhs.getArmorValue());
+		return (lhs.m_item->getArmorValueWithEnchants() > rhs.m_item->getArmorValueWithEnchants());
 	}
 	C_ArmorItem* armor = nullptr;
 	C_ItemStack* m_item = nullptr;
 	int m_slot = 0; 
 };
-
-
 
 AutoArmor::AutoArmor() : IModule(0x0, Category::PLAYER, "Automatically equips the best armor")
 {
@@ -80,7 +64,7 @@ void AutoArmor::onTick(C_GameMode* gm)
 	{
 		bool operator() (ArmorStruct lhs, ArmorStruct rhs)
 		{
-			return (lhs.getArmorValue() > rhs.getArmorValue());
+			return (lhs.m_item->getArmorValueWithEnchants() > rhs.m_item->getArmorValueWithEnchants());
 		}
 	};
 
