@@ -88,7 +88,7 @@ void DrawUtils::setColor(float r, float g, float b, float a)
 	*reinterpret_cast<uint8_t*>(colorHolder + 4) = 1;
 }
 
-uintptr_t DrawUtils::getFont(Fonts font)
+C_Font* DrawUtils::getFont(Fonts font)
 {
 	switch (font) {
 	case Fonts::SMOOTH:
@@ -113,7 +113,7 @@ float DrawUtils::getTextWidth(std::string * textStr, float textSize, Fonts font)
 {
 	TextHolder* text = new TextHolder(*textStr);
 
-	uintptr_t fontPtr = getFont(font);
+	C_Font* fontPtr = getFont(font);
 
 	float ret = renderCtx->getLineLength(fontPtr, text, textSize, false);
 
@@ -183,8 +183,10 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color *color, floa
 		color = WHITE_COLOR;
 	
 	TextHolder* text = new TextHolder(*textStr);
-	uintptr_t fontPtr = getFont(font);
+	C_Font* fontPtr = getFont(font);
 	static uintptr_t caretMeasureData = 0xFFFFFFFF;
+
+	pos.y -= 1;
 
 	float* posF = new float[4]; // vec4_t(startX, startY, endX, endY);
 	posF[0] = pos.x;

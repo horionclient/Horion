@@ -38,7 +38,7 @@ void TabGui::renderLevel()
 {
 	// Parameters
 	static constexpr float textSize = 1.f;
-	static constexpr float textHeight = 10.f * textSize;
+	static const float textHeight = DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() * textSize;
 	static constexpr float alphaVal = 0.5f;
 
 	// First loop: Get the maximum text length 
@@ -138,10 +138,6 @@ void TabGui::renderLevel()
 	}
 	// Cleanup
 	DrawUtils::flush();
-	/*for (auto it = labelList.begin(); it != labelList.end(); ++it) {
-		auto label = *it;
-		delete[] label;
-	}*/
 	labelList.clear();
 	xOffset += maxLength + 4.5f;
 	yOffset = selectedYOffset;

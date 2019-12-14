@@ -55,11 +55,11 @@ public:
 	static void setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* guiData);
 	static void flush();
 	static void setColor(float r, float g, float b, float a); // rgba, values from 0 to 1
-	static void tess__begin(__int64 tesselator);
-	static uintptr_t getFont(Fonts font);
+	static inline void tess__begin(__int64 tesselator);
+	static C_Font* getFont(Fonts font);
 	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = Fonts::SMOOTH);
 	
-	static void drawLine(vec2_t start, vec2_t end, float lineWidth); // rgba
+	static inline void drawLine(vec2_t start, vec2_t end, float lineWidth); // rgba
 	static void fillRectangle(vec4_t pos, const MC_Color col, float alpha);
 	static void drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineWidth = 1.0f);
 

@@ -4,6 +4,7 @@
 #include "CGameSettingsInput.h"
 #include "CLoopbackPacketSender.h"
 #include "TextHolder.h"
+#include "CMinecraftUIRenderContext.h"
 
 class Minecraft;
 class LevelRenderer {
@@ -20,7 +21,7 @@ struct PtrToSmoothFont2
 private:
 	char pad_0x0000[0x18]; //0x0000
 public:
-	uintptr_t smoothFont; //0x0018
+	C_Font* smoothFont; //0x0018
 };
 
 
@@ -37,7 +38,7 @@ struct PtrToGamerFont2
 private:
 	char pad_0x0000[0x70]; //0x0000
 public:
-	uintptr_t gamerFont; //0x0070
+	C_Font* gamerFont; //0x0070
 };
 
 struct PtrToGamerFont1
@@ -66,11 +67,11 @@ private:
 public:
 	bool canUseKeys;//0x0218
 
-	uintptr_t getTheGoodFontThankYou() {
+	C_Font* getTheGoodFontThankYou() {
 		return (*ptr0->ptr)->smoothFont;
 	};
 
-	uintptr_t getGamerFont()
+	C_Font* getGamerFont()
 	{
 		return ptr->ptr->gamerFont;
 	}
@@ -292,9 +293,9 @@ private:
 	virtual __int64 sub_1400CA2E0(__int64 a1);
 	virtual __int64 sub_1400CA2E8(__int64 a1);
 	virtual __int64 sub_1400CA2F0(__int64 a1);
-	virtual __int64 getFont(void)const;
-	virtual __int64 getRuneFont(void)const;
-	virtual __int64 getUnicodeFont(void)const; 
+	virtual C_Font* getFont(void)const;
+	virtual C_Font* getRuneFont(void)const;
+	virtual C_Font* getUnicodeFont(void)const;
 	virtual __int64 getGeometryGroup(void)const; 
 	virtual __int64 getMultiplayerServiceManager(void)const; 
 	virtual __int64 getLocalServerLevel(void); 
@@ -646,17 +647,17 @@ public:
 		return fov;
 	}
 
-	uintptr_t _getFont() {
+	C_Font* _getFont() {
 		
 		return this->getFont();
 	}
 
-	uintptr_t _getRuneFont() {
+	C_Font* _getRuneFont() {
 
 		return this->getRuneFont();
 	}
 
-	uintptr_t _getUnicodeFont() {
+	C_Font* _getUnicodeFont() {
 
 		return this->getUnicodeFont();
 	}
