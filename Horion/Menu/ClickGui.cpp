@@ -28,6 +28,10 @@ static const MC_Color moduleColor = MC_Color(0.2f, 0.2f, 0.2f, 1.f);
 float currentYOffset = 0;
 float currentXOffset = 0;
 
+char currentTooltip[500];
+vec2_t currentTooltipPos;
+bool hasTooltip;
+
 int timesRendered = 0;
 
 void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>* modList) {
@@ -114,20 +118,9 @@ void ClickGui::renderLabel(const char * text)
 }
 
 void ClickGui::renderTooltip(std::string* text, vec2_t mousepos) {		
-
-	float textWidth = DrawUtils::getTextWidth(text, 1.25f);
-	vec2_t textPos = vec2_t(
-		mousepos.x + textPadding + 12.f,
-		mousepos.y + textPadding
-	);
-	vec4_t rectPos = vec4_t(
-		mousepos.x + 12.f,
-		mousepos.y,
-		mousepos.x + paddingRight + textWidth,
-		mousepos.y + textHeight + (textPadding * 2)
-	);
-	DrawUtils::fillRectangle(rectPos, MC_Color(0.2f, 0.2f, 0.2f, 1.0f), 1.0f);
-	DrawUtils::drawText(textPos, text, new MC_Color(1.f, 1.f, 1.f, 1.f),1.05f);
+	strcpy_s(currentTooltip, text->c_str());
+	currentTooltipPos = mousepos;
+	hasTooltip = true;
 }
 
 void ClickGui::renderCategory(Category category)
@@ -269,11 +262,12 @@ void ClickGui::renderCategory(Category category)
 			// Background
 			if(allowRender)
 			{
-				if (rectPos.contains(&mousePos)) { // Is the Mouse hovering above us?
+				if (rectPos.contains(&mousePos) && !ourWindow->isInAnimation) { // Is the Mouse hovering above us?
 					DrawUtils::fillRectangle(rectPos, selectedModuleColor, 0.8f);
 					std::string tooltip = mod->getTooltip();
 					ClickGuiMod* clickgui = moduleMgr->getModule<ClickGuiMod>();
-					if(clickgui->showTooltips) renderTooltip(&tooltip, mousePos);
+					if(clickgui->showTooltips) 
+						renderTooltip(&tooltip, mousePos);
 					if (shouldToggleLeftClick) { // Are we being clicked?
 						mod->toggle();
 						shouldToggleLeftClick = false;
@@ -683,7 +677,6 @@ void ClickGui::renderCategory(Category category)
 		}
 	}
 
-
 	moduleList.clear();
 	DrawUtils::flush();
 }
@@ -717,6 +710,25 @@ void ClickGui::render()
 	shouldToggleLeftClick = false;
 	shouldToggleRightClick = false;
 	resetStartPos = false;
+
+	if(hasTooltip){
+		hasTooltip = false;
+		std::string text = currentTooltip;
+		float textWidth = DrawUtils::getTextWidth(&text, textSize);
+		vec2_t textPos = vec2_t(
+			currentTooltipPos.x + textPadding + 12.f,
+			currentTooltipPos.y
+		);
+		vec4_t rectPos = vec4_t(
+			currentTooltipPos.x + 12.f,
+			currentTooltipPos.y,
+			currentTooltipPos.x + (textPadding * 2) + textWidth + 12.f,
+			currentTooltipPos.y + textHeight
+		);
+		DrawUtils::fillRectangle(rectPos, MC_Color(0.2f, 0.2f, 0.2f, 1.0f), 1.0f);
+		DrawUtils::drawText(textPos, &text, new MC_Color(1.f, 1.f, 1.f, 1.f), textSize);
+	}
+	DrawUtils::flush();
 }
 
 void ClickGui::init() { }
