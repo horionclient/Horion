@@ -89,6 +89,12 @@ void Hooks::Init()
 		void* fogColorFunc = reinterpret_cast<void*>(Utils::FindSignature("0F 28 C2 C7 42 0C 00 00 80 3F F3"));
 		g_Hooks.Dimension_getFogColorHook = std::make_unique<FuncHook>(fogColorFunc, Hooks::Dimension_getFogColor);
 
+		void* timeOfDay = reinterpret_cast<void*>(Utils::FindSignature("44 8B C2 B8 F1 19 76 05"));
+		g_Hooks.Dimension_getTimeOfDayHook = std::make_unique<FuncHook>(timeOfDay, Hooks::Dimension_getTimeOfDay);
+
+		void* sunLightIntensity = reinterpret_cast<void*>(Utils::FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B B9 ?? ?? ?? ?? 49 8B D8 0F"));
+
+
 		void* ChestTick = reinterpret_cast<void*>(Utils::FindSignature("40 53 57 48 83 EC ?? 48 8B 41 ?? 48 8B FA 48 89 6C 24 ?? 48 8B D9 4C 89 74 24 ?? 48 85 C0 75 10 48 8D 51 ?? 48 8B CF E8 ?? ?? ?? ?? 48 89 43 ?? FF 43 ?? 48 85 C0"));
 		g_Hooks.ChestBlockActor_tickHook = std::make_unique <FuncHook>(ChestTick, Hooks::ChestBlockActor_tick);
 
@@ -530,6 +536,17 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightnes
 
 	static float rcolors[4];
 
+	static IModule* testMod = moduleMgr->getModule<TestModule>();
+	if (testMod == nullptr)
+		testMod = moduleMgr->getModule<TestModule>();
+	else if (testMod->isEnabled()) {
+		color[0] = 0.f;
+		color[1] = 0.f;
+		color[2] = 0.2f;
+		color[3] = 1;
+		return color;
+	}
+
 	static IModule* mod = moduleMgr->getModule<RainbowSky>();
 	if (mod == nullptr)
 		mod = moduleMgr->getModule<RainbowSky>();
@@ -552,6 +569,34 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightnes
 		return rcolors;
 	}
 	return oGetFogColor(_this, color, brightness);
+}
+
+float Hooks::Dimension_getTimeOfDay(__int64 _this, int a2, float a3)
+{
+	static auto oGetTimeOfDay = g_Hooks.Dimension_getTimeOfDayHook->GetFastcall<float, __int64, int, float>();
+
+	static IModule* testMod = moduleMgr->getModule<TestModule>();
+	if (testMod == nullptr)
+		testMod = moduleMgr->getModule<TestModule>();
+	else if (testMod->isEnabled()) {
+		return 0.5f;
+	}
+	
+	return oGetTimeOfDay(_this, a2, a3);
+}
+
+float Hooks::Dimension_getSunIntensity(__int64 a1, float a2, vec3_t* a3, float a4)
+{
+	static auto oGetSunIntensity = g_Hooks.Dimension_getSunIntensityHook->GetFastcall<float, __int64, float, vec3_t*, float>();
+
+	static IModule* testMod = moduleMgr->getModule<TestModule>();
+	if (testMod == nullptr)
+		testMod = moduleMgr->getModule<TestModule>();
+	else if (testMod->isEnabled()) {
+		return -0.5f;
+	}
+
+	return oGetSunIntensity(a1, a2, a3, a4);
 }
 
 void Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a)
@@ -966,8 +1011,12 @@ __int64 Hooks::GetGamma(__int64 a1)
 			v7 = *(__int64*)(v6 + 0x138);
 	}
 	else {
-		if (fullBrightModule != nullptr)
+		if (fullBrightModule != nullptr) {
+
 			fullBrightModule->gammaPtr = reinterpret_cast<float*>(v7 + 0xF0);
+			
+		}
+			
 	}
 
 	return oFunc(a1);
