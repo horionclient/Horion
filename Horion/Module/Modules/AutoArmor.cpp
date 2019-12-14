@@ -26,7 +26,7 @@ public:
 
 	float getArmorValue()
 	{
-		return (float)((armor->getArmorValue() * ((this->getEnchantValue(0) * 5 /*Protection*/
+		return (float)((armor->getArmorValue() + ((this->getEnchantValue(0) * 5 /*Protection*/
 			+ this->getEnchantValue(5) * 4  /*Thorns*/
 			+ this->getEnchantValue(3) * 3 /*Blast Protection*/
 			+ this->getEnchantValue(1) * 2 /*Fire Protection*/
@@ -92,7 +92,7 @@ void AutoArmor::onTick(C_GameMode* gm)
 			
 			if (stack->item != NULL && (*stack->item)->isArmor() && reinterpret_cast<C_ArmorItem*>(*stack->item)->ArmorSlot == i)
 			{
-				armorList.push_back(ArmorStruct(stack,reinterpret_cast<C_ArmorItem*>(*stack->item),n));
+				armorList.push_back(ArmorStruct(stack, reinterpret_cast<C_ArmorItem*>(*stack->item), n));
 			}
 		}
 
@@ -120,13 +120,11 @@ void AutoArmor::onTick(C_GameMode* gm)
 				delete first;
 				delete second;
 
-
 				first = new C_InventoryAction(armorList[0].m_slot,armorList[0].m_item,nullptr);
 				second= new C_InventoryAction(i, nullptr, armorList[0].m_item,632);
 
 				*g_Data.getLocalPlayer()->getArmor(i) = *inv->getItemStack(armorList[0].m_slot);
 				*inv->getItemStack(armorList[0].m_slot) = *emptyItemStack;
-				
 
 				manager->addInventoryAction(*first);
 				manager->addInventoryAction(*second);

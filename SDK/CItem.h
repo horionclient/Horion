@@ -122,9 +122,7 @@ public:
 	virtual bool isDestructive(int)const;
 	virtual bool isLiquidClipItem(int)const;
 private:
-	virtual __int64 requiresInteract(void)const;
 	virtual __int64 appendFormattedHovertext(C_ItemStack const&, __int64&, std::string&, bool)const;
-	virtual __int64 appendFormattedHovertext(__int64 const&, __int64&, std::string&, bool)const;
 public:
 	virtual bool isValidRepairItem(C_ItemStack const&, C_ItemStack const&)const;
 public:
@@ -264,7 +262,7 @@ public:
 class C_ArmorItem : public C_Item
 {
 private:
-	char pad_0x108[0x48];//0x108
+	char pad_0x108[0x48 + 0x70];//0x108
 public:
 	int ArmorSlot; //0x150
 };
