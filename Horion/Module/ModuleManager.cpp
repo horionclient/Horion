@@ -77,6 +77,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new InventoryCleaner());
 	this->moduleList.push_back(new Derp());
 	this->moduleList.push_back(new PacketLogger());
+	this->moduleList.push_back(new Crasher());
 
 #ifdef _DEBUG
 	this->moduleList.push_back(new TestModule());

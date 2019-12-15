@@ -536,6 +536,7 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightnes
 
 	static float rcolors[4];
 
+#ifdef _DEBUG
 	static IModule* testMod = moduleMgr->getModule<TestModule>();
 	if (testMod == nullptr)
 		testMod = moduleMgr->getModule<TestModule>();
@@ -546,6 +547,7 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightnes
 		color[3] = 1;
 		return color;
 	}
+#endif
 
 	static IModule* mod = moduleMgr->getModule<RainbowSky>();
 	if (mod == nullptr)
@@ -575,12 +577,14 @@ float Hooks::Dimension_getTimeOfDay(__int64 _this, int a2, float a3)
 {
 	static auto oGetTimeOfDay = g_Hooks.Dimension_getTimeOfDayHook->GetFastcall<float, __int64, int, float>();
 
+#ifdef _DEBUG
 	static IModule* testMod = moduleMgr->getModule<TestModule>();
 	if (testMod == nullptr)
 		testMod = moduleMgr->getModule<TestModule>();
 	else if (testMod->isEnabled()) {
 		return 0.5f;
 	}
+#endif
 	
 	return oGetTimeOfDay(_this, a2, a3);
 }
@@ -589,12 +593,14 @@ float Hooks::Dimension_getSunIntensity(__int64 a1, float a2, vec3_t* a3, float a
 {
 	static auto oGetSunIntensity = g_Hooks.Dimension_getSunIntensityHook->GetFastcall<float, __int64, float, vec3_t*, float>();
 
+#ifdef _DEBUG
 	static IModule* testMod = moduleMgr->getModule<TestModule>();
 	if (testMod == nullptr)
 		testMod = moduleMgr->getModule<TestModule>();
 	else if (testMod->isEnabled()) {
 		return -0.5f;
 	}
+#endif
 
 	return oGetSunIntensity(a1, a2, a3, a4);
 }
