@@ -68,6 +68,7 @@
 #include "Modules/InventoryCleaner.h"
 #include "Modules/Derp.h"
 #include "Modules/PacketLogger.h"
+#include "Modules/Crasher.h"
 
 #ifdef _DEBUG
 #include "Modules/TestModule.h"
