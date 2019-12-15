@@ -16,7 +16,7 @@ const char* Criticals::getModuleName()
 
 void Criticals::onSendPacket(C_Packet* packet)
 {
-	if (packet->isInstanceOf<C_MovePlayerPacket>() && !g_Data.getLocalPlayer()->onGround)
+	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && !g_Data.getLocalPlayer()->onGround)
 	{
 		C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
 		movePacket->onGround = false;
