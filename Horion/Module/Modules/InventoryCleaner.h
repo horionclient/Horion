@@ -6,15 +6,18 @@ class InventoryCleaner :
 private:
 	bool sorted = false;
 
+	std::vector<int> findStackableItems();
 	std::vector<int> findUselessItems();
 	bool stackIsUseful(C_ItemStack* itemStack);
 	bool isLastItem(C_Item* item);
-	void findStackableItems();
 
 	bool keepTools = true;
 	bool keepArmor = true;
 	bool keepBlocks = true;
 	bool keepFood = true;
+
+	bool openInv = true;
+	bool autoSort = false;
 public:
 	C_MoveInputHandler* inputHandler = nullptr;
 	InventoryCleaner();

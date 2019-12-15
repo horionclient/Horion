@@ -291,7 +291,7 @@ public:
 	bool isChestplate() {
 		return ArmorSlot == 1;
 	}
-	bool isLeggins() {
+	bool isLeggings() {
 		return ArmorSlot == 2;
 	}
 	bool isBoots() {

@@ -493,7 +493,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
 				Utils::ColorConvertHSVtoRGB(currColor[0], currColor[1], currColor[2], currColor[0], currColor[1], currColor[2]);
 
 				DrawUtils::drawText(textPos, &textStr, new MC_Color(currColor), textSize);
-				if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos)) {
+				if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos) && hud->clickToggle) {
 
 					if (leftMouseDown) {
 						DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 0.1f), it->enabled ? 0.6f : 0.6f);
