@@ -1,65 +1,7 @@
 #pragma once
 #include "CEntity.h"
 
-class C_Item;
-
-class C_ItemStack {
-private:
-	uintptr_t** vTable;//0x0000
-public:
-	C_Item** item;   //0x08
-private:
-	char pad_0x008[0x12]; //0x10
-public:
-	char count; //0x22
-private:
-	char pad_0x1B[0x65];//0x23
-public:
-	C_ItemStack()
-	{
-		memset(this, 0x0, sizeof(C_ItemStack));
-	}
-
-	C_ItemStack(C_BlockLegacy& legacy, int count)
-	{
-		memset(this, 0x0, sizeof(C_ItemStack));
-		reinit(legacy, count);
-	}
-
-	C_ItemStack(C_Item& item, int count, int itemData)
-	{
-		memset(this, 0x0, sizeof(C_ItemStack));
-		reinit(item, count, itemData);
-	}
-
-	C_ItemStack(C_ItemStack const& src)
-	{
-		memset(this, 0x0, sizeof(C_ItemStack));
-		using ItemStackCopyConstructor_t = void(__fastcall*)(C_ItemStack&, C_ItemStack const&);
-		static ItemStackCopyConstructor_t  ItemStackCopyConstructor = reinterpret_cast<ItemStackCopyConstructor_t>(Utils::FindSignature("48 8B C4 56 57 41 54 41 56 41 57 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 68 ?? 48 8B FA 48 8B D9 48 89 48 ??"));
-		ItemStackCopyConstructor(*this, src);
-		this->setVtable();
-	}
-
-	void reinit(C_BlockLegacy& legacy, int count)
-	{
-		this->setVtable();
-		Utils::CallVFunc<1, void>(this, &legacy, count);
-	}
-
-	void reinit(C_Item& item, int count, int itemData)
-	{
-		this->setVtable();
-		Utils::CallVFunc<2, void>(this, &item, count, itemData);
-	}
-private:
-	inline void setVtable(void)
-	{
-		static uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? 83 7C 24 ?? 00 75 31");
-		int offset = *reinterpret_cast<int*>(sigOffset + 3);
-		this->vTable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
-	}
-};
+class C_ItemStack;
 
 class C_Item {
 private:
@@ -144,11 +86,11 @@ private:
 	virtual __int64 getSecondaryColor(C_ItemStack const&)const;
 	virtual __int64 saveAdditionalData(__int64 const&, __int64&)const;
 	virtual __int64 saveAdditionalData(C_ItemStack const&, __int64&)const;
-/*	virtual __int64 readAdditionalData(C_ItemStack&, __int64 const&)const;
-	virtual __int64 readAdditionalData(__int64&, __int64 const&)const;
-public:
-	virtual bool isTintable(void)const;
-private:*/
+	/*	virtual __int64 readAdditionalData(C_ItemStack&, __int64 const&)const;
+		virtual __int64 readAdditionalData(__int64&, __int64 const&)const;
+	public:
+		virtual bool isTintable(void)const;
+	private:*/
 	virtual __int64 use(C_ItemStack&, C_Entity&)const;
 	virtual __int64 dispense(C_BlockSource&, __int64&, int, vec3_t const&, unsigned char)const;
 	virtual __int64 useTimeDepleted(__int64&, __int64*, C_Entity*)const;
@@ -213,9 +155,10 @@ private:
 	virtual __int64 _calculatePlacePos(C_ItemStack&, C_Entity&, unsigned char&, vec3_ti&)const;
 	virtual __int64 _useOn(__int64&, C_Entity&, vec3_ti, unsigned char, float, float, float)const;
 	virtual __int64 _useOn(C_ItemStack&, C_Entity&, vec3_ti, unsigned char, float, float, float)const;
-
-
 public:
+
+
+
 	bool isTool(void) {
 		if (getAttackDamage() > 0) return true; // Does Attack Damage
 		if (itemId == 261 || itemId == 262) return true; // Bow
@@ -245,19 +188,95 @@ public:
 		if (itemId != 0 && itemId < 255) return true;
 		return false;
 	}
-	bool isHelmet() {
-		return (itemId == 298 || itemId == 302 || itemId == 306 || itemId == 310 || itemId == 314);
+};
+
+class C_ItemStack {
+private:
+	uintptr_t** vTable;//0x0000
+public:
+	C_Item** item;   //0x08
+private:
+	char pad_0x008[0x12]; //0x10
+public:
+	char count; //0x22
+private:
+	char pad_0x1B[0x65];//0x23
+public:
+	C_ItemStack()
+	{
+		memset(this, 0x0, sizeof(C_ItemStack));
 	}
-	bool isChestplate() {
-		return (itemId == 299 || itemId == 303 || itemId == 307 || itemId == 311 || itemId == 315);
+
+	C_ItemStack(C_BlockLegacy& legacy, int count)
+	{
+		memset(this, 0x0, sizeof(C_ItemStack));
+		reinit(legacy, count);
 	}
-	bool isLeggins() {
-		return (itemId == 300 || itemId == 304 || itemId == 308 || itemId == 312 || itemId == 316);
+
+	C_ItemStack(C_Item& item, int count, int itemData)
+	{
+		memset(this, 0x0, sizeof(C_ItemStack));
+		reinit(item, count, itemData);
 	}
-	bool isBoots() {
-		return (itemId == 301 || itemId == 305 || itemId == 309 || itemId == 313 || itemId == 317);
+
+	C_ItemStack(C_ItemStack const& src)
+	{
+		memset(this, 0x0, sizeof(C_ItemStack));
+		using ItemStackCopyConstructor_t = void(__fastcall*)(C_ItemStack&, C_ItemStack const&);
+		static ItemStackCopyConstructor_t  ItemStackCopyConstructor = reinterpret_cast<ItemStackCopyConstructor_t>(Utils::FindSignature("48 8B C4 56 57 41 54 41 56 41 57 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 68 ?? 48 8B FA 48 8B D9 48 89 48 ??"));
+		ItemStackCopyConstructor(*this, src);
+		this->setVtable();
+	}
+
+	inline C_Item* getItem() {
+		return *this->item;
+	}
+
+	void reinit(C_BlockLegacy& legacy, int count)
+	{
+		this->setVtable();
+		Utils::CallVFunc<1, void>(this, &legacy, count);
+	}
+
+	void reinit(C_Item& item, int count, int itemData)
+	{
+		this->setVtable();
+		Utils::CallVFunc<2, void>(this, &item, count, itemData);
+	}
+
+	int getEnchantValue(int enchantId)
+	{
+		using getEnchantsLevel_t = int(__fastcall*)(int, C_ItemStack*);
+		static getEnchantsLevel_t getEnchantsLevel = reinterpret_cast<getEnchantsLevel_t>(Utils::FindSignature("48 8B C4 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B F2 8B ?? 33 ?? 48 8B"));
+		return getEnchantsLevel(enchantId, this);
+	}
+
+	float getArmorValueWithEnchants() {
+		if (!this->item || !(*this->item)->isArmor())
+			return 0;
+
+		return (float)(((*this->item)->getArmorValue() + ((this->getEnchantValue(0) * 5 /*Protection*/
+			+ this->getEnchantValue(5) * 4  /*Thorns*/
+			+ this->getEnchantValue(3) * 3 /*Blast Protection*/
+			+ this->getEnchantValue(1) * 2 /*Fire Protection*/
+			+ this->getEnchantValue(4))))); /*Projectile Protection*/
+	}
+
+	float getAttackingDamageWithEnchants() {
+		if (!this->item)
+			return 0;
+		int sharpnessValue = this->getEnchantValue(9);
+		return (*this->item)->getAttackDamage() + 1.25f * sharpnessValue;
+	}
+private:
+	inline void setVtable(void)
+	{
+		static uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? 83 7C 24 ?? 00 75 31");
+		int offset = *reinterpret_cast<int*>(sigOffset + 3);
+		this->vTable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 	}
 };
+
 
 class C_ArmorItem : public C_Item
 {
@@ -265,4 +284,17 @@ private:
 	char pad_0x108[0x48 + 0x70];//0x108
 public:
 	int ArmorSlot; //0x150
+
+	bool isHelmet() {
+		return ArmorSlot == 0;
+	}
+	bool isChestplate() {
+		return ArmorSlot == 1;
+	}
+	bool isLeggins() {
+		return ArmorSlot == 2;
+	}
+	bool isBoots() {
+		return ArmorSlot == 3;
+	}
 };

@@ -319,7 +319,7 @@ private:
 	virtual __int64 load(__int64 const&, __int64 &);
 	virtual __int64 loadLinks(__int64 const&, __int64);
 public:
-	virtual int getEntityTypeId(void)const;
+	virtual uint8_t getEntityTypeId(void)const;
 private:
 	virtual __int64 queryEntityRenderer(void)const;
 	virtual __int64 getSourceUniqueID(void)const;

@@ -78,6 +78,10 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Derp());
 	this->moduleList.push_back(new PacketLogger());
 
+#ifdef _DEBUG
+	this->moduleList.push_back(new TestModule());
+#endif
+
 	// Sort module alphabetically
 	std::sort(moduleList.begin(), moduleList.end(), [](const IModule* lhs, const IModule* rhs)
 	{

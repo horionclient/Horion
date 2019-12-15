@@ -69,6 +69,10 @@
 #include "Modules/Derp.h"
 #include "Modules/PacketLogger.h"
 
+#ifdef _DEBUG
+#include "Modules/TestModule.h"
+#endif
+
 using json = nlohmann::json;
 
 class ModuleManager {

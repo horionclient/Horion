@@ -59,6 +59,8 @@ private:
 	static __int64	UIScene_render(C_UIScene* uiscene, __int64 screencontext);
 	static __int64	RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx);
 	static float*	Dimension_getFogColor(__int64, float* color, float brightness);
+	static float	Dimension_getTimeOfDay(__int64, int a2, float a3);
+	static float	Dimension_getSunIntensity(__int64, float a2, vec3_t* a3, float a4);
 	static void		ChestBlockActor_tick(C_ChestBlockActor*, void* a);
 	static void		Actor_lerpMotion(C_Entity* _this, vec3_t);
 	static int		AppPlatform_getGameEdition(__int64 _this);
@@ -92,6 +94,8 @@ private:
 	std::unique_ptr<FuncHook> UIScene_renderHook;
 	std::unique_ptr<FuncHook> RenderTextHook;
 	std::unique_ptr<FuncHook> Dimension_getFogColorHook;
+	std::unique_ptr<FuncHook> Dimension_getTimeOfDayHook;
+	std::unique_ptr<FuncHook> Dimension_getSunIntensityHook;
 	std::unique_ptr<FuncHook> ChestBlockActor_tickHook;
 	std::unique_ptr<FuncHook> Actor_lerpMotionHook;
 	std::unique_ptr<FuncHook> AppPlatform_getGameEditionHook;
