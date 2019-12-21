@@ -100,9 +100,6 @@ C_Font* DrawUtils::getFont(Fonts font)
 	case Fonts::RUNE:
 		return g_Data.getClientInstance()->_getRuneFont();
 		break;
-	case Fonts::GAMER:
-		return g_Data.getClientInstance()->N0000080D->getGamerFont();
-		break;
 	default:
 		return g_Data.getClientInstance()->_getFont();
 		break;

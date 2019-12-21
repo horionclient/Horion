@@ -38,7 +38,7 @@ void TabGui::renderLevel()
 {
 	// Parameters
 	static constexpr float textSize = 1.f;
-	static const float textHeight = DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() * textSize;
+	static const float textHeight = 10.f * textSize;
 	static constexpr float alphaVal = 0.5f;
 
 	// First loop: Get the maximum text length 
