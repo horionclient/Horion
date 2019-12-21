@@ -4,7 +4,6 @@
 
 CrystalAura::CrystalAura() : IModule(VK_NUMPAD0, Category::EXPLOITS, "Destroys nearby Crystals")
 {
-	registerIntSetting("Range", &this->range, this->range, 1, 10);
 }
 
 
@@ -41,13 +40,7 @@ void CrystalAura::onTick(C_GameMode* gm) {
 	}
 }
 
-
-
-	
-
-	
-
-
+			
 
 void CrystalAura::onDisable() {
 
