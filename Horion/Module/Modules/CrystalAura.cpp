@@ -37,7 +37,7 @@ void CrystalAura::onTick(C_GameMode* gm) {
 				g_Data.getCGameMode()->attack(ent);
 				g_Data.getLocalPlayer()->swingArm();
 			}
-				});
+			});
 	}
 }
 
