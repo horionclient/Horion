@@ -15,29 +15,33 @@ public:
 };
 class HitDetectSystem;
 
-struct PtrToSmoothFont3
-{
-private:
-	char pad_0x0000[0x10]; //0x0000
+struct C_FontRepository_FontList_FontEntry {
 public:
-	C_Font smoothFont; //0x0010
+	C_Font* font;
+private:
+	void* sharedFontPtr;
 };
 
-struct PtrToSmoothFont2
+struct C_FontRepository_FontList
 {
-private:
-	char pad_0x0000[0x78]; //0x0000
 public:
-	PtrToSmoothFont3* ptr1; //0x0078
+	C_FontRepository_FontList_FontEntry fontEntries[9];
 };
 
 
-struct PtrToSmoothFont1
+struct C_FontRepository
 {
 private:
-	char pad_0x0000[0x38]; //0x0000
+	uintptr_t* shared_ptr_vtable;	// 0x0000
+	int idk1;						// 0x0008
+	int idk2;						// 0x000C
+	uintptr_t* font_repository_vtable;		// 0x0010
+	void* appPlatform;				// 0x0018
+	void* ptrToSelf;				// 0x0020
+	void* ptrToSelfSharedPtr;		// 0x0028
+	__int64 unknown;				// 0x0030
 public:
-	PtrToSmoothFont2* ptr; //0x0038
+	C_FontRepository_FontList* fontList;			//0x0038
 };
 
 class MinecraftGame {
@@ -48,14 +52,14 @@ public:
 private:
 	char pad_0x00A8[0x78]; //0x00A8
 public:
-	PtrToSmoothFont1* ptr0; //0x120
+	C_FontRepository* fontRepository; //0x120
 private:
 	char pad_0x128[0xF0]; //0x128
 public:
 	bool canUseKeys;//0x0218
 
 	C_Font* getTheGoodFontThankYou() {
-		return &ptr0->ptr->ptr1->smoothFont;
+		return fontRepository->fontList->fontEntries[7].font;
 	};
 
 	const bool canUseKeybinds() {
