@@ -24,14 +24,14 @@ void TabGui::renderLabel(const char * text, IModule* mod)
 	//size_t strlength = strlen(text) + 1;
 	//char* alloc = new char[strlength];
 	//strcpy_s(alloc, strlength, text);
-	LabelContainer yikes;
-	yikes.text = text;
+	LabelContainer moduleLabel;
+	moduleLabel.text = text;
 	if (mod != 0) {
-		yikes.enabled = mod->isEnabled();
-		yikes.mod = mod;
+		moduleLabel.enabled = mod->isEnabled();
+		moduleLabel.mod = mod;
 	}
 	
-	labelList.push_back(yikes);
+	labelList.push_back(moduleLabel);
 }
 
 void TabGui::renderLevel()
@@ -90,12 +90,12 @@ void TabGui::renderLevel()
 						else
 							DrawUtils::fillRectangle(rectPos, MC_Color(0.2f, 0.2f, 0.2f, 1.0f), alphaVal);
 					}
-					vec4_t reee = rectPos;
-					reee.x += 0.5f;
-					reee.y += 0.5f;
-					reee.z -= 0.5f;
-					reee.w -= 0.5f;
-					DrawUtils::drawRectangle(reee, MC_Color(0.118f, 0.827f, 0.764f, 1.0f), 1, 1.f); // Border around Text
+					vec4_t rectanglePosition = rectPos;
+					rectanglePosition.x += 0.5f;
+					rectanglePosition.y += 0.5f;
+					rectanglePosition.z -= 0.5f;
+					rectanglePosition.w -= 0.5f;
+					DrawUtils::drawRectangle(rectanglePosition, MC_Color(0.118f, 0.827f, 0.764f, 1.0f), 1, 1.f); // Border around Text
 
 					static bool lastVal = toggleCurrentSelection;
 

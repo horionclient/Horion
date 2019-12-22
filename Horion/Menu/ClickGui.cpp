@@ -479,7 +479,7 @@ void ClickGui::renderCategory(Category category)
 											value += minValue;
 
 											setting->value->_float = value;
-											setting->makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt();
+											setting->isValueValid();
 										}
 									}
 									currentYOffset += textHeight + (textPadding * 2);
@@ -576,7 +576,7 @@ void ClickGui::renderCategory(Category category)
 											value += minValue;
 											
 											setting->value->_int = (int) roundf(value);
-											setting->makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt();
+											setting->isValueValid();
 										}
 									}
 									currentYOffset += textHeight + (textPadding * 2);

@@ -47,7 +47,7 @@ struct SettingEntry {
 	// ClickGui Data
 	bool isDragging = false; // This is incredibly hacky and i wanted to avoid this as much as possible but i want to get this clickgui done
 
-	void makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
+	void isValueValid() {
 		switch (valueType) {
 		case ValueType::TEXT_T:
 		case ValueType::BOOL_T:
