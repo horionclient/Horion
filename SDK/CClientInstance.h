@@ -15,66 +15,52 @@ public:
 };
 class HitDetectSystem;
 
-
-struct PtrToSmoothFont2
-{
-private:
-	char pad_0x0000[0x18]; //0x0000
+struct C_FontRepository_FontList_FontEntry {
 public:
-	C_Font* smoothFont; //0x0018
+	C_Font* font;
+private:
+	void* sharedFontPtr;
+};
+
+struct C_FontRepository_FontList
+{
+public:
+	C_FontRepository_FontList_FontEntry fontEntries[9];
 };
 
 
-struct PtrToSmoothFont1
+struct C_FontRepository
 {
 private:
-	char pad_0x0000[0xF8]; //0x0000
+	uintptr_t* shared_ptr_vtable;	// 0x0000
+	int idk1;						// 0x0008
+	int idk2;						// 0x000C
+	uintptr_t* font_repository_vtable;		// 0x0010
+	void* appPlatform;				// 0x0018
+	void* ptrToSelf;				// 0x0020
+	void* ptrToSelfSharedPtr;		// 0x0028
+	__int64 unknown;				// 0x0030
 public:
-	PtrToSmoothFont2** ptr; //0x00F8
-};
-
-struct PtrToGamerFont2
-{
-private:
-	char pad_0x0000[0x70]; //0x0000
-public:
-	C_Font* gamerFont; //0x0070
-};
-
-struct PtrToGamerFont1
-{
-private:
-	char pad_0x0000[0x30]; //0x0000
-public:
-	PtrToGamerFont2* ptr;//0x0030
+	C_FontRepository_FontList* fontList;			//0x0038
 };
 
 class MinecraftGame {
 private:
-	char filler[0x88];//0x0000
-public:
-	PtrToSmoothFont1* ptr0;//0x0088
-private:
-	char pad_0x0090[0x10]; //0x0090
+	char filler[0xA0];//0x0000
 public:
 	uintptr_t defaultFont;//0x00A0
 private:
-	char pad_0x00A8[0x10]; //0x00A8
+	char pad_0x00A8[0x78]; //0x00A8
 public:
-	PtrToGamerFont1* ptr;//0x00B8
+	C_FontRepository* fontRepository; //0x120
 private:
-	char pad_0x00C0[0x158]; //0x00C0
+	char pad_0x128[0xF0]; //0x128
 public:
 	bool canUseKeys;//0x0218
 
 	C_Font* getTheGoodFontThankYou() {
-		return (*ptr0->ptr)->smoothFont;
+		return fontRepository->fontList->fontEntries[7].font;
 	};
-
-	C_Font* getGamerFont()
-	{
-		return ptr->ptr->gamerFont;
-	}
 
 	const bool canUseKeybinds() {
 		return canUseKeys;

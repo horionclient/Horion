@@ -8,7 +8,7 @@
 #include "../Utils/Utils.h"
 #include "../Utils/Logger.h"
 #include "../Utils/HMath.h"
-enum class Fonts { DEFAULT, UNICOD, SMOOTH, RUNE , GAMER };
+enum class Fonts { DEFAULT, UNICOD, SMOOTH, RUNE};
 
 struct MC_Color {
 	union {
