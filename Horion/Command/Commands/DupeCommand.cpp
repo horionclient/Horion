@@ -1,15 +1,12 @@
 #include "DupeCommand.h"
 
-DupeCommand::DupeCommand() : IMCCommand("dupe", "Duplicates the item in hand", "<count> <mode: give / offhand : 1/0>")
-{
+DupeCommand::DupeCommand() : IMCCommand("dupe", "Duplicates the item in hand", "<count> <mode: give / offhand : 1/0>") {
 }
 
-DupeCommand::~DupeCommand()
-{
+DupeCommand::~DupeCommand() {
 }
 
-bool DupeCommand::execute(std::vector<std::string>* args)
-{
+bool DupeCommand::execute(std::vector<std::string>* args) {
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
 	auto transactionManager = g_Data.getLocalPlayer()->getTransactionManager();
@@ -25,20 +22,17 @@ bool DupeCommand::execute(std::vector<std::string>* args)
 	if (args->size() > 2)
 		isGive = static_cast<bool>(assertInt(args->at(2)));
 
-	if (isGive)
-	{
+	if (isGive) {
 		int slot = inv->getFirstEmptySlot();
 
 		C_InventoryAction* firstAction = nullptr;
 		C_InventoryAction* secondAction = nullptr;
 
-		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0)
-		{
+		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0) {
 			firstAction = new C_InventoryAction(slot, nullptr, item, 32512);
 			secondAction = new C_InventoryAction(0, item, nullptr, 156, 100);
 		}
-		else
-		{
+		else {
 			firstAction = new C_InventoryAction(0, item, nullptr, 507, 99999);
 			secondAction = new C_InventoryAction(slot, nullptr, item);
 		}

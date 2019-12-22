@@ -2,19 +2,16 @@
 
 
 
-BruhCommand::BruhCommand() : IMCCommand("bruh", "bruh moment", "bruh")
-{
+BruhCommand::BruhCommand() : IMCCommand("bruh", "bruh moment", "bruh") {
 	
 }
 
 
-BruhCommand::~BruhCommand()
-{
+BruhCommand::~BruhCommand() {
 }
 
 
-bool BruhCommand::execute(std::vector<std::string>* args)
-{
+bool BruhCommand::execute(std::vector<std::string>* args) {
 	assertTrue(g_Data.getClientInstance()->getLocalPlayer() != nullptr);
 	
 	

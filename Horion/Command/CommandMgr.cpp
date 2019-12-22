@@ -1,14 +1,11 @@
 #include "CommandMgr.h"
 
-CommandMgr::CommandMgr(GameData* gm)
-{
+CommandMgr::CommandMgr(GameData* gm) {
 	this->gameData = gm;
 }
 
-CommandMgr::~CommandMgr()
-{
-	for (int i = 0; i < commandList.size(); i++)
-	{
+CommandMgr::~CommandMgr() {
+	for (int i = 0; i < commandList.size(); i++) {
 		delete commandList[i];
 		commandList[i] = nullptr;
 	}
@@ -48,13 +45,11 @@ void CommandMgr::disable() {
 
 }
 
-std::vector<IMCCommand*>* CommandMgr::getCommandList()
-{
+std::vector<IMCCommand*>* CommandMgr::getCommandList() {
 	return &commandList;
 }
 
-void CommandMgr::execute(char * message)
-{
+void CommandMgr::execute(char * message) {
 	if (message != nullptr) {
 		std::vector<std::string>* args = new std::vector<std::string>();
 		std::string msgStr = message + 1;

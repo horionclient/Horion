@@ -1,17 +1,14 @@
 #include "SpammerCommand.h"
 
 
-SpammerCommand::SpammerCommand() : IMCCommand("spammer", "Edit spammer delay/text", "<message/delay/bypass/manual> <string/int/bool>")
-{
+SpammerCommand::SpammerCommand() : IMCCommand("spammer", "Edit spammer delay/text", "<message/delay/bypass/manual> <string/int/bool>") {
 	registerAlias("spam");
 }
 
-SpammerCommand::~SpammerCommand()
-{
+SpammerCommand::~SpammerCommand() {
 }
 
-bool SpammerCommand::execute(std::vector<std::string>* args)
-{
+bool SpammerCommand::execute(std::vector<std::string>* args) {
 	assertTrue(g_Data.getLocalPlayer() != nullptr);
 	std::string option = args->at(1);
 	std::transform(option.begin(), option.end(), option.begin(), ::tolower);

@@ -1,18 +1,15 @@
 #include "ModulesCommand.h"
 #include <algorithm>
 
-ModulesCommand::ModulesCommand() : IMCCommand("modules", "Lists all modules", "")
-{
+ModulesCommand::ModulesCommand() : IMCCommand("modules", "Lists all modules", "") {
 	registerAlias("mods");
 }
 
 
-ModulesCommand::~ModulesCommand()
-{
+ModulesCommand::~ModulesCommand() {
 }
 
-bool ModulesCommand::execute(std::vector<std::string>* args)
-{
+bool ModulesCommand::execute(std::vector<std::string>* args) {
 	std::vector<IModule*>* modules = moduleMgr->getModuleList();
 	g_Data.getGuiData()->displayClientMessageF("==========");
 	g_Data.getGuiData()->displayClientMessageF("Modules (%i):", modules->size());

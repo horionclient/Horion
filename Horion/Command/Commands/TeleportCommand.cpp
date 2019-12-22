@@ -2,20 +2,17 @@
 
 
 
-TeleportCommand::TeleportCommand() : IMCCommand("tp", "Teleports to coordinates", "<X> <Y> <Z>")
-{
+TeleportCommand::TeleportCommand() : IMCCommand("tp", "Teleports to coordinates", "<X> <Y> <Z>") {
 	registerAlias("teleport");
 	registerAlias("setpos");
 }
 
 
-TeleportCommand::~TeleportCommand()
-{
+TeleportCommand::~TeleportCommand() {
 }
 
 
-bool TeleportCommand::execute(std::vector<std::string>* args)
-{
+bool TeleportCommand::execute(std::vector<std::string>* args) {
 	assertTrue(g_Data.getClientInstance()->getLocalPlayer() != nullptr);
 	assertTrue(args->size() >= 4);
 

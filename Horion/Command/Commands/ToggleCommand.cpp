@@ -2,14 +2,12 @@
 
 
 
-ToggleCommand::ToggleCommand() : IMCCommand("toggle", "Toggles a module", "<module>")
-{
+ToggleCommand::ToggleCommand() : IMCCommand("toggle", "Toggles a module", "<module>") {
 	registerAlias("t");
 }
 
 
-ToggleCommand::~ToggleCommand()
-{
+ToggleCommand::~ToggleCommand() {
 }
 
 bool ToggleCommand::execute(std::vector<std::string>* args)

@@ -1,8 +1,7 @@
 #include "EnchantCommand.h"
 
 
-EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enchantment> [level] <mode: auto / manual : 1/0>")
-{
+EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enchantment> [level] <mode: auto / manual : 1/0>") {
 	enchantMap["protection"] = 0;
 	enchantMap["fire_protection"] = 1;
 	enchantMap["feather_falling"] = 2;
@@ -23,6 +22,7 @@ EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enc
 	enchantMap["impaling"] = 29;
 	enchantMap["loyalty"] = 31;
 	enchantMap["riptide"] = 30;
+	enchantMap["silk_touch"] = 16;
 	enchantMap["silktouch"] = 16;
 	enchantMap["fortune"] = 18;
 	enchantMap["unbreaking"] = 17;
@@ -35,24 +35,21 @@ EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enc
 	enchantMap["multishot"] = 33;
 	enchantMap["quick_charge"] = 35;
 	enchantMap["piercing"] = 34;
-	enchantMap["luck_of_sea"] = 23;
+	enchantMap["luck_of_the_sea"] = 23;
 	enchantMap["lure"] = 24;
 }
 
-EnchantCommand::~EnchantCommand()
-{
+EnchantCommand::~EnchantCommand() {
 }
 
-bool EnchantCommand::execute(std::vector<std::string>* args)
-{
+bool EnchantCommand::execute(std::vector<std::string>* args) {
 	assertTrue(args->size() > 1);
 
 	int enchantId = 0;
 	int enchantLevel = 32767;
 	bool isAuto = true;
 
-	if (args->at(1) != "all")
-	{
+	if (args->at(1) != "all") {
 		try {
 			// convert string to back to lower case
 			std::string data = args->at(1);
@@ -85,14 +82,12 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	C_InventoryAction* firstAction = nullptr;
 	C_InventoryAction* secondAction = nullptr;
 
-	if (isAuto)
-	{
+	if (isAuto) {
 		{
 			firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, item, nullptr);
 			if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0)
 				secondAction = new C_InventoryAction(0, nullptr, item, 32766, 100);
-			else
-			{
+			else {
 				secondAction = new C_InventoryAction(0, nullptr, item, 507, 99999);
 			}
 			manager->addInventoryAction(*firstAction);
@@ -110,10 +105,8 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	static addEnchant_t              addEnchant = reinterpret_cast<addEnchant_t>(Utils::FindSignature("48 89 5C 24 ?? 48 89 54 24 ?? 57 48 83 EC ?? 45 0F"));
 	static saveEnchantsToUserData_t  saveEnchantsToUserData = reinterpret_cast<saveEnchantsToUserData_t>(Utils::FindSignature("48 8B C4 55 57 41 56 48 8D 68 ?? 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B FA 4C 8B C1 48 8B 41 ?? 48 85 C0 74 25"));
 
-	if (strcmp(args->at(1).c_str(), "all") == 0)
-	{
-		for (int i = 0; i < 38; i++)
-		{
+	if (strcmp(args->at(1).c_str(), "all") == 0) {
+		for (int i = 0; i < 38; i++) {
 			void* EnchantData = malloc(0x60);
 			if (EnchantData != nullptr)
 				memset(EnchantData, 0x0, 0x60);
@@ -137,8 +130,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 		}
 		clientMessageF("%sEnchant successful!", GREEN);
 	}
-	else
-	{
+	else {
 		void* EnchantData = malloc(0x60);
 		if (EnchantData != nullptr)
 			memset(EnchantData, 0x0, 0x60);
@@ -165,8 +157,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 		free(EnchantData);
 	}
 
-	if (isAuto)
-	{
+	if (isAuto) {
 		
 		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0)
 			firstAction = new C_InventoryAction(0, item, nullptr, 32766, 100);

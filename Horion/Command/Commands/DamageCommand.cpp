@@ -1,16 +1,13 @@
 #include "DamageCommand.h"
 
-DamageCommand::DamageCommand() : IMCCommand("damage", "Damage yourself (relies on falldamage)", "<amount>")
-{
+DamageCommand::DamageCommand() : IMCCommand("damage", "Damage yourself. Relies on fall damage.", "<amount>") {
 	registerAlias("dmg");
 }
 
-DamageCommand::~DamageCommand()
-{
+DamageCommand::~DamageCommand() {
 }
 
-bool DamageCommand::execute(std::vector<std::string>* args)
-{
+bool DamageCommand::execute(std::vector<std::string>* args) {
 	assertTrue(g_Data.getClientInstance()->getLocalPlayer() != nullptr);
 	float amount = assertFloat(args->at(1));
 	if (amount < 1.f) {
