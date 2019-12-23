@@ -57,21 +57,20 @@ DWORD WINAPI analyticsThread(LPVOID lpParam) {
 	}
 	__except (EXCEPTION_EXECUTE_HANDLER) {
 #ifdef _DEBUG
-		logF("Analytics Thread crashed!");
+		logF("Analytics thread crashed.");
 		__debugbreak();
 #else
 		ExitThread(0);
 #endif
 	}
 	
-	logF("Analytics thread exitted");
+	logF("Analytics thread exited.");
 
 	ExitThread(0);
 }
 
-DWORD WINAPI keyThread(LPVOID lpParam)
-{
-	logF("Key thread started");
+DWORD WINAPI keyThread(LPVOID lpParam) {
+	logF("Key thread started.");
 
 	bool* keyMap = static_cast<bool*>(malloc(0xFF * 4 + 0x4));
 	if(keyMap == 0)
@@ -95,7 +94,8 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 	C_HIDController** hidController = g_Data.getHIDController();
 
 	while (isRunning) {
-		if (GameData::isKeyDown('L') && GameData::isKeyDown(VK_CONTROL) || GameData::shouldTerminate()) { // Press L to uninject
+		if (GameData::isKeyDown('U') && GameData::isKeyDown(VK_CONTROL) || GameData::shouldTerminate()) { // Press U to uninject
+			// Changed from L to U because it interferes with the 'Remember to keep the injector open' screen.
 			isRunning = false;
 			break;
 		}
@@ -108,7 +108,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 
 			C_GuiData* guiData = g_Data.getClientInstance()->getGuiData();
 
-			if (guiData != nullptr) guiData->displayClientMessageF("%sHorion Client is not allowed in Valea Network.", RED);
+			if (guiData != nullptr) guiData->displayClientMessageF("%sHorion Utility Mod is not allowed in Valea Network.", RED);
 
 			isRunning = false;
 			break;
@@ -144,7 +144,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		
 		Sleep(2); 
 	}
-	logF("Aight bro I'm boutta head out");
+	logF("Threads exiting...");
 	Sleep(150); // Give the threads a bit of time to exit
 
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1); // Uninject
@@ -153,7 +153,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	logF("Injector Connection Thread started");
 
-	struct MemoryBoi {
+	struct loaderMemory {
 		short protocolVersion;
 		bool isPresent;
 		bool isUnread;
@@ -171,16 +171,16 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	
 	logF("Magic array at %llX", magicArray);
 
-	MemoryBoi** horionToInjectorPtr = reinterpret_cast<MemoryBoi**>(magicArray + sizeof(magicValues));
-	MemoryBoi** injectorToHorionPtr = reinterpret_cast<MemoryBoi**>(magicArray + sizeof(magicValues) + sizeof(uintptr_t));
+	loaderMemory** horionToInjectorPtr = reinterpret_cast<loaderMemory**>(magicArray + sizeof(magicValues));
+	loaderMemory** injectorToHorionPtr = reinterpret_cast<loaderMemory**>(magicArray + sizeof(magicValues) + sizeof(uintptr_t));
 
-	*horionToInjectorPtr = new MemoryBoi();
-	MemoryBoi* horionToInjector = *horionToInjectorPtr;
+	*horionToInjectorPtr = new loaderMemory();
+	loaderMemory* horionToInjector = *horionToInjectorPtr;
 	horionToInjector->isPresent = true;
 	horionToInjector->protocolVersion = 1;
 
-	*injectorToHorionPtr = new MemoryBoi();
-	MemoryBoi* injectorToHorion = *injectorToHorionPtr;
+	*injectorToHorionPtr = new loaderMemory();
+	loaderMemory* injectorToHorion = *injectorToHorionPtr;
 
 	magicArray[0] = 0x48; //Only find this allocated one, not the one in the thread stack
 
@@ -198,8 +198,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 		QueryPerformanceCounter(&endTime);
 		bool isConnected = horionToInjector->isPresent && injectorToHorion->isPresent && horionToInjector->protocolVersion >= injectorToHorion->protocolVersion;
 
-		if(isConnected && !injectorToHorion->isUnread)
-		{
+		if(isConnected && !injectorToHorion->isUnread) {
 			__int64 elapsed = endTime.QuadPart - timeSinceLastMessage.QuadPart;
 			float realElapsed = (float) elapsed / frequency.QuadPart;
 			if (realElapsed > 4.f) {
@@ -228,8 +227,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 			if (injectorToHorion->isUnread) { // They sent us a message
 				QueryPerformanceCounter(&timeSinceLastMessage);
 				switch(injectorToHorion->cmd) {
-				case CMD_INIT:
-				{
+				case CMD_INIT: {
 					logF("Got CMD_INIT from injector");
 					int flags = injectorToHorion->params[0];
 					if (flags & (1 << 0) && injectorToHorion->dataSize > 0 && injectorToHorion->dataSize < sizeof(injectorToHorion->data)) { // Has Json data
@@ -245,16 +243,14 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 
 					break;
 				}
-				case CMD_PING:
-				{
+				case CMD_PING: {
 					HorionDataPacket pongPacket;
 					pongPacket.cmd = CMD_PONG;
 					pongPacket.params[0] = injectorToHorion->params[0];
 					g_Data.sendPacketToInjector(pongPacket);
 					break;
 				}
-				case CMD_PONG:
-				{
+				case CMD_PONG: {
 					break;
 				}
 				}
@@ -296,15 +292,13 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	ExitThread(0);
 }
 
-DWORD WINAPI startCheat(LPVOID lpParam)
-{
+DWORD WINAPI startCheat(LPVOID lpParam) {
 	logF("Starting up...");
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)injectorConnectionThread, lpParam, NULL, NULL);
 	init();
 
 	DWORD procId = GetCurrentProcessId();
-	if (!mem.Open(procId, SlimUtils::ProcessAccess::Full))
-	{
+	if (!mem.Open(procId, SlimUtils::ProcessAccess::Full)) {
 		logF("Failed to open process, error-code: %i", GetLastError());
 		return 1;
 	}
@@ -345,10 +339,8 @@ DllMain(HMODULE hModule,
 	LPVOID
 )
 {
-	switch (ul_reason_for_call)
-	{
-	case DLL_PROCESS_ATTACH:
-	{
+	switch (ul_reason_for_call) {
+	case DLL_PROCESS_ATTACH: {
 		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)startCheat, hModule, NULL, NULL);
 		DisableThreadLibraryCalls(hModule);
 	}

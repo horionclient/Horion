@@ -22,15 +22,13 @@ private:
 	void* sharedFontPtr;
 };
 
-struct C_FontRepository_FontList
-{
+struct C_FontRepository_FontList {
 public:
 	C_FontRepository_FontList_FontEntry fontEntries[9];
 };
 
 
-struct C_FontRepository
-{
+struct C_FontRepository {
 private:
 	uintptr_t* shared_ptr_vtable;	// 0x0000
 	int idk1;						// 0x0008
@@ -58,7 +56,7 @@ private:
 public:
 	bool canUseKeys;//0x0218
 
-	C_Font* getTheGoodFontThankYou() {
+	C_Font* getSmoothFont() {
 		return fontRepository->fontList->fontEntries[7].font;
 	};
 
@@ -112,24 +110,21 @@ public:
 	};
 };
 
-struct PtrToGameSettings3
-{
+struct PtrToGameSettings3 {
 private:
 	char pad_0x0000[0x18]; //0x0000
 public:
 	C_GameSettingsInput* settingsInput;
 };
 
-struct PtrToGameSettings2
-{
+struct PtrToGameSettings2 {
 private:
 	char pad_0x0000[0x148]; //0x0000
 public:
 	PtrToGameSettings3* ptr;
 };
 
-struct PtrToGameSettings1
-{
+struct PtrToGameSettings1 {
 private:
 	char pad_0x0000[0x18]; //0x0000
 public:

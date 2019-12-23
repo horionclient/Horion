@@ -24,10 +24,8 @@ tess_end_t tess_end = reinterpret_cast<tess_end_t>(Utils::FindSignature("40 53 5
 mce__VertexFormat__disableHalfFloats_t mce__VertexFormat__disableHalfFloats = reinterpret_cast<mce__VertexFormat__disableHalfFloats_t>(Utils::FindSignature("48 83 EC 28 4C 8B C9 C7 81 ?? ?? ?? ?? ?? ?? ?? ?? C6 81 ?? ?? ?? ?? ?? C6 81 ?? ?? ?? ?? ?? C6 81"));
 Tessellator__initializeFormat_t Tessellator__initializeFormat = reinterpret_cast<Tessellator__initializeFormat_t>(Utils::FindSignature("48 89 74 24 ?? 57 48 83 EC 20 4C 8B 41 ?? 48 8B FA 4C 2B 41 ?? 48 8B F1 48 83 C1 08 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 49 F7 E8 48 D1 FA 48 8B C2 48 C1 E8 3F 48 03 D0 48 3B FA"));
 
-void DrawUtils::tess__begin(__int64 tesselator)
-{
-	if (!*(BYTE*)(tesselator + 0x1FC) && !*(BYTE*)(tesselator + 0x1B5))
-	{
+void DrawUtils::tess__begin(__int64 tesselator) {
+	if (!*(BYTE*)(tesselator + 0x1FC) && !*(BYTE*)(tesselator + 0x1B5)) {
 		mce__VertexFormat__disableHalfFloats(tesselator,0,0); //guessed with tess_begin in 1.12
 		*(BYTE*)(tesselator + 8) = 3;
 		*(BYTE*)(tesselator + 0x1B4) = 0;
@@ -41,8 +39,7 @@ void DrawUtils::tess__begin(__int64 tesselator)
 }
 
 
-void DrawUtils::setCtx(C_MinecraftUIRenderContext * ctx, C_GuiData* gui)
-{
+void DrawUtils::setCtx(C_MinecraftUIRenderContext * ctx, C_GuiData* gui) {
 	LARGE_INTEGER EndingTime, ElapsedMicroseconds;
 	LARGE_INTEGER Frequency;
 	QueryPerformanceFrequency(&Frequency);
@@ -79,8 +76,7 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext * ctx, C_GuiData* gui)
 	}
 }
 
-void DrawUtils::setColor(float r, float g, float b, float a)
-{
+void DrawUtils::setColor(float r, float g, float b, float a) {
 	colorHolder[0] = r;
 	colorHolder[1] = g;
 	colorHolder[2] = b;
@@ -88,11 +84,10 @@ void DrawUtils::setColor(float r, float g, float b, float a)
 	*reinterpret_cast<uint8_t*>(colorHolder + 4) = 1;
 }
 
-C_Font* DrawUtils::getFont(Fonts font)
-{
+C_Font* DrawUtils::getFont(Fonts font) {
 	switch (font) {
 	case Fonts::SMOOTH:
-		return g_Data.getClientInstance()->N0000080D->getTheGoodFontThankYou();
+		return g_Data.getClientInstance()->N0000080D->getSmoothFont();
 		break;
 	case Fonts::UNICOD:
 		return g_Data.getClientInstance()->_getUnicodeFont();
@@ -106,8 +101,7 @@ C_Font* DrawUtils::getFont(Fonts font)
 	}
 }
 
-float DrawUtils::getTextWidth(std::string * textStr, float textSize, Fonts font)
-{
+float DrawUtils::getTextWidth(std::string * textStr, float textSize, Fonts font) {
 	TextHolder* text = new TextHolder(*textStr);
 
 	C_Font* fontPtr = getFont(font);
@@ -118,13 +112,11 @@ float DrawUtils::getTextWidth(std::string * textStr, float textSize, Fonts font)
 	return ret;
 }
 
-void DrawUtils::flush()
-{
+void DrawUtils::flush() {
 	renderCtx->flushText(0);
 }
 
-void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth)
-{
+void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth) {
 	float modX = 0 - (start.y - end.y);
 	float modY = start.x - end.x;
 
@@ -148,8 +140,7 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth)
 	tess_end(a2, tesselator,tess_end_base);
 }
 
-void DrawUtils::fillRectangle(vec4_t pos, const MC_Color col, float alpha)
-{
+void DrawUtils::fillRectangle(vec4_t pos, const MC_Color col, float alpha) {
 	float* posF = new float[4]; // vec4_t(startX, startY, endX, endY);
 	posF[0] = pos.x;
 	posF[1] = pos.z;
@@ -164,8 +155,7 @@ void DrawUtils::fillRectangle(vec4_t pos, const MC_Color col, float alpha)
 	delete[] posF;
 }
 
-void DrawUtils::drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineWidth)
-{
+void DrawUtils::drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineWidth) {
 	lineWidth /= 2;
 	fillRectangle(vec4_t(pos.x - lineWidth, pos.y - lineWidth, pos.z + lineWidth, pos.y + lineWidth), col, alpha); // TOP
 	fillRectangle(vec4_t(pos.x - lineWidth, pos.y            , pos.x + lineWidth, pos.w            ), col, alpha); // LEFT
@@ -173,8 +163,7 @@ void DrawUtils::drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineW
 	fillRectangle(vec4_t(pos.x - lineWidth, pos.w - lineWidth, pos.z + lineWidth, pos.w + lineWidth), col, alpha);
 }
 
-void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color *color, float textSize, Fonts font)
-{
+void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color *color, float textSize, Fonts font) {
 	static MC_Color* WHITE_COLOR = new MC_Color(1, 1, 1, 1, false);
 	if (color == nullptr)
 		color = WHITE_COLOR;
@@ -202,8 +191,7 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color *color, floa
 	
 }
 
-void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)
-{
+void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth) {
 	vec3_t diff;
 	diff.x = upper.x - lower.x;
 	diff.y = upper.y - lower.y;
@@ -261,14 +249,13 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth)
 		mod = moduleMgr->getModule<Tracer>();
 	else if (mod->isEnabled()) {
 		// REWORK ASAP
-		vec2_t yeet(((g_Data.getClientInstance()->getGuiData()->widthGame) / 2), ((g_Data.getClientInstance()->getGuiData()->heightGame) / 2));
+		vec2_t renderEnable(((g_Data.getClientInstance()->getGuiData()->widthGame) / 2), ((g_Data.getClientInstance()->getGuiData()->heightGame) / 2));
 		if(Screen2.y > 0)
-			DrawUtils::drawLine(yeet, Screen2, lineWidth);
+			DrawUtils::drawLine(renderEnable, Screen2, lineWidth);
 	}
 }
 
-void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, bool useUnicodeFont)
-{
+void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, bool useUnicodeFont) {
 	vec2_t textPos;
 	std::string text = ent->getNameTag()->getText();
 
@@ -282,8 +269,7 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 }
 
 
-void DrawUtils::rainbow(float* rcolors)
-{
+void DrawUtils::rainbow(float* rcolors) {
 	if (rcolors[3] < 1) {
 		rcolors[0] = 1;
 		rcolors[1] = 0.6f;
@@ -299,8 +285,7 @@ void DrawUtils::rainbow(float* rcolors)
 
 	Utils::ColorConvertHSVtoRGB(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);
 }
-void DrawUtils::drawEntityBox(C_Entity * ent, float lineWidth)
-{
+void DrawUtils::drawEntityBox(C_Entity * ent, float lineWidth) {
 	vec3_t* start = ent->getPosOld();
 	vec3_t* end = ent->getPos();
 	
@@ -333,8 +318,7 @@ void DrawUtils::wirebox(AABB aabb){
 	throw std::exception("not implemented");
 }
 
-vec2_t DrawUtils::worldToScreen(vec3_t world)
-{
+vec2_t DrawUtils::worldToScreen(vec3_t world) {
 	vec2_t ret;
 	bool success = refdef->OWorldToScreen(origin, world, ret, fov, screenSize);
 	return ret;
