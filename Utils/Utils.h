@@ -219,24 +219,20 @@ static inline float  ImFmod(float x, float y) { return fmodf(x, y); }
 static inline float  ImFabs(float x) { return fabsf(x); }
 template<typename T> static inline void ImSwap(T& a, T& b) { T tmp = a; a = b; b = tmp; }
 
-class Utils
-{
+class Utils {
 public:
 	static const char* getKeybindName(int keybind) {
 		return KeyNames[keybind];
 	};
 	// Convert rgb floats ([0-1],[0-1],[0-1]) to hsv floats ([0-1],[0-1],[0-1]), from Foley & van Dam p592
 	// Optimized http://lolengine.net/blog/2013/01/13/fast-rgb-to-hsv
-	static void ColorConvertRGBtoHSV(float r, float g, float b, float& out_h, float& out_s, float& out_v)
-	{
+	static void ColorConvertRGBtoHSV(float r, float g, float b, float& out_h, float& out_s, float& out_v) {
 		float K = 0.f;
-		if (g < b)
-		{
+		if (g < b) {
 			ImSwap(g, b);
 			K = -1.f;
 		}
-		if (r < g)
-		{
+		if (r < g) {
 			ImSwap(r, g);
 			K = -2.f / 6.f - K;
 		}
@@ -249,10 +245,8 @@ public:
 
 	// Convert hsv floats ([0-1],[0-1],[0-1]) to rgb floats ([0-1],[0-1],[0-1]), from Foley & van Dam p593
 	// also http://en.wikipedia.org/wiki/HSL_and_HSV
-	static void ColorConvertHSVtoRGB(float h, float s, float v, float& out_r, float& out_g, float& out_b)
-	{
-		if (s == 0.0f)
-		{
+	static void ColorConvertHSVtoRGB(float h, float s, float v, float& out_r, float& out_g, float& out_b) {
+		if (s == 0.0f) {
 			// gray
 			out_r = out_g = out_b = v;
 			return;
@@ -265,8 +259,7 @@ public:
 		float q = v * (1.0f - s * f);
 		float t = v * (1.0f - s * (1.0f - f));
 
-		switch (i)
-		{
+		switch (i) {
 		case 0: out_r = v; out_g = t; out_b = p; break;
 		case 1: out_r = q; out_g = v; out_b = p; break;
 		case 2: out_r = p; out_g = v; out_b = t; break;
@@ -277,8 +270,7 @@ public:
 	};
 
 	template<unsigned int IIdx, typename TRet, typename ... TArgs>
-	static auto CallVFunc(void* thisptr, TArgs ... argList) -> TRet
-	{
+	static auto CallVFunc(void* thisptr, TArgs ... argList) -> TRet {
 		//if (thisptr == nullptr)
 			//return nullptr;
 		using Fn = TRet(__thiscall*)(void*, decltype(argList)...);
@@ -336,8 +328,7 @@ public:
 		return str.substr(0, size);
 	}
 
-	static uintptr_t FindSignatureModule(const char* szModule, const char* szSignature)
-	{
+	static uintptr_t FindSignatureModule(const char* szModule, const char* szSignature) {
 		const char* pattern = szSignature;
 		uintptr_t firstMatch = 0;
 		static const uintptr_t rangeStart = (uintptr_t)GetModuleHandleA(szModule);
@@ -352,8 +343,7 @@ public:
 		BYTE patByte = GET_BYTE(pattern);
 		const char* oldPat = pattern;
 
-		for (uintptr_t pCur = rangeStart; pCur < rangeEnd; pCur++)
-		{
+		for (uintptr_t pCur = rangeStart; pCur < rangeEnd; pCur++) {
 			if (!*pattern)
 				return firstMatch;
 
@@ -383,8 +373,7 @@ public:
 				//else
 					pattern += 2;
 			}
-			else
-			{
+			else {
 				pattern = szSignature;
 				firstMatch = 0;
 			}
@@ -411,8 +400,7 @@ public:
 	*   GetCurrentSystemTime - Gets actual system time
 	*   @timeInfo: Reference to your own tm variable, gets modified.
 	*/
-	static void GetCurrentSystemTime(tm& timeInfo)
-	{
+	static void GetCurrentSystemTime(tm& timeInfo) {
 		const std::chrono::system_clock::time_point systemNow = std::chrono::system_clock::now();
 		std::time_t now_c = std::chrono::system_clock::to_time_t(systemNow);
 		localtime_s(&timeInfo, &now_c); // using localtime_s as std::localtime is not thread-safe.

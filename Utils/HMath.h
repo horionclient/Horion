@@ -7,8 +7,7 @@
 static constexpr float DEG_RAD2 = PI / 360.0f;
 static constexpr float DEG_RAD = 180.0f / PI;
 
-struct vec2_t
-{
+struct vec2_t {
 	float x, y;
 	vec2_t() { x = y = 0; }
 	vec2_t(float a, float b) : x(a), y(b) {}
@@ -48,8 +47,7 @@ struct vec2_t
 	float magnitude() const { return sqrtf(squaredlen()); }
 };
 
-struct vec3_t
-{
+struct vec3_t {
 	union {
 		struct {
 			float x, y, z;
@@ -139,8 +137,7 @@ struct vec3_t
 	vec3_t &cross(const vec3_t &a, const vec3_t &b) { x = a.y*b.z - a.z*b.y; y = a.z*b.x - a.x*b.z; z = a.x*b.y - a.y*b.x; return *this; }
 	float cxy(const vec3_t &a) { return x * a.y - y * a.x; }
 
-	vec2_t CalcAngle(vec3_t dst)
-	{
+	vec2_t CalcAngle(vec3_t dst) {
 		vec3_t diff = dst.sub(*this);
 
 		diff.y = diff.y / diff.magnitude();
@@ -150,15 +147,13 @@ struct vec3_t
 
 		return angles;
 	}
-	vec3_t DifferenceAngle(vec3_t to)
-	{
+	vec3_t DifferenceAngle(vec3_t to) {
 		vec3_t add;
 		add.x = to.x - this->x;
 		add.y = to.y - this->y;
 		return add;
 	}
-	float DifferenceOfAngles(vec3_t to)
-	{
+	float DifferenceOfAngles(vec3_t to) {
 		vec3_t from = *this;
 		vec3_t vdifference;
 		vdifference.y = from.y - to.y;
@@ -178,8 +173,7 @@ struct vec3_t
 		float fDifference = (vdifference.y + vdifference.x) / 2;
 		return fDifference;
 	}
-	vec3_t scaleFixedPoint(float scalex, float scaley, vec3_t fixedPoint)
-	{
+	vec3_t scaleFixedPoint(float scalex, float scaley, vec3_t fixedPoint) {
 		vec3_t newvec;
 		newvec.x = x * scalex + fixedPoint.x*(1 - scalex);
 		newvec.y = y * scaley + fixedPoint.y*(1 - scaley);
@@ -187,8 +181,7 @@ struct vec3_t
 	}
 
 
-	bool WorldToScreen2(float fovx, float fovy, float windowWidth, float windowHeight, vec3_t left, vec3_t up, vec3_t forward, vec3_t origin, vec3_t &screen)
-	{
+	bool WorldToScreen2(float fovx, float fovy, float windowWidth, float windowHeight, vec3_t left, vec3_t up, vec3_t forward, vec3_t origin, vec3_t &screen) {
 		vec3_t transform;
 		float xc, yc;
 		float px, py;
@@ -285,10 +278,8 @@ struct vec3_ti {
 		return vec;
 	}
 };
-struct vec4_t
-{
-	union
-	{
+struct vec4_t {
+	union {
 		struct { float x, y, z, w; };
 		float v[4];
 	};
@@ -319,8 +310,7 @@ struct vec4_t
 };
 
 
-struct glmatrixf
-{
+struct glmatrixf {
 	union {
 		float v[16];
 		float v_nested[4][4];
@@ -355,8 +345,7 @@ struct glmatrixf
 		return newMatPtr;
 	};
 
-	inline bool OWorldToScreen(vec3_t origin, vec3_t pos, vec2_t &screen, vec2_t fov, vec2_t displaySize)
-	{
+	inline bool OWorldToScreen(vec3_t origin, vec3_t pos, vec2_t &screen, vec2_t fov, vec2_t displaySize) {
 		pos = pos.sub(origin);
 
 		float x = transformx(pos);
@@ -375,40 +364,34 @@ struct glmatrixf
 		return true;
 	}
 
-	inline void mul(const glmatrixf &x, const glmatrixf &y)
-	{
+	inline void mul(const glmatrixf &x, const glmatrixf &y) {
 		mul(x.v, y.v);
 	}
 
-	inline void translate(float x, float y, float z)
-	{
+	inline void translate(float x, float y, float z) {
 		v[12] += x;
 		v[13] += y;
 		v[14] += z;
 	}
 
-	inline void translate(const vec3_t &o)
-	{
+	inline void translate(const vec3_t &o) {
 		translate(o.x, o.y, o.z);
 	}
 
-	inline void scale(float x, float y, float z)
-	{
+	inline void scale(float x, float y, float z) {
 		v[0] *= x; v[1] *= x; v[2] *= x; v[3] *= x;
 		v[4] *= y; v[5] *= y; v[6] *= y; v[7] *= y;
 		v[8] *= z; v[9] *= z; v[10] *= z; v[11] *= z;
 	}
 
-	inline void invertnormal(vec3_t &dir) const
-	{
+	inline void invertnormal(vec3_t &dir) const {
 		vec3_t n(dir);
 		dir.x = n.x*v[0] + n.y*v[1] + n.z*v[2];
 		dir.y = n.x*v[4] + n.y*v[5] + n.z*v[6];
 		dir.z = n.x*v[8] + n.y*v[9] + n.z*v[10];
 	}
 
-	inline void invertvertex(vec3_t &pos) const
-	{
+	inline void invertvertex(vec3_t &pos) const {
 		vec3_t p(pos);
 		p.x -= v[12];
 		p.y -= v[13];
@@ -418,50 +401,42 @@ struct glmatrixf
 		pos.z = p.x*v[8] + p.y*v[9] + p.z*v[10];
 	}
 
-	inline void transform(const vec3_t &in, vec4_t &out) const
-	{
+	inline void transform(const vec3_t &in, vec4_t &out) const {
 		out.x = transformx(in);
 		out.y = transformy(in);
 		out.z = transformz(in);
 		out.w = transformw(in);
 	}
 
-	__forceinline float transformx(const vec3_t &p) const
-	{
+	__forceinline float transformx(const vec3_t &p) const {
 		return p.x*v[0] + p.y*v[4] + p.z*v[8] + v[12];
 	}
 
-	__forceinline float transformy(const vec3_t &p) const
-	{
+	__forceinline float transformy(const vec3_t &p) const {
 		return p.x*v[1] + p.y*v[5] + p.z*v[9] + v[13];
 	}
 
-	__forceinline float transformz(const vec3_t &p) const
-	{
+	__forceinline float transformz(const vec3_t &p) const {
 		return p.x*v[2] + p.y*v[6] + p.z*v[10] + v[14];
 	}
 
-	__forceinline float transformw(const vec3_t &p) const
-	{
+	__forceinline float transformw(const vec3_t &p) const {
 		return p.x*v[3] + p.y*v[7] + p.z*v[11] + v[15];
 	}
 
-	__forceinline vec3_t gettranslation() const
-	{
+	__forceinline vec3_t gettranslation() const {
 		return vec3_t(v[12], v[13], v[14]);
 	}
 
 	//assault cube world2screen
-	vec3_t transform(glmatrixf *matrix, vec3_t &totransform)
-	{
+	vec3_t transform(glmatrixf *matrix, vec3_t &totransform) {
 		return vec3_t(matrix->transformx(totransform),
 			matrix->transformy(totransform),
 			matrix->transformz(totransform)).div(matrix->transformw(totransform));
 	}
 
 	///pos should be the exact center of the enemy model for scaling to work properly
-	vec3_t WorldToScreen(vec3_t pos, int width, int height)
-	{
+	vec3_t WorldToScreen(vec3_t pos, int width, int height) {
 		//Matrix-vector Product, multiplying world(eye) coordinates by projection matrix = clipCoords
 		vec4_t clipCoords;
 		clipCoords.x = pos.x*v[0] + pos.y*v[4] + pos.z*v[8] + v[12];
