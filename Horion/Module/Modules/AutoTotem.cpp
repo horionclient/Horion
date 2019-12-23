@@ -20,9 +20,9 @@ void AutoTotem::onTick(C_GameMode* gm) {
 
 		if (i->item == NULL && delay > 3)  {
 			C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
-			C_Inventory* Item = supplies->inventory;
+			C_Inventory* item = supplies->inventory;
 			for (int i = 0; i < 36; i++) {
-				C_ItemStack* itemStack = Item->getItemStack(i);
+				C_ItemStack* itemStack = item->getItemStack(i);
 				if (itemStack->item != NULL) {
 					C_Item* totemItem = *itemStack->item;
 					if (totemItem->itemId == 450) {
