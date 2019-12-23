@@ -2,13 +2,11 @@
 
 
 
-EditionFaker::EditionFaker() : IModule('X', Category::EXPLOITS, "Fakes your device to android")
-{
+EditionFaker::EditionFaker() : IModule('X', Category::EXPLOITS, "Fakes your device to android") {
 }
 
 
-EditionFaker::~EditionFaker()
-{
+EditionFaker::~EditionFaker() {
 }
 
 int EditionFaker::getFakedEditon() {
@@ -18,7 +16,6 @@ int EditionFaker::getFakedEditon() {
 }
 
 
-const char* EditionFaker::getModuleName()
-{
+const char* EditionFaker::getModuleName() {
 	return ("EditionFaker");
 }

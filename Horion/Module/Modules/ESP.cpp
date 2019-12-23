@@ -2,19 +2,16 @@
 
 
 
-ESP::ESP() : IModule('O', Category::VISUAL,"Makes it easier to find entities around you")
-{
+ESP::ESP() : IModule('O', Category::VISUAL,"Makes it easier to find entities around you") {
 	this->registerBoolSetting("rainbow", &this->doRainbow, this->doRainbow);
 	this->registerBoolSetting("MobEsp", &this->isMobEsp, this->isMobEsp);
 }
 
 
-ESP::~ESP()
-{
+ESP::~ESP() {
 }
 
-const char* ESP::getModuleName()
-{
+const char* ESP::getModuleName() {
 	return ("ESP");
 }
 
@@ -38,8 +35,7 @@ void doRenderStuff(C_Entity* ent, bool isRegularEntitie) {
 				else
 					DrawUtils::setColor(0.9f, 0.9f, 0.9f, max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
 			}
-			else if (espMod->isMobEsp)
-			{
+			else if (espMod->isMobEsp) {
 				if (ent->getNameTag()->getTextLength() <= 1 && ent->getEntityTypeId() == 63)
 					return;
 

@@ -2,16 +2,13 @@
 
 
 
-Tracer::Tracer() : IModule('R', Category::VISUAL, "Draws lines to ESP highlighted entities")
-{
+Tracer::Tracer() : IModule('R', Category::VISUAL, "Draws lines to ESP highlighted entities") {
 }
 
 
-Tracer::~Tracer()
-{
+Tracer::~Tracer() {
 }
 
-const char* Tracer::getModuleName()
-{
+const char* Tracer::getModuleName() {
 	return ("Tracer");
 }

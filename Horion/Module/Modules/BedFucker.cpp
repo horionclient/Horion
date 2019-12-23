@@ -2,8 +2,7 @@
 
 
 
-BedFucker::BedFucker() : IModule(VK_NUMPAD9, Category::EXPLOITS, "Destroys beds around you")
-{
+BedFucker::BedFucker() : IModule(VK_NUMPAD9, Category::EXPLOITS, "Destroys beds around you") {
 	registerIntSetting("Range", &this->range, this->range, 1, 10);
 	registerBoolSetting("Beds", &this->beds, this->beds);
 	registerBoolSetting("Eggs", &this->eggs, this->eggs);
@@ -14,16 +13,14 @@ BedFucker::BedFucker() : IModule(VK_NUMPAD9, Category::EXPLOITS, "Destroys beds 
 }
 
 
-BedFucker::~BedFucker()
-{
+BedFucker::~BedFucker() {
 }
 
-const char* BedFucker::getModuleName()
-{
+const char* BedFucker::getModuleName() {
 	return ("Fucker");
 }
 
-void BedFucker::onEnable(){
+void BedFucker::onEnable() {
 
 	this->delay = 0;
 

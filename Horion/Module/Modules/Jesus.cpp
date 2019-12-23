@@ -1,21 +1,17 @@
 #include "Jesus.h"
 
-Jesus::Jesus() : IModule(0, Category::MOVEMENT, "Walk over wather, like Jesus")
-{
+Jesus::Jesus() : IModule(0, Category::MOVEMENT, "Walk over wather, like Jesus") {
 }
 
 
-Jesus::~Jesus()
-{
+Jesus::~Jesus() {
 }
 
-const char* Jesus::getModuleName()
-{
+const char* Jesus::getModuleName() {
 	return "Jesus";
 }
 
-void Jesus::onTick(C_GameMode* gm)
-{
+void Jesus::onTick(C_GameMode* gm) {
 	if (gm->player != nullptr) {
 		
 		if (gm->player->isSneaking()) return;

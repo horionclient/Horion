@@ -2,23 +2,19 @@
 #include "../../DrawUtils.h"
 
 
-Tower::Tower() : IModule(0x0, Category::BUILD, "Like scaffold, but vertically and a lot faster")
-{
+Tower::Tower() : IModule(0x0, Category::BUILD, "Like scaffold, but vertically and a lot faster") {
 	registerFloatSetting("motion", &this->motion, this->motion, 0.3f, 1.f);
 }
 
 
-Tower::~Tower()
-{
+Tower::~Tower() {
 }
 
-const char* Tower::getModuleName()
-{
+const char* Tower::getModuleName() {
 	return ("Tower");
 }
 
-bool Tower::tryTower(vec3_t blockBelow)
-{
+bool Tower::tryTower(vec3_t blockBelow) {
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	
 	if (input == nullptr)
@@ -55,8 +51,7 @@ bool Tower::tryTower(vec3_t blockBelow)
 			vec3_ti* current = *it;
 
 			vec3_ti* calc = blok->subAndReturn(*current);
-			if (!(*(g_Data.getLocalPlayer()->region->getBlock(*calc)->blockLegacy))->material->isReplaceable)
-			{
+			if (!(*(g_Data.getLocalPlayer()->region->getBlock(*calc)->blockLegacy))->material->isReplaceable) {
 				// Found a solid block to click
 				foundCandidate = true;
 				blok->set(calc);
@@ -82,8 +77,7 @@ bool Tower::tryTower(vec3_t blockBelow)
 	return false;
 }
 
-void Tower::onPostRender()
-{
+void Tower::onPostRender() {
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	if (!g_Data.canUseMoveKeys())

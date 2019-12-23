@@ -2,17 +2,14 @@
 
 
 
-ChestESP::ChestESP() : IModule('H', Category::VISUAL, "ESP for chests")
-{
+ChestESP::ChestESP() : IModule('H', Category::VISUAL, "ESP for chests") {
 }
 
 
-ChestESP::~ChestESP()
-{
+ChestESP::~ChestESP() {
 }
 
-const char* ChestESP::getModuleName()
-{
+const char* ChestESP::getModuleName() {
 	return ("ChestESP");
 }
 
@@ -40,15 +37,14 @@ void ChestESP::onPostRender() {
 
 	std::set<std::shared_ptr<AABB>>* chestList = g_Data.getChestList();
 
-	for (auto iter = chestList->begin(); iter != chestList->end(); ++iter){
+	for (auto iter = chestList->begin(); iter != chestList->end(); ++iter) {
 		DrawUtils::setColor(1.f, 0.3f, 0.3f, 0.2f);
 		DrawUtils::drawBox((*iter)->lower, (*iter)->upper, max(0.2f, 1 / max(1, g_Data.getLocalPlayer()->eyePos0.dist((*iter)->lower)))); // Fancy math to give an illusion of good esp
 	}
 
 }
 
-void ChestESP::onTick(C_GameMode * gm)
-{
+void ChestESP::onTick(C_GameMode * gm) {
 	tickTimeout++;
 	if (tickTimeout > 60) {
 		tickTimeout = 0;

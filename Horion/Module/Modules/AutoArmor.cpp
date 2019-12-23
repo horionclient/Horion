@@ -1,25 +1,21 @@
 #include "AutoArmor.h"
 
 
-class ArmorStruct
-{
+class ArmorStruct {
 public:
-	ArmorStruct(C_ItemStack* item,C_ArmorItem* yot, int slot)
-	{
-		armor = yot;
+	ArmorStruct(C_ItemStack* item,C_ArmorItem* armr, int slot) {
+		armor = armr;
 		m_slot = slot;	
 		m_item = item;
 	}
-	bool isEqual(ArmorStruct& src)
-	{
+	bool isEqual(ArmorStruct& src) {
 		if (this->m_item->getArmorValueWithEnchants() == src.m_item->getArmorValueWithEnchants())
 			return true;
 		else
 			return false;
 	}
 	
-	bool operator() (ArmorStruct lhs, ArmorStruct rhs)
-	{
+	bool operator() (ArmorStruct lhs, ArmorStruct rhs) {
 		return (lhs.m_item->getArmorValueWithEnchants() > rhs.m_item->getArmorValueWithEnchants());
 	}
 	C_ArmorItem* armor = nullptr;
@@ -27,21 +23,17 @@ public:
 	int m_slot = 0; 
 };
 
-AutoArmor::AutoArmor() : IModule(0x0, Category::PLAYER, "Automatically equips the best armor")
-{
+AutoArmor::AutoArmor() : IModule(0x0, Category::PLAYER, "Automatically equips the best armor") {
 }
 
-AutoArmor::~AutoArmor()
-{
+AutoArmor::~AutoArmor() {
 }
 
-const char* AutoArmor::getModuleName()
-{
+const char* AutoArmor::getModuleName() {
 	return ("AutoArmor");
 }
 
-void AutoArmor::onTick(C_GameMode* gm) 
-{
+void AutoArmor::onTick(C_GameMode* gm)  {
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
 	C_InventoryTransactionManager* manager = g_Data.getLocalPlayer()->getTransactionManager();
@@ -60,22 +52,17 @@ void AutoArmor::onTick(C_GameMode* gm)
 
 	std::vector<ArmorStruct> armorList;
 
-	struct CompareArmorStruct
-	{
-		bool operator() (ArmorStruct lhs, ArmorStruct rhs)
-		{
+	struct CompareArmorStruct {
+		bool operator() (ArmorStruct lhs, ArmorStruct rhs) {
 			return (lhs.m_item->getArmorValueWithEnchants() > rhs.m_item->getArmorValueWithEnchants());
 		}
 	};
 
-	for (int i = 0; i < 4; i++)
-	{
-		for (int n = 0; n < 36; n++)
-		{
+	for (int i = 0; i < 4; i++) {
+		for (int n = 0; n < 36; n++) {
 			C_ItemStack* stack = inv->getItemStack(n);
 			
-			if (stack->item != NULL && (*stack->item)->isArmor() && reinterpret_cast<C_ArmorItem*>(*stack->item)->ArmorSlot == i)
-			{
+			if (stack->item != NULL && (*stack->item)->isArmor() && reinterpret_cast<C_ArmorItem*>(*stack->item)->ArmorSlot == i) {
 				armorList.push_back(ArmorStruct(stack, reinterpret_cast<C_ArmorItem*>(*stack->item), n));
 			}
 		}
@@ -83,13 +70,11 @@ void AutoArmor::onTick(C_GameMode* gm)
 		if(gm->player->getArmor(i)->item != nullptr)
 			armorList.push_back(ArmorStruct(gm->player->getArmor(i),reinterpret_cast<C_ArmorItem*>(*gm->player->getArmor(i)->item), i));
 
-		if (armorList.size() > 0)
-		{
+		if (armorList.size() > 0) {
 			std::sort(armorList.begin(), armorList.end(),CompareArmorStruct());
 			C_ItemStack* armorItem = gm->player->getArmor(i);
 
-			if (armorItem->item != nullptr && (ArmorStruct(armorItem, reinterpret_cast<C_ArmorItem*>(*armorItem->item), 0).isEqual(armorList[0])) == false)
-			{
+			if (armorItem->item != nullptr && (ArmorStruct(armorItem, reinterpret_cast<C_ArmorItem*>(*armorItem->item), 0).isEqual(armorList[0])) == false) {
 				int slot = inv->getFirstEmptySlot();
 
 				first = new C_InventoryAction(i, armorItem, nullptr, 632);
@@ -116,8 +101,7 @@ void AutoArmor::onTick(C_GameMode* gm)
 				delete first;
 				delete second;
 			}
-			if (armorItem->item == nullptr)
-			{
+			if (armorItem->item == nullptr) {
 				first = new C_InventoryAction(armorList[0].m_slot, armorList[0].m_item, nullptr);
 				second = new C_InventoryAction(i, nullptr, armorList[0].m_item, 632);
 

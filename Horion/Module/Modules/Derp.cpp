@@ -2,25 +2,21 @@
 
 
 
-Derp::Derp() : IModule(0x0, Category::EXPLOITS, "lol you stupid")
-{
+Derp::Derp() : IModule(0x0, Category::EXPLOITS, "lol you stupid") {
 	this->registerBoolSetting("ihaveastroke", &this->epicStroke, this->epicStroke);
 	this->registerBoolSetting("packet mode", &this->packetMode, this->packetMode);
 }
 
 
-Derp::~Derp()
-{
+Derp::~Derp() {
 
 }
 
-const char* Derp::getModuleName()
-{
+const char* Derp::getModuleName() {
 	return "Derp";
 }
 
-void Derp::onTick(C_GameMode* gm)
-{
+void Derp::onTick(C_GameMode* gm) {
 	if (gm->player == nullptr) return;
 
 	if (packetMode) {

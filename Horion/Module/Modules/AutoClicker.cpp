@@ -1,33 +1,28 @@
 #include "AutoClicker.h"
 
 
-AutoClicker::AutoClicker() : IModule(0x0, Category::COMBAT, "A simple autoclicker, automatically clicks for you.")
-{
+AutoClicker::AutoClicker() : IModule(0x0, Category::COMBAT, "A simple autoclicker, automatically clicks for you.") {
 	this->registerBoolSetting("rightclick", &this->rightclick, rightclick);
 	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
 	this->registerBoolSetting("only swords/axes", &this->sword, this->sword);
 }
 
 
-AutoClicker::~AutoClicker()
-{
+AutoClicker::~AutoClicker() {
 }
 
-const char* AutoClicker::getModuleName()
-{
+const char* AutoClicker::getModuleName() {
 	return ("AutoClicker");
 }
 
-void AutoClicker::onTick(C_GameMode* gm)
-{
+void AutoClicker::onTick(C_GameMode* gm) {
 	if (!GameData::isLeftClickDown() && Odelay != 0) Odelay = 0;
 	if (GameData::isLeftClickDown() && GameData::canUseMoveKeys()) {
 		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 		C_Entity* target = g_Data.getClientInstance()->getPointerStruct()->entityPtr;
 		Odelay++;
 
-		if (Odelay >= delay)
-		{
+		if (Odelay >= delay) {
 			if (sword && !(localPlayer->itemId == 268 || localPlayer->itemId == 267 || localPlayer->itemId == 272 
 				|| localPlayer->itemId == 276 || localPlayer->itemId == 283 /*swords*/ 
 				|| localPlayer->itemId == 271 || localPlayer->itemId == 275 || localPlayer->itemId == 279 
@@ -47,8 +42,7 @@ void AutoClicker::onTick(C_GameMode* gm)
 		if (GameData::isRightClickDown() && GameData::canUseMoveKeys()) {
 			PointingStruct* pstruct = g_Data.getClientInstance()->getPointerStruct();
 			Odelay++;
-			if (Odelay >= delay)
-			{
+			if (Odelay >= delay) {
 				gm->buildBlock(new vec3_ti(pstruct->block), pstruct->blockSide);
 				Odelay = 0;
 			}

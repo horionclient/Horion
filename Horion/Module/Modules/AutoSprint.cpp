@@ -1,21 +1,17 @@
 #include "AutoSprint.h"
 
-AutoSprint::AutoSprint() : IModule(0x0, Category::MOVEMENT, "Automatically sprint without holding the key")
-{
+AutoSprint::AutoSprint() : IModule(0x0, Category::MOVEMENT, "Automatically sprint without holding the key") {
 }
 
 
-AutoSprint::~AutoSprint()
-{
+AutoSprint::~AutoSprint() {
 }
 
-const char* AutoSprint::getModuleName()
-{
+const char* AutoSprint::getModuleName() {
 	return ("AutoSprint");
 }
 
-const char* AutoSprint::getRawModuleName()
-{
+const char* AutoSprint::getRawModuleName() {
 	return ("AutoSprint_");
 }
 

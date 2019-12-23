@@ -2,18 +2,15 @@
 
 
 
-TestModule::TestModule() : IModule(0, Category::EXPLOITS, "For testing purposes")
-{
+TestModule::TestModule() : IModule(0, Category::EXPLOITS, "For testing purposes") {
 	
 }
 
 
-TestModule::~TestModule()
-{
+TestModule::~TestModule() {
 }
 
-const char* TestModule::getModuleName()
-{
+const char* TestModule::getModuleName() {
 	return "TestModule";
 }
 

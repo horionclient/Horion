@@ -1,30 +1,25 @@
 #include "Reach.h"
 
 
-Reach::Reach() : IModule(0x0, Category::COMBAT, "Increases your reach")
-{
+Reach::Reach() : IModule(0x0, Category::COMBAT, "Increases your reach") {
 	this->registerFloatSetting("Reach Value", &this->reachValue, this->reachValue,3.f,7.f);
 }
 
 
-Reach::~Reach()
-{
+Reach::~Reach() {
 }
 
-const char* Reach::getModuleName()
-{
+const char* Reach::getModuleName() {
 	return ("Reach");
 }
 
-void Reach::onTick(C_GameMode* gm)
-{
+void Reach::onTick(C_GameMode* gm) {
 	if (reachPtr != 0) {
 		*reachPtr = reachValue;
 	}
 }
 
-void Reach::onEnable()
-{
+void Reach::onEnable() {
 	static uintptr_t sigOffset = 0x0;
 	if (sigOffset == 0x0) {
 		sigOffset = Utils::FindSignature("EB 18 F3 0F 10 05 ?? ?? ?? ?? 44 0F");
@@ -42,8 +37,7 @@ void Reach::onEnable()
 	
 }
 
-void Reach::onDisable()
-{
+void Reach::onDisable() {
 	if (reachPtr != 0)
 		VirtualProtect(reachPtr, sizeof(float), oldProtect, &oldProtect);
 }

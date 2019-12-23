@@ -1,19 +1,16 @@
 #include "Hitbox.h"
 
 
-Hitbox::Hitbox() : IModule(0x0, Category::COMBAT, "Increase an entitys hitbox size")
-{
+Hitbox::Hitbox() : IModule(0x0, Category::COMBAT, "Increase an entitys hitbox size") {
 	this->registerFloatSetting("Height", &this->height, this->height, 1.8f, 10);
 	this->registerFloatSetting("Width", &this->width, this->width, 0.6f, 10);
 }
 
 
-Hitbox::~Hitbox()
-{
+Hitbox::~Hitbox() {
 }
 
-const char* Hitbox::getModuleName()
-{
+const char* Hitbox::getModuleName() {
 	return ("Hitbox");
 }
 
@@ -38,8 +35,7 @@ void findTarget(C_Entity* currentEntity,bool isRegularEntitie) {
 		
 		float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
 
-		if (dist < hitboxMod->range)
-		{
+		if (dist < hitboxMod->range) {
 			currentEntity->width = hitboxMod->width;
 			currentEntity->height = hitboxMod->height;
 		}
@@ -47,8 +43,7 @@ void findTarget(C_Entity* currentEntity,bool isRegularEntitie) {
 	
 }
 
-void Hitbox::onTick(C_GameMode* gm)
-{
+void Hitbox::onTick(C_GameMode* gm) {
 	if (!g_Data.isInGame())
 		return;
 

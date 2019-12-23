@@ -3,27 +3,22 @@
 
 
 
-TriggerBot::TriggerBot() : IModule('K', Category::COMBAT, "Attacks entities you're looking at")
-{
+TriggerBot::TriggerBot() : IModule('K', Category::COMBAT, "Attacks entities you're looking at") {
 	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
 }
 
 
-TriggerBot::~TriggerBot()
-{
+TriggerBot::~TriggerBot() {
 }
 
-const char* TriggerBot::getModuleName()
-{
+const char* TriggerBot::getModuleName() {
 	return ("TriggerBot");
 }
-void TriggerBot::onTick(C_GameMode* gm)
-{
+void TriggerBot::onTick(C_GameMode* gm) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 	C_Entity* target = g_Data.getClientInstance()->getPointerStruct()->entityPtr;
 	Odelay++;
-	if (target != 0 && Odelay >= delay)
-	{
+	if (target != 0 && Odelay >= delay) {
 		if (!Target::isValidTarget(target))
 			return;
 

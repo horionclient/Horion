@@ -2,22 +2,18 @@
 
 
 
-InventoryMove::InventoryMove() : IModule(0x0, Category::MOVEMENT, "Move even though you have your inventory open")
-{
+InventoryMove::InventoryMove() : IModule(0x0, Category::MOVEMENT, "Move even though you have your inventory open") {
 }
 
 
-InventoryMove::~InventoryMove()
-{
+InventoryMove::~InventoryMove() {
 }
 
-const char* InventoryMove::getModuleName()
-{
+const char* InventoryMove::getModuleName() {
 	return ("InventoryMove");
 }
 
-void InventoryMove::onTick(C_GameMode* gm)
-{
+void InventoryMove::onTick(C_GameMode* gm) {
 	if (g_Data.getLocalPlayer()->canOpenContainerScreen() == 1)
 		return;
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
@@ -34,42 +30,34 @@ void InventoryMove::onTick(C_GameMode* gm)
 
 	if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->backKey))
 		return;
-	else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey))
-	{
+	else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
 		yaw += 45.f;
 		keyPressed = true;
 	}
-	else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->leftKey) &&!GameData::isKeyDown(*input->rightKey))
-	{
+	else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->leftKey) &&!GameData::isKeyDown(*input->rightKey)) {
 		yaw -= 45.f;
 		keyPressed = true;
 	}
-	else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey))
-	{
+	else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
 		yaw += 135.f;
 		keyPressed = true;
 	}
-	else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey))
-	{
+	else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
 		yaw -= 135.f;
 		keyPressed = true;
 	}
-	else if (GameData::isKeyDown(*input->forwardKey))
-	{
+	else if (GameData::isKeyDown(*input->forwardKey)) {
 		keyPressed = true;
 	}
-	else if (GameData::isKeyDown(*input->backKey))
-	{
+	else if (GameData::isKeyDown(*input->backKey)) {
 		yaw += 180.f;
 		keyPressed = true;
 	}
-	else if (GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey))
-	{
+	else if (GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
 		yaw += 90.f;
 		keyPressed = true;
 	}
-	else if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey))
-	{
+	else if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
 		yaw -= 90.f;
 		keyPressed = true;
 	}
@@ -82,8 +70,7 @@ void InventoryMove::onTick(C_GameMode* gm)
 	moveVec.x = cos(calcYaw) * cos(calcPitch) * speed;
 	moveVec.y = gm->player->velocity.y;
 	moveVec.z = sin(calcYaw) * cos(calcPitch) * speed;
-	if (keyPressed)
-	{
+	if (keyPressed) {
 		gm->player->lerpMotion(moveVec);
 		keyPressed = false;
 	}

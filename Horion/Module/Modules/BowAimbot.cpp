@@ -3,13 +3,11 @@
 
 std::vector <C_Entity*> targetList;
 
-BowAimbot::BowAimbot() : IModule('C', Category::COMBAT, "Aimbot, but for bows")
-{
+BowAimbot::BowAimbot() : IModule('C', Category::COMBAT, "Aimbot, but for bows") {
 }
 
 
-BowAimbot::~BowAimbot()
-{
+BowAimbot::~BowAimbot() {
 }
 
 const char* BowAimbot::getModuleName() {
@@ -31,8 +29,7 @@ void findTargets(C_Entity* currentEntity,bool isRegularEntitie) {
 
 	float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());;
 
-	if (dist < 130)
-	{
+	if (dist < 130) {
 		targetList.push_back(currentEntity);
 	}
 }
@@ -52,8 +49,7 @@ void BowAimbot::onPostRender() {
 
 	g_Data.forEachEntity(findTargets);
 
-	if (targetList.size() > 0)
-	{
+	if (targetList.size() > 0) {
 		vec3_t origin = g_Data.getClientInstance()->levelRenderer->origin; // TODO: sort list
 		C_Entity* entity = targetList[0];
 		vec3_t pos = *entity->getPos();

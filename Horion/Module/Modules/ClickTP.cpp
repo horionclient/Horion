@@ -2,24 +2,20 @@
 
 
 
-ClickTP::ClickTP() : IModule(0x0, Category::EXPLOITS, "Click a block to teleport to it")
-{
+ClickTP::ClickTP() : IModule(0x0, Category::EXPLOITS, "Click a block to teleport to it") {
 	registerBoolSetting("Only Hand", &this->onlyHand, this->onlyHand);
 }
 
 
-ClickTP::~ClickTP()
-{
+ClickTP::~ClickTP() {
 
 }
 
-const char* ClickTP::getModuleName()
-{
+const char* ClickTP::getModuleName() {
 	return "ClickTP";
 }
 
-void ClickTP::onTick(C_GameMode* gm)
-{
+void ClickTP::onTick(C_GameMode* gm) {
 	if (gm->player == nullptr)
 		return;
 	if (onlyHand && g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot)->item != nullptr) 

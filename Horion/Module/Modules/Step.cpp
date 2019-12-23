@@ -2,18 +2,15 @@
 
 
 
-Step::Step() : IModule('B', Category::MOVEMENT, "Increases your step height")
-{
+Step::Step() : IModule('B', Category::MOVEMENT, "Increases your step height") {
 	registerFloatSetting("height", &this->height, this->height, 1.f, 10.f);
 }
 
 
-Step::~Step()
-{
+Step::~Step() {
 }
 
-const char* Step::getModuleName()
-{
+const char* Step::getModuleName() {
 	return ("Step");
 }
 

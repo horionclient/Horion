@@ -1,22 +1,18 @@
 #include "Scaffold.h"
 
-Scaffold::Scaffold() : IModule(VK_NUMPAD1, Category::BUILD, "Automatically build blocks beneath you")
-{
+Scaffold::Scaffold() : IModule(VK_NUMPAD1, Category::BUILD, "Automatically build blocks beneath you") {
 	registerBoolSetting("AutoSelect", &this->autoselect, this->autoselect);
 }
 
 
-Scaffold::~Scaffold()
-{
+Scaffold::~Scaffold() {
 }
 
-const char* Scaffold::getModuleName()
-{
+const char* Scaffold::getModuleName() {
 	return ("Scaffold");
 }
 
-bool Scaffold::tryScaffold(vec3_t blockBelow)
-{
+bool Scaffold::tryScaffold(vec3_t blockBelow) {
 	blockBelow = blockBelow.floor();
 
 	DrawUtils::drawBox(blockBelow, vec3_t(blockBelow).add(1), 0.4f);
@@ -48,8 +44,7 @@ bool Scaffold::tryScaffold(vec3_t blockBelow)
 			vec3_ti* current = *it;
 
 			vec3_ti* calc = blok->subAndReturn(*current);
-			if (!(*(g_Data.getLocalPlayer()->region->getBlock(*calc)->blockLegacy))->material->isReplaceable)
-			{
+			if (!(*(g_Data.getLocalPlayer()->region->getBlock(*calc)->blockLegacy))->material->isReplaceable) {
 				// Found a solid block to click
 				foundCandidate = true;
 				blok->set(calc);
@@ -95,8 +90,7 @@ bool Scaffold::findBlock() {
 	return false;
 }
 
-void Scaffold::onPostRender()
-{
+void Scaffold::onPostRender() {
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	if (!g_Data.canUseMoveKeys())

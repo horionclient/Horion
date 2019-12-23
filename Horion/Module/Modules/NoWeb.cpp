@@ -2,17 +2,14 @@
 
 
 
-NoWeb::NoWeb() : IModule(0x0, Category::MOVEMENT, "Ignore cobwebs slowdown")
-{
+NoWeb::NoWeb() : IModule(0x0, Category::MOVEMENT, "Ignore cobwebs slowdown") {
 }
 
 
-NoWeb ::~NoWeb()
-{
+NoWeb ::~NoWeb() {
 }
 
-const char* NoWeb::getModuleName()
-{
+const char* NoWeb::getModuleName() {
 	return ("NoWeb");
 }
 

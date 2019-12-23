@@ -2,22 +2,18 @@
 
 
 
-AirSwim::AirSwim() : IModule(0x0, Category::MOVEMENT, "Swim even though your in air")
-{
+AirSwim::AirSwim() : IModule(0x0, Category::MOVEMENT, "Swim even though your in air") {
 }
 
 
-AirSwim::~AirSwim()
-{
+AirSwim::~AirSwim() {
 }
 
-const char* AirSwim::getModuleName()
-{
+const char* AirSwim::getModuleName() {
 	return ("AirSwim");
 }
 
-void AirSwim::onEnable()
-{
+void AirSwim::onEnable() {
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	g_Data.getLocalPlayer()->didEnterWaterBool = true;
