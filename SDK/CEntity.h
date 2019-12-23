@@ -10,8 +10,7 @@
 
 class C_GameMode;
 
-class PointingStruct
-{
+class PointingStruct {
 private:
 	char pad_0x0000[0x850]; //0x0000
 public:
@@ -24,8 +23,7 @@ public:
 
 class C_Player;
 
-class C_Entity
-{
+class C_Entity {
 public:
 	uintptr_t* ptrToPtrToEntList; //0x0008
 private:
@@ -741,14 +739,12 @@ public:
 		static Turn TurnFunc = reinterpret_cast<Turn>(Utils::FindSignature("4C 8B DC 55 57 ?? ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? 45 ?? ?? ?? ?? ?? ?? ?? 48 8B 05 D6 D4 A5 01 48 33 C4 48 89 45 ?? 49 89 5B ?? 48 8B F9 ?? ?? ?? ?? ?? ?? ?? 48 8B DA 4D 89 73 E8 41 0F 29 73 D8 41 0F 29 7B C8 48 8B 01 FF 90 ?? ?? ?? ?? F2 0F 10 03"));
 		TurnFunc(this, viewAngles);
 	}*/
-	void applyTurnDelta(vec2_t* viewAngleDelta)
-	{
+	void applyTurnDelta(vec2_t* viewAngleDelta) {
 		using applyTurnDelta = void(__thiscall*)(void*, vec2_t*);
 		static applyTurnDelta TurnDelta = reinterpret_cast<applyTurnDelta>(Utils::FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B D9 0F 29 74 24 ?? 48 8B 89 ?? ?? ?? ?? 48 8B ?? 0F 29 7C 24 ?? 44 0F"));
 		TurnDelta(this, viewAngleDelta);
 	}
-	void setGameModeType(int gma)
-	{
+	void setGameModeType(int gma) {
 		// Player::setPlayerGameType
 		using setGameMode = void(__thiscall*)(void*, int);
 		static setGameMode Game_Mode = reinterpret_cast<setGameMode>(Utils::FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 89 ?? 24 ?? 48 89 ?? 24 ?? 8B FA 48 8B D9 8B B1"));

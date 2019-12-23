@@ -202,25 +202,21 @@ public:
 private:
 	char pad_0x1B[0x65];//0x23
 public:
-	C_ItemStack()
-	{
+	C_ItemStack() {
 		memset(this, 0x0, sizeof(C_ItemStack));
 	}
 
-	C_ItemStack(C_BlockLegacy& legacy, int count)
-	{
+	C_ItemStack(C_BlockLegacy& legacy, int count) {
 		memset(this, 0x0, sizeof(C_ItemStack));
 		reinit(legacy, count);
 	}
 
-	C_ItemStack(C_Item& item, int count, int itemData)
-	{
+	C_ItemStack(C_Item& item, int count, int itemData) {
 		memset(this, 0x0, sizeof(C_ItemStack));
 		reinit(item, count, itemData);
 	}
 
-	C_ItemStack(C_ItemStack const& src)
-	{
+	C_ItemStack(C_ItemStack const& src) {
 		memset(this, 0x0, sizeof(C_ItemStack));
 		using ItemStackCopyConstructor_t = void(__fastcall*)(C_ItemStack&, C_ItemStack const&);
 		static ItemStackCopyConstructor_t  ItemStackCopyConstructor = reinterpret_cast<ItemStackCopyConstructor_t>(Utils::FindSignature("48 8B C4 56 57 41 54 41 56 41 57 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 68 ?? 48 8B FA 48 8B D9 48 89 48 ??"));
@@ -232,20 +228,17 @@ public:
 		return *this->item;
 	}
 
-	void reinit(C_BlockLegacy& legacy, int count)
-	{
+	void reinit(C_BlockLegacy& legacy, int count) {
 		this->setVtable();
 		Utils::CallVFunc<1, void>(this, &legacy, count);
 	}
 
-	void reinit(C_Item& item, int count, int itemData)
-	{
+	void reinit(C_Item& item, int count, int itemData) {
 		this->setVtable();
 		Utils::CallVFunc<2, void>(this, &item, count, itemData);
 	}
 
-	int getEnchantValue(int enchantId)
-	{
+	int getEnchantValue(int enchantId) {
 		using getEnchantsLevel_t = int(__fastcall*)(int, C_ItemStack*);
 		static getEnchantsLevel_t getEnchantsLevel = reinterpret_cast<getEnchantsLevel_t>(Utils::FindSignature("48 8B C4 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B F2 8B ?? 33 ?? 48 8B"));
 		return getEnchantsLevel(enchantId, this);
@@ -269,8 +262,7 @@ public:
 		return (*this->item)->getAttackDamage() + 1.25f * sharpnessValue;
 	}
 private:
-	inline void setVtable(void)
-	{
+	inline void setVtable(void) {
 		static uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? 83 7C 24 ?? 00 75 31");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		this->vTable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
@@ -278,8 +270,7 @@ private:
 };
 
 
-class C_ArmorItem : public C_Item
-{
+class C_ArmorItem : public C_Item {
 private:
 	char pad_0x108[0x48 + 0x70];//0x108
 public:

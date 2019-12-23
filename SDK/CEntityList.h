@@ -3,8 +3,7 @@
 #include "../Utils/HMath.h"
 class C_Entity;
 
-class C_EntityList
-{
+class C_EntityList {
 public:
 private:
 	char pad_0x0000[0x40]; //0x0000

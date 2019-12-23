@@ -6,28 +6,23 @@ class C_Inventory {
 private:
 	virtual ~C_Inventory();
 public:
-	bool isFull()
-	{
+	bool isFull() {
 		int fullslots = 0;
-		for (int i = 0; i < 36; i++)
-		{
+		for (int i = 0; i < 36; i++) {
 			if (this->getItemStack(i)->item != nullptr)
 				fullslots++;
 		}
 		if (fullslots == 36) return true;
 		return false;
 	}
-	int getFirstEmptySlot()
-	{
-		for (int i = 0; i < 36; i++)
-		{
+	int getFirstEmptySlot() {
+		for (int i = 0; i < 36; i++) {
 			if (this->getItemStack(i)->item == nullptr)
 				return i;
 		}
 		return -1;
 	}
-	void dropSlot(int slot)
-	{
+	void dropSlot(int slot) {
 		// FillingContainer::dropSlot
 		using drop_t = void(__fastcall*)(C_Inventory*, int, char);
 		static drop_t func = reinterpret_cast<drop_t>(Utils::FindSignature("85 D2 0F 88 ?? ?? ?? ?? 55 56 57 41 54 41 55 41 56 41 57 48"));
@@ -68,8 +63,7 @@ public:
 	C_Inventory* inventory; //0x00A8 
 };
 
-class C_ContainerScreenController
-{
+class C_ContainerScreenController {
 public:
 	void handleAutoPlace(uintptr_t a1, std::string name, int slot) {
 		using ContainerScreenController__autoPlace = __int64(__fastcall*)(C_ContainerScreenController*, uintptr_t, TextHolder, int);
@@ -149,12 +143,10 @@ private:
 	virtual __int64 _sendFlyingItem(__int64 const&, std::string const&, int, std::string const&, int);
 };
 
-class C_CraftingScreenController : public C_ContainerScreenController
-{
+class C_CraftingScreenController : public C_ContainerScreenController {
 
 };
 
-class C_ChestScreenController : public C_ContainerScreenController
-{
+class C_ChestScreenController : public C_ContainerScreenController {
 
 };

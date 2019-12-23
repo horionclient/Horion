@@ -7,13 +7,11 @@
 class C_Packet {
 public:
 	uintptr_t** vTable; //0x0000
-	TextHolder* getName()
-	{
+	TextHolder* getName() {
 		return Utils::CallVFunc<2, TextHolder*>(this, new TextHolder());
 	}
 	template <class T>
-	bool isInstanceOf()
-	{
+	bool isInstanceOf() {
 		T packet;
 		if (packet.vTable == this->vTable)
 			return true;
@@ -22,8 +20,7 @@ public:
 	}
 };
 
-class PlayerAuthInputPacket : public C_Packet
-{
+class PlayerAuthInputPacket : public C_Packet {
 private:
 	char pad_0x0000[0x18]; //0x0008
 public:
@@ -35,8 +32,7 @@ public:
 private:
 	char pad_0x0040[0x20]; //0x0040
 public:
-	PlayerAuthInputPacket()
-	{
+	PlayerAuthInputPacket() {
 		static uintptr_t** PlayerAuthInputPacketVtable = 0x0;
 		if (PlayerAuthInputPacketVtable == 0x0) {
 			uintptr_t sigOffset = Utils::FindSignature("48 8D 15 ?? ?? ?? ?? 48 89 11 48 89 79 ?? 48 89 79 ?? 89 79 ?? 48 89 79 ?? 48 89 79 ??");
@@ -48,8 +44,7 @@ public:
 		memset(this, 0, sizeof(PlayerAuthInputPacket)); // Avoid overwriting vtable
 		vTable = PlayerAuthInputPacketVtable;
 	}
-	PlayerAuthInputPacket(__int64 entityRuntimeId,vec3_t pos,float pitch,float yaw,float yawUnused)
-	{
+	PlayerAuthInputPacket(__int64 entityRuntimeId,vec3_t pos,float pitch,float yaw,float yawUnused) {
 		static uintptr_t** PlayerAuthInputPacketVtable = 0x0;
 		if (PlayerAuthInputPacketVtable == 0x0) {
 			uintptr_t sigOffset = Utils::FindSignature("48 8D 15 ?? ?? ?? ?? 48 89 11 48 89 79 ?? 48 89 79 ?? 89 79 ?? 48 89 79 ?? 48 89 79 ??");
@@ -68,13 +63,11 @@ public:
 	}
 };
 
-class C_ActorFallPacket : public C_Packet
-{
+class C_ActorFallPacket : public C_Packet {
 private:
 	char pad_0x8[0x20];//0x8
 public:
-	C_ActorFallPacket()
-	{
+	C_ActorFallPacket() {
 		static uintptr_t** ActorFallPacketVtable = 0x0;
 		if (ActorFallPacketVtable == 0x0) {
 			uintptr_t sigOffset = Utils::FindSignature("48 8D 0D ?? ?? ?? ?? 48 89 4D ?? 48 89 45 EF F3 44 0F 11 45 F7 88 5D FB");
@@ -91,11 +84,9 @@ public:
 	bool isInVoid;
 };
 
-class C_MobEquipmentPacket : public C_Packet
-{
+class C_MobEquipmentPacket : public C_Packet {
 public:
-	C_MobEquipmentPacket()
-	{
+	C_MobEquipmentPacket() {
 		static uintptr_t** MobEquipmentPacketVtable = 0x0;
 		if (MobEquipmentPacketVtable == 0x0) {
 			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 48 89 51 ?? 48 83 C1 28 49 8B D0");
@@ -107,8 +98,7 @@ public:
 		memset(this, 0, sizeof(C_MobEquipmentPacket)); // Avoid overwriting vtable
 		vTable = MobEquipmentPacketVtable;
 	}
-	C_MobEquipmentPacket(__int64 entityRuntimeId,C_ItemStack& item, int hotbarSlot, int inventorySlot)
-	{
+	C_MobEquipmentPacket(__int64 entityRuntimeId,C_ItemStack& item, int hotbarSlot, int inventorySlot) {
 		memset(this, 0x0, sizeof(C_MobEquipmentPacket));
 		using MobEquimentPacketConstructor_t = void(__fastcall*)(C_MobEquipmentPacket*,__int64, C_ItemStack&, int, int, char);
 		static MobEquimentPacketConstructor_t MobEquimentPacketConstructor = reinterpret_cast<MobEquimentPacketConstructor_t>(Utils::FindSignature("48 89 4C 24 08 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 48 41 8B D9 48 8B F9 C7 41 ?? ?? ?? ?? ?? C7 41 ?? ?? ?? ?? ?? C6 41 ?? 00 48 ?? ?? ?? ?? ?? ?? ?? 48 8D 05 ?? ?? ?? ??"));
@@ -131,8 +121,7 @@ private:
 	char unknown1;
 };
 
-class C_InventoryTransactionPacket : public C_Packet
-{
+class C_InventoryTransactionPacket : public C_Packet {
 public:
 	C_InventoryTransactionPacket() {
 		static uintptr_t** InventoryTransactionPacketVtable = 0x0;
@@ -156,8 +145,7 @@ public:
 };
 
 
-class C_TextPacket : public C_Packet
-{
+class C_TextPacket : public C_Packet {
 public:
 	C_TextPacket() {
 		static uintptr_t** textPacketVtable = 0x0;
@@ -192,8 +180,7 @@ public:
 #pragma pack(push,8)
 
 __declspec(align(8))
-class C_MovePlayerPacket : public C_Packet
-{
+class C_MovePlayerPacket : public C_Packet {
 public:
 	C_MovePlayerPacket() {
 		static uintptr_t** movePlayerPacketVtable = 0x0;

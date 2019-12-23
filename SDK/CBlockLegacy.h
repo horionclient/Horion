@@ -24,8 +24,7 @@ public:
 	float color[4];
 };
 
-class C_BlockLegacy
-{
+class C_BlockLegacy {
 public:
 	uintptr_t** Vtable; //0x0000
 	TextHolder tileName; // 0x0008
@@ -44,8 +43,7 @@ public:
 	AABB aabb; //0x00C8
 };
 
-class C_Block
-{
+class C_Block {
 private:
 	uintptr_t** vtable;
 public:
@@ -58,8 +56,7 @@ public:
 	inline C_BlockLegacy* toLegacy() { return *blockLegacy; }
 };
 
-class C_BlockSource
-{
+class C_BlockSource {
 public:
 	C_Block* getBlock(const vec3_ti& block) {
 		using getBlock_t = C_Block*(__fastcall*)(C_BlockSource*, const vec3_ti&);

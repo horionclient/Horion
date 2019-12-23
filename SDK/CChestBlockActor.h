@@ -6,8 +6,7 @@
 #include "CEntityList.h"
 
 
-class C_ChestBlockActor
-{
+class C_ChestBlockActor {
 public:
 	uintptr_t** vTable; //0x0000
 private:

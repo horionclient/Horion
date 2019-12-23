@@ -18,8 +18,7 @@ public:
 		memset(this, 0, sizeof(TextHolder));
 	}
 
-	TextHolder(TextHolder const& copy)
-	{
+	TextHolder(TextHolder const& copy) {
 		memset(this, 0, sizeof(TextHolder));
 		textLength = copy.textLength;
 		alignedTextLength = copy.alignedTextLength;
@@ -34,8 +33,7 @@ public:
 		}
 	}
 
-	TextHolder& operator=(TextHolder const& copy)
-	{
+	TextHolder& operator=(TextHolder const& copy) {
 		if (textLength >= 16 && pText != nullptr) {
 			free(pText);
 		}
