@@ -2,7 +2,7 @@
 
 
 
-EjectCommand::EjectCommand() : IMCCommand("eject", "Removes Horion Utility Mod from the game.", "") {
+EjectCommand::EjectCommand() : IMCCommand("eject", "Removes Horion from the game.", "") {
 	registerAlias("uninject");
 }
 
