@@ -108,7 +108,7 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 
 			C_GuiData* guiData = g_Data.getClientInstance()->getGuiData();
 
-			if (guiData != nullptr) guiData->displayClientMessageF("%sHorion Utility Mod is not allowed in Valea Network.", RED);
+			if (guiData != nullptr) guiData->displayClientMessageF("%sHorion is not allowed in Valea Network.", RED);
 
 			isRunning = false;
 			break;
@@ -292,7 +292,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	ExitThread(0);
 }
 
-DWORD WINAPI startCheat(LPVOID lpParam) {
+DWORD WINAPI startMod(LPVOID lpParam) {
 	logF("Starting up...");
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)injectorConnectionThread, lpParam, NULL, NULL);
 	init();
@@ -341,7 +341,7 @@ DllMain(HMODULE hModule,
 {
 	switch (ul_reason_for_call) {
 	case DLL_PROCESS_ATTACH: {
-		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)startCheat, hModule, NULL, NULL);
+		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)startMod, hModule, NULL, NULL);
 		DisableThreadLibraryCalls(hModule);
 	}
 	break;
