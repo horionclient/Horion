@@ -39,6 +39,7 @@ private:
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
 	std::queue<HorionDataPacket> horionToInjectorQueue;
 
+
 	bool injectorConnectionActive = false;
 	const SlimUtils::SlimModule* gameModule = 0;
 	SlimUtils::SlimMem* slimMem;
@@ -65,6 +66,7 @@ public:
 	static void EntityList_tick(C_EntityList * list);
 	static void setHIDController(C_HIDController* Hid);
 	static void setRakNetInstance(C_RakNetInstance* raknet);
+	static TextHolder* getGameVersion();
 
 	inline AccountInformation getAccountInformation() { return this->accountInformation; };
 	inline void setAccountInformation(AccountInformation newAcc) {

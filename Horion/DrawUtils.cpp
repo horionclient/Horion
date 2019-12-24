@@ -90,6 +90,9 @@ void DrawUtils::setColor(float r, float g, float b, float a)
 
 C_Font* DrawUtils::getFont(Fonts font)
 {
+	static bool check = strcmp(GameData::getGameVersion()->getText(),"1.14.0");
+	if (check == 0)
+		return g_Data.getClientInstance()->N0000080D->getOldFont();
 	switch (font) {
 	case Fonts::SMOOTH:
 		return g_Data.getClientInstance()->N0000080D->getTheGoodFontThankYou();

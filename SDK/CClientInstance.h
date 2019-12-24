@@ -42,6 +42,7 @@ private:
 	__int64 unknown;				// 0x0030
 public:
 	C_FontRepository_FontList* fontList;			//0x0038
+	C_FontRepository_FontList* fontList1; //0x0040
 };
 
 class MinecraftGame {
@@ -54,12 +55,20 @@ private:
 public:
 	C_FontRepository* fontRepository; //0x120
 private:
-	char pad_0x128[0xF0]; //0x128
+	char pad_0x128[0x28]; //0x128
+public:
+	C_FontRepository* fontRepository1; //0x150
+private:
+	char pad_0x0158[0xC0]; //0x158
 public:
 	bool canUseKeys;//0x0218
 
 	C_Font* getTheGoodFontThankYou() {
 		return fontRepository->fontList->fontEntries[7].font;
+	};
+
+	C_Font* getOldFont() {
+		return fontRepository1->fontList1->fontEntries[6].font;
 	};
 
 	const bool canUseKeybinds() {

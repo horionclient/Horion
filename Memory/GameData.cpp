@@ -24,6 +24,15 @@ void GameData::retrieveClientInstance()
 	// 1.11.1 : 0x0250A2D0
 }
 
+TextHolder* GameData::getGameVersion()
+{
+	static uintptr_t sigOffset = 0x0;
+	if (sigOffset == 0x0)
+		sigOffset = Utils::FindSignature("48 8D 1D ?? ?? ?? ?? 8B 04 0A 39 05 ?? ?? ?? ?? 0F 8F ?? ?? ?? ?? 4C 8B CB 48 83 3D ?? ?? ?? ?? 10 4C 0F 43 0D ?? ?? ?? ??");
+	int offset = *reinterpret_cast<int*>((sigOffset + 3));
+	return reinterpret_cast<TextHolder*>(sigOffset + offset + 7);
+}
+
 bool GameData::canUseMoveKeys()
 {
 	MinecraftGame* mc = g_Data.clientInstance->minecraftGame;
