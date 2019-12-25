@@ -78,6 +78,7 @@ void ModuleManager::initModules()
 	this->moduleList.push_back(new Derp());
 	this->moduleList.push_back(new PacketLogger());
 	this->moduleList.push_back(new Crasher());
+	this->moduleList.push_back(new CrystalAura());
 
 #ifdef _DEBUG
 	this->moduleList.push_back(new TestModule());
