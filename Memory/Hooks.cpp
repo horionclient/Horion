@@ -1120,49 +1120,46 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 {
 	static auto oFunc = g_Hooks.ConnectionRequest_createHook->GetFastcall<__int64, __int64, __int64, void*, TextHolder*, TextHolder*, __int64, TextHolder*, SkinData*, __int64, __int64, TextHolder*, TextHolder*, TextHolder*, bool, bool, TextHolder*, int, int, int, TextHolder*, bool, TextHolder*, __int64, TextHolder*, TextHolder*, bool, TextHolder*, TextHolder*, bool, TextHolder*>();
 
-#ifdef _DEBUG
+	if (g_Data.allowWIPFeatures()) {
+		logF("Connection Request: InputMode: %i UiProfile: %i GuiScale: %i", inputMode, uiProfile, guiScale);
+		logF("Geometry size: %d", skinGeometryData->getTextLength());
 
-	logF("Connection Request: InputMode: %i UiProfile: %i GuiScale: %i", inputMode, uiProfile, guiScale);
-	logF("Geometry size: %d", skinGeometryData->getTextLength());
-	//Logger::WriteBigLogFileF(skinGeometryData->getTextLength() + 20, "Geometry: %s", skinGeometryData->getText());
-	auto hResourceGeometry = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_TEXT1), "TEXT");
-	auto hMemoryGeometry = LoadResource(g_Data.getDllModule(), hResourceGeometry);
+		auto hResourceGeometry = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_TEXT1), "TEXT");
+		auto hMemoryGeometry = LoadResource(g_Data.getDllModule(), hResourceGeometry);
 
-	auto sizeGeometry = SizeofResource(g_Data.getDllModule(), hResourceGeometry);
-	auto ptrGeometry = LockResource(hMemoryGeometry);
+		auto sizeGeometry = SizeofResource(g_Data.getDllModule(), hResourceGeometry);
+		auto ptrGeometry = LockResource(hMemoryGeometry);
 
-	auto hResourceSteve = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_STEVE), (char*)RT_RCDATA);
-	auto hMemorySteve = LoadResource(g_Data.getDllModule(), hResourceSteve);
+		auto hResourceSteve = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_STEVE), (char*)RT_RCDATA);
+		auto hMemorySteve = LoadResource(g_Data.getDllModule(), hResourceSteve);
 
-	auto sizeSteve = SizeofResource(g_Data.getDllModule(), hResourceSteve);
-	auto ptrSteve = LockResource(hMemorySteve);
+		auto sizeSteve = SizeofResource(g_Data.getDllModule(), hResourceSteve);
+		auto ptrSteve = LockResource(hMemorySteve);
 
-	TextHolder* newGeometryData = new TextHolder(ptrGeometry, sizeGeometry);
-	SkinData* newSkinData = new SkinData();
-	newSkinData->SkinWidth = 128;
-	newSkinData->SkinHeight = 128;
-	newSkinData->skinData = ptrSteve;
-	newSkinData->skinSize = sizeSteve;
-	//Logger::WriteBigLogFileF(newGeometryData->getTextLength() + 20, "Geometry: %s", newGeometryData->getText());
-	TextHolder* newSkinResourcePatch = new TextHolder(Utils::base64_decode("ewogICAiZ2VvbWV0cnkiIDogewogICAgICAiYW5pbWF0ZWRfZmFjZSIgOiAiZ2VvbWV0cnkuYW5pbWF0ZWRfZmFjZV9wZXJzb25hXzRjZGJiZmFjYTI0YTk2OGVfMF8wIiwKICAgICAgImRlZmF1bHQiIDogImdlb21ldHJ5LnBlcnNvbmFfNGNkYmJmYWNhMjRhOTY4ZV8wXzAiCiAgIH0KfQo="));
+		std::unique_ptr<TextHolder> newGeometryData = std::make_unique<TextHolder>(ptrGeometry, sizeGeometry);
+		std::unique_ptr<SkinData> newSkinData = std::make_unique<SkinData>();
+		newSkinData->SkinWidth = 128;
+		newSkinData->SkinHeight = 128;
+		newSkinData->skinData = ptrSteve;
+		newSkinData->skinSize = sizeSteve;
+		
+		std::unique_ptr<TextHolder> newSkinResourcePatch = std::make_unique<TextHolder>(Utils::base64_decode("ewogICAiZ2VvbWV0cnkiIDogewogICAgICAiYW5pbWF0ZWRfZmFjZSIgOiAiZ2VvbWV0cnkuYW5pbWF0ZWRfZmFjZV9wZXJzb25hXzRjZGJiZmFjYTI0YTk2OGVfMF8wIiwKICAgICAgImRlZmF1bHQiIDogImdlb21ldHJ5LnBlcnNvbmFfNGNkYmJmYWNhMjRhOTY4ZV8wXzAiCiAgIH0KfQo="));
 
-	__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, newSkinData, capeData, animatedImageDataArr, newSkinResourcePatch, newGeometryData, skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, thirdPartyName, thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
+		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, newSkinData.get(), capeData, animatedImageDataArr, newSkinResourcePatch.get(), newGeometryData.get(), skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, thirdPartyName, thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
 
-	if(hMemoryGeometry)
-		FreeResource(hMemoryGeometry);
-	if (hMemorySteve)
-		FreeResource(hMemorySteve);
+		if (hMemoryGeometry)
+			FreeResource(hMemoryGeometry);
+		if (hMemorySteve)
+			FreeResource(hMemorySteve);
 
-	newGeometryData->resetWithoutDelete();
-	delete newGeometryData;
-	delete newSkinData;
-	delete newSkinResourcePatch;
-#else
-	__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, skinData, capeData, animatedImageDataArr, skinResourcePatch, skinGeometryData, skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, thirdPartyName, thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
+		newGeometryData->resetWithoutDelete();
 
-#endif
-
-	return res;
+		return res;
+	}
+	else {
+		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, skinData, capeData, animatedImageDataArr, skinResourcePatch, skinGeometryData, skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, thirdPartyName, thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
+		return res;
+	}
 }
 
 void Hooks::InventoryTransactionManager_addAction(C_InventoryTransactionManager* a1, C_InventoryAction* a2)
