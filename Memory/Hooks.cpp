@@ -882,7 +882,6 @@ int Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1) {
 		if (strstr(text, "ore") == NULL)
 			if (strcmp(text, "lava") != NULL)
 				if (strcmp(text, "water") != NULL)
-					if (strcmp(text, "bedrock") != NULL) // lol added bedrock xray from suggestions
 					return 10;
 	}
 	return oFunc(a1);
