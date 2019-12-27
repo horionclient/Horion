@@ -1,20 +1,14 @@
 #include "UnbindCommand.h"
 
-
-
-UnbindCommand::UnbindCommand() : IMCCommand("unbind", "unbind modules", "<module | all>")
-{
+UnbindCommand::UnbindCommand() : IMCCommand("unbind", "unbind modules", "<module | all>") {
 }
 
-
-UnbindCommand::~UnbindCommand()
-{
+UnbindCommand::~UnbindCommand() {
 }
 
-bool UnbindCommand::execute(std::vector<std::string>* args)
-{
+bool UnbindCommand::execute(std::vector<std::string>* args) {
 	assertTrue(args->size() >= 2);
-	std::string moduleName = args->at(1); 
+	std::string moduleName = args->at(1);
 
 	if (moduleName.size() > 0) {
 		IModule* mod = moduleMgr->getModuleByName(moduleName);
@@ -27,22 +21,18 @@ bool UnbindCommand::execute(std::vector<std::string>* args)
 						mod->setKeybind(0x0);
 					}
 					clientMessageF("%sUnbound all modules!", YELLOW);
-				}
-				else {
+				} else {
 					clientMessageF("%sAre you sure? This will unbind %sALL%s%s modules!", RED, BOLD, RESET, RED);
 					clientMessageF("%sUse %s.unbind all force%s to unbind all modules", RED, WHITE, RED);
 				}
-			}
-			else {
+			} else {
 				clientMessageF("%sCould not find module with name: %s", RED, moduleName.c_str());
 			}
-		}
-		else {
+		} else {
 			mod->setKeybind(0x0);
 			clientMessageF("%sSuccessfully unbound %s!", GREEN, mod->getModuleName());
 		}
-	}
-	else {
+	} else {
 		return false;
 	}
 	return true;

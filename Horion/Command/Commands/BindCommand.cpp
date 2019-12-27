@@ -1,21 +1,15 @@
 #include "BindCommand.h"
 
-
-
-BindCommand::BindCommand() : IMCCommand("bind", "Binds modules to specific keys", "<module> <key>")
-{
+BindCommand::BindCommand() : IMCCommand("bind", "Binds modules to specific keys", "<module> <key>") {
 	registerAlias("b");
 }
 
-
-BindCommand::~BindCommand()
-{
+BindCommand::~BindCommand() {
 }
 
-bool BindCommand::execute(std::vector<std::string>* args)
-{
+bool BindCommand::execute(std::vector<std::string>* args) {
 	assertTrue(args->size() >= 3);
-	std::string moduleName = args->at(1); 
+	std::string moduleName = args->at(1);
 	std::string key = args->at(2);
 
 	assertTrue(moduleName.size() > 0);
@@ -33,20 +27,17 @@ bool BindCommand::execute(std::vector<std::string>* args)
 			return true;
 		}
 
-		for(int i = 0; i < 190; i++)
-		{
+		for (int i = 0; i < 190; i++) {
 			const char* haystack = KeyNames[i];
 			size_t len = strlen(needle) + 1;
 			char* haystackLowercase = new char[len];
 			for (int i = 0; i < len; i++)
 				haystackLowercase[i] = tolower(haystack[i]);
 
-			if(strcmp(needle, haystackLowercase) == 0)
-			{
+			if (strcmp(needle, haystackLowercase) == 0) {
 				if (mod == nullptr) {
 					clientMessageF("%sCould not find module with name: %s", RED, moduleName.c_str());
-				}
-				else {
+				} else {
 					mod->setKeybind(i);
 					clientMessageF("%sThe keybind of %s is now '%s'", GREEN, mod->getModuleName(), haystack);
 				}
@@ -59,21 +50,19 @@ bool BindCommand::execute(std::vector<std::string>* args)
 		return true;
 	}
 
-	int keyCode = (int) key.at(0);
-	if (keyCode >= 0x61 && keyCode <= 0x7A) // Convert key to lower case
+	int keyCode = (int)key.at(0);
+	if (keyCode >= 0x61 && keyCode <= 0x7A)  // Convert key to lower case
 		keyCode -= 0x20;
 
 	if (keyCode >= 0x30 && keyCode <= 0x5A) {
 		IModule* mod = moduleMgr->getModuleByName(moduleName);
 		if (mod == nullptr) {
 			clientMessageF("%sCould not find module with name: %s", RED, moduleName.c_str());
-		}
-		else {
+		} else {
 			mod->setKeybind(keyCode);
 			clientMessageF("%sThe Keybind of %s is now '%c'", GREEN, mod->getModuleName(), keyCode);
 		}
-	}
-	else {
+	} else {
 		clientMessageF("%sInvalid Key! Outside of ascii range: %X", RED, keyCode);
 	}
 	return true;

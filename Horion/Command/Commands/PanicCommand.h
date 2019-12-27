@@ -1,8 +1,6 @@
 #pragma once
 #include "ICommand.h"
-class PanicCommand :
-	public IMCCommand
-{
+class PanicCommand : public IMCCommand {
 public:
 	PanicCommand();
 	~PanicCommand();
@@ -10,4 +8,3 @@ public:
 	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
 };
-

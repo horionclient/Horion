@@ -1,8 +1,6 @@
 #include "EnchantCommand.h"
 
-
-EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enchantment> [level] <mode: auto / manual : 1/0>")
-{
+EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enchantment> [level] <mode: auto / manual : 1/0>") {
 	enchantMap["protection"] = 0;
 	enchantMap["fire_protection"] = 1;
 	enchantMap["feather_falling"] = 2;
@@ -39,20 +37,17 @@ EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enc
 	enchantMap["lure"] = 24;
 }
 
-EnchantCommand::~EnchantCommand()
-{
+EnchantCommand::~EnchantCommand() {
 }
 
-bool EnchantCommand::execute(std::vector<std::string>* args)
-{
+bool EnchantCommand::execute(std::vector<std::string>* args) {
 	assertTrue(args->size() > 1);
 
 	int enchantId = 0;
 	int enchantLevel = 32767;
 	bool isAuto = true;
 
-	if (args->at(1) != "all")
-	{
+	if (args->at(1) != "all") {
 		try {
 			// convert string to back to lower case
 			std::string data = args->at(1);
@@ -63,8 +58,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 				enchantId = convertedString->second;
 			else
 				enchantId = assertInt(args->at(1));
-		}
-		catch (int) {
+		} catch (int) {
 			logF("exception while trying to get enchant string");
 			enchantId = assertInt(args->at(1));
 		}
@@ -85,14 +79,12 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	C_InventoryAction* firstAction = nullptr;
 	C_InventoryAction* secondAction = nullptr;
 
-	if (isAuto)
-	{
+	if (isAuto) {
 		{
 			firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, item, nullptr);
 			if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0)
 				secondAction = new C_InventoryAction(0, nullptr, item, 32766, 100);
-			else
-			{
+			else {
 				secondAction = new C_InventoryAction(0, nullptr, item, 507, 99999);
 			}
 			manager->addInventoryAction(*firstAction);
@@ -107,13 +99,11 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 	using saveEnchantsToUserData_t = void(__fastcall*)(C_ItemStack*, void*);
 
 	static getEnchantsFromUserData_t getEnchantsFromUserData = reinterpret_cast<getEnchantsFromUserData_t>(Utils::FindSignature("48 8B C4 55 57 41 54 41 56 41 57 48 8D 68 ?? 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 0F 29 70 C8 4C 8B E2 4C 8B F9 48 89 54 24 ?? 33 F6"));
-	static addEnchant_t              addEnchant = reinterpret_cast<addEnchant_t>(Utils::FindSignature("48 89 5C 24 ?? 48 89 54 24 ?? 57 48 83 EC ?? 45 0F"));
-	static saveEnchantsToUserData_t  saveEnchantsToUserData = reinterpret_cast<saveEnchantsToUserData_t>(Utils::FindSignature("48 8B C4 55 57 41 56 48 8D 68 ?? 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B FA 4C 8B C1 48 8B 41 ?? 48 85 C0 74 25"));
+	static addEnchant_t addEnchant = reinterpret_cast<addEnchant_t>(Utils::FindSignature("48 89 5C 24 ?? 48 89 54 24 ?? 57 48 83 EC ?? 45 0F"));
+	static saveEnchantsToUserData_t saveEnchantsToUserData = reinterpret_cast<saveEnchantsToUserData_t>(Utils::FindSignature("48 8B C4 55 57 41 56 48 8D 68 ?? 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B FA 4C 8B C1 48 8B 41 ?? 48 85 C0 74 25"));
 
-	if (strcmp(args->at(1).c_str(), "all") == 0)
-	{
-		for (int i = 0; i < 38; i++)
-		{
+	if (strcmp(args->at(1).c_str(), "all") == 0) {
+		for (int i = 0; i < 38; i++) {
 			void* EnchantData = malloc(0x60);
 			if (EnchantData != nullptr)
 				memset(EnchantData, 0x0, 0x60);
@@ -122,23 +112,21 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 
 			__int64 enchantPair = ((__int64)enchantLevel << 32) | i;
 
-			if (addEnchant(EnchantData, enchantPair)) { // Upper 4 bytes = level, lower 4 bytes = enchant type
+			if (addEnchant(EnchantData, enchantPair)) {  // Upper 4 bytes = level, lower 4 bytes = enchant type
 				saveEnchantsToUserData(item, EnchantData);
 				__int64 proxy = reinterpret_cast<__int64>(g_Data.getLocalPlayer()->getSupplies());
 				if (!*(uint8_t*)(proxy + 160))
 					(*(void(__fastcall**)(unsigned long long, unsigned long long, C_ItemStack*))(**(unsigned long long**)(proxy + 168) + 64i64))(
 						*(unsigned long long*)(proxy + 168),
 						*(unsigned int*)(proxy + 16),
-						item);// Player::selectItem
+						item);  // Player::selectItem
 
 				g_Data.getLocalPlayer()->sendInventory();
 			}
 			free(EnchantData);
 		}
 		clientMessageF("%sEnchant successful!", GREEN);
-	}
-	else
-	{
+	} else {
 		void* EnchantData = malloc(0x60);
 		if (EnchantData != nullptr)
 			memset(EnchantData, 0x0, 0x60);
@@ -147,27 +135,24 @@ bool EnchantCommand::execute(std::vector<std::string>* args)
 
 		__int64 enchantPair = ((__int64)enchantLevel << 32) | enchantId;
 
-		if (addEnchant(EnchantData, enchantPair)) { // Upper 4 bytes = level, lower 4 bytes = enchant type
+		if (addEnchant(EnchantData, enchantPair)) {  // Upper 4 bytes = level, lower 4 bytes = enchant type
 			saveEnchantsToUserData(item, EnchantData);
 			__int64 proxy = reinterpret_cast<__int64>(g_Data.getLocalPlayer()->getSupplies());
 			if (!*(uint8_t*)(proxy + 160))
 				(*(void(__fastcall**)(unsigned long long, unsigned long long, C_ItemStack*))(**(unsigned long long**)(proxy + 168) + 64i64))(
 					*(unsigned long long*)(proxy + 168),
 					*(unsigned int*)(proxy + 16),
-					item);// Player::selectItem
+					item);  // Player::selectItem
 
 			g_Data.getLocalPlayer()->sendInventory();
 			clientMessageF("%sEnchant successful!", GREEN);
-		}
-		else
+		} else
 			clientMessageF("%sEnchant failed, try using a lower enchant-level", RED);
 
 		free(EnchantData);
 	}
 
-	if (isAuto)
-	{
-		
+	if (isAuto) {
 		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0)
 			firstAction = new C_InventoryAction(0, item, nullptr, 32766, 100);
 		else

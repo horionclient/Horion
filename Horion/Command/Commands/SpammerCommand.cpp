@@ -1,17 +1,13 @@
 #include "SpammerCommand.h"
 
-
-SpammerCommand::SpammerCommand() : IMCCommand("spammer", "Edit spammer delay/text", "<message/delay/bypass/manual> <string/int/bool>")
-{
+SpammerCommand::SpammerCommand() : IMCCommand("spammer", "Edit spammer delay/text", "<message/delay/bypass/manual> <string/int/bool>") {
 	registerAlias("spam");
 }
 
-SpammerCommand::~SpammerCommand()
-{
+SpammerCommand::~SpammerCommand() {
 }
 
-bool SpammerCommand::execute(std::vector<std::string>* args)
-{
+bool SpammerCommand::execute(std::vector<std::string>* args) {
 	assertTrue(g_Data.getLocalPlayer() != nullptr);
 	std::string option = args->at(1);
 	std::transform(option.begin(), option.end(), option.begin(), ::tolower);
@@ -24,29 +20,25 @@ bool SpammerCommand::execute(std::vector<std::string>* args)
 		}
 		std::string text = os.str().substr(1);
 		moduleMgr->getModule<Spammer>()->getMessage() = text;
-		clientMessageF("%sSpammer message set to %s%s%s!", GREEN, GRAY, text.c_str(),GREEN);
+		clientMessageF("%sSpammer message set to %s%s%s!", GREEN, GRAY, text.c_str(), GREEN);
 		return true;
-	}
-	else if (option == "delay") {
+	} else if (option == "delay") {
 		int delay = assertInt(args->at(2));
 		if (delay < 1) {
 			clientMessageF("%sDelay needs to be 1 or more!", RED);
 			return true;
-		}
-		else {
+		} else {
 			moduleMgr->getModule<Spammer>()->getDelay() = delay;
 			return true;
 		}
-	}
-	else if (option == "bypass") {
+	} else if (option == "bypass") {
 		std::string data = args->at(2);
 		std::transform(data.begin(), data.end(), data.begin(), ::tolower);
 		bool state = (data == "true") ? true : false;
 		moduleMgr->getModule<Spammer>()->getBypass() = state;
 		clientMessageF("%sBypass set to %s%s%s!", GREEN, GRAY, state ? "true" : "false", GREEN);
 		return true;
-	}
-	else if (option == "manual") {
+	} else if (option == "manual") {
 		int times = assertInt(args->at(2));
 		std::ostringstream os;
 		for (int i = 3; i < args->size(); i++) {
