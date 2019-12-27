@@ -7,7 +7,8 @@ CRITICAL_SECTION loggerLock;
 CRITICAL_SECTION vecLock;
 std::vector<TextForPrint> stringPrintVector = std::vector<TextForPrint>();
 
-std::wstring Logger::GetRoamingFolderPath() {
+std::wstring Logger::GetRoamingFolderPath()
+{
 	ComPtr<IApplicationDataStatics> appDataStatics;
 	auto hr = RoGetActivationFactory(HStringReference(L"Windows.Storage.ApplicationData").Get(), __uuidof(appDataStatics), &appDataStatics);
 	if (FAILED(hr)) throw std::runtime_error("Failed to retrieve application data statics");
@@ -34,7 +35,8 @@ std::wstring Logger::GetRoamingFolderPath() {
 
 }
 
-void Logger::WriteLogFileF(const char * fmt, ...) {
+void Logger::WriteLogFileF(const char * fmt, ...)
+{
 	if (!loggerActive)
 		return;
 #ifdef _DEBUG
@@ -59,7 +61,8 @@ void Logger::WriteLogFileF(const char * fmt, ...) {
 	else EnterCriticalSection(&loggerLock);
 
 	pFile = _fsopen(logPath, "a", _SH_DENYWR); // Open File with DENY_WRITE so other programs can only read stuff from log
-	if (pFile != nullptr) {
+	if (pFile != nullptr)
+	{
 		std::stringstream ssTime;
 		Utils::ApplySystemTime(&ssTime);
 
@@ -89,7 +92,8 @@ void Logger::WriteLogFileF(const char * fmt, ...) {
 #endif
 }
 
-void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...) {
+void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...)
+{
 	if (!loggerActive)
 		return;
 #ifdef _DEBUG
@@ -114,7 +118,8 @@ void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...) {
 	else EnterCriticalSection(&loggerLock);
 
 	pFile = _fsopen(logPath, "a", _SH_DENYWR); // Open File with DENY_WRITE so other programs can only read stuff from log
-	if (pFile != nullptr) {
+	if (pFile != nullptr)
+	{
 		std::stringstream ssTime;
 		Utils::ApplySystemTime(&ssTime);
 
@@ -145,15 +150,18 @@ void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...) {
 #endif
 }
 
-std::vector<TextForPrint>* Logger::GetTextToPrint() {
+std::vector<TextForPrint>* Logger::GetTextToPrint()
+{
 	return &stringPrintVector;
 }
 
-CRITICAL_SECTION* Logger::GetTextToPrintSection() {
+CRITICAL_SECTION* Logger::GetTextToPrintSection()
+{
 	return &vecLock;
 }
 
-void Logger::Disable() {
+void Logger::Disable()
+{
 	
 	loggerActive = false;
 #ifdef _DEBUG

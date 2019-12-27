@@ -2,14 +2,17 @@
 
 
 
-UnbindCommand::UnbindCommand() : IMCCommand("unbind", "unbind modules", "<module | all>") {
+UnbindCommand::UnbindCommand() : IMCCommand("unbind", "unbind modules", "<module | all>")
+{
 }
 
 
-UnbindCommand::~UnbindCommand() {
+UnbindCommand::~UnbindCommand()
+{
 }
 
-bool UnbindCommand::execute(std::vector<std::string>* args) {
+bool UnbindCommand::execute(std::vector<std::string>* args)
+{
 	assertTrue(args->size() >= 2);
 	std::string moduleName = args->at(1); 
 

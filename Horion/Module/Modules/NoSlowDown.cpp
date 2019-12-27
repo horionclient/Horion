@@ -2,18 +2,22 @@
 
 
 
-NoSlowDown::NoSlowDown() : IModule(0x0, Category::MOVEMENT, "Don't get slowed down when blocking or eating") {
+NoSlowDown::NoSlowDown() : IModule(0x0, Category::MOVEMENT, "Don't get slowed down when blocking or eating")
+{
 }
 
 
-NoSlowDown::~NoSlowDown() {
+NoSlowDown::~NoSlowDown()
+{
 }
 
-const char* NoSlowDown::getModuleName() {
+const char* NoSlowDown::getModuleName()
+{
 	return ("NoSlowDown");
 }
 
-void NoSlowDown::onEnable() {
+void NoSlowDown::onEnable()
+{
 	if (opcode == 0)
 		opcode = reinterpret_cast<uint8_t*>(Utils::FindSignature("75 2F 4D 85 FF 75 2A"));
 
@@ -31,7 +35,8 @@ void NoSlowDown::onEnable() {
 	
 }
 
-void NoSlowDown::onDisable() {
+void NoSlowDown::onDisable()
+{
 	if (opcode == 0)
 		opcode = reinterpret_cast<uint8_t*>(Utils::FindSignature("75 2F 4D 85 FF 75 2A"));
 

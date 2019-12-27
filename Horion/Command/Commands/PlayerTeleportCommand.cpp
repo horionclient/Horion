@@ -2,16 +2,19 @@
 
 
 
-PlayerTeleportCommand::PlayerTeleportCommand() : IMCCommand("playertp", "Teleports to player's coordinates. Only works if the player is in your render distance!", "<playerName>") {
+PlayerTeleportCommand::PlayerTeleportCommand() : IMCCommand("playertp", "Teleports to players coordinates", "<NameOfThePlayer>")
+{
 
 }
 
 
-PlayerTeleportCommand::~PlayerTeleportCommand() {
+PlayerTeleportCommand::~PlayerTeleportCommand()
+{
 }
 
 
-bool PlayerTeleportCommand::execute(std::vector<std::string>* args) {
+bool PlayerTeleportCommand::execute(std::vector<std::string>* args)
+{
 	assertTrue(g_Data.getClientInstance()->getLocalPlayer() != nullptr);
 	assertTrue(args->size() > 1); // .playertp <player>
 	std::string nameOfPlayer = args->at(1);
@@ -26,12 +29,13 @@ bool PlayerTeleportCommand::execute(std::vector<std::string>* args) {
 	vec3_t pos;
 
 	if (listSize > 5000) {
-		logF("Entity list bigger than expected! %i", listSize);
+		logF("Big ent list wtf men %i", listSize);
 		return true;
 	}
 	std::string playerName;
 	//Loop through all our players and retrieve their information
-	for (size_t i = 0; i < listSize; i++) {
+	for (size_t i = 0; i < listSize; i++)
+	{
 		C_Entity* currentEntity = entList->get(i);
 
 		std::string name(currentEntity->getNameTag()->getText());
@@ -52,7 +56,8 @@ bool PlayerTeleportCommand::execute(std::vector<std::string>* args) {
 		break;
 
 	}
-	if (pos.iszero()) {
+	if (pos.iszero())
+	{
 		clientMessageF("[%sHorion%s] %sCouldn't find player: %s!",GOLD,WHITE,RED,nameOfPlayer.c_str());
 		return true;
 	}

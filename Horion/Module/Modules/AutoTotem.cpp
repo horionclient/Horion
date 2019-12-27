@@ -2,32 +2,37 @@
 
 
 
-AutoTotem::AutoTotem() : IModule(0x0, Category::PLAYER, "Automatically puts Totems into your offhand") {
+AutoTotem::AutoTotem() : IModule(0x0, Category::PLAYER, "Automatically puts Totems into your offhand")
+{
 }
 
 
-AutoTotem::~AutoTotem() {
+AutoTotem::~AutoTotem()
+{
 }
 
-const char* AutoTotem::getModuleName() {
+const char* AutoTotem::getModuleName()
+{
 	return ("AutoTotem");
 }
 
 void AutoTotem::onTick(C_GameMode* gm) {
 	
-	if (g_Data.getLocalPlayer() != nullptr)  {
+	if (g_Data.getLocalPlayer() != nullptr) 
+	{
 		C_ItemStack* i = g_Data.getLocalPlayer()->getEquippedTotem();
 
-		if (i->item == NULL && delay > 3)  {
+		if (i->item == NULL && delay > 3) 
+		{
 			C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
-			C_Inventory* item = supplies->inventory;
+			C_Inventory* a = supplies->inventory;
 			for (int i = 0; i < 36; i++) {
-				C_ItemStack* itemStack = item->getItemStack(i);
-				if (itemStack->item != NULL) {
-					C_Item* totemItem = *itemStack->item;
-					if (totemItem->itemId == 450) {
+				C_ItemStack* test = a->getItemStack(i);
+				if (test->item != NULL) {
+					C_Item* yikes = *test->item;
+					if (yikes->itemId == 450) {
 						g_Data.getLocalPlayer()->consumeTotem();
-						g_Data.getLocalPlayer()->setOffhandSlot(itemStack);
+						g_Data.getLocalPlayer()->setOffhandSlot(test);
 					}
 
 				}

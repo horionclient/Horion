@@ -2,7 +2,8 @@
 
 
 
-Killaura::Killaura() : IModule('P', Category::COMBAT, "Attacks entities around you automatically") {
+Killaura::Killaura() : IModule('P', Category::COMBAT, "Attacks entities around you automatically")
+{
 	this->registerBoolSetting("MultiAura", &this->isMulti, this->isMulti);
 	this->registerBoolSetting("MobAura", &this->isMobAura, this->isMobAura);
 	this->registerFloatSetting("range", &this->range, this->range, 2.f, 20.f);
@@ -11,10 +12,12 @@ Killaura::Killaura() : IModule('P', Category::COMBAT, "Attacks entities around y
 }
 
 
-Killaura::~Killaura() {
+Killaura::~Killaura()
+{
 }
 
-const char* Killaura::getModuleName() {
+const char* Killaura::getModuleName()
+{
 	return ("Killaura");
 }
 
@@ -34,21 +37,24 @@ void findEntity(C_Entity* currentEntity,bool isRegularEntitie) {
 		if (currentEntity->timeSinceDeath > 0 || currentEntity->damageTime >= 7)
 			return;
 
-		if (killauraMod->isMobAura && !isRegularEntitie) {
+		if (killauraMod->isMobAura && !isRegularEntitie)
+		{
 			if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)
 				return;
 
 			if (!g_Data.getLocalPlayer()->canAttack(currentEntity, false))
 				return;
 		}
-		else {
+		else 
+		{
 			if (!Target::isValidTarget(currentEntity))
 				return;
 		}
 		
 		float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
 
-		if (dist < killauraMod->range) {
+		if (dist < killauraMod->range)
+		{
 			targetList.push_back(currentEntity);
 		}
 	}
@@ -60,9 +66,11 @@ void Killaura::findWeapon() {
 	C_Inventory* inv = supplies->inventory;
 	float damage = 0;
 	int slot = supplies->selectedHotbarSlot;
-	for (int n = 0; n < 9; n++) {
+	for (int n = 0; n < 9; n++)
+	{
 		C_ItemStack* stack = inv->getItemStack(n);
-		if (stack->item != NULL) {
+		if (stack->item != NULL)
+		{
 			float currentDamage = stack->getAttackingDamageWithEnchants();
 			if (currentDamage > damage) {
 				damage = currentDamage;
@@ -73,7 +81,8 @@ void Killaura::findWeapon() {
 	supplies->selectedHotbarSlot = slot;
 }
 
-void Killaura::onTick(C_GameMode* gm) {
+void Killaura::onTick(C_GameMode* gm)
+{
 	if (!g_Data.isInGame())
 		return;
 
@@ -105,13 +114,16 @@ void Killaura::onTick(C_GameMode* gm) {
 	}
 }
 
-void Killaura::onEnable() {
+void Killaura::onEnable()
+{
 	if (g_Data.getLocalPlayer() == nullptr) 
 		this->setEnabled(false);
 }
 
-void Killaura::onSendPacket(C_Packet* packet) {
-	if (packet->isInstanceOf<C_MovePlayerPacket>()) {
+void Killaura::onSendPacket(C_Packet* packet)
+{
+	if (packet->isInstanceOf<C_MovePlayerPacket>())
+	{
 		vec2_t angle = this->angle;
 		if (this->hasTarget) {
 			C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);

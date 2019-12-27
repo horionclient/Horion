@@ -2,16 +2,19 @@
 
 
 
-FriendListCommand::FriendListCommand() : IMCCommand("friend", "Add/Remove friendly players", "<add/remove>") {
+FriendListCommand::FriendListCommand() : IMCCommand("friend", "Add/Remove friendly players", "<add/remove>")
+{
 	registerAlias("friendlist");
 }
 
 
-FriendListCommand::~FriendListCommand() {
+FriendListCommand::~FriendListCommand()
+{
 }
 
 
-bool FriendListCommand::execute(std::vector<std::string>* args) {
+bool FriendListCommand::execute(std::vector<std::string>* args)
+{
 	assertTrue(args->size() >= 3);
 	std::string subcommand = args->at(1);
 	std::transform(subcommand.begin(), subcommand.end(), subcommand.begin(), ::tolower);
@@ -22,13 +25,14 @@ bool FriendListCommand::execute(std::vector<std::string>* args) {
 	size_t listSize = entList->getListSize();
 
 	if (listSize > 10000) {
-		logF("Entity list larger than expected. %i", listSize);
+		logF("Big ent list wtf men %i", listSize);
 		return true;
 	}
 
 	std::string playerName;
 	//Loop through all our players and retrieve their information
-	for (size_t i = 0; i < listSize; i++) {
+	for (size_t i = 0; i < listSize; i++)
+	{
 		C_Entity* currentEntity = entList->get(i);
 
 		std::string currentEntityName(currentEntity->getNameTag()->getText());
@@ -48,7 +52,8 @@ bool FriendListCommand::execute(std::vector<std::string>* args) {
 		break;
 
 	}
-	if (playerName.size() <= 1)  {
+	if (playerName.size() <= 1) 
+	{
 		clientMessageF("[%sHorion%s] %sCouldn't find player: %s!", GOLD, WHITE, RED, searchedName.c_str());
 		return true;
 	}
@@ -59,7 +64,8 @@ bool FriendListCommand::execute(std::vector<std::string>* args) {
 		return true;
 
 	}
-	else if (subcommand == "remove") {
+	else if (subcommand == "remove")
+	{
 		if (FriendList::removePlayer(searchedName)) {
 			clientMessageF("[%sHorion%s] %s%s has been removed from your friendlist!", GOLD, WHITE, GREEN, searchedName.c_str());
 			return true;

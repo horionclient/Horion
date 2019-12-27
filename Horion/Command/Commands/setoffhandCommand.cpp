@@ -4,15 +4,18 @@
 
 
 
-setoffhandCommand::setoffhandCommand() : IMCCommand("setoffhand", "Puts any item into offhand", "<ItemName> <count> <itemData>") {
+setoffhandCommand::setoffhandCommand() : IMCCommand("setoffhand", "Puts any item into offhand", "<ItemName> <count> <itemData>")
+{
 	registerAlias("soh");
 }
 
 
-setoffhandCommand::~setoffhandCommand() {
+setoffhandCommand::~setoffhandCommand()
+{
 }
 
-bool setoffhandCommand::execute(std::vector<std::string>* args) {
+bool setoffhandCommand::execute(std::vector<std::string>* args)
+{
 	assertTrue(args->size() > 2);
 	int itemId = 0;
 	char count = static_cast<char>(assertInt(args->at(2)));
@@ -20,17 +23,19 @@ bool setoffhandCommand::execute(std::vector<std::string>* args) {
 	if (args->size() > 3)
 		itemData = static_cast<char>(assertInt(args->at(3)));
 
-	try {
+	try
+	{
 		itemId = std::stoi(args->at(1));
 	}
-	catch (const std::invalid_argument&) {
+	catch (const std::invalid_argument&)
+	{
 	}
 
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
 	C_BlockLegacy* blockItem = nullptr;
 	C_Item* itemItem = nullptr;
-	C_ItemStack* stackItem = nullptr;
+	C_ItemStack* yot = nullptr;
 	auto transactionManager = g_Data.getLocalPlayer()->getTransactionManager();
 
 	static uintptr_t** VanillaBlocks__mDirtPtr = 0x0;
@@ -55,59 +60,71 @@ bool setoffhandCommand::execute(std::vector<std::string>* args) {
 			logF("VanillaItems sig not working!!!");
 	}
 
-	if (itemId == 0) {
-		if (VanillaBlocks__mDirtPtr != nullptr) {
-			for (int i = 0; i < 465; i++) {
+	if (itemId == 0)
+	{
+		if (VanillaBlocks__mDirtPtr != nullptr)
+		{
+			for (int i = 0; i < 465; i++)
+			{
 				if (VanillaBlocks__mDirtPtr[i] != nullptr &&
-					strcmp(reinterpret_cast<C_BlockLegacy*>(VanillaBlocks__mDirtPtr[i][0])->name.getText(), args->at(1).c_str()) == 0) {
+					strcmp(reinterpret_cast<C_BlockLegacy*>(VanillaBlocks__mDirtPtr[i][0])->name.getText(), args->at(1).c_str()) == 0)
+				{
 					blockItem = reinterpret_cast<C_BlockLegacy*>(VanillaBlocks__mDirtPtr[i][0]);
 					break;
 				}
 			}
 		}
 
-		if (VanillaItems__mShovel_ironPtr != nullptr && blockItem == nullptr) {
-			for (int i = 0; i < 234; i++) {
+		if (VanillaItems__mShovel_ironPtr != nullptr && blockItem == nullptr)
+		{
+			for (int i = 0; i < 234; i++)
+			{
 				if (VanillaItems__mShovel_ironPtr[i] != nullptr &&
-					strcmp(reinterpret_cast<C_Item*>(VanillaItems__mShovel_ironPtr[i][0])->name.getText(), args->at(1).c_str()) == 0) {
+					strcmp(reinterpret_cast<C_Item*>(VanillaItems__mShovel_ironPtr[i][0])->name.getText(), args->at(1).c_str()) == 0)
+				{
 					itemItem = reinterpret_cast<C_Item*>(VanillaItems__mShovel_ironPtr[i][0]);
 					break;
 				}
 			}
 		}
-		if (blockItem == nullptr && itemItem == nullptr) {
+		if (blockItem == nullptr && itemItem == nullptr)
+		{
 			clientMessageF("%sInvalid Item!", RED);
 			return true;
 		}
-		else if (blockItem != nullptr && stackItem == nullptr) {
+		else if (blockItem != nullptr && yot == nullptr)
+		{
 			if (itemData == 0)
-				stackItem = new C_ItemStack(*blockItem, count);
-			else {
+				yot = new C_ItemStack(*blockItem, count);
+			else
+			{
 				void* ItemPtr = malloc(0x8);
 				C_Item*** cStack = getItemFromId(ItemPtr, blockItem->blockId);
-				stackItem = new C_ItemStack(***cStack, count, itemData);
+				yot = new C_ItemStack(***cStack, count, itemData);
 				free(ItemPtr);
 			}
 		}
-		else if (itemItem != nullptr && stackItem == nullptr)
-			stackItem = new C_ItemStack(*itemItem, count, itemData);
+		else if (itemItem != nullptr && yot == nullptr)
+			yot = new C_ItemStack(*itemItem, count, itemData);
 	}
-	else {
+	else
+	{
 		void* ItemPtr = malloc(0x8);
 		C_Item*** cStack = getItemFromId(ItemPtr, itemId);
-		if (**cStack == NULL) {
+		if (**cStack == NULL)
+		{
 			clientMessageF("%sInvalid item ID!", RED);
 			return true;
 		}
-		stackItem = new C_ItemStack(***cStack, count, itemData);
+		yot = new C_ItemStack(***cStack, count, itemData);
 		free(ItemPtr);
 	}
 
-	if (stackItem != nullptr)
-		stackItem->count = count;
+	if (yot != nullptr)
+		yot->count = count;
 
 
-	g_Data.getLocalPlayer()->setOffhandSlot(stackItem);
+	g_Data.getLocalPlayer()->setOffhandSlot(yot);
 	clientMessageF("%sSet item as offhand!", BLUE);
 	return true;
 }

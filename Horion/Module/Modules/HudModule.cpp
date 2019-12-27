@@ -1,6 +1,7 @@
 #include "HudModule.h"
 
-HudModule::HudModule() : IModule(0x0, Category::VISUAL, "Displays ArrayList/TabGUI") {
+HudModule::HudModule() : IModule(0x0, Category::VISUAL, "Displays ArrayList/TabGUI")
+{
 	registerBoolSetting("TabGui", &this->tabgui, this->tabgui);
 	registerBoolSetting("ArrayList", &this->arraylist, this->arraylist);
 	registerBoolSetting("ClickToggle", &this->clickToggle, this->clickToggle);
@@ -9,9 +10,11 @@ HudModule::HudModule() : IModule(0x0, Category::VISUAL, "Displays ArrayList/TabG
 	registerBoolSetting("Show Keybinds", &this->keybinds, this->keybinds);
 }
 
-HudModule::~HudModule() {
+HudModule::~HudModule()
+{
 }
 
-const char* HudModule::getModuleName() {
+const char* HudModule::getModuleName()
+{
 	return ("HUD");
 }

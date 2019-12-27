@@ -2,14 +2,17 @@
 
 
 
-Phase::Phase() : IModule('I', Category::MOVEMENT, "Walk through walls") {
+Phase::Phase() : IModule('I', Category::MOVEMENT, "Walk through walls")
+{
 }
 
 
-Phase::~Phase() {
+Phase::~Phase()
+{
 }
 
-const char* Phase::getModuleName() {
+const char* Phase::getModuleName()
+{
 	return ("Phase");
 }
 

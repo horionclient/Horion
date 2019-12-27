@@ -2,20 +2,25 @@
 
 
 
-HideCommand::HideCommand() : IMCCommand("hide", "Hides Horion.", "") {
+HideCommand::HideCommand() : IMCCommand("hide", "hide the cheat", "")
+{
 }
 
 
-HideCommand::~HideCommand() {
+HideCommand::~HideCommand()
+{
 }
 
-bool HideCommand::execute(std::vector<std::string>* args) {
+bool HideCommand::execute(std::vector<std::string>* args)
+{
 	GameData::hide();
-	if (GameData::shouldHide()) {
-		clientMessageF("[%sHorion%s] %sHorion has been hidden.", GOLD, WHITE, GREEN);
+	if (GameData::shouldHide())
+	{
+		clientMessageF("[%sHorion%s] %sCheat Hidden", GOLD, WHITE, GREEN);
 	}
-	else {
-		clientMessageF("[%sHorion%s] %sHorion is now visible.", GOLD, WHITE, GREEN);
+	else
+	{
+		clientMessageF("[%sHorion%s] %sCheat is now visible", GOLD, WHITE, GREEN);
 	}
 	return true;
 }

@@ -7,7 +7,8 @@ void Target::init(C_LocalPlayer** cl) {
 	localPlayer = cl;
 }
 
-bool Target::isValidTarget(C_Entity* ent) {
+bool Target::isValidTarget(C_Entity* ent)
+{
 	if (ent == NULL)
 		return false;
 

@@ -2,7 +2,8 @@
 
 
 
-IModule::IModule(int key, Category c, const char* tooltip) {
+IModule::IModule(int key, Category c, const char* tooltip)
+{
 	this->keybind = key;
 	this->category = c;
 	this->tooltip = tooltip;
@@ -10,7 +11,8 @@ IModule::IModule(int key, Category c, const char* tooltip) {
 	this->registerBoolSetting(std::string("enabled"), &this->enabled, false);
 }
 
-void IModule::registerFloatSetting(std::string name, float* floatPtr, float defaultValue, float minValue, float maxValue) {
+void IModule::registerFloatSetting(std::string name, float* floatPtr, float defaultValue, float minValue, float maxValue)
+{
 #ifdef DEBUG
 	if (minValue > maxValue)
 		__debugbreak(); // Minimum value is bigger than maximum value
@@ -41,7 +43,8 @@ void IModule::registerFloatSetting(std::string name, float* floatPtr, float defa
 	settings.push_back(setting); // Add to list
 }
 
-void IModule::registerIntSetting(std::string name, int * intPtr, int defaultValue, int minValue, int maxValue) {
+void IModule::registerIntSetting(std::string name, int * intPtr, int defaultValue, int minValue, int maxValue)
+{
 #ifdef DEBUG
 	if (minValue > maxValue)
 		__debugbreak(); // Minimum value is bigger than maximum value
@@ -72,7 +75,8 @@ void IModule::registerIntSetting(std::string name, int * intPtr, int defaultValu
 	settings.push_back(setting); // Add to list
 }
 
-void IModule::registerBoolSetting(std::string name, bool * boolPtr, bool defaultValue) {
+void IModule::registerBoolSetting(std::string name, bool * boolPtr, bool defaultValue)
+{
 	SettingEntry* setting = new SettingEntry();
 	setting->valueType = ValueType::BOOL_T;
 
@@ -87,18 +91,22 @@ void IModule::registerBoolSetting(std::string name, bool * boolPtr, bool default
 	settings.push_back(setting); // Add to list
 }
 
-IModule::~IModule() {
+IModule::~IModule()
+{
 }
 
-const char* IModule::getModuleName() {
+const char* IModule::getModuleName()
+{
 	return "Module";
 }
 
-const char* IModule::getRawModuleName() {
+const char* IModule::getRawModuleName()
+{
 	return getModuleName();
 }
 
-int IModule::getKeybind() {
+int IModule::getKeybind()
+{
 	return this->keybind;
 }
 
@@ -106,14 +114,17 @@ void IModule::setKeybind(int key) {
 	this->keybind = key;
 }
 
-bool IModule::allowAutoStart() {
+bool IModule::allowAutoStart()
+{
 	return true;
 }
 
-void IModule::onTick(C_GameMode*) {
+void IModule::onTick(C_GameMode*)
+{
 }
 
-void IModule::onKeyUpdate(int key, bool isDown) {
+void IModule::onKeyUpdate(int key, bool isDown)
+{
 	if (key == getKeybind()) {
 		if (isFlashMode())
 			setEnabled(isDown);
@@ -123,22 +134,28 @@ void IModule::onKeyUpdate(int key, bool isDown) {
 		
 }
 
-void IModule::onEnable() {
+void IModule::onEnable()
+{
 }
 
-void IModule::onDisable() {
+void IModule::onDisable()
+{
 }
 
-void IModule::onPreRender() {
+void IModule::onPreRender()
+{
 }
 
-void IModule::onPostRender() {
+void IModule::onPostRender()
+{
 }
 
-void IModule::onSendPacket(C_Packet*) {
+void IModule::onSendPacket(C_Packet*)
+{
 }
 
-void IModule::onLoadConfig(json * conf) {
+void IModule::onLoadConfig(json * conf)
+{
 	if (conf->contains(this->getRawModuleName())) {
 		auto obj = conf->at(this->getRawModuleName());
 		if (obj.is_null())
@@ -170,7 +187,7 @@ void IModule::onLoadConfig(json * conf) {
 						sett->value->text = &value.get<std::string>();
 						break;
 					}
-					sett->isValueValid();
+					sett->makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt();
 					continue;
 				}
 				catch (std::exception e) {
@@ -185,7 +202,8 @@ void IModule::onLoadConfig(json * conf) {
 
 #pragma warning( push )
 #pragma warning( disable : 26444 )
-void IModule::onSaveConfig(json * conf) {
+void IModule::onSaveConfig(json * conf)
+{
 	std::string modName = getRawModuleName();
 	if (conf->contains(modName.c_str()))
 		conf->erase(modName.c_str());
@@ -221,12 +239,14 @@ void IModule::onSaveConfig(json * conf) {
 
 #pragma warning( pop ) 
 
-bool IModule::isFlashMode() {
+bool IModule::isFlashMode()
+{
 	return false;
 }
 
 
-void IModule::setEnabled(bool enabled) {
+void IModule::setEnabled(bool enabled)
+{
 	if (this->enabled != enabled) {
 		this->enabled = enabled;
 #ifndef _DEBUG
@@ -241,11 +261,13 @@ void IModule::setEnabled(bool enabled) {
 	}
 }
 
-void IModule::toggle() {
+void IModule::toggle()
+{
 	setEnabled(!this->enabled);
 }
 
-bool IModule::isEnabled() {
+bool IModule::isEnabled()
+{
 	return this->enabled;
 }
 

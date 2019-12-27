@@ -4,10 +4,12 @@ Hooks    g_Hooks;
 bool isTicked = false;
 //#define TEST_DEBUG
 
-void Hooks::Init() {
-	logF("Setting up Hooks..."); {
+void Hooks::Init()
+{
+	logF("Setting up Hooks...");
 
-		// Vtables
+	// Vtables
+	{
 		// GameMode::vtable
 		{
 			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 33 D2 48 C7 41 ??");
@@ -180,7 +182,8 @@ void Hooks::Restore()
 	Sleep(10);
 }
 
-void Hooks::GameMode_tick(C_GameMode* _this) {
+void Hooks::GameMode_tick(C_GameMode* _this)
+{
 	static auto oTick = g_Hooks.GameMode_tickHook->GetFastcall<void, C_GameMode*>();
 	oTick(_this);
 
@@ -190,7 +193,8 @@ void Hooks::GameMode_tick(C_GameMode* _this) {
 	}
 }
 
-void Hooks::SurvivalMode_tick(C_GameMode* _this) {
+void Hooks::SurvivalMode_tick(C_GameMode* _this)
+{
 	static auto oTick = g_Hooks.SurvivalMode_tickHook->GetFastcall<void, C_GameMode*>();
 	oTick(_this);
 	GameData::updateGameData(_this);
@@ -199,7 +203,8 @@ void Hooks::SurvivalMode_tick(C_GameMode* _this) {
 	}
 }
 
-void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
+void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this)
+{
 	static auto oSendMessage = g_Hooks.ChatScreenController_sendChatMessageHook->GetFastcall<void, void*>();
 
 	using addCommandToChatHistory_t = void(__fastcall*)(__int64*, char*);
@@ -236,7 +241,8 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 	oSendMessage(_this);
 }
 
-__int64 Hooks::UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext) {
+__int64 Hooks::UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext)
+{
 	static auto oSetup = g_Hooks.UIScene_setupAndRenderHook->GetFastcall<__int64, C_UIScene*, __int64>();
 
 	g_Hooks.shouldRender = uiscene->isPlayScreen();
@@ -244,7 +250,8 @@ __int64 Hooks::UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext)
 	return oSetup(uiscene, screencontext);
 }
 
-__int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
+__int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext)
+{
 	static auto oRender = g_Hooks.UIScene_renderHook->GetFastcall<__int64, C_UIScene*, __int64>();
 
 	g_Hooks.shouldRender = uiscene->isPlayScreen();
@@ -262,13 +269,15 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	return oRender(uiscene, screencontext);
 }
 
-__int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
+__int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx)
+{
 	static auto oText = g_Hooks.RenderTextHook->GetFastcall<__int64, __int64, C_MinecraftUIRenderContext*>();
 	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
 	DrawUtils::setCtx(renderCtx, dat);
 	if (GameData::shouldHide())
-		return oText(a1, renderCtx); 
+		return oText(a1, renderCtx);
 
+	{
 		static bool wasConnectedBefore = false;
 		static LARGE_INTEGER start;
 		static LARGE_INTEGER frequency;
@@ -316,8 +325,10 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 	bool shouldRenderArrayList = true;
 	bool shouldRenderTabGui = true;
-	bool shouldRenderCoords = false; {
-		// Call PostRender() functions
+	bool shouldRenderCoords = false;
+
+	// Call PostRender() functions
+	{
 		moduleMgr->onPostRender();
 		static HudModule* hud = moduleMgr->getModule<HudModule>();
 		if (hud == nullptr)
@@ -357,8 +368,10 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 		vec2_t mousePos = *g_Data.getClientInstance()->getMousePos();
 		mousePos.div(windowSizeReal);
-		mousePos.mul(windowSize); {
-			// Rainbow color updates
+		mousePos.mul(windowSize);
+
+		// Rainbow color updates
+		{
 			DrawUtils::rainbow(rcolors); // Increase Hue of rainbow color array
 			disabledRcolors[0] = min(1, rcolors[0] * 0.4f + 0.2f);
 			disabledRcolors[1] = min(1, rcolors[1] * 0.4f + 0.2f);
@@ -432,8 +445,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			// Show disabled Modules?
 			//const bool extendedArraylist = g_Data.getLocalPlayer() == nullptr ? /* not ingame */ true : /* ingame */(GameData::canUseMoveKeys() ? false : true);
 			constexpr bool extendedArraylist = false;
-			std::set<IModuleContainer> modContainerList; 
-				// Fill modContainerList with Modules
+			std::set<IModuleContainer> modContainerList;
+			// Fill modContainerList with Modules
+			{
 				std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
 
 				for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
@@ -559,7 +573,8 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightnes
 	return oGetFogColor(_this, color, brightness);
 }
 
-float Hooks::Dimension_getTimeOfDay(__int64 _this, int a2, float a3) {
+float Hooks::Dimension_getTimeOfDay(__int64 _this, int a2, float a3)
+{
 	static auto oGetTimeOfDay = g_Hooks.Dimension_getTimeOfDayHook->GetFastcall<float, __int64, int, float>();
 
 #ifdef _DEBUG
@@ -574,7 +589,8 @@ float Hooks::Dimension_getTimeOfDay(__int64 _this, int a2, float a3) {
 	return oGetTimeOfDay(_this, a2, a3);
 }
 
-float Hooks::Dimension_getSunIntensity(__int64 a1, float a2, vec3_t* a3, float a4) {
+float Hooks::Dimension_getSunIntensity(__int64 a1, float a2, vec3_t* a3, float a4)
+{
 	static auto oGetSunIntensity = g_Hooks.Dimension_getSunIntensityHook->GetFastcall<float, __int64, float, vec3_t*, float>();
 
 #ifdef _DEBUG
@@ -589,13 +605,15 @@ float Hooks::Dimension_getSunIntensity(__int64 a1, float a2, vec3_t* a3, float a
 	return oGetSunIntensity(a1, a2, a3, a4);
 }
 
-void Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a) {
+void Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a)
+{
 	static auto oTick = g_Hooks.ChestBlockActor_tickHook->GetFastcall<void, C_ChestBlockActor*, void*>();
 	oTick(_this, a);
 	GameData::addChestToList(_this);
 }
 
-void Hooks::Actor_lerpMotion(C_Entity* _this, vec3_t motVec) {
+void Hooks::Actor_lerpMotion(C_Entity* _this, vec3_t motVec)
+{
 	static auto oLerp = g_Hooks.Actor_lerpMotionHook->GetFastcall<void, C_Entity*, vec3_t>();
 
 	if (g_Data.getLocalPlayer() != _this)
@@ -621,7 +639,8 @@ void Hooks::Actor_lerpMotion(C_Entity* _this, vec3_t motVec) {
 	oLerp(_this, motVec);
 }
 
-int Hooks::AppPlatform_getGameEdition(__int64 _this) {
+int Hooks::AppPlatform_getGameEdition(__int64 _this)
+{
 	static auto oGetEditon = g_Hooks.AppPlatform_getGameEditionHook->GetFastcall<signed int, __int64>();
 
 	static EditionFaker* mod = moduleMgr->getModule<EditionFaker>();
@@ -634,7 +653,8 @@ int Hooks::AppPlatform_getGameEdition(__int64 _this) {
 	return oGetEditon(_this);
 }
 
-void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4) {
+void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
+{
 	static auto oAutoComplete = g_Hooks.PleaseAutoCompleteHook->GetFastcall<void, __int64, __int64, TextHolder*, int>();
 	char* tx = text->getText();
 	if (tx != nullptr && text->getTextLength() >= 1 && tx[0] == '.') {
@@ -729,7 +749,8 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 	oAutoComplete(a1, a2, text, a4);
 }
 
-void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packet* packet) {
+void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packet* packet)
+{
 	static auto oFunc = g_Hooks.LoopbackPacketSender_sendToServerHook->GetFastcall<void, C_LoopbackPacketSender*, C_Packet*>();
 
 	static Freecam* FreecamMod = moduleMgr->getModule<Freecam>();
@@ -746,14 +767,18 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	}
 	else if (FreecamMod->isEnabled() || BlinkMod->isEnabled()) {
 
-		if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
-			if (BlinkMod->isEnabled()) {
-				if (packet->isInstanceOf<C_MovePlayerPacket>()) {
+		if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>())
+		{
+			if (BlinkMod->isEnabled())
+			{
+				if (packet->isInstanceOf<C_MovePlayerPacket>())
+				{
 					C_MovePlayerPacket* meme = reinterpret_cast<C_MovePlayerPacket*>(packet);
 					meme->onGround = true; //Don't take Fall Damages when turned off
 					BlinkMod->getMovePlayerPacketHolder()->push_back(new C_MovePlayerPacket(*meme)); // Saving the packets
 				}
-				else {
+				else
+				{
 					BlinkMod->getPlayerAuthInputPacketHolder()->push_back(new PlayerAuthInputPacket(*reinterpret_cast<PlayerAuthInputPacket*>(packet)));
 				}
 			}
@@ -762,8 +787,10 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	}
 	else if (!BlinkMod->isEnabled()) {
 
-		if (BlinkMod->getMovePlayerPacketHolder()->size() > 0) {
-			for (auto it : *BlinkMod->getMovePlayerPacketHolder()) {
+		if (BlinkMod->getMovePlayerPacketHolder()->size() > 0)
+		{
+			for (auto it : *BlinkMod->getMovePlayerPacketHolder())
+			{
 				oFunc(a, (it));
 				delete it;
 				it = nullptr;
@@ -771,8 +798,10 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 			BlinkMod->getMovePlayerPacketHolder()->clear();
 			return;
 		}
-		if (BlinkMod->getPlayerAuthInputPacketHolder()->size() > 0) {
-			for (auto it : *BlinkMod->getPlayerAuthInputPacketHolder()) {
+		if (BlinkMod->getPlayerAuthInputPacketHolder()->size() > 0)
+		{
+			for (auto it : *BlinkMod->getPlayerAuthInputPacketHolder())
+			{
 				oFunc(a, (it));
 				delete it;
 				it = nullptr;
@@ -784,7 +813,8 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	moduleMgr->onSendPacket(packet);
 #ifdef TEST_DEBUG
 	C_InventoryTransactionPacket Packet0 = C_InventoryTransactionPacket();
-	if (packet->vTable == Packet0.vTable) {
+	if (packet->vTable == Packet0.vTable)
+	{
 		C_InventoryTransactionPacket* y = reinterpret_cast<C_InventoryTransactionPacket*>(packet);
 		logF("action type : %d", y->complexTransaction->actionType);
 	}
@@ -792,7 +822,8 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	oFunc(a, packet);
 }
 
-float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3) {
+float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3)
+{
 	static auto oGetFov = g_Hooks.LevelRendererPlayer_getFovHook->GetFastcall<float, __int64, float, bool>();
 	static void* renderItemInHand = reinterpret_cast<void*>(Utils::FindSignature("0F 28 F0 F3 44 0F 10 3D ?? ?? ?? ?? F3 41 0F 59 F7"));
 	static void* setupCamera = reinterpret_cast<void*>(Utils::FindSignature("44 0F 28 D8 F3 44 0F 59 1D ?? ?? ?? ?? 41 0F B6 4E ??"));
@@ -810,18 +841,21 @@ float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3) {
 	return oGetFov(_this, a2, a3);
 }
 
-void Hooks::MultiLevelPlayer_tick(C_EntityList* _this) {
+void Hooks::MultiLevelPlayer_tick(C_EntityList* _this)
+{
 	static auto oTick = g_Hooks.MultiLevelPlayer_tickHook->GetFastcall<void, C_EntityList*>();
 	oTick(_this);
 	GameData::EntityList_tick(_this);
 }
 
-void Hooks::GameMode_startDestroyBlock(C_GameMode* _this, vec3_ti* a2, uint8_t face, void* a4, void* a5) {
+void Hooks::GameMode_startDestroyBlock(C_GameMode* _this, vec3_ti* a2, uint8_t face, void* a4, void* a5)
+{
 	static auto oFunc = g_Hooks.GameMode_startDestroyBlockHook->GetFastcall<void, C_GameMode*, vec3_ti*, uint8_t, void*, void*>();
 
 	static Nuker* nukerModule = moduleMgr->getModule<Nuker>();
 	static IModule* instaBreakModule = moduleMgr->getModule<InstaBreak>();
-	if (nukerModule == nullptr || instaBreakModule == nullptr) {
+	if (nukerModule == nullptr || instaBreakModule == nullptr)
+	{
 		nukerModule = moduleMgr->getModule<Nuker>();
 		instaBreakModule = moduleMgr->getModule<InstaBreak>();
 	}
@@ -863,7 +897,8 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* _this, vec3_ti* a2, uint8_t f
 	oFunc(_this, a2, face, a4, a5);
 }
 
-void Hooks::HIDController_keyMouse(C_HIDController* _this, void* a2, void* a3) {
+void Hooks::HIDController_keyMouse(C_HIDController* _this, void* a2, void* a3)
+{
 	static auto oFunc = g_Hooks.HIDController_keyMouseHook->GetFastcall<void, C_HIDController*, void*, void*>();
 	GameData::setHIDController(_this);
 	isTicked = true;
@@ -871,7 +906,8 @@ void Hooks::HIDController_keyMouse(C_HIDController* _this, void* a2, void* a3) {
 	return;
 }
 
-int Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1) {
+int Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1)
+{
 	static auto oFunc = g_Hooks.BlockLegacy_getRenderLayerHook->GetFastcall<int, C_BlockLegacy*>();
 
 	static IModule* XrayModule = moduleMgr->getModule<Xray>();
@@ -887,7 +923,8 @@ int Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1) {
 	return oFunc(a1);
 }
 
-__int8* Hooks::BlockLegacy_getLightEmission(C_BlockLegacy* a1, __int8* a2) {
+__int8* Hooks::BlockLegacy_getLightEmission(C_BlockLegacy* a1, __int8* a2)
+{
 	static auto oFunc = g_Hooks.BlockLegacy_getLightEmissionHook->GetFastcall<__int8*, C_BlockLegacy*, __int8*>();
 
 	static IModule* XrayModule = moduleMgr->getModule<Xray>();
@@ -900,7 +937,8 @@ __int8* Hooks::BlockLegacy_getLightEmission(C_BlockLegacy* a1, __int8* a2) {
 	return oFunc(a1, a2);
 }
 
-__int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3) {
+__int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3)
+{
 	static auto oFunc = g_Hooks.LevelRenderer_renderLevelHook->GetFastcall<__int64, __int64, __int64, __int64>();
 
 	using reloadShit_t = void(__fastcall*)(__int64);
@@ -942,12 +980,14 @@ void Hooks::ClickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __in
 	oFunc(a1, a2, a3, a4, a5, a6, a7, a8);
 }
 
-__int64 Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity* a2) {
+__int64 Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity* a2)
+{
 	static auto oTick = g_Hooks.MoveInputHandler_tickHook->GetFastcall<__int64, C_MoveInputHandler*, C_Entity*>();
 	return oTick(a1, a2);
 }
 
-__int64 Hooks::ChestScreenController_tick(C_ChestScreenController* a1) {
+__int64 Hooks::ChestScreenController_tick(C_ChestScreenController* a1)
+{
 	static auto oFunc = g_Hooks.ChestScreenController_tickHook->GetFastcall<__int64, C_ChestScreenController*>();
 
 	static ChestStealer* ChestStealerMod = moduleMgr->getModule<ChestStealer>();
@@ -960,7 +1000,8 @@ __int64 Hooks::ChestScreenController_tick(C_ChestScreenController* a1) {
 	return oFunc(a1);
 }
 
-__int64 Hooks::GetGamma(__int64 a1) {
+__int64 Hooks::GetGamma(__int64 a1)
+{
 	static auto oFunc = g_Hooks.GetGammaHook->GetFastcall<__int64, __int64>();
 
 	static FullBright* fullBrightModule = moduleMgr->getModule<FullBright>();
@@ -987,7 +1028,8 @@ __int64 Hooks::GetGamma(__int64 a1) {
 	return oFunc(a1);
 }
 
-bool Hooks::Actor_isInWater(C_Entity* _this) {
+bool Hooks::Actor_isInWater(C_Entity* _this)
+{
 	static auto oFunc = g_Hooks.Actor_isInWaterHook->GetFastcall<bool, C_Entity*>();
 
 	if (g_Data.getLocalPlayer() != _this)
@@ -1002,7 +1044,8 @@ bool Hooks::Actor_isInWater(C_Entity* _this) {
 	return oFunc(_this);
 }
 
-void Hooks::JumpPower(C_Entity* a1, float a2) {
+void Hooks::JumpPower(C_Entity* a1, float a2)
+{
 	static auto oFunc = g_Hooks.JumpPowerHook->GetFastcall<void, C_Entity*, float>();
 	static HighJump* HighJumpMod = moduleMgr->getModule<HighJump>();
 	if (HighJumpMod == nullptr)
@@ -1014,13 +1057,15 @@ void Hooks::JumpPower(C_Entity* a1, float a2) {
 	oFunc(a1, a2);
 }
 
-__int64 Hooks::MinecraftGame_onAppSuspended(__int64 _this) {
+__int64 Hooks::MinecraftGame_onAppSuspended(__int64 _this)
+{
 	static auto oFunc = g_Hooks.MinecraftGame_onAppSuspendedHook->GetFastcall<__int64, __int64>();
 	configMgr->saveConfig();
 	return oFunc(_this);
 }
 
-void Hooks::Actor_ladderUp(C_Entity* _this) {
+void Hooks::Actor_ladderUp(C_Entity* _this)
+{
 	static auto oFunc = g_Hooks.Actor_ladderUpHook->GetFastcall<void, C_Entity*>();
 
 	static IModule* FastLadderModule = moduleMgr->getModule<FastLadder>();
@@ -1034,7 +1079,8 @@ void Hooks::Actor_ladderUp(C_Entity* _this) {
 
 }
 
-void Hooks::Actor_startSwimming(C_Entity* _this) {
+void Hooks::Actor_startSwimming(C_Entity* _this)
+{
 	static auto oFunc = g_Hooks.Actor_startSwimmingHook->GetFastcall<void, C_Entity*>();
 
 	static IModule* JesusModule = moduleMgr->getModule<Jesus>();
@@ -1046,13 +1092,15 @@ void Hooks::Actor_startSwimming(C_Entity* _this) {
 	oFunc(_this);
 }
 
-void Hooks::RakNetInstance_tick(C_RakNetInstance* _this,__int64 a2,__int64 a3) {
+void Hooks::RakNetInstance_tick(C_RakNetInstance* _this,__int64 a2,__int64 a3)
+{
 	static auto oTick = g_Hooks.RakNetInstance_tickHook->GetFastcall<void, C_RakNetInstance*,__int64,__int64>();
 	GameData::setRakNetInstance(_this);
 	oTick(_this,a2,a3);
 }
 
-float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3) {
+float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3)
+{
 	static auto oFunc = g_Hooks.GameMode_getPickRangeHook->GetFastcall<float, C_GameMode*, __int64, char>();
 	static InfiniteBlockReach* InfiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
 	if (InfiniteBlockReachModule == nullptr)
@@ -1068,7 +1116,8 @@ float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3) {
 	return oFunc(_this, a2, a3);
 }
 
-__int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager, void* a3, TextHolder* selfSignedId, TextHolder* serverAddress, __int64 clientRandomId, TextHolder* skinId, SkinData* skinData, __int64 capeData, __int64 animatedImageDataArr, TextHolder* skinResourcePatch, TextHolder* skinGeometryData, TextHolder* skinAnimationData, bool isPremiumSkin, bool isPersonaSkin, TextHolder* deviceId, int inputMode, int uiProfile, int guiScale, TextHolder* languageCode, bool sendEduModeParams, TextHolder* tenantId, __int64 unused, TextHolder* platformUserId, TextHolder* thirdPartyName, bool thirdPartyNameOnly, TextHolder* platformOnlineId, TextHolder* platformOfflineId, bool isCapeOnClassicSkin, TextHolder* capeId) {
+__int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager, void* a3, TextHolder* selfSignedId, TextHolder* serverAddress, __int64 clientRandomId, TextHolder* skinId, SkinData* skinData, __int64 capeData, __int64 animatedImageDataArr, TextHolder* skinResourcePatch, TextHolder* skinGeometryData, TextHolder* skinAnimationData, bool isPremiumSkin, bool isPersonaSkin, TextHolder* deviceId, int inputMode, int uiProfile, int guiScale, TextHolder* languageCode, bool sendEduModeParams, TextHolder* tenantId, __int64 unused, TextHolder* platformUserId, TextHolder* thirdPartyName, bool thirdPartyNameOnly, TextHolder* platformOnlineId, TextHolder* platformOfflineId, bool isCapeOnClassicSkin, TextHolder* capeId)
+{
 	static auto oFunc = g_Hooks.ConnectionRequest_createHook->GetFastcall<__int64, __int64, __int64, void*, TextHolder*, TextHolder*, __int64, TextHolder*, SkinData*, __int64, __int64, TextHolder*, TextHolder*, TextHolder*, bool, bool, TextHolder*, int, int, int, TextHolder*, bool, TextHolder*, __int64, TextHolder*, TextHolder*, bool, TextHolder*, TextHolder*, bool, TextHolder*>();
 
 #ifdef _DEBUG
@@ -1116,7 +1165,8 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 	return res;
 }
 
-void Hooks::InventoryTransactionManager_addAction(C_InventoryTransactionManager* a1, C_InventoryAction* a2) {
+void Hooks::InventoryTransactionManager_addAction(C_InventoryTransactionManager* a1, C_InventoryAction* a2)
+{
 	static auto Func = g_Hooks.InventoryTransactionManager_addActionHook->GetFastcall<void, C_InventoryTransactionManager*, C_InventoryAction*>();
 	Func(a1, a2);
 }
