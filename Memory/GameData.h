@@ -1,17 +1,18 @@
 #pragma once
 
+#include <map>
+#include <queue>
 #include <set>
+
+#include "../Horion/Config/AccountInformation.h"
+#include "../SDK/CChestBlockActor.h"
 #include "../SDK/CClientInstance.h"
 #include "../SDK/CGameMode.h"
-#include "../SDK/CChestBlockActor.h"
 #include "../SDK/CHIDController.h"
 #include "../SDK/CMoveInputHandler.h"
 #include "../SDK/CRakNetInstance.h"
 #include "../Utils/TextFormat.h"
-#include "../Horion/Config/AccountInformation.h"
 #include "SlimMem.h"
-#include <map>
-#include <queue>
 
 enum DATAPACKET_CMD : int {
 	CMD_INIT = 0,
@@ -39,7 +40,6 @@ private:
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
 	std::queue<HorionDataPacket> horionToInjectorQueue;
 
-
 	bool injectorConnectionActive = false;
 	const SlimUtils::SlimModule* gameModule = 0;
 	SlimUtils::SlimMem* slimMem;
@@ -49,6 +49,7 @@ private:
 	LARGE_INTEGER lastUpdate;
 	AccountInformation accountInformation = AccountInformation::asGuest();
 	static void retrieveClientInstance();
+
 public:
 	static bool canUseMoveKeys();
 	static bool isKeyDown(int key);
@@ -62,8 +63,8 @@ public:
 	static void terminate();
 	static void updateGameData(C_GameMode* gameMode);
 	static void initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem, HMODULE hDllInst);
-	static void addChestToList(C_ChestBlockActor * ChestBlock2);
-	static void EntityList_tick(C_EntityList * list);
+	static void addChestToList(C_ChestBlockActor* ChestBlock2);
+	static void EntityList_tick(C_EntityList* list);
 	static void setHIDController(C_HIDController* Hid);
 	static void setRakNetInstance(C_RakNetInstance* raknet);
 	static TextHolder* getGameVersion();
@@ -91,12 +92,12 @@ public:
 	}
 	inline void setAllowWIPFeatures(bool enable = false) { isAllowingWIPFeatures = enable; };
 	inline bool isInjectorConnectionActive() { return injectorConnectionActive; };
-	inline void setInjectorConnectionActive(bool isActive) { 
+	inline void setInjectorConnectionActive(bool isActive) {
 		if (injectorConnectionActive && !isActive) {
 			std::queue<HorionDataPacket> empty;
 			horionToInjectorQueue.swap(empty);
-		} 
-		injectorConnectionActive = isActive; 
+		}
+		injectorConnectionActive = isActive;
 	};
 	inline bool isPacketToInjectorQueueEmpty() { return horionToInjectorQueue.empty(); };
 	inline HorionDataPacket getPacketToInjector() {
@@ -110,7 +111,6 @@ public:
 	inline C_ClientInstance* getClientInstance() { return clientInstance; };
 	inline C_GuiData* getGuiData() { return clientInstance->getGuiData(); };
 	inline C_LocalPlayer* getLocalPlayer() {
-		
 		localPlayer = clientInstance->getLocalPlayer();
 		if (localPlayer == nullptr)
 			gameMode = nullptr;
@@ -136,8 +136,7 @@ public:
 
 	inline LARGE_INTEGER getLastUpdateTime() { return lastUpdate; };
 
-	void forEachEntity(void(*callback) (C_Entity*,bool));
+	void forEachEntity(void (*callback)(C_Entity*, bool));
 };
-
 
 extern GameData g_Data;
