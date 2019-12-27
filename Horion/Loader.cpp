@@ -144,7 +144,7 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 		
 		Sleep(2); 
 	}
-	logF("Threads exiting...");
+	logF("Aight bro I'm boutta head out");
 	Sleep(150); // Give the threads a bit of time to exit
 
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1); // Uninject
