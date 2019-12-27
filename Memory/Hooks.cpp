@@ -810,6 +810,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 			return;
 		}
 	}
+	moduleMgr->onSendPacket(packet);
 	oFunc(a, packet);
 }
 
