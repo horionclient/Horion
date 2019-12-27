@@ -1,9 +1,6 @@
 #include "ConfigManager.h"
 
-
-
-std::wstring ConfigManager::GetRoamingFolderPath()
-{
+std::wstring ConfigManager::GetRoamingFolderPath() {
 	ComPtr<IApplicationDataStatics> appDataStatics;
 	auto hr = RoGetActivationFactory(HStringReference(L"Windows.Storage.ApplicationData").Get(), __uuidof(appDataStatics), &appDataStatics);
 	if (FAILED(hr)) throw std::runtime_error("Failed to retrieve application data statics");
@@ -29,19 +26,15 @@ std::wstring ConfigManager::GetRoamingFolderPath()
 	return std::wstring(roamingPathCStr, pathLength);
 }
 
-ConfigManager::ConfigManager()
-{
+ConfigManager::ConfigManager() {
 	this->roamingFolder = GetRoamingFolderPath();
 }
 
-
-ConfigManager::~ConfigManager()
-{
+ConfigManager::~ConfigManager() {
 }
 
-void ConfigManager::loadConfig(std::string name, bool create)
-{
-	size_t allocSize = name.size() + roamingFolder.size() + 20; // std::wstring::size() can be wierd so lets make sure this actually fits
+void ConfigManager::loadConfig(std::string name, bool create) {
+	size_t allocSize = name.size() + roamingFolder.size() + 20;  // std::wstring::size() can be wierd so lets make sure this actually fits
 	char* fullPath = new char[allocSize];
 	sprintf_s(fullPath, allocSize, "%S\\%s.h", roamingFolder.c_str(), name.c_str());
 
@@ -54,8 +47,7 @@ void ConfigManager::loadConfig(std::string name, bool create)
 			try {
 				currentConfigObj.clear();
 				confFile >> currentConfigObj;
-			}
-			catch (json::parse_error& e) {
+			} catch (json::parse_error& e) {
 				logF("Config Load Exception!: %s", e.what());
 			}
 			currentConfigObj["from"] = "Horion";
@@ -71,9 +63,8 @@ void ConfigManager::loadConfig(std::string name, bool create)
 	delete[] fullPath;
 }
 
-void ConfigManager::saveConfig()
-{
-	size_t allocSize = currentConfig.size() + roamingFolder.size() + 20; // std::wstring::size() can be wierd so lets make sure this actually fits
+void ConfigManager::saveConfig() {
+	size_t allocSize = currentConfig.size() + roamingFolder.size() + 20;  // std::wstring::size() can be wierd so lets make sure this actually fits
 	char* fullPath = new char[allocSize];
 	sprintf_s(fullPath, allocSize, "%S\\%s.h", roamingFolder.c_str(), currentConfig.c_str());
 
@@ -87,8 +78,7 @@ void ConfigManager::saveConfig()
 	delete[] fullPath;
 }
 
-void ConfigManager::init()
-{
+void ConfigManager::init() {
 	loadConfig(currentConfig, true);
 }
 

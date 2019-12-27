@@ -1,10 +1,11 @@
 #pragma once
 
-#include <vector>
 #include <map>
+#include <vector>
+
+#include "../../Memory/GameData.h"
 #include "../DrawUtils.h"
 #include "../GuiUtils.h"
-#include "../../Memory/GameData.h"
 #include "../Module/ModuleManager.h"
 
 struct ClickModule {
@@ -27,8 +28,7 @@ struct ClickWindow {
 	std::map<unsigned int, std::shared_ptr<ClickModule>> moduleMap;
 };
 
-class ClickGui
-{
+class ClickGui {
 private:
 	inline static std::shared_ptr<ClickWindow> getWindow(const char* id);
 	inline static std::shared_ptr<ClickModule> getClickModule(std::shared_ptr<ClickWindow> window, const char* id);
@@ -39,6 +39,7 @@ private:
 	static void renderCategory(Category category);
 	inline static void getModuleListByCategory(Category category, std::vector<IModule*>* modList);
 	inline static unsigned int getCrcHash(const char* str, int seed = 0);
+
 public:
 	static void init();
 	static void render();
