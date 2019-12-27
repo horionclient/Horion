@@ -153,7 +153,7 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	logF("Injector Connection Thread started");
 
-	struct loaderMemory {
+	struct LoaderMemory {
 		short protocolVersion;
 		bool isPresent;
 		bool isUnread;
