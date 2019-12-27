@@ -432,7 +432,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			// Show disabled Modules?
 			//const bool extendedArraylist = g_Data.getLocalPlayer() == nullptr ? /* not ingame */ true : /* ingame */(GameData::canUseMoveKeys() ? false : true);
 			constexpr bool extendedArraylist = false;
-			std::set<IModuleContainer> modContainerList; {
+			std::set<IModuleContainer> modContainerList; 
 				// Fill modContainerList with Modules
 				std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
 
