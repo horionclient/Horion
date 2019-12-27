@@ -69,14 +69,21 @@ public:
 		}
 	}
 
-	TextHolder(void* ptr, size_t sizeOfData) {
+	TextHolder(void* ptr, size_t sizeOfData, bool copy) {
 		memset(this, 0, sizeof(TextHolder));
 		textLength = sizeOfData;
 		alignedTextLength = sizeOfData;
 		if (textLength < 16)
 			memcpy(inlineText, ptr, sizeOfData);
-		else
-			pText = reinterpret_cast<char*>(ptr);
+		else {
+			if (copy) {
+				pText = new char[alignedTextLength + 1];
+				memcpy(pText, ptr, sizeOfData);
+				pText[alignedTextLength] = 0;
+			} else
+				pText = reinterpret_cast<char*>(ptr);
+		}
+			
 	}
 
 	~TextHolder() {

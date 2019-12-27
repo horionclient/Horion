@@ -101,7 +101,7 @@ DWORD WINAPI keyThread(LPVOID lpParam)
 		}
 
 		C_RakNetInstance* rakInstance = g_Data.getRakNetInstance();
-		if (rakInstance != nullptr && rakInstance->serverIp.getTextLength() > 5 &&
+		if (rakInstance != nullptr && g_Data.isInGame() && rakInstance->serverIp.getTextLength() > 5 &&
 				(strcmp(rakInstance->serverIp.getText(),"play.valeanetwork.eu") == 0 ||
 				strcmp(rakInstance->serverIp.getText(), "137.74.152.142") == 0 ||
 				strcmp(rakInstance->serverIp.getText(), "pvp.valeanetwork.eu") == 0)) {

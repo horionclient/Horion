@@ -1116,43 +1116,17 @@ float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3)
 	return oFunc(_this, a2, a3);
 }
 
-__int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager, void* a3, TextHolder* selfSignedId, TextHolder* serverAddress, __int64 clientRandomId, TextHolder* skinId, SkinData* skinData, __int64 capeData, __int64 animatedImageDataArr, TextHolder* skinResourcePatch, TextHolder* skinGeometryData, TextHolder* skinAnimationData, bool isPremiumSkin, bool isPersonaSkin, TextHolder* deviceId, int inputMode, int uiProfile, int guiScale, TextHolder* languageCode, bool sendEduModeParams, TextHolder* tenantId, __int64 unused, TextHolder* platformUserId, TextHolder* thirdPartyName, bool thirdPartyNameOnly, TextHolder* platformOnlineId, TextHolder* platformOfflineId, bool isCapeOnClassicSkin, TextHolder* capeId)
+__int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager, void* a3, TextHolder* selfSignedId, TextHolder* serverAddress, __int64 clientRandomId, TextHolder* skinId, C_SkinData* skinData, __int64 capeData, __int64 animatedImageDataArr, TextHolder* skinResourcePatch, TextHolder* skinGeometryData, TextHolder* skinAnimationData, bool isPremiumSkin, bool isPersonaSkin, TextHolder* deviceId, int inputMode, int uiProfile, int guiScale, TextHolder* languageCode, bool sendEduModeParams, TextHolder* tenantId, __int64 unused, TextHolder* platformUserId, TextHolder* thirdPartyName, bool thirdPartyNameOnly, TextHolder* platformOnlineId, TextHolder* platformOfflineId, bool isCapeOnClassicSkin, TextHolder* capeId)
 {
-	static auto oFunc = g_Hooks.ConnectionRequest_createHook->GetFastcall<__int64, __int64, __int64, void*, TextHolder*, TextHolder*, __int64, TextHolder*, SkinData*, __int64, __int64, TextHolder*, TextHolder*, TextHolder*, bool, bool, TextHolder*, int, int, int, TextHolder*, bool, TextHolder*, __int64, TextHolder*, TextHolder*, bool, TextHolder*, TextHolder*, bool, TextHolder*>();
+	static auto oFunc = g_Hooks.ConnectionRequest_createHook->GetFastcall<__int64, __int64, __int64, void*, TextHolder*, TextHolder*, __int64, TextHolder*, C_SkinData*, __int64, __int64, TextHolder*, TextHolder*, TextHolder*, bool, bool, TextHolder*, int, int, int, TextHolder*, bool, TextHolder*, __int64, TextHolder*, TextHolder*, bool, TextHolder*, TextHolder*, bool, TextHolder*>();
 
-	if (g_Data.allowWIPFeatures()) {
+	if (g_Data.allowWIPFeatures() && g_Data.isOverwritingSkin()) {
 		logF("Connection Request: InputMode: %i UiProfile: %i GuiScale: %i", inputMode, uiProfile, guiScale);
 		logF("Geometry size: %d", skinGeometryData->getTextLength());
 
-		auto hResourceGeometry = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_TEXT1), "TEXT");
-		auto hMemoryGeometry = LoadResource(g_Data.getDllModule(), hResourceGeometry);
-
-		auto sizeGeometry = SizeofResource(g_Data.getDllModule(), hResourceGeometry);
-		auto ptrGeometry = LockResource(hMemoryGeometry);
-
-		auto hResourceSteve = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_STEVE), (char*)RT_RCDATA);
-		auto hMemorySteve = LoadResource(g_Data.getDllModule(), hResourceSteve);
-
-		auto sizeSteve = SizeofResource(g_Data.getDllModule(), hResourceSteve);
-		auto ptrSteve = LockResource(hMemorySteve);
-
-		std::unique_ptr<TextHolder> newGeometryData = std::make_unique<TextHolder>(ptrGeometry, sizeGeometry);
-		std::unique_ptr<SkinData> newSkinData = std::make_unique<SkinData>();
-		newSkinData->SkinWidth = 128;
-		newSkinData->SkinHeight = 128;
-		newSkinData->skinData = ptrSteve;
-		newSkinData->skinSize = sizeSteve;
+		auto newSkin = g_Data.getOverwrittenSkin();
 		
-		std::unique_ptr<TextHolder> newSkinResourcePatch = std::make_unique<TextHolder>(Utils::base64_decode("ewogICAiZ2VvbWV0cnkiIDogewogICAgICAiYW5pbWF0ZWRfZmFjZSIgOiAiZ2VvbWV0cnkuYW5pbWF0ZWRfZmFjZV9wZXJzb25hXzRjZGJiZmFjYTI0YTk2OGVfMF8wIiwKICAgICAgImRlZmF1bHQiIDogImdlb21ldHJ5LnBlcnNvbmFfNGNkYmJmYWNhMjRhOTY4ZV8wXzAiCiAgIH0KfQo="));
-
-		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, newSkinData.get(), capeData, animatedImageDataArr, newSkinResourcePatch.get(), newGeometryData.get(), skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, thirdPartyName, thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
-
-		if (hMemoryGeometry)
-			FreeResource(hMemoryGeometry);
-		if (hMemorySteve)
-			FreeResource(hMemorySteve);
-
-		newGeometryData->resetWithoutDelete();
+		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, &newSkin->skin, capeData, animatedImageDataArr, newSkin->resourcePatch.get(), newSkin->geometryData.get(), skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, thirdPartyName, thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
 
 		return res;
 	}

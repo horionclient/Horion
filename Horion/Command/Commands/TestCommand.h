@@ -1,15 +1,16 @@
 #pragma once
 #include "ICommand.h"
 
-//#define HTTP_TEST
-
-#ifdef HTTP_TEST
+#include "../../../resource.h"
 #include "../../../include/WinHttpClient.h"
-#endif
+
 
 class TestCommand :
 	public IMCCommand
 {
+private:
+	HGLOBAL hMemoryGeometry;
+	HGLOBAL hMemorySteve;
 public:
 	TestCommand();
 	~TestCommand();

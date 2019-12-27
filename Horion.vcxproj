@@ -264,6 +264,7 @@
     <ClInclude Include="SDK\CPacket.h" />
     <ClInclude Include="SDK\CLoopbackPacketSender.h" />
     <ClInclude Include="SDK\CRakNetInstance.h" />
+    <ClInclude Include="SDK\CSkin.h" />
     <ClInclude Include="SDK\CUIScene.h" />
     <ClInclude Include="SDK\CComplexInventoryTransaction.h" />
     <ClInclude Include="Utils\Json.hpp" />

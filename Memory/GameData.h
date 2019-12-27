@@ -8,6 +8,7 @@
 #include "../SDK/CMoveInputHandler.h"
 #include "../SDK/CRakNetInstance.h"
 #include "../Utils/TextFormat.h"
+#include "../SDK/CSkin.h"
 #include "../Horion/Config/AccountInformation.h"
 #include "SlimMem.h"
 #include <map>
@@ -38,7 +39,8 @@ private:
 	HMODULE hDllInst = 0;
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
 	std::queue<HorionDataPacket> horionToInjectorQueue;
-
+	std::shared_ptr<MinecraftSkinData> overwrittenSkin;
+	bool overwriteSkin = false;
 
 	bool injectorConnectionActive = false;
 	const SlimUtils::SlimModule* gameModule = 0;
@@ -68,6 +70,9 @@ public:
 	static void setRakNetInstance(C_RakNetInstance* raknet);
 	static TextHolder* getGameVersion();
 
+	inline std::shared_ptr<MinecraftSkinData> getOverwrittenSkin() { return this->overwrittenSkin; }
+	inline bool isOverwritingSkin() { return this->overwriteSkin; }
+	inline void setOverwrittenSkin(std::shared_ptr<MinecraftSkinData> skin) { this->overwrittenSkin = skin; this->overwriteSkin = skin.get() != nullptr; }
 	inline AccountInformation getAccountInformation() { return this->accountInformation; };
 	inline void setAccountInformation(AccountInformation newAcc) {
 		if (newAcc.verify())
@@ -120,7 +125,7 @@ public:
 		return &localPlayer;
 	};
 	bool isInGame() {
-		return localPlayer != nullptr;
+		return getLocalPlayer() != nullptr;
 	}
 	const SlimUtils::SlimModule* getModule() {
 		return gameModule;
