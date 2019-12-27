@@ -70,6 +70,7 @@
 #include "Modules/PacketLogger.h"
 #include "Modules/Crasher.h"
 #include "Modules/CrystalAura.h"
+#include "Modules/Timer.h"
 
 #ifdef _DEBUG
 #include "Modules/TestModule.h"

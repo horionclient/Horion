@@ -22,6 +22,36 @@ public:
 	}
 };
 
+class LevelSoundEventPacket : public C_Packet
+{
+private:
+	char pad_[0x20];//0x8
+public:
+	int sound;//0x28
+	vec3_t pos;//0x2C
+	int extraData = -1;//0x38
+private:
+	int unknown = 0;//0x3C
+public:
+	TextHolder entityType;//0x40
+	bool isBabyMod = false;//0x60
+	bool disableRelativeVolume = false;//0x61
+	LevelSoundEventPacket()
+	{
+		static uintptr_t** LevelSoundEventPacketVtable = 0x0;
+		if (LevelSoundEventPacketVtable == 0x0) {
+			uintptr_t sigOffset = Utils::FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 44 24 ?? 44 89 74 24 ?? F2 0F 10 06 F2 0F 11 44 24 ??");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			LevelSoundEventPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+			if (LevelSoundEventPacketVtable == 0x0 || sigOffset == 0x0)
+				logF("LevelSoundEventPacketVtable signature not working!!!");
+		}
+		memset(this, 0, sizeof(LevelSoundEventPacket)); // Avoid overwriting vtable
+		vTable = LevelSoundEventPacketVtable;
+		this->entityType.setText("minecraft:player");
+	}
+};
+
 class PlayerAuthInputPacket : public C_Packet
 {
 private:

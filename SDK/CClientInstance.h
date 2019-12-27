@@ -6,7 +6,13 @@
 #include "TextHolder.h"
 #include "CMinecraftUIRenderContext.h"
 
-class Minecraft;
+class Minecraft {
+private:
+	char pad_0x0000[0xB0]; //0x0000
+public:
+	float* timer; //0x00B0
+};
+
 class LevelRenderer {
 private:
 	char pad_0x0000[0x860]; //0x0000
@@ -367,8 +373,8 @@ public:
 	virtual bool isEduMode(void)const; 
 	virtual bool isGamepadCursorEnabled(void)const; 
 private:
-	virtual __int64 getServerData(void); 
-	virtual __int64 getServerData(void)const;
+	virtual Minecraft* getServerData(void); 
+	virtual Minecraft* getServerData(void)const;
 public:
 	virtual PointingStruct* getLevel(void); 
 	virtual PointingStruct* getLevel(void)const; 

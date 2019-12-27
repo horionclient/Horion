@@ -810,15 +810,6 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 			return;
 		}
 	}
-	moduleMgr->onSendPacket(packet);
-#ifdef TEST_DEBUG
-	C_InventoryTransactionPacket Packet0 = C_InventoryTransactionPacket();
-	if (packet->vTable == Packet0.vTable)
-	{
-		C_InventoryTransactionPacket* y = reinterpret_cast<C_InventoryTransactionPacket*>(packet);
-		logF("action type : %d", y->complexTransaction->actionType);
-	}
-#endif
 	oFunc(a, packet);
 }
 
