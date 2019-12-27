@@ -1,11 +1,10 @@
 #pragma once
 #include "Module.h"
-class Glide :
-	public IModule
-{
+class Glide : public IModule {
 private:
 	float glideMod = -0.01f;
 	float glideModEffective = 0;
+
 public:
 	Glide();
 	~Glide();
@@ -15,4 +14,3 @@ public:
 	virtual void onTick(C_GameMode* gm) override;
 	virtual const char* getRawModuleName() override;
 };
-

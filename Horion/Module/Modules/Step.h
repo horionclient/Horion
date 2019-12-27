@@ -1,10 +1,9 @@
 #pragma once
 #include "Module.h"
-class Step :
-	public IModule
-{
+class Step : public IModule {
 private:
 	float height = 2.f;
+
 public:
 	Step();
 	~Step();
@@ -14,4 +13,3 @@ public:
 	virtual void onTick(C_GameMode* gm) override;
 	virtual void onDisable() override;
 };
-

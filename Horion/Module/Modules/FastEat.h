@@ -1,8 +1,6 @@
 #pragma once
 #include "Module.h"
-class FastEat :
-	public IModule
-{
+class FastEat : public IModule {
 public:
 	FastEat();
 	~FastEat();
@@ -12,4 +10,3 @@ public:
 	virtual void onTick(C_GameMode* gm) override;
 	virtual void onDisable() override;
 };
-

@@ -1,8 +1,6 @@
 #pragma once
 #include "Module.h"
-class HighJump :
-	public IModule
-{
+class HighJump : public IModule {
 public:
 	float jumpPower = 1.8f;
 	HighJump();
@@ -11,4 +9,3 @@ public:
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 };
-

@@ -1,8 +1,6 @@
 #pragma once
 #include "Module.h"
-class FullBright :
-	public IModule
-{
+class FullBright : public IModule {
 public:
 	float* gammaPtr = nullptr;
 	FullBright();
@@ -14,4 +12,3 @@ public:
 	virtual void onEnable() override;
 	virtual void onDisable() override;
 };
-

@@ -1,8 +1,6 @@
 #pragma once
 #include "Module.h"
-class EditionFaker :
-	public IModule
-{
+class EditionFaker : public IModule {
 public:
 	EditionFaker();
 	~EditionFaker();
@@ -12,4 +10,3 @@ public:
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 };
-

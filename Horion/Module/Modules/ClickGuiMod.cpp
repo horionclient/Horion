@@ -1,28 +1,21 @@
 #include "ClickGuiMod.h"
 
-
-
-ClickGuiMod::ClickGuiMod() : IModule(VK_INSERT, Category::VISUAL, "The clickgui - toggle everything by just clicking on it!")
-{
+ClickGuiMod::ClickGuiMod() : IModule(VK_INSERT, Category::VISUAL, "The clickgui - toggle everything by just clicking on it!") {
 	registerBoolSetting("Show Tooltips", &this->showTooltips, this->showTooltips);
 }
 
-
-ClickGuiMod::~ClickGuiMod()
-{
+ClickGuiMod::~ClickGuiMod() {
 }
 
-const char* ClickGuiMod::getModuleName()
-{
+const char* ClickGuiMod::getModuleName() {
 	return ("ClickGui");
 }
 
-void ClickGuiMod::onEnable(){
+void ClickGuiMod::onEnable() {
 	g_Data.getClientInstance()->releaseMouse();
 }
 
-bool ClickGuiMod::allowAutoStart()
-{
+bool ClickGuiMod::allowAutoStart() {
 	return false;
 }
 

@@ -1,8 +1,7 @@
 #pragma once
 #include "Module.h"
 
-class CrystalAura : public IModule
-{
+class CrystalAura : public IModule {
 private:
 	int range = 5;
 
@@ -17,4 +16,3 @@ public:
 	virtual void onDisable() override;
 	int delay = 0;
 };
-
