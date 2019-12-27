@@ -7,6 +7,7 @@
 #include "CBlockLegacy.h"
 #include "CInventory.h"
 #include "CInventoryTransaction.h"
+#include "CSkin.h"
 
 class C_GameMode;
 
@@ -587,6 +588,14 @@ public:
 			offset = *reinterpret_cast<int*>(Utils::FindSignature("4C 8B 82 ?? ?? ?? ?? 48 8B B2") + 3); // GameMode::startDestroyBlock -> GameMode::_canDestroy -> getSupplies
 		}
 		return *reinterpret_cast<C_PlayerInventoryProxy**>(reinterpret_cast<__int64>(this) + offset);
+	};
+
+	C_SerializedSkin* getSerializedSkin() {
+		static unsigned int offset = 0;
+		if (offset == 0) { // from Player::updateSkin
+			offset = *reinterpret_cast<int*>(Utils::FindSignature("48 81 C1 ?? ?? ?? ?? E8 ?? ?? ?? ?? 44 8B C3 48") + 3); // GameMode::startDestroyBlock -> GameMode::_canDestroy -> getSupplies
+		}
+		return reinterpret_cast<C_SerializedSkin*>(reinterpret_cast<__int64>(this) + offset);
 	};
 private:
 	virtual __int64 frameUpdate(__int64&);

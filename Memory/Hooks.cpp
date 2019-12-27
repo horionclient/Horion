@@ -1120,10 +1120,13 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 {
 	static auto oFunc = g_Hooks.ConnectionRequest_createHook->GetFastcall<__int64, __int64, __int64, void*, TextHolder*, TextHolder*, __int64, TextHolder*, C_SkinData*, __int64, __int64, TextHolder*, TextHolder*, TextHolder*, bool, bool, TextHolder*, int, int, int, TextHolder*, bool, TextHolder*, __int64, TextHolder*, TextHolder*, bool, TextHolder*, TextHolder*, bool, TextHolder*>();
 
+	logF("Skin Data: %llX", skinData->skinData);
+
 	if (g_Data.allowWIPFeatures() && g_Data.isOverwritingSkin()) {
 		logF("Connection Request: InputMode: %i UiProfile: %i GuiScale: %i", inputMode, uiProfile, guiScale);
 		logF("Geometry size: %d", skinGeometryData->getTextLength());
-
+		
+	
 		auto newSkin = g_Data.getOverwrittenSkin();
 		
 		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, &newSkin->skin, capeData, animatedImageDataArr, newSkin->resourcePatch.get(), newSkin->geometryData.get(), skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, thirdPartyName, thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
