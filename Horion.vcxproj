@@ -280,6 +280,7 @@
     <ResourceCompile Include="Horion.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".clang-format" />
     <None Include="resources\coolroblox.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
