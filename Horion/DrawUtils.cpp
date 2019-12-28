@@ -91,7 +91,7 @@ C_Font* DrawUtils::getFont(Fonts font) {
 		return g_Data.getClientInstance()->N0000080D->getTheGoodFontThankYou();
 		break;
 	case Fonts::UNICOD:
-		return g_Data.getClientInstance()->_getUnicodeFont();
+		return g_Data.getClientInstance()->N0000080D->getUnicodeFont();
 		break;
 	case Fonts::RUNE:
 		return g_Data.getClientInstance()->_getRuneFont();
@@ -262,7 +262,7 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 	if (refdef->OWorldToScreen(origin, ent->eyePos0, textPos, fov, screenSize)) {
 		textPos.y -= 10.f;
 		textPos.x -= textStr / 2.f;
-		drawText(textPos, &text, nullptr, textSize);
+		drawText(textPos, &text, nullptr, textSize, useUnicodeFont ? Fonts::UNICOD : Fonts::SMOOTH);
 	}
 }
 

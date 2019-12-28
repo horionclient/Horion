@@ -71,6 +71,10 @@ public:
 		return fontRepository->fontList->fontEntries[7].font;
 	};
 
+	C_Font* getUnicodeFont() {
+		return fontRepository->fontList->fontEntries[1].font;
+	};
+
 	C_Font* getOldFont() {
 		return fontRepository1->fontList1->fontEntries[6].font;
 	};
