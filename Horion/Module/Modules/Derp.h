@@ -1,12 +1,11 @@
 #pragma once
 #include "Module.h"
-class Derp :
-	public IModule
-{
+class Derp : public IModule {
 private:
 	int counter = 0;
 	bool epicStroke = false;
 	bool packetMode = false;
+
 public:
 	Derp();
 	~Derp();

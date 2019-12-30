@@ -1,10 +1,9 @@
 #include "AccountInformation.h"
 
-AccountInformation::AccountInformation(std::string discordTok, unsigned int serial) : discordToken(discordTok), isGuest(false), serialNum(serial) {};
-AccountInformation::AccountInformation() : discordToken("none"), isGuest(true) {};
+AccountInformation::AccountInformation(std::string discordTok, unsigned int serial) : discordToken(discordTok), isGuest(false), serialNum(serial){};
+AccountInformation::AccountInformation() : discordToken("none"), isGuest(true){};
 
-bool AccountInformation::verify()
-{
+bool AccountInformation::verify() {
 	if (isGuest)
 		return true;
 	if (discordToken.size() < 10)
@@ -39,13 +38,11 @@ bool AccountInformation::verify()
 	return false;
 };
 
-AccountInformation AccountInformation::fromToken(std::string discordToken, unsigned int serial)
-{
+AccountInformation AccountInformation::fromToken(std::string discordToken, unsigned int serial) {
 	auto acc = AccountInformation(discordToken, serial);
 	return acc;
 }
 
-AccountInformation AccountInformation::asGuest()
-{
+AccountInformation AccountInformation::asGuest() {
 	return AccountInformation();
 }

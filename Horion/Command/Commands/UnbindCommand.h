@@ -1,10 +1,9 @@
 #pragma once
-#include "ICommand.h"
 #include <map>
 
-class UnbindCommand :
-	public IMCCommand
-{
+#include "ICommand.h"
+
+class UnbindCommand : public IMCCommand {
 public:
 	UnbindCommand();
 	~UnbindCommand();
@@ -12,4 +11,3 @@ public:
 	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
 };
-

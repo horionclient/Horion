@@ -1,10 +1,9 @@
 #pragma once
 #include "Module.h"
-class Freecam :
-	public IModule
-{
+class Freecam : public IModule {
 private:
 	vec3_t oldPos;
+
 public:
 	Freecam();
 	~Freecam();
@@ -15,4 +14,3 @@ public:
 	virtual void onEnable() override;
 	virtual void onDisable() override;
 };
-

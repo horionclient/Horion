@@ -1,24 +1,18 @@
 #include "Spammer.h"
 
-
-Spammer::Spammer() : IModule(0x0, Category::EXPLOITS, "Spams a message in a specified delay")
-{
+Spammer::Spammer() : IModule(0x0, Category::EXPLOITS, "Spams a message in a specified delay") {
 	registerIntSetting("delay", &this->delay, this->delay, 1, 10);
 	registerBoolSetting("bypass", &this->bypass, this->bypass);
 }
 
-
-Spammer::~Spammer()
-{
+Spammer::~Spammer() {
 }
 
-const char* Spammer::getModuleName()
-{
+const char* Spammer::getModuleName() {
 	return ("Spammer");
 }
 
-void Spammer::onTick(C_GameMode* gm)
-{
+void Spammer::onTick(C_GameMode* gm) {
 	Odelay++;
 	if (Odelay > delay * 20) {
 		C_TextPacket* textPacket = new C_TextPacket();
@@ -30,4 +24,3 @@ void Spammer::onTick(C_GameMode* gm)
 		Odelay = 0;
 	}
 }
-

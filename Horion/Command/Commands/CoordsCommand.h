@@ -1,8 +1,6 @@
 #pragma once
 #include "ICommand.h"
-class CoordsCommand :
-	public IMCCommand
-{
+class CoordsCommand : public IMCCommand {
 public:
 	CoordsCommand();
 	~CoordsCommand();
@@ -10,4 +8,3 @@ public:
 	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
 };
-

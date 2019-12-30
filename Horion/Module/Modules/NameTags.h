@@ -1,11 +1,10 @@
 #pragma once
 
-#include "Module.h"
-#include "../../DrawUtils.h"
 #include "../../../Utils/Target.h"
+#include "../../DrawUtils.h"
+#include "Module.h"
 
-class NameTags : public IModule
-{
+class NameTags : public IModule {
 public:
 	bool displayHealth = true;
 	bool useUnicodeFont = false;
@@ -16,4 +15,3 @@ public:
 	virtual const char* getModuleName() override;
 	virtual void onPostRender() override;
 };
-

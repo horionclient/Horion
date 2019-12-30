@@ -1,11 +1,11 @@
 #pragma once
-#include "Module.h"
 #include "..\ModuleManager.h"
+#include "Module.h"
 
-class ChestAura : public IModule
-{
+class ChestAura : public IModule {
 private:
 	int range = 3;
+
 public:
 	C_MoveInputHandler* inputHandler = nullptr;
 	ChestAura();

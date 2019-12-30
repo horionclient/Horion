@@ -193,50 +193,52 @@ static const char* const KeyNames[] = {
 	"MINUS",
 	"DOT",
 	"OEM_2",
-	"OEM_3"
-};
+	"OEM_3"};
 
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <Windows.h>
-#include <ctime>
 #include <Psapi.h>
+
+#include <algorithm>
+#include <chrono>
+#include <ctime>
 #include <iomanip>
 #include <iostream>
-#include <sstream>
-#include <chrono>
-#include <algorithm>
-#include <vector>
 #include <random>
+#include <sstream>
+#include <vector>
+
 #include "Logger.h"
 
-#define INRANGE(x,a,b)   (x >= a && x <= b)
-#define GET_BYTE( x )    (GET_BITS(x[0]) << 4 | GET_BITS(x[1]))
-#define GET_BITS( x )    (INRANGE((x&(~0x20)),'A','F') ? ((x&(~0x20)) - 'A' + 0xa) : (INRANGE(x,'0','9') ? x - '0' : 0))
+#define INRANGE(x, a, b) (x >= a && x <= b)
+#define GET_BYTE(x) (GET_BITS(x[0]) << 4 | GET_BITS(x[1]))
+#define GET_BITS(x) (INRANGE((x & (~0x20)), 'A', 'F') ? ((x & (~0x20)) - 'A' + 0xa) : (INRANGE(x, '0', '9') ? x - '0' : 0))
 
-static inline float  ImFmod(float x, float y) { return fmodf(x, y); }
-static inline float  ImFabs(float x) { return fabsf(x); }
-template<typename T> static inline void ImSwap(T& a, T& b) { T tmp = a; a = b; b = tmp; }
+static inline float ImFmod(float x, float y) { return fmodf(x, y); }
+static inline float ImFabs(float x) { return fabsf(x); }
+template <typename T>
+static inline void ImSwap(T& a, T& b) {
+	T tmp = a;
+	a = b;
+	b = tmp;
+}
 
-class Utils
-{
+class Utils {
 public:
 	static const char* getKeybindName(int keybind) {
 		return KeyNames[keybind];
 	};
 	// Convert rgb floats ([0-1],[0-1],[0-1]) to hsv floats ([0-1],[0-1],[0-1]), from Foley & van Dam p592
 	// Optimized http://lolengine.net/blog/2013/01/13/fast-rgb-to-hsv
-	static void ColorConvertRGBtoHSV(float r, float g, float b, float& out_h, float& out_s, float& out_v)
-	{
+	static void ColorConvertRGBtoHSV(float r, float g, float b, float& out_h, float& out_s, float& out_v) {
 		float K = 0.f;
-		if (g < b)
-		{
+		if (g < b) {
 			ImSwap(g, b);
 			K = -1.f;
 		}
-		if (r < g)
-		{
+		if (r < g) {
 			ImSwap(r, g);
 			K = -2.f / 6.f - K;
 		}
@@ -249,38 +251,59 @@ public:
 
 	// Convert hsv floats ([0-1],[0-1],[0-1]) to rgb floats ([0-1],[0-1],[0-1]), from Foley & van Dam p593
 	// also http://en.wikipedia.org/wiki/HSL_and_HSV
-	static void ColorConvertHSVtoRGB(float h, float s, float v, float& out_r, float& out_g, float& out_b)
-	{
-		if (s == 0.0f)
-		{
+	static void ColorConvertHSVtoRGB(float h, float s, float v, float& out_r, float& out_g, float& out_b) {
+		if (s == 0.0f) {
 			// gray
 			out_r = out_g = out_b = v;
 			return;
 		}
 
 		h = ImFmod(h, 1.0f) / (60.0f / 360.0f);
-		int   i = (int)h;
+		int i = (int)h;
 		float f = h - (float)i;
 		float p = v * (1.0f - s);
 		float q = v * (1.0f - s * f);
 		float t = v * (1.0f - s * (1.0f - f));
 
-		switch (i)
-		{
-		case 0: out_r = v; out_g = t; out_b = p; break;
-		case 1: out_r = q; out_g = v; out_b = p; break;
-		case 2: out_r = p; out_g = v; out_b = t; break;
-		case 3: out_r = p; out_g = q; out_b = v; break;
-		case 4: out_r = t; out_g = p; out_b = v; break;
-		case 5: default: out_r = v; out_g = p; out_b = q; break;
+		switch (i) {
+		case 0:
+			out_r = v;
+			out_g = t;
+			out_b = p;
+			break;
+		case 1:
+			out_r = q;
+			out_g = v;
+			out_b = p;
+			break;
+		case 2:
+			out_r = p;
+			out_g = v;
+			out_b = t;
+			break;
+		case 3:
+			out_r = p;
+			out_g = q;
+			out_b = v;
+			break;
+		case 4:
+			out_r = t;
+			out_g = p;
+			out_b = v;
+			break;
+		case 5:
+		default:
+			out_r = v;
+			out_g = p;
+			out_b = q;
+			break;
 		}
 	};
 
-	template<unsigned int IIdx, typename TRet, typename ... TArgs>
-	static auto CallVFunc(void* thisptr, TArgs ... argList) -> TRet
-	{
+	template <unsigned int IIdx, typename TRet, typename... TArgs>
+	static auto CallVFunc(void* thisptr, TArgs... argList) -> TRet {
 		//if (thisptr == nullptr)
-			//return nullptr;
+		//return nullptr;
 		using Fn = TRet(__thiscall*)(void*, decltype(argList)...);
 		return (*static_cast<Fn**>(thisptr))[IIdx](thisptr, argList...);
 	}
@@ -291,7 +314,6 @@ public:
 
 	// https://stackoverflow.com/a/34571089
 	static std::string base64_encode(const std::string& in) {
-
 		std::string out;
 
 		int val = 0, valb = -6;
@@ -327,7 +349,6 @@ public:
 	}
 
 	static std::string base64_decode(const std::string& in) {
-
 		std::string out;
 
 		std::vector<int> T(256, -1);
@@ -354,8 +375,7 @@ public:
 		return str.substr(0, size);
 	}
 
-	static uintptr_t FindSignatureModule(const char* szModule, const char* szSignature)
-	{
+	static uintptr_t FindSignatureModule(const char* szModule, const char* szSignature) {
 		const char* pattern = szSignature;
 		uintptr_t firstMatch = 0;
 		static const uintptr_t rangeStart = (uintptr_t)GetModuleHandleA(szModule);
@@ -370,8 +390,7 @@ public:
 		BYTE patByte = GET_BYTE(pattern);
 		const char* oldPat = pattern;
 
-		for (uintptr_t pCur = rangeStart; pCur < rangeEnd; pCur++)
-		{
+		for (uintptr_t pCur = rangeStart; pCur < rangeEnd; pCur++) {
 			if (!*pattern)
 				return firstMatch;
 
@@ -383,12 +402,11 @@ public:
 
 			if (oldPat != pattern) {
 				oldPat = pattern;
-				if(*(PBYTE)pattern != '\?')
+				if (*(PBYTE)pattern != '\?')
 					patByte = GET_BYTE(pattern);
 			}
 
-			if (*(PBYTE)pattern == '\?' || *(BYTE*)pCur == patByte)
-			{
+			if (*(PBYTE)pattern == '\?' || *(BYTE*)pCur == patByte) {
 				if (!firstMatch)
 					firstMatch = pCur;
 
@@ -399,18 +417,16 @@ public:
 				//pattern += 3;
 
 				//else
-					pattern += 2;
-			}
-			else
-			{
+				pattern += 2;
+			} else {
 				pattern = szSignature;
 				firstMatch = 0;
 			}
 		}
 #ifdef _DEBUG
-		const char* sig = szSignature; // Put sig in here to access it in debugger
-		// This will not get optimized away because we are in debug
-		// Leave this in here to quickly find bad signatures in case of updates
+		const char* sig = szSignature;  // Put sig in here to access it in debugger
+										// This will not get optimized away because we are in debug
+										// Leave this in here to quickly find bad signatures in case of updates
 #ifdef SIG_DEBUG
 #ifdef logF
 		logF("Signature dead: %s", szSignature);
@@ -429,23 +445,20 @@ public:
 	*   GetCurrentSystemTime - Gets actual system time
 	*   @timeInfo: Reference to your own tm variable, gets modified.
 	*/
-	static void GetCurrentSystemTime(tm& timeInfo)
-	{
+	static void GetCurrentSystemTime(tm& timeInfo) {
 		const std::chrono::system_clock::time_point systemNow = std::chrono::system_clock::now();
 		std::time_t now_c = std::chrono::system_clock::to_time_t(systemNow);
-		localtime_s(&timeInfo, &now_c); // using localtime_s as std::localtime is not thread-safe.
+		localtime_s(&timeInfo, &now_c);  // using localtime_s as std::localtime is not thread-safe.
 	};
 
-
-	static void ApplySystemTime(std::stringstream *ss) {
-
+	static void ApplySystemTime(std::stringstream* ss) {
 		using namespace std::chrono;
 #ifdef _DEBUG
-		const std::chrono::system_clock::time_point systemNow = system_clock::now(); 
+		const std::chrono::system_clock::time_point systemNow = system_clock::now();
 		auto ms = duration_cast<milliseconds>(systemNow.time_since_epoch()) % 10000;
 		time_t now_c = system_clock::to_time_t(systemNow);
-		tm timeInfo{ };
-		localtime_s(&timeInfo, &now_c); // using localtime_s as std::localtime is not thread-safe.
+		tm timeInfo{};
+		localtime_s(&timeInfo, &now_c);  // using localtime_s as std::localtime is not thread-safe.
 		*ss << "[" << std::put_time(&timeInfo, "%T") << "." << std::setfill('0') << std::setw(4) << ms.count() << "] ";
 #endif
 	};

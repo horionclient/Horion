@@ -1,10 +1,7 @@
 #pragma once
 #include "Module.h"
-class TestModule :
-	public IModule
-{
+class TestModule : public IModule {
 private:
-	
 public:
 	TestModule();
 	~TestModule();
@@ -14,4 +11,3 @@ public:
 	virtual void onTick(C_GameMode* gm) override;
 	virtual void onDisable() override;
 };
-

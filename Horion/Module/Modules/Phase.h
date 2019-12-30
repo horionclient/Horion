@@ -1,8 +1,7 @@
 #pragma once
 #include "Module.h"
 
-class Phase : public IModule
-{
+class Phase : public IModule {
 public:
 	Phase();
 	~Phase();
@@ -11,4 +10,3 @@ public:
 	virtual void onTick(C_GameMode* gm) override;
 	virtual void onDisable() override;
 };
-

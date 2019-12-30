@@ -1,8 +1,6 @@
 #pragma once
 #include "ICommand.h"
-class HideCommand :
-	public IMCCommand
-{
+class HideCommand : public IMCCommand {
 public:
 	HideCommand();
 	~HideCommand();
@@ -10,4 +8,3 @@ public:
 	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
 };
-

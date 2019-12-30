@@ -1,20 +1,14 @@
 #include "NameTags.h"
 
-
-
-NameTags::NameTags() : IModule(0x0, Category::VISUAL, "Shows better nametags above players that can be seen from a lot more far aways")
-{
+NameTags::NameTags() : IModule(0x0, Category::VISUAL, "Shows better nametags above players that can be seen from a lot more far aways") {
 	this->registerBoolSetting("Display Health", &this->displayHealth, this->displayHealth);
 	this->registerBoolSetting("Use Unicode font", &this->useUnicodeFont, this->useUnicodeFont);
 }
 
-
-NameTags::~NameTags()
-{
+NameTags::~NameTags() {
 }
 
-const char* NameTags::getModuleName()
-{
+const char* NameTags::getModuleName() {
 	return ("NameTags");
 }
 
@@ -23,7 +17,6 @@ void drawNameTags(C_Entity* ent, bool isRegularEntitie) {
 	static NameTags* NameTagsMod = moduleMgr->getModule<NameTags>();
 
 	if (ent != localPlayer) {
-
 		if (ent->timeSinceDeath > 0)
 			return;
 		if (Target::isValidTarget(ent) && NameTagsMod != nullptr)
@@ -32,11 +25,9 @@ void drawNameTags(C_Entity* ent, bool isRegularEntitie) {
 }
 
 void NameTags::onPostRender() {
-
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
 	if (localPlayer != nullptr && GameData::canUseMoveKeys()) {
-
 		g_Data.forEachEntity(drawNameTags);
 	}
 }

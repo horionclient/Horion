@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Module.h"
 #include "../../DrawUtils.h"
+#include "Module.h"
 
-class ChestESP : public IModule
-{
+class ChestESP : public IModule {
 private:
 	int tickTimeout = 0;
+
 public:
 	ChestESP();
 	~ChestESP();
@@ -16,4 +16,3 @@ public:
 	virtual void onPostRender() override;
 	virtual void onTick(C_GameMode* gm) override;
 };
-

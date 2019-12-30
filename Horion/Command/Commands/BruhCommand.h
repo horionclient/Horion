@@ -1,8 +1,6 @@
 #pragma once
 #include "ICommand.h"
-class BruhCommand :
-	public IMCCommand
-{
+class BruhCommand : public IMCCommand {
 public:
 	BruhCommand();
 	~BruhCommand();

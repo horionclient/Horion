@@ -1,14 +1,12 @@
 #pragma once
 #include "Module.h"
 
-
-class Jetpack :
-	public IModule
-{
+class Jetpack : public IModule {
 private:
 	int delay = 0;
 	bool isBypass = false;
 	float speedMod = 1;
+
 public:
 	C_MovePlayerPacket* jetpack = nullptr;
 	Jetpack();
@@ -20,4 +18,3 @@ public:
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 };
-

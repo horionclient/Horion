@@ -1,9 +1,7 @@
 #pragma once
 #include "Module.h"
 
-class HudModule :
-	public IModule
-{
+class HudModule : public IModule {
 public:
 	HudModule();
 	~HudModule();

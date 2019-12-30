@@ -1,8 +1,6 @@
 #pragma once
 #include "Module.h"
-class Xray :
-	public IModule
-{
+class Xray : public IModule {
 public:
 	Xray();
 	~Xray();
@@ -10,4 +8,3 @@ public:
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 };
-

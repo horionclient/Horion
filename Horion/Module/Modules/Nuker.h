@@ -1,13 +1,11 @@
 #pragma once
 #include "Module.h"
 
-
-class Nuker :
-	public IModule
-{
+class Nuker : public IModule {
 private:
 	int nukerRadius = 4;
 	bool veinMiner = false;
+
 public:
 	Nuker();
 	~Nuker();
@@ -18,4 +16,3 @@ public:
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 };
-

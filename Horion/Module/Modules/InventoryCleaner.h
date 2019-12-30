@@ -1,8 +1,6 @@
 #pragma once
 #include "Module.h"
-class InventoryCleaner :
-	public IModule
-{
+class InventoryCleaner : public IModule {
 private:
 	bool sorted = false;
 
@@ -18,6 +16,7 @@ private:
 
 	bool openInv = true;
 	bool autoSort = false;
+
 public:
 	C_MoveInputHandler* inputHandler = nullptr;
 	InventoryCleaner();
