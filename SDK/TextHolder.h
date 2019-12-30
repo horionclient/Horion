@@ -2,28 +2,25 @@
 
 #include <string>
 
-class TextHolder
-{	
+class TextHolder {
 public:
-
 	union {
-		char inlineText[16]; //0x0000 
-		char *pText; //0x0000 
+		char inlineText[16];  //0x0000
+		char* pText;          //0x0000
 	};
 
-	size_t textLength; //0x0010 
-	size_t alignedTextLength; //0x0018
+	size_t textLength;         //0x0010
+	size_t alignedTextLength;  //0x0018
 
 	TextHolder() {
 		memset(this, 0, sizeof(TextHolder));
 	}
 
-	TextHolder(TextHolder const& copy)
-	{
+	TextHolder(TextHolder const& copy) {
 		memset(this, 0, sizeof(TextHolder));
 		textLength = copy.textLength;
 		alignedTextLength = copy.alignedTextLength;
-		if(copy.textLength < 16)
+		if (copy.textLength < 16)
 			strcpy_s(inlineText, 16, copy.inlineText);
 		else {
 			size_t size = strlen(copy.pText) + 1;
@@ -34,8 +31,7 @@ public:
 		}
 	}
 
-	TextHolder& operator=(TextHolder const& copy)
-	{
+	TextHolder& operator=(TextHolder const& copy) {
 		if (textLength >= 16 && pText != nullptr) {
 			free(pText);
 		}

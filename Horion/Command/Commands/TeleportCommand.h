@@ -1,8 +1,6 @@
 #pragma once
 #include "ICommand.h"
-class TeleportCommand :
-	public IMCCommand
-{
+class TeleportCommand : public IMCCommand {
 public:
 	TeleportCommand();
 	~TeleportCommand();
@@ -10,4 +8,3 @@ public:
 	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
 };
-

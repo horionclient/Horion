@@ -12,4 +12,3 @@ public:
 			sendChatMessageFunc(this, (char*)std::string(message).c_str());
 	}
 };
-

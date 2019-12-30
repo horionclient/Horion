@@ -1,33 +1,25 @@
 #include "Bhop.h"
 
-
-
-Bhop::Bhop() : IModule(0x0, Category::MOVEMENT, "Hop around like a bunny!")
-{
+Bhop::Bhop() : IModule(0x0, Category::MOVEMENT, "Hop around like a bunny!") {
 	registerFloatSetting("Speed", &this->speed, this->speed, 0.1f, 0.8f);
 }
 
-
-Bhop::~Bhop()
-{
+Bhop::~Bhop() {
 }
 
-const char* Bhop::getModuleName()
-{
+const char* Bhop::getModuleName() {
 	return ("Bhop");
 }
 
 void Bhop::onTick(C_GameMode* gm) {
-
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 
 	if (gm->player->isInLava() == 1 || gm->player->isInWater() == 1) return;
 
 	if (gm->player->isSneaking()) return;
 
-	if (GameData::canUseMoveKeys() || g_Data.getLocalPlayer()->canOpenContainerScreen() != 1)
-	{ }
-	else
+	if (GameData::canUseMoveKeys() || g_Data.getLocalPlayer()->canOpenContainerScreen() != 1) {
+	} else
 		return;
 
 	if (input == nullptr) return;
@@ -38,42 +30,27 @@ void Bhop::onTick(C_GameMode* gm) {
 
 	if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->backKey))
 		return;
-	else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey))
-	{
+	else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
 		yaw += 45.f;
 		keyPressed = true;
-	}
-	else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey))
-	{
+	} else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
 		yaw -= 45.f;
 		keyPressed = true;
-	}
-	else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey))
-	{
+	} else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
 		yaw += 135.f;
 		keyPressed = true;
-	}
-	else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey))
-	{
+	} else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
 		yaw -= 135.f;
 		keyPressed = true;
-	}
-	else if (GameData::isKeyDown(*input->forwardKey))
-	{
+	} else if (GameData::isKeyDown(*input->forwardKey)) {
 		keyPressed = true;
-	}
-	else if (GameData::isKeyDown(*input->backKey))
-	{
+	} else if (GameData::isKeyDown(*input->backKey)) {
 		yaw += 180.f;
 		keyPressed = true;
-	}
-	else if (GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey))
-	{
+	} else if (GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
 		yaw += 90.f;
 		keyPressed = true;
-	}
-	else if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey))
-	{
+	} else if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
 		yaw -= 90.f;
 		keyPressed = true;
 	}
@@ -85,10 +62,8 @@ void Bhop::onTick(C_GameMode* gm) {
 	moveVec.x = cos(calcYaw) * speed;
 	moveVec.y = gm->player->velocity.y;
 	moveVec.z = sin(calcYaw) * speed;
-	if (keyPressed)
-	{
+	if (keyPressed) {
 		gm->player->lerpMotion(moveVec);
 		keyPressed = false;
 	}
-
 }

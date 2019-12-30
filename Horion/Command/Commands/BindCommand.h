@@ -1,10 +1,9 @@
 #pragma once
-#include "ICommand.h"
 #include <map>
 
-class BindCommand :
-	public IMCCommand
-{
+#include "ICommand.h"
+
+class BindCommand : public IMCCommand {
 public:
 	BindCommand();
 	~BindCommand();
@@ -12,4 +11,3 @@ public:
 	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
 };
-

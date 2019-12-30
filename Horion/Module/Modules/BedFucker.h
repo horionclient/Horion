@@ -1,8 +1,7 @@
 #pragma once
 #include "Module.h"
 
-class BedFucker : public IModule
-{
+class BedFucker : public IModule {
 private:
 	int range = 5;
 	bool beds = true;
@@ -11,6 +10,7 @@ private:
 	bool treasures = true;
 	bool chests = false;
 	bool barrels = false;
+
 public:
 	BedFucker();
 	~BedFucker();
@@ -22,4 +22,3 @@ public:
 	virtual void onDisable() override;
 	int delay = 0;
 };
-

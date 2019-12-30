@@ -1,11 +1,10 @@
 #pragma once
 #include "Module.h"
-class ClickTP :
-	public IModule
-{
+class ClickTP : public IModule {
 private:
 	bool hasClicked = false;
 	bool onlyHand = false;
+
 public:
 	ClickTP();
 	~ClickTP();

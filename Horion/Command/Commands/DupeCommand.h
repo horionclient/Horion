@@ -1,9 +1,7 @@
 #pragma once
 #include "ICommand.h"
 
-class DupeCommand :
-	public IMCCommand
-{
+class DupeCommand : public IMCCommand {
 public:
 	DupeCommand();
 	~DupeCommand();

@@ -1,10 +1,9 @@
 #pragma once
 #include "Module.h"
-class MidClick :
-	public IModule
-{
+class MidClick : public IModule {
 private:
 	bool hasClicked = false;
+
 public:
 	MidClick();
 	~MidClick();

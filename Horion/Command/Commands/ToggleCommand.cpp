@@ -1,30 +1,22 @@
 #include "ToggleCommand.h"
 
-
-
-ToggleCommand::ToggleCommand() : IMCCommand("toggle", "Toggles a module", "<module>")
-{
+ToggleCommand::ToggleCommand() : IMCCommand("toggle", "Toggles a module", "<module>") {
 	registerAlias("t");
 }
 
-
-ToggleCommand::~ToggleCommand()
-{
+ToggleCommand::~ToggleCommand() {
 }
 
-bool ToggleCommand::execute(std::vector<std::string>* args)
-{
+bool ToggleCommand::execute(std::vector<std::string>* args) {
 	assertTrue(args->size() >= 2);
 	std::string moduleName = args->at(1);
 
 	assertTrue(moduleName.size() > 0);
 
-
 	IModule* mod = moduleMgr->getModuleByName(moduleName);
 	if (mod == nullptr) {
 		clientMessageF("%sCould not find Module with name: %s", RED, moduleName.c_str());
-	}
-	else {
+	} else {
 		if (mod->isFlashMode()) {
 			clientMessageF("%sModule cannot be toggled!", RED);
 		}

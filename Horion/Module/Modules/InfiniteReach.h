@@ -1,13 +1,13 @@
 #pragma once
-#include "Module.h"
 #include "../../DrawUtils.h"
+#include "Module.h"
 
-class InfiniteReach : public IModule
-{
+class InfiniteReach : public IModule {
 private:
 	int delay = 15;
 	int Odelay = 0;
 	bool isMulti = false;
+
 public:
 	float range = 15;
 	InfiniteReach();
@@ -16,4 +16,3 @@ public:
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
 };
-

@@ -1,21 +1,17 @@
 #include "ModuleManager.h"
 
-ModuleManager::ModuleManager(GameData * gameData)
-{
+ModuleManager::ModuleManager(GameData* gameData) {
 	this->gameData = gameData;
 }
 
-ModuleManager::~ModuleManager()
-{
+ModuleManager::~ModuleManager() {
 	initialized = false;
-	for (int i = 0; i < this->moduleList.size(); i++)
-	{
+	for (int i = 0; i < this->moduleList.size(); i++) {
 		delete this->moduleList[i];
 	}
 }
 
-void ModuleManager::initModules()
-{
+void ModuleManager::initModules() {
 	this->moduleList.push_back(new HudModule());
 	this->moduleList.push_back(new Killaura());
 	this->moduleList.push_back(new ESP());
@@ -86,11 +82,10 @@ void ModuleManager::initModules()
 #endif
 
 	// Sort module alphabetically
-	std::sort(moduleList.begin(), moduleList.end(), [](const IModule* lhs, const IModule* rhs)
-	{
+	std::sort(moduleList.begin(), moduleList.end(), [](const IModule* lhs, const IModule* rhs) {
 		IModule* current = const_cast<IModule*>(lhs);
 		IModule* other = const_cast<IModule*>(rhs);
-		return std::string{ *current->getModuleName() } < std::string{ *other->getModuleName() };
+		return std::string{*current->getModuleName()} < std::string{*other->getModuleName()};
 	});
 
 	initialized = true;
@@ -100,8 +95,7 @@ void ModuleManager::initModules()
 	this->getModule<AntiBot>()->setEnabled(true);
 }
 
-void ModuleManager::disable()
-{
+void ModuleManager::disable() {
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
 		IModule* mod = *it;
 		if (mod->isEnabled())
@@ -109,8 +103,7 @@ void ModuleManager::disable()
 	}
 }
 
-void ModuleManager::onLoadConfig(json * conf)
-{
+void ModuleManager::onLoadConfig(json* conf) {
 	if (!isInitialized())
 		return;
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
@@ -119,8 +112,7 @@ void ModuleManager::onLoadConfig(json * conf)
 	}
 }
 
-void ModuleManager::onSaveConfig(json * conf)
-{
+void ModuleManager::onSaveConfig(json* conf) {
 	if (!isInitialized())
 		return;
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
@@ -129,8 +121,7 @@ void ModuleManager::onSaveConfig(json * conf)
 	}
 }
 
-void ModuleManager::onTick(C_GameMode * gameMode)
-{
+void ModuleManager::onTick(C_GameMode* gameMode) {
 	if (!isInitialized())
 		return;
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
@@ -140,8 +131,7 @@ void ModuleManager::onTick(C_GameMode * gameMode)
 	}
 }
 
-void ModuleManager::onKeyUpdate(int key, bool isDown)
-{
+void ModuleManager::onKeyUpdate(int key, bool isDown) {
 	if (!isInitialized())
 		return;
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
@@ -150,8 +140,7 @@ void ModuleManager::onKeyUpdate(int key, bool isDown)
 	}
 }
 
-void ModuleManager::onPreRender()
-{
+void ModuleManager::onPreRender() {
 	if (!isInitialized())
 		return;
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
@@ -161,8 +150,7 @@ void ModuleManager::onPreRender()
 	}
 }
 
-void ModuleManager::onPostRender()
-{
+void ModuleManager::onPostRender() {
 	if (!isInitialized())
 		return;
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
@@ -172,8 +160,7 @@ void ModuleManager::onPostRender()
 	}
 }
 
-void ModuleManager::onSendPacket(C_Packet* packet)
-{
+void ModuleManager::onSendPacket(C_Packet* packet) {
 	if (!isInitialized())
 		return;
 	for (auto it : moduleList) {
@@ -182,18 +169,15 @@ void ModuleManager::onSendPacket(C_Packet* packet)
 	}
 }
 
-std::vector<IModule*>* ModuleManager::getModuleList()
-{
+std::vector<IModule*>* ModuleManager::getModuleList() {
 	return &this->moduleList;
 }
 
-int ModuleManager::getModuleCount()
-{
+int ModuleManager::getModuleCount() {
 	return (int)(&moduleList)->size();
 }
 
-int ModuleManager::getEnabledModuleCount()
-{
+int ModuleManager::getEnabledModuleCount() {
 	int i = 0;
 	for (auto it = (&moduleList)->begin(); it != (&moduleList)->end(); ++it) {
 		IModule* mod = *it;

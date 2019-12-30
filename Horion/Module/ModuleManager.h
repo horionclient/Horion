@@ -1,76 +1,77 @@
 #pragma once
 
-#include <vector>
 #include <typeinfo>
-#include "../../Utils/Json.hpp"
+#include <vector>
+
 #include "../../Memory/GameData.h"
-#include "Modules/Module.h"
-#include "Modules/HudModule.h"
-#include "Modules/Killaura.h"
-#include "Modules/ESP.h"
+#include "../../Utils/Json.hpp"
 #include "Modules/Aimbot.h"
-#include "Modules/TriggerBot.h"
-#include "Modules/Jetpack.h"
-#include "Modules/ChestESP.h"
-#include "Modules/RainbowSky.h"
 #include "Modules/AirJump.h"
-#include "Modules/NoKnockBack.h"
-#include "Modules/Step.h"
-#include "Modules/Glide.h"
-#include "Modules/EditionFaker.h"
-#include "Modules/Phase.h"
-#include "Modules/Freecam.h"
-#include "Modules/AutoSprint.h"
-#include "Modules/Tracer.h"
-#include "Modules/BowAimbot.h"
-#include "Modules/Scaffold.h"
-#include "Modules/Speed.h"
-#include "Modules/NoFall.h"
-#include "Modules/Blink.h"
-#include "Modules/Nuker.h"
-#include "Modules/InstaBreak.h"
-#include "Modules/NoPacket.h"
-#include "Modules/Xray.h"
-#include "Modules/BedFucker.h"
-#include "Modules/NoSlowDown.h"
-#include "Modules/InfiniteReach.h"
-#include "Modules/AutoTotem.h"
-#include "Modules/ClickGuiMod.h"
-#include "Modules/ChestStealer.h"
-#include "Modules/Fly.h"
-#include "Modules/Hitbox.h"
-#include "Modules/Reach.h"
-#include "Modules/FullBright.h"
 #include "Modules/AirSwim.h"
-#include "Modules/InventoryMove.h"
-#include "Modules/HighJump.h"
-#include "Modules/NoWeb.h"
-#include "Modules/FastLadder.h"
-#include "Modules/StackableItem.h"
-#include "Modules/AutoSneak.h"
-#include "Modules/FastEat.h"
-#include "Modules/Jesus.h"
-#include "Modules/AutoArmor.h"
-#include "Modules/InfiniteBlockReach.h"
-#include "Modules/AutoClicker.h"
-#include "Modules/NameTags.h"
-#include "Modules/Criticals.h"
-#include "Modules/Bhop.h"
-#include "Modules/Tower.h"
-#include "Modules/AutoGapple.h"
-#include "Modules/BugUp.h"
-#include "Modules/MidClick.h"
-#include "Modules/ClickTP.h"
-#include "Modules/NoFriends.h"
-#include "Modules/Spammer.h"
-#include "Modules/ChestAura.h"
 #include "Modules/AntiBot.h"
-#include "Modules/InventoryCleaner.h"
-#include "Modules/Derp.h"
-#include "Modules/PacketLogger.h"
+#include "Modules/AutoArmor.h"
+#include "Modules/AutoClicker.h"
+#include "Modules/AutoGapple.h"
+#include "Modules/AutoSneak.h"
+#include "Modules/AutoSprint.h"
+#include "Modules/AutoTotem.h"
+#include "Modules/BedFucker.h"
+#include "Modules/Bhop.h"
+#include "Modules/Blink.h"
+#include "Modules/BowAimbot.h"
+#include "Modules/BugUp.h"
+#include "Modules/ChestAura.h"
+#include "Modules/ChestESP.h"
+#include "Modules/ChestStealer.h"
+#include "Modules/ClickGuiMod.h"
+#include "Modules/ClickTP.h"
 #include "Modules/Crasher.h"
+#include "Modules/Criticals.h"
 #include "Modules/CrystalAura.h"
+#include "Modules/Derp.h"
+#include "Modules/ESP.h"
+#include "Modules/EditionFaker.h"
+#include "Modules/FastEat.h"
+#include "Modules/FastLadder.h"
+#include "Modules/Fly.h"
+#include "Modules/Freecam.h"
+#include "Modules/FullBright.h"
+#include "Modules/Glide.h"
+#include "Modules/HighJump.h"
+#include "Modules/Hitbox.h"
+#include "Modules/HudModule.h"
+#include "Modules/InfiniteBlockReach.h"
+#include "Modules/InfiniteReach.h"
+#include "Modules/InstaBreak.h"
+#include "Modules/InventoryCleaner.h"
+#include "Modules/InventoryMove.h"
+#include "Modules/Jesus.h"
+#include "Modules/Jetpack.h"
+#include "Modules/Killaura.h"
+#include "Modules/MidClick.h"
+#include "Modules/Module.h"
+#include "Modules/NameTags.h"
+#include "Modules/NoFall.h"
+#include "Modules/NoFriends.h"
+#include "Modules/NoKnockBack.h"
+#include "Modules/NoPacket.h"
+#include "Modules/NoSlowDown.h"
+#include "Modules/NoWeb.h"
+#include "Modules/Nuker.h"
+#include "Modules/PacketLogger.h"
+#include "Modules/Phase.h"
+#include "Modules/RainbowSky.h"
+#include "Modules/Reach.h"
+#include "Modules/Scaffold.h"
+#include "Modules/Spammer.h"
+#include "Modules/Speed.h"
+#include "Modules/StackableItem.h"
+#include "Modules/Step.h"
 #include "Modules/Timer.h"
+#include "Modules/Tower.h"
+#include "Modules/Tracer.h"
+#include "Modules/TriggerBot.h"
+#include "Modules/Xray.h"
 
 #ifdef _DEBUG
 #include "Modules/TestModule.h"
@@ -83,6 +84,7 @@ private:
 	GameData* gameData;
 	std::vector<IModule*> moduleList;
 	bool initialized = false;
+
 public:
 	~ModuleManager();
 	ModuleManager(GameData* gameData);
@@ -107,7 +109,7 @@ public:
 	 *		IModule* mod = moduleMgr.getModule<NoKnockBack>(); 
 	 *	Check for nullptr directly after that call, as Hooks::init is called before ModuleManager::initModules !	
 	 */
-	template<typename TRet>
+	template <typename TRet>
 	TRet* getModule() {
 		if (!isInitialized())
 			return nullptr;
@@ -131,7 +133,6 @@ public:
 			std::transform(modNameCopy.begin(), modNameCopy.end(), modNameCopy.begin(), ::tolower);
 			if (modNameCopy == nameCopy)
 				return mod;
-			
 		}
 		return nullptr;
 	}

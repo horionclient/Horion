@@ -1,4 +1,5 @@
 ﻿#include "Target.h"
+
 #include "../Horion/Module/ModuleManager.h"
 
 C_LocalPlayer** localPlayer;
@@ -7,8 +8,7 @@ void Target::init(C_LocalPlayer** cl) {
 	localPlayer = cl;
 }
 
-bool Target::isValidTarget(C_Entity* ent)
-{
+bool Target::isValidTarget(C_Entity* ent) {
 	if (ent == NULL)
 		return false;
 

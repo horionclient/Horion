@@ -1,11 +1,11 @@
 #pragma once
 #include "Module.h"
 
-class Speed : public IModule
-{
+class Speed : public IModule {
 private:
 	float origSpeed = 0;
 	float speed = 1.6f;
+
 public:
 	Speed();
 	~Speed();
@@ -16,4 +16,3 @@ public:
 	virtual void onEnable() override;
 	virtual void onDisable() override;
 };
-

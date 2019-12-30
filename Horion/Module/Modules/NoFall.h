@@ -1,11 +1,9 @@
 #pragma once
 
-#include "Module.h"
 #include "../../DrawUtils.h"
+#include "Module.h"
 
-
-class NoFall : public IModule
-{
+class NoFall : public IModule {
 public:
 	NoFall();
 	~NoFall();
@@ -14,4 +12,3 @@ public:
 	virtual const char* getModuleName() override;
 	virtual void onSendPacket(C_Packet* packet) override;
 };
-

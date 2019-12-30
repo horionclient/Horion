@@ -1,8 +1,6 @@
 #pragma once
 #include "Module.h"
-class NoPacket :
-	public IModule
-{
+class NoPacket : public IModule {
 public:
 	NoPacket();
 	~NoPacket();
@@ -10,4 +8,3 @@ public:
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 };
-

@@ -1,9 +1,8 @@
 #pragma once
-#include "Module.h"
 #include "../ModuleManager.h"
+#include "Module.h"
 
-class Aimbot : public IModule
-{
+class Aimbot : public IModule {
 private:
 	float range = 4.f;
 	bool vertical = true;
@@ -13,6 +12,7 @@ private:
 	float verticalspeed = 50.f;
 	float verticalrange = 40.f;
 	float horizontalrange = 60.f;
+
 public:
 	Aimbot();
 	~Aimbot();
@@ -21,4 +21,3 @@ public:
 	virtual const char* getModuleName() override;
 	virtual void onPostRender() override;
 };
-

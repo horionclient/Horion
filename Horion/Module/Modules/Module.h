@@ -1,9 +1,10 @@
 #pragma once
 
+#include <string>
+
 #include "../../../Memory/GameData.h"
 #include "../../../Utils/Json.hpp"
 #include "../../FriendList/FriendList.h"
-#include <string>
 
 using json = nlohmann::json;
 
@@ -45,7 +46,7 @@ struct SettingEntry {
 	SettingValue* maxValue = nullptr;
 
 	// ClickGui Data
-	bool isDragging = false; // This is incredibly hacky and i wanted to avoid this as much as possible but i want to get this clickgui done
+	bool isDragging = false;  // This is incredibly hacky and i wanted to avoid this as much as possible but i want to get this clickgui done
 
 	void makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
 		switch (valueType) {
@@ -70,8 +71,7 @@ struct SettingEntry {
 	}
 };
 
-class IModule
-{
+class IModule {
 private:
 	bool enabled = false;
 	int keybind = 0x0;
@@ -80,12 +80,14 @@ private:
 	const char* tooltip;
 
 	std::vector<SettingEntry*> settings;
+
 protected:
 	IModule(int key, Category c, const char* tooltip);
 
 	void registerFloatSetting(std::string name, float* floatPtr, float defaultValue, float minValue, float maxValue);
 	void registerIntSetting(std::string name, int* intpTr, int defaultValue, int minValue, int maxValue);
 	void registerBoolSetting(std::string name, bool* boolPtr, bool defaultValue);
+
 public:
 	~IModule();
 
@@ -114,4 +116,3 @@ public:
 	virtual void onSendPacket(C_Packet*);
 	const char* getTooltip();
 };
-
