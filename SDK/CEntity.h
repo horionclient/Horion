@@ -651,6 +651,10 @@ private:
 	virtual __int64 tickWorld(__int64 const &);
 
 public:
+	TextHolder *getUUID() {
+		return reinterpret_cast<TextHolder *>(reinterpret_cast<__int64>(this) + 0x1F38);
+	}
+
 	C_InventoryTransactionManager *getTransactionManager() {
 		static unsigned int offset = 0;
 		if (offset == 0) {
@@ -680,10 +684,16 @@ public:
 	C_SerializedSkin *getSerializedSkin() {
 		static unsigned int offset = 0;
 		if (offset == 0) {                                                                                                   // from Player::updateSkin
-			offset = *reinterpret_cast<int *>(Utils::FindSignature("48 81 C1 ?? ?? ?? ?? E8 ?? ?? ?? ?? 44 8B C3 48") + 3);  // GameMode::startDestroyBlock -> GameMode::_canDestroy -> getSupplies
+			offset = *reinterpret_cast<int *>(Utils::FindSignature("48 81 C1 ?? ?? ?? ?? E8 ?? ?? ?? ?? 44 8B C3 48") + 3);  
 		}
 		return reinterpret_cast<C_SerializedSkin *>(reinterpret_cast<__int64>(this) + offset);
 	};
+
+	void updateSkin(C_SerializedSkin* skin, unsigned int id) {
+		using updateSkin_t = void(__fastcall*)(C_Entity*, C_SerializedSkin* skin, unsigned int id);
+		static updateSkin_t updateSkin = reinterpret_cast<updateSkin_t>(Utils::FindSignature("48 8B C4 55 56 57 41 56 41 57 48 8D 68 A1 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 ?? 0F 29 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 41 8B D8"));
+		updateSkin(this, skin, id);
+	}
 
 private:
 	virtual __int64 frameUpdate(__int64 &);

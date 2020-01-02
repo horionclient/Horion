@@ -43,6 +43,7 @@ public:
     inline std::wstring GetResponseCookies(void);
     inline bool SetAdditionalRequestCookies(const std::wstring &cookies);
     inline bool SetAdditionalDataToSend(BYTE *data, unsigned int dataSize);
+	inline bool SetPostDataToSend(std::shared_ptr<char[]> data, unsigned int dataSize);
     inline bool UpdateUrl(const std::wstring &url);
     inline bool ResetAdditionalDataToSend(void);
     inline bool SetAdditionalRequestHeaders(const std::wstring &additionalRequestHeaders);
@@ -77,6 +78,8 @@ private:
     std::wstring m_responseCookies;
     std::wstring m_additionalRequestCookies;
     BYTE *m_pDataToSend;
+	std::shared_ptr<char[]> m_postData;
+	unsigned int m_postDataSize;
     unsigned int m_dataToSendSize;
     std::wstring m_additionalRequestHeaders;
     std::wstring m_proxy;
@@ -288,12 +291,13 @@ bool WinHttpClient::SendHttpRequest(const std::wstring &httpVerb, bool disableAu
                         }
                     }
                     bool bSendRequestSucceed = false;
+					bool hasData = verb == L"POST" && this->m_postDataSize > 0;
                     if (::WinHttpSendRequest(hRequest,
                                              WINHTTP_NO_ADDITIONAL_HEADERS,
                                              0,
-                                             WINHTTP_NO_REQUEST_DATA,
-                                             0,
-                                             0,
+											 hasData ? this->m_postData.get() : WINHTTP_NO_REQUEST_DATA,
+                                             hasData ? this->m_postDataSize : 0,
+											 hasData ? this->m_postDataSize : 0,
                                              NULL))
                     {
                         bSendRequestSucceed = true;
@@ -327,9 +331,9 @@ bool WinHttpClient::SendHttpRequest(const std::wstring &httpVerb, bool disableAu
                                         if (::WinHttpSendRequest(hRequest,
                                                                  WINHTTP_NO_ADDITIONAL_HEADERS,
                                                                  0,
-                                                                 WINHTTP_NO_REQUEST_DATA,
-                                                                 0,
-                                                                 0,
+																 hasData ? this->m_postData.get() : WINHTTP_NO_REQUEST_DATA,
+																 hasData ? this->m_postDataSize : 0,
+																 hasData ? this->m_postDataSize : 0,
                                                                  NULL))
                                         {
                                             bSendRequestSucceed = true;
@@ -721,6 +725,17 @@ bool WinHttpClient::SetAdditionalDataToSend(BYTE *data, unsigned int dataSize)
     }
 
     return false;
+}
+
+inline bool WinHttpClient::SetPostDataToSend(std::shared_ptr<char[]> data, unsigned int dataSize) {
+	if (data == NULL || dataSize <= 0) {
+		return false;
+	}
+
+	m_postData = data;
+	m_postDataSize = dataSize;
+
+	return true;
 }
 
 // Reset additional data fields

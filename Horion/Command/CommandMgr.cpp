@@ -72,7 +72,8 @@ void CommandMgr::execute(char* message) {
 					try {
 						if (!c->execute(args))
 							g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s%c%s %s", RED, BOLD, RESET, cmdMgr->prefix, c->getCommand(), c->getUsage());
-					} catch (...) {
+					} catch (std::exception e) {
+						logF("Error in command: %s", e.what());
 						g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s%c%s %s", RED, BOLD, RESET, cmdMgr->prefix, c->getCommand(), c->getUsage());
 					}
 					goto done;

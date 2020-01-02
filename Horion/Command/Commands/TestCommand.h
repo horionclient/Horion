@@ -3,7 +3,7 @@
 
 #include "../../../resource.h"
 #include "../../../include/WinHttpClient.h"
-
+#include <fstream>
 
 class TestCommand :
 	public IMCCommand
