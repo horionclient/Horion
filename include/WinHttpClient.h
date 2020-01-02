@@ -43,7 +43,7 @@ public:
     inline std::wstring GetResponseCookies(void);
     inline bool SetAdditionalRequestCookies(const std::wstring &cookies);
     inline bool SetAdditionalDataToSend(BYTE *data, unsigned int dataSize);
-	inline bool SetPostDataToSend(std::shared_ptr<char[]> data, unsigned int dataSize);
+    inline bool SetPostDataToSend(std::shared_ptr<char[]> data, unsigned int dataSize);
     inline bool UpdateUrl(const std::wstring &url);
     inline bool ResetAdditionalDataToSend(void);
     inline bool SetAdditionalRequestHeaders(const std::wstring &additionalRequestHeaders);
@@ -78,8 +78,8 @@ private:
     std::wstring m_responseCookies;
     std::wstring m_additionalRequestCookies;
     BYTE *m_pDataToSend;
-	std::shared_ptr<char[]> m_postData;
-	unsigned int m_postDataSize;
+    std::shared_ptr<char[]> m_postData;
+    unsigned int m_postDataSize;
     unsigned int m_dataToSendSize;
     std::wstring m_additionalRequestHeaders;
     std::wstring m_proxy;

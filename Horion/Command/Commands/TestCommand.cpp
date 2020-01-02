@@ -34,24 +34,6 @@ bool TestCommand::execute(std::vector<std::string>* args) {
 			}
 		}
 
-		
-		/*{
-			std::ofstream moin("C:\\Users\\gcaker\\AppData\\Local\\Packages\\Microsoft.MinecraftUWP_8wekyb3d8bbwe\\RoamingState\\skin.dat", std::ios::out | std::ios::binary);
-			moin.write(reinterpret_cast<char*>(imageDataResized.get()), 64 * 64 * 4);
-			moin.close();
-		}*/
-		{
-			GamerTextHolder boi;
-			currentSkin->geometry.getAsString(boi);
-			std::ofstream moin("C:\\Users\\gcaker\\AppData\\Local\\Packages\\Microsoft.MinecraftUWP_8wekyb3d8bbwe\\RoamingState\\orig.dat", std::ios::out | std::ios::binary);
-			moin.write(reinterpret_cast<char*>(boi.getText()), boi.getTextLength());
-			moin.close();
-			boi.getText();
-			
-		}
-
-		logF("skin: %llX", currentSkin);
-
 		{
 			swprintf_s(fullUrl, L"http://207.180.225.107:5758/api/cosmetic/infoList?api_key=%S", apiKey);
 			WinHttpClient client(fullUrl);
