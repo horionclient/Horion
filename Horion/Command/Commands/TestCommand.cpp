@@ -16,6 +16,7 @@ bool TestCommand::execute(std::vector<std::string>* args) {
 	assertTrue(skinName.size() > 0);
 
 	{
+		using json = nlohmann::json;
 		const char* apiKey = "C3DFBFT3r5RXWLrP";
 		auto currentSkin = g_Data.getLocalPlayer()->getSerializedSkin();
 		TextHolder* uuid = g_Data.getLocalPlayer()->getUUID();
@@ -24,6 +25,13 @@ bool TestCommand::execute(std::vector<std::string>* args) {
 
 		assertTrue(uuid->getTextLength() > 0);
 
+		json oldGeo;
+		{
+			GamerTextHolder boi;
+			currentSkin->geometry.getAsString(boi);
+			Logger::WriteBigLogFileF(boi.getTextLength() + 100, "Geo: %s", boi.getText());
+			oldGeo = json::parse(boi.getText());
+		}
 		std::unique_ptr<unsigned int[]> imageDataResized(new unsigned int[64 * 64]);
 
 		for (int x = 0; x < 64; x++) {
@@ -132,6 +140,59 @@ bool TestCommand::execute(std::vector<std::string>* args) {
 
 					auto patch = json();
 					patch["geometry"]["default"] = geometryName;
+
+					
+					// Mod the geometry to match our UV's
+					if (currentSkin->isPersonaSkin) {
+						json geoMod = json::parse(geometryData);
+						auto geoParts = &geoMod.at("minecraft:geometry");
+						auto oldGeoParts = oldGeo["minecraft:geometry"];
+
+						for (auto it = geoParts->begin(); it != geoParts->end(); it++) {
+							auto part = it.value();
+							std::string identifier = part["description"]["identifier"].get<std::string>();
+							auto oldPartIt = std::find_if(oldGeoParts.begin(), oldGeoParts.end(), [identifier](auto oldPart) {
+								//return oldPart["description"]["identifier"].get<std::string>() == identifier;
+								return oldPart["description"]["texture_width"].get<float>() == 256.0f;
+							});
+							if (oldPartIt == oldGeoParts.end())
+								continue;
+							auto oldPart = *oldPartIt;
+							
+							logF("Found part: %s", identifier.c_str());
+							auto bones = &part.at("bones");
+							auto oldBones = oldPart["bones"];
+
+							for (auto boneIt = bones->begin(); boneIt != bones->end(); boneIt++) {
+								auto bone = *boneIt;
+								if (!bone["cubes"].is_array())
+									continue;
+								std::string name = bone["name"];
+								std::string parent = bone["parent"];
+								std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
+
+								auto oldBoneIt = std::find_if(oldBones.begin(), oldBones.end(), [name, parent](auto oldBone) {
+									return oldBone["name"].get<std::string>() == name && oldBone["poly_mesh"].is_object() && oldBone["parent"] == parent;
+								});
+								if (oldBoneIt == oldBones.end()) {
+									logF("Did not find bone: %s", name.c_str());
+									continue;
+								}
+									
+								auto oldBone = *oldBoneIt;
+
+								boneIt->erase("cubes");
+								//bone["cubes"].swap(json::value_t::null);
+								boneIt->emplace("poly_mesh", oldBone["poly_mesh"]);
+								
+								logF("Found bone: %s poly: %s", name.c_str(), (*boneIt)["poly_mesh"].is_object() ? "true" : "false");
+							}
+
+							it->swap(part);
+						}
+						geometryData = geoMod.dump();
+						Logger::WriteBigLogFileF(geometryData.size() + 100, "New geometry: %s", geometryData.c_str());
+					}
 
 					std::shared_ptr<TextHolder> newSkinResourcePatch = std::make_shared<TextHolder>(patch.dump());
 
