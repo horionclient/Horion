@@ -106,7 +106,7 @@ bool TestCommand::execute(std::vector<std::string>* args) {
 			auto skinData = Utils::url_encode(Utils::base64_encode(reinterpret_cast<unsigned char*>(imageDataResized.get()), 64 * 64 * 4));
 
 			std::shared_ptr<char[]> postData(new char[200 + skinData.size()]);
-			int postDataSize = sprintf_s(postData.get(), 200 + skinData.size(), "api_key=%s&user=%s&skin_type=%s&skin_data=%s", apiKey, uuid->getText(), "alex", skinData.c_str());
+			int postDataSize = sprintf_s(postData.get(), 200 + skinData.size(), "api_key=%s&user=%s&skin_type=%s&skin_data=%s&isPersona=%d", apiKey, uuid->getText(), "alex", skinData.c_str(), currentSkin->isPersonaSkin);
 
 			WinHttpClient client(fullUrl);
 
@@ -143,7 +143,7 @@ bool TestCommand::execute(std::vector<std::string>* args) {
 
 					
 					// Mod the geometry to match our UV's
-					if (currentSkin->isPersonaSkin) {
+					/*if (currentSkin->isPersonaSkin) {
 						json geoMod = json::parse(geometryData);
 						auto geoParts = &geoMod.at("minecraft:geometry");
 						auto oldGeoParts = oldGeo["minecraft:geometry"];
@@ -192,7 +192,7 @@ bool TestCommand::execute(std::vector<std::string>* args) {
 						}
 						geometryData = geoMod.dump();
 						Logger::WriteBigLogFileF(geometryData.size() + 100, "New geometry: %s", geometryData.c_str());
-					}
+					}*/
 
 					std::shared_ptr<TextHolder> newSkinResourcePatch = std::make_shared<TextHolder>(patch.dump());
 
