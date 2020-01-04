@@ -6,8 +6,10 @@
 #ifndef WINHTTPCLIENT_H
 #define WINHTTPCLIENT_H
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wreorder"
+#endif
 #pragma comment(lib, "Winhttp.lib")
 
 #include "RegExp.h"
@@ -841,6 +843,7 @@ bool WinHttpClient::SetTimeouts(unsigned int resolveTimeout,
 
     return true;
 }
-
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 #endif // WINHTTPCLIENT_H
