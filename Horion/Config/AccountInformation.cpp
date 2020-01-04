@@ -1,4 +1,7 @@
 #include "AccountInformation.h"
+#include "../../Utils/Json.hpp"
+#include "../../include/WinHttpClient.h"
+
 
 AccountInformation::AccountInformation(std::string discordTok, unsigned int serial) : isGuest(false), discordToken(discordTok), serialNum(serial){};
 AccountInformation::AccountInformation() : isGuest(true), discordToken("none"){};

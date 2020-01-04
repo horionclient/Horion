@@ -1,5 +1,9 @@
 #include "ESP.h"
 
+#include "../ModuleManager.h"
+#include "../../../Utils/Target.h"
+#include "../../DrawUtils.h"
+
 ESP::ESP() : IModule('O', Category::VISUAL, "Makes it easier to find entities around you") {
 	this->registerBoolSetting("rainbow", &this->doRainbow, this->doRainbow);
 	this->registerBoolSetting("MobEsp", &this->isMobEsp, this->isMobEsp);

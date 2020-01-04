@@ -2,9 +2,7 @@
 
 #include <string>
 
-#include "../../Utils/Json.hpp"
 #include "../../Utils/Logger.h"
-#include "../../include/WinHttpClient.h"
 
 class AccountInformation {
 private:

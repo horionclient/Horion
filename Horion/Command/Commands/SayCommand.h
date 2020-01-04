@@ -1,5 +1,6 @@
 #pragma once
 #include "ICommand.h"
+#include <sstream>
 class SayCommand : public IMCCommand {
 public:
 	SayCommand();

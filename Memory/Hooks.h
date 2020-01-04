@@ -23,6 +23,8 @@
 #include "GameData.h"
 #include "MinHook.h"
 
+#include <intrin.h>
+
 #ifdef PERFORMANCE_TEST
 #include <chrono>
 #endif

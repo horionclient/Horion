@@ -1,5 +1,9 @@
 #include "Module.h"
 
+#include "../../../Utils/Json.hpp"
+
+using json = nlohmann::json;
+
 IModule::IModule(int key, Category c, const char* tooltip) {
 	this->keybind = key;
 	this->category = c;
@@ -139,7 +143,8 @@ void IModule::onPostRender() {
 void IModule::onSendPacket(C_Packet*) {
 }
 
-void IModule::onLoadConfig(json* conf) {
+void IModule::onLoadConfig(void* confVoid) {
+	json* conf = reinterpret_cast<json*>(confVoid);
 	if (conf->contains(this->getRawModuleName())) {
 		auto obj = conf->at(this->getRawModuleName());
 		if (obj.is_null())
@@ -185,7 +190,8 @@ void IModule::onLoadConfig(json* conf) {
 
 #pragma warning(push)
 #pragma warning(disable : 26444)
-void IModule::onSaveConfig(json* conf) {
+void IModule::onSaveConfig(void* confVoid) {
+	json* conf = reinterpret_cast<json*>(confVoid);
 	std::string modName = getRawModuleName();
 	if (conf->contains(modName.c_str()))
 		conf->erase(modName.c_str());

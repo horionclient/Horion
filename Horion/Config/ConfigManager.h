@@ -4,8 +4,6 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <Windows.h>
-#include <windows.storage.h>
-#include <wrl.h>
 
 #include <filesystem>
 #include <fstream>
@@ -16,9 +14,6 @@
 #include "../Command/CommandMgr.h"
 #include "../Module/ModuleManager.h"
 
-using namespace ABI::Windows::Storage;
-using namespace Microsoft::WRL;
-using namespace Microsoft::WRL::Wrappers;
 using json = nlohmann::json;
 
 class ConfigManager {

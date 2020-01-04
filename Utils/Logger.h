@@ -5,30 +5,16 @@
 #endif
 #include <Windows.h>
 
+#include <vector>
+#include "Utils.h"
+
 #ifdef _DEBUG
 #include <ios>
 #include <iosfwd>
 #include <iostream>
-#include <streambuf>
 #endif
 
-#include <windows.storage.h>
-#include <wrl.h>
-
-#include <ctime>
-#include <iomanip>
-#include <mutex>
-#include <sstream>
-#include <string>
-#include <vector>
-
-#include "Utils.h"
-
 #pragma comment(lib, "runtimeobject")
-
-using namespace ABI::Windows::Storage;
-using namespace Microsoft::WRL;
-using namespace Microsoft::WRL::Wrappers;
 
 #ifndef logF
 #define logF Logger::WriteLogFileF

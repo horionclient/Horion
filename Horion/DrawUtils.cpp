@@ -237,19 +237,10 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth) {
 	vec2_t Screen1;
 	vec2_t Screen2;
 
-	for (int i = 0; i < 24; i += 2)
+	for (int i = 0; i < 24; i += 2) {
 		if (refdef->OWorldToScreen(origin, cornerList[i], Screen1, fov, screenSize) && refdef->OWorldToScreen(origin, cornerList[i + 1], Screen2, fov, screenSize)) {
 			drawLine(Screen1, Screen2, lineWidth);
 		}
-
-	static Tracer* mod = moduleMgr->getModule<Tracer>();
-	if (mod == nullptr)
-		mod = moduleMgr->getModule<Tracer>();
-	else if (mod->isEnabled()) {
-		// REWORK ASAP
-		vec2_t yeet(((g_Data.getClientInstance()->getGuiData()->widthGame) / 2), ((g_Data.getClientInstance()->getGuiData()->heightGame) / 2));
-		if (Screen2.y > 0)
-			DrawUtils::drawLine(yeet, Screen2, lineWidth);
 	}
 }
 

@@ -3,10 +3,9 @@
 #include <string>
 
 #include "../../../Memory/GameData.h"
-#include "../../../Utils/Json.hpp"
 #include "../../FriendList/FriendList.h"
 
-using json = nlohmann::json;
+
 
 enum class Category {
 	COMBAT = 0,
@@ -107,8 +106,8 @@ public:
 	virtual void onDisable();
 	virtual void onPreRender();
 	virtual void onPostRender();
-	virtual void onLoadConfig(json* conf);
-	virtual void onSaveConfig(json* conf);
+	virtual void onLoadConfig(void* conf);
+	virtual void onSaveConfig(void* conf);
 	virtual bool isFlashMode();
 	virtual void setEnabled(bool enabled);
 	virtual void toggle();

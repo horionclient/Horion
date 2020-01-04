@@ -1,5 +1,7 @@
 #include "UnbindCommand.h"
 
+#include "../../Module/ModuleManager.h"
+
 UnbindCommand::UnbindCommand() : IMCCommand("unbind", "unbind modules", "<module | all>") {
 }
 

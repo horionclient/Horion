@@ -1,5 +1,12 @@
 #include "ConfigManager.h"
 
+#include <windows.storage.h>
+#include <wrl.h>
+
+using namespace ABI::Windows::Storage;
+using namespace Microsoft::WRL;
+using namespace Microsoft::WRL::Wrappers;
+
 std::wstring ConfigManager::GetRoamingFolderPath() {
 	ComPtr<IApplicationDataStatics> appDataStatics;
 	auto hr = RoGetActivationFactory(HStringReference(L"Windows.Storage.ApplicationData").Get(), __uuidof(appDataStatics), &appDataStatics);

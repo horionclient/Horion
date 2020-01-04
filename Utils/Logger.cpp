@@ -1,5 +1,13 @@
 #include "Logger.h"
 
+#include <sstream>
+#include <windows.storage.h>
+#include <wrl.h>
+
+using namespace ABI::Windows::Storage;
+using namespace Microsoft::WRL;
+using namespace Microsoft::WRL::Wrappers;
+
 char logPath[200];
 bool initializedLogger = false;
 bool loggerActive = true;

@@ -5,7 +5,6 @@
 
 #include "../../../Memory/GameData.h"
 #include "../../FriendList/FriendList.h"
-#include "../../Module/ModuleManager.h"
 
 #ifndef ASSERT_T
 #define ASSERT_T(x) \

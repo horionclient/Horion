@@ -1,6 +1,7 @@
 #include "ModulesCommand.h"
 
 #include <algorithm>
+#include "../../Module/ModuleManager.h"
 
 ModulesCommand::ModulesCommand() : IMCCommand("modules", "Lists all modules", "") {
 	registerAlias("mods");

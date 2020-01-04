@@ -1,5 +1,9 @@
 #include "NameTags.h"
 
+#include "../ModuleManager.h"
+#include "../../../Utils/Target.h"
+#include "../../DrawUtils.h"
+
 NameTags::NameTags() : IModule(0x0, Category::VISUAL, "Shows better nametags above players that can be seen from a lot more far aways") {
 	this->registerBoolSetting("Display Health", &this->displayHealth, this->displayHealth);
 	this->registerBoolSetting("Use Unicode font", &this->useUnicodeFont, this->useUnicodeFont);

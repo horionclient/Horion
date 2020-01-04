@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../../Utils/Target.h"
-#include "../../DrawUtils.h"
 #include "Module.h"
 
 class NameTags : public IModule {

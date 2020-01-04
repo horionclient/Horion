@@ -465,7 +465,7 @@ private:
 	virtual __int64 shouldRenderUICursor(void) const;
 	virtual bool sub_1400CD3B0(void);
 	virtual bool sub_1400CD3B1(void);
-	virtual __int64 onLatencyUpdated(std::chrono::duration<long long, std::ratio<1ll, 1000ll>> const&);
+	virtual __int64 onLatencyUpdated(__int64 const&);
 	virtual __int64 getGuiScale(void) const;
 	virtual __int64 getGuiScaleOption(void) const;
 	virtual __int64 getGuiScaleOffset(void) const;

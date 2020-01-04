@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../Horion/Module/ModuleManager.h"
 #include "../Memory/GameData.h"
 #include "../SDK/CClientInstance.h"
 #include "../SDK/CMinecraftUIRenderContext.h"

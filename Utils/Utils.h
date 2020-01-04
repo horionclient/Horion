@@ -1,5 +1,18 @@
 #pragma once
 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <Windows.h>
+#include <Psapi.h>
+
+#include <algorithm>
+#include <ctime>
+#include <random>
+#include <vector>
+
+#include "Logger.h"
+
 static const char* const KeyNames[] = {
 	"Unknown",
 	"VK_LBUTTON",
@@ -195,23 +208,6 @@ static const char* const KeyNames[] = {
 	"OEM_2",
 	"OEM_3"};
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#include <Windows.h>
-#include <Psapi.h>
-
-#include <algorithm>
-#include <chrono>
-#include <ctime>
-#include <iomanip>
-#include <iostream>
-#include <random>
-#include <sstream>
-#include <vector>
-
-#include "Logger.h"
-
 #define INRANGE(x, a, b) (x >= a && x <= b)
 #define GET_BYTE(x) (GET_BITS(x[0]) << 4 | GET_BITS(x[1]))
 #define GET_BITS(x) (INRANGE((x & (~0x20)), 'A', 'F') ? ((x & (~0x20)) - 'A' + 0xa) : (INRANGE(x, '0', '9') ? x - '0' : 0))
@@ -227,12 +223,12 @@ static inline void ImSwap(T& a, T& b) {
 
 class Utils {
 public:
-	static const char* getKeybindName(int keybind) {
+	static inline const char* getKeybindName(int keybind) {
 		return KeyNames[keybind];
 	};
 	// Convert rgb floats ([0-1],[0-1],[0-1]) to hsv floats ([0-1],[0-1],[0-1]), from Foley & van Dam p592
 	// Optimized http://lolengine.net/blog/2013/01/13/fast-rgb-to-hsv
-	static void ColorConvertRGBtoHSV(float r, float g, float b, float& out_h, float& out_s, float& out_v) {
+	static inline void ColorConvertRGBtoHSV(float r, float g, float b, float& out_h, float& out_s, float& out_v) {
 		float K = 0.f;
 		if (g < b) {
 			ImSwap(g, b);
@@ -251,7 +247,7 @@ public:
 
 	// Convert hsv floats ([0-1],[0-1],[0-1]) to rgb floats ([0-1],[0-1],[0-1]), from Foley & van Dam p593
 	// also http://en.wikipedia.org/wiki/HSL_and_HSV
-	static void ColorConvertHSVtoRGB(float h, float s, float v, float& out_r, float& out_g, float& out_b) {
+	static inline void ColorConvertHSVtoRGB(float h, float s, float v, float& out_r, float& out_g, float& out_b) {
 		if (s == 0.0f) {
 			// gray
 			out_r = out_g = out_b = v;
@@ -301,7 +297,7 @@ public:
 	};
 
 	template <unsigned int IIdx, typename TRet, typename... TArgs>
-	static auto CallVFunc(void* thisptr, TArgs... argList) -> TRet {
+	static inline auto CallVFunc(void* thisptr, TArgs... argList)->TRet {
 		//if (thisptr == nullptr)
 		//return nullptr;
 		using Fn = TRet(__thiscall*)(void*, decltype(argList)...);
@@ -349,7 +345,7 @@ public:
 		return out;
 	}
 
-	static std::string randomString(const int size) {
+	static inline std::string randomString(const int size) {
 		std::string str("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
 		std::random_device rd;
 		std::mt19937 generator(rd());
@@ -427,25 +423,7 @@ public:
 		return 0u;
 	}
 
-	/**
-	*   GetCurrentSystemTime - Gets actual system time
-	*   @timeInfo: Reference to your own tm variable, gets modified.
-	*/
-	static void GetCurrentSystemTime(tm& timeInfo) {
-		const std::chrono::system_clock::time_point systemNow = std::chrono::system_clock::now();
-		std::time_t now_c = std::chrono::system_clock::to_time_t(systemNow);
-		localtime_s(&timeInfo, &now_c);  // using localtime_s as std::localtime is not thread-safe.
-	};
+	static void GetCurrentSystemTime(tm& timeInfo);
 
-	static void ApplySystemTime(std::stringstream* ss) {
-		using namespace std::chrono;
-#ifdef _DEBUG
-		const std::chrono::system_clock::time_point systemNow = system_clock::now();
-		auto ms = duration_cast<milliseconds>(systemNow.time_since_epoch()) % 10000;
-		time_t now_c = system_clock::to_time_t(systemNow);
-		tm timeInfo{};
-		localtime_s(&timeInfo, &now_c);  // using localtime_s as std::localtime is not thread-safe.
-		*ss << "[" << std::put_time(&timeInfo, "%T") << "." << std::setfill('0') << std::setw(4) << ms.count() << "] ";
-#endif
-	};
+	static void ApplySystemTime(std::stringstream* ss);
 };

@@ -1,5 +1,7 @@
 #include "ToggleCommand.h"
 
+#include "../../Module/ModuleManager.h"
+
 ToggleCommand::ToggleCommand() : IMCCommand("toggle", "Toggles a module", "<module>") {
 	registerAlias("t");
 }
