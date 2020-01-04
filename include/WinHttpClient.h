@@ -6,6 +6,8 @@
 #ifndef WINHTTPCLIENT_H
 #define WINHTTPCLIENT_H
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreorder"
 #pragma comment(lib, "Winhttp.lib")
 
 #include "RegExp.h"
@@ -19,7 +21,7 @@
 typedef bool (*PROGRESSPROC)(double);
 
 static const unsigned int INT_RETRYTIMES = 1;
-static wchar_t *SZ_AGENT = L"WinHttpClient";
+static const wchar_t *SZ_AGENT = L"WinHttpClient";
 static const int INT_BUFFERSIZE = 10240;    // Initial 10 KB temporary buffer, double if it is not enough.
 
 class WinHttpClient
@@ -179,7 +181,7 @@ bool WinHttpClient::SendHttpRequest(const std::wstring &httpVerb, bool disableAu
         }
     }
 
-    bool timSet = ::WinHttpSetTimeouts(m_sessionHandle,
+    ::WinHttpSetTimeouts(m_sessionHandle,
                          m_resolveTimeout,
                          m_connectTimeout,
                          m_sendTimeout,
@@ -840,4 +842,5 @@ bool WinHttpClient::SetTimeouts(unsigned int resolveTimeout,
     return true;
 }
 
+#pragma clang diagnostic pop
 #endif // WINHTTPCLIENT_H

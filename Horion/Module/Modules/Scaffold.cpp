@@ -73,7 +73,6 @@ bool Scaffold::tryScaffold(vec3_t blockBelow) {
 bool Scaffold::findBlock() {
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
-	int slot = supplies->selectedHotbarSlot;
 	for (int n = 0; n < 9; n++) {
 		C_ItemStack* stack = inv->getItemStack(n);
 		if (stack->item != NULL) {

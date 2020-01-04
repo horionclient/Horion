@@ -317,6 +317,6 @@ void DrawUtils::wirebox(AABB aabb) {
 
 vec2_t DrawUtils::worldToScreen(vec3_t world) {
 	vec2_t ret;
-	bool success = refdef->OWorldToScreen(origin, world, ret, fov, screenSize);
+	refdef->OWorldToScreen(origin, world, ret, fov, screenSize);
 	return ret;
 }

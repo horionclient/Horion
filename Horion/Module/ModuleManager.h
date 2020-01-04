@@ -114,7 +114,7 @@ public:
 		if (!isInitialized())
 			return nullptr;
 		for (auto pMod : moduleList) {
-			if (auto pRet = dynamic_cast<std::remove_pointer<TRet>::type*>(pMod))
+			if (auto pRet = dynamic_cast<typename std::remove_pointer<TRet>::type*>(pMod))
 				return pRet;
 		}
 		return nullptr;

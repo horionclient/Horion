@@ -13,7 +13,7 @@ bool isRunning = true;
 DWORD WINAPI analyticsThread(LPVOID lpParam) {
 	logF("Analytics started");
 	__try {
-		auto sendRequest = [](char* request) {
+		auto sendRequest = [](const char* request) {
 			wchar_t fullUrl[200];
 			swprintf_s(fullUrl, 200, L"https://hbob.ml/horion/action.php?type=%S", request);
 			WinHttpClient client(fullUrl);
@@ -46,9 +46,9 @@ DWORD WINAPI analyticsThread(LPVOID lpParam) {
 					QueryPerformanceCounter(&StartingTime);
 			}
 			char url[200];
-			char* serverIp = "";
+			char serverIp[200];
 			if (g_Data.getRakNetInstance() != nullptr && g_Data.getRakNetInstance()->serverIp.getTextLength() >= 0)
-				serverIp = g_Data.getRakNetInstance()->serverIp.getText();
+				strcpy_s(serverIp, g_Data.getRakNetInstance()->serverIp.getText());
 			sprintf_s(url, 200, "continuous&s=%s", serverIp[0] == 0 ? "none" : serverIp);
 			sendRequest(url);
 		}
@@ -90,7 +90,7 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 	C_HIDController** hidController = g_Data.getHIDController();
 
 	while (isRunning) {
-		if (GameData::isKeyDown('L') && GameData::isKeyDown(VK_CONTROL) || GameData::shouldTerminate()) {  // Press L to uninject
+		if ((GameData::isKeyDown('L') && GameData::isKeyDown(VK_CONTROL)) || GameData::shouldTerminate()) {  // Press L to uninject
 			isRunning = false;
 			break;
 		}
@@ -246,6 +246,8 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 				case CMD_PONG: {
 					break;
 				}
+				default:
+					break;
 				}
 
 				injectorToHorion->isUnread = false;
@@ -276,7 +278,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	}
 	logF("Quitting connection thread");
 	memset(magicValues, 0, sizeof(magicValues));
-	memset(magicArray, 0, sizeof(magicValues + sizeof(uintptr_t) * 2));
+	memset(magicArray, 0, sizeof(magicValues) + sizeof(uintptr_t) * 2);
 	delete *horionToInjectorPtr;
 	delete *injectorToHorionPtr;
 	delete[] magicArray;

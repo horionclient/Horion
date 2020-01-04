@@ -89,7 +89,7 @@ protected:
 	void registerBoolSetting(std::string name, bool* boolPtr, bool defaultValue);
 
 public:
-	~IModule();
+	virtual ~IModule();
 
 	const Category getCategory() { return category; };
 

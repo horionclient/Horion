@@ -180,7 +180,6 @@ int ModuleManager::getModuleCount() {
 int ModuleManager::getEnabledModuleCount() {
 	int i = 0;
 	for (auto it = (&moduleList)->begin(); it != (&moduleList)->end(); ++it) {
-		IModule* mod = *it;
 		if ((*it)->isEnabled()) i++;
 	}
 	return i;

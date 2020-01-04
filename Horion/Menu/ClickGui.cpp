@@ -51,7 +51,7 @@ unsigned int ClickGui::getCrcHash(const char* str, int seed) {
 		for (unsigned int i = 0; i < 256; i++) {
 			unsigned int crc = i;
 			for (unsigned int j = 0; j < 8; j++)
-				crc = (crc >> 1) ^ (unsigned int(-int(crc & 1)) & polynomial);
+				crc = (crc >> 1) ^ (((unsigned int)(-((int)(crc & 1)))) & polynomial);
 			crc32_lut[i] = crc;
 		}
 	}

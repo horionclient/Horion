@@ -1,6 +1,6 @@
 #include "ICommand.h"
 
-IMCCommand::IMCCommand(const char* command, char* description, char* usage) {
+IMCCommand::IMCCommand(const char* command, const char* description, const char* usage) {
 	this->_command = command;
 	this->_description = description;
 	this->_usage = usage;

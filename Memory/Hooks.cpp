@@ -91,7 +91,7 @@ void Hooks::Init() {
 	void* timeOfDay = reinterpret_cast<void*>(Utils::FindSignature("44 8B C2 B8 F1 19 76 05"));
 	g_Hooks.Dimension_getTimeOfDayHook = std::make_unique<FuncHook>(timeOfDay, Hooks::Dimension_getTimeOfDay);
 
-	void* sunLightIntensity = reinterpret_cast<void*>(Utils::FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B B9 ?? ?? ?? ?? 49 8B D8 0F"));
+	//void* sunLightIntensity = reinterpret_cast<void*>(Utils::FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B B9 ?? ?? ?? ?? 49 8B D8 0F"));
 
 	void* ChestTick = reinterpret_cast<void*>(Utils::FindSignature("40 53 57 48 83 EC ?? 48 8B 41 ?? 48 8B FA 48 89 6C 24 ?? 48 8B D9 4C 89 74 24 ?? 48 85 C0 75 10 48 8D 51 ?? 48 8B CF E8 ?? ?? ?? ?? 48 89 43 ?? FF 43 ?? 48 85 C0"));
 	g_Hooks.ChestBlockActor_tickHook = std::make_unique<FuncHook>(ChestTick, Hooks::ChestBlockActor_tick);

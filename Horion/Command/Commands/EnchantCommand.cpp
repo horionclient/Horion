@@ -121,7 +121,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 						*(unsigned int*)(proxy + 16),
 						item);  // Player::selectItem
 
-				g_Data.getLocalPlayer()->sendInventory();
+				 //g_Data.getLocalPlayer()->sendInventory();
 			}
 			free(EnchantData);
 		}
@@ -144,7 +144,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 					*(unsigned int*)(proxy + 16),
 					item);  // Player::selectItem
 
-			g_Data.getLocalPlayer()->sendInventory();
+			//g_Data.getLocalPlayer()->sendInventory();
 			clientMessageF("%sEnchant successful!", GREEN);
 		} else
 			clientMessageF("%sEnchant failed, try using a lower enchant-level", RED);

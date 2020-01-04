@@ -137,7 +137,6 @@ void GameData::setRakNetInstance(C_RakNetInstance* raknet) {
 }
 
 void GameData::forEachEntity(void (*callback)(C_Entity*, bool)) {
-	C_LocalPlayer* localPlayer = getLocalPlayer();
 
 	// New EntityList
 	{

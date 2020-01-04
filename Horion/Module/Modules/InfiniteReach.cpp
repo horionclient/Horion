@@ -52,8 +52,6 @@ void InfiniteReach::onTick(C_GameMode* gm) {
 
 	g_Data.forEachEntity(findEntities);
 	Odelay++;
-	float calcYaw = (gm->player->yaw + 90) * (PI / 180);
-	float calcPitch = (gm->player->pitch) * -(PI / 180);
 
 	if (targetList0.size() > 0 && Odelay >= delay) {
 		g_Data.getLocalPlayer()->swingArm();

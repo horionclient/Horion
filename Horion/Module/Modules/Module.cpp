@@ -86,6 +86,10 @@ void IModule::registerBoolSetting(std::string name, bool* boolPtr, bool defaultV
 }
 
 IModule::~IModule() {
+	for (auto it = this->settings.begin(); it != this->settings.end(); it++) {
+		delete *it;
+	}
+	this->settings.clear();
 }
 
 const char* IModule::getModuleName() {
@@ -164,7 +168,7 @@ void IModule::onLoadConfig(json* conf) {
 						sett->value->_bool = value.get<bool>();
 						break;
 					case ValueType::TEXT_T:
-						sett->value->text = &value.get<std::string>();
+						sett->value->text = new std::string(value.get<std::string>());
 						break;
 					}
 					sett->makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt();

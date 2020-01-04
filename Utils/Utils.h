@@ -406,6 +406,8 @@ public:
 			}
 		}
 #ifdef _DEBUG
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-variable"
 		const char* sig = szSignature;  // Put sig in here to access it in debugger
 										// This will not get optimized away because we are in debug
 										// Leave this in here to quickly find bad signatures in case of updates
@@ -414,10 +416,12 @@ public:
 		logF("Signature dead: %s", szSignature);
 #endif
 #else
-		char* msgToTheOverwhelmedDebugger = "SIGNATURE NOT FOUND";
+		const char* msgToTheOverwhelmedDebugger = "SIGNATURE NOT FOUND";
 		__debugbreak();
 
 		throw std::exception("Signature not found");
+
+#pragma clang diagnostic pop
 #endif
 #endif
 		return 0u;

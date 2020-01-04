@@ -61,7 +61,7 @@ public:
 	static C_Font* getFont(Fonts font);
 	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = Fonts::SMOOTH);
 
-	static inline void drawLine(vec2_t start, vec2_t end, float lineWidth);  // rgba
+	static void drawLine(vec2_t start, vec2_t end, float lineWidth);  // rgba
 	static void fillRectangle(vec4_t pos, const MC_Color col, float alpha);
 	static void drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineWidth = 1.0f);
 

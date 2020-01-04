@@ -42,8 +42,8 @@ protected:
 	};
 
 public:
-	IMCCommand(const char* command, char* description, char* usage);
-	~IMCCommand();
+	IMCCommand(const char* command, const char* description, const char* usage);
+	virtual ~IMCCommand();
 
 	virtual const char* getCommand() { return _command; };
 	virtual std::vector<std::string>* getAliasList() { return &aliasList; };

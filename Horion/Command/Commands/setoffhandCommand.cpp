@@ -23,12 +23,9 @@ bool setoffhandCommand::execute(std::vector<std::string>* args) {
 	} catch (const std::invalid_argument&) {
 	}
 
-	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
-	C_Inventory* inv = supplies->inventory;
 	C_BlockLegacy* blockItem = nullptr;
 	C_Item* itemItem = nullptr;
 	C_ItemStack* yot = nullptr;
-	auto transactionManager = g_Data.getLocalPlayer()->getTransactionManager();
 
 	static uintptr_t** VanillaBlocks__mDirtPtr = 0x0;
 	static uintptr_t** VanillaItems__mShovel_ironPtr = 0x0;

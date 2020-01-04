@@ -1,7 +1,7 @@
 #include "AccountInformation.h"
 
-AccountInformation::AccountInformation(std::string discordTok, unsigned int serial) : discordToken(discordTok), isGuest(false), serialNum(serial){};
-AccountInformation::AccountInformation() : discordToken("none"), isGuest(true){};
+AccountInformation::AccountInformation(std::string discordTok, unsigned int serial) : isGuest(false), discordToken(discordTok), serialNum(serial){};
+AccountInformation::AccountInformation() : isGuest(true), discordToken("none"){};
 
 bool AccountInformation::verify() {
 	if (isGuest)
@@ -28,7 +28,7 @@ bool AccountInformation::verify() {
 		std::wstring content = client.GetResponseContent();
 		nlohmann::json data = nlohmann::json::parse(content);
 
-		if (data.contains("status") && data["status"].is_string() && data["status"].get<std::string>() == "success" || data["status"].get<std::string>() == "nobeta") {
+		if (data.contains("status") && data["status"].is_string() && (data["status"].get<std::string>() == "success" || data["status"].get<std::string>() == "nobeta")) {
 			logF("Account verified");
 			isValid = true;
 			return true;

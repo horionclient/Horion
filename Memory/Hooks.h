@@ -158,7 +158,7 @@ public:
 	}
 
 	void Restore() {
-		if (this != nullptr && funcPtr != nullptr)
+		if (funcPtr != nullptr)
 			MH_DisableHook(funcPtr);
 	}
 
