@@ -14,6 +14,7 @@ DWORD WINAPI analyticsThread(LPVOID lpParam) {
 	logF("Analytics started");
 	__try {
 		auto sendRequest = [](const char* request) {
+#ifndef _DEBUG
 			wchar_t fullUrl[200];
 			swprintf_s(fullUrl, 200, L"https://hbob.ml/horion/action.php?type=%S", request);
 			WinHttpClient client(fullUrl);
@@ -23,6 +24,7 @@ DWORD WINAPI analyticsThread(LPVOID lpParam) {
 
 			// The response header.
 			std::wstring httpResponseHeader = client.GetResponseHeader();
+#endif
 		};
 
 		sendRequest("startup");
@@ -40,7 +42,7 @@ DWORD WINAPI analyticsThread(LPVOID lpParam) {
 				ElapsedMicroseconds.QuadPart *= 1000;
 				ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
 				if (ElapsedMicroseconds.QuadPart < 1000 * 60 * 2) {
-					Sleep(500);
+					Sleep(50);
 					continue;
 				} else
 					QueryPerformanceCounter(&StartingTime);

@@ -174,7 +174,7 @@ void Hooks::Restore() {
 	g_Hooks.Actor_ladderUpHook->Restore();
 	g_Hooks.RakNetInstance_tickHook->Restore();
 	g_Hooks.GameMode_getPickRangeHook->Restore();
-	g_Hooks.InventoryTransactionManager_addActionHook->Restore();
+	//g_Hooks.InventoryTransactionManager_addActionHook->Restore();
 	MH_DisableHook(MH_ALL_HOOKS);
 	Sleep(10);
 }
