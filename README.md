@@ -3,6 +3,7 @@
 **Horion** is a minecraft bedrock edition utility mod designed to enhance a users gameplay.
 If you want to contribute to this project, feel free to fork this repository and submit a pull request.
 
+[![Discord](https://img.shields.io/discord/669714521375375385?label=chat&logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/YtuTZVw)
 [![Download the injector](https://img.shields.io/badge/download-injector-brightgreen?style=for-the-badge "Download the injector")](https://horionclient.eu/files/HorionInjector.exe "Download the injector")
 ![](https://img.shields.io/github/downloads/Horionclient/Horion-Releases/total?label=Total%20Injections&style=for-the-badge)
 [![Build Status](https://img.shields.io/azure-devops/build/horionclient/Horion/2?label=dev%20release&style=for-the-badge)](https://dev.azure.com/horionclient/Horion/_build/latest?definitionId=2&branchName=master)
@@ -23,4 +24,3 @@ If you are clueless about what you could start with, [we collected some issues f
 More Information on setting everything up can be found in the **[wiki](https://github.com/horionclient/Horion/wiki "wiki")**!
 If you need any help with understanding our code, join the official discord server:
 
-[![](https://discordapp.com/api/guilds/605086182560235569/embed.png?style=banner2)](https://discord.gg/horion)
