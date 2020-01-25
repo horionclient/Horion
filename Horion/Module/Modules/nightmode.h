@@ -5,8 +5,6 @@ private:
 public:
 	NightMode();
 	~NightMode();
-	bool fdark = true;
-	bool mdark = false;
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
