@@ -1,10 +1,10 @@
 #pragma once
 #include "Module.h"
-class Nightmode : public IModule {
+class NightMode : public IModule {
 private:
 public:
-	Nightmode();
-	~Nightmode();
+	NightMode();
+	~NightMode();
 	bool fdark = true;
 	bool mdark = false;
 
@@ -13,5 +13,3 @@ public:
 	virtual void onTick(C_GameMode* gm) override;
 	virtual void onDisable() override;
 };
-
-

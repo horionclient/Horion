@@ -520,16 +520,30 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightnes
 
 	static float rcolors[4];
 
-	static IModule* nightMode = moduleMgr->getModule<Nightmode>();
+	static IModule* nightMode = moduleMgr->getModule<NightMode>();
 	if (nightMode == nullptr)
-		nightMode = moduleMgr->getModule<Nightmode>();
-		else if (nightMode->isEnabled()) {
-			color[0] = 0.f;
-			color[1] = 0.f;
-			color[2] = 0.1f;
-			color[3] = 0.9;
-			return color;
-		}
+		nightMode = moduleMgr->getModule<NightMode>();
+	else if (nightMode->isEnabled()) {
+		color[0] = 0.f;
+		color[1] = 0.f;
+		color[2] = 0.1f;
+		color[3] = 0.9f;
+		return color;
+	}
+
+
+#ifdef _DEBUG
+	static IModule* testMod = moduleMgr->getModule<TestModule>();
+	if (testMod == nullptr)
+		testMod = moduleMgr->getModule<TestModule>();
+	else if (testMod->isEnabled()) {
+		color[0] = 0.f;
+		color[1] = 0.f;
+		color[2] = 0.2f;
+		color[3] = 1;
+		return color;
+	}
+#endif
 
 	static IModule* mod = moduleMgr->getModule<RainbowSky>();
 	if (mod == nullptr)
