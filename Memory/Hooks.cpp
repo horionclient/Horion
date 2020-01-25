@@ -524,10 +524,11 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightnes
 	if (nightMode == nullptr)
 		nightMode = moduleMgr->getModule<NightMode>();
 	else if (nightMode->isEnabled()) {
+		// set the amount of block & belle is cute btw
 		color[0] = 0.f;
 		color[1] = 0.f;
 		color[2] = 0.1f;
-		color[3] = 0.9f;
+		color[3] = 0.6f;
 		return color;
 	}
 
