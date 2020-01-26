@@ -219,7 +219,7 @@ inline bool SeparateString(const std::wstring &content, const std::wstring &deli
     }
     else
     {
-        false;
+        
     }
 
     return true;

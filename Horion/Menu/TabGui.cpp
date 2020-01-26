@@ -1,6 +1,5 @@
 #include "TabGui.h"
 
-
 // State
 int level;
 int selected[4];
@@ -19,8 +18,7 @@ struct LabelContainer {
 
 std::vector<LabelContainer> labelList;
 
-void TabGui::renderLabel(const char * text, IModule* mod)
-{
+void TabGui::renderLabel(const char* text, IModule* mod) {
 	//size_t strlength = strlen(text) + 1;
 	//char* alloc = new char[strlength];
 	//strcpy_s(alloc, strlength, text);
@@ -30,18 +28,17 @@ void TabGui::renderLabel(const char * text, IModule* mod)
 		yikes.enabled = mod->isEnabled();
 		yikes.mod = mod;
 	}
-	
+
 	labelList.push_back(yikes);
 }
 
-void TabGui::renderLevel()
-{
+void TabGui::renderLevel() {
 	// Parameters
 	static constexpr float textSize = 1.f;
-	static constexpr float textHeight = 10.f * textSize;
+	static const float textHeight = 10.f * textSize;
 	static constexpr float alphaVal = 0.5f;
 
-	// First loop: Get the maximum text length 
+	// First loop: Get the maximum text length
 	float maxLength = 1;
 	int labelListLength = 0;
 	for (auto it = labelList.begin(); it != labelList.end(); ++it) {
@@ -65,16 +62,15 @@ void TabGui::renderLevel()
 			yOffset,
 			xOffset + maxLength + 4.5f,
 			yOffset + textHeight);
-		
-		if (selected[renderedLevel] == i && level >= renderedLevel) { // We are selected
-			if (renderedLevel == level) { // Are we actually in the menu we are drawing right now?
+
+		if (selected[renderedLevel] == i && level >= renderedLevel) {  // We are selected
+			if (renderedLevel == level) {                              // Are we actually in the menu we are drawing right now?
 				// We are selected in the current menu
 
 				if (label.mod == 0) {
 					// Category
 					DrawUtils::fillRectangle(rectPos, MC_Color(0.118f, 0.827f, 0.764f, 1.0f), alphaVal);
-				}
-				else {
+				} else {
 					// Modules
 					/*
 					if(label.enabled)
@@ -95,61 +91,52 @@ void TabGui::renderLevel()
 					reee.y += 0.5f;
 					reee.z -= 0.5f;
 					reee.w -= 0.5f;
-					DrawUtils::drawRectangle(reee, MC_Color(0.118f, 0.827f, 0.764f, 1.0f), 1, 1.f); // Border around Text
+					DrawUtils::drawRectangle(reee, MC_Color(0.118f, 0.827f, 0.764f, 1.0f), 1, 1.f);  // Border around Text
 
 					static bool lastVal = toggleCurrentSelection;
 
 					if (toggleCurrentSelection) {
 						if (label.mod->isFlashMode()) {
 							label.mod->setEnabled(true);
-						}
-						else {
+						} else {
 							toggleCurrentSelection = false;
 							label.mod->toggle();
 						}
-					}
-					else if (toggleCurrentSelection != lastVal && label.mod->isFlashMode())
+					} else if (toggleCurrentSelection != lastVal && label.mod->isFlashMode())
 						label.mod->setEnabled(false);
 					lastVal = toggleCurrentSelection;
 				}
-			}
-			else {
+			} else {
 				// We are selected but we are not in the current menu
 				//DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.3f, 0.3f, 1.0f), alphaVal);
 				DrawUtils::fillRectangle(rectPos, MC_Color((48.f / 255.f) * 0.93f, (211.f / 255.f) * 0.93f, (195.f / 255.f) * 0.93f, 1.0f), alphaVal);
 			}
 			selectedYOffset = yOffset;
-		}
-		else { // We are not selected
+		} else {  // We are not selected
 			if (label.enabled && renderedLevel > 0)
 				DrawUtils::fillRectangle(rectPos, MC_Color(0.9f, 0.4f, 0.4f, 1.0f), alphaVal);
-			else if(renderedLevel > 0)
+			else if (renderedLevel > 0)
 				DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.4f, 0.4f, 1.0f), alphaVal);
 			else
 				DrawUtils::fillRectangle(rectPos, MC_Color(0.2f, 0.2f, 0.2f, 1.0f), alphaVal);
 		}
-			
-		//DrawUtils::drawRectangle(rectPos, MC_Color(0.0f, 0.0f, 0.0f, 1.0f), 1, 0.3f); // Border around Text
 
-		DrawUtils::drawText(vec2_t(xOffset + 1.5f, yOffset /*+ 0.5f*/), &std::string(label.text), /* White Color*/ nullptr, textSize);
+		//DrawUtils::drawRectangle(rectPos, MC_Color(0.0f, 0.0f, 0.0f, 1.0f), 1, 0.3f); // Border around Text
+		std::string tempLabel(label.text);
+		DrawUtils::drawText(vec2_t(xOffset + 1.5f, yOffset /*+ 0.5f*/), &tempLabel, /* White Color*/ nullptr, textSize);
 
 		yOffset += textHeight;
 		i++;
 	}
 	// Cleanup
 	DrawUtils::flush();
-	/*for (auto it = labelList.begin(); it != labelList.end(); ++it) {
-		auto label = *it;
-		delete[] label;
-	}*/
 	labelList.clear();
 	xOffset += maxLength + 4.5f;
 	yOffset = selectedYOffset;
 	renderedLevel++;
 }
 
-void TabGui::render()
-{
+void TabGui::render() {
 	if (!moduleMgr->isInitialized())
 		return;
 	renderedLevel = 0;
@@ -164,7 +151,7 @@ void TabGui::render()
 	renderLabel("Build");
 	renderLabel("Exploits");
 	renderLevel();
-	
+
 	// Render all modules
 	if (level >= 0) {
 		std::vector<IModule*>* modules = moduleMgr->getModuleList();
@@ -186,17 +173,15 @@ void TabGui::init() {
 	renderedLevel = 0;
 }
 
-void TabGui::onKeyUpdate(int key, bool isDown)
-{
+void TabGui::onKeyUpdate(int key, bool isDown) {
 	if (!isDown) {
-		if(key == VK_RIGHT)
+		if (key == VK_RIGHT)
 			toggleCurrentSelection = false;
 		return;
 	}
-		
 
 	switch (key) {
-	case VK_LEFT: // Leave menus
+	case VK_LEFT:  // Leave menus
 		if (level > -1) {
 			level--;
 		}
@@ -205,8 +190,7 @@ void TabGui::onKeyUpdate(int key, bool isDown)
 		if (level < 1) {
 			level++;
 			selected[level] = 0;
-		}
-		else
+		} else
 			toggleCurrentSelection = true;
 		return;
 	case VK_UP:
@@ -223,6 +207,6 @@ void TabGui::onKeyUpdate(int key, bool isDown)
 		break;
 	};
 
-	if(level < 3)
+	if (level < 3)
 		selected[level + 1] = 0;
 }

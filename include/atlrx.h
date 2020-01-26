@@ -1517,13 +1517,13 @@ protected:
 			else
 				type = RE_PLUS;
 
-		else if (MatchToken(ppszRE, '?'))
-			if(MatchToken(ppszRE, '?'))
+		else if (MatchToken(ppszRE, '?')) {
+			if (MatchToken(ppszRE, '?'))
 				type = RE_NG_QUESTION;
 			else
 				type = RE_QUESTION;
-
-
+		}
+			
 		if (type == RE_MATCH)
 			return nFirst;
 

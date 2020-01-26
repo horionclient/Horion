@@ -1,9 +1,10 @@
 #include "Module.h"
 
+#include "../../../Utils/Json.hpp"
 
+using json = nlohmann::json;
 
-IModule::IModule(int key, Category c, const char* tooltip)
-{
+IModule::IModule(int key, Category c, const char* tooltip) {
 	this->keybind = key;
 	this->category = c;
 	this->tooltip = tooltip;
@@ -11,20 +12,19 @@ IModule::IModule(int key, Category c, const char* tooltip)
 	this->registerBoolSetting(std::string("enabled"), &this->enabled, false);
 }
 
-void IModule::registerFloatSetting(std::string name, float* floatPtr, float defaultValue, float minValue, float maxValue)
-{
+void IModule::registerFloatSetting(std::string name, float* floatPtr, float defaultValue, float minValue, float maxValue) {
 #ifdef DEBUG
 	if (minValue > maxValue)
-		__debugbreak(); // Minimum value is bigger than maximum value
+		__debugbreak();  // Minimum value is bigger than maximum value
 #endif
 
 	SettingEntry* setting = new SettingEntry();
-	setting->valueType = FLOAT_T;
-	
+	setting->valueType = ValueType::FLOAT_T;
+
 	setting->value = reinterpret_cast<SettingValue*>(floatPtr);
 
 	// Default Value
-	SettingValue* defaultVal = new SettingValue(); 
+	SettingValue* defaultVal = new SettingValue();
 	defaultVal->_float = defaultValue;
 	setting->defaultValue = defaultVal;
 
@@ -38,24 +38,23 @@ void IModule::registerFloatSetting(std::string name, float* floatPtr, float defa
 	maxVal->_float = maxValue;
 	setting->maxValue = maxVal;
 
-	strcpy_s(setting->name, 19, name.c_str()); // Name
+	strcpy_s(setting->name, 19, name.c_str());  // Name
 
-	settings.push_back(setting); // Add to list
+	settings.push_back(setting);  // Add to list
 }
 
-void IModule::registerIntSetting(std::string name, int * intPtr, int defaultValue, int minValue, int maxValue)
-{
+void IModule::registerIntSetting(std::string name, int* intPtr, int defaultValue, int minValue, int maxValue) {
 #ifdef DEBUG
 	if (minValue > maxValue)
-		__debugbreak(); // Minimum value is bigger than maximum value
+		__debugbreak();  // Minimum value is bigger than maximum value
 #endif
 
 	SettingEntry* setting = new SettingEntry();
-	setting->valueType = INT_T;
-	setting->value = reinterpret_cast<SettingValue*>(intPtr); // Actual Value
+	setting->valueType = ValueType::INT_T;
+	setting->value = reinterpret_cast<SettingValue*>(intPtr);  // Actual Value
 
 	// Default Value
-	SettingValue* defaultVal = new SettingValue(); 
+	SettingValue* defaultVal = new SettingValue();
 	defaultVal->_int = defaultValue;
 	setting->defaultValue = defaultVal;
 
@@ -70,43 +69,42 @@ void IModule::registerIntSetting(std::string name, int * intPtr, int defaultValu
 	setting->maxValue = maxVal;
 
 	// Name
-	strcpy_s(setting->name, 19, name.c_str()); 
+	strcpy_s(setting->name, 19, name.c_str());
 
-	settings.push_back(setting); // Add to list
+	settings.push_back(setting);  // Add to list
 }
 
-void IModule::registerBoolSetting(std::string name, bool * boolPtr, bool defaultValue)
-{
+void IModule::registerBoolSetting(std::string name, bool* boolPtr, bool defaultValue) {
 	SettingEntry* setting = new SettingEntry();
-	setting->valueType = BOOL_T;
+	setting->valueType = ValueType::BOOL_T;
 
-	setting->value = reinterpret_cast<SettingValue*>(boolPtr); // Actual value
+	setting->value = reinterpret_cast<SettingValue*>(boolPtr);  // Actual value
 
-	SettingValue* defaultVal = new SettingValue(); // Default Value
+	SettingValue* defaultVal = new SettingValue();  // Default Value
 	defaultVal->_bool = defaultValue;
 	setting->defaultValue = defaultVal;
 
-	strcpy_s(setting->name, 19, name.c_str()); // Name
+	strcpy_s(setting->name, 19, name.c_str());  // Name
 
-	settings.push_back(setting); // Add to list
+	settings.push_back(setting);  // Add to list
 }
 
-IModule::~IModule()
-{
+IModule::~IModule() {
+	for (auto it = this->settings.begin(); it != this->settings.end(); it++) {
+		delete *it;
+	}
+	this->settings.clear();
 }
 
-const char* IModule::getModuleName()
-{
+const char* IModule::getModuleName() {
 	return "Module";
 }
 
-const char* IModule::getRawModuleName()
-{
+const char* IModule::getRawModuleName() {
 	return getModuleName();
 }
 
-int IModule::getKeybind()
-{
+int IModule::getKeybind() {
 	return this->keybind;
 }
 
@@ -114,44 +112,39 @@ void IModule::setKeybind(int key) {
 	this->keybind = key;
 }
 
-bool IModule::allowAutoStart()
-{
+bool IModule::allowAutoStart() {
 	return true;
 }
 
-void IModule::onTick(C_GameMode*)
-{
+void IModule::onTick(C_GameMode*) {
 }
 
-void IModule::onKeyUpdate(int key, bool isDown)
-{
+void IModule::onKeyUpdate(int key, bool isDown) {
 	if (key == getKeybind()) {
 		if (isFlashMode())
 			setEnabled(isDown);
 		else if (isDown)
 			toggle();
 	}
-		
 }
 
-void IModule::onEnable()
-{
+void IModule::onEnable() {
 }
 
-void IModule::onDisable()
-{
+void IModule::onDisable() {
 }
 
-void IModule::onPreRender()
-{
+void IModule::onPreRender() {
 }
 
-void IModule::onPostRender()
-{
+void IModule::onPostRender() {
 }
 
-void IModule::onLoadConfig(json * conf)
-{
+void IModule::onSendPacket(C_Packet*) {
+}
+
+void IModule::onLoadConfig(void* confVoid) {
+	json* conf = reinterpret_cast<json*>(confVoid);
 	if (conf->contains(this->getRawModuleName())) {
 		auto obj = conf->at(this->getRawModuleName());
 		if (obj.is_null())
@@ -164,29 +157,28 @@ void IModule::onLoadConfig(json * conf)
 					continue;
 				try {
 					switch (sett->valueType) {
-					case FLOAT_T:
+					case ValueType::FLOAT_T:
 						sett->value->_float = value.get<float>();
 						break;
-					case DOUBLE_T:
+					case ValueType::DOUBLE_T:
 						sett->value->_double = value.get<double>();
 						break;
-					case INT64_T:
+					case ValueType::INT64_T:
 						sett->value->int64 = value.get<__int64>();
 						break;
-					case INT_T:
+					case ValueType::INT_T:
 						sett->value->_int = value.get<int>();
 						break;
-					case BOOL_T:
+					case ValueType::BOOL_T:
 						sett->value->_bool = value.get<bool>();
 						break;
-					case TEXT_T:
-						sett->value->text = &value.get<std::string>();
+					case ValueType::TEXT_T:
+						sett->value->text = new std::string(value.get<std::string>());
 						break;
 					}
 					sett->makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt();
 					continue;
-				}
-				catch (std::exception e) {
+				} catch (std::exception e) {
 					logF("Config Load Error (%s): %s", this->getRawModuleName(), e.what());
 				}
 			}
@@ -196,57 +188,54 @@ void IModule::onLoadConfig(json * conf)
 	}
 }
 
-#pragma warning( push )
-#pragma warning( disable : 26444 )
-void IModule::onSaveConfig(json * conf)
-{
+#pragma warning(push)
+#pragma warning(disable : 26444)
+void IModule::onSaveConfig(void* confVoid) {
+	json* conf = reinterpret_cast<json*>(confVoid);
 	std::string modName = getRawModuleName();
 	if (conf->contains(modName.c_str()))
 		conf->erase(modName.c_str());
-	
+
 	json obj = {};
 	//auto obj = conf->at(modName);
 	for (auto it = this->settings.begin(); it != this->settings.end(); ++it) {
 		SettingEntry* sett = *it;
 		switch (sett->valueType) {
-		case FLOAT_T:
+		case ValueType::FLOAT_T:
 			obj.emplace(sett->name, sett->value->_float);
 			break;
-		case DOUBLE_T:
+		case ValueType::DOUBLE_T:
 			obj.emplace(sett->name, sett->value->_double);
 			break;
-		case INT64_T:
+		case ValueType::INT64_T:
 			obj.emplace(sett->name, sett->value->int64);
 			break;
-		case INT_T:
+		case ValueType::INT_T:
 			obj.emplace(sett->name, sett->value->_int);
 			break;
-		case BOOL_T:
+		case ValueType::BOOL_T:
 			obj.emplace(sett->name, sett->value->_bool);
 			break;
-		case TEXT_T:
+		case ValueType::TEXT_T:
 			obj.emplace(sett->name, *sett->value->text);
 			break;
 		}
 	}
-	
+
 	conf->emplace(modName.c_str(), obj);
 }
 
-#pragma warning( pop ) 
+#pragma warning(pop)
 
-bool IModule::isFlashMode()
-{
+bool IModule::isFlashMode() {
 	return false;
 }
 
-
-void IModule::setEnabled(bool enabled)
-{
+void IModule::setEnabled(bool enabled) {
 	if (this->enabled != enabled) {
 		this->enabled = enabled;
 #ifndef _DEBUG
-		if(!isFlashMode()) // Only print jetpack stuff in debug mode
+		if (!isFlashMode())  // Only print jetpack stuff in debug mode
 #endif
 			logF("%s %s", enabled ? "Enabled" : "Disabled", this->getModuleName());
 
@@ -257,13 +246,11 @@ void IModule::setEnabled(bool enabled)
 	}
 }
 
-void IModule::toggle()
-{
+void IModule::toggle() {
 	setEnabled(!this->enabled);
 }
 
-bool IModule::isEnabled()
-{
+bool IModule::isEnabled() {
 	return this->enabled;
 }
 

@@ -1,8 +1,6 @@
 #pragma once
 #include "Module.h"
-class RainbowSky :
-	public IModule
-{
+class RainbowSky : public IModule {
 public:
 	RainbowSky();
 	~RainbowSky();
@@ -10,4 +8,3 @@ public:
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 };
-

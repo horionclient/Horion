@@ -1,17 +1,11 @@
 #include "Xray.h"
 
-
-
-Xray::Xray() : IModule(VK_NUMPAD6, Category::VISUAL, "X-Ray view!")
-{
+Xray::Xray() : IModule(VK_NUMPAD6, Category::VISUAL, "X-Ray view!") {
 }
 
-
-Xray::~Xray()
-{
+Xray::~Xray() {
 }
 
-const char* Xray::getModuleName()
-{
+const char* Xray::getModuleName() {
 	return ("X-Ray");
 }

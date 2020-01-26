@@ -1,21 +1,15 @@
 #include "RelativeTeleportCommand.h"
 
-
-
-RelativeTeleportCommand::RelativeTeleportCommand() : IMCCommand("relativeteleport", "Teleports to coordinates relative to the Player", "<X> <Y> <Z>")
-{
+RelativeTeleportCommand::RelativeTeleportCommand() : IMCCommand("relativeteleport", "Teleports to coordinates relative to the Player", "<X> <Y> <Z>") {
 	registerAlias("reltp");
 	registerAlias("rtp");
 	registerAlias("vclip");
 }
 
-
-RelativeTeleportCommand::~RelativeTeleportCommand()
-{
+RelativeTeleportCommand::~RelativeTeleportCommand() {
 }
 
-bool RelativeTeleportCommand::execute(std::vector<std::string>* args)
-{
+bool RelativeTeleportCommand::execute(std::vector<std::string>* args) {
 	assertTrue(g_Data.getClientInstance()->getLocalPlayer() != nullptr);
 	assertTrue(args->size() >= 4);
 

@@ -1,16 +1,15 @@
 #include "DamageCommand.h"
 
-DamageCommand::DamageCommand() : IMCCommand("damage", "Damage yourself (relies on falldamage)", "<amount>")
-{
+#include "../../Module/ModuleManager.h"
+
+DamageCommand::DamageCommand() : IMCCommand("damage", "Damage yourself (relies on falldamage)", "<amount>") {
 	registerAlias("dmg");
 }
 
-DamageCommand::~DamageCommand()
-{
+DamageCommand::~DamageCommand() {
 }
 
-bool DamageCommand::execute(std::vector<std::string>* args)
-{
+bool DamageCommand::execute(std::vector<std::string>* args) {
 	assertTrue(g_Data.getClientInstance()->getLocalPlayer() != nullptr);
 	float amount = assertFloat(args->at(1));
 	if (amount < 1.f) {
@@ -21,8 +20,7 @@ bool DamageCommand::execute(std::vector<std::string>* args)
 		moduleMgr->getModule<NoFall>()->setEnabled(false);
 		g_Data.getLocalPlayer()->causeFallDamage(amount + 3.f);
 		moduleMgr->getModule<NoFall>()->setEnabled(true);
-	}
-	else {
+	} else {
 		g_Data.getLocalPlayer()->causeFallDamage(amount + 3.f);
 	}
 	return true;

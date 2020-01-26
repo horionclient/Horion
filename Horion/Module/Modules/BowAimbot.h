@@ -1,8 +1,6 @@
 #pragma once
 #include "Module.h"
-class BowAimbot :
-	public IModule
-{
+class BowAimbot : public IModule {
 public:
 	BowAimbot();
 	~BowAimbot();
@@ -10,4 +8,3 @@ public:
 	virtual const char* getModuleName() override;
 	virtual void onPostRender() override;
 };
-

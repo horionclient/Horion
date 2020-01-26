@@ -1,9 +1,7 @@
 #pragma once
 #include "Module.h"
 
-class ClickGuiMod :
-	public IModule
-{
+class ClickGuiMod : public IModule {
 public:
 	ClickGuiMod();
 	~ClickGuiMod();
@@ -17,4 +15,3 @@ public:
 	virtual void onEnable() override;
 	virtual bool allowAutoStart() override;
 };
-

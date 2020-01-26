@@ -5,32 +5,18 @@
 #endif
 #include <Windows.h>
 
+#include <vector>
+#include "Utils.h"
+
 #ifdef _DEBUG
 #include <ios>
-#include <iostream>
-#include <streambuf>
 #include <iosfwd>
+#include <iostream>
 #endif
 
+#pragma comment(lib, "runtimeobject")
 
-#include <mutex>
-#include <string>
-#include <ctime>
-#include <sstream>
-#include <iomanip>
-#include "Utils.h"
-#include <vector>
-
-#include <windows.storage.h>
-#include <wrl.h>
-
-#pragma comment(lib,"runtimeobject")
-
-using namespace ABI::Windows::Storage;
-using namespace Microsoft::WRL;
-using namespace Microsoft::WRL::Wrappers;
-
-#ifndef logF 
+#ifndef logF
 #define logF Logger::WriteLogFileF
 #endif
 
@@ -42,6 +28,7 @@ struct TextForPrint {
 class Logger {
 private:
 	static std::wstring GetRoamingFolderPath();
+
 public:
 	static void WriteLogFileF(const char* fmt, ...);
 	static void WriteBigLogFileF(size_t maxSize, const char* fmt, ...);

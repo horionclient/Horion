@@ -1,8 +1,6 @@
 #pragma once
 #include "Module.h"
-class Tracer :
-	public IModule
-{
+class Tracer : public IModule {
 public:
 	Tracer();
 	~Tracer();
@@ -10,4 +8,3 @@ public:
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 };
-

@@ -1,10 +1,9 @@
 #pragma once
 #include "Module.h"
-class NoSlowDown :
-	public IModule
-{
+class NoSlowDown : public IModule {
 private:
 	uint8_t* opcode = 0;
+
 public:
 	NoSlowDown();
 	~NoSlowDown();
@@ -14,4 +13,3 @@ public:
 	virtual void onEnable() override;
 	virtual void onDisable() override;
 };
-

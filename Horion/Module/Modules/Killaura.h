@@ -11,11 +11,12 @@ private:
 	int Odelay = 0;
 	bool autoweapon = false;
 	void findWeapon();
+	vec2_t angle = vec2_t(0, 0);
+	bool hasTarget = false;
 public:
 	bool isMobAura = false;
 	float range = 6;
-	vec2_t angle = vec2_t(0, 0);
-	bool hasTarget = false;
+
 
 	Killaura();
 	~Killaura();
@@ -24,5 +25,6 @@ public:
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
 	virtual void onEnable() override;
+	virtual void onSendPacket(C_Packet* packet) override;
 };
 

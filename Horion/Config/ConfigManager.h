@@ -6,28 +6,23 @@
 #include <Windows.h>
 
 #include <filesystem>
-#include <string>
 #include <fstream>
-#include <windows.storage.h>
-#include <wrl.h>
-#pragma comment(lib,"runtimeobject")
+#include <string>
+#pragma comment(lib, "runtimeobject")
 
-#include "../Module/ModuleManager.h"
-#include "../Command/CommandMgr.h"
 #include "../../Utils/Json.hpp"
+#include "../Command/CommandMgr.h"
+#include "../Module/ModuleManager.h"
 
-using namespace ABI::Windows::Storage;
-using namespace Microsoft::WRL;
-using namespace Microsoft::WRL::Wrappers;
 using json = nlohmann::json;
 
-class ConfigManager
-{
+class ConfigManager {
 private:
 	std::string currentConfig = "default";
 	std::wstring roamingFolder;
 	static std::wstring GetRoamingFolderPath();
 	json currentConfigObj;
+
 public:
 	ConfigManager();
 	~ConfigManager();

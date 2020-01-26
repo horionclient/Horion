@@ -1,13 +1,12 @@
 #pragma once
-#include "Module.h"
 #include "../../DrawUtils.h"
-class Scaffold :
-	public IModule
-{
+#include "Module.h"
+class Scaffold : public IModule {
 private:
 	bool autoselect = false;
 	bool tryScaffold(vec3_t blockBelow);
 	bool findBlock();
+
 public:
 	Scaffold();
 	~Scaffold();
@@ -16,4 +15,3 @@ public:
 	virtual const char* getModuleName() override;
 	virtual void onPostRender() override;
 };
-

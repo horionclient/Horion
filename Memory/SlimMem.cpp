@@ -1,5 +1,10 @@
 #include "SlimMem.h"
 
+static std::wstring ToLower(std::wstring string) {
+	transform(string.begin(), string.end(), string.begin(), tolower);
+	return string;
+}
+
 namespace SlimUtils {
 #pragma region Constructors/Destructors
 	SlimMem::SlimMem(const SlimMem & copy)

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../../../Memory/GameData.h"
-#include "../../../Utils/Json.hpp"
-#include "../../FriendList/FriendList.h"
 #include <string>
 
-using json = nlohmann::json;
+#include "../../../Memory/GameData.h"
+#include "../../FriendList/FriendList.h"
+
+
 
 enum class Category {
 	COMBAT = 0,
@@ -16,7 +16,7 @@ enum class Category {
 	EXPLOITS = 5
 };
 
-enum ValueType {
+enum class ValueType {
 	FLOAT_T,
 	DOUBLE_T,
 	INT64_T,
@@ -37,7 +37,7 @@ struct SettingValue {
 };
 
 struct SettingEntry {
-	char name[0x20];
+	char name[0x20] = "";
 	ValueType valueType;
 	SettingValue* value = nullptr;
 	SettingValue* defaultValue = nullptr;
@@ -45,23 +45,23 @@ struct SettingEntry {
 	SettingValue* maxValue = nullptr;
 
 	// ClickGui Data
-	bool isDragging = false; // This is incredibly hacky and i wanted to avoid this as much as possible but i want to get this clickgui done
+	bool isDragging = false;  // This is incredibly hacky and i wanted to avoid this as much as possible but i want to get this clickgui done
 
 	void makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
 		switch (valueType) {
-		case TEXT_T:
-		case BOOL_T:
+		case ValueType::TEXT_T:
+		case ValueType::BOOL_T:
 			break;
-		case INT64_T:
+		case ValueType::INT64_T:
 			value->int64 = max(minValue->int64, min(maxValue->int64, value->int64));
 			break;
-		case DOUBLE_T:
+		case ValueType::DOUBLE_T:
 			value->_double = max(minValue->_double, min(maxValue->_double, value->_double));
 			break;
-		case FLOAT_T:
+		case ValueType::FLOAT_T:
 			value->_float = max(minValue->_float, min(maxValue->_float, value->_float));
 			break;
-		case INT_T:
+		case ValueType::INT_T:
 			value->_int = max(minValue->_int, min(maxValue->_int, value->_int));
 			break;
 		default:
@@ -70,8 +70,7 @@ struct SettingEntry {
 	}
 };
 
-class IModule
-{
+class IModule {
 private:
 	bool enabled = false;
 	int keybind = 0x0;
@@ -80,14 +79,16 @@ private:
 	const char* tooltip;
 
 	std::vector<SettingEntry*> settings;
+
 protected:
 	IModule(int key, Category c, const char* tooltip);
 
 	void registerFloatSetting(std::string name, float* floatPtr, float defaultValue, float minValue, float maxValue);
 	void registerIntSetting(std::string name, int* intpTr, int defaultValue, int minValue, int maxValue);
 	void registerBoolSetting(std::string name, bool* boolPtr, bool defaultValue);
+
 public:
-	~IModule();
+	virtual ~IModule();
 
 	const Category getCategory() { return category; };
 
@@ -105,12 +106,12 @@ public:
 	virtual void onDisable();
 	virtual void onPreRender();
 	virtual void onPostRender();
-	virtual void onLoadConfig(json* conf);
-	virtual void onSaveConfig(json* conf);
+	virtual void onLoadConfig(void* conf);
+	virtual void onSaveConfig(void* conf);
 	virtual bool isFlashMode();
 	virtual void setEnabled(bool enabled);
 	virtual void toggle();
 	virtual bool isEnabled();
+	virtual void onSendPacket(C_Packet*);
 	const char* getTooltip();
 };
-

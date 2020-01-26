@@ -7,9 +7,7 @@
 #include "../../../include/WinHttpClient.h"
 #endif
 
-class TestCommand :
-	public IMCCommand
-{
+class TestCommand : public IMCCommand {
 public:
 	TestCommand();
 	~TestCommand();
@@ -17,4 +15,3 @@ public:
 	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
 };
-

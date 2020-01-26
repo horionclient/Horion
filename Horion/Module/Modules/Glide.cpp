@@ -1,27 +1,19 @@
 #include "Glide.h"
 
-
-
-Glide::Glide() : IModule('U', Category::MOVEMENT, "Float down")
-{
+Glide::Glide() : IModule('U', Category::MOVEMENT, "Float down") {
 	this->registerFloatSetting("value", &this->glideMod, this->glideMod, -2, 1);
 }
 
-
-Glide::~Glide()
-{
+Glide::~Glide() {
 }
 
-const char* Glide::getModuleName()
-{
+const char* Glide::getModuleName() {
 	if (isEnabled()) {
-		static char modName[30]; // This is kinda ghetto rn, there should be a better way to make this...
+		static char modName[30];  // This is kinda ghetto rn, there should be a better way to make this...
 		sprintf_s(modName, 30, "Glide [%.2f]", glideModEffective);
 		return modName;
-	}
-	else
+	} else
 		return ("Glide");
-	
 }
 
 void Glide::onTick(C_GameMode* gm) {
@@ -33,10 +25,8 @@ void Glide::onTick(C_GameMode* gm) {
 			glideModEffective -= 0.2f;
 		gm->player->velocity.y = glideModEffective;
 	}
-		
 }
 
-const char * Glide::getRawModuleName()
-{
+const char* Glide::getRawModuleName() {
 	return "Glide";
 }

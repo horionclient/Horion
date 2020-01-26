@@ -1,8 +1,8 @@
 #pragma once
 #include "ICommand.h"
-class SpammerCommand :
-	public IMCCommand
-{
+#include <sstream>
+
+class SpammerCommand : public IMCCommand {
 public:
 	SpammerCommand();
 	~SpammerCommand();
@@ -10,4 +10,3 @@ public:
 	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
 };
-

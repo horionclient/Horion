@@ -1,14 +1,21 @@
 #include "Logger.h"
 
-char logPath[200]; 
+#include <sstream>
+#include <windows.storage.h>
+#include <wrl.h>
+
+using namespace ABI::Windows::Storage;
+using namespace Microsoft::WRL;
+using namespace Microsoft::WRL::Wrappers;
+
+char logPath[200];
 bool initializedLogger = false;
 bool loggerActive = true;
 CRITICAL_SECTION loggerLock;
 CRITICAL_SECTION vecLock;
 std::vector<TextForPrint> stringPrintVector = std::vector<TextForPrint>();
 
-std::wstring Logger::GetRoamingFolderPath()
-{
+std::wstring Logger::GetRoamingFolderPath() {
 	ComPtr<IApplicationDataStatics> appDataStatics;
 	auto hr = RoGetActivationFactory(HStringReference(L"Windows.Storage.ApplicationData").Get(), __uuidof(appDataStatics), &appDataStatics);
 	if (FAILED(hr)) throw std::runtime_error("Failed to retrieve application data statics");
@@ -32,11 +39,9 @@ std::wstring Logger::GetRoamingFolderPath()
 	uint32_t pathLength;
 	auto roamingPathCStr = roamingPathHString.GetRawBuffer(&pathLength);
 	return std::wstring(roamingPathCStr, pathLength);
-
 }
 
-void Logger::WriteLogFileF(const char * fmt, ...)
-{
+void Logger::WriteLogFileF(const char* fmt, ...) {
 	if (!loggerActive)
 		return;
 #ifdef _DEBUG
@@ -53,16 +58,14 @@ void Logger::WriteLogFileF(const char * fmt, ...)
 
 		try {
 			remove(logPath);
-		}
-		catch (std::exception e) {
+		} catch (std::exception e) {
 		}
 
-	}
-	else EnterCriticalSection(&loggerLock);
+	} else
+		EnterCriticalSection(&loggerLock);
 
-	pFile = _fsopen(logPath, "a", _SH_DENYWR); // Open File with DENY_WRITE so other programs can only read stuff from log
-	if (pFile != nullptr)
-	{
+	pFile = _fsopen(logPath, "a", _SH_DENYWR);  // Open File with DENY_WRITE so other programs can only read stuff from log
+	if (pFile != nullptr) {
 		std::stringstream ssTime;
 		Utils::ApplySystemTime(&ssTime);
 
@@ -92,8 +95,7 @@ void Logger::WriteLogFileF(const char * fmt, ...)
 #endif
 }
 
-void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...)
-{
+void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...) {
 	if (!loggerActive)
 		return;
 #ifdef _DEBUG
@@ -110,16 +112,14 @@ void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...)
 
 		try {
 			remove(logPath);
-		}
-		catch (std::exception e) {
+		} catch (std::exception e) {
 		}
 
-	}
-	else EnterCriticalSection(&loggerLock);
+	} else
+		EnterCriticalSection(&loggerLock);
 
-	pFile = _fsopen(logPath, "a", _SH_DENYWR); // Open File with DENY_WRITE so other programs can only read stuff from log
-	if (pFile != nullptr)
-	{
+	pFile = _fsopen(logPath, "a", _SH_DENYWR);  // Open File with DENY_WRITE so other programs can only read stuff from log
+	if (pFile != nullptr) {
 		std::stringstream ssTime;
 		Utils::ApplySystemTime(&ssTime);
 
@@ -150,19 +150,15 @@ void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...)
 #endif
 }
 
-std::vector<TextForPrint>* Logger::GetTextToPrint()
-{
+std::vector<TextForPrint>* Logger::GetTextToPrint() {
 	return &stringPrintVector;
 }
 
-CRITICAL_SECTION* Logger::GetTextToPrintSection()
-{
+CRITICAL_SECTION* Logger::GetTextToPrintSection() {
 	return &vecLock;
 }
 
-void Logger::Disable()
-{
-	
+void Logger::Disable() {
 	loggerActive = false;
 #ifdef _DEBUG
 	EnterCriticalSection(&loggerLock);
@@ -174,5 +170,4 @@ void Logger::Disable()
 	DeleteCriticalSection(&loggerLock);
 	DeleteCriticalSection(&vecLock);
 #endif
-
 }

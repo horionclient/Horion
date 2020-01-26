@@ -1,21 +1,13 @@
 #include "EjectCommand.h"
 
-
-
-EjectCommand::EjectCommand() : IMCCommand("eject", "Removes the cheat from the game.", "")
-{
+EjectCommand::EjectCommand() : IMCCommand("eject", "Removes the cheat from the game.", "") {
 	registerAlias("uninject");
 }
 
-
-EjectCommand::~EjectCommand()
-{
+EjectCommand::~EjectCommand() {
 }
 
-
-bool EjectCommand::execute(std::vector<std::string>* args)
-{
+bool EjectCommand::execute(std::vector<std::string>* args) {
 	GameData::terminate();
 	return true;
 }
-

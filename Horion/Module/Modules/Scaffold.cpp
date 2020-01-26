@@ -1,22 +1,17 @@
 #include "Scaffold.h"
 
-Scaffold::Scaffold() : IModule(VK_NUMPAD1, Category::BUILD, "Automatically build blocks beneath you")
-{
+Scaffold::Scaffold() : IModule(VK_NUMPAD1, Category::BUILD, "Automatically build blocks beneath you") {
 	registerBoolSetting("AutoSelect", &this->autoselect, this->autoselect);
 }
 
-
-Scaffold::~Scaffold()
-{
+Scaffold::~Scaffold() {
 }
 
-const char* Scaffold::getModuleName()
-{
+const char* Scaffold::getModuleName() {
 	return ("Scaffold");
 }
 
-bool Scaffold::tryScaffold(vec3_t blockBelow)
-{
+bool Scaffold::tryScaffold(vec3_t blockBelow) {
 	blockBelow = blockBelow.floor();
 
 	DrawUtils::drawBox(blockBelow, vec3_t(blockBelow).add(1), 0.4f);
@@ -27,7 +22,6 @@ bool Scaffold::tryScaffold(vec3_t blockBelow)
 	C_BlockLegacy* blockLegacy = *(block->blockLegacy);
 	//logF("blockLegacy: %llX", blockLegacy);
 	if (blockLegacy->material->isReplaceable) {
-		
 		vec3_ti* blok = new vec3_ti(blockBelow);
 
 		// Find neighbour
@@ -48,8 +42,7 @@ bool Scaffold::tryScaffold(vec3_t blockBelow)
 			vec3_ti* current = *it;
 
 			vec3_ti* calc = blok->subAndReturn(*current);
-			if (!(*(g_Data.getLocalPlayer()->region->getBlock(*calc)->blockLegacy))->material->isReplaceable)
-			{
+			if (!(*(g_Data.getLocalPlayer()->region->getBlock(*calc)->blockLegacy))->material->isReplaceable) {
 				// Found a solid block to click
 				foundCandidate = true;
 				blok->set(calc);
@@ -65,12 +58,11 @@ bool Scaffold::tryScaffold(vec3_t blockBelow)
 				findBlock();
 				g_Data.getCGameMode()->buildBlock(blok, i);
 				g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = slot;
-			}
-			else {
+			} else {
 				g_Data.getCGameMode()->buildBlock(blok, i);
 			}
 			delete blok;
-			
+
 			return true;
 		}
 		delete blok;
@@ -81,9 +73,7 @@ bool Scaffold::tryScaffold(vec3_t blockBelow)
 bool Scaffold::findBlock() {
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
-	int slot = supplies->selectedHotbarSlot;
-	for (int n = 0; n < 9; n++)
-	{
+	for (int n = 0; n < 9; n++) {
 		C_ItemStack* stack = inv->getItemStack(n);
 		if (stack->item != NULL) {
 			if ((*stack->item)->itemId < 256 && (*stack->item)->itemId != 0) {
@@ -95,28 +85,26 @@ bool Scaffold::findBlock() {
 	return false;
 }
 
-void Scaffold::onPostRender()
-{
+void Scaffold::onPostRender() {
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	if (!g_Data.canUseMoveKeys())
 		return;
-	if ((g_Data.getLocalPlayer()->itemId == 0 || g_Data.getLocalPlayer()->itemId > 255) && !autoselect) // Block in hand?
+	if ((g_Data.getLocalPlayer()->itemId == 0 || g_Data.getLocalPlayer()->itemId > 255) && !autoselect)  // Block in hand?
 		return;
 
-	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0; // Block below the player
-	blockBelow.y -= g_Data.getLocalPlayer()->height;     
+	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block below the player
+	blockBelow.y -= g_Data.getLocalPlayer()->height;
 	blockBelow.y -= 0.5f;
-
 
 	// Adjustment by velocity
 	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
 	vec3_t vel = g_Data.getLocalPlayer()->velocity;
-	vel.normalize(); // Only use values from 0 - 1
-	
+	vel.normalize();  // Only use values from 0 - 1
+
 	DrawUtils::setColor(0.3f, 0.2f, 0.8f, 1);
 	if (!tryScaffold(blockBelow)) {
-		if (speed > 0.05f) { // Are we actually walking?
+		if (speed > 0.05f) {  // Are we actually walking?
 			DrawUtils::setColor(0.8f, 0.8f, 0.2f, 1);
 			blockBelow.z -= vel.z * 0.4f;
 			if (!tryScaffold(blockBelow)) {
@@ -128,6 +116,5 @@ void Scaffold::onPostRender()
 				}
 			}
 		}
-		
 	}
 }

@@ -1,10 +1,9 @@
 #pragma once
 
-#include "Module.h"
 #include "../../DrawUtils.h"
+#include "Module.h"
 
-class NoFriends : public IModule
-{
+class NoFriends : public IModule {
 public:
 	NoFriends();
 	~NoFriends();
@@ -12,4 +11,3 @@ public:
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 };
-

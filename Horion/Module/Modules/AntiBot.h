@@ -1,14 +1,14 @@
 #pragma once
 #include "Module.h"
-class AntiBot :
-	public IModule
-{
+class AntiBot : public IModule {
 private:
 	bool hitboxCheck = true;
 	bool nameCheck = false;
 	bool invisibleCheck = true;
 	bool entityIdCheck = true;
 	bool otherCheck = true;
+	bool extraCheck = false;
+
 public:
 	AntiBot();
 	~AntiBot();
@@ -28,8 +28,10 @@ public:
 	bool isOtherCheckEnabled() {
 		return otherCheck && this->isEnabled();
 	}
+	bool isExtraCheckEnabled() {
+		return this->extraCheck;
+	}
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 };
-

@@ -1,9 +1,7 @@
 #pragma once
 #include "ICommand.h"
 
-class ServerCommand :
-	public IMCCommand
-{
+class ServerCommand : public IMCCommand {
 public:
 	ServerCommand();
 	~ServerCommand();

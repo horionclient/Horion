@@ -1,8 +1,6 @@
 #pragma once
 #include "Module.h"
-class AutoSneak :
-	public IModule
-{
+class AutoSneak : public IModule {
 public:
 	AutoSneak();
 	~AutoSneak();
@@ -11,4 +9,3 @@ public:
 	virtual const char* getModuleName() override;
 	virtual const char* getRawModuleName() override;
 };
-

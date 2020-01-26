@@ -1,11 +1,10 @@
 #pragma once
 
-#include "ICommand.h"
 #include <map>
 
-class setoffhandCommand :
-	public IMCCommand
-{
+#include "ICommand.h"
+
+class setoffhandCommand : public IMCCommand {
 public:
 	setoffhandCommand();
 	~setoffhandCommand();
@@ -13,4 +12,3 @@ public:
 	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
 };
-
