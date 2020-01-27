@@ -1,6 +1,6 @@
 #include "CrystalAura.h"
 
-CrystalAura::CrystalAura() : IModule(VK_NUMPAD0, Category::EXPLOITS, "Destroys nearby Crystals") {
+CrystalAura::CrystalAura() : IModule(VK_NUMPAD0, Category::COMBAT, "Destroys nearby Crystals") {
 }
 
 CrystalAura::~CrystalAura() {
