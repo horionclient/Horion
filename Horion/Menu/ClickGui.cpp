@@ -690,13 +690,11 @@ void ClickGui::onMouseClickUpdate(int key, bool isDown) {
 	switch (key) {
 	case 0:  // Left Click
 		isLeftClickDown = isDown;
-		if (isDown)
-			shouldToggleLeftClick = true;
+		shouldToggleLeftClick = isDown;
 		break;
 	case 1:  // Right Click
 		isRightClickDown = isDown;
-		if (isDown)
-			shouldToggleRightClick = true;
+		shouldToggleRightClick = isDown;
 		break;
 	}
 }
