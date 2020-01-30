@@ -36,7 +36,7 @@ void TabGui::renderLevel() {
 	// Parameters
 	static constexpr float textSize = 1.f;
 	static const float textHeight = 10.f * textSize;
-	static constexpr float alphaVal = 0.5f;
+	static constexpr float alphaVal = 1.0f;
 
 	// First loop: Get the maximum text length
 	float maxLength = 1;
@@ -63,67 +63,35 @@ void TabGui::renderLevel() {
 			xOffset + maxLength + 4.5f,
 			yOffset + textHeight);
 
+		MC_Color* color = new MC_Color(200, 200, 200, 1);
+
 		if (selected[renderedLevel] == i && level >= renderedLevel) {  // We are selected
 			if (renderedLevel == level) {                              // Are we actually in the menu we are drawing right now?
 				// We are selected in the current menu
+				DrawUtils::fillRectangle(rectPos, MC_Color(28, 107, 201, 1), alphaVal);
+				static bool lastVal = toggleCurrentSelection;
 
-				if (label.mod == 0) {
-					// Category
-					DrawUtils::fillRectangle(rectPos, MC_Color(0.118f, 0.827f, 0.764f, 1.0f), alphaVal);
-				} else {
-					// Modules
-					/*
-					if(label.enabled)
-						DrawUtils::fillRectangle(rectPos, MC_Color(0.8f, 0.5f, 0.5f, 1.0f), alphaVal);
-					else
-						DrawUtils::fillRectangle(rectPos, MC_Color(48.f / 255.f, 211.f / 255.f, 195.f / 255.f, 1.0f), alphaVal);*/
-
-					{
-						if (label.enabled && renderedLevel > 0)
-							DrawUtils::fillRectangle(rectPos, MC_Color(0.9f, 0.4f, 0.4f, 1.0f), alphaVal);
-						else if (renderedLevel > 0)
-							DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.4f, 0.4f, 1.0f), alphaVal);
-						else
-							DrawUtils::fillRectangle(rectPos, MC_Color(0.2f, 0.2f, 0.2f, 1.0f), alphaVal);
+				if (toggleCurrentSelection) {
+					if (label.mod->isFlashMode()) {
+						label.mod->setEnabled(true);
+					} else {
+						toggleCurrentSelection = false;
+						label.mod->toggle();
 					}
-					vec4_t reee = rectPos;
-					reee.x += 0.5f;
-					reee.y += 0.5f;
-					reee.z -= 0.5f;
-					reee.w -= 0.5f;
-					DrawUtils::drawRectangle(reee, MC_Color(0.118f, 0.827f, 0.764f, 1.0f), 1, 1.f);  // Border around Text
-
-					static bool lastVal = toggleCurrentSelection;
-
-					if (toggleCurrentSelection) {
-						if (label.mod->isFlashMode()) {
-							label.mod->setEnabled(true);
-						} else {
-							toggleCurrentSelection = false;
-							label.mod->toggle();
-						}
-					} else if (toggleCurrentSelection != lastVal && label.mod->isFlashMode())
-						label.mod->setEnabled(false);
-					lastVal = toggleCurrentSelection;
-				}
+				} else if (toggleCurrentSelection != lastVal && label.mod->isFlashMode())
+					label.mod->setEnabled(false);
+				lastVal = toggleCurrentSelection;
 			} else {
-				// We are selected but we are not in the current menu
-				//DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.3f, 0.3f, 1.0f), alphaVal);
-				DrawUtils::fillRectangle(rectPos, MC_Color((48.f / 255.f) * 0.93f, (211.f / 255.f) * 0.93f, (195.f / 255.f) * 0.93f, 1.0f), alphaVal);
+				DrawUtils::fillRectangle(rectPos, MC_Color(28, 107, 201, 1), alphaVal);
 			}
 			selectedYOffset = yOffset;
 		} else {  // We are not selected
-			if (label.enabled && renderedLevel > 0)
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.9f, 0.4f, 0.4f, 1.0f), alphaVal);
-			else if (renderedLevel > 0)
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.4f, 0.4f, 1.0f), alphaVal);
-			else
-				DrawUtils::fillRectangle(rectPos, MC_Color(0.2f, 0.2f, 0.2f, 1.0f), alphaVal);
+			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
 		}
 
 		//DrawUtils::drawRectangle(rectPos, MC_Color(0.0f, 0.0f, 0.0f, 1.0f), 1, 0.3f); // Border around Text
 		std::string tempLabel(label.text);
-		DrawUtils::drawText(vec2_t(xOffset + 1.5f, yOffset /*+ 0.5f*/), &tempLabel, /* White Color*/ nullptr, textSize);
+		DrawUtils::drawText(vec2_t(xOffset + 1.5f, yOffset /*+ 0.5f*/), &tempLabel, label.enabled ? nullptr : color, textSize);
 
 		yOffset += textHeight;
 		i++;

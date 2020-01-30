@@ -9,7 +9,6 @@
 ** A simple to use memory-manipulation class
 **
 ** Author: Zat
-** More information: https://www.unknowncheats.me/forum/c-and-c/167302-slimmem-simple-use-memory-manipulation-class.html
 ** -------------------------------------------------------------------------*/
 
 // clang-format off

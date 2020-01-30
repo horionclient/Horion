@@ -91,7 +91,7 @@ C_Font* DrawUtils::getFont(Fonts font) {
 		return g_Data.getClientInstance()->N0000080D->getTheGoodFontThankYou();
 		break;
 	case Fonts::UNICOD:
-		return g_Data.getClientInstance()->_getUnicodeFont();
+		return g_Data.getClientInstance()->N0000080D->getTheBetterFontYes();
 		break;
 	case Fonts::RUNE:
 		return g_Data.getClientInstance()->_getRuneFont();

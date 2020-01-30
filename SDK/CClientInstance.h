@@ -75,6 +75,10 @@ public:
 		return fontRepository1->fontList1->fontEntries[6].font;
 	};
 
+	C_Font* getTheBetterFontYes() {
+		return fontRepository->fontList->fontEntries[0].font;
+	}
+
 	const bool canUseKeybinds() {
 		return canUseKeys;
 	};

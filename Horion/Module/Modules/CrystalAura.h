@@ -1,9 +1,11 @@
 #pragma once
 #include "Module.h"
+#include "../ModuleManager.h"
 
 class CrystalAura : public IModule {
 private:
-	int range = 5;
+	int delay = 0;
+	bool autoplace = true;
 
 public:
 	CrystalAura();
@@ -14,5 +16,5 @@ public:
 	virtual void onTick(C_GameMode* gm) override;
 	virtual void onEnable() override;
 	virtual void onDisable() override;
-	int delay = 0;
+	int range = 5;
 };

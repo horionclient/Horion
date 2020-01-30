@@ -22,15 +22,11 @@ static constexpr float categoryMargin = 0.5f;
 static constexpr float paddingRight = 13.5f;
 static constexpr float crossSize = textHeight / 2.f;
 static constexpr float crossWidth = 0.3f;
-static const MC_Color selectedModuleColor = MC_Color(0.5f, 0.5f, 0.5f, 1.f);
-static const MC_Color moduleColor = MC_Color(0.2f, 0.2f, 0.2f, 1.f);
+static const MC_Color selectedModuleColor = MC_Color(28, 107, 201, 1);
+static const MC_Color moduleColor = MC_Color(13, 29, 48, 1);
 
 float currentYOffset = 0;
 float currentXOffset = 0;
-
-char currentTooltip[500];
-vec2_t currentTooltipPos;
-bool hasTooltip;
 
 int timesRendered = 0;
 
@@ -107,10 +103,21 @@ std::shared_ptr<ClickModule> ClickGui::getClickModule(std::shared_ptr<ClickWindo
 void ClickGui::renderLabel(const char* text) {
 }
 
-void ClickGui::renderTooltip(std::string* text, vec2_t mousepos) {
-	strcpy_s(currentTooltip, text->c_str());
-	currentTooltipPos = mousepos;
-	hasTooltip = true;
+void ClickGui::renderTooltip(std::string* text) {
+	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+	vec2_t currentTooltipPos = vec2_t(5.f, windowSize.y - 15.f);
+	float textWidth = DrawUtils::getTextWidth(text, textSize);
+	vec2_t textPos = vec2_t(
+		currentTooltipPos.x + textPadding,
+		currentTooltipPos.y);
+	vec4_t rectPos = vec4_t(
+		currentTooltipPos.x - 2.f,
+		currentTooltipPos.y - 2.f,
+		currentTooltipPos.x + (textPadding * 2) + textWidth + 2.f,
+		currentTooltipPos.y + textHeight + 2.f);
+	DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.0f);
+	DrawUtils::drawRectangle(rectPos, MC_Color(255, 255, 255, 1), 1.f, 1.f);
+	DrawUtils::drawText(textPos, text, new MC_Color(255, 255, 255, 1), textSize);
 }
 
 void ClickGui::renderCategory(Category category) {
@@ -247,23 +254,23 @@ void ClickGui::renderCategory(Category category) {
 			// Background
 			if (allowRender) {
 				if (rectPos.contains(&mousePos) && !ourWindow->isInAnimation) {  // Is the Mouse hovering above us?
-					DrawUtils::fillRectangle(rectPos, selectedModuleColor, 0.8f);
+					DrawUtils::fillRectangle(rectPos, selectedModuleColor, 1.f);
 					std::string tooltip = mod->getTooltip();
 					ClickGuiMod* clickgui = moduleMgr->getModule<ClickGuiMod>();
 					if (clickgui->showTooltips)
-						renderTooltip(&tooltip, mousePos);
+						renderTooltip(&tooltip);
 					if (shouldToggleLeftClick) {  // Are we being clicked?
 						mod->toggle();
 						shouldToggleLeftClick = false;
 					}
 				} else {
-					DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
+					DrawUtils::fillRectangle(rectPos, moduleColor, 1.f);
 				}
 			}
 
 			// Text
 			if (allowRender)
-				DrawUtils::drawText(textPos, &textStr, mod->isEnabled() ? new MC_Color(0, 1.0f, 0, 1.0f) : new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
+				DrawUtils::drawText(textPos, &textStr, mod->isEnabled() ? new MC_Color(255, 255, 255, 1) : new MC_Color(200, 200, 200, 1), textSize);
 
 			// Settings
 			{
@@ -278,7 +285,7 @@ void ClickGui::renderCategory(Category category) {
 					GuiUtils::drawCrossLine(vec2_t(
 												currentXOffset + windowSize->x + paddingRight - (crossSize / 2) - 1.f,
 												currentYOffset + textPadding + (textHeight / 2)),
-											MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !clickMod->isExtended);
+											MC_Color(255, 255, 255, 1), crossWidth, crossSize, !clickMod->isExtended);
 
 					currentYOffset += textHeight + (textPadding * 2);
 
@@ -337,10 +344,10 @@ void ClickGui::renderCategory(Category category) {
 										textPos.x + textHeight - textPadding,
 										textPos.y + textHeight - textPadding);
 
-									DrawUtils::drawRectangle(boxPos, MC_Color(1, 1, 1, 1), isFocused ? 1 : 0.8f, 0.5f);
+									DrawUtils::drawRectangle(boxPos, MC_Color(255, 255, 255, 255), isFocused ? 1 : 0.8f, 0.5f);
 
 									if (setting->value->_bool) {
-										DrawUtils::setColor(0.2f, 0.7f, 0.2f, 1);
+										DrawUtils::setColor(28, 107, 201, 1);
 										boxPos.x += textPadding;
 										boxPos.y += textPadding;
 										boxPos.z -= textPadding;
@@ -416,20 +423,20 @@ void ClickGui::renderCategory(Category category) {
 										{
 											vec2_t mid = vec2_t(
 												rect.x + ((rect.z - rect.x) / 2),
-												rect.y - 1.5f  // Hardcoded ghetto
+												rect.y - 0.2f
 											);
 											char str[10];
 											sprintf_s(str, 10, "%.2f", setting->value->_float);
 											std::string text = str;
 											mid.x -= DrawUtils::getTextWidth(&text, textSize) / 2;
 
-											DrawUtils::drawText(mid, &text, (areWeFocused || setting->isDragging) ? new MC_Color(1.0f, 0.1f, 0.1f, 1.f) : new MC_Color(0.8f, 0.05f, 0.05f, 1.f), textSize);
+											DrawUtils::drawText(mid, &text, new MC_Color(255, 255, 255, 1), textSize);
 										}
 
 										// Draw Progress
 										{
 											rect.z = rect.x + value;
-											DrawUtils::fillRectangle(rect, MC_Color(1.0f, 1.0f, 1.0f, 1.0f), (areWeFocused || setting->isDragging) ? 1.f : 0.8f);
+											DrawUtils::fillRectangle(rect, MC_Color(28, 107, 201, 1), (areWeFocused || setting->isDragging) ? 1.f : 0.8f);
 										}
 
 										// Drag Logic
@@ -630,13 +637,14 @@ void ClickGui::renderCategory(Category category) {
 		{
 			// Draw Text
 			std::string textStr = categoryName;
-			DrawUtils::drawText(textPos, &textStr, new MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
-			DrawUtils::fillRectangle(rectPos, MC_Color(0.118f, 0.827f, 0.764f, 1.f), 0.95f);
+			DrawUtils::drawText(textPos, &textStr, new MC_Color(255, 255, 255, 1), textSize);
+			DrawUtils::fillRectangle(rectPos, moduleColor, 1.f);
+			if(ourWindow->isExtended) DrawUtils::fillRectangle(vec4_t(rectPos.x, rectPos.w - 1, rectPos.z, rectPos.w), selectedModuleColor, 1.f);
 			// Draw Dash
 			GuiUtils::drawCrossLine(vec2_t(
 										currentXOffset + windowSize->x + paddingRight - (crossSize / 2) - 1.f,
 										categoryHeaderYOffset + textPadding + (textHeight / 2)),
-									MC_Color(1.0f, 0.2f, 0, 1.0f), crossWidth, crossSize, !ourWindow->isExtended);
+									MC_Color(255, 255, 255, 1), crossWidth, crossSize, !ourWindow->isExtended);
 		}
 	}
 
@@ -658,7 +666,7 @@ void ClickGui::render() {
 									 0,
 									 g_Data.getClientInstance()->getGuiData()->widthGame,
 									 g_Data.getClientInstance()->getGuiData()->heightGame),
-								 MC_Color(0.8f, 0.8f, 0.8f, 0.1f), 0.2f);
+								 MC_Color(33, 34, 48, 1), 0.2f);
 	}
 
 	// Render all categorys
@@ -673,21 +681,6 @@ void ClickGui::render() {
 	shouldToggleRightClick = false;
 	resetStartPos = false;
 
-	if (hasTooltip) {
-		hasTooltip = false;
-		std::string text = currentTooltip;
-		float textWidth = DrawUtils::getTextWidth(&text, textSize);
-		vec2_t textPos = vec2_t(
-			currentTooltipPos.x + textPadding + 12.f,
-			currentTooltipPos.y);
-		vec4_t rectPos = vec4_t(
-			currentTooltipPos.x + 12.f,
-			currentTooltipPos.y,
-			currentTooltipPos.x + (textPadding * 2) + textWidth + 12.f,
-			currentTooltipPos.y + textHeight);
-		DrawUtils::fillRectangle(rectPos, MC_Color(0.2f, 0.2f, 0.2f, 1.0f), 1.0f);
-		DrawUtils::drawText(textPos, &text, new MC_Color(1.f, 1.f, 1.f, 1.f), textSize);
-	}
 	DrawUtils::flush();
 }
 
