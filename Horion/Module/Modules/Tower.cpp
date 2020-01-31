@@ -81,7 +81,7 @@ void Tower::onPostRender() {
 	if (!g_Data.canUseMoveKeys())
 		return;
 	auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
-	if (!(*selectedItem->item)->isBlock())  // Block in hand?
+	if (!selectedItem->isValid() || !(*selectedItem->item)->isBlock())  // Block in hand?
 		return;
 
 	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block below the player

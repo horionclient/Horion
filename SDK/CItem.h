@@ -248,6 +248,10 @@ public:
 		this->setVtable();
 	}
 
+	bool isValid() {
+		return this != nullptr && this->item != nullptr && *this->item != nullptr;
+	}
+
 	inline C_Item* getItem() {
 		return *this->item;
 	}

@@ -3,6 +3,7 @@
 struct SelectedItemInformation {
 	int selectedItemId = 0;
 	float currentSelectedItemInterpol = 0;
+	float rollbackVal = 1;
 
 	void setSelectedItemForce(int item) {
 		selectedItemId = item;
@@ -11,6 +12,13 @@ struct SelectedItemInformation {
 
 	void interp() {
 		currentSelectedItemInterpol += (selectedItemId - currentSelectedItemInterpol) * 0.1f;
+	}
+
+	void rollback() {
+		rollbackVal *= 0.9f;
+	}
+	void rollin() {
+		rollbackVal = 1 - ((1 - rollbackVal) * 0.9f);
 	}
 };
 
@@ -101,28 +109,34 @@ void TabGui::renderLevel() {
 			} else {  // selected, but not what the user is interacting with
 				DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
 			}
-			selectedYOffset = yOffset;
+			//selectedYOffset = yOffset;
 		} else {  // We are not selected
 			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
 		}
 
 		std::string tempLabel(label.text);
-		DrawUtils::drawText(vec2_t(xOffset + 1.5f, yOffset /*+ 0.5f*/), &tempLabel, label.enabled ? MC_Color() : color, textSize);
+		DrawUtils::drawText(vec2_t(xOffset + 1.5f, yOffset + 0.5f), &tempLabel, label.enabled ? MC_Color() : color, textSize);
 
 		yOffset += textHeight;
 	}
 
 	// Draw selected item
 	{
-		float selectedOffset = startYOffset + textHeight * selected[renderedLevel].currentSelectedItemInterpol;
+		selectedYOffset = startYOffset + textHeight * selected[renderedLevel].currentSelectedItemInterpol;
 		vec4_t selectedPos = vec4_t(
 			xOffset - 0.5f,  // Off screen / Left border not visible
-			selectedOffset,
+			selectedYOffset,
 			xOffset + maxLength + 4.5f,
-			selectedOffset + textHeight);
+			selectedYOffset + textHeight);
 
-		if (renderedLevel <= level)
-			DrawUtils::fillRectangle(selectedPos, MC_Color(28, 107, 201, 1), alphaVal);
+		float diff = selectedPos.z - selectedPos.x;
+		selectedPos.z = selectedPos.x + diff * selected[renderedLevel].rollbackVal;
+
+		if (renderedLevel > level) {
+			selected[renderedLevel].rollback();
+		}else
+			selected[renderedLevel].rollin();
+		DrawUtils::fillRectangle(selectedPos, MC_Color(28, 107, 201, 1), alphaVal);
 	}
 
 	// Cleanup
