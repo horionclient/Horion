@@ -249,14 +249,12 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 
 	g_Hooks.shouldRender = uiscene->isPlayScreen();
 	if (!g_Hooks.shouldRender) {
-		TextHolder* alloc = new TextHolder();
+		std::unique_ptr<TextHolder> alloc(new TextHolder());
 
-		uiscene->getScreenName(alloc);
+		uiscene->getScreenName(alloc.get());
 
 		if (strcmp(alloc->getText(), "hud_screen") == 0 || strcmp(alloc->getText(), "start_screen") == 0 || (alloc->getTextLength() >= 11 && strncmp(alloc->getText(), "play_screen", 11)) == 0)
 			g_Hooks.shouldRender = true;
-
-		delete alloc;
 	}
 
 	return oRender(uiscene, screencontext);
@@ -761,46 +759,46 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packet* packet) {
 	static auto oFunc = g_Hooks.LoopbackPacketSender_sendToServerHook->GetFastcall<void, C_LoopbackPacketSender*, C_Packet*>();
 
-	static Freecam* FreecamMod = moduleMgr->getModule<Freecam>();
-	static Blink* BlinkMod = moduleMgr->getModule<Blink>();
-	static NoPacket* No_Packet = moduleMgr->getModule<NoPacket>();
+	static Freecam* freecamMod = moduleMgr->getModule<Freecam>();
+	static Blink* blinkMod = moduleMgr->getModule<Blink>();
+	static NoPacket* noPacketMod = moduleMgr->getModule<NoPacket>();
 
-	if (FreecamMod == nullptr || BlinkMod == nullptr || No_Packet == nullptr) {
-		FreecamMod = moduleMgr->getModule<Freecam>();
-		BlinkMod = moduleMgr->getModule<Blink>();
-		No_Packet = moduleMgr->getModule<NoPacket>();
-	} else if (No_Packet->isEnabled()) {
+	if (freecamMod == nullptr || blinkMod == nullptr || noPacketMod == nullptr) {
+		freecamMod = moduleMgr->getModule<Freecam>();
+		blinkMod = moduleMgr->getModule<Blink>();
+		noPacketMod = moduleMgr->getModule<NoPacket>();
+	} else if (noPacketMod->isEnabled()) {
 		return;
-	} else if (FreecamMod->isEnabled() || BlinkMod->isEnabled()) {
+	} else if (freecamMod->isEnabled() || blinkMod->isEnabled()) {
 		if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
-			if (BlinkMod->isEnabled()) {
+			if (blinkMod->isEnabled()) {
 				if (packet->isInstanceOf<C_MovePlayerPacket>()) {
 					C_MovePlayerPacket* meme = reinterpret_cast<C_MovePlayerPacket*>(packet);
 					meme->onGround = true;                                                            //Don't take Fall Damages when turned off
-					BlinkMod->getMovePlayerPacketHolder()->push_back(new C_MovePlayerPacket(*meme));  // Saving the packets
+					blinkMod->getMovePlayerPacketHolder()->push_back(new C_MovePlayerPacket(*meme));  // Saving the packets
 				} else {
-					BlinkMod->getPlayerAuthInputPacketHolder()->push_back(new PlayerAuthInputPacket(*reinterpret_cast<PlayerAuthInputPacket*>(packet)));
+					blinkMod->getPlayerAuthInputPacketHolder()->push_back(new PlayerAuthInputPacket(*reinterpret_cast<PlayerAuthInputPacket*>(packet)));
 				}
 			}
 			return;  // Dont call LoopbackPacketSender_sendToServer
 		}
-	} else if (!BlinkMod->isEnabled()) {
-		if (BlinkMod->getMovePlayerPacketHolder()->size() > 0) {
-			for (auto it : *BlinkMod->getMovePlayerPacketHolder()) {
+	} else if (!blinkMod->isEnabled()) {
+		if (blinkMod->getMovePlayerPacketHolder()->size() > 0) {
+			for (auto it : *blinkMod->getMovePlayerPacketHolder()) {
 				oFunc(a, (it));
 				delete it;
 				it = nullptr;
 			}
-			BlinkMod->getMovePlayerPacketHolder()->clear();
+			blinkMod->getMovePlayerPacketHolder()->clear();
 			return;
 		}
-		if (BlinkMod->getPlayerAuthInputPacketHolder()->size() > 0) {
-			for (auto it : *BlinkMod->getPlayerAuthInputPacketHolder()) {
+		if (blinkMod->getPlayerAuthInputPacketHolder()->size() > 0) {
+			for (auto it : *blinkMod->getPlayerAuthInputPacketHolder()) {
 				oFunc(a, (it));
 				delete it;
 				it = nullptr;
 			}
-			BlinkMod->getPlayerAuthInputPacketHolder()->clear();
+			blinkMod->getPlayerAuthInputPacketHolder()->clear();
 			return;
 		}
 	}
@@ -940,19 +938,17 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3) 
 	return oFunc(_this, a2, a3);
 }
 
-void Hooks::ClickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8) {
-	static auto oFunc = g_Hooks.ClickFuncHook->GetFastcall<void, __int64, char, char, __int16, __int16, __int16, __int16, char>();
+void Hooks::ClickFunc(__int64 a1, char mouseButton, bool isDown, __int16 mouseX, __int16 mouseY, __int16 a6, __int16 a7, char a8) {
+	static auto oFunc = g_Hooks.ClickFuncHook->GetFastcall<void, __int64, bool, char, __int16, __int16, __int16, __int16, char>();
 	static IModule* clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
-
+	
 	if (clickGuiModule == nullptr)
 		clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 	else if (clickGuiModule->isEnabled()) {
-		if (isTicked) {
-			isTicked = false;
+		if (mouseButton != 0) // Mouse click event
 			return;
-		}
 	}
-	oFunc(a1, a2, a3, a4, a5, a6, a7, a8);
+	oFunc(a1, mouseButton, isDown, mouseX, mouseY, a6, a7, a8);
 }
 
 __int64 Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity* a2) {
