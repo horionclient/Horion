@@ -939,7 +939,7 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3) 
 }
 
 void Hooks::ClickFunc(__int64 a1, char mouseButton, bool isDown, __int16 mouseX, __int16 mouseY, __int16 a6, __int16 a7, char a8) {
-	static auto oFunc = g_Hooks.ClickFuncHook->GetFastcall<void, __int64, bool, char, __int16, __int16, __int16, __int16, char>();
+	static auto oFunc = g_Hooks.ClickFuncHook->GetFastcall<void, __int64, char, bool, __int16, __int16, __int16, __int16, char>();
 	static IModule* clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 	
 	if (clickGuiModule == nullptr)
