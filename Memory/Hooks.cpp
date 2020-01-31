@@ -318,6 +318,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	bool shouldRenderArrayList = true;
 	bool shouldRenderTabGui = true;
 	bool shouldRenderCoords = false;
+	bool shouldRenderWatermark = true;
 
 	// Call PostRender() functions
 	{
@@ -329,6 +330,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			shouldRenderTabGui = hud->tabgui && hud->isEnabled();
 			shouldRenderArrayList = hud->arraylist && hud->isEnabled();
 			shouldRenderCoords = hud->coordinates && hud->isEnabled();
+			shouldRenderWatermark = hud->watermark && hud->isEnabled();
 		}
 
 		static IModule* ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
@@ -338,6 +340,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			ClickGui::render();
 			shouldRenderArrayList = false;
 			shouldRenderCoords = false;
+			shouldRenderTabGui = false;
+			shouldRenderWatermark = false;
 		}
 
 		if (shouldRenderTabGui) TabGui::render();
@@ -346,13 +350,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	{
 		// Display ArrayList on the Right?
 		static constexpr bool isOnRightSide = true;
-		static float rcolors[4];                                            // Rainbow color array RGBA
-		static float disabledRcolors[4];                                    // Rainbow Colors, but for disabled modules
-		static float currColor[4];                                          // ArrayList collors
-		static std::string horionStr = std::string("Horion");               // Static Horion logo / text
-		static float horionStrWidth = DrawUtils::getTextWidth(&horionStr);  // Graphical Width of Horion logo / text
-		static std::string dlStr = std::string("discord.gg/horion");
-		static float dlStrWidth = DrawUtils::getTextWidth(&dlStr);
+		static float rcolors[4];          // Rainbow color array RGBA
+		static float disabledRcolors[4];  // Rainbow Colors, but for disabled modules
+		static float currColor[4];        // ArrayList collors
 
 		float yOffset = 0;  // Offset of next Text
 		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
@@ -375,9 +375,18 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		static HudModule* hud = moduleMgr->getModule<HudModule>();
 		if (hud == nullptr)
 			hud = moduleMgr->getModule<HudModule>();
-		else if (hud->watermark && hud->isEnabled()) {
-			DrawUtils::drawText(vec2_t(windowSize.x - horionStrWidth * 1.5f - 2.f, windowSize.y - 22.f), &horionStr, nullptr, 1.5f);
-			DrawUtils::drawText(vec2_t(windowSize.x - dlStrWidth * 0.85f - 2.f, windowSize.y - 10.75f), &dlStr, nullptr, 0.85f);
+		else if (shouldRenderWatermark) {
+			std::string name = "Horion";
+			float length = DrawUtils::getTextWidth(&name, 1.5f);
+			vec4_t rect = vec4_t(
+				windowSize.x - length - 20.f,
+				windowSize.y - 20.f,
+				windowSize.x - 5.f,
+				windowSize.y - 5.f);
+			DrawUtils::fillRectangle(rect, MC_Color(13, 29, 48, 1), 1.f);
+			DrawUtils::drawRectangle(rect, MC_Color(rcolors), 1.f, 1.f);
+			DrawUtils::drawText(vec2_t(windowSize.x - length - 18.f, windowSize.y - 20.f), &name, nullptr, 1.5f);
+			DrawUtils::drawText(vec2_t(windowSize.x - 17.5f, windowSize.y - 12.f), &std::string{"beta"}, nullptr, 0.7f);
 		}
 
 		// Draw ArrayList
@@ -433,7 +442,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			wasLeftMouseDown = leftMouseDown;                                        // Set last isDown value
 
 			// Show disabled Modules?
-			//const bool extendedArraylist = g_Data.getLocalPlayer() == nullptr ? /* not ingame */ true : /* ingame */(GameData::canUseMoveKeys() ? false : true);
 			constexpr bool extendedArraylist = false;
 			std::set<IModuleContainer> modContainerList;
 			// Fill modContainerList with Modules
@@ -465,15 +473,19 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					xOffset + textPadding,
 					yOffset + textPadding);
 				vec4_t rectPos = vec4_t(
-					xOffset,
+					xOffset - 2,
 					yOffset,
 					isOnRightSide ? windowSize.x : textWidth + (textPadding * 2),
 					yOffset + textPadding * 2 + textHeight);
-				// Here comes some premium code (thank you lemon for explaining a bit)
+				vec4_t leftRect = vec4_t(
+					xOffset - 2,
+					yOffset,
+					xOffset - 1,
+					yOffset + textPadding * 2 + textHeight);
 				c++;
 				b++;
 				if (b < 20)
-					a = moduleMgr->getEnabledModuleCount() * 2;
+					a = moduleMgr->getEnabledModuleCount();
 				else
 					b = 0;
 				currColor[3] = rcolors[3];
@@ -481,7 +493,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				currColor[0] += 1.f / a * c;
 				Utils::ColorConvertHSVtoRGB(currColor[0], currColor[1], currColor[2], currColor[0], currColor[1], currColor[2]);
 
-				DrawUtils::drawText(textPos, &textStr, new MC_Color(currColor), textSize);
+				DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
+				DrawUtils::fillRectangle(leftRect, MC_Color(currColor), 1.f);
 				if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos) && hud->clickToggle) {
 					if (leftMouseDown) {
 						DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 0.1f), it->enabled ? 0.6f : 0.6f);
@@ -490,6 +503,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					} else
 						DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.7f, 0.3f, 0.1f), it->enabled ? 0.4f : 0.15f);
 				}
+				DrawUtils::drawText(textPos, &textStr, new MC_Color(currColor), textSize);
 
 				yOffset += textHeight + (textPadding * 2);
 			}
