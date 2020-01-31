@@ -343,6 +343,7 @@
     <ClInclude Include="Utils\Logger.h" />
     <ClInclude Include="Memory\SlimMem.h" />
     <ClInclude Include="Utils\Utils.h" />
+    <ClInclude Include="Utils\xorstr.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Horion.rc" />

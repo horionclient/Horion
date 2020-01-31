@@ -12,7 +12,7 @@ const char* NoSlowDown::getModuleName() {
 
 void NoSlowDown::onEnable() {
 	if (opcode == 0)
-		opcode = reinterpret_cast<uint8_t*>(Utils::FindSignature("75 2F 4D 85 FF 75 2A"));
+		opcode = reinterpret_cast<uint8_t*>(FindSignature("75 2F 4D 85 FF 75 2A"));
 
 	DWORD oldProtect = 0;
 	if (!VirtualProtect(opcode, 1, PAGE_EXECUTE_READWRITE, &oldProtect)) {
@@ -28,7 +28,7 @@ void NoSlowDown::onEnable() {
 
 void NoSlowDown::onDisable() {
 	if (opcode == 0)
-		opcode = reinterpret_cast<uint8_t*>(Utils::FindSignature("75 2F 4D 85 FF 75 2A"));
+		opcode = reinterpret_cast<uint8_t*>(FindSignature("75 2F 4D 85 FF 75 2A"));
 
 	DWORD oldProtect = 0;
 	if (!VirtualProtect(opcode, 1, PAGE_EXECUTE_READWRITE, &oldProtect)) {

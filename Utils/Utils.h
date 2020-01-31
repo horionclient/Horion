@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "Logger.h"
+#include "xorstr.h"
 
 static const char* const KeyNames[] = {
 	"Unknown",
@@ -221,6 +222,9 @@ static inline void ImSwap(T& a, T& b) {
 	b = tmp;
 }
 
+#define FindSignature(szSignature) Utils::FindSignatureModule("Minecraft.Windows.exe", xorstr_(szSignature))
+
+
 class Utils {
 public:
 	static inline const char* getKeybindName(int keybind) {
@@ -304,10 +308,6 @@ public:
 		return (*static_cast<Fn**>(thisptr))[IIdx](thisptr, argList...);
 	}
 
-	static uintptr_t FindSignature(const char* szSignature) {
-		return FindSignatureModule("Minecraft.Windows.exe", szSignature);
-	}
-
 	// https://stackoverflow.com/a/34571089
 	static std::string base64_encode(const std::string& in) {
 		std::string out;
@@ -353,6 +353,7 @@ public:
 		return str.substr(0, size);
 	}
 
+	
 	static uintptr_t FindSignatureModule(const char* szModule, const char* szSignature) {
 		const char* pattern = szSignature;
 		uintptr_t firstMatch = 0;
