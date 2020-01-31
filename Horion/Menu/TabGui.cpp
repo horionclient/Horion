@@ -80,7 +80,7 @@ void TabGui::renderLevel() {
 			xOffset + maxLength + 4.5f,
 			yOffset + textHeight);
 
-		MC_Color* color = new MC_Color(200, 200, 200, 1);
+		MC_Color color = MC_Color(200, 200, 200, 1);
 
 		if (selected[renderedLevel].selectedItemId == i && level >= renderedLevel) {  // We are selected
 			if (renderedLevel == level) {                                             // Are we actually in the menu we are drawing right now?
@@ -107,7 +107,7 @@ void TabGui::renderLevel() {
 		}
 
 		std::string tempLabel(label.text);
-		DrawUtils::drawText(vec2_t(xOffset + 1.5f, yOffset /*+ 0.5f*/), &tempLabel, label.enabled ? nullptr : color, textSize);
+		DrawUtils::drawText(vec2_t(xOffset + 1.5f, yOffset /*+ 0.5f*/), &tempLabel, label.enabled ? MC_Color() : color, textSize);
 
 		yOffset += textHeight;
 	}

@@ -164,11 +164,7 @@ void DrawUtils::drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineW
 	fillRectangle(vec4_t(pos.x - lineWidth, pos.w - lineWidth, pos.z + lineWidth, pos.w + lineWidth), col, alpha);
 }
 
-void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color* color, float textSize, Fonts font) {
-	static MC_Color* WHITE_COLOR = new MC_Color(1, 1, 1, 1, false);
-	if (color == nullptr)
-		color = WHITE_COLOR;
-
+void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float textSize, Fonts font) {
 	TextHolder* text = new TextHolder(*textStr);
 	C_Font* fontPtr = getFont(font);
 	static uintptr_t caretMeasureData = 0xFFFFFFFF;
@@ -183,10 +179,7 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color* color, floa
 
 	static float size = 1;
 	size = textSize;
-	renderCtx->drawText(fontPtr, posF, text, color->arr, 1, 0, &size, &caretMeasureData);
-
-	if (color->shouldDelete)
-		delete color;
+	renderCtx->drawText(fontPtr, posF, text, color.arr, 1, 0, &size, &caretMeasureData);
 	delete[] posF;
 	delete text;
 }

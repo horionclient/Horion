@@ -368,21 +368,12 @@ struct vec4_t {
 	float &operator[](int i) { return v[i]; };
 	float operator[](int i) const { return v[i]; };
 
-	inline bool contains(vec2_t *point) {
-		/*
-		Assumes:
-			start: vec2_t(x, y)
-			end:   vec2_t(z, w)
-
-			start < end
-		*/
-		vec2_t start = vec2_t(x, y);
-		vec2_t end = vec2_t(z, w);
-
-		if (point->x <= start.x || point->y <= start.y)
+	__forceinline
+	bool contains(vec2_t *point) {
+		if (point->x <= x || point->y <= y)
 			return false;
 
-		if (point->x >= end.x || point->y >= end.y)
+		if (point->x >= z || point->y >= w)
 			return false;
 		return true;
 	};

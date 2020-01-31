@@ -20,6 +20,13 @@ struct MC_Color {
 	};
 	bool shouldDelete = true;
 
+	MC_Color() {
+		this->r = 1;
+		this->g = 1;
+		this->b = 1;
+		this->a = 1;
+	};
+
 	MC_Color(const MC_Color& other) {
 		this->r = other.r;
 		this->g = other.g;
@@ -71,7 +78,7 @@ public:
 	static void fillRectangle(vec4_t pos, const MC_Color col, float alpha);
 	static void drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineWidth = 1.0f);
 
-	static void drawText(vec2_t pos, std::string* text, MC_Color* color = nullptr, float textSize = 1, Fonts font = Fonts::SMOOTH);
+	static void drawText(vec2_t pos, std::string* text, MC_Color color, float textSize = 1, Fonts font = Fonts::SMOOTH);
 	static void rainbow(float* rcolors);
 	static void drawBox(vec3_t lower, vec3_t upper, float lineWidth);
 	static void drawEntityBox(C_Entity* ent, float lineWidth);
