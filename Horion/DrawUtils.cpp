@@ -246,7 +246,7 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 	if (refdef->OWorldToScreen(origin, ent->eyePos0, textPos, fov, screenSize)) {
 		textPos.y -= 10.f;
 		textPos.x -= textStr / 2.f;
-		drawText(textPos, &text, nullptr, textSize);
+		drawText(textPos, &text, MC_Color(), textSize);
 	}
 }
 
