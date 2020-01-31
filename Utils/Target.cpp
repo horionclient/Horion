@@ -16,9 +16,9 @@ bool Target::isValidTarget(C_Entity* ent) {
 		return false;
 
 	static AntiBot* antibot = moduleMgr->getModule<AntiBot>();
-	if (antibot == NULL) antibot = moduleMgr->getModule<AntiBot>();
+	if (antibot == nullptr) antibot = moduleMgr->getModule<AntiBot>();
 	static Hitbox* hitboxMod = moduleMgr->getModule<Hitbox>();
-	if (hitboxMod == NULL) hitboxMod = moduleMgr->getModule<Hitbox>();
+	if (hitboxMod == nullptr) hitboxMod = moduleMgr->getModule<Hitbox>();
 
 	if (!ent->isAlive())
 		return false;
@@ -26,6 +26,7 @@ bool Target::isValidTarget(C_Entity* ent) {
 	if (ent->getEntityTypeId() <= 122 && ent->getEntityTypeId() != 63 && antibot->isEntityIdCheckEnabled())
 		return false;
 
+	// Temporarily removed from gui, tons of false negatives
 	if (!Target::containsOnlyASCII(ent->getNameTag()->getText()) && antibot->isNameCheckEnabled())
 		return false;
 

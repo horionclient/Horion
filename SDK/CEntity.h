@@ -683,6 +683,15 @@ public:
 		return supplies->inventory->getItemStack(supplies->selectedHotbarSlot);
 	}
 
+	int getSelectedItemId() {
+		auto item = getSelectedItem();
+		if (item == nullptr || item->item == nullptr)
+			return 0;
+		if (item->getItem() == nullptr)
+			return 0;
+		return item->getItem()->itemId;
+	}
+
 private:
 	virtual __int64 frameUpdate(__int64 &);
 	virtual __int64 getTickingOffsets(void) const;

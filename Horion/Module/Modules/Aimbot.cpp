@@ -63,13 +63,14 @@ void Aimbot::onPostRender() {
 		vec2_t angle = origin.CalcAngle(*targetList[0]->getPos());
 		vec2_t appl = angle.sub(localPlayer->viewAngles).normAngles();
 		appl.x = -appl.x;
-
 		if ((appl.x < verticalrange && appl.x > -verticalrange) && (appl.y < horizontalrange && appl.y > -horizontalrange) && GameData::canUseMoveKeys()) {
-			auto selectedItemId = localPlayer->getSelectedItem()->getItem()->itemId;
+			auto selectedItemId = localPlayer->getSelectedItemId();
 			if (sword && !(selectedItemId == 268 || selectedItemId == 267 || selectedItemId == 272 || selectedItemId == 276 || selectedItemId == 283 /*swords*/ || selectedItemId == 271 || selectedItemId == 275 || selectedItemId == 279 || selectedItemId == 286 || selectedItemId == 258 /*axes*/))
 				return;
 
-			if (click && !g_Data.isLeftClickDown()) return;
+			if (click && !g_Data.isLeftClickDown()) 
+				return;
+
 			appl.x /= (100.f - verticalspeed);
 			appl.y /= (100.f - horizontalspeed);
 			if (appl.x >= 1 || appl.x <= -1) appl.div(abs(appl.x));

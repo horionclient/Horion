@@ -110,6 +110,10 @@ void ModuleManager::onLoadConfig(json* conf) {
 		IModule* mod = *it;
 		mod->onLoadConfig(conf);
 	}
+
+	this->getModule<HudModule>()->setEnabled(true);
+	this->getModule<ClickGuiMod>()->setEnabled(false);
+	this->getModule<AntiBot>()->setEnabled(true);
 }
 
 void ModuleManager::onSaveConfig(json* conf) {

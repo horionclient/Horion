@@ -10,6 +10,13 @@ BowAimbot::BowAimbot() : IModule('C', Category::COMBAT, "Aimbot, but for bows") 
 BowAimbot::~BowAimbot() {
 }
 
+struct CompareTargetEnArray {
+	bool operator()(C_Entity* lhs, C_Entity* rhs) {
+		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
+		return (*lhs->getPos()).dist(*localPlayer->getPos()) < (*rhs->getPos()).dist(*localPlayer->getPos());
+	}
+};
+
 const char* BowAimbot::getModuleName() {
 	return ("BowAimbot");
 }
@@ -28,7 +35,6 @@ void findTargets(C_Entity* currentEntity, bool isRegularEntitie) {
 		return;
 
 	float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
-	;
 
 	if (dist < 130) {
 		targetList.push_back(currentEntity);
@@ -40,7 +46,7 @@ void BowAimbot::onPostRender() {
 	if (localPlayer == nullptr)
 		return;
 
-	if (localPlayer->getSelectedItem()->getItem()->itemId != 261)  // Bow in hand?
+	if (localPlayer->getSelectedItemId() != 261)  // Bow in hand?
 		return;
 
 	vec3_t origin = g_Data.getClientInstance()->levelRenderer->origin;
@@ -50,6 +56,7 @@ void BowAimbot::onPostRender() {
 	g_Data.forEachEntity(findTargets);
 
 	if (targetList.size() > 0) {
+		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
 		vec3_t origin = g_Data.getClientInstance()->levelRenderer->origin;  // TODO: sort list
 		C_Entity* entity = targetList[0];
 		vec3_t pos = *entity->getPos();
@@ -58,15 +65,14 @@ void BowAimbot::onPostRender() {
 
 		float yaw = (atan2f(pos.z, pos.x) * DEG_RAD) - 90;
 		float len = pos.magnitudexz();
-		float g = 0.006f;  // nukkit = 0.012, some servers use different calculus
+		constexpr float g = 0.006f;  // nukkit = 0.012, some servers need different values
 		float tmp = 1 - g * (g * (len * len) + 2 * pos.y);
-		float pitch = DEG_RAD * -(atanf((1 - sqrtf(tmp)) / (g * len)));
+		float pitch = DEG_RAD * -atanf((1 - sqrtf(tmp)) / (g * len));
 		if (pitch < 89 && pitch > -89) {
 			vec2_t angles = vec2_t(pitch, yaw);
 
 			vec2_t appl = angles.sub(localPlayer->viewAngles).normAngles();
 			appl.x = -appl.x;
-
 			appl.div(7);  // Smooth dat boi
 
 			localPlayer->applyTurnDelta(&appl);

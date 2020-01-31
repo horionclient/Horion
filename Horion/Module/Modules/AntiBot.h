@@ -17,7 +17,7 @@ public:
 		return hitboxCheck && this->isEnabled();
 	}
 	bool isNameCheckEnabled() {
-		return nameCheck && this->isEnabled();
+		return /*nameCheck*/false && this->isEnabled();
 	}
 	bool isInvisibleCheckEnabled() {
 		return invisibleCheck && this->isEnabled();
@@ -29,7 +29,7 @@ public:
 		return otherCheck && this->isEnabled();
 	}
 	bool isExtraCheckEnabled() {
-		return this->extraCheck;
+		return this->extraCheck && this->isEnabled();
 	}
 
 	// Inherited via IModule

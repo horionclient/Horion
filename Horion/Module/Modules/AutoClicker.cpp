@@ -21,7 +21,7 @@ void AutoClicker::onTick(C_GameMode* gm) {
 		Odelay++;
 
 		if (Odelay >= delay) {
-			auto selectedItemId = (*localPlayer->getSelectedItem()->item)->itemId;
+			auto selectedItemId = localPlayer->getSelectedItemId();
 			if (sword && !(selectedItemId == 268 || selectedItemId == 267 || selectedItemId == 272 || selectedItemId == 276 || selectedItemId == 283 /*swords*/
 						   || selectedItemId == 271 || selectedItemId == 275 || selectedItemId == 279 || selectedItemId == 286 || selectedItemId == 258 /*axes*/))
 				return;
