@@ -1,8 +1,22 @@
 #include "TabGui.h"
 
+struct SelectedItemInformation {
+	int selectedItemId = 0;
+	float currentSelectedItemInterpol = 0;
+
+	void setSelectedItemForce(int item) {
+		selectedItemId = item;
+		currentSelectedItemInterpol = (float)item;
+	}
+
+	void interp() {
+		currentSelectedItemInterpol += (selectedItemId - currentSelectedItemInterpol) * 0.1f;
+	}
+};
+
 // State
 int level;
-int selected[4];
+SelectedItemInformation selected[4];
 bool toggleCurrentSelection = false;
 
 // Render
@@ -47,15 +61,18 @@ void TabGui::renderLevel() {
 		maxLength = max(maxLength, DrawUtils::getTextWidth(&label, textSize));
 	}
 
-	if (selected[renderedLevel] < 0)
-		selected[renderedLevel] = labelListLength + selected[renderedLevel];
-	if (selected[renderedLevel] >= labelListLength)
-		selected[renderedLevel] -= labelListLength;
+	if (selected[renderedLevel].selectedItemId < 0)
+		selected[renderedLevel].selectedItemId += labelListLength;
+	if (selected[renderedLevel].selectedItemId >= labelListLength)
+		selected[renderedLevel].selectedItemId -= labelListLength;
+
+	selected[renderedLevel].interp();  // Converge to selected item
 
 	// Second loop: Render everything
 	int i = 0;
 	float selectedYOffset = yOffset;
-	for (auto it = labelList.begin(); it != labelList.end(); ++it) {
+	float startYOffset = yOffset;
+	for (auto it = labelList.begin(); it != labelList.end(); ++it, i++) {
 		auto label = *it;
 		vec4_t rectPos = vec4_t(
 			xOffset - 0.5f,  // Off screen / Left border not visible
@@ -65,10 +82,10 @@ void TabGui::renderLevel() {
 
 		MC_Color* color = new MC_Color(200, 200, 200, 1);
 
-		if (selected[renderedLevel] == i && level >= renderedLevel) {  // We are selected
-			if (renderedLevel == level) {                              // Are we actually in the menu we are drawing right now?
+		if (selected[renderedLevel].selectedItemId == i && level >= renderedLevel) {  // We are selected
+			if (renderedLevel == level) {                                             // Are we actually in the menu we are drawing right now?
 				// We are selected in the current menu
-				DrawUtils::fillRectangle(rectPos, MC_Color(28, 107, 201, 1), alphaVal);
+				DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
 				static bool lastVal = toggleCurrentSelection;
 
 				if (toggleCurrentSelection) {
@@ -81,21 +98,33 @@ void TabGui::renderLevel() {
 				} else if (toggleCurrentSelection != lastVal && label.mod->isFlashMode())
 					label.mod->setEnabled(false);
 				lastVal = toggleCurrentSelection;
-			} else {
-				DrawUtils::fillRectangle(rectPos, MC_Color(28, 107, 201, 1), alphaVal);
+			} else {  // selected, but not what the user is interacting with
+				DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
 			}
 			selectedYOffset = yOffset;
 		} else {  // We are not selected
 			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
 		}
 
-		//DrawUtils::drawRectangle(rectPos, MC_Color(0.0f, 0.0f, 0.0f, 1.0f), 1, 0.3f); // Border around Text
 		std::string tempLabel(label.text);
 		DrawUtils::drawText(vec2_t(xOffset + 1.5f, yOffset /*+ 0.5f*/), &tempLabel, label.enabled ? nullptr : color, textSize);
 
 		yOffset += textHeight;
-		i++;
 	}
+
+	// Draw selected item
+	{
+		float selectedOffset = startYOffset + textHeight * selected[renderedLevel].currentSelectedItemInterpol;
+		vec4_t selectedPos = vec4_t(
+			xOffset - 0.5f,  // Off screen / Left border not visible
+			selectedOffset,
+			xOffset + maxLength + 4.5f,
+			selectedOffset + textHeight);
+
+		if (renderedLevel <= level)
+			DrawUtils::fillRectangle(selectedPos, MC_Color(28, 107, 201, 1), alphaVal);
+	}
+
 	// Cleanup
 	DrawUtils::flush();
 	labelList.clear();
@@ -125,7 +154,7 @@ void TabGui::render() {
 		std::vector<IModule*>* modules = moduleMgr->getModuleList();
 		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
 			IModule* mod = *it;
-			if (selected[0] == static_cast<int>(mod->getCategory())) {
+			if (selected[0].selectedItemId == static_cast<int>(mod->getCategory())) {
 				auto name = mod->getModuleName();
 				renderLabel(name, mod);
 			}
@@ -157,24 +186,24 @@ void TabGui::onKeyUpdate(int key, bool isDown) {
 	case VK_RIGHT:
 		if (level < 1) {
 			level++;
-			selected[level] = 0;
+			selected[level].setSelectedItemForce(0);
 		} else
 			toggleCurrentSelection = true;
 		return;
 	case VK_UP:
 		if (level >= 0)
-			selected[level]--;
+			selected[level].selectedItemId--;
 		else
 			level = 0;
 		break;
 	case VK_DOWN:
 		if (level >= 0)
-			selected[level]++;
+			selected[level].selectedItemId++;
 		else
 			level = 0;
 		break;
 	};
 
 	if (level < 3)
-		selected[level + 1] = 0;
+		selected[level + 1].setSelectedItemForce(0);
 }
