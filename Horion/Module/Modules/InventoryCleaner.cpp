@@ -130,6 +130,7 @@ std::vector<int> InventoryCleaner::findUselessItems() {
 
 		bool hadTheBestItem = false;
 		C_ItemStack* bestItem = items.at(0);
+
 		for (int i = 0; i < 36; i++) {
 			if (std::find(uselessItems.begin(), uselessItems.end(), i) != uselessItems.end())
 				continue;
@@ -181,7 +182,9 @@ std::vector<int> InventoryCleaner::findUselessItems() {
 			C_ItemStack* itemsteck = g_Data.getLocalPlayer()->getArmor(i);
 			C_Item** item = itemsteck->item;
 			if (item != nullptr) {
+				
 				C_ArmorItem* armor = reinterpret_cast<C_ArmorItem*>(*item);
+				
 				float testArmorValue = 0;
 				switch (armor->ArmorSlot) {
 				case 0:
@@ -201,10 +204,11 @@ std::vector<int> InventoryCleaner::findUselessItems() {
 						testArmorValue = boots.at(0)->getArmorValueWithEnchants();
 					break;
 				}
-				if (armor->getArmorValue() >= testArmorValue)
+				if (itemsteck->getArmorValueWithEnchants() >= testArmorValue)
 					hadBest[armor->ArmorSlot] = true;
 			}
 		}
+
 		for (int i = 0; i < 36; i++) {
 			if (std::find(uselessItems.begin(), uselessItems.end(), i) != uselessItems.end())
 				continue;  // item already useless
