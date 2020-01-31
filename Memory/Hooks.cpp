@@ -294,7 +294,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					DrawUtils::drawText(vec2_t(windowSize.x / 2 - DrawUtils::getTextWidth(&text, 1.5f) / 2, windowSize.y * 0.4f), &text, nullptr, 1.5f);
 				text = "Remember to keep the injector open while playing";
 				DrawUtils::drawText(vec2_t(windowSize.x / 2 - DrawUtils::getTextWidth(&text, wasConnectedBefore ? 1.5f : 0.7f) / 2, windowSize.y * (wasConnectedBefore ? 0.5f : 0.7f)), &text, nullptr, wasConnectedBefore ? 1.5f : 0.7f);
-				text = "Close this window by holding down CTRL + L";
+				text = "Uninject by holding down CTRL + L";
 				DrawUtils::drawText(vec2_t(windowSize.x / 2 - DrawUtils::getTextWidth(&text, 0.7f) / 2, windowSize.y * 0.8f), &text, nullptr, 0.7f);
 
 				DrawUtils::flush();
@@ -378,7 +378,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		else if (shouldRenderWatermark) {
 			constexpr float nameTextSize = 1.5f;
 			constexpr float versionTextSize = 0.7f;
-			static const float textHeight = (nameTextSize + versionTextSize * 0.7f) * DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight();
+			static const float textHeight = (nameTextSize + versionTextSize * 0.7f /* We don't quite want the version string in its own line, just a bit below the name */) * DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight();
 			constexpr float borderPadding = 1;
 			constexpr float margin = 5;
 
@@ -512,12 +512,14 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
 				DrawUtils::fillRectangle(leftRect, MC_Color(currColor), 1.f);
 				if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos) && hud->clickToggle) {
+					vec4_t selectedRect = rectPos;
+					selectedRect.x = leftRect.z;
 					if (leftMouseDown) {
-						DrawUtils::fillRectangle(rectPos, MC_Color(0.4f, 0.9f, 0.4f, 0.1f), it->enabled ? 0.6f : 0.6f);
+						DrawUtils::fillRectangle(selectedRect, MC_Color(0.8f, 0.8f, 0.8f, 0.1f), 0.8f);
 						if (executeClick)
 							it->backingModule->toggle();
 					} else
-						DrawUtils::fillRectangle(rectPos, MC_Color(0.3f, 0.7f, 0.3f, 0.1f), it->enabled ? 0.4f : 0.15f);
+						DrawUtils::fillRectangle(selectedRect, MC_Color(0.8f, 0.8f, 0.8f, 0.8f), 0.3f);
 				}
 				DrawUtils::drawText(textPos, &textStr, new MC_Color(currColor), textSize);
 
