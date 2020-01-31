@@ -10,64 +10,6 @@ bool isRunning = true;
 #pragma comment(lib, "MinHook.x86.lib")
 #endif
 
-DWORD WINAPI analyticsThread(LPVOID lpParam) {
-	logF("Analytics started");
-	__try {
-		auto sendRequest = [](const char* request) {
-#ifndef _DEBUG
-			wchar_t fullUrl[200];
-			swprintf_s(fullUrl, 200, L"https://hbob.ml/horion/action.php?type=%S", request);
-			WinHttpClient client(fullUrl);
-
-			// Send HTTP request, a GET request by default.
-			client.SendHttpRequest();
-
-			// The response header.
-			std::wstring httpResponseHeader = client.GetResponseHeader();
-#endif
-		};
-
-		sendRequest("startup");
-
-		LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;
-		LARGE_INTEGER Frequency;
-
-		QueryPerformanceFrequency(&Frequency);
-		QueryPerformanceCounter(&StartingTime);
-
-		while (isRunning) {
-			{
-				QueryPerformanceCounter(&EndingTime);
-				ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
-				ElapsedMicroseconds.QuadPart *= 1000;
-				ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
-				if (ElapsedMicroseconds.QuadPart < 1000 * 60 * 2) {
-					Sleep(50);
-					continue;
-				} else
-					QueryPerformanceCounter(&StartingTime);
-			}
-			char url[200];
-			char serverIp[200];
-			if (g_Data.getRakNetInstance() != nullptr && g_Data.getRakNetInstance()->serverIp.getTextLength() >= 0)
-				strcpy_s(serverIp, g_Data.getRakNetInstance()->serverIp.getText());
-			sprintf_s(url, 200, "continuous&s=%s", serverIp[0] == 0 ? "none" : serverIp);
-			sendRequest(url);
-		}
-	} __except (EXCEPTION_EXECUTE_HANDLER) {
-#ifdef _DEBUG
-		logF("Analytics Thread crashed!");
-		__debugbreak();
-#else
-		ExitThread(0);
-#endif
-	}
-
-	logF("Analytics thread exitted");
-
-	ExitThread(0);
-}
-
 DWORD WINAPI keyThread(LPVOID lpParam) {
 	logF("Key thread started");
 
@@ -93,19 +35,6 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 
 	while (isRunning) {
 		if ((GameData::isKeyDown('L') && GameData::isKeyDown(VK_CONTROL)) || GameData::shouldTerminate()) {  // Press L to uninject
-			isRunning = false;
-			break;
-		}
-
-		C_RakNetInstance* rakInstance = g_Data.getRakNetInstance();
-		if (rakInstance != nullptr && rakInstance->serverIp.getTextLength() > 5 &&
-			(strcmp(rakInstance->serverIp.getText(), "play.valeanetwork.eu") == 0 ||
-			 strcmp(rakInstance->serverIp.getText(), "137.74.152.142") == 0 ||
-			 strcmp(rakInstance->serverIp.getText(), "pvp.valeanetwork.eu") == 0)) {
-			C_GuiData* guiData = g_Data.getClientInstance()->getGuiData();
-
-			if (guiData != nullptr) guiData->displayClientMessageF("%sHorion Client is not allowed in Valea Network.", RED);
-
 			isRunning = false;
 			break;
 		}
@@ -139,7 +68,7 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 
 		Sleep(2);
 	}
-	logF("Aight bro I'm boutta head out");
+	logF("Stopping Threads...");
 	Sleep(150);  // Give the threads a bit of time to exit
 
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1);  // Uninject
@@ -229,7 +158,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 						injectorToHorion->data[sizeof(injectorToHorion->data) - 1] = '\0';
 						json data = json::parse(reinterpret_cast<char*>(injectorToHorion->data));
 						if (data.at("discordAuth").is_string() && data.at("serial").is_number_integer()) {
-							logF("Got discord auth token from injector");
+							logF("Got discord api token from injector");
 							g_Data.setAccountInformation(AccountInformation::fromToken(data.at("discordAuth").get<std::string>(), data.at("serial").get<unsigned int>()));
 						}
 					}
@@ -288,7 +217,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	ExitThread(0);
 }
 
-DWORD WINAPI startCheat(LPVOID lpParam) {
+DWORD WINAPI start(LPVOID lpParam) {
 	logF("Starting up...");
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)injectorConnectionThread, lpParam, NULL, NULL);
 	init();
@@ -324,8 +253,6 @@ DWORD WINAPI startCheat(LPVOID lpParam) {
 
 	logF("Starting threads...");
 
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)analyticsThread, lpParam, NULL, NULL);
-
 	ExitThread(0);
 }
 
@@ -334,7 +261,7 @@ BOOL __stdcall DllMain(HMODULE hModule,
 					   LPVOID) {
 	switch (ul_reason_for_call) {
 	case DLL_PROCESS_ATTACH: {
-		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)startCheat, hModule, NULL, NULL);
+		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)start, hModule, NULL, NULL);
 		DisableThreadLibraryCalls(hModule);
 	} break;
 	case DLL_PROCESS_DETACH:

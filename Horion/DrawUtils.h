@@ -42,6 +42,13 @@ struct MC_Color {
 		this->a = a;
 	};
 
+	MC_Color(const int r, const int g, const int b, const int a) {
+		this->r = r / 255.0F;
+		this->g = g / 255.0F;
+		this->b = b / 255.0f;
+		this->a = a * 1.0f;
+	};
+
 	MC_Color(const float r, const float g, const float b, const float a, const bool shouldDelete) {
 		this->r = r;
 		this->g = g;
