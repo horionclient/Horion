@@ -376,17 +376,33 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		if (hud == nullptr)
 			hud = moduleMgr->getModule<HudModule>();
 		else if (shouldRenderWatermark) {
-			std::string name = "Horion";
-			float length = DrawUtils::getTextWidth(&name, 1.5f);
+			constexpr float nameTextSize = 1.5f;
+			constexpr float versionTextSize = 0.7f;
+			static const float textHeight = (nameTextSize + versionTextSize * 0.7f) * DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight();
+			constexpr float borderPadding = 1;
+			constexpr float margin = 5;
+
+			static std::string name = "Horion";
+#ifdef _DEBUG
+			static std::string version = "dev";
+#elif defined _BETA
+			static std::string version = "beta";
+#else
+			static std::string version = "public";
+#endif
+
+			float nameLength = DrawUtils::getTextWidth(&name, nameTextSize);
+			float fullTextLength = nameLength + DrawUtils::getTextWidth(&version, versionTextSize);
 			vec4_t rect = vec4_t(
-				windowSize.x - length - 20.f,
-				windowSize.y - 20.f,
-				windowSize.x - 5.f,
-				windowSize.y - 5.f);
+				windowSize.x - margin - fullTextLength - borderPadding * 2,
+				windowSize.y - margin - textHeight,
+				windowSize.x - margin + borderPadding,
+				windowSize.y - margin);
+
 			DrawUtils::fillRectangle(rect, MC_Color(13, 29, 48, 1), 1.f);
 			DrawUtils::drawRectangle(rect, MC_Color(rcolors), 1.f, 1.f);
-			DrawUtils::drawText(vec2_t(windowSize.x - length - 18.f, windowSize.y - 20.f), &name, nullptr, 1.5f);
-			DrawUtils::drawText(vec2_t(windowSize.x - 17.5f, windowSize.y - 12.f), &std::string{"beta"}, nullptr, 0.7f);
+			DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, nullptr, nameTextSize);
+			DrawUtils::drawText(vec2_t(rect.x + borderPadding + nameLength, rect.w - 7), &version, nullptr, versionTextSize);
 		}
 
 		// Draw ArrayList
