@@ -396,11 +396,10 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				windowSize.y - margin - textHeight,
 				windowSize.x - margin + borderPadding,
 				windowSize.y - margin);
-
 			
 			DrawUtils::drawRectangle(rect, MC_Color(13, 29, 48, 1), 1.f, 2.f);
 			DrawUtils::fillRectangle(rect, MC_Color(rcolors), 1.f);
-			DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, MC_Color(13, 29, 48, 1), nameTextSize);
+			DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, MC_Color(6, 15, 24, 1), nameTextSize);
 			DrawUtils::drawText(vec2_t(rect.x + borderPadding + nameLength, rect.w - 7), &version, MC_Color(0, 0, 0, 0), versionTextSize);
 		}
 
