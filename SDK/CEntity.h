@@ -108,7 +108,6 @@ public:
 	bool canFly;  //0x0A94
 private:
 	char pad_0x0A95[0x62B];  //0x0A95
-public:
 	int16_t itemData;  //0x10C0
 	int16_t itemId;    //0x10C2
 private:
@@ -662,6 +661,8 @@ public:
 	AABB *getAABB() {
 		return &this->aabb;
 	}
+
+	
 };
 
 class C_ServerPlayer;
@@ -675,6 +676,12 @@ public:
 		}
 		return *reinterpret_cast<C_PlayerInventoryProxy **>(reinterpret_cast<__int64>(this) + offset);
 	};
+
+
+	C_ItemStack *getSelectedItem() {
+		auto supplies = this->getSupplies();
+		return supplies->inventory->getItemStack(supplies->selectedHotbarSlot);
+	}
 
 private:
 	virtual __int64 frameUpdate(__int64 &);

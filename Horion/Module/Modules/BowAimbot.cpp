@@ -40,7 +40,7 @@ void BowAimbot::onPostRender() {
 	if (localPlayer == nullptr)
 		return;
 
-	if (localPlayer->itemId != 261)  // Bow in hand?
+	if (localPlayer->getSelectedItem()->getItem()->itemId != 261)  // Bow in hand?
 		return;
 
 	vec3_t origin = g_Data.getClientInstance()->levelRenderer->origin;

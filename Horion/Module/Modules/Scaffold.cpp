@@ -90,7 +90,8 @@ void Scaffold::onPostRender() {
 		return;
 	if (!g_Data.canUseMoveKeys())
 		return;
-	if ((g_Data.getLocalPlayer()->itemId == 0 || g_Data.getLocalPlayer()->itemId > 255) && !autoselect)  // Block in hand?
+	auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
+	if (!(*selectedItem->item)->isBlock() && !autoselect)  // Block in hand?
 		return;
 
 	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block below the player
