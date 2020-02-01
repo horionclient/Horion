@@ -351,6 +351,12 @@
   <ItemGroup>
     <None Include=".clang-format" />
     <None Include="resources\coolroblox.json" />
+    <None Include="resources\Steve.dat" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\block.obj">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
