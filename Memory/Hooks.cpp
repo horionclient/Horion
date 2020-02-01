@@ -412,12 +412,15 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				bool enabled;
 				int keybind;
 				float textWidth;
+				vec2_t* pos;
+				bool shouldRender = true;
 
 				IModuleContainer(IModule* mod) {
 					const char* moduleNameChr = mod->getModuleName();
 					this->enabled = mod->isEnabled();
 					this->keybind = mod->getKeybind();
 					this->backingModule = mod;
+					this->pos = mod->getPos();
 
 					if (keybind == 0x0)
 						moduleName = moduleNameChr;
@@ -427,15 +430,17 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						moduleName = text;
 					}
 
+					if (!this->enabled && *this->pos == vec2_t(0.f, 0.f))
+						this->shouldRender = false;
 					this->textWidth = DrawUtils::getTextWidth(&moduleName);
 				}
 
 				bool operator<(const IModuleContainer& other) const {
-					if (enabled) {
+					/*if (enabled) {
 						if (!other.enabled)  // We are enabled
 							return true;
 					} else if (other.enabled)  // They are enabled
-						return false;
+						return false;*/
 
 					if (this->textWidth == other.textWidth)
 						return moduleName < other.moduleName;
@@ -447,6 +452,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			static constexpr float textPadding = 1.0f;
 			static constexpr float textSize = 1.0f;
 			static constexpr float textHeight = textSize * 10.0f;
+			static constexpr float smoothNess = 0.95f;
 
 			// Mouse click detector
 			static bool wasLeftMouseDown = GameData::isLeftClickDown();  // Last isDown value
@@ -455,17 +461,16 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			bool executeClick = leftMouseDown && leftMouseDown != wasLeftMouseDown;  // isDown == true AND (current state IS NOT last state)
 			wasLeftMouseDown = leftMouseDown;                                        // Set last isDown value
 
-			// Show disabled Modules?
-			constexpr bool extendedArraylist = false;
 			std::set<IModuleContainer> modContainerList;
 			// Fill modContainerList with Modules
 			{
 				std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
 
-				for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
-					if (extendedArraylist || (*it)->isEnabled()) {
+				for (auto it : *moduleList) {
+					//if (it->isEnabled())
+					{
 						HudModule* hud = moduleMgr->getModule<HudModule>();
-						if ((*it) != hud) modContainerList.emplace(IModuleContainer(*it));
+						if (it != hud) modContainerList.emplace(IModuleContainer(it));
 					}
 				}
 			}
@@ -476,13 +481,30 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 			// Loop through mods to display Labels
 			for (std::set<IModuleContainer>::iterator it = modContainerList.begin(); it != modContainerList.end(); ++it) {
-				if (!extendedArraylist && !it->enabled)
+				if (!it->shouldRender)
 					continue;
 
 				std::string textStr = it->moduleName;
 				float textWidth = it->textWidth;
 
-				float xOffset = isOnRightSide ? windowSize.x - textWidth - (textPadding * 2) : 0;
+				float xOffsetOri = windowSize.x - textWidth - (textPadding * 2);
+
+				float xOffset = windowSize.x - it->pos->x;
+
+				it->pos->x += smoothNess;
+
+				if (xOffset < xOffsetOri) {
+					xOffset = xOffsetOri;
+				}
+				if (!it->enabled) {
+					xOffset += it->pos->y;
+					it->pos->y += smoothNess;
+				}
+				if (xOffset >= windowSize.x && !it->enabled) {
+					it->pos->x = 0.f;
+					it->pos->y = 0.f;
+				}
+
 				vec2_t textPos = vec2_t(
 					xOffset + textPadding,
 					yOffset + textPadding);

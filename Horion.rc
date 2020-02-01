@@ -2,4 +2,4 @@
 
 IDR_TEXT1               TEXT                    "resources\\coolroblox.json"
 IDR_STEVE               RCDATA                    "resources\\Steve.dat" 
-IDR_OBJ TEXT "resources\\block.obj"
+//IDR_OBJ TEXT "resources\\block.obj"
