@@ -12,5 +12,6 @@ const char* TestModule::getModuleName() {
 
 void TestModule::onTick(C_GameMode* gm) {
 }
+
 void TestModule::onDisable() {
 }

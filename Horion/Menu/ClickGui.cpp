@@ -154,22 +154,22 @@ void ClickGui::renderCategory(Category category) {
 		ourWindow->pos.y = 4;
 		switch (category) {
 		case Category::COMBAT:
-			ourWindow->pos.x = 100;
+			ourWindow->pos.x = 75;
 			break;
 		case Category::VISUAL:
-			ourWindow->pos.x = 200;
+			ourWindow->pos.x = 150;
 			break;
 		case Category::MOVEMENT:
-			ourWindow->pos.x = 300;
+			ourWindow->pos.x = 225;
 			break;
 		case Category::PLAYER:
-			ourWindow->pos.x = 400;
+			ourWindow->pos.x = 315;
 			break;
 		case Category::BUILD:
-			ourWindow->pos.x = 500;
+			ourWindow->pos.x = 415;
 			break;
 		case Category::EXPLOITS:
-			ourWindow->pos.x = 600;
+			ourWindow->pos.x = 490;
 			break;
 		}
 	}
@@ -639,7 +639,7 @@ void ClickGui::renderCategory(Category category) {
 			std::string textStr = categoryName;
 			DrawUtils::drawText(textPos, &textStr, MC_Color(255, 255, 255, 1), textSize);
 			DrawUtils::fillRectangle(rectPos, moduleColor, 1.f);
-			if(ourWindow->isExtended) DrawUtils::fillRectangle(vec4_t(rectPos.x, rectPos.w - 1, rectPos.z, rectPos.w), selectedModuleColor, 1.f);
+			if (ourWindow->isExtended) DrawUtils::fillRectangle(vec4_t(rectPos.x, rectPos.w - 1, rectPos.z, rectPos.w), selectedModuleColor, 1.f);
 			// Draw Dash
 			GuiUtils::drawCrossLine(vec2_t(
 										currentXOffset + windowSize->x + paddingRight - (crossSize / 2) - 1.f,

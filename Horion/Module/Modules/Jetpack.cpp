@@ -20,42 +20,22 @@ void Jetpack::onTick(C_GameMode* gm) {
 	float calcYaw = (gm->player->yaw + 90) * (PI / 180);
 	float calcPitch = (gm->player->pitch) * -(PI / 180);
 
-	if (!isBypass) {
-		vec3_t moveVec;
-		moveVec.x = cos(calcYaw) * cos(calcPitch) * speedMod;
-		moveVec.y = sin(calcPitch) * speedMod;
-		moveVec.z = sin(calcYaw) * cos(calcPitch) * speedMod;
-
-		gm->player->lerpMotion(moveVec);
-	} else {
-		delay++;
-
-		if (delay >= 5) {
-			vec3_t pos = *g_Data.getLocalPlayer()->getPos();
-			C_MovePlayerPacket* a = new C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
-			delete a;
-			pos.y += 0.35f;
-			a = new C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
-			delete a;
-
-			gm->player->velocity.y = 0.465f;
-			vec3_t moveVec;
-			moveVec.x = cos(calcYaw) * cos(calcPitch) * speedMod;
-			moveVec.z = sin(calcYaw) * cos(calcPitch) * speedMod;
-
-			gm->player->velocity.x = moveVec.x;
-			gm->player->velocity.z = moveVec.z;
-
-			float teleportX = cos(calcYaw) * cos(calcPitch) * 0.00000005f;
-			float teleportZ = sin(calcYaw) * cos(calcPitch) * 0.00000005f;
-
-			pos = *gm->player->getPos();
-			g_Data.getLocalPlayer()->setPos(vec3_t(pos.x + teleportX, pos.y - 0.15f, pos.z + teleportZ));
-
-			gm->player->velocity.y -= 0.15f;
-			delay = 0;
-		}
+	if (isBypass) {
+		vec3_t pos = *g_Data.getLocalPlayer()->getPos();
+		pos.y += 1.f;
+		C_MovePlayerPacket* a = new C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
+		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
+		delete a;
+		pos.y -= 1.f;
+		C_MovePlayerPacket* a2 = new C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
+		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a2);
+		delete a2;
 	}
+
+	vec3_t moveVec;
+	moveVec.x = cos(calcYaw) * cos(calcPitch) * speedMod;
+	moveVec.y = sin(calcPitch) * speedMod;
+	moveVec.z = sin(calcYaw) * cos(calcPitch) * speedMod;
+
+	gm->player->lerpMotion(moveVec);
 }
