@@ -354,7 +354,7 @@
     <None Include="resources\Steve.dat" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\block.obj">
+    <None Include="resources\block.3dobj">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>
