@@ -1151,7 +1151,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 		std::vector<std::array<float, 3>> vertices;
 		std::vector<std::array<float, 3>> normals;
 		std::vector<std::array<float, 2>> uvs;
-		std::vector<face> faces; 
+		std::vector<face> faces;
 
 		while (std::getline(f, line)) {
 			// Remove trailing whitespace
@@ -1181,7 +1181,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 			args.push_back(line.substr(initialPos, min(pos, line.size()) - initialPos + 1));
 
 			auto cmd = args[0].c_str();
-			
+
 			if (strcmp(cmd, "vt") == 0) {  // uv
 				if (args.size() != 3) {
 					logF("Faulty uv, 2 args expected: %s", line.c_str());
@@ -1282,11 +1282,11 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 						//Logger::WriteBigLogFileF(dump.size() + 20, "%s", dump.c_str());
 
 						boneIt->emplace("poly_mesh", polyMesh);
-						}
 					}
-				
-				it->swap(part);
 				}
+
+				it->swap(part);
+			}
 			newGeometryData = new TextHolder(geoMod.dump());
 		}
 	}
