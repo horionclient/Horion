@@ -1155,15 +1155,21 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 
 		while (std::getline(f, line)) {
 			// Remove trailing whitespace
+			// left out for performance reasons
 			/*{
 				size_t startpos = line.find_first_not_of(" \t");
 				if (std::string::npos != startpos) {
 					line = line.substr(startpos);
 				}
 			}*/
-			auto firstWhiteSpace = line.find(" ");
-			if (line[0] == '#' || firstWhiteSpace == std::string::npos)  // comment
+
+			if (line[0] != 'f' && line[0] != 'v')
 				continue;
+
+			auto firstWhiteSpace = line.find(" ");
+			if (firstWhiteSpace == std::string::npos)  // comment
+				continue;
+
 			std::vector<std::string> args;
 			size_t pos = firstWhiteSpace, initialPos = 0;
 			while (pos != std::string::npos) {
@@ -1174,30 +1180,21 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 			}
 			args.push_back(line.substr(initialPos, min(pos, line.size()) - initialPos + 1));
 
-			auto cmd = args[0];
-
-			if (cmd == "mtllib" || cmd == "o" || cmd == "usemtl" || cmd == "s" || cmd == "l")
-				continue;
-
-			if (cmd == "v") {  // vertex
-				if (args.size() != 4) {
-					logF("Faulty vertex, 3 args expected: %s", line.c_str());
-					continue;
-				}
-				vertices.push_back({std::stof(args[1]), std::stof(args[2]), std::stof(args[3])});
-			} else if (cmd == "vt") {  // uv
+			auto cmd = args[0].c_str();
+			
+			if (strcmp(cmd, "vt") == 0) {  // uv
 				if (args.size() != 3) {
 					logF("Faulty uv, 2 args expected: %s", line.c_str());
 					continue;
 				}
 				uvs.push_back({std::stof(args[1]), std::stof(args[2])});
-			} else if (cmd == "vn") {  // normal
+			} else if (strcmp(cmd, "v") == 0) {  // vertex
 				if (args.size() != 4) {
-					logF("Faulty normal, 3 args expected: %s", line.c_str());
+					logF("Faulty vertex, 3 args expected: %s", line.c_str());
 					continue;
 				}
-				normals.push_back({std::stof(args[1]), std::stof(args[2]), std::stof(args[3])});
-			} else if (cmd == "f") {  // face
+				vertices.push_back({std::stof(args[1]), std::stof(args[2]), std::stof(args[3])});
+			} else if (strcmp(cmd, "f") == 0) {  // face
 				if (args.size() != 5) {
 					logF("Faulty face, only quads allowed: %i", args.size() - 1);
 					continue;
@@ -1243,8 +1240,14 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 					face.indices[i - 1] = part;
 				}
 				faces.push_back(face);
+			} else if (strcmp(cmd, "vn") == 0) {  // normal
+				if (args.size() != 4) {
+					logF("Faulty normal, 3 args expected: %s", line.c_str());
+					continue;
+				}
+				normals.push_back({std::stof(args[1]), std::stof(args[2]), std::stof(args[3])});
 			} else
-				logF("Unknown command: %s", cmd.c_str());
+				logF("Unknown command: %s", cmd);
 		}
 
 		logF("Modding our roblox geometry");
