@@ -7,6 +7,7 @@ private:
 	int Odelay = 0;
 	bool sword = true;
 	bool rightclick = false;
+	bool hold = false;
 
 public:
 	AutoClicker();

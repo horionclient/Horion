@@ -5,6 +5,7 @@
 std::vector<C_Entity*> targetList;
 
 BowAimbot::BowAimbot() : IModule('C', Category::COMBAT, "Aimbot, but for bows") {
+	registerBoolSetting("silent", &this->silent, this->silent);
 }
 
 BowAimbot::~BowAimbot() {
@@ -22,15 +23,6 @@ const char* BowAimbot::getModuleName() {
 }
 
 void findTargets(C_Entity* currentEntity, bool isRegularEntitie) {
-	if (currentEntity == 0)
-		return;
-
-	if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
-		return;
-
-	if (FriendList::findPlayer(currentEntity->getNameTag()->getText()))  //Skip Friend
-		return;
-
 	if (!Target::isValidTarget(currentEntity))
 		return;
 
@@ -49,6 +41,9 @@ void BowAimbot::onPostRender() {
 	if (localPlayer->getSelectedItemId() != 261)  // Bow in hand?
 		return;
 
+	if (!(GameData::isRightClickDown() && GameData::canUseMoveKeys())) // is aiming?
+		return;
+
 	vec3_t origin = g_Data.getClientInstance()->levelRenderer->origin;
 
 	targetList.clear();
@@ -62,20 +57,41 @@ void BowAimbot::onPostRender() {
 		vec3_t pos = *entity->getPos();
 
 		pos = pos.sub(origin);
-
 		float yaw = (atan2f(pos.z, pos.x) * DEG_RAD) - 90;
 		float len = pos.magnitudexz();
 		constexpr float g = 0.006f;  // nukkit = 0.012, some servers need different values
 		float tmp = 1 - g * (g * (len * len) + 2 * pos.y);
 		float pitch = DEG_RAD * -atanf((1 - sqrtf(tmp)) / (g * len));
-		if (pitch < 89 && pitch > -89) {
-			vec2_t angles = vec2_t(pitch, yaw);
 
-			vec2_t appl = angles.sub(localPlayer->viewAngles).normAngles();
-			appl.x = -appl.x;
-			appl.div(7);  // Smooth dat boi
+		if (silent) {
+			angle = vec2_t(pitch, yaw);
+			C_MovePlayerPacket* p = new C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
+			p->pitch = angle.x;
+			p->yaw = angle.y;
+			p->headYaw = angle.y;
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(p);
+		} else {
+			if (pitch < 89 && pitch > -89) {
+				vec2_t angles = vec2_t(pitch, yaw);
 
-			localPlayer->applyTurnDelta(&appl);
+				vec2_t appl = angles.sub(localPlayer->viewAngles).normAngles();
+				appl.x = -appl.x;
+				appl.div(7);  // Smooth dat boi
+
+				localPlayer->applyTurnDelta(&appl);
+			}
+		}
+	}
+}
+
+void BowAimbot::onSendPacket(C_Packet* packet) {
+	if (packet->isInstanceOf<C_MovePlayerPacket>() && silent) {
+		vec2_t angle = this->angle;
+		if (targetList.size() > 0) {
+			C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+			movePacket->pitch = angle.x;
+			movePacket->headYaw = angle.y;
+			movePacket->yaw = angle.y;
 		}
 	}
 }
