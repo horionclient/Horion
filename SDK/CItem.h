@@ -13,10 +13,10 @@ private:
 public:
 	C_ItemRenderer* renderer;  //0x0050
 private:
-	char pad_0x50[0x40];  //0x58
+	char pad_0x50[0x280 - 0x58];  //0x58
 public:
 	C_BaseActorRenderContext(C_ScreenContext* ScreenCtx, C_ClientInstance* client, MinecraftGame* game) {
-		memset(this, 0x0, sizeof(C_BaseActorRenderContext));
+		memset(this, 0, sizeof(C_BaseActorRenderContext));
 		using BaseActorRenderContext_t = __int64(__fastcall*)(C_BaseActorRenderContext*, C_ScreenContext*, C_ClientInstance*, MinecraftGame*);
 		static BaseActorRenderContext_t BaseActorRenderContext_constructor = reinterpret_cast<BaseActorRenderContext_t>(FindSignature("48 89 5C 24 08 57 48 83 EC 20 48 8D 05 ?? ?? ?? ?? 49 8B D8 48 89 01 48 8B F9 8B 42 ?? 89 41 ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 59 ?? 4C 89 49 ?? 48 89 51 ?? 49 8B C8"));
 		BaseActorRenderContext_constructor(this, ScreenCtx, client, game);
