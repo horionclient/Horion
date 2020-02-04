@@ -281,10 +281,10 @@ void DrawUtils::drawEntityBox(C_Entity* ent, float lineWidth) {
 void DrawUtils::drawItem(C_ItemStack* item, vec2_t ItemPos, float opacity, float scale, bool isEnchanted) {
 	__int64 ScnCtx = reinterpret_cast<__int64*>(renderCtx)[2];
 	C_ScreenContext* ScreenCtx = reinterpret_cast<C_ScreenContext*>(ScnCtx);
-	C_BaseActorRenderContext* BaseActorRenderCtx = new C_BaseActorRenderContext(ScreenCtx, g_Data.getClientInstance(), g_Data.getClientInstance()->minecraftGame);
-	C_ItemRenderer* renderer = BaseActorRenderCtx->renderer;
-	renderer->renderGuiItemNew(BaseActorRenderCtx, item, g_Data.getClientInstance()->minecraftGame,ItemPos.x,ItemPos.y,opacity, scale,isEnchanted);
-	delete BaseActorRenderCtx;
+	C_BaseActorRenderContext baseActorRenderCtx(ScreenCtx, g_Data.getClientInstance(), g_Data.getClientInstance()->minecraftGame);
+	C_ItemRenderer* renderer = baseActorRenderCtx.renderer;
+	renderer->renderGuiItemNew(&baseActorRenderCtx, item, g_Data.getClientInstance()->minecraftGame, ItemPos.x, ItemPos.y, opacity, scale, isEnchanted);
+	
 }
 
 void DrawUtils::wirebox(AABB aabb) {
