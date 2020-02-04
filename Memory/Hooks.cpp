@@ -1193,7 +1193,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 					logF("Faulty vertex, 3 args expected: %s", line.c_str());
 					continue;
 				}
-				vertices.push_back({std::stof(args[1]), std::stof(args[2]), std::stof(args[3])});
+				vertices.push_back({-std::stof(args[1]), std::stof(args[2]), std::stof(args[3])});
 			} else if (strcmp(cmd, "f") == 0) {  // face
 				if (args.size() != 5) {
 					logF("Faulty face, only quads allowed: %i", args.size() - 1);
