@@ -4,6 +4,7 @@
 
 #include "../../../Memory/GameData.h"
 #include "../../FriendList/FriendList.h"
+#include "../../DrawUtils.h"
 
 
 
@@ -108,8 +109,8 @@ public:
 	virtual void onKeyUpdate(int key, bool isDown);
 	virtual void onEnable();
 	virtual void onDisable();
-	virtual void onPreRender();
-	virtual void onPostRender();
+	virtual void onPreRender(C_MinecraftUIRenderContext* renderCtx);
+	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx);
 	virtual void onLoadConfig(void* conf);
 	virtual void onSaveConfig(void* conf);
 	virtual bool isFlashMode();

@@ -2,6 +2,35 @@
 #include "CEntity.h"
 
 class C_ItemStack;
+class C_ScreenContext;
+class C_ItemRenderer;
+class C_ClientInstance;
+class MinecraftGame;
+
+class C_BaseActorRenderContext {
+private:
+	char pad_0x0[0x50];  //0x0000
+public:
+	C_ItemRenderer* renderer;  //0x0050
+private:
+	char pad_0x50[0x40];  //0x58
+public:
+	C_BaseActorRenderContext(C_ScreenContext* ScreenCtx, C_ClientInstance* client, MinecraftGame* game) {
+		memset(this, 0x0, sizeof(C_BaseActorRenderContext));
+		using BaseActorRenderContext_t = __int64(__fastcall*)(C_BaseActorRenderContext*, C_ScreenContext*, C_ClientInstance*, MinecraftGame*);
+		static BaseActorRenderContext_t BaseActorRenderContext_constructor = reinterpret_cast<BaseActorRenderContext_t>(FindSignature("48 89 5C 24 08 57 48 83 EC 20 48 8D 05 ?? ?? ?? ?? 49 8B D8 48 89 01 48 8B F9 8B 42 ?? 89 41 ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 59 ?? 4C 89 49 ?? 48 89 51 ?? 49 8B C8"));
+		BaseActorRenderContext_constructor(this, ScreenCtx, client, game);
+	}
+};
+
+class C_ItemRenderer {
+public:
+	void renderGuiItemNew(C_BaseActorRenderContext* BaseActorRenderCtx, C_ItemStack* item, MinecraftGame* game, float x, float y, float opacity, float scale, bool isEnchanted) {
+		using renderGuiItemNew_t = void(__fastcall*)(C_ItemRenderer*, C_BaseActorRenderContext*, C_ItemStack*, MinecraftGame*, float, float, float, float, float, bool);
+		static renderGuiItemNew_t renderGuiItemNew = reinterpret_cast<renderGuiItemNew_t>(FindSignature("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 89 58 20 0F 29 70 B8 48 8B 05 ?? ?? ?? ??"));
+		renderGuiItemNew(this, BaseActorRenderCtx, item, game, x, y, 1, opacity, scale, isEnchanted);
+	}
+};
 
 class C_Item {
 private:
@@ -270,6 +299,17 @@ public:
 		using getEnchantsLevel_t = int(__fastcall*)(int, C_ItemStack*);
 		static getEnchantsLevel_t getEnchantsLevel = reinterpret_cast<getEnchantsLevel_t>(FindSignature("48 8B C4 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B F2 8B ?? 33 ?? 48 8B"));
 		return getEnchantsLevel(enchantId, this);
+	}
+
+	bool isEnchanted() {
+		int enchantValue = 0;
+		for (int i = 0; i < 40; i++) {
+			enchantValue = this->getEnchantValue(i);
+		}
+		if (enchantValue != 0)
+			return true;
+		else
+			return false;
 	}
 
 	float getArmorValueWithEnchants() {

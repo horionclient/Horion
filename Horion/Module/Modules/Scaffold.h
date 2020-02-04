@@ -1,5 +1,4 @@
 #pragma once
-#include "../../DrawUtils.h"
 #include "Module.h"
 class Scaffold : public IModule {
 private:
@@ -13,5 +12,5 @@ public:
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
-	virtual void onPostRender() override;
+	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
 };

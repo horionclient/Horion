@@ -25,7 +25,7 @@ struct CompareTargetEnArray {
 	}
 };
 
-void Aimbot::onPostRender() {
+void Aimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 	if (localPlayer == nullptr)
 		return;

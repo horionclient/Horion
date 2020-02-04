@@ -517,20 +517,20 @@ void ClickGui::renderCategory(Category category) {
 										{
 											vec2_t mid = vec2_t(
 												rect.x + ((rect.z - rect.x) / 2),
-												rect.y - 1.5f  // Hardcoded ghetto
+												rect.y - 0.2f  // Hardcoded ghetto
 											);
 											char str[10];
 											sprintf_s(str, 10, "%i", setting->value->_int);
 											std::string text = str;
 											mid.x -= DrawUtils::getTextWidth(&text, textSize) / 2;
 
-											DrawUtils::drawText(mid, &text, (areWeFocused || setting->isDragging) ? MC_Color(1.0f, 0.1f, 0.1f, 1.f) : MC_Color(0.8f, 0.05f, 0.05f, 1.f), textSize);
+											DrawUtils::drawText(mid, &text, MC_Color(255, 255, 255, 1), textSize);
 										}
 
 										// Draw Progress
 										{
 											rect.z = rect.x + value;
-											DrawUtils::fillRectangle(rect, MC_Color(1.0f, 1.0f, 1.0f, 1.0f), (areWeFocused || setting->isDragging) ? 1.f : 0.8f);
+											DrawUtils::fillRectangle(rect, MC_Color(28, 107, 201, 1), (areWeFocused || setting->isDragging) ? 1.f : 0.8f);
 										}
 
 										// Drag Logic

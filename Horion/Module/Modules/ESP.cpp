@@ -2,7 +2,6 @@
 
 #include "../ModuleManager.h"
 #include "../../../Utils/Target.h"
-#include "../../DrawUtils.h"
 
 ESP::ESP() : IModule('O', Category::VISUAL, "Makes it easier to find entities around you") {
 	this->registerBoolSetting("rainbow", &this->doRainbow, this->doRainbow);
@@ -51,7 +50,7 @@ void doRenderStuff(C_Entity* ent, bool isRegularEntitie) {
 	}
 }
 
-void ESP::onPostRender() {
+void ESP::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
 	if (localPlayer != nullptr && GameData::canUseMoveKeys()) {

@@ -23,7 +23,7 @@ void ClickGuiMod::onDisable() {
 	g_Data.getClientInstance()->grabMouse();
 }
 
-void ClickGuiMod::onPostRender() {
+void ClickGuiMod::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	if (GameData::canUseMoveKeys())
 		g_Data.getClientInstance()->releaseMouse();
 }

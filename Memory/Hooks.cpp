@@ -304,7 +304,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	}
 
 	// Call PreRender() functions
-	moduleMgr->onPreRender();
+	moduleMgr->onPreRender(renderCtx);
 	DrawUtils::flush();
 
 	__int64 retval = oText(a1, renderCtx);
@@ -320,7 +320,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 	// Call PostRender() functions
 	{
-		moduleMgr->onPostRender();
+		moduleMgr->onPostRender(renderCtx);
 		static HudModule* hud = moduleMgr->getModule<HudModule>();
 		if (hud == nullptr)
 			hud = moduleMgr->getModule<HudModule>();
@@ -1113,8 +1113,8 @@ void to_json(json& j, const face& f) {
 
 __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager, void* a3, TextHolder* selfSignedId, TextHolder* serverAddress, __int64 clientRandomId, TextHolder* skinId, SkinData* skinData, __int64 capeData, __int64 animatedImageDataArr, TextHolder* skinResourcePatch, TextHolder* skinGeometryData, TextHolder* skinAnimationData, bool isPremiumSkin, bool isPersonaSkin, TextHolder* deviceId, int inputMode, int uiProfile, int guiScale, TextHolder* languageCode, bool sendEduModeParams, TextHolder* tenantId, __int64 unused, TextHolder* platformUserId, TextHolder* thirdPartyName, bool thirdPartyNameOnly, TextHolder* platformOnlineId, TextHolder* platformOfflineId, bool isCapeOnClassicSkin, TextHolder* capeId) {
 	static auto oFunc = g_Hooks.ConnectionRequest_createHook->GetFastcall<__int64, __int64, __int64, void*, TextHolder*, TextHolder*, __int64, TextHolder*, SkinData*, __int64, __int64, TextHolder*, TextHolder*, TextHolder*, bool, bool, TextHolder*, int, int, int, TextHolder*, bool, TextHolder*, __int64, TextHolder*, TextHolder*, bool, TextHolder*, TextHolder*, bool, TextHolder*>();
-	// def _DEBUG
-#if 1
+	
+#ifdef _DEBUG
 
 	logF("Connection Request: InputMode: %i UiProfile: %i GuiScale: %i", inputMode, uiProfile, guiScale);
 	logF("Geometry size: %d", skinGeometryData->getTextLength());

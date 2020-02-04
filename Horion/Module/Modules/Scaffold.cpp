@@ -85,7 +85,7 @@ bool Scaffold::findBlock() {
 	return false;
 }
 
-void Scaffold::onPostRender() {
+void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	if (!g_Data.canUseMoveKeys())

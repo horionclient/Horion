@@ -94,8 +94,8 @@ public:
 	void onSaveConfig(json* conf);
 	void onTick(C_GameMode* gameMode);
 	void onKeyUpdate(int key, bool isDown);
-	void onPreRender();
-	void onPostRender();
+	void onPreRender(C_MinecraftUIRenderContext* renderCtx);
+	void onPostRender(C_MinecraftUIRenderContext* renderCtx);
 	void onSendPacket(C_Packet*);
 
 	bool isInitialized() { return initialized; };
