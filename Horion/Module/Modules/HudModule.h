@@ -12,7 +12,9 @@ public:
 	bool watermark = true;
 	bool coordinates = false;
 	bool keybinds = true;
+	bool displayArmor = true;
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
+	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
 };

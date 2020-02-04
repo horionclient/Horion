@@ -75,7 +75,7 @@ bool Tower::tryTower(vec3_t blockBelow) {
 	return false;
 }
 
-void Tower::onPostRender() {
+void Tower::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	if (!g_Data.canUseMoveKeys())

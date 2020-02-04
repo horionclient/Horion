@@ -135,10 +135,10 @@ void IModule::onEnable() {
 void IModule::onDisable() {
 }
 
-void IModule::onPreRender() {
+void IModule::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 }
 
-void IModule::onPostRender() {
+void IModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 }
 
 void IModule::onSendPacket(C_Packet*) {

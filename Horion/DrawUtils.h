@@ -83,6 +83,7 @@ public:
 	static void drawBox(vec3_t lower, vec3_t upper, float lineWidth);
 	static void drawEntityBox(C_Entity* ent, float lineWidth);
 	static void drawNameTags(C_Entity* ent, float textSize, bool drawHealth = false, bool useUnicodeFont = false);
+	static void drawItem(C_ItemStack* item, vec2_t ItemPos , float opacity , float scale , bool isEnchanted);
 	static void wirebox(AABB aabb);
 
 	static vec2_t worldToScreen(vec3_t world);

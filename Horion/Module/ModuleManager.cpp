@@ -144,23 +144,23 @@ void ModuleManager::onKeyUpdate(int key, bool isDown) {
 	}
 }
 
-void ModuleManager::onPreRender() {
+void ModuleManager::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	if (!isInitialized())
 		return;
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
 		IModule* mod = *it;
 		if (mod->isEnabled())
-			mod->onPreRender();
+			mod->onPreRender(renderCtx);
 	}
 }
 
-void ModuleManager::onPostRender() {
+void ModuleManager::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	if (!isInitialized())
 		return;
 	for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
 		IModule* mod = *it;
 		if (mod->isEnabled())
-			mod->onPostRender();
+			mod->onPostRender(renderCtx);
 	}
 }
 

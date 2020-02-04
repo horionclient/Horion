@@ -304,7 +304,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	}
 
 	// Call PreRender() functions
-	moduleMgr->onPreRender();
+	moduleMgr->onPreRender(renderCtx);
 	DrawUtils::flush();
 
 	__int64 retval = oText(a1, renderCtx);
@@ -320,7 +320,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 	// Call PostRender() functions
 	{
-		moduleMgr->onPostRender();
+		moduleMgr->onPostRender(renderCtx);
 		static HudModule* hud = moduleMgr->getModule<HudModule>();
 		if (hud == nullptr)
 			hud = moduleMgr->getModule<HudModule>();

@@ -10,6 +10,6 @@ public:
 	~BowAimbot();
 
 	virtual const char* getModuleName() override;
-	virtual void onPostRender() override;
+	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
 	virtual void onSendPacket(C_Packet* packet) override;
 };

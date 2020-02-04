@@ -13,5 +13,8 @@ const char* TestModule::getModuleName() {
 void TestModule::onTick(C_GameMode* gm) {
 }
 
+void TestModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
+}
+
 void TestModule::onDisable() {
 }

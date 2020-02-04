@@ -2,7 +2,6 @@
 
 #include "../ModuleManager.h"
 #include "../../../Utils/Target.h"
-#include "../../DrawUtils.h"
 
 NameTags::NameTags() : IModule(0x0, Category::VISUAL, "Shows better nametags above players that can be seen from a lot more far aways") {
 	this->registerBoolSetting("Display Health", &this->displayHealth, this->displayHealth);
@@ -28,7 +27,7 @@ void drawNameTags(C_Entity* ent, bool isRegularEntitie) {
 	}
 }
 
-void NameTags::onPostRender() {
+void NameTags::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
 	if (localPlayer != nullptr && GameData::canUseMoveKeys()) {

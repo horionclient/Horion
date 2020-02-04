@@ -33,7 +33,7 @@ void findTargets(C_Entity* currentEntity, bool isRegularEntitie) {
 	}
 }
 
-void BowAimbot::onPostRender() {
+void BowAimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 	if (localPlayer == nullptr)
 		return;
