@@ -3,4 +3,3 @@
 IDR_TEXT1               TEXT                    "resources\\coolroblox.json"
 IDR_STEVE               RCDATA                    "resources\\Steve.dat" 
 IDR_OBJ TEXT "resources\\block.3dobj"
-IDR_PNG1 PNG "resources\\apple_golden.png"
