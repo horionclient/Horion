@@ -10,6 +10,7 @@ vec2_t fov;
 vec2_t screenSize;
 vec3_t origin;
 float lerpT;
+C_TexturePtr* texturePtr = nullptr;
 
 static __int64* tess_end_base = 0x0;
 
@@ -237,6 +238,23 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth) {
 	}
 }
 
+void DrawUtils::drawImage(std::string FilePath, vec2_t& imagePos, vec2_t& ImageDimension, vec2_t& idk) {
+	if (texturePtr == nullptr) {
+		texturePtr = new C_TexturePtr();
+		C_FilePath file(FilePath);
+		renderCtx->getTexture(texturePtr, file);
+	}
+
+	__int64 yot = 0;
+	static __int64 hashedString = 0xA99285D21E94FC80;
+	static uintptr_t flushImageAddr = FindSignature("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 ?? ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 0F 29 70 ?? 0F 29 78 ?? 44 0F 29 40 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 ?? ?? ?? ?? ?? ?? ?? 4D 8B E1 44 0F 28 C2 4C 8B F2 4C 8B F9");
+
+	if (texturePtr != nullptr) {
+		renderCtx->drawImage(texturePtr, imagePos, ImageDimension, yot, idk);
+		renderCtx->flushImages(MC_Color(1.f, 1.f, 1.f, 1.f), flushImageAddr, (__int64)&hashedString);
+	}
+}
+
 void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, bool useUnicodeFont) {
 	vec2_t textPos;
 	std::string text = ent->getNameTag()->getText();
@@ -284,7 +302,6 @@ void DrawUtils::drawItem(C_ItemStack* item, vec2_t ItemPos, float opacity, float
 	C_BaseActorRenderContext baseActorRenderCtx(ScreenCtx, g_Data.getClientInstance(), g_Data.getClientInstance()->minecraftGame);
 	C_ItemRenderer* renderer = baseActorRenderCtx.renderer;
 	renderer->renderGuiItemNew(&baseActorRenderCtx, item, g_Data.getClientInstance()->minecraftGame, ItemPos.x, ItemPos.y, opacity, scale, isEnchanted);
-	
 }
 
 void DrawUtils::wirebox(AABB aabb) {
