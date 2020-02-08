@@ -176,10 +176,7 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float
 	TextMeasureData textMeasure;
 	memset(&textMeasure, 0, sizeof(TextMeasureData));
 	textMeasure.textSize = textSize;
-	//static float size = 1;
-	//size = 1;
 
-	//size = textSize;
 	renderCtx->drawText(fontPtr, posF, &text, color.arr, 1, 0, &textMeasure, &caretMeasureData);
 }
 
