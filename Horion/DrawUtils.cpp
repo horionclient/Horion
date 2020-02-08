@@ -105,13 +105,12 @@ C_Font* DrawUtils::getFont(Fonts font) {
 }
 
 float DrawUtils::getTextWidth(std::string* textStr, float textSize, Fonts font) {
-	TextHolder* text = new TextHolder(*textStr);
+	TextHolder text(*textStr);
 
 	C_Font* fontPtr = getFont(font);
 
-	float ret = renderCtx->getLineLength(fontPtr, text, textSize, false);
+	float ret = renderCtx->getLineLength(fontPtr, &text, textSize, false);
 
-	delete text;
 	return ret;
 }
 
@@ -144,18 +143,12 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth) {
 }
 
 void DrawUtils::fillRectangle(vec4_t pos, const MC_Color col, float alpha) {
-	float* posF = new float[4];  // vec4_t(startX, startY, endX, endY);
+	float posF[4];  // vec4_t(startX, startY, endX, endY);
 	posF[0] = pos.x;
 	posF[1] = pos.z;
 	posF[2] = pos.y;
 	posF[3] = pos.w;
-
-	MC_Color* c = new MC_Color(col);
-
-	renderCtx->fillRectangle(posF, reinterpret_cast<float*>(c), alpha);
-
-	delete c;
-	delete[] posF;
+	renderCtx->fillRectangle(posF, reinterpret_cast<const float*>(&col), alpha);
 }
 
 void DrawUtils::drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineWidth) {
@@ -167,13 +160,13 @@ void DrawUtils::drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineW
 }
 
 void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float textSize, Fonts font) {
-	TextHolder* text = new TextHolder(*textStr);
+	TextHolder text(*textStr);
 	C_Font* fontPtr = getFont(font);
 	static uintptr_t caretMeasureData = 0xFFFFFFFF;
 
 	pos.y -= 1;
 
-	float* posF = new float[4];  // vec4_t(startX, startY, endX, endY);
+	float posF[4];  // vec4_t(startX, startY, endX, endY);
 	posF[0] = pos.x;
 	posF[1] = pos.x + 1000;
 	posF[2] = pos.y;
@@ -181,9 +174,7 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float
 
 	static float size = 1;
 	size = textSize;
-	renderCtx->drawText(fontPtr, posF, text, color.arr, 1, 0, &size, &caretMeasureData);
-	delete[] posF;
-	delete text;
+	renderCtx->drawText(fontPtr, posF, &text, color.arr, 1, 0, &size, &caretMeasureData);
 }
 
 void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth) {
