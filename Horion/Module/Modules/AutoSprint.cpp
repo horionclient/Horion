@@ -1,6 +1,7 @@
 #include "AutoSprint.h"
 
 AutoSprint::AutoSprint() : IModule(0x0, Category::MOVEMENT, "Automatically sprint without holding the key") {
+	registerBoolSetting("all directions", &this->alldirections, this->alldirections);
 }
 
 AutoSprint::~AutoSprint() {
@@ -16,6 +17,8 @@ const char* AutoSprint::getRawModuleName() {
 
 void AutoSprint::onTick(C_GameMode* gm) {
 	if (gm->player != nullptr && !gm->player->isSprinting() && gm->player->velocity.magnitudexz() > 0.01f) {
+		C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
+		if(alldirections || GameData::isKeyDown(*input->forwardKey))
 		gm->player->setSprinting(true);
 	}
 }
