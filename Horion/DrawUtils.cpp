@@ -1,4 +1,5 @@
 #include "DrawUtils.h"
+
 #include "Module/ModuleManager.h"
 
 C_MinecraftUIRenderContext* renderCtx;
@@ -172,9 +173,14 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float
 	posF[2] = pos.y;
 	posF[3] = pos.y + 1000;
 
-	static float size = 1;
-	size = textSize;
-	renderCtx->drawText(fontPtr, posF, &text, color.arr, 1, 0, &size, &caretMeasureData);
+	TextMeasureData textMeasure;
+	memset(&textMeasure, 0, sizeof(TextMeasureData));
+	textMeasure.textSize = textSize;
+	//static float size = 1;
+	//size = 1;
+
+	//size = textSize;
+	renderCtx->drawText(fontPtr, posF, &text, color.arr, 1, 0, &textMeasure, &caretMeasureData);
 }
 
 void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth) {
