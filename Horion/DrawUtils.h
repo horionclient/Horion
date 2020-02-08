@@ -5,6 +5,7 @@
 #include "../SDK/CMinecraftUIRenderContext.h"
 #include "../Utils/HMath.h"
 #include "../Utils/Logger.h"
+#include "../Utils/Target.h"
 #include "../Utils/Utils.h"
 enum class Fonts { DEFAULT,
 				   UNICOD,

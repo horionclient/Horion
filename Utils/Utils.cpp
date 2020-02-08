@@ -21,3 +21,13 @@ void Utils::GetCurrentSystemTime(tm& timeInfo) {
 	std::time_t now_c = std::chrono::system_clock::to_time_t(systemNow);
 	localtime_s(&timeInfo, &now_c);  // using localtime_s as std::localtime is not thread-safe.
 }
+
+bool invalidChar(char c) {
+	return !(c >= 0 && c < 128);
+}
+
+std::string Utils::sanitize(std::string text) {
+	std::string out = text;
+	out.erase(std::remove_if(out.begin(), out.end(), invalidChar), out.end());
+	return out;
+}

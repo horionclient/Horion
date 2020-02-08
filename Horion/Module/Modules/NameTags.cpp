@@ -1,11 +1,10 @@
 #include "NameTags.h"
 
-#include "../ModuleManager.h"
 #include "../../../Utils/Target.h"
+#include "../ModuleManager.h"
 
 NameTags::NameTags() : IModule(0x0, Category::VISUAL, "Shows better nametags above players that can be seen from a lot more far aways") {
-	this->registerBoolSetting("Display Health", &this->displayHealth, this->displayHealth);
-	this->registerBoolSetting("Use Unicode font", &this->useUnicodeFont, this->useUnicodeFont);
+	this->registerBoolSetting("Display Armor", &this->displayArmor, this->displayArmor);
 }
 
 NameTags::~NameTags() {
@@ -22,8 +21,10 @@ void drawNameTags(C_Entity* ent, bool isRegularEntitie) {
 	if (ent != localPlayer) {
 		if (ent->timeSinceDeath > 0)
 			return;
+		if (ent->getNameTag()->getTextLength() < 1)
+			return;
 		if (Target::isValidTarget(ent) && NameTagsMod != nullptr)
-			DrawUtils::drawNameTags(ent, 0.95f, NameTagsMod->displayHealth, NameTagsMod->useUnicodeFont);
+			DrawUtils::drawNameTags(ent, 0.95f);
 	}
 }
 

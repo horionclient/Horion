@@ -4,8 +4,7 @@
 
 class NameTags : public IModule {
 public:
-	bool displayHealth = true;
-	bool useUnicodeFont = false;
+	bool displayArmor = true;
 	NameTags();
 	~NameTags();
 

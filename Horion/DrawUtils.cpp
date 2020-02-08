@@ -1,4 +1,5 @@
 #include "DrawUtils.h"
+#include "Module/ModuleManager.h"
 
 C_MinecraftUIRenderContext* renderCtx;
 C_GuiData* guiData;
@@ -257,14 +258,40 @@ void DrawUtils::drawImage(std::string FilePath, vec2_t& imagePos, vec2_t& ImageD
 
 void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, bool useUnicodeFont) {
 	vec2_t textPos;
+	vec4_t rectPos;
 	std::string text = ent->getNameTag()->getText();
+	text = Utils::sanitize(text).erase(0, 1);  // bad code here, I need to find a way to just get the plain playername
 
 	float textStr = getTextWidth(&text);
 
 	if (refdef->OWorldToScreen(origin, ent->eyePos0, textPos, fov, screenSize)) {
 		textPos.y -= 10.f;
 		textPos.x -= textStr / 2.f;
-		drawText(textPos, &text, MC_Color(), textSize);
+		rectPos.x = textPos.x - 1.f;
+		rectPos.y = textPos.y - 1.f;
+		rectPos.z = textPos.x + textStr + 25.f;
+		rectPos.w = textPos.y + 10.f;
+		vec4_t subRectPos = rectPos;
+		subRectPos.y = subRectPos.w - 1.f;
+		fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 0.5f);
+		fillRectangle(subRectPos, MC_Color(28, 107, 201, 1), 0.5f);
+		drawText(textPos, &text, MC_Color(255, 255, 255, 1), textSize);
+
+		if (ent->getEntityTypeId() == 63 && moduleMgr->getModule<NameTags>()->displayArmor) {  // is player, show armor
+			C_Player* player = static_cast<C_Player*>(ent);
+			static float constexpr scale = 0.4f;
+			static float constexpr opacity = 0.25f;
+			static float constexpr spacing = scale + 15.f;
+			float x = rectPos.z - 25.f;
+			float y = rectPos.w - 10.f;
+			for (int i = 0; i < 4; i++) {
+				C_ItemStack* stack = player->getArmor(i);
+				if (stack->item != nullptr) {
+					DrawUtils::drawItem(stack, vec2_t(x, y), opacity, scale, stack->isEnchanted());
+					x += scale * spacing;
+				}
+			}
+		}
 	}
 }
 

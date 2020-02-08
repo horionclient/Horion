@@ -26,8 +26,9 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	float x = g_Data.getClientInstance()->getGuiData()->windowSize.x / 2.f + 5.f;
 	float y = g_Data.getClientInstance()->getGuiData()->windowSize.y - 57.5f;
 	for (int i = 0; i < 4; i++) {
-		if (player->getArmor(i)->item != nullptr) {
-			DrawUtils::drawItem(player->getArmor(i),vec2_t(x,y),opacity, scale, player->getArmor(i)->isEnchanted());
+		C_ItemStack* stack = player->getArmor(i);
+		if (stack->item != nullptr) {
+			DrawUtils::drawItem(stack, vec2_t(x, y), opacity, scale, stack->isEnchanted());
 			x += scale * spacing;
 		}
 	}

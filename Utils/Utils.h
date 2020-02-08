@@ -301,7 +301,7 @@ public:
 	};
 
 	template <unsigned int IIdx, typename TRet, typename... TArgs>
-	static inline auto CallVFunc(void* thisptr, TArgs... argList)->TRet {
+	static inline auto CallVFunc(void* thisptr, TArgs... argList) -> TRet {
 		//if (thisptr == nullptr)
 		//return nullptr;
 		using Fn = TRet(__thiscall*)(void*, decltype(argList)...);
@@ -353,7 +353,7 @@ public:
 		return str.substr(0, size);
 	}
 
-	
+
 	static uintptr_t FindSignatureModule(const char* szModule, const char* szSignature) {
 		const char* pattern = szSignature;
 		uintptr_t firstMatch = 0;
@@ -420,7 +420,7 @@ public:
 
 		throw std::exception("Signature not found");
 #ifdef __clang__
-#pragma clang diagnostic pop 
+#pragma clang diagnostic pop
 #endif
 #endif
 #endif
@@ -430,4 +430,6 @@ public:
 	static void GetCurrentSystemTime(tm& timeInfo);
 
 	static void ApplySystemTime(std::stringstream* ss);
+
+	static std::string sanitize(std::string text);
 };
