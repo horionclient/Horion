@@ -9,26 +9,34 @@ ClickTP::~ClickTP() {
 }
 
 const char* ClickTP::getModuleName() {
-	return "ClickTP";
+	return "Teleport";
 }
 
 void ClickTP::onTick(C_GameMode* gm) {
-	if (gm->player == nullptr)
-		return;
-	if (onlyHand && g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot)->item != nullptr)
-		return;
-	vec3_ti block = g_Data.getClientInstance()->getPointerStruct()->block;
-	if (block == vec3_ti(0, 0, 0))
-		return;
-	vec3_t pos = block.toFloatVector();
 
-	if (GameData::isRightClickDown() && !hasClicked && GameData::canUseMoveKeys()) {
-		g_Data.getGuiData()->displayClientMessageF("%sTeleported to %sX: %.1f Y: %.1f Z: %.1f%s.", GREEN, GRAY, pos.x, pos.y, pos.z, GREEN);
-		pos.y += (gm->player->getPos()->y - gm->player->getAABB()->lower.y) + 1;  // eye height + 1
+	if (gm->player == nullptr) return;
+	if (onlyHand && g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot)->item != nullptr) return;
+	
+	if (GameData::isRightClickDown() && !hasClicked) {
+		hasClicked = true;
+
+		vec3_ti block = g_Data.getClientInstance()->getPointerStruct()->block;
+		if (block == vec3_ti(0, 0, 0)) return;
+		vec3_t pos = block.toFloatVector();
 		pos.x += 0.5f;
 		pos.z += 0.5f;
+
+		tpPos = pos;
+		shouldTP = true;
+
+		g_Data.getGuiData()->displayClientMessageF("%sTeleport position set to %sX: %.1f Y: %.1f Z: %.1f%s. Sneak to teleport!", GREEN, GRAY, pos.x, pos.y, pos.z, GREEN);
+	}
+	if (!GameData::isRightClickDown()) hasClicked = false;
+
+	if (shouldTP && gm->player->isSneaking()) {
+		tpPos.y += (gm->player->getPos()->y - gm->player->getAABB()->lower.y) + 1;  // eye height + 1
 		if (bypass) {
-			vec3_t posNew = pos;
+			vec3_t posNew = tpPos;
 			C_MovePlayerPacket* a = new C_MovePlayerPacket(g_Data.getLocalPlayer(), posNew);
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
 			delete a;
@@ -43,9 +51,7 @@ void ClickTP::onTick(C_GameMode* gm) {
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a3);
 			delete a3;
 		}
-		gm->player->setPos(pos);
-		hasClicked = true;
-	} else if (!GameData::isRightClickDown()) {
-		hasClicked = false;
+		gm->player->setPos(tpPos);
+		shouldTP = false;
 	}
 }
