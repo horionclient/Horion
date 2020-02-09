@@ -198,6 +198,7 @@
     <ClCompile Include="Horion\Module\Modules\MidClick.cpp" />
     <ClCompile Include="Horion\Module\Modules\Module.cpp" />
     <ClCompile Include="Horion\Module\Modules\NameTags.cpp" />
+    <ClCompile Include="Horion\Module\Modules\NightMode.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoFall.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoFriends.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoKnockBack.cpp" />
@@ -286,6 +287,7 @@
     <ClInclude Include="Horion\Module\Modules\MidClick.h" />
     <ClInclude Include="Horion\Module\Modules\Module.h" />
     <ClInclude Include="Horion\Module\Modules\NameTags.h" />
+    <ClInclude Include="Horion\Module\Modules\NightMode.h" />
     <ClInclude Include="Horion\Module\Modules\NoFall.h" />
     <ClInclude Include="Horion\Module\Modules\NoFriends.h" />
     <ClInclude Include="Horion\Module\Modules\NoKnockBack.h" />

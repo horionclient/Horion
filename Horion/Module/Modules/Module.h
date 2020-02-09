@@ -6,8 +6,6 @@
 #include "../../FriendList/FriendList.h"
 #include "../../DrawUtils.h"
 
-
-
 enum class Category {
 	COMBAT = 0,
 	VISUAL = 1,
