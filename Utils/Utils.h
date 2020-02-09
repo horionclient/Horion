@@ -12,7 +12,7 @@
 #include <vector>
 
 #include "Logger.h"
-#include "xorstr.h"
+//#include "xorstr.h"
 
 static const char* const KeyNames[] = {
 	"Unknown",
@@ -222,8 +222,11 @@ static inline void ImSwap(T& a, T& b) {
 	b = tmp;
 }
 
+#ifdef JM_XORSTR_HPP
 #define FindSignature(szSignature) Utils::FindSignatureModule("Minecraft.Windows.exe", xorstr_(szSignature))
-
+#else
+#define FindSignature(szSignature) Utils::FindSignatureModule("Minecraft.Windows.exe", szSignature)
+#endif
 
 class Utils {
 public:
