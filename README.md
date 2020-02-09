@@ -8,6 +8,7 @@ If you want to contribute to this project, feel free to fork this repository and
 ![](https://img.shields.io/github/downloads/Horionclient/Horion-Releases/total?label=Total%20Injections&style=for-the-badge)
 [![Build Status](https://img.shields.io/azure-devops/build/horionclient/Horion/2?label=dev%20release&style=for-the-badge)](https://dev.azure.com/horionclient/Horion/_build/latest?definitionId=2&branchName=master)
 [![Codacy Badge](https://img.shields.io/codacy/grade/a8c1e0a4242d4da39762bc231c2c8c48?style=for-the-badge)](https://www.codacy.com/manual/horionclient/Horion)
+[![License](https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png)](http://creativecommons.org/licenses/by-nc-nd/4.0/)
 
 ## Installation
 1. **Download the Injector** or directly download the `.dll` via the label:
@@ -22,5 +23,7 @@ To contribute, simply **fork the repository**, edit the things you want to and *
 We will then check your pull request and accept/deny it.
 If you are clueless about what you could start with, [we collected some issues for you](https://github.com/horionclient/Horion/contribute).
 More Information on setting everything up can be found in the **[wiki](https://github.com/horionclient/Horion/wiki "wiki")**!
-If you need any help with understanding our code, join the official discord server:
+If you need any help with understanding our code, join the official discord server
 
+## Licensing
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
