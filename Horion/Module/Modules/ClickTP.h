@@ -4,6 +4,7 @@ class ClickTP : public IModule {
 private:
 	bool hasClicked = false;
 	bool onlyHand = false;
+	bool bypass = false;
 
 public:
 	ClickTP();
