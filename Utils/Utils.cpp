@@ -27,7 +27,19 @@ bool invalidChar(char c) {
 }
 
 std::string Utils::sanitize(std::string text) {
-	std::string out = text;
-	out.erase(std::remove_if(out.begin(), out.end(), invalidChar), out.end());
+	std::string out;
+	bool wasValid = true;
+	for (char c : text) {
+		bool isValid = !invalidChar(c);
+		if (wasValid) {
+			if (!isValid) {
+				wasValid = false;
+			} else {
+				out += c;
+			}
+		} else {
+			wasValid = isValid;
+		}
+	}
 	return out;
 }

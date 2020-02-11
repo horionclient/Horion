@@ -254,7 +254,7 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 	vec2_t textPos;
 	vec4_t rectPos;
 	std::string text = ent->getNameTag()->getText();
-	text = Utils::sanitize(text).erase(0, 1);  // bad code here, I need to find a way to just get the plain playername
+	text = Utils::sanitize(text);
 
 	float textStr = getTextWidth(&text);
 
