@@ -181,6 +181,7 @@
     <ClCompile Include="Horion\Module\Modules\FastEast.cpp" />
     <ClCompile Include="Horion\Module\Modules\FastLadder.cpp" />
     <ClCompile Include="Horion\Module\Modules\Fly.cpp" />
+    <ClCompile Include="Horion\Module\Modules\ForceOpenCommandBlock.cpp" />
     <ClCompile Include="Horion\Module\Modules\Freecam.cpp" />
     <ClCompile Include="Horion\Module\Modules\FullBright.cpp" />
     <ClCompile Include="Horion\Module\Modules\Glide.cpp" />
@@ -270,6 +271,7 @@
     <ClInclude Include="Horion\Module\Modules\FastEat.h" />
     <ClInclude Include="Horion\Module\Modules\FastLadder.h" />
     <ClInclude Include="Horion\Module\Modules\Fly.h" />
+    <ClInclude Include="Horion\Module\Modules\ForceOpenCommandBlock.h" />
     <ClInclude Include="Horion\Module\Modules\Freecam.h" />
     <ClInclude Include="Horion\Module\Modules\FullBright.h" />
     <ClInclude Include="Horion\Module\Modules\Glide.h" />

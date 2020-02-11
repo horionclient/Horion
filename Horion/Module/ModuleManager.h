@@ -73,6 +73,7 @@
 #include "Modules/TriggerBot.h"
 #include "Modules/Xray.h"
 #include "Modules/NightMode.h"
+#include "Modules/ForceOpenCommandBlock.h"
 
 #ifdef _DEBUG
 #include "Modules/TestModule.h"

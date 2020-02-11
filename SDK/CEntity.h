@@ -662,7 +662,19 @@ public:
 		return &this->aabb;
 	}
 
-	
+	__int64* getUniqueId() {
+		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
+		__int64 *result;  // rax
+		__int64 v2;       // rcx
+
+		result = (__int64 *)(_this + 0xD8);
+		if (*result == -1i64) {
+			v2 = *(__int64 *)(_this + 0x358);
+			*result = ++*(__int64 *)(v2 + 0x198);
+		}
+		return result;
+	}
+
 };
 
 class C_ServerPlayer;
@@ -724,6 +736,8 @@ private:
 	virtual __int64 startStonecutting(vec3_ti const &);
 	virtual __int64 startDestroying(void);
 	virtual __int64 stopDestroying(void);
+
+public:
 	virtual __int64 openContainer(vec3_ti const &);
 	virtual __int64 openContainer(__int64 const &);
 	virtual __int64 openFurnace(vec3_ti const &);
