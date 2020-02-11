@@ -15,6 +15,7 @@ const char* ClickTP::getModuleName() {
 void ClickTP::onTick(C_GameMode* gm) {
 
 	if (gm->player == nullptr) return;
+	if (!GameData::canUseMoveKeys()) return;
 	if (onlyHand && g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot)->item != nullptr) return;
 	
 	if (GameData::isRightClickDown() && !hasClicked) {
