@@ -2,6 +2,9 @@
 #include "Module.h"
 
 class ForceOpenCommandBlock : public IModule {
+private:
+	bool clicked = false;
+
 public:
 	ForceOpenCommandBlock();
 	~ForceOpenCommandBlock();
