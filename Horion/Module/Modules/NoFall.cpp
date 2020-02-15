@@ -13,7 +13,6 @@ const char* NoFall::getModuleName() {
 void NoFall::onSendPacket(C_Packet* packet) {
 	if (packet->isInstanceOf<C_MovePlayerPacket>()) {
 		C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
-		movePacket->Position.y += 0.25f;
 		movePacket->onGround = true;
 	} else if (packet->isInstanceOf<C_ActorFallPacket>()) {
 		C_ActorFallPacket* fallPacket = reinterpret_cast<C_ActorFallPacket*>(packet);
