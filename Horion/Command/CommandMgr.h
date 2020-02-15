@@ -26,6 +26,7 @@
 #include "Commands/UnbindCommand.h"
 #include "Commands/setoffhandCommand.h"
 #include "Commands/CommandBlockExploitCommand.h"
+#include "Commands/ConfigCommand.h"
 
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"

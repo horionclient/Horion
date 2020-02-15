@@ -36,6 +36,7 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new DupeCommand());
 	commandList.push_back(new DamageCommand());
 	commandList.push_back(new CommandBlockExploitCommand());
+	commandList.push_back(new ConfigCommand());
 
 #ifdef _DEBUG
 	commandList.push_back(new TestCommand());

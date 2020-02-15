@@ -47,7 +47,6 @@ void ConfigManager::loadConfig(std::string name, bool create) {
 
 	const bool configExists = std::filesystem::exists(fullPath);
 	if (configExists || create) {
-		currentConfig = name;
 		if (configExists) {
 			std::ifstream confFile(fullPath, std::ifstream::binary);
 			json conf;
@@ -63,18 +62,22 @@ void ConfigManager::loadConfig(std::string name, bool create) {
 		moduleMgr->onLoadConfig(&currentConfigObj);
 
 		if (create) {
-			saveConfig();
+			saveConfig(name);
 		}
+
+		if (g_Data.getLocalPlayer() != nullptr) g_Data.getGuiData()->displayClientMessageF("[%sHorion%s] %sSuccessfully loaded config %s%s%s!", GOLD, WHITE, GREEN, GRAY, name.c_str(), GREEN);
+	} else {
+		if (g_Data.getLocalPlayer() != nullptr) g_Data.getGuiData()->displayClientMessageF("[%sHorion%s] %sCould not load config %s%s%s!", GOLD, WHITE, RED, GRAY, name.c_str(), RED);
 	}
 
 	delete[] fullPath;
 }
 
-void ConfigManager::saveConfig() {
-	logF("Saving config %s", currentConfig.c_str());
-	size_t allocSize = currentConfig.size() + roamingFolder.size() + 20;  // std::wstring::size() can be wierd so lets make sure this actually fits
+void ConfigManager::saveConfig(std::string name) {
+	logF("Saving config %s", name.c_str());
+	size_t allocSize = name.size() + roamingFolder.size() + 20;  // std::wstring::size() can be wierd so lets make sure this actually fits
 	char* fullPath = new char[allocSize];
-	sprintf_s(fullPath, allocSize, "%S\\%s.h", roamingFolder.c_str(), currentConfig.c_str());
+	sprintf_s(fullPath, allocSize, "%S\\%s.h", roamingFolder.c_str(), name.c_str());
 
 	moduleMgr->onSaveConfig(&currentConfigObj);
 

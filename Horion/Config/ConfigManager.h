@@ -18,7 +18,6 @@ using json = nlohmann::json;
 
 class ConfigManager {
 private:
-	std::string currentConfig = "default";
 	std::wstring roamingFolder;
 	static std::wstring GetRoamingFolderPath();
 	json currentConfigObj;
@@ -27,8 +26,10 @@ public:
 	ConfigManager();
 	~ConfigManager();
 
+	std::string currentConfig = "default";
+
 	void loadConfig(std::string name, bool create);
-	void saveConfig();
+	void saveConfig(std::string name);
 	void init();
 };
 
