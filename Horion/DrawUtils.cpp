@@ -233,6 +233,13 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth) {
 	}
 }
 
+void DrawUtils::drawTracer(C_Entity* ent) {
+	vec2_t target;
+	refdef->OWorldToScreen(origin, *ent->getPos(), target, fov, screenSize);
+	vec2_t mid(((g_Data.getClientInstance()->getGuiData()->widthGame) / 2), ((g_Data.getClientInstance()->getGuiData()->heightGame) / 2));
+	if(target != vec2_t(0, 0)) DrawUtils::drawLine(mid, target, 0.2f);
+}
+
 void DrawUtils::drawImage(std::string FilePath, vec2_t& imagePos, vec2_t& ImageDimension, vec2_t& idk) {
 	if (texturePtr == nullptr) {
 		texturePtr = new C_TexturePtr();
