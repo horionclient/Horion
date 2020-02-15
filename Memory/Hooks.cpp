@@ -611,7 +611,6 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightnes
 float Hooks::Dimension_getTimeOfDay(__int64 _this, int a2, float a3) {
 	static auto oGetTimeOfDay = g_Hooks.Dimension_getTimeOfDayHook->GetFastcall<float, __int64, int, float>();
 
-
 	static IModule* nightMod = moduleMgr->getModule<NightMode>();
 	if (nightMod == nullptr)
 		nightMod = moduleMgr->getModule<NightMode>();
@@ -690,7 +689,7 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 		struct LilPlump {
 			std::string cmdAlias;
 			IMCCommand* command = 0;
-			bool shouldReplace = true;
+			bool shouldReplace = true;  // Should replace the current text in the box (autocomplete)
 
 			bool operator<(const LilPlump& o) const {
 				return cmdAlias < o.cmdAlias;
@@ -713,12 +712,12 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 						plump.shouldReplace = false;
 						break;
 					} else if (i >= cmd.size())
-						goto nope;
+						goto outerContinue;
 
 					if (car != cmd.at(i))  // and compare
-						goto nope;
+						goto outerContinue;
 				}
-				// Not at nope? Then we got a good result!
+				// Not at outerContinue? Then we got a good result!
 				{
 					cmd.insert(0, 1, '.');  // Prepend the '.'
 
@@ -727,13 +726,29 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 					searchResults.emplace(plump);
 				}
 
-			nope:
+			outerContinue:
 				continue;
 			}
 		}
 
 		if (searchResults.size() > 0) {
-			LilPlump firstResult = (*searchResults.begin());
+			LilPlump firstResult = *searchResults.begin();
+
+			size_t maxReplaceLength = firstResult.cmdAlias.size();
+			if (searchResults.size() > 1) {
+				for (auto it = searchResults.begin()++; it != searchResults.end(); it++) {
+					auto alias = it->cmdAlias;
+					maxReplaceLength = min(maxReplaceLength, alias.size());
+
+					for (int i = 0; i < maxReplaceLength; i++) {
+						if (alias[i] != firstResult.cmdAlias[i]) {
+							maxReplaceLength = i;
+							break;
+						}
+					}
+				}
+			} else
+				maxReplaceLength = firstResult.cmdAlias.size();
 
 			if (searchResults.size() > 1) {
 				g_Data.getGuiData()->displayClientMessageF("==========");
@@ -750,18 +765,22 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 			}
 
 			if (firstResult.shouldReplace) {
-				if (search.size() == firstResult.cmdAlias.size() - 1 && searchResults.size() == 1)
+				if (search.size() == firstResult.cmdAlias.size() - 1 && searchResults.size() == 1) {
+					maxReplaceLength++;
 					firstResult.cmdAlias.append(" ");
-				text->setText(firstResult.cmdAlias);  // Set text
-				// now sync with the UI thread that shows the cursor n stuff
+				}
+				
+				text->setText(firstResult.cmdAlias.substr(0, maxReplaceLength));  // Set text
+				// now sync with the UI thread
 				using syncShit_t = void(__fastcall*)(__int64*, TextHolder*);
 				static syncShit_t syncShit = nullptr;
 				static __int64* winrt_ptr;
 				if (syncShit == nullptr) {
-					uintptr_t sigOffset = FindSignature("48 8B 0D ?? ?? ?? ?? 48 8B 01 49 8B D6 FF 90 ?? ?? ?? ??");
+					uintptr_t sigOffset = FindSignature("48 8B 0D ?? ?? ?? ?? 48 8B 01 49 8B D6 FF 90 ?? 04");  // The 04 at the end might get invalid in the future
 					int offset = *reinterpret_cast<int*>(sigOffset + 3);
 					winrt_ptr = *reinterpret_cast<__int64**>(sigOffset + offset + 7);
-					syncShit = reinterpret_cast<syncShit_t>(*reinterpret_cast<__int64*>(*winrt_ptr + 0x460));
+					int vtOffset = *reinterpret_cast<int*>(sigOffset + 15);
+					syncShit = reinterpret_cast<syncShit_t>(*reinterpret_cast<__int64*>(*winrt_ptr + vtOffset));
 				}
 
 				syncShit(winrt_ptr, text);
