@@ -7,6 +7,7 @@ HudModule::HudModule() : IModule(0x0, Category::VISUAL, "Displays ArrayList/TabG
 	registerBoolSetting("Watermark", &this->watermark, this->watermark);
 	registerBoolSetting("Coordinates", &this->coordinates, this->coordinates);
 	registerBoolSetting("Show Keybinds", &this->keybinds, this->keybinds);
+	registerBoolSetting("Show ArmorHUD", &this->displayArmor, this->displayArmor);
 }
 
 HudModule::~HudModule() {
