@@ -11,6 +11,7 @@ const char* Tracer::getModuleName() {
 }
 
 void Tracer::onPostRender(C_MinecraftUIRenderContext* ctx) {
+	if (g_Data.getLocalPlayer() == nullptr) return;
 	g_Data.forEachEntity([](C_Entity* ent, bool valid) {
 		if(Target::isValidTarget(ent) && ent != g_Data.getLocalPlayer()) DrawUtils::drawTracer(ent);
 	});
