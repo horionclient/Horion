@@ -39,8 +39,5 @@ void findTarget(C_Entity* currentEntity, bool isRegularEntitie) {
 }
 
 void Hitbox::onTick(C_GameMode* gm) {
-	if (!g_Data.isInGame())
-		return;
-
 	g_Data.forEachEntity(findTarget);
 }

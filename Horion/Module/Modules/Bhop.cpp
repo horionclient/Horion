@@ -13,24 +13,26 @@ const char* Bhop::getModuleName() {
 
 void Bhop::onTick(C_GameMode* gm) {
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
-
-	if (gm->player->isInLava() == 1 || gm->player->isInWater() == 1) return;
-
-	if (gm->player->isSneaking()) return;
-
-	if (GameData::canUseMoveKeys() || g_Data.getLocalPlayer()->canOpenContainerScreen() != 1) {
-	} else
+	if (input == nullptr) 
 		return;
 
-	if (input == nullptr) return;
+	if (gm->player->isInLava() == 1 || gm->player->isInWater() == 1) 
+		return;
+
+	if (gm->player->isSneaking()) 
+		return;
+
+	if (!GameData::canUseMoveKeys() && g_Data.getLocalPlayer()->canOpenContainerScreen())
+		return;
 
 	float yaw = gm->player->yaw;
 
-	if (gm->player->onGround && (GameData::isKeyDown(*input->forwardKey) || GameData::isKeyDown(*input->backKey) || GameData::isKeyDown(*input->rightKey) || GameData::isKeyDown(*input->leftKey))) gm->player->jumpFromGround();
+	if (gm->player->onGround && (GameData::isKeyDown(*input->forwardKey) || GameData::isKeyDown(*input->backKey) || GameData::isKeyDown(*input->rightKey) || GameData::isKeyDown(*input->leftKey))) 
+		gm->player->jumpFromGround();
 
-	if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->backKey))
+	if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->backKey)) {
 		return;
-	else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
+	} else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
 		yaw += 45.f;
 		keyPressed = true;
 	} else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {

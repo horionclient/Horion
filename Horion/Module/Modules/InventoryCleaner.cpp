@@ -19,8 +19,8 @@ const char* InventoryCleaner::getModuleName() {
 }
 
 void InventoryCleaner::onTick(C_GameMode* gm) {
-	if (g_Data.getLocalPlayer() == nullptr) return;
-	if ((g_Data.getLocalPlayer()->canOpenContainerScreen() || moduleMgr->getModule<ChestStealer>()->chestScreenController != nullptr) && openInv) return;
+	if ((g_Data.getLocalPlayer()->canOpenContainerScreen() || moduleMgr->getModule<ChestStealer>()->chestScreenController != nullptr) && openInv) 
+		return;
 
 	// Drop useless items
 	std::vector<int> dropSlots = findUselessItems();

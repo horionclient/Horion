@@ -185,7 +185,7 @@ void Hooks::GameMode_tick(C_GameMode* _this) {
 	oTick(_this);
 
 	GameData::updateGameData(_this);
-	if (_this->player == g_Data.getLocalPlayer()) {
+	if (_this->player == g_Data.getLocalPlayer() && _this->player != nullptr) {
 		moduleMgr->onTick(_this);
 	}
 }
@@ -194,7 +194,7 @@ void Hooks::SurvivalMode_tick(C_GameMode* _this) {
 	static auto oTick = g_Hooks.SurvivalMode_tickHook->GetFastcall<void, C_GameMode*>();
 	oTick(_this);
 	GameData::updateGameData(_this);
-	if (_this->player == g_Data.getLocalPlayer()) {
+	if (_this->player == g_Data.getLocalPlayer() && _this->player != nullptr) {
 		moduleMgr->onTick(_this);
 	}
 }

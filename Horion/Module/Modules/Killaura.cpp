@@ -69,8 +69,6 @@ void Killaura::findWeapon() {
 }
 
 void Killaura::onTick(C_GameMode* gm) {
-	if (!g_Data.isInGame())
-		return;
 
 	//Loop through all our players and retrieve their information
 	targetList.clear();

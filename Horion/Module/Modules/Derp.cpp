@@ -13,7 +13,6 @@ const char* Derp::getModuleName() {
 }
 
 void Derp::onTick(C_GameMode* gm) {
-	if (gm->player == nullptr) return;
 
 	if (packetMode) {
 		C_MovePlayerPacket* p = new C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());

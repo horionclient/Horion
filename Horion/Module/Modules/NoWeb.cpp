@@ -11,6 +11,5 @@ const char* NoWeb::getModuleName() {
 }
 
 void NoWeb::onTick(C_GameMode* gm) {
-	if (gm->player != nullptr)
-		gm->player->web = 0.f;
+	gm->player->web = 0.f;
 }

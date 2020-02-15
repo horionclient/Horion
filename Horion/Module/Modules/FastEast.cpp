@@ -11,8 +11,7 @@ const char* FastEat::getModuleName() {
 }
 
 void FastEat::onTick(C_GameMode* gm) {
-	if (g_Data.getLocalPlayer() == nullptr)
-		return;
+
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
 	for (int i = 0; i < 36; i++) {

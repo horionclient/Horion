@@ -12,7 +12,9 @@ const char* MidClick::getModuleName() {
 
 void MidClick::onTick(C_GameMode* gm) {
 	C_Entity* entity = g_Data.getClientInstance()->getPointerStruct()->entityPtr;
-	if (entity == nullptr) return;
+	if (entity == nullptr) 
+		return;
+
 	std::string name = entity->getNameTag()->getText();
 
 	if (GameData::isWheelDown() && !hasClicked) {

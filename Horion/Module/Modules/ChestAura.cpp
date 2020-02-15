@@ -12,8 +12,9 @@ const char* ChestAura::getModuleName() {
 }
 
 void ChestAura::onTick(C_GameMode* gm) {
-	if (gm->player == nullptr) return;
-	if (g_Data.getLocalPlayer()->getSupplies()->inventory->isFull()) return;
+	if (g_Data.getLocalPlayer()->getSupplies()->inventory->isFull())
+		return;
+
 	vec3_t* pos = gm->player->getPos();
 	for (int x = (int)pos->x - range; x < pos->x + range; x++) {
 		for (int z = (int)pos->z - range; z < pos->z + range; z++) {

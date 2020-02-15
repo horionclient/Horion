@@ -47,8 +47,6 @@ void findEntities(C_Entity* currentEntity, bool isRegularEntitie) {
 }
 
 void InfiniteReach::onTick(C_GameMode* gm) {
-	if (!g_Data.isInGame())
-		return;
 
 	//Loop through all our players and retrieve their information
 	targetList0.clear();

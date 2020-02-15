@@ -17,7 +17,6 @@ void CrystalAura::onEnable() {
 }
 
 void CrystalAura::onTick(C_GameMode* gm) {
-	if (gm->player == nullptr) return;
 	
 	this->delay++;
 	if (this->delay >= 5) {

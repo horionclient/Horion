@@ -14,9 +14,10 @@ const char* ClickTP::getModuleName() {
 
 void ClickTP::onTick(C_GameMode* gm) {
 
-	if (gm->player == nullptr) return;
-	if (!GameData::canUseMoveKeys()) return;
-	if (onlyHand && g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot)->item != nullptr) return;
+	if (!GameData::canUseMoveKeys()) 
+		return;
+	if (onlyHand && g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot)->item != nullptr) 
+		return;
 	
 	if (GameData::isRightClickDown() && !hasClicked) {
 		hasClicked = true;
@@ -32,7 +33,8 @@ void ClickTP::onTick(C_GameMode* gm) {
 
 		g_Data.getGuiData()->displayClientMessageF("%sTeleport position set to %sX: %.1f Y: %.1f Z: %.1f%s. Sneak to teleport!", GREEN, GRAY, pos.x, pos.y, pos.z, GREEN);
 	}
-	if (!GameData::isRightClickDown()) hasClicked = false;
+	if (!GameData::isRightClickDown()) 
+		hasClicked = false;
 
 	if (shouldTP && gm->player->isSneaking()) {
 		tpPos.y += (gm->player->getPos()->y - gm->player->getAABB()->lower.y) + 1;  // eye height + 1
