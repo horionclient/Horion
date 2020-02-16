@@ -769,7 +769,7 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 					maxReplaceLength++;
 					firstResult.cmdAlias.append(" ");
 				}
-				
+
 				text->setText(firstResult.cmdAlias.substr(0, maxReplaceLength));  // Set text
 				// now sync with the UI thread
 				using syncShit_t = void(__fastcall*)(__int64*, TextHolder*);
@@ -1097,40 +1097,31 @@ float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3) {
 
 	if (g_Data.getLocalPlayer() != nullptr) {
 		static ForceOpenCommandBlock* forceOpenCmdBlock = moduleMgr->getModule<ForceOpenCommandBlock>();
-		if (forceOpenCmdBlock == nullptr) forceOpenCmdBlock = moduleMgr->getModule<ForceOpenCommandBlock>();
-		else if (forceOpenCmdBlock->isEnabled() && forceOpenCmdBlock->isInCommandBlock) return forceOpenCmdBlock->distance;
+		if (forceOpenCmdBlock == nullptr)
+			forceOpenCmdBlock = moduleMgr->getModule<ForceOpenCommandBlock>();
+		else if (forceOpenCmdBlock->isEnabled() && forceOpenCmdBlock->isInCommandBlock)
+			return forceOpenCmdBlock->distance;
 
 		static InfiniteBlockReach* infiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
-		if (infiniteBlockReachModule == nullptr) infiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
-		else if (infiniteBlockReachModule->isEnabled()) return infiniteBlockReachModule->getBlockReach();
+		if (infiniteBlockReachModule == nullptr)
+			infiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
+		else if (infiniteBlockReachModule->isEnabled())
+			return infiniteBlockReachModule->getBlockReach();
 
 		static ClickTP* clickTP = moduleMgr->getModule<ClickTP>();
-		if (clickTP == nullptr) clickTP = moduleMgr->getModule<ClickTP>();
-		else if (clickTP->isEnabled()) return 255;
+		if (clickTP == nullptr)
+			clickTP = moduleMgr->getModule<ClickTP>();
+		else if (clickTP->isEnabled())
+			return 255;
 	}
 
 	return oFunc(_this, a2, a3);
 }
 
-struct face {
-	struct facePart {
-		int vertIndex = -1, normalIndex = -1, uvIndex = -1;
-	} indices[8];
-	int facesPresent = 4;
-};
-
-void to_json(json& j, const face& f) {
-	std::vector<std::array<int, 3>> partArray;
-
-	for (int i = 0; i < f.facesPresent; i++) {
-		auto ind = f.indices[i];
-		partArray.push_back({ind.vertIndex, ind.normalIndex, ind.uvIndex});
-	}
-	j = partArray;
-}
-
 __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager, void* a3, TextHolder* selfSignedId, TextHolder* serverAddress, __int64 clientRandomId, TextHolder* skinId, SkinData* skinData, __int64 capeData, __int64 animatedImageDataArr, TextHolder* skinResourcePatch, TextHolder* skinGeometryData, TextHolder* skinAnimationData, bool isPremiumSkin, bool isPersonaSkin, TextHolder* deviceId, int inputMode, int uiProfile, int guiScale, TextHolder* languageCode, bool sendEduModeParams, TextHolder* tenantId, __int64 unused, TextHolder* platformUserId, TextHolder* thirdPartyName, bool thirdPartyNameOnly, TextHolder* platformOnlineId, TextHolder* platformOfflineId, bool isCapeOnClassicSkin, TextHolder* capeId) {
 	static auto oFunc = g_Hooks.ConnectionRequest_createHook->GetFastcall<__int64, __int64, __int64, void*, TextHolder*, TextHolder*, __int64, TextHolder*, SkinData*, __int64, __int64, TextHolder*, TextHolder*, TextHolder*, bool, bool, TextHolder*, int, int, int, TextHolder*, bool, TextHolder*, __int64, TextHolder*, TextHolder*, bool, TextHolder*, TextHolder*, bool, TextHolder*>();
+
+	auto geoOverride = g_Data.getCustomGeoOverride();
 
 	if (g_Data.allowWIPFeatures()) {
 		logF("Connection Request: InputMode: %i UiProfile: %i GuiScale: %i", inputMode, uiProfile, guiScale);
@@ -1150,162 +1141,28 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 		auto ptrSteve = LockResource(hMemorySteve);
 
 		//std::unique_ptr<TextHolder> newGeometryData(new TextHolder(ptrGeometry, sizeGeometry));
-		TextHolder* newGeometryData;
-		{
-			auto hResourceObj = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_OBJ), "TEXT");
-			auto hMemoryObj = LoadResource(g_Data.getDllModule(), hResourceObj);
+		TextHolder* newGeometryData = nullptr;
 
-			auto sizeObj = SizeofResource(g_Data.getDllModule(), hResourceObj);
-			auto ptrObj = LockResource(hMemoryObj);
-
-			char* str = new char[sizeObj + 1];
-			memset(str, 0, sizeObj + 1);
-			memcpy(str, ptrObj, sizeObj);
-
-			std::istringstream f(reinterpret_cast<char*>(str));
-			std::string line;
-
-			std::vector<std::array<float, 3>> vertices;
-			std::vector<std::array<float, 3>> normals;
-			std::vector<std::array<float, 2>> uvs;
-			std::vector<face> faces;
-
-			while (std::getline(f, line)) {
-				// Remove trailing whitespace
-				// left out for performance reasons
-				/*{
-				size_t startpos = line.find_first_not_of(" \t");
-				if (std::string::npos != startpos) {
-					line = line.substr(startpos);
-				}
-			}*/
-
-				if (line[0] != 'f' && line[0] != 'v')
-					continue;
-
-				auto firstWhiteSpace = line.find(" ");
-				if (firstWhiteSpace == std::string::npos)  // comment
-					continue;
-
-				std::vector<std::string> args;
-				size_t pos = firstWhiteSpace, initialPos = 0;
-				while (pos != std::string::npos) {
-					args.push_back(line.substr(initialPos, pos - initialPos));
-					initialPos = pos + 1;
-
-					pos = line.find(" ", initialPos);
-				}
-				args.push_back(line.substr(initialPos, min(pos, line.size()) - initialPos + 1));
-
-				auto cmd = args[0].c_str();
-
-				if (strcmp(cmd, "vt") == 0) {  // uv
-					if (args.size() != 3) {
-						logF("Faulty uv, 2 args expected: %s", line.c_str());
-						continue;
-					}
-					uvs.push_back({std::stof(args[1]), std::stof(args[2])});
-				} else if (strcmp(cmd, "v") == 0) {  // vertex
-					if (args.size() != 4) {
-						logF("Faulty vertex, 3 args expected: %s", line.c_str());
-						continue;
-					}
-					vertices.push_back({-std::stof(args[1]), std::stof(args[2]), std::stof(args[3])});
-				} else if (strcmp(cmd, "f") == 0) {  // face
-					if (args.size() != 5) {
-						logF("Faulty face, only quads allowed: %i", args.size() - 1);
-						continue;
-					}
-
-					face face;
-					face.facesPresent = (int)args.size() - 1;
-					for (int i = 1; i < args.size(); i++) {
-						face::facePart part;
-						auto arg = args[i];
-						size_t doubleOff = arg.find("//");
-						if (doubleOff != std::string::npos) {  //  vertex // normal
-							int vertex = std::stoi(arg.substr(0, doubleOff)) - 1;
-							int normal = std::stoi(arg.substr(doubleOff + 2)) - 1;
-							assert(vertex >= 0);
-							assert(normal >= 0);  // negative indices mean relative from last, too lazy for that tbh
-							part.vertIndex = vertex;
-							part.normalIndex = normal;
-						} else {
-							size_t firstOff = arg.find("/");
-							if (firstOff != std::string::npos) {
-								int vertex = std::stoi(arg.substr(0, firstOff)) - 1;
-								assert(vertex >= 0);
-								part.vertIndex = vertex;
-
-								auto afterSingle = arg.substr(firstOff + 1);
-								size_t secondOff = afterSingle.find("/");
-								if (secondOff != std::string::npos) {  // vertex / uv / normal
-									int uv = std::stoi(afterSingle.substr(0, secondOff)) - 1;
-									int normal = std::stoi(afterSingle.substr(secondOff + 1)) - 1;
-									assert(uv >= 0);
-									assert(normal >= 0);
-
-									part.uvIndex = uv;
-									part.normalIndex = normal;
-								} else {  // vertex / uv
-									assert(false);
-								}
-							} else
-								assert(false);  // vertex only, don't think minecraft even supports this
-						}
-
-						face.indices[i - 1] = part;
-					}
-					faces.push_back(face);
-				} else if (strcmp(cmd, "vn") == 0) {  // normal
-					if (args.size() != 4) {
-						logF("Faulty normal, 3 args expected: %s", line.c_str());
-						continue;
-					}
-					normals.push_back({std::stof(args[1]), std::stof(args[2]), std::stof(args[3])});
-				} else
-					logF("Unknown command: %s", cmd);
-			}
-
-			logF("Modding our roblox geometry");
-			// Swap coolroblox's body with new mesh
+		if (std::get<0>(geoOverride)) {  // Is overriding geometry
+			auto overrideGeo = std::get<1>(geoOverride);
+			newGeometryData = new TextHolder(*overrideGeo.get());
+		} else {  // Default Skin
+				  /*
+			char* str;  // Obj text
 			{
-				auto oldGeo = std::string(reinterpret_cast<char*>(ptrGeometry));
-				json geoMod = json::parse(oldGeo);  // If this crashes, coolroblox json is invalid
-				auto geoParts = &geoMod.at("minecraft:geometry");
+				auto hResourceObj = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_OBJ), "TEXT");
+				auto hMemoryObj = LoadResource(g_Data.getDllModule(), hResourceObj);
 
-				for (auto it = geoParts->begin(); it != geoParts->end(); it++) {
-					auto part = it.value();
-					std::string identifier = part["description"]["identifier"].get<std::string>();
-					if (identifier.find("animated") != std::string::npos)
-						continue;
+				auto sizeObj = SizeofResource(g_Data.getDllModule(), hResourceObj);
+				auto ptrObj = LockResource(hMemoryObj);
 
-					auto bones = &part.at("bones");
-					for (auto boneIt = bones->begin(); boneIt != bones->end(); boneIt++) {
-						auto bone = *boneIt;
-						if (bone["cubes"].is_array() || bone["poly_mesh"].is_object())
-							continue;
-						std::string name = bone["name"];
-						std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
-						if (name == "body") {
-							logF("Found body");
-							json polyMesh;
-							polyMesh["normalized_uvs"] = true;  // blender does that apparently
-							polyMesh["normals"] = normals;
-							polyMesh["positions"] = vertices;
-							polyMesh["uvs"] = uvs;
-							polyMesh["polys"] = faces;
-							//auto dump = polyMesh.dump();
-							//Logger::WriteBigLogFileF(dump.size() + 20, "%s", dump.c_str());
-
-							boneIt->emplace("poly_mesh", polyMesh);
-						}
-					}
-
-					it->swap(part);
-				}
-				newGeometryData = new TextHolder(geoMod.dump());
+				str = new char[sizeObj + 1];
+				memset(str, 0, sizeObj + 1);
+				memcpy(str, ptrObj, sizeObj);
 			}
+
+			newGeometryData = new TextHolder(SkinUtil::modGeometry(reinterpret_cast<char*>(ptrGeometry), SkinUtil::objToMesh(str)));
+			*/
 		}
 
 		SkinData* newSkinData = new SkinData();
@@ -1316,14 +1173,15 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 		//Logger::WriteBigLogFileF(newGeometryData->getTextLength() + 20, "Geometry: %s", newGeometryData->getText());
 		TextHolder* newSkinResourcePatch = new TextHolder(Utils::base64_decode("ewogICAiZ2VvbWV0cnkiIDogewogICAgICAiYW5pbWF0ZWRfZmFjZSIgOiAiZ2VvbWV0cnkuYW5pbWF0ZWRfZmFjZV9wZXJzb25hXzRjZGJiZmFjYTI0YTk2OGVfMF8wIiwKICAgICAgImRlZmF1bHQiIDogImdlb21ldHJ5LnBlcnNvbmFfNGNkYmJmYWNhMjRhOTY4ZV8wXzAiCiAgIH0KfQo="));
 
-		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, newSkinData, capeData, animatedImageDataArr, newSkinResourcePatch, newGeometryData, skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, thirdPartyName, thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
+		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, newSkinData, capeData, animatedImageDataArr, newSkinResourcePatch, newGeometryData == nullptr ? skinGeometryData : newGeometryData, skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, thirdPartyName, thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
 
 		if (hMemoryGeometry)
 			FreeResource(hMemoryGeometry);
 		if (hMemorySteve)
 			FreeResource(hMemorySteve);
 
-		delete newGeometryData;
+		if (newGeometryData)
+			delete newGeometryData;
 		delete newSkinData;
 		delete newSkinResourcePatch;
 		return res;

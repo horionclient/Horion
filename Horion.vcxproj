@@ -226,6 +226,7 @@
     <ClCompile Include="Memory\Hooks.cpp" />
     <ClCompile Include="Memory\SlimMem.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />
+    <ClCompile Include="Utils\SkinUtil.cpp" />
     <ClCompile Include="Utils\Target.cpp" />
     <ClCompile Include="Utils\TextFormat.cpp" />
     <ClCompile Include="Utils\Utils.cpp" />
@@ -340,6 +341,7 @@
     <ClInclude Include="SDK\CUIScene.h" />
     <ClInclude Include="SDK\CComplexInventoryTransaction.h" />
     <ClInclude Include="Utils\Json.hpp" />
+    <ClInclude Include="Utils\SkinUtil.h" />
     <ClInclude Include="Utils\Target.h" />
     <ClInclude Include="Utils\TextFormat.h" />
     <ClInclude Include="SDK\TextHolder.h" />

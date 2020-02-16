@@ -177,6 +177,25 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 				case CMD_PONG: {
 					break;
 				}
+				case CMD_RESPONSE: {
+					int id = injectorToHorion->params[1];
+					
+					auto pk = std::make_shared<HorionDataPacket>();
+					pk->cmd = (DATAPACKET_CMD)injectorToHorion->params[0];
+					memcpy(pk->params, &injectorToHorion->params[2], sizeof(injectorToHorion->params) - sizeof(int) * 2);
+
+					if (injectorToHorion->dataSize > 0 && injectorToHorion->dataSize < 3000) {
+						pk->dataArraySize = injectorToHorion->dataSize;
+						
+						auto dataTemp = new unsigned char[injectorToHorion->dataSize + 2];
+						memset(dataTemp + injectorToHorion->dataSize, 0, 2); // If we don't zero the last 2 bytes, printing as unicode string won't work
+						memcpy(dataTemp, injectorToHorion->data, injectorToHorion->dataSize);
+						pk->data.swap(std::shared_ptr<unsigned char[]>(dataTemp));
+					}
+
+					g_Data.callInjectorResponseCallback(id, pk);
+					break;
+				}
 				default:
 					break;
 				}
@@ -189,15 +208,13 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 				// They read the message, lets send the next one
 				HorionDataPacket nextDataPack = g_Data.getPacketToInjector();
 				if (nextDataPack.dataArraySize >= 3000) {
-					delete[] nextDataPack.data;
 					throw std::exception("Horion Data packet too big to send");
 				}
 
 				horionToInjector->cmd = nextDataPack.cmd;
 				memcpy(horionToInjector->params, nextDataPack.params, sizeof(int) * 5);
 				if (nextDataPack.dataArraySize > 0) {
-					memcpy(horionToInjector->data, nextDataPack.data, nextDataPack.dataArraySize);
-					delete[] nextDataPack.data;
+					memcpy(horionToInjector->data, nextDataPack.data.get(), nextDataPack.dataArraySize);
 				}
 
 				horionToInjector->dataSize = nextDataPack.dataArraySize;

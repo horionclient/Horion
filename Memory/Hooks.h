@@ -19,6 +19,7 @@
 #include "../SDK/CUIScene.h"
 #include "../SDK/TextHolder.h"
 #include "../Utils/TextFormat.h"
+#include "../Utils/SkinUtil.h"
 #include "../resource.h"
 #include "GameData.h"
 #include "MinHook.h"

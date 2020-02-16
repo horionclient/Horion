@@ -1,5 +1,9 @@
 #pragma once
 #include "ICommand.h"
+#include <fstream>
+#include "../../../Utils/SkinUtil.h"
+#include "../../../resource.h"
+#include <thread>
 
 //#define HTTP_TEST
 

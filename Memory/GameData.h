@@ -3,6 +3,7 @@
 #include <map>
 #include <queue>
 #include <set>
+#include <functional>
 
 #include "../Horion/Config/AccountInformation.h"
 #include "../SDK/CChestBlockActor.h"
@@ -18,14 +19,16 @@ enum DATAPACKET_CMD : int {
 	CMD_INIT = 0,
 	CMD_PING,
 	CMD_PONG,
-	CMD_OPENBROWSER
+	CMD_OPENBROWSER,
+	CMD_FILECHOOSER,
+	CMD_RESPONSE
 };
 
 struct HorionDataPacket {
 	DATAPACKET_CMD cmd;
 	int params[5];
 	int dataArraySize;
-	unsigned char* data;
+	std::shared_ptr<unsigned char[]> data;
 };
 
 class GameData {
@@ -39,6 +42,10 @@ private:
 	HMODULE hDllInst = 0;
 	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
 	std::queue<HorionDataPacket> horionToInjectorQueue;
+	std::map<int, std::function<void(std::shared_ptr<HorionDataPacket>)>> injectorToHorionResponseCallbacks;
+	int lastRequestId = 0;
+	std::shared_ptr<std::string> customGeometry;
+	bool customGeoActive = false;
 
 	bool injectorConnectionActive = false;
 	const SlimUtils::SlimModule* gameModule = 0;
@@ -69,6 +76,16 @@ public:
 	static void setRakNetInstance(C_RakNetInstance* raknet);
 	static TextHolder* getGameVersion();
 
+	inline void setCustomGeometryOverride(bool setActive, std::shared_ptr<std::string> customGeoPtr) {
+		this->customGeoActive = setActive;
+		if (setActive)
+			this->customGeometry.swap(customGeoPtr);
+		else
+			this->customGeometry.swap(std::shared_ptr<std::string>());
+	}
+	inline std::tuple<bool, std::shared_ptr<std::string>> getCustomGeoOverride() {
+		return std::make_tuple(this->customGeoActive, this->customGeometry);
+	}
 	inline AccountInformation getAccountInformation() { return this->accountInformation; };
 	inline void setAccountInformation(AccountInformation newAcc) {
 		if (newAcc.verify())
@@ -80,6 +97,19 @@ public:
 		if (horionDataPack.dataArraySize >= 3000)
 			throw std::exception("Data packet data too big");
 		horionToInjectorQueue.push(horionDataPack);
+	}
+	inline int addInjectorResponseCallback(std::function<void(std::shared_ptr<HorionDataPacket>)> callback) {
+		lastRequestId++;
+		this->injectorToHorionResponseCallbacks[lastRequestId] = callback;
+		return lastRequestId;
+	}
+	inline void callInjectorResponseCallback(int id, std::shared_ptr<HorionDataPacket> packet) {
+		if (this->injectorToHorionResponseCallbacks.find(id) == this->injectorToHorionResponseCallbacks.end()) {
+			logF("No response callback for request with id=%i!", id);
+			return;
+		}
+		this->injectorToHorionResponseCallbacks[id](packet);
+		this->injectorToHorionResponseCallbacks.erase(id);
 	}
 	inline bool allowWIPFeatures() {
 #ifdef _DEBUG

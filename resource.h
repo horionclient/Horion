@@ -4,7 +4,6 @@
 //
 #define IDR_TEXT1                       101
 #define IDR_STEVE                       102
-#define IDR_OBJ                       103
 
 // Next default values for new objects
 // 
