@@ -77,7 +77,11 @@ void ModuleManager::initModules() {
 	this->moduleList.push_back(new CrystalAura());
 	this->moduleList.push_back(new Timer());
 	this->moduleList.push_back(new NightMode());
+
+#if defined(_BETA) or defined(_DEBUG)
 	this->moduleList.push_back(new ForceOpenCommandBlock());
+#endif
+
 #ifdef _DEBUG
 	this->moduleList.push_back(new TestModule());
 #endif

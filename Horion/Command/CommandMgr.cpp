@@ -35,8 +35,11 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new SpammerCommand());
 	commandList.push_back(new DupeCommand());
 	commandList.push_back(new DamageCommand());
-	commandList.push_back(new CommandBlockExploitCommand());
 	commandList.push_back(new ConfigCommand());
+
+#if defined(_BETA) or defined(_DEBUG)
+	commandList.push_back(new CommandBlockExploitCommand());
+#endif
 
 #ifdef _DEBUG
 	commandList.push_back(new TestCommand());
