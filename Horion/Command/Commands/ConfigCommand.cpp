@@ -11,8 +11,7 @@ bool ConfigCommand::execute(std::vector<std::string>* args) {
 		std::string name = args->at(2);
 		configMgr->loadConfig(name, false);
 		return true;
-	}
-	if (args->at(1) == "new") {
+	} else if (args->at(1) == "new") {
 		std::string name = args->at(2);
 		configMgr->loadConfig(name, true);
 		return true;
