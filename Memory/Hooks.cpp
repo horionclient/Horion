@@ -1095,14 +1095,19 @@ void Hooks::RakNetInstance_tick(C_RakNetInstance* _this, __int64 a2, __int64 a3)
 float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3) {
 	static auto oFunc = g_Hooks.GameMode_getPickRangeHook->GetFastcall<float, C_GameMode*, __int64, char>();
 
-	static ForceOpenCommandBlock* forceOpenCmdBlock = moduleMgr->getModule<ForceOpenCommandBlock>();
-	if (forceOpenCmdBlock->isEnabled() && forceOpenCmdBlock->isInCommandBlock) return forceOpenCmdBlock->distance;
+	if (g_Data.getLocalPlayer() != nullptr) {
+		static ForceOpenCommandBlock* forceOpenCmdBlock = moduleMgr->getModule<ForceOpenCommandBlock>();
+		if (forceOpenCmdBlock == nullptr) forceOpenCmdBlock = moduleMgr->getModule<ForceOpenCommandBlock>();
+		else if (forceOpenCmdBlock->isEnabled() && forceOpenCmdBlock->isInCommandBlock) return forceOpenCmdBlock->distance;
 
-	static InfiniteBlockReach* InfiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
-	if (InfiniteBlockReachModule->isEnabled()) return InfiniteBlockReachModule->getBlockReach();
+		static InfiniteBlockReach* infiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
+		if (infiniteBlockReachModule == nullptr) infiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
+		else if (infiniteBlockReachModule->isEnabled()) return infiniteBlockReachModule->getBlockReach();
 
-	static ClickTP* clickTP = moduleMgr->getModule<ClickTP>();
-	if (clickTP->isEnabled()) return 255;
+		static ClickTP* clickTP = moduleMgr->getModule<ClickTP>();
+		if (clickTP == nullptr) clickTP = moduleMgr->getModule<ClickTP>();
+		else if (clickTP->isEnabled()) return 255;
+	}
 
 	return oFunc(_this, a2, a3);
 }
