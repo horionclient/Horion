@@ -253,8 +253,9 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 
 		uiscene->getScreenName(&alloc);
 
-		if (strcmp(alloc.getText(), "hud_screen") == 0 || strcmp(alloc.getText(), "start_screen") == 0 || (alloc.getTextLength() >= 11 && strncmp(alloc.getText(), "play_screen", 11)) == 0)
+		if (strcmp(alloc.getText(), "pause_screen") == 0 || strcmp(alloc.getText(), "hud_screen") == 0 || strcmp(alloc.getText(), "start_screen") == 0 || (alloc.getTextLength() >= 11 && strncmp(alloc.getText(), "play_screen", 11)) == 0)
 			g_Hooks.shouldRender = true;
+		
 		alloc.resetWithoutDelete();
 	}
 
@@ -265,8 +266,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	static auto oText = g_Hooks.RenderTextHook->GetFastcall<__int64, __int64, C_MinecraftUIRenderContext*>();
 	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
 	DrawUtils::setCtx(renderCtx, dat);
-	if (GameData::shouldHide() || !g_Hooks.shouldRender)
-		return oText(a1, renderCtx);
+	
 
 	{
 		static bool wasConnectedBefore = false;
@@ -304,15 +304,14 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			wasConnectedBefore = true;
 	}
 
+	if (GameData::shouldHide() || !g_Hooks.shouldRender)
+		return oText(a1, renderCtx);
+
 	// Call PreRender() functions
 	moduleMgr->onPreRender(renderCtx);
 	DrawUtils::flush();
 
 	__int64 retval = oText(a1, renderCtx);
-
-#ifdef PERFORMANCE_TEST
-	std::chrono::steady_clock::time_point beginPostRender = std::chrono::steady_clock::now();
-#endif
 
 	bool shouldRenderArrayList = true;
 	bool shouldRenderTabGui = true;
@@ -978,6 +977,8 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3) 
 void Hooks::ClickFunc(__int64 a1, char mouseButton, bool isDown, __int16 mouseX, __int16 mouseY, __int16 a6, __int16 a7, char a8) {
 	static auto oFunc = g_Hooks.ClickFuncHook->GetFastcall<void, __int64, char, bool, __int16, __int16, __int16, __int16, char>();
 	static IModule* clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
+
+	
 
 	if (clickGuiModule == nullptr)
 		clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
