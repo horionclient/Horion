@@ -248,16 +248,19 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	static auto oRender = g_Hooks.UIScene_renderHook->GetFastcall<__int64, C_UIScene*, __int64>();
 
 	g_Hooks.shouldRender = uiscene->isPlayScreen();
+
+	TextHolder alloc;
+	uiscene->getScreenName(&alloc);
+
+	if (alloc.getTextLength() < 100)
+		strcpy_s(g_Hooks.currentScreenName, alloc.getText());
+
 	if (!g_Hooks.shouldRender) {
-		TextHolder alloc;
-
-		uiscene->getScreenName(&alloc);
-
 		if (strcmp(alloc.getText(), "pause_screen") == 0 || strcmp(alloc.getText(), "hud_screen") == 0 || strcmp(alloc.getText(), "start_screen") == 0 || (alloc.getTextLength() >= 11 && strncmp(alloc.getText(), "play_screen", 11)) == 0)
 			g_Hooks.shouldRender = true;
 
-		alloc.resetWithoutDelete();
 	}
+	alloc.resetWithoutDelete();
 
 	return oRender(uiscene, screencontext);
 }
@@ -323,9 +326,26 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 	// Call PostRender() functions
 	{
-		if (ImGui.Button("Yeet", vec2_t(wid.x / 3, wid.y / 3))) {
-			g_Data.getLocalPlayer()->velocity.y = 10;
+		// Main Menu
+		std::string screenName(g_Hooks.currentScreenName);
+		if (strcmp(screenName.c_str(), "start_screen") == 0/* || (screenName.size() >= 11 && strncmp(screenName.c_str(), "play_screen", 11)) == 0*/) { 
+			if (ImGui.Button("Custom Geometry", vec2_t(wid.x * 0.8f, wid.y * 0.9f))) {
+				HorionDataPacket packet;
+				packet.cmd = CMD_FILECHOOSER;
+				packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[200]));
+				strcpy_s((char*)packet.data.get(), 100, "{\"title\": \"Select a 3d objet\", \"filter\":\"Object Files (*.obj)|*.obj\"}");
+				packet.dataArraySize = (int)strlen((char*)packet.data.get());
+				packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
+					wchar_t* filePath = reinterpret_cast<wchar_t*>(pk->data.get());
+					std::wstring filePathStr(filePath);
+					std::thread gamer(SkinUtil::importGeo, filePathStr);
+					gamer.detach();
+				});
+
+				g_Data.sendPacketToInjector(packet);
+			}
 		}
+		
 
 		moduleMgr->onPostRender(renderCtx);
 		static HudModule* hud = moduleMgr->getModule<HudModule>();

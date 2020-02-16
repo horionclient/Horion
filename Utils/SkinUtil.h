@@ -1,11 +1,14 @@
 #pragma once
 
+#include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
 
 #include "Json.hpp"
 #include "Logger.h"
+#include "../Memory/GameData.h"
+#include "../resource.h"
 
 using namespace nlohmann;
 
@@ -29,6 +32,30 @@ namespace MeshStructs {
 
 class SkinUtil {
 public:
+	static void importGeo(std::wstring filePath) {
+		std::ifstream fileStr(filePath, std::ios::in | std::ios::binary);
+		if (fileStr) {
+			std::string contents;
+			fileStr.seekg(0, std::ios::end);
+			contents.resize(fileStr.tellg());
+			fileStr.seekg(0, std::ios::beg);
+			fileStr.read(&contents[0], contents.size());
+			fileStr.close();
+
+			auto hResourceGeometry = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_TEXT1), "TEXT");
+			auto hMemoryGeometry = LoadResource(g_Data.getDllModule(), hResourceGeometry);
+
+			auto sizeGeometry = SizeofResource(g_Data.getDllModule(), hResourceGeometry);
+			auto ptrGeometry = LockResource(hMemoryGeometry);
+			logF("Starting geometry import");
+			std::string moddedGeo = SkinUtil::modGeometry(reinterpret_cast<char*>(ptrGeometry), SkinUtil::objToMesh(contents.c_str()));
+			g_Data.setCustomGeometryOverride(true, std::make_shared<std::string>(moddedGeo));
+			logF("Geometry import done");
+
+			if (hMemoryGeometry)
+				FreeResource(hMemoryGeometry);
+		}
+	}
 	static std::string modGeometry(const char* oldGeoStr, MeshStructs::meshData mesh) {
 		auto oldGeo = std::string(oldGeoStr);
 		json geoMod = json::parse(oldGeo);  // If this crashes, coolroblox json is invalid

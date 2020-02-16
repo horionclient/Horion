@@ -49,6 +49,7 @@ class FuncHook;
 class Hooks {
 private:
 	bool shouldRender = true;
+	char currentScreenName[100];
 
 public:
 	static void Init();
