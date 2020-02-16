@@ -255,6 +255,7 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 
 		if (strcmp(alloc.getText(), "hud_screen") == 0 || strcmp(alloc.getText(), "start_screen") == 0 || (alloc.getTextLength() >= 11 && strncmp(alloc.getText(), "play_screen", 11)) == 0)
 			g_Hooks.shouldRender = true;
+		alloc.resetWithoutDelete();
 	}
 
 	return oRender(uiscene, screencontext);

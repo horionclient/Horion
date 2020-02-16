@@ -13,7 +13,14 @@ enum class Fonts { DEFAULT,
 				   SMOOTH,
 				   RUNE };
 
+using tess_vertex_t = void(__fastcall*)(__int64 _this, float v1, float v2, float v3);
+using tess_end_t = void(__fastcall*)(__int64, __int64 tesselator, __int64*);
+using mce__VertexFormat__disableHalfFloats_t = void(__fastcall*)(__int64, int, int);
+using Tessellator__initializeFormat_t = void(__fastcall*)(__int64, __int64);
+
 extern C_MinecraftUIRenderContext* renderCtx;
+extern mce__VertexFormat__disableHalfFloats_t mce__VertexFormat__disableHalfFloats;
+extern Tessellator__initializeFormat_t Tessellator__initializeFormat;
 
 struct MC_Color {
 	union {
@@ -74,7 +81,19 @@ public:
 	static void setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* guiData);
 	static void flush();
 	static void setColor(float r, float g, float b, float a);  // rgba, values from 0 to 1
-	static inline void tess__begin(__int64 tesselator);
+	static inline void tess__begin(__int64 tesselator) {
+		if (!*(BYTE*)(tesselator + 0x1FC) && !*(BYTE*)(tesselator + 0x1B5)) {
+			mce__VertexFormat__disableHalfFloats(tesselator, 0, 0);  //guessed with tess_begin in 1.12
+			*(BYTE*)(tesselator + 8) = 3;
+			*(BYTE*)(tesselator + 0x1B4) = 0;
+			*(WORD*)(tesselator + 0x1FC) = 1;
+			*(DWORD*)(tesselator + 0x16C) = 0;
+			*(__int64*)(tesselator + 0x150) = *(__int64*)(tesselator + 0x148);
+			if (!*(BYTE*)tesselator)
+				*(BYTE*)(tesselator + 0xD0) = 1;
+			Tessellator__initializeFormat(tesselator + 8, 0x66i64);  //same
+		}
+	}
 	static C_Font* getFont(Fonts font);
 	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = Fonts::SMOOTH);
 
