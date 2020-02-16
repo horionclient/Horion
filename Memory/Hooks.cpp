@@ -1057,7 +1057,7 @@ void Hooks::JumpPower(C_Entity* a1, float a2) {
 
 __int64 Hooks::MinecraftGame_onAppSuspended(__int64 _this) {
 	static auto oFunc = g_Hooks.MinecraftGame_onAppSuspendedHook->GetFastcall<__int64, __int64>();
-	configMgr->saveConfig(configMgr->currentConfig);
+	configMgr->saveConfig();
 	return oFunc(_this);
 }
 

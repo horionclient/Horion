@@ -267,7 +267,7 @@ BOOL __stdcall DllMain(HMODULE hModule,
 	case DLL_PROCESS_DETACH:
 		isRunning = false;
 
-		configMgr->saveConfig(configMgr->currentConfig);
+		configMgr->saveConfig();
 		moduleMgr->disable();
 		cmdMgr->disable();
 		Hooks::Restore();

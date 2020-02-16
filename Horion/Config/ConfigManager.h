@@ -29,7 +29,7 @@ public:
 	std::string currentConfig = "default";
 
 	void loadConfig(std::string name, bool create);
-	void saveConfig(std::string name);
+	void saveConfig();
 	void init();
 };
 
