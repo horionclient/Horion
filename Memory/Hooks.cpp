@@ -329,7 +329,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		// Main Menu
 		std::string screenName(g_Hooks.currentScreenName);
 		if (strcmp(screenName.c_str(), "start_screen") == 0/* || (screenName.size() >= 11 && strncmp(screenName.c_str(), "play_screen", 11)) == 0*/) { 
-			if (ImGui.Button("Custom Geometry", vec2_t(wid.x * 0.8f, wid.y * 0.9f))) {
+			if (ImGui.Button("Custom Geometry", vec2_t(wid.x * 0.7f, wid.y * 0.92f))) {
 				HorionDataPacket packet;
 				packet.cmd = CMD_FILECHOOSER;
 				packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[200]));
