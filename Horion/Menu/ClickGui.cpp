@@ -210,12 +210,12 @@ void ClickGui::renderCategory(Category category) {
 
 	if (ourWindow->isInAnimation) {
 		if (ourWindow->isExtended) {
-			ourWindow->animation -= 0.05f;
-			if (ourWindow->animation <= 0)
+			ourWindow->animation *= 0.85f;
+			if (ourWindow->animation < 0.001f)
 				ourWindow->isInAnimation = false;
 		} else {
-			ourWindow->animation += 0.05f;
-			if (ourWindow->animation >= 1)
+			ourWindow->animation = 1 - ((1 - ourWindow->animation) * 0.85f);
+			if (1 - ourWindow->animation < 0.001f)
 				ourWindow->isInAnimation = false;
 		}
 	}
@@ -224,8 +224,7 @@ void ClickGui::renderCategory(Category category) {
 	// Loop through Modules to display em
 	if (ourWindow->isExtended || ourWindow->isInAnimation) {
 		if (ourWindow->isInAnimation) {
-			currentYOffset -= pow(ourWindow->animation * 10, 3);
-			shouldToggleLeftClick = false;  // Disable Toggles during animations because they can be buggy af
+			currentYOffset -= ourWindow->animation * moduleList.size() * (textHeight + (textPadding * 2));
 		}
 
 		for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it) {
@@ -251,7 +250,7 @@ void ClickGui::renderCategory(Category category) {
 					ClickGuiMod* clickgui = moduleMgr->getModule<ClickGuiMod>();
 					if (clickgui->showTooltips)
 						renderTooltip(&tooltip);
-					if (shouldToggleLeftClick) {  // Are we being clicked?
+					if (shouldToggleLeftClick && !ourWindow->isInAnimation) {  // Are we being clicked?
 						mod->toggle();
 						shouldToggleLeftClick = false;
 					}
@@ -269,7 +268,7 @@ void ClickGui::renderCategory(Category category) {
 				std::vector<SettingEntry*>* settings = mod->getSettings();
 				if (settings->size() > 2 && allowRender) {
 					std::shared_ptr<ClickModule> clickMod = getClickModule(ourWindow, mod->getRawModuleName());
-					if (rectPos.contains(&mousePos) && shouldToggleRightClick) {
+					if (rectPos.contains(&mousePos) && shouldToggleRightClick && !ourWindow->isInAnimation) {
 						shouldToggleRightClick = false;
 						clickMod->isExtended = !clickMod->isExtended;
 					}
@@ -312,7 +311,7 @@ void ClickGui::renderCategory(Category category) {
 								bool isFocused = selectableSurface.contains(&mousePos);
 								// Logic
 								{
-									if (isFocused && shouldToggleLeftClick) {
+									if (isFocused && shouldToggleLeftClick && !ourWindow->isInAnimation) {
 										shouldToggleLeftClick = false;
 										setting->value->_bool = !setting->value->_bool;
 									}
@@ -422,7 +421,7 @@ void ClickGui::renderCategory(Category category) {
 													value = mousePos.x - rect.x;
 												else
 													setting->isDragging = false;
-											} else if (areWeFocused && shouldToggleLeftClick) {
+											} else if (areWeFocused && shouldToggleLeftClick && !ourWindow->isInAnimation) {
 												shouldToggleLeftClick = false;
 												setting->isDragging = true;
 											}
@@ -513,7 +512,7 @@ void ClickGui::renderCategory(Category category) {
 													value = mousePos.x - rect.x;
 												else
 													setting->isDragging = false;
-											} else if (areWeFocused && shouldToggleLeftClick) {
+											} else if (areWeFocused && shouldToggleLeftClick && !ourWindow->isInAnimation) {
 												shouldToggleLeftClick = false;
 												setting->isDragging = true;
 											}
@@ -612,8 +611,8 @@ void ClickGui::renderCategory(Category category) {
 			std::string textStr = categoryName;
 			DrawUtils::drawText(textPos, &textStr, MC_Color(255, 255, 255, 1), textSize);
 			DrawUtils::fillRectangle(rectPos, moduleColor, 1.f);
-			if (ourWindow->isExtended) 
-				DrawUtils::fillRectangle(vec4_t(rectPos.x, rectPos.w - 1, rectPos.z, rectPos.w), selectedModuleColor, 1.f);
+			
+			DrawUtils::fillRectangle(vec4_t(rectPos.x, rectPos.w - 1, rectPos.z, rectPos.w), selectedModuleColor, 1 - ourWindow->animation);
 			// Draw Dash
 			GuiUtils::drawCrossLine(vec2_t(
 										currentXOffset + windowSize->x + paddingRight - (crossSize / 2) - 1.f,
