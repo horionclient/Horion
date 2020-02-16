@@ -3,6 +3,7 @@
 #include "TextHolder.h"
 
 class C_UIScene {
+	/*
 private:
 	virtual ~C_UIScene();
 	// Duplicate destructor
@@ -12,6 +13,7 @@ public:
 	virtual void setSize(__int64 const &);
 
 private:
+	virtual void unknown();
 	virtual __int64 onSetKeyboardHeight(float);
 	virtual __int64 onInternetUpdate(void);
 	virtual __int64 getInputAreas(void) const;
@@ -47,7 +49,7 @@ private:
 	virtual __int64 handleBackEvent(bool);
 	virtual __int64 handleTextChar(__int64 const &, bool, __int64);
 	virtual __int64 handleCaretLocation(int, __int64);
-
+	virtual __int64 unk();
 public:
 	virtual void setTextboxText(__int64 const &);
 
@@ -153,5 +155,14 @@ public:
 	virtual void setupForRendering(__int64 &);
 
 private:
-	virtual __int64 cleanupForRendering(__int64 &);
+	virtual __int64 cleanupForRendering(__int64 &);*/
+
+public:
+	bool isPlayScreen() {
+		return Utils::CallVFunc<52, bool>(this);
+	}
+
+	void getScreenName(TextHolder* txt) {
+		Utils::CallVFunc<64, void, TextHolder*>(this, txt);
+	}
 };
