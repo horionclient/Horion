@@ -3,20 +3,20 @@
 #include "../../include/WinHttpClient.h"
 
 
-AccountInformation::AccountInformation(std::string discordTok, unsigned int serial) : isGuest(false), discordToken(discordTok), serialNum(serial){};
-AccountInformation::AccountInformation() : isGuest(true), discordToken("none"){};
+AccountInformation::AccountInformation(std::string authTok, unsigned int serial) : isGuest(false), authToken(authTok), serialNum(serial){};
+AccountInformation::AccountInformation() : isGuest(true), authToken("none"){};
 
 bool AccountInformation::verify() {
 	if (isGuest)
 		return true;
-	if (discordToken.size() < 10)
+	if (authToken.size() < 10)
 		return false;
 	if (didVerify)
 		return isValid;
 	didVerify = true;
 
 	wchar_t fullUrl[200];
-	swprintf_s(fullUrl, 200, L"http://www.horionbeta.club:50451/api/beta/check?client=%S&serial=%u", discordToken.c_str(), serialNum);
+	swprintf_s(fullUrl, 200, L"http://www.horionbeta.club:50451/api/beta/check?client=%S&serial=%u", authToken.c_str(), serialNum);
 	WinHttpClient client(fullUrl);
 	client.SetTimeouts(1500, 3000, 2000, 3000);
 	bool boi = client.SendHttpRequest();
@@ -35,14 +35,15 @@ bool AccountInformation::verify() {
 			logF("Account verified");
 			isValid = true;
 			return true;
-		}
+		} else
+			logF("Account is a guest account");
 	}
 
 	return false;
 };
 
-AccountInformation AccountInformation::fromToken(std::string discordToken, unsigned int serial) {
-	auto acc = AccountInformation(discordToken, serial);
+AccountInformation AccountInformation::fromToken(std::string authToken, unsigned int serial) {
+	auto acc = AccountInformation(authToken, serial);
 	return acc;
 }
 

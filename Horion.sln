@@ -7,12 +7,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Horion", "Horion.vcxproj", 
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		BetaConf|x64 = BetaConf|x64
+		BetaConf|x86 = BetaConf|x86
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{499784D2-7EA3-4CBE-BD93-EC0DBBC42FCD}.BetaConf|x64.ActiveCfg = BetaConf|x64
+		{499784D2-7EA3-4CBE-BD93-EC0DBBC42FCD}.BetaConf|x64.Build.0 = BetaConf|x64
+		{499784D2-7EA3-4CBE-BD93-EC0DBBC42FCD}.BetaConf|x86.ActiveCfg = BetaConf|Win32
+		{499784D2-7EA3-4CBE-BD93-EC0DBBC42FCD}.BetaConf|x86.Build.0 = BetaConf|Win32
 		{499784D2-7EA3-4CBE-BD93-EC0DBBC42FCD}.Debug|x64.ActiveCfg = Debug|x64
 		{499784D2-7EA3-4CBE-BD93-EC0DBBC42FCD}.Debug|x64.Build.0 = Debug|x64
 		{499784D2-7EA3-4CBE-BD93-EC0DBBC42FCD}.Debug|x86.ActiveCfg = Debug|Win32
