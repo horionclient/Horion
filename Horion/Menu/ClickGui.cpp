@@ -22,6 +22,7 @@ static constexpr float categoryMargin = 0.5f;
 static constexpr float paddingRight = 13.5f;
 static constexpr float crossSize = textHeight / 2.f;
 static constexpr float crossWidth = 0.3f;
+static constexpr float backgroundAlpha = 1;
 static const MC_Color selectedModuleColor = MC_Color(28, 107, 201, 1);
 static const MC_Color moduleColor = MC_Color(13, 29, 48, 1);
 
@@ -245,7 +246,7 @@ void ClickGui::renderCategory(Category category) {
 			// Background
 			if (allowRender) {
 				if (!ourWindow->isInAnimation && !isDragging && rectPos.contains(&mousePos)) {  // Is the Mouse hovering above us?
-					DrawUtils::fillRectangle(rectPos, selectedModuleColor, 1.f);
+					DrawUtils::fillRectangle(rectPos, selectedModuleColor, backgroundAlpha);
 					std::string tooltip = mod->getTooltip();
 					ClickGuiMod* clickgui = moduleMgr->getModule<ClickGuiMod>();
 					if (clickgui->showTooltips)
@@ -255,7 +256,7 @@ void ClickGui::renderCategory(Category category) {
 						shouldToggleLeftClick = false;
 					}
 				} else {
-					DrawUtils::fillRectangle(rectPos, moduleColor, 1.f);
+					DrawUtils::fillRectangle(rectPos, moduleColor, backgroundAlpha);
 				}
 			}
 
@@ -298,27 +299,16 @@ void ClickGui::renderCategory(Category category) {
 								xEnd,
 								0);
 
-#ifdef _DEBUG
-#ifndef DEBUG_DRAW_SELECTABLE_AREA
-//#define DEBUG_DRAW_SELECTABLE_AREA
-#endif
-#endif
-
 							switch (setting->valueType) {
 							case ValueType::BOOL_T: {
 								rectPos.w = currentYOffset + textHeight + (textPadding * 2);
-								DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
+								DrawUtils::fillRectangle(rectPos, moduleColor, backgroundAlpha);
 								vec4_t selectableSurface = vec4_t(
 									textPos.x + textPadding,
 									textPos.y + textPadding,
 									xEnd - textPadding,
 									textPos.y + textHeight - textPadding);
-								// Debugging
-								{
-#ifdef DEBUG_DRAW_SELECTABLE_AREA
-									DrawUtils::drawRectangle(selectableSurface, MC_Color(1, 0, 0, 1), 0.3f);
-#endif
-								}
+
 								bool isFocused = selectableSurface.contains(&mousePos);
 								// Logic
 								{
@@ -363,7 +353,7 @@ void ClickGui::renderCategory(Category category) {
 								}
 							} break;
 							case ValueType::FLOAT_T: {
-								// Text
+								// Text and background
 								{
 									// Convert first letter to uppercase for more friendlieness
 									char name[0x21];
@@ -376,7 +366,7 @@ void ClickGui::renderCategory(Category category) {
 									DrawUtils::drawText(textPos, &elTexto, MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 									currentYOffset += textPadding + textHeight;
 									rectPos.w = currentYOffset;
-									DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
+									DrawUtils::fillRectangle(rectPos, moduleColor, backgroundAlpha);
 								}
 								// Slider
 								{
@@ -385,12 +375,7 @@ void ClickGui::renderCategory(Category category) {
 										currentYOffset + textPadding,
 										xEnd - textPadding,
 										currentYOffset - textPadding + textHeight);
-									// Debugging
-									{
-#ifdef DEBUG_DRAW_SELECTABLE_AREA
-										DrawUtils::fillRectangle(rect, MC_Color(1, 0, 0, 1), 0.3f);
-#endif
-									}
+
 									// Visuals & Logic
 									{
 										rectPos.y = currentYOffset;
@@ -398,8 +383,8 @@ void ClickGui::renderCategory(Category category) {
 										// Background
 										const bool areWeFocused = rect.contains(&mousePos);
 
-										DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);                         // Background
-										DrawUtils::drawRectangle(rect, MC_Color(1.0f, 1.0f, 1.0f, 1.0f), 1.f, 0.7f);  // Slider background
+										DrawUtils::fillRectangle(rectPos, moduleColor, backgroundAlpha);              // Background
+										DrawUtils::drawRectangle(rect, MC_Color(1.0f, 1.0f, 1.0f, 1.0f), 1.f, backgroundAlpha);  // Slider background
 
 										const float minValue = setting->minValue->_float;
 										const float maxValue = setting->maxValue->_float - minValue;
@@ -457,7 +442,9 @@ void ClickGui::renderCategory(Category category) {
 								}
 							} break;
 							case ValueType::INT_T: {
-								// Text
+
+								
+								// Text and background
 								{
 									// Convert first letter to uppercase for more friendlieness
 									char name[0x21];
@@ -470,7 +457,7 @@ void ClickGui::renderCategory(Category category) {
 									DrawUtils::drawText(textPos, &elTexto, MC_Color(1.0f, 1.0f, 1.0f, 1.0f), textSize);
 									currentYOffset += textPadding + textHeight;
 									rectPos.w = currentYOffset;
-									DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);
+									DrawUtils::fillRectangle(rectPos, moduleColor, backgroundAlpha);
 								}
 								// Slider
 								{
@@ -479,12 +466,7 @@ void ClickGui::renderCategory(Category category) {
 										currentYOffset + textPadding,
 										xEnd - textPadding,
 										currentYOffset - textPadding + textHeight);
-									// Debugging
-									{
-#ifdef DEBUG_DRAW_SELECTABLE_AREA
-										DrawUtils::fillRectangle(rect, MC_Color(1, 0, 0, 1), 0.3f);
-#endif
-									}
+
 									// Visuals & Logic
 									{
 										rectPos.y = currentYOffset;
@@ -492,8 +474,8 @@ void ClickGui::renderCategory(Category category) {
 										// Background
 										const bool areWeFocused = rect.contains(&mousePos);
 
-										DrawUtils::fillRectangle(rectPos, moduleColor, 0.7f);                         // Background
-										DrawUtils::drawRectangle(rect, MC_Color(1.0f, 1.0f, 1.0f, 1.0f), 1.f, 0.7f);  // Slider background
+										DrawUtils::fillRectangle(rectPos, moduleColor, backgroundAlpha);              // Background
+										DrawUtils::drawRectangle(rect, MC_Color(1.0f, 1.0f, 1.0f, 1.0f), 1.f, backgroundAlpha);  // Slider background
 
 										const float minValue = (float)setting->minValue->_int;
 										const float maxValue = (float)setting->maxValue->_int - minValue;
