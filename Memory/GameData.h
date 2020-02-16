@@ -90,6 +90,12 @@ public:
 	inline void setAccountInformation(AccountInformation newAcc) {
 		if (newAcc.verify())
 			this->accountInformation = newAcc;
+		else {
+			#ifdef _BETA
+			this->terminate();
+			*reinterpret_cast<int*>(0) = 1;
+			#endif
+		}
 	}
 	inline void sendPacketToInjector(HorionDataPacket horionDataPack) {
 		if (!isInjectorConnectionActive())
