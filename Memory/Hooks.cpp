@@ -258,7 +258,6 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	if (!g_Hooks.shouldRender) {
 		if (strcmp(alloc.getText(), "pause_screen") == 0 || strcmp(alloc.getText(), "hud_screen") == 0 || strcmp(alloc.getText(), "start_screen") == 0 || (alloc.getTextLength() >= 11 && strncmp(alloc.getText(), "play_screen", 11)) == 0)
 			g_Hooks.shouldRender = true;
-
 	}
 	alloc.resetWithoutDelete();
 
@@ -324,12 +323,39 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	bool shouldRenderCoords = false;
 	bool shouldRenderWatermark = true;
 
+	static float rcolors[4];          // Rainbow color array RGBA
+	static float disabledRcolors[4];  // Rainbow Colors, but for disabled modules
+	static float currColor[4];        // ArrayList collors
+
+	// Rainbow color updates
+	{
+		DrawUtils::rainbow(rcolors);  // Increase Hue of rainbow color array
+		disabledRcolors[0] = min(1, rcolors[0] * 0.4f + 0.2f);
+		disabledRcolors[1] = min(1, rcolors[1] * 0.4f + 0.2f);
+		disabledRcolors[2] = min(1, rcolors[2] * 0.4f + 0.2f);
+		disabledRcolors[3] = 1;
+	}
+
 	// Call PostRender() functions
 	{
+		moduleMgr->onPostRender(renderCtx);
+
 		// Main Menu
 		std::string screenName(g_Hooks.currentScreenName);
-		if (strcmp(screenName.c_str(), "start_screen") == 0/* || (screenName.size() >= 11 && strncmp(screenName.c_str(), "play_screen", 11)) == 0*/) { 
-			if (ImGui.Button("Custom Geometry", vec2_t(wid.x * 0.7f, wid.y * 0.92f))) {
+		if (strcmp(screenName.c_str(), "start_screen") == 0 /* || (screenName.size() >= 11 && strncmp(screenName.c_str(), "play_screen", 11)) == 0*/) {
+			// Draw BIG epic horion watermark
+			{
+				std::string text = "H O R I O N";
+				vec2_t textPos = vec2_t(wid.x / 2.f - DrawUtils::getTextWidth(&text, 8.f) / 2.f, wid.y / 9.5f);
+				vec4_t rectPos = vec4_t(textPos.x - 55.f, textPos.y - 15.f, textPos.x + DrawUtils::getTextWidth(&text, 8.f) + 55.f, textPos.y + 75.f);
+				DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
+				DrawUtils::drawRectangle(rectPos, rcolors, 1.f, 2.f);
+				DrawUtils::drawText(textPos, &text, MC_Color(255, 255, 255, 1), 8.f);
+			
+			}
+
+			// Draw Custom Geo Button
+			if (ImGui.Button("Custom Geometry", vec2_t(wid.x * 0.765f, wid.y * 0.92f))) {
 				HorionDataPacket packet;
 				packet.cmd = CMD_FILECHOOSER;
 				packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[200]));
@@ -344,243 +370,229 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 				g_Data.sendPacketToInjector(packet);
 			}
-		}
-		
+		} else {
+			static HudModule* hud = moduleMgr->getModule<HudModule>();
+			if (hud == nullptr)
+				hud = moduleMgr->getModule<HudModule>();
+			else {
+				shouldRenderTabGui = hud->tabgui && hud->isEnabled();
+				shouldRenderArrayList = hud->arraylist && hud->isEnabled();
+				shouldRenderCoords = hud->coordinates && hud->isEnabled();
+				shouldRenderWatermark = hud->watermark && hud->isEnabled();
+			}
 
-		moduleMgr->onPostRender(renderCtx);
-		static HudModule* hud = moduleMgr->getModule<HudModule>();
-		if (hud == nullptr)
-			hud = moduleMgr->getModule<HudModule>();
-		else {
-			shouldRenderTabGui = hud->tabgui && hud->isEnabled();
-			shouldRenderArrayList = hud->arraylist && hud->isEnabled();
-			shouldRenderCoords = hud->coordinates && hud->isEnabled();
-			shouldRenderWatermark = hud->watermark && hud->isEnabled();
-		}
+			static IModule* ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
+			if (ClickGuiModule == nullptr)
+				ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
+			else if (ClickGuiModule->isEnabled()) {
+				ClickGui::render();
+				shouldRenderArrayList = false;
+				shouldRenderCoords = false;
+				shouldRenderTabGui = false;
+				shouldRenderWatermark = false;
+			}
 
-		static IModule* ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
-		if (ClickGuiModule == nullptr)
-			ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
-		else if (ClickGuiModule->isEnabled()) {
-			ClickGui::render();
-			shouldRenderArrayList = false;
-			shouldRenderCoords = false;
-			shouldRenderTabGui = false;
-			shouldRenderWatermark = false;
-		}
+			if (shouldRenderTabGui) TabGui::render();
 
-		if (shouldRenderTabGui) TabGui::render();
-	}
+			{
+				// Display ArrayList on the Right?
+				static constexpr bool isOnRightSide = true;
 
-	{
-		// Display ArrayList on the Right?
-		static constexpr bool isOnRightSide = true;
-		static float rcolors[4];          // Rainbow color array RGBA
-		static float disabledRcolors[4];  // Rainbow Colors, but for disabled modules
-		static float currColor[4];        // ArrayList collors
+				float yOffset = 0;  // Offset of next Text
+				vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+				vec2_t windowSizeReal = g_Data.getClientInstance()->getGuiData()->windowSizeReal;
 
-		float yOffset = 0;  // Offset of next Text
-		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
-		vec2_t windowSizeReal = g_Data.getClientInstance()->getGuiData()->windowSizeReal;
+				vec2_t mousePos = *g_Data.getClientInstance()->getMousePos();
+				mousePos.div(windowSizeReal);
+				mousePos.mul(windowSize);
 
-		vec2_t mousePos = *g_Data.getClientInstance()->getMousePos();
-		mousePos.div(windowSizeReal);
-		mousePos.mul(windowSize);
+				// Draw Horion logo
+				static HudModule* hud = moduleMgr->getModule<HudModule>();
+				if (hud == nullptr)
+					hud = moduleMgr->getModule<HudModule>();
+				else if (shouldRenderWatermark) {
+					constexpr float nameTextSize = 1.5f;
+					constexpr float versionTextSize = 0.7f;
+					static const float textHeight = (nameTextSize + versionTextSize * 0.7f /* We don't quite want the version string in its own line, just a bit below the name */) * DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight();
+					constexpr float borderPadding = 1;
+					constexpr float margin = 5;
 
-		// Rainbow color updates
-		{
-			DrawUtils::rainbow(rcolors);  // Increase Hue of rainbow color array
-			disabledRcolors[0] = min(1, rcolors[0] * 0.4f + 0.2f);
-			disabledRcolors[1] = min(1, rcolors[1] * 0.4f + 0.2f);
-			disabledRcolors[2] = min(1, rcolors[2] * 0.4f + 0.2f);
-			disabledRcolors[3] = 1;
-		}
-
-		// Draw Horion logo
-		static HudModule* hud = moduleMgr->getModule<HudModule>();
-		if (hud == nullptr)
-			hud = moduleMgr->getModule<HudModule>();
-		else if (shouldRenderWatermark) {
-			constexpr float nameTextSize = 1.5f;
-			constexpr float versionTextSize = 0.7f;
-			static const float textHeight = (nameTextSize + versionTextSize * 0.7f /* We don't quite want the version string in its own line, just a bit below the name */) * DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight();
-			constexpr float borderPadding = 1;
-			constexpr float margin = 5;
-
-			static std::string name = "Horion";
+					static std::string name = "Horion";
 #ifdef _DEBUG
-			static std::string version = "dev";
+					static std::string version = "dev";
 #elif defined _BETA
-			static std::string version = "beta";
+					static std::string version = "beta";
 #else
-			static std::string version = "public";
+					static std::string version = "public";
 #endif
 
-			float nameLength = DrawUtils::getTextWidth(&name, nameTextSize);
-			float fullTextLength = nameLength + DrawUtils::getTextWidth(&version, versionTextSize);
-			vec4_t rect = vec4_t(
-				windowSize.x - margin - fullTextLength - borderPadding * 2,
-				windowSize.y - margin - textHeight,
-				windowSize.x - margin + borderPadding,
-				windowSize.y - margin);
+					float nameLength = DrawUtils::getTextWidth(&name, nameTextSize);
+					float fullTextLength = nameLength + DrawUtils::getTextWidth(&version, versionTextSize);
+					vec4_t rect = vec4_t(
+						windowSize.x - margin - fullTextLength - borderPadding * 2,
+						windowSize.y - margin - textHeight,
+						windowSize.x - margin + borderPadding,
+						windowSize.y - margin);
 
-			DrawUtils::drawRectangle(rect, MC_Color(13, 29, 48, 1), 1.f, 2.f);
-			DrawUtils::fillRectangle(rect, MC_Color(rcolors), 1.f);
-			DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, MC_Color(6, 15, 24, 1), nameTextSize);
-			DrawUtils::drawText(vec2_t(rect.x + borderPadding + nameLength, rect.w - 7), &version, MC_Color(0, 0, 0, 0), versionTextSize);
-		}
-
-		// Draw ArrayList
-		if (moduleMgr->isInitialized() && shouldRenderArrayList) {
-			struct IModuleContainer {
-				// Struct used to Sort IModules in a std::set
-				IModule* backingModule;
-				std::string moduleName;
-				bool enabled;
-				int keybind;
-				float textWidth;
-				vec2_t* pos;
-				bool shouldRender = true;
-
-				IModuleContainer(IModule* mod) {
-					const char* moduleNameChr = mod->getModuleName();
-					this->enabled = mod->isEnabled();
-					this->keybind = mod->getKeybind();
-					this->backingModule = mod;
-					this->pos = mod->getPos();
-
-					if (keybind == 0x0)
-						moduleName = moduleNameChr;
-					else {
-						char text[50];
-						sprintf_s(text, 50, "%s%s", moduleNameChr, hud->keybinds ? std::string(" [" + std::string(Utils::getKeybindName(keybind)) + "]").c_str() : "");
-						moduleName = text;
-					}
-
-					if (!this->enabled && *this->pos == vec2_t(0.f, 0.f))
-						this->shouldRender = false;
-					this->textWidth = DrawUtils::getTextWidth(&moduleName);
+					DrawUtils::drawRectangle(rect, MC_Color(13, 29, 48, 1), 1.f, 2.f);
+					DrawUtils::fillRectangle(rect, MC_Color(rcolors), 1.f);
+					DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, MC_Color(6, 15, 24, 1), nameTextSize);
+					DrawUtils::drawText(vec2_t(rect.x + borderPadding + nameLength, rect.w - 7), &version, MC_Color(0, 0, 0, 0), versionTextSize);
 				}
 
-				bool operator<(const IModuleContainer& other) const {
-					/*if (enabled) {
+				// Draw ArrayList
+				if (moduleMgr->isInitialized() && shouldRenderArrayList) {
+					struct IModuleContainer {
+						// Struct used to Sort IModules in a std::set
+						IModule* backingModule;
+						std::string moduleName;
+						bool enabled;
+						int keybind;
+						float textWidth;
+						vec2_t* pos;
+						bool shouldRender = true;
+
+						IModuleContainer(IModule* mod) {
+							const char* moduleNameChr = mod->getModuleName();
+							this->enabled = mod->isEnabled();
+							this->keybind = mod->getKeybind();
+							this->backingModule = mod;
+							this->pos = mod->getPos();
+
+							if (keybind == 0x0)
+								moduleName = moduleNameChr;
+							else {
+								char text[50];
+								sprintf_s(text, 50, "%s%s", moduleNameChr, hud->keybinds ? std::string(" [" + std::string(Utils::getKeybindName(keybind)) + "]").c_str() : "");
+								moduleName = text;
+							}
+
+							if (!this->enabled && *this->pos == vec2_t(0.f, 0.f))
+								this->shouldRender = false;
+							this->textWidth = DrawUtils::getTextWidth(&moduleName);
+						}
+
+						bool operator<(const IModuleContainer& other) const {
+							/*if (enabled) {
 						if (!other.enabled)  // We are enabled
 							return true;
 					} else if (other.enabled)  // They are enabled
 						return false;*/
 
-					if (this->textWidth == other.textWidth)
-						return moduleName < other.moduleName;
-					return this->textWidth > other.textWidth;
-				}
-			};
+							if (this->textWidth == other.textWidth)
+								return moduleName < other.moduleName;
+							return this->textWidth > other.textWidth;
+						}
+					};
 
-			// Parameters
-			static constexpr float textPadding = 1.0f;
-			static constexpr float textSize = 1.0f;
-			static constexpr float textHeight = textSize * 10.0f;
-			static constexpr float smoothness = 2;
+					// Parameters
+					static constexpr float textPadding = 1.0f;
+					static constexpr float textSize = 1.0f;
+					static constexpr float textHeight = textSize * 10.0f;
+					static constexpr float smoothness = 2;
 
-			// Mouse click detector
-			static bool wasLeftMouseDown = GameData::isLeftClickDown();  // Last isDown value
-			bool leftMouseDown = GameData::isLeftClickDown();            // current isDown value
+					// Mouse click detector
+					static bool wasLeftMouseDown = GameData::isLeftClickDown();  // Last isDown value
+					bool leftMouseDown = GameData::isLeftClickDown();            // current isDown value
 
-			bool executeClick = leftMouseDown && leftMouseDown != wasLeftMouseDown;  // isDown == true AND (current state IS NOT last state)
-			wasLeftMouseDown = leftMouseDown;                                        // Set last isDown value
+					bool executeClick = leftMouseDown && leftMouseDown != wasLeftMouseDown;  // isDown == true AND (current state IS NOT last state)
+					wasLeftMouseDown = leftMouseDown;                                        // Set last isDown value
 
-			std::set<IModuleContainer> modContainerList;
-			// Fill modContainerList with Modules
-			{
-				std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
-
-				for (auto it : *moduleList) {
-					//if (it->isEnabled())
+					std::set<IModuleContainer> modContainerList;
+					// Fill modContainerList with Modules
 					{
-						HudModule* hud = moduleMgr->getModule<HudModule>();
-						if (it != hud) modContainerList.emplace(IModuleContainer(it));
+						std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
+
+						for (auto it : *moduleList) {
+							//if (it->isEnabled())
+							{
+								HudModule* hud = moduleMgr->getModule<HudModule>();
+								if (it != hud) modContainerList.emplace(IModuleContainer(it));
+							}
+						}
 					}
+
+					int a = 0;
+					int b = 0;
+					int c = 0;
+
+					// Loop through mods to display Labels
+					for (std::set<IModuleContainer>::iterator it = modContainerList.begin(); it != modContainerList.end(); ++it) {
+						if (!it->shouldRender)
+							continue;
+
+						std::string textStr = it->moduleName;
+						float textWidth = it->textWidth;
+
+						float xOffsetOri = windowSize.x - textWidth - (textPadding * 2);
+
+						float xOffset = windowSize.x - it->pos->x;
+
+						it->pos->x += smoothness;
+
+						if (xOffset < xOffsetOri) {
+							xOffset = xOffsetOri;
+						}
+						if (!it->enabled) {
+							xOffset += it->pos->y;
+							it->pos->y += smoothness;
+						}
+						if (xOffset >= windowSize.x && !it->enabled) {
+							it->pos->x = 0.f;
+							it->pos->y = 0.f;
+						}
+
+						vec2_t textPos = vec2_t(
+							xOffset + textPadding,
+							yOffset + textPadding);
+						vec4_t rectPos = vec4_t(
+							xOffset - 2,
+							yOffset,
+							isOnRightSide ? windowSize.x : textWidth + (textPadding * 2),
+							yOffset + textPadding * 2 + textHeight);
+						vec4_t leftRect = vec4_t(
+							xOffset - 2,
+							yOffset,
+							xOffset - 1,
+							yOffset + textPadding * 2 + textHeight);
+						c++;
+						b++;
+						if (b < 20)
+							a = moduleMgr->getEnabledModuleCount() * 2;
+						else
+							b = 0;
+						currColor[3] = rcolors[3];
+						Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[1], rcolors[2], currColor[0], currColor[1], currColor[2]);
+						currColor[0] += 1.f / a * c;
+						Utils::ColorConvertHSVtoRGB(currColor[0], currColor[1], currColor[2], currColor[0], currColor[1], currColor[2]);
+
+						DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
+						DrawUtils::fillRectangle(leftRect, MC_Color(currColor), 1.f);
+						if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos) && hud->clickToggle) {
+							vec4_t selectedRect = rectPos;
+							selectedRect.x = leftRect.z;
+							if (leftMouseDown) {
+								DrawUtils::fillRectangle(selectedRect, MC_Color(0.8f, 0.8f, 0.8f, 0.1f), 0.8f);
+								if (executeClick)
+									it->backingModule->toggle();
+							} else
+								DrawUtils::fillRectangle(selectedRect, MC_Color(0.8f, 0.8f, 0.8f, 0.8f), 0.3f);
+						}
+						DrawUtils::drawText(textPos, &textStr, MC_Color(currColor), textSize);
+
+						yOffset += textHeight + (textPadding * 2);
+					}
+					c = 0;
+					modContainerList.clear();
+				}
+
+				// Draw coordinates
+				if (moduleMgr->isInitialized() && shouldRenderCoords && g_Data.getLocalPlayer() != nullptr) {
+					vec3_t* pos = g_Data.getLocalPlayer()->getPos();
+					std::string coords = "XYZ: " + std::to_string((int)pos->x) + " / " + std::to_string((int)pos->y) + " / " + std::to_string((int)pos->z);
+					DrawUtils::drawText(vec2_t(5.f, shouldRenderTabGui ? windowSize.y - 12.f : 2.f), &coords, MC_Color(), 1.f);
 				}
 			}
-
-			int a = 0;
-			int b = 0;
-			int c = 0;
-
-			// Loop through mods to display Labels
-			for (std::set<IModuleContainer>::iterator it = modContainerList.begin(); it != modContainerList.end(); ++it) {
-				if (!it->shouldRender)
-					continue;
-
-				std::string textStr = it->moduleName;
-				float textWidth = it->textWidth;
-
-				float xOffsetOri = windowSize.x - textWidth - (textPadding * 2);
-
-				float xOffset = windowSize.x - it->pos->x;
-
-				it->pos->x += smoothness;
-
-				if (xOffset < xOffsetOri) {
-					xOffset = xOffsetOri;
-				}
-				if (!it->enabled) {
-					xOffset += it->pos->y;
-					it->pos->y += smoothness;
-				}
-				if (xOffset >= windowSize.x && !it->enabled) {
-					it->pos->x = 0.f;
-					it->pos->y = 0.f;
-				}
-
-				vec2_t textPos = vec2_t(
-					xOffset + textPadding,
-					yOffset + textPadding);
-				vec4_t rectPos = vec4_t(
-					xOffset - 2,
-					yOffset,
-					isOnRightSide ? windowSize.x : textWidth + (textPadding * 2),
-					yOffset + textPadding * 2 + textHeight);
-				vec4_t leftRect = vec4_t(
-					xOffset - 2,
-					yOffset,
-					xOffset - 1,
-					yOffset + textPadding * 2 + textHeight);
-				c++;
-				b++;
-				if (b < 20)
-					a = moduleMgr->getEnabledModuleCount() * 2;
-				else
-					b = 0;
-				currColor[3] = rcolors[3];
-				Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[1], rcolors[2], currColor[0], currColor[1], currColor[2]);
-				currColor[0] += 1.f / a * c;
-				Utils::ColorConvertHSVtoRGB(currColor[0], currColor[1], currColor[2], currColor[0], currColor[1], currColor[2]);
-
-				DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
-				DrawUtils::fillRectangle(leftRect, MC_Color(currColor), 1.f);
-				if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos) && hud->clickToggle) {
-					vec4_t selectedRect = rectPos;
-					selectedRect.x = leftRect.z;
-					if (leftMouseDown) {
-						DrawUtils::fillRectangle(selectedRect, MC_Color(0.8f, 0.8f, 0.8f, 0.1f), 0.8f);
-						if (executeClick)
-							it->backingModule->toggle();
-					} else
-						DrawUtils::fillRectangle(selectedRect, MC_Color(0.8f, 0.8f, 0.8f, 0.8f), 0.3f);
-				}
-				DrawUtils::drawText(textPos, &textStr, MC_Color(currColor), textSize);
-
-				yOffset += textHeight + (textPadding * 2);
-			}
-			c = 0;
-			modContainerList.clear();
-		}
-
-		// Draw coordinates
-		if (moduleMgr->isInitialized() && shouldRenderCoords && g_Data.getLocalPlayer() != nullptr) {
-			vec3_t* pos = g_Data.getLocalPlayer()->getPos();
-			std::string coords = "XYZ: " + std::to_string((int)pos->x) + " / " + std::to_string((int)pos->y) + " / " + std::to_string((int)pos->z);
-			DrawUtils::drawText(vec2_t(5.f, shouldRenderTabGui ? windowSize.y - 12.f : 2.f), &coords, MC_Color(), 1.f);
 		}
 	}
 
@@ -1169,7 +1181,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 			auto overrideGeo = std::get<1>(geoOverride);
 			newGeometryData = new TextHolder(*overrideGeo.get());
 		} else {  // Default Skin
-				  /*char* str;  // Obj text
+			/*char* str;  // Obj text
 			{
 				auto hResourceObj = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_OBJ), "TEXT");
 				auto hMemoryObj = LoadResource(g_Data.getDllModule(), hResourceObj);
