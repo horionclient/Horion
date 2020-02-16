@@ -58,6 +58,7 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 				bool* oldKey = reinterpret_cast<bool*>(clickMap + key);
 				if (newKey != *oldKey) {
 					ClickGui::onMouseClickUpdate((int)key, newKey);
+					ImGui.onMouseClickUpdate((int)key, newKey);
 				}
 			}
 

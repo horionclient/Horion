@@ -208,6 +208,7 @@
     <ClCompile Include="Horion\DrawUtils.cpp" />
     <ClCompile Include="Horion\FriendList\FriendList.cpp" />
     <ClCompile Include="Horion\GuiUtils.cpp" />
+    <ClCompile Include="Horion\ImmediateGui.cpp" />
     <ClCompile Include="Horion\Loader.cpp" />
     <ClCompile Include="Horion\Menu\ClickGui.cpp" />
     <ClCompile Include="Horion\Menu\TabGui.cpp" />
@@ -299,6 +300,7 @@
     <ClInclude Include="Horion\DrawUtils.h" />
     <ClInclude Include="Horion\FriendList\FriendList.h" />
     <ClInclude Include="Horion\GuiUtils.h" />
+    <ClInclude Include="Horion\ImmediateGui.h" />
     <ClInclude Include="Horion\Loader.h" />
     <ClInclude Include="Horion\Menu\ClickGui.h" />
     <ClInclude Include="Horion\Menu\TabGui.h" />

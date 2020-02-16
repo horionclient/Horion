@@ -40,39 +40,8 @@ void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>*
 	}
 }
 
-// Stolen from IMGUI
-unsigned int ClickGui::getCrcHash(const char* str, int seed) {
-	static unsigned int crc32_lut[256] = {0};
-	if (!crc32_lut[1]) {
-		const unsigned int polynomial = 0xEDB88320;
-		for (unsigned int i = 0; i < 256; i++) {
-			unsigned int crc = i;
-			for (unsigned int j = 0; j < 8; j++)
-				crc = (crc >> 1) ^ (((unsigned int)(-((int)(crc & 1)))) & polynomial);
-			crc32_lut[i] = crc;
-		}
-	}
-
-	seed = ~seed;
-	unsigned int crc = seed;
-	const unsigned char* current = (const unsigned char*)str;
-	{
-		// Zero-terminated string
-		while (unsigned char c = *current++) {
-			// We support a syntax of "label###id" where only "###id" is included in the hash, and only "label" gets displayed.
-			// Because this syntax is rarely used we are optimizing for the common case.
-			// - If we reach ### in the string we discard the hash so far and reset to the seed.
-			// - We don't do 'current += 2; continue;' after handling ### to keep the code smaller.
-			if (c == '#' && current[0] == '#' && current[1] == '#')
-				crc = seed;
-			crc = (crc >> 8) ^ crc32_lut[(crc & 0xFF) ^ c];
-		}
-	}
-	return ~crc;
-}
-
 std::shared_ptr<ClickWindow> ClickGui::getWindow(const char* name) {
-	unsigned int id = getCrcHash(name);
+	unsigned int id = Utils::getCrcHash(name);
 
 	auto search = windowMap.find(id);
 	if (search != windowMap.end()) {  // Window exists already
@@ -87,7 +56,7 @@ std::shared_ptr<ClickWindow> ClickGui::getWindow(const char* name) {
 }
 
 std::shared_ptr<ClickModule> ClickGui::getClickModule(std::shared_ptr<ClickWindow> window, const char* name) {
-	unsigned int id = getCrcHash(name);
+	unsigned int id = Utils::getCrcHash(name);
 
 	auto search = window->moduleMap.find(id);
 	if (search != window->moduleMap.end()) {  // Window exists already
@@ -589,7 +558,7 @@ void ClickGui::renderCategory(Category category) {
 
 		// Dragging Logic
 		{
-			if (isDragging && getCrcHash(categoryName) == draggedWindow) {  // WE are being dragged
+			if (isDragging && Utils::getCrcHash(categoryName) == draggedWindow) {  // WE are being dragged
 				if (isLeftClickDown) {                                      // Still dragging
 					vec2_t diff = vec2_t(mousePos).sub(dragStart);
 					ourWindow->pos.add(diff);
@@ -599,7 +568,7 @@ void ClickGui::renderCategory(Category category) {
 				}
 			} else if (rectPos.contains(&mousePos) && shouldToggleLeftClick) {
 				isDragging = true;
-				draggedWindow = getCrcHash(categoryName);
+				draggedWindow = Utils::getCrcHash(categoryName);
 				shouldToggleLeftClick = false;
 				dragStart = mousePos;
 			}

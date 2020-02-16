@@ -255,7 +255,7 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 
 		if (strcmp(alloc.getText(), "pause_screen") == 0 || strcmp(alloc.getText(), "hud_screen") == 0 || strcmp(alloc.getText(), "start_screen") == 0 || (alloc.getTextLength() >= 11 && strncmp(alloc.getText(), "play_screen", 11)) == 0)
 			g_Hooks.shouldRender = true;
-		
+
 		alloc.resetWithoutDelete();
 	}
 
@@ -266,7 +266,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	static auto oText = g_Hooks.RenderTextHook->GetFastcall<__int64, __int64, C_MinecraftUIRenderContext*>();
 	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
 	DrawUtils::setCtx(renderCtx, dat);
-	
+
 	{
 		static bool wasConnectedBefore = false;
 		static LARGE_INTEGER start;
@@ -306,6 +306,10 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	if (GameData::shouldHide() || !g_Hooks.shouldRender)
 		return oText(a1, renderCtx);
 
+	ImGui.startFrame();
+
+	auto wid = g_Data.getClientInstance()->getGuiData()->windowSize;
+
 	// Call PreRender() functions
 	moduleMgr->onPreRender(renderCtx);
 	DrawUtils::flush();
@@ -319,6 +323,10 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 	// Call PostRender() functions
 	{
+		if (ImGui.Button("Yeet", vec2_t(wid.x / 3, wid.y / 3))) {
+			g_Data.getLocalPlayer()->velocity.y = 10;
+		}
+
 		moduleMgr->onPostRender(renderCtx);
 		static HudModule* hud = moduleMgr->getModule<HudModule>();
 		if (hud == nullptr)
@@ -556,6 +564,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		}
 	}
 
+	ImGui.endFrame();
 	DrawUtils::flush();
 
 	return retval;
@@ -971,8 +980,6 @@ void Hooks::ClickFunc(__int64 a1, char mouseButton, bool isDown, __int16 mouseX,
 	static auto oFunc = g_Hooks.ClickFuncHook->GetFastcall<void, __int64, char, bool, __int16, __int16, __int16, __int16, char>();
 	static IModule* clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 
-	
-
 	if (clickGuiModule == nullptr)
 		clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 	else if (clickGuiModule->isEnabled()) {
@@ -1142,7 +1149,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 			auto overrideGeo = std::get<1>(geoOverride);
 			newGeometryData = new TextHolder(*overrideGeo.get());
 		} else {  // Default Skin
-			/*char* str;  // Obj text
+				  /*char* str;  // Obj text
 			{
 				auto hResourceObj = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_OBJ), "TEXT");
 				auto hMemoryObj = LoadResource(g_Data.getDllModule(), hResourceObj);

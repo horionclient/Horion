@@ -38,7 +38,6 @@ private:
 
 	static void renderCategory(Category category);
 	inline static void getModuleListByCategory(Category category, std::vector<IModule*>* modList);
-	inline static unsigned int getCrcHash(const char* str, int seed = 0);
 
 public:
 	static void init();

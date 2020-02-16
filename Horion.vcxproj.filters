@@ -2653,6 +2653,7 @@
     <ClCompile Include="Horion\Command\Commands\*.cpp" />
     <ClCompile Include="Horion\Command\Commands\*.cpp" />
     <ClCompile Include="Utils\SkinUtil.cpp" />
+    <ClCompile Include="Horion\ImmediateGui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -5344,6 +5345,7 @@
     <ClInclude Include="Horion\Command\Commands\*.h" />
     <ClInclude Include="Horion\Command\Commands\*.h" />
     <ClInclude Include="Utils\SkinUtil.h" />
+    <ClInclude Include="Horion\ImmediateGui.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Horion.rc" />

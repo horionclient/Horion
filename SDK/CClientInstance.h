@@ -383,7 +383,11 @@ public:
 private:
 	virtual __int64 useController(void) const;
 	virtual __int64 useTouchscreen(void) const;
-	virtual __int64 getMouseGrabbed(void) const;
+
+public:
+	virtual bool getMouseGrabbed(void) const;
+
+private:
 	virtual __int64 currentInputModeIsGamePadOrMotionController(void) const;
 	virtual __int64 currentInputModeIsMouseAndKeyboard(void) const;
 	virtual __int64 getForceMonoscopic(void) const;
