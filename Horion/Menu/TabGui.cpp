@@ -15,10 +15,10 @@ struct SelectedItemInformation {
 	}
 
 	void rollback() {
-		rollbackVal *= 0.9f;
+		rollbackVal *= 0.7f;
 	}
 	void rollin() {
-		rollbackVal = 1 - ((1 - rollbackVal) * 0.9f);
+		rollbackVal = 1 - ((1 - rollbackVal) * 0.7f);
 	}
 };
 
@@ -150,6 +150,8 @@ void TabGui::renderLevel() {
 void TabGui::render() {
 	if (!moduleMgr->isInitialized())
 		return;
+	if (!GameData::canUseMoveKeys()) 
+		level = -1;
 	renderedLevel = 0;
 	yOffset = 4;
 	xOffset = 3;
@@ -185,7 +187,10 @@ void TabGui::init() {
 }
 
 void TabGui::onKeyUpdate(int key, bool isDown) {
-	if (!GameData::canUseMoveKeys()) return;
+	if (!GameData::canUseMoveKeys()) {
+		level = -1;
+		return;
+	}
 
 	if (!isDown) {
 		if (key == VK_RIGHT)

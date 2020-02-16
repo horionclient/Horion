@@ -267,7 +267,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
 	DrawUtils::setCtx(renderCtx, dat);
 	
-
 	{
 		static bool wasConnectedBefore = false;
 		static LARGE_INTEGER start;
@@ -452,7 +451,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			static constexpr float textPadding = 1.0f;
 			static constexpr float textSize = 1.0f;
 			static constexpr float textHeight = textSize * 10.0f;
-			static constexpr float smoothNess = 0.95f;
+			static constexpr float smoothness = 2;
 
 			// Mouse click detector
 			static bool wasLeftMouseDown = GameData::isLeftClickDown();  // Last isDown value
@@ -491,14 +490,14 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 				float xOffset = windowSize.x - it->pos->x;
 
-				it->pos->x += smoothNess;
+				it->pos->x += smoothness;
 
 				if (xOffset < xOffsetOri) {
 					xOffset = xOffsetOri;
 				}
 				if (!it->enabled) {
 					xOffset += it->pos->y;
-					it->pos->y += smoothNess;
+					it->pos->y += smoothness;
 				}
 				if (xOffset >= windowSize.x && !it->enabled) {
 					it->pos->x = 0.f;
@@ -558,12 +557,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	}
 
 	DrawUtils::flush();
-
-#ifdef PERFORMANCE_TEST
-	std::chrono::steady_clock::time_point endRender = std::chrono::steady_clock::now();
-	//logF("PreRender: %.1f", std::chrono::duration_cast<std::chrono::microseconds>(endPreRender - beginPreRender).count() / 1000.f);
-	logF("Render: %.2fms", std::chrono::duration_cast<std::chrono::microseconds>(endRender - beginPostRender).count() / 1000.f);
-#endif
 
 	return retval;
 }
