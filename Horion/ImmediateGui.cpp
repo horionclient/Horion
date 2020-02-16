@@ -2,6 +2,7 @@
 
 ImmediateGui ImGui;
 
+float padding = 3.f;
 
 ComponentInfo::ComponentInfo(int id) : id(id) {
 }
@@ -19,10 +20,10 @@ bool ButtonInfo::isInSelectableSurface(vec2_t mouse) {
 }
 
 vec4_t ButtonInfo::getSelectableSurface() {
-	return { this->pos.x,
-			 this->pos.y,
-			 this->pos.x + this->size.x,
-			 this->pos.y + this->size.y };
+	return { this->pos.x - padding,
+			 this->pos.y - padding,
+			 this->pos.x + this->size.x + padding,
+			 this->pos.y + this->size.y + padding};
 }
 
 void ImmediateGui::onMouseClickUpdate(int key, bool isDown) {
@@ -70,12 +71,12 @@ bool ImmediateGui::Button(const char* label, vec2_t pos) {
 	button->calculateSize(label);
 	DrawUtils::drawText(pos, &std::string(label), MC_Color());
 	if (button->isInSelectableSurface(this->mousePos)) { // Mouse hovering over us
-		DrawUtils::fillRectangle(button->getSelectableSurface(), MC_Color(0.3f, 0.3f, 0.7f, 1.f), 1);
+		DrawUtils::fillRectangle(button->getSelectableSurface(), MC_Color(28, 50, 77, 1), 1);
 		if (this->leftMb.trySteal()) { // Click
 			return true;
 		}
 	}else
-		DrawUtils::fillRectangle(button->getSelectableSurface(), MC_Color(0.1f, 0.1f, 0.7f, 1.f), 1);
+		DrawUtils::fillRectangle(button->getSelectableSurface(), MC_Color(13, 29, 48, 1), 1);
 		
 
 	return false;
