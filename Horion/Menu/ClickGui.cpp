@@ -195,23 +195,14 @@ void ClickGui::renderCategory(Category category) {
 	const float xEnd = currentXOffset + windowSize->x + paddingRight;
 
 	vec2_t mousePos = *g_Data.getClientInstance()->getMousePos();
-	// Convert mousePos to visual Pos and anti idiot
+
+	// Convert mousePos to visual Pos
 	{
 		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
 		vec2_t windowSizeReal = g_Data.getClientInstance()->getGuiData()->windowSizeReal;
+		
 		mousePos.div(windowSizeReal);
 		mousePos.mul(windowSize);
-
-		if (ourWindow->pos.x + ourWindow->size.x > windowSize.x) {
-			ourWindow->pos.x = windowSize.x - ourWindow->size.x;
-		}
-
-		if (ourWindow->pos.y + ourWindow->size.y > windowSize.y) {
-			ourWindow->pos.y = windowSize.y - ourWindow->size.y;
-		}
-
-		ourWindow->pos.x = max(0, ourWindow->pos.x);
-		ourWindow->pos.y = max(0, ourWindow->pos.y);
 	}
 
 	float categoryHeaderYOffset = currentYOffset;
@@ -253,7 +244,7 @@ void ClickGui::renderCategory(Category category) {
 
 			// Background
 			if (allowRender) {
-				if (rectPos.contains(&mousePos) && !ourWindow->isInAnimation) {  // Is the Mouse hovering above us?
+				if (!ourWindow->isInAnimation && !isDragging && rectPos.contains(&mousePos)) {  // Is the Mouse hovering above us?
 					DrawUtils::fillRectangle(rectPos, selectedModuleColor, 1.f);
 					std::string tooltip = mod->getTooltip();
 					ClickGuiMod* clickgui = moduleMgr->getModule<ClickGuiMod>();
@@ -639,13 +630,30 @@ void ClickGui::renderCategory(Category category) {
 			std::string textStr = categoryName;
 			DrawUtils::drawText(textPos, &textStr, MC_Color(255, 255, 255, 1), textSize);
 			DrawUtils::fillRectangle(rectPos, moduleColor, 1.f);
-			if (ourWindow->isExtended) DrawUtils::fillRectangle(vec4_t(rectPos.x, rectPos.w - 1, rectPos.z, rectPos.w), selectedModuleColor, 1.f);
+			if (ourWindow->isExtended) 
+				DrawUtils::fillRectangle(vec4_t(rectPos.x, rectPos.w - 1, rectPos.z, rectPos.w), selectedModuleColor, 1.f);
 			// Draw Dash
 			GuiUtils::drawCrossLine(vec2_t(
 										currentXOffset + windowSize->x + paddingRight - (crossSize / 2) - 1.f,
 										categoryHeaderYOffset + textPadding + (textHeight / 2)),
 									MC_Color(255, 255, 255, 1), crossWidth, crossSize, !ourWindow->isExtended);
 		}
+	}
+
+	// anti idiot
+	{
+		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+
+		if (ourWindow->pos.x + ourWindow->size.x > windowSize.x) {
+			ourWindow->pos.x = windowSize.x - ourWindow->size.x;
+		}
+
+		if (ourWindow->pos.y + ourWindow->size.y > windowSize.y) {
+			ourWindow->pos.y = windowSize.y - ourWindow->size.y;
+		}
+
+		ourWindow->pos.x = max(0, ourWindow->pos.x);
+		ourWindow->pos.y = max(0, ourWindow->pos.y);
 	}
 
 	moduleList.clear();

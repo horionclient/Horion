@@ -143,23 +143,6 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth) {
 	tess_end(a2, tesselator, tess_end_base);
 }
 
-void DrawUtils::fillRectangle(vec4_t pos, const MC_Color col, float alpha) {
-	float posF[4];  // vec4_t(startX, startY, endX, endY);
-	posF[0] = pos.x;
-	posF[1] = pos.z;
-	posF[2] = pos.y;
-	posF[3] = pos.w;
-	renderCtx->fillRectangle(posF, reinterpret_cast<const float*>(&col), alpha);
-}
-
-void DrawUtils::drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineWidth) {
-	lineWidth /= 2;
-	fillRectangle(vec4_t(pos.x - lineWidth, pos.y - lineWidth, pos.z + lineWidth, pos.y + lineWidth), col, alpha);  // TOP
-	fillRectangle(vec4_t(pos.x - lineWidth, pos.y, pos.x + lineWidth, pos.w), col, alpha);                          // LEFT
-	fillRectangle(vec4_t(pos.z - lineWidth, pos.y, pos.z + lineWidth, pos.w), col, alpha);                          //
-	fillRectangle(vec4_t(pos.x - lineWidth, pos.w - lineWidth, pos.z + lineWidth, pos.w + lineWidth), col, alpha);
-}
-
 void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float textSize, Fonts font) {
 	TextHolder text(*textStr);
 	C_Font* fontPtr = getFont(font);

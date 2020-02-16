@@ -7,10 +7,13 @@
 #include "../Utils/Logger.h"
 #include "../Utils/Target.h"
 #include "../Utils/Utils.h"
+
 enum class Fonts { DEFAULT,
 				   UNICOD,
 				   SMOOTH,
 				   RUNE };
+
+extern C_MinecraftUIRenderContext* renderCtx;
 
 struct MC_Color {
 	union {
@@ -76,8 +79,21 @@ public:
 	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = Fonts::SMOOTH);
 
 	static void drawLine(vec2_t start, vec2_t end, float lineWidth);  // rgba
-	static void fillRectangle(vec4_t pos, const MC_Color col, float alpha);
-	static void drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineWidth = 1.0f);
+	static inline void fillRectangle(vec4_t pos, const MC_Color col, float alpha) {
+		float posF[4];  // vec4_t(startX, startY, endX, endY);
+		posF[0] = pos.x;
+		posF[1] = pos.z;
+		posF[2] = pos.y;
+		posF[3] = pos.w;
+		renderCtx->fillRectangle(posF, reinterpret_cast<const float*>(&col), alpha);
+	}
+	static inline void drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineWidth = 1.0f) {
+		lineWidth /= 2;
+		fillRectangle(vec4_t(pos.x - lineWidth, pos.y - lineWidth, pos.z + lineWidth, pos.y + lineWidth), col, alpha);  // TOP
+		fillRectangle(vec4_t(pos.x - lineWidth, pos.y, pos.x + lineWidth, pos.w), col, alpha);                          // LEFT
+		fillRectangle(vec4_t(pos.z - lineWidth, pos.y, pos.z + lineWidth, pos.w), col, alpha);                          //
+		fillRectangle(vec4_t(pos.x - lineWidth, pos.w - lineWidth, pos.z + lineWidth, pos.w + lineWidth), col, alpha);
+	}
 	static void drawImage(std::string filePath, vec2_t& ImagePos, vec2_t& ImageDimension, vec2_t& idk);
 
 	static void drawText(vec2_t pos, std::string* text, MC_Color color, float textSize = 1, Fonts font = Fonts::SMOOTH);
@@ -91,3 +107,4 @@ public:
 
 	static vec2_t worldToScreen(vec3_t world);
 };
+
