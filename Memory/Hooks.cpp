@@ -364,8 +364,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
 					wchar_t* filePath = reinterpret_cast<wchar_t*>(pk->data.get());
 					std::wstring filePathStr(filePath);
-					std::thread gamer(SkinUtil::importGeo, filePathStr);
-					gamer.detach();
+					SkinUtil::importGeo(filePathStr);
 				});
 
 				g_Data.sendPacketToInjector(packet);
