@@ -185,6 +185,8 @@ void TabGui::init() {
 }
 
 void TabGui::onKeyUpdate(int key, bool isDown) {
+	if (!GameData::canUseMoveKeys()) return;
+
 	if (!isDown) {
 		if (key == VK_RIGHT)
 			toggleCurrentSelection = false;
