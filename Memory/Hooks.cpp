@@ -141,6 +141,9 @@ void Hooks::Init() {
 		void* ConnectionRequest__create = reinterpret_cast<void*>(FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D ?? ?? ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 ?? ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 49 8B D9 4C"));
 		g_Hooks.ConnectionRequest_createHook = std::make_unique<FuncHook>(ConnectionRequest__create, Hooks::ConnectionRequest_create);
 
+		void* PaintingRenderer__renderAddr = reinterpret_cast<void*>(FindSignature("48 8B C4 57 41 54 41 55 41 56 41 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 68 ?? 48 89 70 ?? 4D 8B F0 4C 8B FA 48 8B F1 B9 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??"));
+		g_Hooks.PaintingRenderer__renderHook = std::make_unique<FuncHook>(PaintingRenderer__renderAddr,Hooks::PaintingRenderer__render);
+
 	#ifdef TEST_DEBUG
 		void* addAction = reinterpret_cast<void*>(FindSignature("40 55 56 57 41 56 41 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 8B EA 4C 8B F1 4C 8B C2 48 8B 51 ?? 48 8B 49 ?? E8"));
 		g_Hooks.InventoryTransactionManager__addActionHook = std::make_unique<FuncHook>(addAction, Hooks::InventoryTransactionManager__addAction);
@@ -175,6 +178,7 @@ void Hooks::Restore() {
 	g_Hooks.Actor_ladderUpHook->Restore();
 	g_Hooks.RakNetInstance_tickHook->Restore();
 	g_Hooks.GameMode_getPickRangeHook->Restore();
+	g_Hooks.PaintingRenderer__renderHook->Restore();
 	//g_Hooks.InventoryTransactionManager_addActionHook->Restore();
 	MH_DisableHook(MH_ALL_HOOKS);
 	Sleep(10);
@@ -351,7 +355,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
 				DrawUtils::drawRectangle(rectPos, rcolors, 1.f, 2.f);
 				DrawUtils::drawText(textPos, &text, MC_Color(255, 255, 255, 1), 8.f);
-			
 			}
 
 			// Draw Custom Geo Button
@@ -1225,4 +1228,8 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 void Hooks::InventoryTransactionManager_addAction(C_InventoryTransactionManager* a1, C_InventoryAction* a2) {
 	static auto Func = g_Hooks.InventoryTransactionManager_addActionHook->GetFastcall<void, C_InventoryTransactionManager*, C_InventoryAction*>();
 	Func(a1, a2);
+}
+
+void Hooks::PaintingRenderer__render(__int64 _this, __int64 a2, __int64 a3) {
+	return;
 }
