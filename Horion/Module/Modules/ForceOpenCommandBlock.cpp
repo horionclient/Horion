@@ -11,16 +11,24 @@ const char* ForceOpenCommandBlock::getModuleName() {
 }
 
 void ForceOpenCommandBlock::onTick(C_GameMode* gm) {
-	if (!GameData::canUseMoveKeys()) return;
+	if (GameData::canUseMoveKeys()) {
+		isInCommandBlock = false;
+	} else {
+		return;
+	}
 	PointingStruct* pointingStruct = g_Data.getClientInstance()->getPointerStruct();
 	C_Block* block = gm->player->region->getBlock(pointingStruct->block);
 	int blockId = block->toLegacy()->blockId;
 	if (GameData::isRightClickDown() && !clicked) {
 		clicked = true;
 		if (pointingStruct->entityPtr != nullptr && pointingStruct->entityPtr->getEntityTypeId() == 100) {
+			distance = g_Data.getLocalPlayer()->getPos()->dist(*pointingStruct->entityPtr->getPos());
+			isInCommandBlock = true;
 			__int64* id = pointingStruct->entityPtr->getUniqueId();
 			g_Data.getLocalPlayer()->openCommandBlockMinecart(*id);
 		} else if (block != nullptr && (blockId == 137 || blockId == 188 || blockId == 189)) {
+			distance = g_Data.getLocalPlayer()->getPos()->dist(pointingStruct->block.toFloatVector());
+			isInCommandBlock = true;
 			g_Data.getLocalPlayer()->openCommandBlock(pointingStruct->block);
 		}
 	} else if (!GameData::isRightClickDown()) {
