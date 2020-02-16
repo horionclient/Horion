@@ -406,8 +406,12 @@ public:
 
 private:
 	virtual __int64 stopRiding(bool, bool, bool);
-	virtual __int64 startSwimming(void);
-	virtual __int64 stopSwimming(void);
+
+public:
+	virtual void startSwimming(void);
+	virtual void stopSwimming(void);
+
+private:
 	virtual __int64 buildDebugInfo(std::string &) const;
 	virtual __int64 getCommandPermissionLevel(void) const;
 	virtual __int64 getMutableAttribute(__int64 const &);

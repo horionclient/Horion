@@ -522,7 +522,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				c++;
 				b++;
 				if (b < 20)
-					a = moduleMgr->getEnabledModuleCount();
+					a = moduleMgr->getEnabledModuleCount() * 2;
 				else
 					b = 0;
 				currColor[3] = rcolors[3];
