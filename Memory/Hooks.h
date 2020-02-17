@@ -26,11 +26,7 @@
 #include "MinHook.h"
 
 #include <intrin.h>
-
-#ifdef PERFORMANCE_TEST
-#include <chrono>
-#endif
-
+#include <thread>
 #include <dxgi.h>
 
 struct SkinData {
