@@ -26,7 +26,7 @@ void AutoClicker::onTick(C_GameMode* gm) {
 						   || selectedItemId == 271 || selectedItemId == 275 || selectedItemId == 279 || selectedItemId == 286 || selectedItemId == 258 /*axes*/))
 				return;
 
-			localPlayer->swingArm();
+			if(!moduleMgr->getModule<NoSwing>()->isEnabled()) localPlayer->swingArm();
 
 			if (target != 0)
 				gm->attack(target);

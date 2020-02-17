@@ -1,6 +1,5 @@
 #include "ESP.h"
 
-#include "../ModuleManager.h"
 #include "../../../Utils/Target.h"
 
 ESP::ESP() : IModule('O', Category::VISUAL, "Makes it easier to find entities around you") {

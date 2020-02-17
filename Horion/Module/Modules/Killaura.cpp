@@ -81,7 +81,7 @@ void Killaura::onTick(C_GameMode* gm) {
 	if (hasTarget && Odelay >= delay) {
 		if (autoweapon) findWeapon();
 
-		g_Data.getLocalPlayer()->swing();
+		if (!moduleMgr->getModule<NoSwing>()->isEnabled()) g_Data.getLocalPlayer()->swing();
 
 		// Attack all entitys in targetList
 		if (isMulti) {

@@ -42,7 +42,7 @@ void BedFucker::onTick(C_GameMode* gm) {
 
 					if (destroy) {
 						g_Data.getCGameMode()->destroyBlock(&blockPos, 0);
-						g_Data.getLocalPlayer()->swingArm();
+						if (!moduleMgr->getModule<NoSwing>()->isEnabled()) g_Data.getLocalPlayer()->swingArm();
 						return;
 					}
 				}
@@ -55,7 +55,7 @@ void BedFucker::onTick(C_GameMode* gm) {
 				int id = ent->getEntityTypeId();
 				if (name.find("Treasure") != std::string::npos && g_Data.getLocalPlayer()->getPos()->dist(*ent->getPos()) <= 5) {
 					g_Data.getCGameMode()->attack(ent);
-					g_Data.getLocalPlayer()->swingArm();
+					if (!moduleMgr->getModule<NoSwing>()->isEnabled()) g_Data.getLocalPlayer()->swingArm();
 				}
 			});
 		}
