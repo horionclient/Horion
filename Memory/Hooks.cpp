@@ -365,10 +365,14 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				strcpy_s((char*)packet.data.get(), 100, "{\"title\": \"Select a 3d objet\", \"filter\":\"Object Files (*.obj)|*.obj\"}");
 				packet.dataArraySize = (int)strlen((char*)packet.data.get());
 				packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
-					wchar_t* filePath = reinterpret_cast<wchar_t*>(pk->data.get());
-					std::wstring filePathStr(filePath);
-					std::thread gamer(SkinUtil::importGeo, filePathStr);
-					gamer.detach();
+					wchar_t* jsonData = reinterpret_cast<wchar_t*>(pk->data.get());
+					std::wstring jsonDataStr(jsonData);
+
+					json parsed = json::parse(jsonDataStr);
+					if (parsed["path"].is_string()) {
+						std::thread gamer(SkinUtil::importGeo, Utils::stringToWstring(parsed["path"].get<std::string>()));
+						gamer.detach();
+					}
 				});
 
 				g_Data.sendPacketToInjector(packet);

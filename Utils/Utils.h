@@ -386,7 +386,6 @@ public:
 		return str.substr(0, size);
 	}
 
-
 	static uintptr_t FindSignatureModule(const char* szModule, const char* szSignature) {
 		const char* pattern = szSignature;
 		uintptr_t firstMatch = 0;
@@ -465,4 +464,6 @@ public:
 	static void ApplySystemTime(std::stringstream* ss);
 
 	static std::string sanitize(std::string text);
+
+	static std::wstring stringToWstring(std::string txt);
 };

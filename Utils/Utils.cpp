@@ -3,6 +3,9 @@
 #include <iomanip>
 #include <chrono>
 #include <sstream>
+#include <locale>
+#include <codecvt>
+#include <string>
 
 void Utils::ApplySystemTime(std::stringstream* ss) {
 	using namespace std::chrono;
@@ -42,4 +45,14 @@ std::string Utils::sanitize(std::string text) {
 		}
 	}
 	return out;
+}
+
+std::wstring Utils::stringToWstring(std::string txt) {
+	int wchars_num = MultiByteToWideChar(CP_UTF8, 0, txt.c_str(), -1, NULL, 0);
+	wchar_t* wstr = new wchar_t[wchars_num];
+	MultiByteToWideChar(CP_UTF8, 0, txt.c_str(), -1, wstr, wchars_num);
+	// do whatever with wstr
+	std::wstring gamer(wstr);
+	delete[] wstr;
+	return gamer;
 }
