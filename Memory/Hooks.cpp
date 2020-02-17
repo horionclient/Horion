@@ -357,6 +357,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				DrawUtils::drawText(textPos, &text, MC_Color(255, 255, 255, 1), 8.f);
 			}
 
+#if defined(_BETA) or defined(_DEBUG)
 			// Draw Custom Geo Button
 			if (ImGui.Button("Custom Geometry", vec2_t(wid.x * 0.765f, wid.y * 0.92f))) {
 				HorionDataPacket packet;
@@ -377,6 +378,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 				g_Data.sendPacketToInjector(packet);
 			}
+#endif
 		} else {
 			static HudModule* hud = moduleMgr->getModule<HudModule>();
 			if (hud == nullptr)
