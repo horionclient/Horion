@@ -48,7 +48,7 @@ void CrystalAura::onTick(C_GameMode* gm) {
 			int range = moduleMgr->getModule<CrystalAura>()->range;
 			if (id == 71 && g_Data.getLocalPlayer()->getPos()->dist(*ent->getPos()) <= range) {
 				g_Data.getCGameMode()->attack(ent);
-				g_Data.getLocalPlayer()->swingArm();
+				if (!moduleMgr->getModule<NoSwing>()->isEnabled()) g_Data.getLocalPlayer()->swingArm();
 			}
 		});
 	}

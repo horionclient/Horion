@@ -1,8 +1,5 @@
 #include "InfiniteReach.h"
 
-#include "../../DrawUtils.h"
-#include "../ModuleManager.h"
-
 InfiniteReach::InfiniteReach() : IModule(0x0, Category::COMBAT, "Killaura with infinite reach") {
 	this->registerBoolSetting("multiaura", &this->isMulti, this->isMulti);
 	this->registerFloatSetting("range", &this->range, this->range, 15, 100);
@@ -55,7 +52,7 @@ void InfiniteReach::onTick(C_GameMode* gm) {
 	Odelay++;
 
 	if (targetList0.size() > 0 && Odelay >= delay) {
-		g_Data.getLocalPlayer()->swingArm();
+		if (!moduleMgr->getModule<NoSwing>()->isEnabled()) g_Data.getLocalPlayer()->swingArm();
 
 		float calcYaw = (gm->player->yaw + 90) * (PI / 180);
 		float calcPitch = (gm->player->pitch) * -(PI / 180);

@@ -74,6 +74,7 @@
 #include "Modules/Xray.h"
 #include "Modules/NightMode.h"
 #include "Modules/ForceOpenCommandBlock.h"
+#include "Modules/NoSwing.h"
 
 #ifdef _DEBUG
 #include "Modules/TestModule.h"

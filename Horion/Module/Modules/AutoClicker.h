@@ -1,5 +1,6 @@
 #pragma once
 #include "Module.h"
+#include "../ModuleManager.h"
 
 class AutoClicker : public IModule {
 private:
