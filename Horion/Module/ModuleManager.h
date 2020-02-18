@@ -75,6 +75,7 @@
 #include "Modules/NightMode.h"
 #include "Modules/ForceOpenCommandBlock.h"
 #include "Modules/NoSwing.h"
+#include "Modules/CubeGlide.h"
 
 #ifdef _DEBUG
 #include "Modules/TestModule.h"

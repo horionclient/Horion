@@ -78,6 +78,7 @@ void ModuleManager::initModules() {
 	this->moduleList.push_back(new Timer());
 	this->moduleList.push_back(new NightMode());
 	this->moduleList.push_back(new NoSwing());
+	this->moduleList.push_back(new CubeGlide());
 
 #if defined(_BETA) or defined(_DEBUG)
 	this->moduleList.push_back(new ForceOpenCommandBlock());

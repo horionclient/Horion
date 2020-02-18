@@ -1,17 +1,17 @@
 #pragma once
 #include "Module.h"
-class TestModule : public IModule {
+class CubeGlide : public IModule {
 private:
+	float speed = 1.5f;
+
 public:
-	TestModule();
-	~TestModule();
+	CubeGlide();
+	~CubeGlide();
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 	virtual bool isFlashMode() override;
 	virtual void onEnable() override;
 	virtual void onTick(C_GameMode* gm) override;
-	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
 	virtual void onDisable() override;
-	
 };
