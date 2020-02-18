@@ -371,7 +371,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 					json parsed = json::parse(jsonDataStr);
 					if (parsed["path"].is_string()) {
-						auto box = g_Data.addInfoBox("Importing Skin", "Please wait (0/5)");
+						auto box = g_Data.addInfoBox("Importing Skin", "Please wait...");
 						std::thread gamer([parsed, box]() { 
 
 							SkinUtil::importGeo(Utils::stringToWstring(parsed["path"].get<std::string>()));
@@ -608,7 +608,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				}
 			}
 		}
-
 		
 	}
 
@@ -639,9 +638,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			const float messageHeight = DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() * messageTextSize * lines;
 
 			float titleWidth = DrawUtils::getTextWidth(&box->title, titleTextSize);
-			float msgWidth = DrawUtils::getTextWidth(&box->message, titleTextSize);
+			float msgWidth = DrawUtils::getTextWidth(&box->message, messageTextSize);
 			vec2_t textPos = vec2_t(wid.x / 2.f - titleWidth / 2.f, wid.y / 9.f);
-			vec2_t msgPos = vec2_t(textPos.x, textPos.y + titleTextHeight + paddingVert);
+			vec2_t msgPos = vec2_t(wid.x / 2.f - msgWidth / 2.f, textPos.y + titleTextHeight + paddingVert);
 			vec4_t rectPos = vec4_t(
 				textPos.x - paddingHoriz, 
 				textPos.y - paddingVert, 
