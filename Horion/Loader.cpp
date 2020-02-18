@@ -237,8 +237,14 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	ExitThread(0);
 }
 
+#ifndef _MSC_VER
+#define _MSC_VER "unk"
+#endif
+
 DWORD WINAPI start(LPVOID lpParam) {
 	logF("Starting up...");
+	logF("MSC v%i at %s", _MSC_VER, __TIMESTAMP__);
+	
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)injectorConnectionThread, lpParam, NULL, NULL);
 	init();
 
@@ -271,7 +277,7 @@ DWORD WINAPI start(LPVOID lpParam) {
 	moduleMgr->initModules();
 	configMgr->init();
 
-	logF("Starting threads...");
+	logF("Managers initialized");
 
 	ExitThread(0);
 }
