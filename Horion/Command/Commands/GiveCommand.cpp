@@ -1,6 +1,6 @@
 #include "GiveCommand.h"
 
-GiveCommand::GiveCommand() : IMCCommand("give", "spawn items", "<itemName> <count> <itemData>") {
+GiveCommand::GiveCommand() : IMCCommand("give", "spawn items", "<itemName> <count> <itemData> <NBT>") {
 }
 
 GiveCommand::~GiveCommand() {
@@ -17,7 +17,8 @@ bool GiveCommand::execute(std::vector<std::string>* args) {
 
 	try {
 		itemId = std::stoi(args->at(1));
-	} catch (const std::invalid_argument&) { }
+	} catch (const std::invalid_argument&) {
+	}
 
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
@@ -72,8 +73,14 @@ bool GiveCommand::execute(std::vector<std::string>* args) {
 			clientMessageF("%sInvalid Item!", RED);
 			return true;
 		} else if (blockItem != nullptr && yot == nullptr) {
-			if (itemData == 0)
+			if (itemData == 0) {
 				yot = new C_ItemStack(*blockItem, count);
+				if (yot->getItem()->itemId == 52 && args->at(4).size() > 0) {
+					std::unique_ptr<CompoundTag> tag = std::make_unique<CompoundTag>();
+					tag->putString(EntityIdentifier,args->at(4));
+					yot->setUserData(std::move(tag));
+				}
+			}
 			else {
 				void* ItemPtr = malloc(0x8);
 				C_Item*** cStack = getItemFromId(ItemPtr, blockItem->blockId);
@@ -101,10 +108,10 @@ bool GiveCommand::execute(std::vector<std::string>* args) {
 	C_InventoryAction* firstAction = nullptr;
 	C_InventoryAction* secondAction = nullptr;
 	if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0) {
-		firstAction =  new C_InventoryAction(slot, nullptr, yot,     32512);
-		secondAction = new C_InventoryAction(0,    yot,     nullptr, 156,  100);
+		firstAction = new C_InventoryAction(slot, nullptr, yot, 32512);
+		secondAction = new C_InventoryAction(0, yot, nullptr, 156, 100);
 	} else {
-		firstAction =  new C_InventoryAction(0,    yot,     nullptr, 507, 99999);
+		firstAction = new C_InventoryAction(0, yot, nullptr, 507, 99999);
 		secondAction = new C_InventoryAction(slot, nullptr, yot);
 	}
 

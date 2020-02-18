@@ -1,4 +1,5 @@
 #pragma once
+#include "CCompoundTag.h"
 #include "CEntity.h"
 
 class C_ItemStack;
@@ -275,6 +276,12 @@ public:
 		static ItemStackCopyConstructor_t ItemStackCopyConstructor = reinterpret_cast<ItemStackCopyConstructor_t>(FindSignature("48 8B C4 56 57 41 54 41 56 41 57 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 68 ?? 48 8B FA 48 8B D9 48 89 48 ??"));
 		ItemStackCopyConstructor(*this, src);
 		this->setVtable();
+	}
+
+	void setUserData(std::unique_ptr<CompoundTag> tag) {
+		using setUserData_t = void(__fastcall*)(C_ItemStack*, std::unique_ptr<CompoundTag>);
+		setUserData_t setUserData = reinterpret_cast<setUserData_t>(FindSignature("40 53 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B DA 48 8D 51 10 48 3B D3 74 20 48 8B 03 48 ?? ?? ?? ?? ?? ?? 48 8B 0A 48 89 02 48 85 C9 74 0B 48 8B 01 BA ?? ?? ?? ?? FF 10"));
+		setUserData(this, std::move(tag));
 	}
 
 	bool isValid() {

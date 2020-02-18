@@ -389,6 +389,7 @@
     <ClInclude Include="SDK\CChestBlockActor.h" />
     <ClInclude Include="SDK\CClientInstance.h" />
     <ClInclude Include="SDK\CClientInstanceScreenModel.h" />
+    <ClInclude Include="SDK\CCompoundTag.h" />
     <ClInclude Include="SDK\CEntity.h" />
     <ClInclude Include="SDK\CEntityList.h" />
     <ClInclude Include="SDK\CGameMode.h" />
