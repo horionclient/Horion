@@ -5,30 +5,30 @@
 #include <string>
 #include <vector>
 
-#include "Json.hpp"
-#include "Logger.h"
 #include "../Memory/GameData.h"
 #include "../resource.h"
+#include "Json.hpp"
+#include "Logger.h"
 
 using namespace nlohmann;
 
 namespace MeshStructs {
-	struct face {
-		struct facePart {
-			int vertIndex = -1, normalIndex = -1, uvIndex = -1;
-		} indices[8];
-		int facesPresent = 4;
-	};
+struct face {
+	struct facePart {
+		int vertIndex = -1, normalIndex = -1, uvIndex = -1;
+	} indices[8];
+	int facesPresent = 4;
+};
 
-	void to_json(json& j, const face& f);
+void to_json(json& j, const face& f);
 
-	struct meshData {
-		std::vector<std::array<float, 3>> vertices;
-		std::vector<std::array<float, 3>> normals;
-		std::vector<std::array<float, 2>> uvs;
-		std::vector<face> faces;
-	};
-}
+struct meshData {
+	std::vector<std::array<float, 3>> vertices;
+	std::vector<std::array<float, 3>> normals;
+	std::vector<std::array<float, 2>> uvs;
+	std::vector<face> faces;
+};
+}  // namespace MeshStructs
 
 class SkinUtil {
 public:
@@ -48,7 +48,9 @@ public:
 			auto sizeGeometry = SizeofResource(g_Data.getDllModule(), hResourceGeometry);
 			auto ptrGeometry = LockResource(hMemoryGeometry);
 			logF("Starting geometry import");
-			std::string moddedGeo = SkinUtil::modGeometry(reinterpret_cast<char*>(ptrGeometry), SkinUtil::objToMesh(contents.c_str()));
+			auto mesh = SkinUtil::objToMesh(contents.c_str());
+			logF("Mesh created (verts: %i, uvs: %i, normals: %i, faces: %i)", mesh.vertices.size(), mesh.uvs.size(), mesh.normals.size(), mesh.faces.size());
+			std::string moddedGeo = SkinUtil::modGeometry(reinterpret_cast<char*>(ptrGeometry), mesh);
 			g_Data.setCustomGeometryOverride(true, std::make_shared<std::string>(moddedGeo));
 			logF("Geometry import done");
 
@@ -75,14 +77,13 @@ public:
 				std::string name = bone["name"];
 				std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
 				if (name == "body") {
-					
 					json polyMesh;
 					polyMesh["normalized_uvs"] = true;  // blender does that apparently
 					polyMesh["normals"] = mesh.normals;
 					polyMesh["positions"] = mesh.vertices;
 					polyMesh["uvs"] = mesh.uvs;
 					polyMesh["polys"] = mesh.faces;
-					
+
 					boneIt->emplace("poly_mesh", polyMesh);
 				}
 			}
@@ -99,6 +100,7 @@ public:
 		std::vector<std::array<float, 3>> normals;
 		std::vector<std::array<float, 2>> uvs;
 		std::vector<MeshStructs::face> faces;
+		std::vector<int> faceFixList;  // Fix faces without uvs
 
 		while (std::getline(f, line)) {
 			// Remove trailing whitespace
@@ -149,6 +151,7 @@ public:
 					continue;
 				}
 
+				bool needsFix = false;
 				MeshStructs::face face;
 				face.facesPresent = (int)args.size() - 1;
 				for (int i = 1; i < args.size(); i++) {
@@ -162,6 +165,8 @@ public:
 						assert(normal >= 0);  // negative indices mean relative from last, too lazy for that tbh
 						part.vertIndex = vertex;
 						part.normalIndex = normal;
+						part.uvIndex = -1;
+						needsFix = true;
 					} else {
 						size_t firstOff = arg.find("/");
 						if (firstOff != std::string::npos) {
@@ -189,6 +194,9 @@ public:
 					face.indices[i - 1] = part;
 				}
 				faces.push_back(face);
+				if (needsFix)
+					faceFixList.push_back((int)faces.size() - 1);
+
 			} else if (strcmp(cmd, "vn") == 0) {  // normal
 				if (args.size() != 4) {
 					logF("Faulty normal, 3 args expected: %s", line.c_str());
@@ -197,6 +205,17 @@ public:
 				normals.push_back({std::stof(args[1]), std::stof(args[2]), std::stof(args[3])});
 			} else
 				logF("Unknown command: %s", cmd);
+		}
+
+		if (faceFixList.size() > 0) { // Fix faces without uv's
+			uvs.push_back({0, 0});
+			logF("Fixed %i (%i%% of faces) missing uvs (texture mappings) in mesh, please fix them yourself next time", faceFixList.size(), faceFixList.size() * 100 / faces.size());
+			for (auto it = faceFixList.begin(); it != faceFixList.end(); it++) {
+				auto fac = &faces[*it];
+				for (int i = 0; i < fac->facesPresent; i++) {
+					fac->indices[i].uvIndex = (int)uvs.size() - 1;
+				}
+			}
 		}
 
 		MeshStructs::meshData mesh;

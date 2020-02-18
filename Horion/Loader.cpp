@@ -226,8 +226,10 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 			Sleep(30);
 	}
 	logF("Quitting connection thread");
+	horionToInjector->isPresent = false;
 	memset(magicValues, 0, sizeof(magicValues));
 	memset(magicArray, 0, sizeof(magicValues) + sizeof(uintptr_t) * 2);
+	Sleep(100);
 	delete *horionToInjectorPtr;
 	delete *injectorToHorionPtr;
 	delete[] magicArray;
