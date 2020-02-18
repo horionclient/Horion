@@ -371,7 +371,12 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 					json parsed = json::parse(jsonDataStr);
 					if (parsed["path"].is_string()) {
-						std::thread gamer(SkinUtil::importGeo, Utils::stringToWstring(parsed["path"].get<std::string>()));
+						auto box = g_Data.addInfoBox("Importing Skin", "Please wait (0/5)");
+						std::thread gamer([parsed, box]() { 
+
+							SkinUtil::importGeo(Utils::stringToWstring(parsed["path"].get<std::string>()));
+							box->fadeTarget = 0;
+						});
 						gamer.detach();
 					}
 				});
@@ -603,9 +608,51 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				}
 			}
 		}
+
+		
 	}
 
 	ImGui.endFrame();
+	DrawUtils::flush();
+
+	// Draw Info / Alert Boxes
+	{
+		auto box = g_Data.getFreshInfoBox();
+		if (box) {
+			box->fade();
+			const float paddingHoriz = 40 * box->fadeVal;
+			const float paddingVert = 10 * box->fadeVal;
+			const float titleTextSize = box->fadeVal * 2;
+			const float messageTextSize = box->fadeVal * 1;
+			const float titleTextHeight = DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() * titleTextSize;
+
+			int lines = 1;
+			std::string substring = box->message;
+			while (lines < 5) {
+				auto brea = substring.find("\n");
+				if (brea == std::string::npos)
+					break;
+				substring = substring.substr(brea);
+				lines++;
+			}
+
+			const float messageHeight = DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() * messageTextSize * lines;
+
+			float titleWidth = DrawUtils::getTextWidth(&box->title, titleTextSize);
+			float msgWidth = DrawUtils::getTextWidth(&box->message, titleTextSize);
+			vec2_t textPos = vec2_t(wid.x / 2.f - titleWidth / 2.f, wid.y / 9.f);
+			vec2_t msgPos = vec2_t(textPos.x, textPos.y + titleTextHeight + paddingVert);
+			vec4_t rectPos = vec4_t(
+				textPos.x - paddingHoriz, 
+				textPos.y - paddingVert, 
+				textPos.x + paddingHoriz + max(titleWidth, msgWidth), 
+				textPos.y + paddingVert * 2 + titleTextHeight + messageHeight * lines);
+			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), box->fadeVal);
+			DrawUtils::drawRectangle(rectPos, rcolors, box->fadeVal, 2.f);
+			DrawUtils::drawText(textPos, &box->title, MC_Color(), titleTextSize, box->fadeVal);
+			DrawUtils::drawText(msgPos, &box->message, MC_Color(), messageTextSize, box->fadeVal);
+		}
+	}
 	DrawUtils::flush();
 
 	return retval;
@@ -1190,7 +1237,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 			auto overrideGeo = std::get<1>(geoOverride);
 			newGeometryData = new TextHolder(*overrideGeo.get());
 		} else {  // Default Skin
-			/*char* str;  // Obj text
+				  /*char* str;  // Obj text
 			{
 				auto hResourceObj = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_OBJ), "TEXT");
 				auto hMemoryObj = LoadResource(g_Data.getDllModule(), hResourceObj);

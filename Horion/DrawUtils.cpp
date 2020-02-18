@@ -125,7 +125,7 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth) {
 	tess_end(a2, tesselator, tess_end_base);
 }
 
-void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float textSize, Fonts font) {
+void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float textSize, float alpha, Fonts font) {
 	TextHolder text(*textStr);
 	C_Font* fontPtr = getFont(font);
 	static uintptr_t caretMeasureData = 0xFFFFFFFF;
@@ -141,8 +141,8 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float
 	TextMeasureData textMeasure;
 	memset(&textMeasure, 0, sizeof(TextMeasureData));
 	textMeasure.textSize = textSize;
-
-	renderCtx->drawText(fontPtr, posF, &text, color.arr, 1, 0, &textMeasure, &caretMeasureData);
+	
+	renderCtx->drawText(fontPtr, posF, &text, color.arr, alpha, 0, &textMeasure, &caretMeasureData);
 }
 
 void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth) {

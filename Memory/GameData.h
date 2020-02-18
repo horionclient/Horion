@@ -31,6 +31,22 @@ struct HorionDataPacket {
 	std::shared_ptr<unsigned char[]> data;
 };
 
+struct InfoBoxData {
+	bool isOpen = true;
+	float fadeTarget = 1;
+	float fadeVal = 0;
+	std::string title;
+	std::string message;
+
+	InfoBoxData(std::string title, std::string message) : title(title), message(message){};
+
+	void fade() {
+		fadeVal = fadeTarget - ((fadeTarget - fadeVal) * 0.65f);
+		if (fadeTarget == 0 && fadeVal < 0.001f)
+			isOpen = false;
+	}
+};
+
 class GameData {
 private:
 	C_ClientInstance* clientInstance = 0;
@@ -46,6 +62,7 @@ private:
 	int lastRequestId = 0;
 	std::shared_ptr<std::string> customGeometry;
 	bool customGeoActive = false;
+	std::queue<std::shared_ptr<InfoBoxData>> infoBoxQueue;
 
 	bool injectorConnectionActive = false;
 	const SlimUtils::SlimModule* gameModule = 0;
@@ -76,6 +93,23 @@ public:
 	static void setRakNetInstance(C_RakNetInstance* raknet);
 	static TextHolder* getGameVersion();
 
+
+	inline std::shared_ptr<InfoBoxData> getFreshInfoBox() {
+		while (!this->infoBoxQueue.empty()) {
+			auto box = this->infoBoxQueue.front();
+			if (!box->isOpen) {
+				this->infoBoxQueue.pop();
+				continue;
+			}
+			return box;
+		}
+		return std::shared_ptr<InfoBoxData>();
+	}
+	inline std::shared_ptr<InfoBoxData> addInfoBox(std::string title, std::string message) {
+		auto box = std::make_shared<InfoBoxData>(title, message);
+		this->infoBoxQueue.push(box);
+		return box;
+	}
 	inline void setCustomGeometryOverride(bool setActive, std::shared_ptr<std::string> customGeoPtr) {
 		this->customGeoActive = setActive;
 		if (setActive)

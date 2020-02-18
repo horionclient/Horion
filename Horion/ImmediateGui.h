@@ -1,8 +1,9 @@
 #pragma once
 
 #include <map>
-#include "../Utils/Utils.h"
+
 #include "../Utils/HMath.h"
+#include "../Utils/Utils.h"
 #include "DrawUtils.h"
 
 class ComponentInfo {
@@ -18,21 +19,27 @@ class ButtonInfo : public ComponentInfo {
 private:
 	vec2_t pos;
 	vec2_t size;
+	bool centered;
+	float padding = 3.f;
+	bool canClickB = false;
 
 public:
-	ButtonInfo(int id, vec2_t pos);
+	ButtonInfo(int id, vec2_t pos, bool centered = false);
 	virtual ~ButtonInfo(){};
 
 	void calculateSize(const char*);
 	bool isInSelectableSurface(vec2_t mouse);
 	vec4_t getSelectableSurface();
+	void draw(vec2_t mousePos, const char* label);
+	bool canClick() { return canClickB; };
 
-	bool wasClicked = false;
+	
 };
 
+
 struct KeyInfo {
-	bool isDown; // Held down right now
-	bool isClicked; // Did it go down this frame
+	bool isDown;     // Held down right now
+	bool isClicked;  // Did it go down this frame
 	bool nextIsDown;
 
 	void update() {

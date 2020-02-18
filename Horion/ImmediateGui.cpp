@@ -2,16 +2,14 @@
 
 ImmediateGui ImGui;
 
-float padding = 3.f;
-
 ComponentInfo::ComponentInfo(int id) : id(id) {
 }
 
-ButtonInfo::ButtonInfo(int id, vec2_t pos) : ComponentInfo(id), pos(pos) {
+ButtonInfo::ButtonInfo(int id, vec2_t pos, bool centered) : ComponentInfo(id), pos(pos), centered(centered) {
 }
 
 void ButtonInfo::calculateSize(const char* txt) {
-	this->size = { DrawUtils::getTextWidth(&std::string(txt)), DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight()};
+	this->size = {DrawUtils::getTextWidth(&std::string(txt)), DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight()};
 }
 
 bool ButtonInfo::isInSelectableSurface(vec2_t mouse) {
@@ -20,10 +18,29 @@ bool ButtonInfo::isInSelectableSurface(vec2_t mouse) {
 }
 
 vec4_t ButtonInfo::getSelectableSurface() {
-	return { this->pos.x - padding,
-			 this->pos.y - padding,
-			 this->pos.x + this->size.x + padding,
-			 this->pos.y + this->size.y + padding};
+	if (centered) {
+		return {this->pos.x - padding - this->size.x / 2,
+				this->pos.y - padding - this->size.y / 2,
+				this->pos.x + padding + this->size.x / 2,
+				this->pos.y + padding + this->size.y / 2};
+	} else {
+		return {this->pos.x - padding,
+				this->pos.y - padding,
+				this->pos.x + padding + this->size.x,
+				this->pos.y + padding + this->size.y};
+	}
+}
+
+void ButtonInfo::draw(vec2_t mousePos, const char* label) {
+	calculateSize(label);
+	DrawUtils::drawText(pos, &std::string(label), MC_Color());
+	if (isInSelectableSurface(mousePos)) {  // Mouse hovering over us
+		DrawUtils::fillRectangle(getSelectableSurface(), MC_Color(28, 50, 77, 1), 1);
+		this->canClickB = true;
+	} else {
+		DrawUtils::fillRectangle(getSelectableSurface(), MC_Color(13, 29, 48, 1), 1);
+		this->canClickB = false;
+	}		
 }
 
 void ImmediateGui::onMouseClickUpdate(int key, bool isDown) {
@@ -62,23 +79,16 @@ void ImmediateGui::endFrame() {
 
 bool ImmediateGui::Button(const char* label, vec2_t pos) {
 	auto id = Utils::getCrcHash(label);
-	if (this->components.find(id) == this->components.end()) { // Create new button
+	if (this->components.find(id) == this->components.end()) {  // Create new button
 		this->components[id] = std::make_shared<ButtonInfo>(id, pos);
 	}
 	auto comp = this->components[id];
 	auto button = dynamic_cast<ButtonInfo*>(comp.get());
 
-	button->calculateSize(label);
-	DrawUtils::drawText(pos, &std::string(label), MC_Color());
-	if (button->isInSelectableSurface(this->mousePos)) { // Mouse hovering over us
-		DrawUtils::fillRectangle(button->getSelectableSurface(), MC_Color(28, 50, 77, 1), 1);
-		if (this->leftMb.trySteal()) { // Click
-			return true;
-		}
-	}else
-		DrawUtils::fillRectangle(button->getSelectableSurface(), MC_Color(13, 29, 48, 1), 1);
-		
+	button->draw(this->mousePos, label);
+	if (button->canClick() && this->leftMb.trySteal()) {  // Click
+		return true;
+	}
 
 	return false;
 }
-
