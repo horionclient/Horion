@@ -297,6 +297,20 @@ void DrawUtils::drawItem(C_ItemStack* item, vec2_t ItemPos, float opacity, float
 	renderer->renderGuiItemNew(&baseActorRenderCtx, item, g_Data.getClientInstance()->minecraftGame, ItemPos.x, ItemPos.y, opacity, scale, isEnchanted);
 }
 
+void DrawUtils::drawKeystroke(char key, vec2_t pos) {
+	std::string keyString = Utils::getKeybindName(key);
+	vec4_t rectPos(
+		pos.x,
+		pos.y,
+		pos.x + 20.f,
+		pos.y + 20.f);
+	vec2_t textPos(
+		rectPos.x + 10.f - DrawUtils::getTextWidth(&keyString) / 2.f,
+		rectPos.y + 10.f - DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() / 2.f);
+	fillRectangle(rectPos, GameData::isKeyDown(key) ? MC_Color(28, 50, 77, 1) : MC_Color(13, 29, 48, 1), 1.f);
+	drawText(textPos, &keyString, MC_Color(255, 255, 255, 1), 1.f, 1.f);
+}
+
 void DrawUtils::wirebox(AABB aabb) {
 	/*
 	using tesselatorWirebox_t = void(_fastcall*)(__int64 _this, AABB aabb);

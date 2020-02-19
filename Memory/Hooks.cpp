@@ -324,7 +324,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 	bool shouldRenderArrayList = true;
 	bool shouldRenderTabGui = true;
-	bool shouldRenderCoords = false;
 	bool shouldRenderWatermark = true;
 
 	static float rcolors[4];          // Rainbow color array RGBA
@@ -391,7 +390,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			else {
 				shouldRenderTabGui = hud->tabgui && hud->isEnabled();
 				shouldRenderArrayList = hud->arraylist && hud->isEnabled();
-				shouldRenderCoords = hud->coordinates && hud->isEnabled();
 				shouldRenderWatermark = hud->watermark && hud->isEnabled();
 			}
 
@@ -401,7 +399,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			else if (ClickGuiModule->isEnabled()) {
 				ClickGui::render();
 				shouldRenderArrayList = false;
-				shouldRenderCoords = false;
 				shouldRenderTabGui = false;
 				shouldRenderWatermark = false;
 			}
@@ -598,13 +595,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					}
 					c = 0;
 					modContainerList.clear();
-				}
-
-				// Draw coordinates
-				if (moduleMgr->isInitialized() && shouldRenderCoords && g_Data.getLocalPlayer() != nullptr) {
-					vec3_t* pos = g_Data.getLocalPlayer()->getPos();
-					std::string coords = "XYZ: " + std::to_string((int)pos->x) + " / " + std::to_string((int)pos->y) + " / " + std::to_string((int)pos->z);
-					DrawUtils::drawText(vec2_t(5.f, shouldRenderTabGui ? windowSize.y - 12.f : 2.f), &coords, MC_Color(), 1.f);
 				}
 			}
 		}

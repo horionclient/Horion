@@ -13,6 +13,7 @@ public:
 	bool coordinates = false;
 	bool keybinds = true;
 	bool displayArmor = true;
+	bool keystrokes = true;
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;

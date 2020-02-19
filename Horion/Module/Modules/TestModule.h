@@ -2,6 +2,8 @@
 #include "Module.h"
 class TestModule : public IModule {
 private:
+	int delay = 0;
+
 public:
 	TestModule();
 	~TestModule();
