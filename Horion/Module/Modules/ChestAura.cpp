@@ -24,7 +24,7 @@ void ChestAura::onTick(C_GameMode* gm) {
 				if (block != nullptr && g_Data.canUseMoveKeys()) {
 					if (block->toLegacy()->blockId == 54) {
 						if (!(std::find(chestlist.begin(), chestlist.end(), pos) != chestlist.end())) {
-							g_Data.getLocalPlayer()->openContainer(pos);
+							gm->buildBlock(&pos, 0);
 							chestlist.push_back(pos);
 							return;
 						}
