@@ -103,11 +103,11 @@ private:
 public:
 	int timeSinceDeath;  //0x08AC
 private:
-	char pad_08B0[0x1E4];  //0x08B0
+	char pad_08B0[0x1E0];  //0x08B0
 public:
-	bool canFly;  //0x0A94
+	bool canFly;  //0x0A90
 private:
-	char pad_0x0A95[0x62B];  //0x0A95
+	char pad_0x0A95[0x62F];  //0x0A91
 	int16_t itemData;  //0x10C0
 	int16_t itemId;    //0x10C2
 private:
