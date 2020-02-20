@@ -93,6 +93,7 @@ public:
 	static void setRakNetInstance(C_RakNetInstance* raknet);
 	static TextHolder* getGameVersion();
 
+	TextHolder* fakeName = new TextHolder("");
 
 	inline std::shared_ptr<InfoBoxData> getFreshInfoBox() {
 		while (!this->infoBoxQueue.empty()) {
