@@ -42,6 +42,7 @@ void CommandMgr::initCommands() {
 #endif
 
 #ifdef _DEBUG
+	commandList.push_back(new NameSpoofCommand());
 	commandList.push_back(new TestCommand());
 #endif
 }

@@ -16,7 +16,7 @@ void FastEat::onTick(C_GameMode* gm) {
 	for (int i = 0; i < 36; i++) {
 		C_ItemStack* stack = inv->getItemStack(i);
 		if (stack->item != NULL && (*stack->item)->itemId != 261 && (*stack->item)->duration == 32) {
-			(*stack->item)->duration = 1;
+			(*stack->item)->setMaxUseDuration(5);
 		}
 	}
 }
@@ -28,8 +28,8 @@ void FastEat::onDisable() {
 	C_Inventory* inv = supplies->inventory;
 	for (int i = 0; i < 36; i++) {
 		C_ItemStack* stack = inv->getItemStack(i);
-		if (stack->item != NULL && (*stack->item)->itemId != 261 && (*stack->item)->duration == 1) {
-			(*stack->item)->duration = 32;
+		if (stack->item != NULL && (*stack->item)->itemId != 261 && (*stack->item)->duration == 5) {
+			(*stack->item)->setMaxUseDuration(32);
 		}
 	}
 }
