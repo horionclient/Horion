@@ -7,6 +7,7 @@ AntiBot::AntiBot() : IModule(0x0, Category::PLAYER, "Enable this module to filte
 	registerBoolSetting("EntityID Check", &this->entityIdCheck, this->entityIdCheck);
 	registerBoolSetting("Other Check", &this->otherCheck, this->otherCheck);
 	registerBoolSetting("Extra Check", &this->extraCheck, this->extraCheck);
+	registerBoolSetting("Cubecraft Teams", &this->teams, this->teams);
 }
 
 AntiBot::~AntiBot() {

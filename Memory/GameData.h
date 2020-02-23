@@ -73,6 +73,7 @@ private:
 	LARGE_INTEGER lastUpdate;
 	AccountInformation accountInformation = AccountInformation::asGuest();
 	static void retrieveClientInstance();
+	TextHolder* fakeName;
 
 public:
 	static bool canUseMoveKeys();
@@ -92,8 +93,6 @@ public:
 	static void setHIDController(C_HIDController* Hid);
 	static void setRakNetInstance(C_RakNetInstance* raknet);
 	static TextHolder* getGameVersion();
-
-	TextHolder* fakeName = new TextHolder("");
 
 	inline std::shared_ptr<InfoBoxData> getFreshInfoBox() {
 		while (!this->infoBoxQueue.empty()) {
@@ -204,6 +203,9 @@ public:
 	C_HIDController** getHIDController() { return &hidController; };
 	C_RakNetInstance* getRakNetInstance() { return raknetInstance; };
 	std::set<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
+
+	void setFakeName(TextHolder* name) { fakeName = name; };
+	TextHolder* getFakeName() { return fakeName; };
 
 	inline LARGE_INTEGER getLastUpdateTime() { return lastUpdate; };
 

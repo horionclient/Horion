@@ -72,7 +72,6 @@ void ModuleManager::initModules() {
 	this->moduleList.push_back(new AntiBot());
 	this->moduleList.push_back(new InventoryCleaner());
 	this->moduleList.push_back(new Derp());
-	this->moduleList.push_back(new PacketLogger());
 	this->moduleList.push_back(new Crasher());
 	this->moduleList.push_back(new CrystalAura());
 	this->moduleList.push_back(new Timer());
@@ -85,6 +84,7 @@ void ModuleManager::initModules() {
 #endif
 
 #ifdef _DEBUG
+	this->moduleList.push_back(new PacketLogger());
 	this->moduleList.push_back(new TestModule());
 #endif
 
