@@ -358,7 +358,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 #if defined(_BETA) or defined(_DEBUG)
 			// Draw Custom Geo Button
-			if (ImGui.Button("Custom Geometry", vec2_t(wid.x * 0.765f, wid.y * 0.92f))) {
+			if (g_Data.allowWIPFeatures() && ImGui.Button("Custom Geometry", vec2_t(wid.x * 0.765f, wid.y * 0.92f))) {
 				HorionDataPacket packet;
 				packet.cmd = CMD_FILECHOOSER;
 				packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[200]));
