@@ -1,5 +1,7 @@
 #pragma once
 #include "ICommand.h"
+#include <sstream>
+
 class NameSpoofCommand : public IMCCommand {
 public:
 	NameSpoofCommand();

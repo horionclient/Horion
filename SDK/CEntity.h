@@ -468,6 +468,8 @@ private:
 	virtual __int64 onOrphan(void);
 	virtual __int64 wobble(void);
 	virtual __int64 wasHurt(void);
+
+public:
 	virtual __int64 startSpinAttack(void);
 	virtual __int64 stopSpinAttack(void);
 

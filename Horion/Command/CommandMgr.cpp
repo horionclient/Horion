@@ -39,10 +39,10 @@ void CommandMgr::initCommands() {
 
 #if defined(_BETA) or defined(_DEBUG)
 	commandList.push_back(new CommandBlockExploitCommand());
+	commandList.push_back(new NameSpoofCommand());
 #endif
 
 #ifdef _DEBUG
-	commandList.push_back(new NameSpoofCommand());
 	commandList.push_back(new TestCommand());
 #endif
 }

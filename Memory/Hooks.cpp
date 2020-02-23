@@ -1,4 +1,4 @@
-#include "Hooks.h"
+﻿#include "Hooks.h"
 
 Hooks g_Hooks;
 bool isTicked = false;
@@ -217,6 +217,7 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 
 		if (*message == cmdMgr->prefix) {
 			cmdMgr->execute(message);
+
 
 			__int64* a1 = (__int64*)(*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0x668) + 0x20i64) + 0x960i64))(*(__int64*)(*(__int64*)(_this + 0x668) + 0x20i64));
 			addCommandToChatHistory(a1, (char*)(_this + 0x700));  // This will put the command in the chat history (Arrow up/down)
@@ -1249,8 +1250,10 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 		newSkinData->skinSize = sizeSteve;
 		//Logger::WriteBigLogFileF(newGeometryData->getTextLength() + 20, "Geometry: %s", newGeometryData->getText());
 		TextHolder* newSkinResourcePatch = new TextHolder(Utils::base64_decode("ewogICAiZ2VvbWV0cnkiIDogewogICAgICAiYW5pbWF0ZWRfZmFjZSIgOiAiZ2VvbWV0cnkuYW5pbWF0ZWRfZmFjZV9wZXJzb25hXzRjZGJiZmFjYTI0YTk2OGVfMF8wIiwKICAgICAgImRlZmF1bHQiIDogImdlb21ldHJ5LnBlcnNvbmFfNGNkYmJmYWNhMjRhOTY4ZV8wXzAiCiAgIH0KfQo="));
+		
+		TextHolder* fakeName = g_Data.getFakeName();
 
-		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, newGeometryData == nullptr ? skinData : newSkinData, capeData, animatedImageDataArr, newGeometryData == nullptr ? skinResourcePatch : newSkinResourcePatch, newGeometryData == nullptr ? skinGeometryData : newGeometryData, skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, g_Data.fakeName, g_Data.fakeName->getTextLength() < 1, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
+		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, newGeometryData == nullptr ? skinData : newSkinData, capeData, animatedImageDataArr, newGeometryData == nullptr ? skinResourcePatch : newSkinResourcePatch, newGeometryData == nullptr ? skinGeometryData : newGeometryData, skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, fakeName != nullptr ? fakeName : thirdPartyName, fakeName != nullptr ? true : thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
 
 		if (hMemoryGeometry)
 			FreeResource(hMemoryGeometry);

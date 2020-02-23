@@ -26,6 +26,14 @@ bool Target::isValidTarget(C_Entity* ent) {
 	if (ent->getEntityTypeId() <= 122 && ent->getEntityTypeId() != 63 && antibot->isEntityIdCheckEnabled())
 		return false;
 
+	if (ent->getEntityTypeId() == 63 && antibot->isTeamsEnabled()) {
+		std::string text = ent->getNameTag()->getText();
+		if (text.length() > 2) {
+			text.erase(0, 2);
+			if (text.at(0) == 'a') return false;
+		}
+	}
+
 	// Temporarily removed from gui, tons of false negatives
 	if (!Target::containsOnlyASCII(ent->getNameTag()->getText()) && antibot->isNameCheckEnabled())
 		return false;
