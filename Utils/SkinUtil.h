@@ -146,8 +146,8 @@ public:
 				}
 				vertices.push_back({-std::stof(args[1]), std::stof(args[2]), std::stof(args[3])});
 			} else if (strcmp(cmd, "f") == 0) {  // face
-				if (args.size() != 5) {
-					logF("Faulty face, only quads allowed: %i", args.size() - 1);
+				if (args.size() != 5 && args.size() != 4) {
+					logF("Faulty face, only quads or tris allowed: %i", args.size() - 1);
 					continue;
 				}
 
@@ -192,6 +192,10 @@ public:
 					}
 
 					face.indices[i - 1] = part;
+				}
+				if (args.size() == 4) { // Convert triangles to quads
+					face.facesPresent++;
+					face.indices[face.facesPresent - 1] = face.indices[face.facesPresent - 2];
 				}
 				faces.push_back(face);
 				if (needsFix)
