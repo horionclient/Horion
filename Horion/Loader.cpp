@@ -34,7 +34,7 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 	C_HIDController** hidController = g_Data.getHIDController();
 
 	while (isRunning) {
-		if ((GameData::isKeyPressed('L') && GameData::isKeyPressed(VK_CONTROL)) || GameData::shouldTerminate()) {  // Press L to uninject
+		if ((GameData::isKeyDown('L') && GameData::isKeyDown(VK_CONTROL)) || GameData::shouldTerminate()) {  // Press L to uninject
 			isRunning = false;
 			break;
 		}
@@ -159,7 +159,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 						injectorToHorion->data[sizeof(injectorToHorion->data) - 1] = '\0';
 						json data = json::parse(reinterpret_cast<char*>(injectorToHorion->data));
 						if (data.at("discordAuth").is_string() && data.at("serial").is_number_integer()) {
-							logF("Got discord api token from injector");
+							logF("Got api token from injector");
 							g_Data.setAccountInformation(AccountInformation::fromToken(data.at("discordAuth").get<std::string>(), data.at("serial").get<unsigned int>()));
 						}
 					}
