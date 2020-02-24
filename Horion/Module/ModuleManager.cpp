@@ -78,6 +78,8 @@ void ModuleManager::initModules() {
 	this->moduleList.push_back(new NightMode());
 	this->moduleList.push_back(new NoSwing());
 	this->moduleList.push_back(new CubeGlide());
+	this->moduleList.push_back(new AirStuck());
+	this->moduleList.push_back(new Zoom());
 
 #if defined(_BETA) or defined(_DEBUG)
 	this->moduleList.push_back(new ForceOpenCommandBlock());
@@ -85,6 +87,7 @@ void ModuleManager::initModules() {
 
 #ifdef _DEBUG
 	this->moduleList.push_back(new PacketLogger());
+
 	this->moduleList.push_back(new TestModule());
 #endif
 

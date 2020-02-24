@@ -218,7 +218,6 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 		if (*message == cmdMgr->prefix) {
 			cmdMgr->execute(message);
 
-
 			__int64* a1 = (__int64*)(*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0x668) + 0x20i64) + 0x960i64))(*(__int64*)(*(__int64*)(_this + 0x668) + 0x20i64));
 			addCommandToChatHistory(a1, (char*)(_this + 0x700));  // This will put the command in the chat history (Arrow up/down)
 
@@ -372,8 +371,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					json parsed = json::parse(jsonDataStr);
 					if (parsed["path"].is_string()) {
 						auto box = g_Data.addInfoBox("Importing Skin", "Please wait...");
-						std::thread gamer([parsed, box]() { 
-
+						std::thread gamer([parsed, box]() {
 							SkinUtil::importGeo(Utils::stringToWstring(parsed["path"].get<std::string>()));
 							box->fadeTarget = 0;
 						});
@@ -599,7 +597,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				}
 			}
 		}
-		
 	}
 
 	ImGui.endFrame();
@@ -633,9 +630,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			vec2_t textPos = vec2_t(wid.x / 2.f - titleWidth / 2.f, wid.y / 9.f);
 			vec2_t msgPos = vec2_t(wid.x / 2.f - msgWidth / 2.f, textPos.y + titleTextHeight + paddingVert);
 			vec4_t rectPos = vec4_t(
-				textPos.x - paddingHoriz, 
-				textPos.y - paddingVert, 
-				textPos.x + paddingHoriz + max(titleWidth, msgWidth), 
+				textPos.x - paddingHoriz,
+				textPos.y - paddingVert,
+				textPos.x + paddingHoriz + max(titleWidth, msgWidth),
 				textPos.y + paddingVert * 2 + titleTextHeight + messageHeight * lines);
 			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), box->fadeVal);
 			DrawUtils::drawRectangle(rectPos, rcolors, box->fadeVal, 2.f);
@@ -927,11 +924,14 @@ float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3) {
 	static void* renderItemInHand = reinterpret_cast<void*>(FindSignature("0F 28 F0 F3 44 0F 10 3D ?? ?? ?? ?? F3 41 0F 59 F7"));
 	static void* setupCamera = reinterpret_cast<void*>(FindSignature("44 0F 28 D8 F3 44 0F 59 1D ?? ?? ?? ?? 41 0F B6 4E ??"));
 
+	static Zoom* zoomModule = moduleMgr->getModule<Zoom>();
+	if (zoomModule == nullptr) zoomModule = moduleMgr->getModule<Zoom>();
+
 	if (_ReturnAddress() == renderItemInHand) {
 		return oGetFov(_this, a2, a3);
 	}
 	if (_ReturnAddress() == setupCamera) {
-		return oGetFov(_this, a2, a3);
+		return oGetFov(_this, a2, (moduleMgr->isInitialized() && zoomModule->isEnabled()) ? false : a3);
 	}
 #ifdef _DEBUG
 	logF("LevelRendererPlayer_getFov Return Addres: %llX", _ReturnAddress());
@@ -1227,7 +1227,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 			auto overrideGeo = std::get<1>(geoOverride);
 			newGeometryData = new TextHolder(*overrideGeo.get());
 		} else {  // Default Skin
-				  /*char* str;  // Obj text
+			/*char* str;  // Obj text
 			{
 				auto hResourceObj = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_OBJ), "TEXT");
 				auto hMemoryObj = LoadResource(g_Data.getDllModule(), hResourceObj);
@@ -1250,7 +1250,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 		newSkinData->skinSize = sizeSteve;
 		//Logger::WriteBigLogFileF(newGeometryData->getTextLength() + 20, "Geometry: %s", newGeometryData->getText());
 		TextHolder* newSkinResourcePatch = new TextHolder(Utils::base64_decode("ewogICAiZ2VvbWV0cnkiIDogewogICAgICAiYW5pbWF0ZWRfZmFjZSIgOiAiZ2VvbWV0cnkuYW5pbWF0ZWRfZmFjZV9wZXJzb25hXzRjZGJiZmFjYTI0YTk2OGVfMF8wIiwKICAgICAgImRlZmF1bHQiIDogImdlb21ldHJ5LnBlcnNvbmFfNGNkYmJmYWNhMjRhOTY4ZV8wXzAiCiAgIH0KfQo="));
-		
+
 		TextHolder* fakeName = g_Data.getFakeName();
 
 		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, newGeometryData == nullptr ? skinData : newSkinData, capeData, animatedImageDataArr, newGeometryData == nullptr ? skinResourcePatch : newSkinResourcePatch, newGeometryData == nullptr ? skinGeometryData : newGeometryData, skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, fakeName != nullptr ? fakeName : thirdPartyName, fakeName != nullptr ? true : thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
@@ -1266,7 +1266,8 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 		delete newSkinResourcePatch;
 		return res;
 	} else {
-		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, skinData, capeData, animatedImageDataArr, skinResourcePatch, skinGeometryData, skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, thirdPartyName, thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
+		TextHolder* fakeName = g_Data.getFakeName();
+		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, skinData, capeData, animatedImageDataArr, skinResourcePatch, skinGeometryData, skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, fakeName != nullptr ? fakeName : thirdPartyName, fakeName != nullptr ? true : thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
 		return res;
 	}
 }

@@ -770,8 +770,12 @@ public:
 private:
 	virtual __int64 openChalkboard(__int64 &, bool);
 	virtual __int64 openNpcInteractScreen(C_Entity &);
+
+public:
 	virtual __int64 openInventory(void);
 	virtual __int64 openStructureEditor(vec3_ti const &);
+
+private:
 	virtual __int64 openLabTable(vec3_ti const &);
 	virtual __int64 openElementConstructor(vec3_ti const &);
 	virtual __int64 openCompoundCreator(vec3_ti const &);

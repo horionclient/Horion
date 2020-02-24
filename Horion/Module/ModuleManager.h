@@ -76,6 +76,8 @@
 #include "Modules/ForceOpenCommandBlock.h"
 #include "Modules/NoSwing.h"
 #include "Modules/CubeGlide.h"
+#include "Modules/AirStuck.h"
+#include "Modules/Zoom.h"
 
 #ifdef _DEBUG
 #include "Modules/TestModule.h"
