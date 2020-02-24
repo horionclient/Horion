@@ -16,7 +16,7 @@ const char* Zoom::getModuleName() {
 }
 
 void Zoom::onEnable() {
-	wasEnabled = true;
+	zooming = true;
 }
 
 void Zoom::onPostRender(C_MinecraftUIRenderContext* ctx) {

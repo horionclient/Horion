@@ -5,7 +5,7 @@ public:
 	Zoom();
 	~Zoom();
 
-	bool wasEnabled = false;
+	bool zooming = false;
 	float strength = 20.f;
 	float target = 20.f;
 	float modifier = 20.f;

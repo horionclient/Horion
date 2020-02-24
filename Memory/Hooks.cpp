@@ -604,7 +604,10 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	{
 		static Zoom* zoomModule = moduleMgr->getModule<Zoom>();
 		if (zoomModule == nullptr) zoomModule = moduleMgr->getModule<Zoom>();
-		if (moduleMgr->isInitialized()) zoomModule->modifier = zoomModule->target - ((zoomModule->target - zoomModule->modifier) * 0.85f);
+		if (moduleMgr->isInitialized()) {
+			zoomModule->modifier = zoomModule->target - ((zoomModule->target - zoomModule->modifier) * 0.8f);
+			if (abs(zoomModule->modifier - zoomModule->target) < 0.1f && zoomModule->target != zoomModule->strength) zoomModule->zooming = false;
+		}
 	}
 
 	ImGui.endFrame();
@@ -940,7 +943,7 @@ float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3) {
 	}
 	if (_ReturnAddress() == setupCamera) {
 		g_Data.fov = -oGetFov(_this, a2, a3) + 110.f;
-		return (moduleMgr->isInitialized() && zoomModule->wasEnabled) ? -zoomModule->modifier + 110.f : oGetFov(_this, a2, a3);
+		return (moduleMgr->isInitialized() && zoomModule->zooming) ? -zoomModule->modifier + 110.f : oGetFov(_this, a2, a3);
 	}
 #ifdef _DEBUG
 	logF("LevelRendererPlayer_getFov Return Addres: %llX", _ReturnAddress());
