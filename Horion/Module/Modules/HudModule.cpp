@@ -21,7 +21,7 @@ const char* HudModule::getModuleName() {
 void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
 	{  // Coordinates
-		if (!(g_Data.getLocalPlayer() != nullptr || !this->coordinates || !GameData::canUseMoveKeys())) {
+		if (!(g_Data.getLocalPlayer() == nullptr || !this->coordinates || !GameData::canUseMoveKeys())) {
 			vec3_t* pos = g_Data.getLocalPlayer()->getPos();
 			std::string coords = "XYZ: " + std::to_string((int)pos->x) + " / " + std::to_string((int)pos->y) + " / " + std::to_string((int)pos->z);
 			DrawUtils::drawText(vec2_t(5.f, tabgui ? windowSize.y - 12.f : 2.f), &coords, MC_Color(), 1.f);
