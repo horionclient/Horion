@@ -93,6 +93,7 @@ public:
 	static void setHIDController(C_HIDController* Hid);
 	static void setRakNetInstance(C_RakNetInstance* raknet);
 	static TextHolder* getGameVersion();
+	float fov;
 
 	inline std::shared_ptr<InfoBoxData> getFreshInfoBox() {
 		while (!this->infoBoxQueue.empty()) {

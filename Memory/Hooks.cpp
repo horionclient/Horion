@@ -585,7 +585,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 								DrawUtils::fillRectangle(selectedRect, MC_Color(0.8f, 0.8f, 0.8f, 0.1f), 0.8f);
 								if (executeClick)
 									it->backingModule->toggle();
-							} else
+							}
+							else
 								DrawUtils::fillRectangle(selectedRect, MC_Color(0.8f, 0.8f, 0.8f, 0.8f), 0.3f);
 						}
 						DrawUtils::drawText(textPos, &textStr, MC_Color(currColor), textSize);
@@ -597,6 +598,13 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				}
 			}
 		}
+	}
+
+	// Zoom calc
+	{
+		static Zoom* zoomModule = moduleMgr->getModule<Zoom>();
+		if (zoomModule == nullptr) zoomModule = moduleMgr->getModule<Zoom>();
+		if (moduleMgr->isInitialized()) zoomModule->modifier = zoomModule->target - ((zoomModule->target - zoomModule->modifier) * 0.85f);
 	}
 
 	ImGui.endFrame();
@@ -931,7 +939,8 @@ float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3) {
 		return oGetFov(_this, a2, a3);
 	}
 	if (_ReturnAddress() == setupCamera) {
-		return oGetFov(_this, a2, (moduleMgr->isInitialized() && zoomModule->isEnabled()) ? false : a3);
+		g_Data.fov = -oGetFov(_this, a2, a3) + 110.f;
+		return (moduleMgr->isInitialized() && zoomModule->wasEnabled) ? -zoomModule->modifier + 110.f : oGetFov(_this, a2, a3);
 	}
 #ifdef _DEBUG
 	logF("LevelRendererPlayer_getFov Return Addres: %llX", _ReturnAddress());
