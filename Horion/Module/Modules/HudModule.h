@@ -15,6 +15,7 @@ public:
 	bool displayArmor = true;
 	bool keystrokes = true;
 	bool fps = true;
+	bool cps = true;
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;

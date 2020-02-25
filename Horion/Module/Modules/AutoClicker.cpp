@@ -26,6 +26,8 @@ void AutoClicker::onTick(C_GameMode* gm) {
 						   || selectedItemId == 271 || selectedItemId == 275 || selectedItemId == 279 || selectedItemId == 286 || selectedItemId == 258 /*axes*/))
 				return;
 
+			g_Data.leftclickCount++;
+
 			if(!moduleMgr->getModule<NoSwing>()->isEnabled()) localPlayer->swingArm();
 
 			if (target != 0)
@@ -39,6 +41,7 @@ void AutoClicker::onTick(C_GameMode* gm) {
 			PointingStruct* pstruct = g_Data.getClientInstance()->getPointerStruct();
 			Odelay++;
 			if (Odelay >= delay) {
+				g_Data.rightclickCount++;
 				gm->buildBlock(new vec3_ti(pstruct->block), pstruct->blockSide);
 				Odelay = 0;
 			}

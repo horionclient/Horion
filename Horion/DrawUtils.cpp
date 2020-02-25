@@ -300,7 +300,7 @@ void DrawUtils::drawItem(C_ItemStack* item, vec2_t ItemPos, float opacity, float
 void DrawUtils::drawKeystroke(char key, vec2_t pos) {
 	std::string keyString = Utils::getKeybindName(key);
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
-	if (key == *input->spaceBarKey) keyString = u8"-";
+	if (key == *input->spaceBarKey) keyString = "-";
 	vec4_t rectPos(
 		pos.x,
 		pos.y,

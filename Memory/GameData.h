@@ -96,6 +96,10 @@ public:
 	float fov = 0.f;
 	int fps = 0;
 	int frameCount = 0;
+	int cpsLeft = 0;
+	int cpsRight = 0;
+	int leftclickCount = 0;
+	int rightclickCount = 0;
 
 	inline std::shared_ptr<InfoBoxData> getFreshInfoBox() {
 		while (!this->infoBoxQueue.empty()) {
@@ -215,6 +219,8 @@ public:
 	void forEachEntity(void (*callback)(C_Entity*, bool));
 
 	int getFPS() { return fps; };
+	int getLeftCPS() { return cpsLeft; };
+	int getRightCPS() { return cpsRight; };
 };
 
 extern GameData g_Data;

@@ -59,6 +59,12 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 				if (newKey != *oldKey) {
 					ClickGui::onMouseClickUpdate((int)key, newKey);
 					ImGui.onMouseClickUpdate((int)key, newKey);
+					if (newKey == true) {
+						if ((int)key == 0)
+							g_Data.leftclickCount++;
+						else if ((int)key == 1)
+							g_Data.rightclickCount++;
+					}
 				}
 			}
 
@@ -263,14 +269,18 @@ DWORD WINAPI start(LPVOID lpParam) {
 	ClickGui::init();
 	Hooks::Init();
 
-	std::thread fpsThread([] {
+	std::thread countThread([] {
 		while (isRunning) {
 			Sleep(1000);
 			g_Data.fps = g_Data.frameCount;
 			g_Data.frameCount = 0;
+			g_Data.cpsLeft = g_Data.leftclickCount;
+			g_Data.leftclickCount = 0;
+			g_Data.cpsRight = g_Data.rightclickCount;
+			g_Data.rightclickCount = 0;
 		}
 	});
-	fpsThread.detach();
+	countThread.detach();
 
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL);  // Checking Keypresses
 
