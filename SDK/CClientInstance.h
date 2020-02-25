@@ -359,9 +359,9 @@ public:
 private:
 	virtual __int64 onDimensionChanged(void);
 	virtual __int64 onGameEventNotification(__int64);
-	virtual __int64 getTopScreenName(void) const;
 
 public:
+	virtual TextHolder getTopScreenName(void) const;
 	virtual void setLeaveGameInProgressAsReadyToContinue(void);
 
 private:
@@ -509,7 +509,11 @@ private:
 	virtual __int64 getCurrentUIRouter(void) const;
 	virtual __int64 prepareSceneFor(__int64);
 	virtual __int64 getCachedScenes(void);
-	virtual __int64 getScreenName(void) const;
+
+public:
+	virtual TextHolder getScreenName(void) const;
+
+private:
 	virtual __int64 getScreenTelemetry(void) const;
 	virtual __int64 getTopSceneType(void) const;
 	virtual __int64 getMobEffectsLayout(void);

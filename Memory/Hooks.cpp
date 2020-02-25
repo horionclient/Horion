@@ -314,6 +314,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 	ImGui.startFrame();
 
+	g_Data.frameCount++;
+
 	auto wid = g_Data.getClientInstance()->getGuiData()->windowSize;
 
 	// Call PreRender() functions

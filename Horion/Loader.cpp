@@ -263,6 +263,15 @@ DWORD WINAPI start(LPVOID lpParam) {
 	ClickGui::init();
 	Hooks::Init();
 
+	std::thread fpsThread([] {
+		while (isRunning) {
+			Sleep(1000);
+			g_Data.fps = g_Data.frameCount;
+			g_Data.frameCount = 0;
+		}
+	});
+	fpsThread.detach();
+
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL);  // Checking Keypresses
 
 	logF("Waiting for injector");

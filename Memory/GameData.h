@@ -93,7 +93,9 @@ public:
 	static void setHIDController(C_HIDController* Hid);
 	static void setRakNetInstance(C_RakNetInstance* raknet);
 	static TextHolder* getGameVersion();
-	float fov;
+	float fov = 0.f;
+	int fps = 0;
+	int frameCount = 0;
 
 	inline std::shared_ptr<InfoBoxData> getFreshInfoBox() {
 		while (!this->infoBoxQueue.empty()) {
@@ -211,6 +213,8 @@ public:
 	inline LARGE_INTEGER getLastUpdateTime() { return lastUpdate; };
 
 	void forEachEntity(void (*callback)(C_Entity*, bool));
+
+	int getFPS() { return fps; };
 };
 
 extern GameData g_Data;
