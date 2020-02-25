@@ -64,8 +64,13 @@ void ConfigManager::loadConfig(std::string name, bool create) {
 			currentConfigObj["from"] = "Horion";
 		}
 
-		if (configExists)
+		if (configExists) {
 			moduleMgr->onLoadConfig(&currentConfigObj);
+			if (currentConfigObj.contains("prefix")) {
+				std::string prefix = currentConfigObj["prefix"];
+				cmdMgr->prefix = prefix.at(0);
+			}
+		}
 
 		if (create) 
 			saveConfig();
@@ -87,6 +92,10 @@ void ConfigManager::saveConfig() {
 	sprintf_s(fullPath, allocSize, "%S\\%s.h", roamingFolder.c_str(), currentConfig.c_str());
 
 	moduleMgr->onSaveConfig(&currentConfigObj);
+
+	std::string prefix;
+	prefix.push_back(cmdMgr->prefix);
+	currentConfigObj["prefix"] = prefix;
 
 	std::ofstream o(fullPath, std::ifstream::binary);
 	o << std::setw(4) << currentConfigObj << std::endl;
