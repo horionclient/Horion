@@ -701,11 +701,11 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightnes
 float Hooks::Dimension_getTimeOfDay(__int64 _this, int a2, float a3) {
 	static auto oGetTimeOfDay = g_Hooks.Dimension_getTimeOfDayHook->GetFastcall<float, __int64, int, float>();
 
-	static IModule* nightMod = moduleMgr->getModule<NightMode>();
+	static NightMode* nightMod = moduleMgr->getModule<NightMode>();
 	if (nightMod == nullptr)
 		nightMod = moduleMgr->getModule<NightMode>();
 	else if (nightMod->isEnabled()) {
-		return 0.5f;
+		return nightMod->modifier;
 	}
 
 	return oGetTimeOfDay(_this, a2, a3);
