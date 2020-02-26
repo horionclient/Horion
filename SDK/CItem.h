@@ -323,11 +323,12 @@ public:
 		if (!this->item || !(*this->item)->isArmor())
 			return 0;
 
-		return (float)(((*this->item)->getArmorValue() + ((this->getEnchantValue(0) * 5    /*Protection*/
-														   + this->getEnchantValue(5) * 4  /*Thorns*/
-														   + this->getEnchantValue(3) * 3  /*Blast Protection*/
-														   + this->getEnchantValue(1) * 2  /*Fire Protection*/
-														   + this->getEnchantValue(4))))); /*Projectile Protection*/
+		return (float)(((*this->item)->getArmorValue() + ((this->getEnchantValue(0) * 1.5f		// Protection
+														   + this->getEnchantValue(5) * 0.4f	// Thorns
+														   + this->getEnchantValue(3) * 0.4f	// Blast Protection
+														   + this->getEnchantValue(1) * 0.4f	// Fire Protection
+														   + this->getEnchantValue(4) * 0.4f	// Projectile Protection
+			))));
 	}
 
 	float getAttackingDamageWithEnchants() {
