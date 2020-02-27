@@ -739,7 +739,8 @@ float Hooks::Dimension_getSunIntensity(__int64 a1, float a2, vec3_t* a3, float a
 void Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a) {
 	static auto oTick = g_Hooks.ChestBlockActor_tickHook->GetFastcall<void, C_ChestBlockActor*, void*>();
 	oTick(_this, a);
-	GameData::addChestToList(_this);
+	if (_this != nullptr)
+		GameData::addChestToList(_this);
 }
 
 void Hooks::Actor_lerpMotion(C_Entity* _this, vec3_t motVec) {

@@ -23,6 +23,7 @@ void ChestESP::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	}
 	Utils::ApplyRainbow(rcolors, 0.0015f);
 
+	auto listLock = g_Data.lockChestList();
 	std::set<std::shared_ptr<AABB>>* chestList = g_Data.getChestList();
 
 	for (auto iter = chestList->begin(); iter != chestList->end(); ++iter) {
@@ -35,6 +36,6 @@ void ChestESP::onTick(C_GameMode* gm) {
 	tickTimeout++;
 	if (tickTimeout > 60) {
 		tickTimeout = 0;
-		g_Data.getChestList()->clear();
+		g_Data.clearChestList();
 	}
 }

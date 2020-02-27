@@ -4,6 +4,7 @@
 #include <queue>
 #include <set>
 #include <functional>
+#include <mutex>
 
 #include "../Horion/Config/AccountInformation.h"
 #include "../SDK/CChestBlockActor.h"
@@ -56,7 +57,8 @@ private:
 	C_HIDController* hidController = 0;
 	C_RakNetInstance* raknetInstance = 0;
 	HMODULE hDllInst = 0;
-	std::set<std::shared_ptr<AABB>> chestList = std::set<std::shared_ptr<AABB>>();
+	std::set<std::shared_ptr<AABB>> chestList;
+	std::mutex chestListMutex;
 	std::queue<HorionDataPacket> horionToInjectorQueue;
 	std::map<int, std::function<void(std::shared_ptr<HorionDataPacket>)>> injectorToHorionResponseCallbacks;
 	int lastRequestId = 0;
@@ -76,6 +78,7 @@ private:
 	TextHolder* fakeName;
 
 public:
+
 	static bool canUseMoveKeys();
 	static bool isKeyDown(int key);
 	static bool isKeyPressed(int key);
@@ -101,6 +104,10 @@ public:
 	int leftclickCount = 0;
 	int rightclickCount = 0;
 
+	void clearChestList() {
+		std::lock_guard<std::mutex> listGuard(chestListMutex);
+		this->chestList.clear();
+	}
 	inline std::shared_ptr<InfoBoxData> getFreshInfoBox() {
 		while (!this->infoBoxQueue.empty()) {
 			auto box = this->infoBoxQueue.front();
@@ -210,6 +217,7 @@ public:
 	C_HIDController** getHIDController() { return &hidController; };
 	C_RakNetInstance* getRakNetInstance() { return raknetInstance; };
 	std::set<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
+	auto lockChestList() { return std::lock_guard<std::mutex>(this->chestListMutex); }
 
 	void setFakeName(TextHolder* name) { fakeName = name; };
 	TextHolder* getFakeName() { return fakeName; };

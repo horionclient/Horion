@@ -11,7 +11,7 @@ struct SelectedItemInformation {
 	}
 
 	void interp() {
-		currentSelectedItemInterpol += (selectedItemId - currentSelectedItemInterpol) * 0.1f;
+		currentSelectedItemInterpol += (selectedItemId - currentSelectedItemInterpol) * 0.2f;
 	}
 
 	void rollback() {
@@ -75,6 +75,8 @@ void TabGui::renderLevel() {
 		selected[renderedLevel].selectedItemId -= labelListLength;
 
 	selected[renderedLevel].interp();  // Converge to selected item
+	if (renderedLevel < level)
+		selected[renderedLevel].rollbackVal = 1; // Speed up animation when we are in the next menu already
 
 	// Second loop: Render everything
 	int i = 0;
@@ -203,11 +205,14 @@ void TabGui::onKeyUpdate(int key, bool isDown) {
 		if (level > -1) {
 			level--;
 		}
+		if (level == -1)
+			selected[1].rollbackVal = 0;
 		return;
 	case VK_RIGHT:
 		if (level < 1) {
 			level++;
 			selected[level].setSelectedItemForce(0);
+			selected[level].rollbackVal = 0;
 		} else
 			toggleCurrentSelection = true;
 		return;
