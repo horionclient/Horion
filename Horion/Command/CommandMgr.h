@@ -28,6 +28,7 @@
 #include "Commands/CommandBlockExploitCommand.h"
 #include "Commands/ConfigCommand.h"
 #include "Commands/NameSpoofCommand.h"
+#include "Commands/SetprefixCommand.h"
 
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"

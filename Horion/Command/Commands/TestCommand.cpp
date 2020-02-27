@@ -27,5 +27,6 @@ void showAimedBlockInfo() {
 }
 
 bool TestCommand::execute(std::vector<std::string>* args) {
+	g_Data.getLocalPlayer()->openStructureEditor(g_Data.getClientInstance()->getPointerStruct()->block);
 	return true;
 }

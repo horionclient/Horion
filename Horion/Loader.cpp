@@ -34,7 +34,7 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 	C_HIDController** hidController = g_Data.getHIDController();
 
 	while (isRunning) {
-		if ((GameData::isKeyPressed('L') && GameData::isKeyPressed(VK_CONTROL)) || GameData::shouldTerminate()) {  // Press L to uninject
+		if ((GameData::isKeyDown('L') && GameData::isKeyDown(VK_CONTROL)) || GameData::shouldTerminate()) {  // Press L to uninject
 			isRunning = false;
 			break;
 		}
@@ -59,6 +59,12 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 				if (newKey != *oldKey) {
 					ClickGui::onMouseClickUpdate((int)key, newKey);
 					ImGui.onMouseClickUpdate((int)key, newKey);
+					if (newKey == true) {
+						if ((int)key == 0)
+							g_Data.leftclickCount++;
+						else if ((int)key == 1)
+							g_Data.rightclickCount++;
+					}
 				}
 			}
 
@@ -159,7 +165,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 						injectorToHorion->data[sizeof(injectorToHorion->data) - 1] = '\0';
 						json data = json::parse(reinterpret_cast<char*>(injectorToHorion->data));
 						if (data.at("discordAuth").is_string() && data.at("serial").is_number_integer()) {
-							logF("Got discord api token from injector");
+							logF("Got api token from injector");
 							g_Data.setAccountInformation(AccountInformation::fromToken(data.at("discordAuth").get<std::string>(), data.at("serial").get<unsigned int>()));
 						}
 					}
@@ -263,6 +269,19 @@ DWORD WINAPI start(LPVOID lpParam) {
 	ClickGui::init();
 	Hooks::Init();
 
+	std::thread countThread([] {
+		while (isRunning) {
+			Sleep(1000);
+			g_Data.fps = g_Data.frameCount;
+			g_Data.frameCount = 0;
+			g_Data.cpsLeft = g_Data.leftclickCount;
+			g_Data.leftclickCount = 0;
+			g_Data.cpsRight = g_Data.rightclickCount;
+			g_Data.rightclickCount = 0;
+		}
+	});
+	countThread.detach();
+
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL);  // Checking Keypresses
 
 	logF("Waiting for injector");
@@ -307,7 +326,7 @@ BOOL __stdcall DllMain(HMODULE hModule,
 		delete configMgr;
 		if (g_Data.getClientInstance()->getLocalPlayer() != nullptr) {
 			C_GuiData* guiData = g_Data.getClientInstance()->getGuiData();
-			if (guiData != nullptr)
+			if (guiData != nullptr && !GameData::shouldHide())
 				guiData->displayClientMessageF("%sUninjected!", RED);
 		}
 		break;

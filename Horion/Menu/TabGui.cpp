@@ -61,7 +61,7 @@ void TabGui::renderLevel() {
 	static constexpr float alphaVal = 1.0f;
 
 	// First loop: Get the maximum text length
-	float maxLength = 1;
+	float maxLength = 43.f;
 	int labelListLength = 0;
 	for (auto it = labelList.begin(); it != labelList.end(); ++it) {
 		labelListLength++;
