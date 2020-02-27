@@ -261,22 +261,6 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 	}
 }
 
-void DrawUtils::rainbow(float* rcolors) {
-	if (rcolors[3] < 1) {
-		rcolors[0] = 1;
-		rcolors[1] = 0.6f;
-		rcolors[2] = 0.6f;
-		rcolors[3] = 1;
-	}
-
-	Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);  // perfect code, dont question this
-
-	rcolors[0] += 0.003f;
-	if (rcolors[0] >= 1)
-		rcolors[0] = 0;
-
-	Utils::ColorConvertHSVtoRGB(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);
-}
 void DrawUtils::drawEntityBox(C_Entity* ent, float lineWidth) {
 	vec3_t* start = ent->getPosOld();
 	vec3_t* end = ent->getPos();
@@ -309,27 +293,6 @@ void DrawUtils::drawKeystroke(char key, vec2_t pos) {
 		rectPos.y + 10.f - DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() / 2.f);
 	fillRectangle(rectPos, GameData::isKeyDown(key) ? MC_Color(28, 50, 77, 1) : MC_Color(13, 29, 48, 1), 1.f);
 	drawText(textPos, &keyString, MC_Color(255, 255, 255, 1), 1.f, 1.f);
-}
-
-void DrawUtils::wirebox(AABB aabb) {
-	/*
-	using tesselatorWirebox_t = void(_fastcall*)(__int64 _this, AABB aabb);
-	static tesselatorWirebox_t tesselateWirebox = reinterpret_cast<tesselatorWirebox_t>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B DA 48 C7 44 24 ?? 00 00 00 00 B2 04"));
-	
-	float* v15 = reinterpret_cast<float*>(tesselator);
-	float* yote = reinterpret_cast<float*>(0x0000019367E06228 + 0x448);
-	v15[41] = -yote[0];
-	v15[42] = -yote[1];
-	v15[43] = -yote[2];
-	setColor(1, 1, 0, 1);
-
-	tesselateWirebox(tesselator, aabb);
-	tess_end(0x0000019354E40E08, tesselator, reinterpret_cast<__int64*>(0x0000019367E07288));
-
-	v15[41] = 0;
-	v15[42] = 0;
-	v15[43] = 0;*/
-	throw std::exception("not implemented");
 }
 
 vec2_t DrawUtils::worldToScreen(vec3_t world) {

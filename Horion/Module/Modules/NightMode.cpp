@@ -1,6 +1,6 @@
 #include "NightMode.h"
 
-NightMode::NightMode() : IModule(0x0, Category::VISUAL, "") {
+NightMode::NightMode() : IModule(0x0, Category::VISUAL, "Darkens the environment") {
 }
 
 NightMode::~NightMode() {

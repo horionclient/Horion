@@ -87,7 +87,8 @@ private:
 	static __int64 ConnectionRequest_create(__int64 _this, __int64 privateKeyManager, void* a3, TextHolder* selfSignedId, TextHolder* serverAddress, __int64 clientRandomId, TextHolder* skinId, SkinData* a8, __int64 capeData, __int64 animatedImageDataArr, TextHolder* skinResourcePatch, TextHolder* skinGeometryData, TextHolder* skinAnimationData, bool isPremiumSkin, bool isPersonaSkin, TextHolder* deviceId, int inputMode, int uiProfile, int guiScale, TextHolder* languageCode, bool sendEduModeParams, TextHolder* tenantId, __int64 unused, TextHolder* platformUserId, TextHolder* thirdPartyName, bool thirdPartyNameOnly, TextHolder* platformOnlineId, TextHolder* platformOfflineId, bool isCapeOnClassicSkin, TextHolder* capeId);
 	static void InventoryTransactionManager_addAction(C_InventoryTransactionManager* a1, C_InventoryAction* a2);
 	static void PaintingRenderer__render(__int64 _this, __int64 a2, __int64 a3);
-
+	static bool DirectoryPackAccessStrategy__isTrusted(__int64 _this);
+	
 	std::unique_ptr<FuncHook> GameMode_tickHook;
 	std::unique_ptr<FuncHook> SurvivalMode_tickHook;
 	std::unique_ptr<FuncHook> ChatScreenController_sendChatMessageHook;
@@ -123,6 +124,7 @@ private:
 	std::unique_ptr<FuncHook> ConnectionRequest_createHook;
 	std::unique_ptr<FuncHook> InventoryTransactionManager_addActionHook;
 	std::unique_ptr<FuncHook> PaintingRenderer__renderHook;
+	std::unique_ptr<FuncHook> DirectoryPackAccessStrategy__isTrustedHook;
 };
 
 extern Hooks g_Hooks;

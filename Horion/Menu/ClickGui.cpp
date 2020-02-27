@@ -86,7 +86,7 @@ void ClickGui::renderTooltip(std::string* text) {
 		currentTooltipPos.x + (textPadding * 2) + textWidth + 2.f,
 		currentTooltipPos.y + textHeight + 2.f);
 	DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.0f);
-	DrawUtils::drawRectangle(rectPos, MC_Color(255, 255, 255, 1), 1.f, 1.f);
+	DrawUtils::drawRectangle(rectPos, MC_Color(255, 255, 255, 1), 1.f, 0.5f);
 	DrawUtils::drawText(textPos, text, MC_Color(255, 255, 255, 1), textSize);
 }
 
@@ -217,7 +217,7 @@ void ClickGui::renderCategory(Category category) {
 					DrawUtils::fillRectangle(rectPos, selectedModuleColor, backgroundAlpha);
 					std::string tooltip = mod->getTooltip();
 					ClickGuiMod* clickgui = moduleMgr->getModule<ClickGuiMod>();
-					if (clickgui->showTooltips)
+					if (clickgui->showTooltips && tooltip.size() > 0)
 						renderTooltip(&tooltip);
 					if (shouldToggleLeftClick && !ourWindow->isInAnimation) {  // Are we being clicked?
 						mod->toggle();

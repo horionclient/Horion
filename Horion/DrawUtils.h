@@ -53,18 +53,18 @@ struct MC_Color {
 		this->arr[3] = arr[3];
 	};
 
-	MC_Color(const float r, const float g, const float b, const float a) {
+	MC_Color(const float r, const float g, const float b, const float a = 1) {
 		this->r = r;
 		this->g = g;
 		this->b = b;
 		this->a = a;
 	};
 
-	MC_Color(const int r, const int g, const int b, const int a) {
-		this->r = r / 255.0F;
-		this->g = g / 255.0F;
+	MC_Color(const int r, const int g, const int b, const int a = 255) {
+		this->r = r / 255.0f;
+		this->g = g / 255.0f;
 		this->b = b / 255.0f;
-		this->a = a * 1.0f;
+		this->a = a / 255.0f;
 	};
 
 	MC_Color(const float r, const float g, const float b, const float a, const bool shouldDelete) {
@@ -116,14 +116,12 @@ public:
 	static void drawImage(std::string filePath, vec2_t& ImagePos, vec2_t& ImageDimension, vec2_t& idk);
 
 	static void drawText(vec2_t pos, std::string* text, MC_Color color, float textSize = 1, float alpha = 1, Fonts font = Fonts::SMOOTH);
-	static void rainbow(float* rcolors);
 	static void drawBox(vec3_t lower, vec3_t upper, float lineWidth);
 	static void drawTracer(C_Entity* ent);
 	static void drawEntityBox(C_Entity* ent, float lineWidth);
 	static void drawNameTags(C_Entity* ent, float textSize, bool drawHealth = false, bool useUnicodeFont = false);
 	static void drawItem(C_ItemStack* item, vec2_t ItemPos, float opacity, float scale, bool isEnchanted);
 	static void drawKeystroke(char key, vec2_t pos);
-	static void wirebox(AABB aabb);
 
 	static vec2_t worldToScreen(vec3_t world);
 };

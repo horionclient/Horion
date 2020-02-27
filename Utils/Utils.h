@@ -466,4 +466,21 @@ public:
 	static std::string sanitize(std::string text);
 
 	static std::wstring stringToWstring(std::string txt);
+
+	static void ApplyRainbow(float* rcolors, const float modifier = 0.003f) {
+		if (rcolors[3] < 1) {
+			rcolors[0] = 1;
+			rcolors[1] = 0.6f;
+			rcolors[2] = 0.6f;
+			rcolors[3] = 1;
+		}
+
+		Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);
+
+		rcolors[0] += modifier;
+		if (rcolors[0] >= 1)
+			rcolors[0] = 0;
+
+		Utils::ColorConvertHSVtoRGB(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);
+	}
 };

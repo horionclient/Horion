@@ -66,6 +66,18 @@ void Hooks::Init() {
 				g_Hooks.MoveInputHandler_tickHook = std::make_unique<FuncHook>(moveInputVtable[1], Hooks::MoveInputHandler_tick);
 			}
 		}
+
+		// DirectoryPackAccessStrategy::vtable
+		{
+			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 49 89 06 49 8D 76 50");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			uintptr_t** directoryPackVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+			
+			{
+				// fix vtable index
+				//g_Hooks.DirectoryPackAccessStrategy__isTrustedHook = std::make_unique<FuncHook>(directoryPackVtable[1], Hooks::DirectoryPackAccessStrategy__isTrusted);
+			}
+		}
 	}
 
 	// Signatures
@@ -333,7 +345,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 	// Rainbow color updates
 	{
-		DrawUtils::rainbow(rcolors);  // Increase Hue of rainbow color array
+		Utils::ApplyRainbow(rcolors);  // Increase Hue of rainbow color array
 		disabledRcolors[0] = min(1, rcolors[0] * 0.4f + 0.2f);
 		disabledRcolors[1] = min(1, rcolors[1] * 0.4f + 0.2f);
 		disabledRcolors[2] = min(1, rcolors[2] * 0.4f + 0.2f);

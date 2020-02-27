@@ -62,13 +62,7 @@ void ESP::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 				rcolors[3] = 1;
 			}
 
-			Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);  // premium code right here
-
-			rcolors[0] += 0.0015f;
-			if (rcolors[0] >= 1)
-				rcolors[0] = 0;
-
-			Utils::ColorConvertHSVtoRGB(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);
+			Utils::ApplyRainbow(rcolors, 0.0015f);
 		}
 
 		g_Data.forEachEntity(doRenderStuff);
