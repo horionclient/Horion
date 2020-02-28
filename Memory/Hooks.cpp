@@ -74,7 +74,7 @@ void Hooks::Init() {
 			uintptr_t** directoryPackVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 			
 			{
-				//g_Hooks.DirectoryPackAccessStrategy__isTrustedHook = std::make_unique<FuncHook>(directoryPackVtable[6], Hooks::ReturnTrue);
+				g_Hooks.DirectoryPackAccessStrategy__isTrustedHook = std::make_unique<FuncHook>(directoryPackVtable[6], Hooks::DirectoryPackAccessStrategy__isTrusted);
 			}
 
 			uintptr_t sigOffset2 = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 03 49 8D 57");
@@ -611,8 +611,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 								DrawUtils::fillRectangle(selectedRect, MC_Color(0.8f, 0.8f, 0.8f, 0.1f), 0.8f);
 								if (executeClick)
 									it->backingModule->toggle();
-							}
-							else
+							} else
 								DrawUtils::fillRectangle(selectedRect, MC_Color(0.8f, 0.8f, 0.8f, 0.8f), 0.3f);
 						}
 						DrawUtils::drawText(textPos, &textStr, MC_Color(currColor), textSize);
@@ -1266,7 +1265,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 			auto overrideGeo = std::get<1>(geoOverride);
 			newGeometryData = new TextHolder(*overrideGeo.get());
 		} else {  // Default Skin
-			/*char* str;  // Obj text
+				  /*char* str;  // Obj text
 			{
 				auto hResourceObj = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_OBJ), "TEXT");
 				auto hMemoryObj = LoadResource(g_Data.getDllModule(), hResourceObj);
@@ -1320,6 +1319,15 @@ void Hooks::PaintingRenderer__render(__int64 _this, __int64 a2, __int64 a3) {
 	return;
 }
 
+bool Hooks::DirectoryPackAccessStrategy__isTrusted(__int64 _this) {
+	static auto func = g_Hooks.DirectoryPackAccessStrategy__isTrustedHook->GetFastcall<bool, __int64>();
+	
+	if (Utils::getRttiBaseClassName(reinterpret_cast<void*>(_this)) == "DirectoryPackAccessStrategy")
+		return true;
+	
+	return func(_this);
+}
+
 bool Hooks::ReturnTrue(__int64 _this) {
 	return true;
 }
@@ -1329,7 +1337,7 @@ __int64 Hooks::SkinRepository___loadSkinPack(__int64 _this, __int64 pack, __int6
 
 	//auto res = (*(unsigned __int8 (**)(void))(**(__int64**)(pack + 8) + 48i64))();
 	//logF("SkinRepository___loadSkinPack: origin %i, is Trusted: %i", *(int*)((*(__int64*)pack) + 888i64), res);
-	*(int*)((*(__int64*)pack) + 888i64) = 2; // Set pack origin to "2"
+	*(int*)((*(__int64*)pack) + 888i64) = 2;  // Set pack origin to "2"
 
 	return func(_this, pack, a3);
 }

@@ -1,10 +1,10 @@
 #include "Utils.h"
 
-#include <iomanip>
 #include <chrono>
-#include <sstream>
-#include <locale>
 #include <codecvt>
+#include <iomanip>
+#include <locale>
+#include <sstream>
 #include <string>
 
 void Utils::ApplySystemTime(std::stringstream* ss) {
@@ -55,4 +55,52 @@ std::wstring Utils::stringToWstring(std::string txt) {
 	std::wstring gamer(wstr);
 	delete[] wstr;
 	return gamer;
+}
+
+std::string Utils::getRttiBaseClassName(void* ptr) {
+#define retIfBad(m, c) \
+	if (IsBadReadPtr(reinterpret_cast<void*>(m), c)) DebugBreak();
+
+	retIfBad(ptr, 8);
+
+	__int64 vtable = *reinterpret_cast<__int64*>(ptr);
+	retIfBad(vtable - sizeof(uintptr_t), 8);
+
+	uintptr_t moduleBase;
+	if (!GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, reinterpret_cast<char*>(vtable), reinterpret_cast<HMODULE*>(&moduleBase)))
+		return std::string("invalid handle");
+
+	auto objLocator = *reinterpret_cast<__int64*>(vtable - sizeof(uintptr_t));
+	retIfBad(objLocator + 0x10, 8);
+	auto classHierachyDescriptorOffset = *reinterpret_cast<int*>(objLocator + 0x10);
+	auto classHierachy = moduleBase + classHierachyDescriptorOffset;
+	retIfBad(classHierachy + 0x8, sizeof(unsigned int));
+	int numBaseClasses = *reinterpret_cast<int*>(classHierachy + 0x8);
+	if (numBaseClasses < 0 || numBaseClasses > 25)
+		numBaseClasses = 0;
+	retIfBad(classHierachy + 0xC, sizeof(uintptr_t));
+	auto baseClassArrayOffset = *reinterpret_cast<int*>(classHierachy + 0xC);
+	auto baseClassArray = moduleBase + baseClassArrayOffset;
+	retIfBad(baseClassArray, sizeof(unsigned int));
+
+
+	// We could iterate over all base classes here, but we just return the first
+	auto classDescriptorOffset = *reinterpret_cast<unsigned int*>(baseClassArray);
+	auto classDescriptor = moduleBase + classDescriptorOffset;
+	retIfBad(classDescriptor, sizeof(int));
+	auto typeDescripterOffset = *reinterpret_cast<int*>(classDescriptor);
+	auto typeDescriptor = moduleBase + typeDescripterOffset;
+	retIfBad(typeDescriptor, 0x10 + 512);
+
+	size_t rttiLength = strnlen_s(reinterpret_cast<char*>(typeDescriptor + 0x11), 512);
+	if (rttiLength > 5 && rttiLength < 512) {
+		auto name = std::string(reinterpret_cast<char*>(typeDescriptor + 0x10 + 1));
+		if (name.substr(0, 3) == "?AV")
+			name = name.substr(3);
+		if (name.substr(name.size() - 2, 2) == "@@")
+			name = name.substr(0, name.size() - 2);
+		return name;
+	}
+
+	return std::string("invalid");
 }

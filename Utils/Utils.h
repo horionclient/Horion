@@ -483,4 +483,6 @@ public:
 
 		Utils::ColorConvertHSVtoRGB(rcolors[0], rcolors[1], rcolors[2], rcolors[0], rcolors[1], rcolors[2]);
 	}
+
+	static std::string getRttiBaseClassName(void* ptr);
 };
