@@ -3,6 +3,7 @@
 class CubeGlide : public IModule {
 private:
 	float speed = 1.5f;
+	int gameTick = 0;
 
 public:
 	CubeGlide();

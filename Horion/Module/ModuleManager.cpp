@@ -80,6 +80,7 @@ void ModuleManager::initModules() {
 	this->moduleList.push_back(new CubeGlide());
 	this->moduleList.push_back(new AirStuck());
 	this->moduleList.push_back(new Zoom());
+	this->moduleList.push_back(new Teams());
 
 #if defined(_BETA) or defined(_DEBUG)
 	this->moduleList.push_back(new ForceOpenCommandBlock());

@@ -1,4 +1,5 @@
 ﻿#include "Target.h"
+#include <regex>
 
 #include "../Horion/Module/ModuleManager.h"
 
@@ -19,6 +20,8 @@ bool Target::isValidTarget(C_Entity* ent) {
 	if (antibot == nullptr) antibot = moduleMgr->getModule<AntiBot>();
 	static Hitbox* hitboxMod = moduleMgr->getModule<Hitbox>();
 	if (hitboxMod == nullptr) hitboxMod = moduleMgr->getModule<Hitbox>();
+	static Teams* teams = moduleMgr->getModule<Teams>();
+	if (teams == nullptr) teams = moduleMgr->getModule<Teams>();
 
 	if (!ent->isAlive())
 		return false;
@@ -26,11 +29,19 @@ bool Target::isValidTarget(C_Entity* ent) {
 	if (ent->getEntityTypeId() <= 122 && ent->getEntityTypeId() != 63 && antibot->isEntityIdCheckEnabled())
 		return false;
 
-	if (ent->getEntityTypeId() == 63 && antibot->isTeamsEnabled()) {
-		std::string text = ent->getNameTag()->getText();
-		if (text.length() > 2) {
-			text.erase(0, 2);
-			if (text.at(0) == 'a') return false;
+	if (ent->getEntityTypeId() == 63) {
+		if (teams->isColorCheckEnabled()) {
+			std::string targetName = ent->getNameTag()->getText();
+			std::string localName = g_Data.getLocalPlayer()->getNameTag()->getText();
+			if (targetName.length() > 2 && localName.length() > 2) {
+				targetName = std::regex_replace(targetName, std::regex("\\§r"), "");
+				localName = std::regex_replace(localName, std::regex("\\§r"), "");
+				if (targetName.at(0) == localName.at(0)) return false;
+			}
+		}
+		if (teams->isAlliedCheckEnabled()) {
+			C_LocalPlayer* p = g_Data.getLocalPlayer(); 
+			if (p->isAlliedTo(ent)) return false;
 		}
 	}
 

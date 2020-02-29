@@ -78,6 +78,7 @@
 #include "Modules/CubeGlide.h"
 #include "Modules/AirStuck.h"
 #include "Modules/Zoom.h"
+#include "Modules/Teams.h"
 
 #ifdef _DEBUG
 #include "Modules/TestModule.h"

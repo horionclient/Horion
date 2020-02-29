@@ -22,12 +22,14 @@ void CubeGlide::onEnable() {
 void CubeGlide::onTick(C_GameMode* gm) {
 	float calcYaw = (gm->player->yaw + 90) * (PI / 180);
 
+	gameTick++;
+
 	vec3_t pos = *g_Data.getLocalPlayer()->getPos();
-	pos.y += 1.1f;
+	pos.y += 1.3f;
 	C_MovePlayerPacket* a = new C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
 	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
 	delete a;
-	pos.y -= 1.2f;
+	pos.y -= 1.3f;
 	C_MovePlayerPacket* a2 = new C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
 	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a2);
 	delete a2;
@@ -37,6 +39,17 @@ void CubeGlide::onTick(C_GameMode* gm) {
 	moveVec.z = sin(calcYaw) * speed;
 
 	gm->player->lerpMotion(moveVec);
+
+	if (gameTick >= 5) {
+		gameTick = 0;
+		float yaw = gm->player->yaw * (PI / 180);
+		float length = 4.f;
+
+		float x = -sin(yaw) * length;
+		float z = cos(yaw) * length;
+
+		gm->player->setPos(pos.add(vec3_t(x, 0.5f, z)));
+	}
 }
 
 void CubeGlide::onDisable() {

@@ -152,9 +152,7 @@ private:
 
 public:
 	virtual void setRot(vec2_t const &);
-
-private:
-	virtual __int64 move(vec3_t const &);
+	virtual void move(vec3_t const &);
 	virtual __int64 getInterpolatedRidingPosition(float) const;
 	virtual __int64 getInterpolatedBodyRot(float) const;
 	virtual __int64 getInterpolatedHeadRot(float) const;
@@ -162,17 +160,15 @@ private:
 	virtual __int64 getYawSpeedInDegreesPerSecond(void) const;
 	virtual __int64 getInterpolatedWalkAnimSpeed(float) const;
 	virtual __int64 getInterpolatedRidingOffset(float) const;
-	virtual __int64 checkBlockCollisions(AABB const &);
-	virtual __int64 checkBlockCollisions(void);
-	virtual __int64 breaksFallingBlocks(void) const;
-	virtual __int64 blockedByShield(__int64 const &, C_Entity &);
-	virtual __int64 moveRelative(float, float, float, float);
-	virtual __int64 teleportTo(vec3_t const &, bool, int, int);
-	virtual __int64 tryTeleportTo(vec3_t const &, bool, bool, int, int);
+	virtual void checkBlockCollisions(AABB const &);
+	virtual void checkBlockCollisions(void);
+	virtual bool breaksFallingBlocks(void) const;
+	virtual bool blockedByShield(__int64 const &, C_Entity &);
+	virtual void moveRelative(float, float, float, float);
+	virtual void teleportTo(vec3_t const &, bool, int, int);
+	virtual void tryTeleportTo(vec3_t const &, bool, bool, int, int);
 	virtual void chorusFruitTeleport(vec3_t &);
 	virtual __int64 lerpTo(vec3_t const &, vec2_t const &, int);
-
-public:
 	virtual void lerpMotion(vec3_t const &);
 
 private:
@@ -215,9 +211,7 @@ private:
 
 public:
 	virtual void setScoreTag(std::string const &);
-
-private:
-	virtual __int64 getScoreTag(void) const;
+	virtual TextHolder *getScoreTag(void) const;
 
 public:
 	virtual bool isInWater(void) const;
