@@ -30,6 +30,7 @@ struct ClickWindow {
 
 class ClickGui {
 private:
+
 	inline static std::shared_ptr<ClickWindow> getWindow(const char* id);
 	inline static std::shared_ptr<ClickModule> getClickModule(std::shared_ptr<ClickWindow> window, const char* id);
 

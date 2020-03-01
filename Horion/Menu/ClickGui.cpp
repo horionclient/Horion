@@ -5,6 +5,7 @@ bool isRightClickDown = false;
 bool shouldToggleLeftClick = false;  // If true, toggle the focused module
 bool shouldToggleRightClick = false;
 bool resetStartPos = true;
+bool initialised = false;
 
 std::map<unsigned int, std::shared_ptr<ClickWindow>> windowMap;
 
@@ -642,7 +643,7 @@ void ClickGui::render() {
 	DrawUtils::flush();
 }
 
-void ClickGui::init() {}
+void ClickGui::init() { initialised = true; }
 
 void ClickGui::onMouseClickUpdate(int key, bool isDown) {
 	switch (key) {
@@ -658,6 +659,8 @@ void ClickGui::onMouseClickUpdate(int key, bool isDown) {
 }
 
 void ClickGui::onKeyUpdate(int key, bool isDown) {
+	if (!initialised)
+		return;
 	static auto clickGuiMod = moduleMgr->getModule<ClickGuiMod>();
 	
 	if (!isDown)

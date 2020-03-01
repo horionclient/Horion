@@ -265,8 +265,6 @@ DWORD WINAPI start(LPVOID lpParam) {
 	GameData::initGameData(gameModule, &mem, (HMODULE)lpParam);
 	Target::init(g_Data.getPtrLocalPlayer());
 
-	TabGui::init();
-	ClickGui::init();
 	Hooks::Init();
 
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL);  // Checking Keypresses
@@ -286,6 +284,8 @@ DWORD WINAPI start(LPVOID lpParam) {
 	logF("Managers initialized");
 
 	Hooks::Enable();
+	TabGui::init();
+	ClickGui::init();
 
 	logF("Hooks enabled");
 

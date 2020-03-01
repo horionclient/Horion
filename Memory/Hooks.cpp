@@ -98,6 +98,7 @@ void Hooks::Init() {
 
 		void* _renderText = reinterpret_cast<void*>(FindSignature("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 ?? 0F 29 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 89 54 24"));
 		g_Hooks.RenderTextHook = std::make_unique<FuncHook>(_renderText, Hooks::RenderText);
+		g_Hooks.RenderTextHook->enableHook();
 
 		void* setupRender = reinterpret_cast<void*>(FindSignature("40 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B DA 48 8B F9 33 D2 ?? ?? ?? ?? ?? ?? 48 8D 4C 24 30 E8 ?? ?? ?? ?? 4C 8B CF 4C 8B C3 48 8B 57 ?? 48 8D 4C 24"));
 		g_Hooks.UIScene_setupAndRenderHook = std::make_unique<FuncHook>(setupRender, Hooks::UIScene_setupAndRender);
@@ -273,8 +274,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	static auto oText = g_Hooks.RenderTextHook->GetFastcall<__int64, __int64, C_MinecraftUIRenderContext*>();
 	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
 	DrawUtils::setCtx(renderCtx, dat);
-	static auto hudModule = moduleMgr->getModule<HudModule>();
-	static auto clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 
 	{
 		static bool wasConnectedBefore = false;
@@ -312,8 +311,11 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			wasConnectedBefore = true;
 	}
 
-	if (GameData::shouldHide() || !g_Hooks.shouldRender)
+	if (GameData::shouldHide() || !g_Hooks.shouldRender || !moduleMgr->isInitialized())
 		return oText(a1, renderCtx);
+
+	static auto hudModule = moduleMgr->getModule<HudModule>();
+	static auto clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 
 	ImGui.startFrame();
 
