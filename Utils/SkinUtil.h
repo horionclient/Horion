@@ -12,6 +12,16 @@
 
 using namespace nlohmann;
 
+struct SkinData {
+public:
+	char pad_0x0000[0x4];     //0x0000
+	unsigned int SkinWidth;   //0x0004
+	unsigned int SkinHeight;  //0x0008
+	char pad_0x000C[0x4];     //0x000C
+	void* skinData;           //0x0010
+	size_t skinSize;          //0x0018
+};
+
 namespace MeshStructs {
 struct face {
 	struct facePart {
@@ -32,32 +42,7 @@ struct meshData {
 
 class SkinUtil {
 public:
-	static void importGeo(std::wstring filePath) {
-		std::ifstream fileStr(filePath, std::ios::in | std::ios::binary);
-		if (fileStr) {
-			std::string contents;
-			fileStr.seekg(0, std::ios::end);
-			contents.resize(fileStr.tellg());
-			fileStr.seekg(0, std::ios::beg);
-			fileStr.read(&contents[0], contents.size());
-			fileStr.close();
-
-			auto hResourceGeometry = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_TEXT1), "TEXT");
-			auto hMemoryGeometry = LoadResource(g_Data.getDllModule(), hResourceGeometry);
-
-			auto sizeGeometry = SizeofResource(g_Data.getDllModule(), hResourceGeometry);
-			auto ptrGeometry = LockResource(hMemoryGeometry);
-			logF("Starting geometry import");
-			auto mesh = SkinUtil::objToMesh(contents.c_str());
-			logF("Mesh created (verts: %i, uvs: %i, normals: %i, faces: %i)", mesh.vertices.size(), mesh.uvs.size(), mesh.normals.size(), mesh.faces.size());
-			std::string moddedGeo = SkinUtil::modGeometry(reinterpret_cast<char*>(ptrGeometry), mesh);
-			g_Data.setCustomGeometryOverride(true, std::make_shared<std::string>(moddedGeo));
-			logF("Geometry import done");
-
-			if (hMemoryGeometry)
-				FreeResource(hMemoryGeometry);
-		}
-	}
+	static void importGeo(std::wstring filePath);
 	static std::string modGeometry(const char* oldGeoStr, MeshStructs::meshData mesh) {
 		auto oldGeo = std::string(oldGeoStr);
 		json geoMod = json::parse(oldGeo);  // If this crashes, coolroblox json is invalid

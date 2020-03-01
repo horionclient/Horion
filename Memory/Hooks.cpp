@@ -352,7 +352,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 		// Main Menu
 		std::string screenName(g_Hooks.currentScreenName);
-		if (strcmp(screenName.c_str(), "start_screen") == 0 /* || (screenName.size() >= 11 && strncmp(screenName.c_str(), "play_screen", 11)) == 0*/) {
+		if (strcmp(screenName.c_str(), "start_screen") == 0) {
 			// Draw BIG epic horion watermark
 			/*{
 				std::string text = "H O R I O N";
@@ -365,28 +365,76 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 #if defined(_BETA) or defined(_DEBUG)
 			// Draw Custom Geo Button
-			if (g_Data.allowWIPFeatures() && ImGui.Button("Custom Geometry", vec2_t(wid.x * 0.765f, wid.y * 0.92f))) {
-				HorionDataPacket packet;
-				packet.cmd = CMD_FILECHOOSER;
-				packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[200]));
-				strcpy_s((char*)packet.data.get(), 100, "{\"title\": \"Select a 3d objet\", \"filter\":\"Object Files (*.obj)|*.obj\"}");
-				packet.dataArraySize = (int)strlen((char*)packet.data.get());
-				packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
-					wchar_t* jsonData = reinterpret_cast<wchar_t*>(pk->data.get());
-					std::wstring jsonDataStr(jsonData);
+			if (g_Data.allowWIPFeatures()) {
+				if (ImGui.Button("Custom Geometry", vec2_t(wid.x * 0.765f, wid.y * 0.92f))) {
+					HorionDataPacket packet;
+					packet.cmd = CMD_FILECHOOSER;
+					packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[200]));
+					strcpy_s((char*)packet.data.get(), 100, "{\"title\": \"Select a 3d object\", \"filter\":\"Object Files (*.obj)|*.obj\"}");
+					packet.dataArraySize = (int)strlen((char*)packet.data.get());
+					packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
+						if (pk->params[0] != 1 && std::get<0>(g_Data.getCustomGeoOverride())) {  // Dialog Canceled, reset geo
+							auto box = g_Data.addInfoBox("Geometry reset", "Geometry override removed");
+							box->closeTimer = 1;
+							return;
+						}
 
-					json parsed = json::parse(jsonDataStr);
-					if (parsed["path"].is_string()) {
-						auto box = g_Data.addInfoBox("Importing Skin", "Please wait...");
-						std::thread gamer([parsed, box]() {
-							SkinUtil::importGeo(Utils::stringToWstring(parsed["path"].get<std::string>()));
-							box->fadeTarget = 0;
-						});
-						gamer.detach();
-					}
-				});
+						wchar_t* jsonData = reinterpret_cast<wchar_t*>(pk->data.get());
+						std::wstring jsonDataStr(jsonData);
 
-				g_Data.sendPacketToInjector(packet);
+						json parsed = json::parse(jsonDataStr);
+						if (parsed["path"].is_string()) {
+							auto box = g_Data.addInfoBox("Importing Skin", "Please wait...");
+							std::thread gamer([parsed, box]() {
+								SkinUtil::importGeo(Utils::stringToWstring(parsed["path"].get<std::string>()));
+								box->fadeTarget = 0;
+							});
+							gamer.detach();
+						}
+					});
+
+					g_Data.sendPacketToInjector(packet);
+				}
+				if (ImGui.Button("Custom Texture", vec2_t(wid.x * 0.5f, wid.y * 0.92f), true)) {
+					HorionDataPacket packet;
+					packet.cmd = CMD_FILECHOOSER;
+					packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[200]));
+					strcpy_s((char*)packet.data.get(), 100, "{\"title\": \"Select a raw image file\", \"filter\":\"Raw image files (*.data, *.raw)|*.data;*.raw\"}");
+					packet.dataArraySize = (int)strlen((char*)packet.data.get());
+					packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
+						if (pk->params[0] != 1 && std::get<0>(g_Data.getCustomTextureOverride())) {  // Dialog Canceled, reset texture
+							auto box = g_Data.addInfoBox("Texture reset", "Texture override removed");
+							box->closeTimer = 1;
+							return;
+						}
+
+						wchar_t* jsonData = reinterpret_cast<wchar_t*>(pk->data.get());
+						std::wstring jsonDataStr(jsonData);
+
+						json parsed = json::parse(jsonDataStr);
+						if (parsed["path"].is_string()) {
+							auto box = g_Data.addInfoBox("Importing texture...", "");
+							std::thread gamer([parsed, box]() {
+								auto contents = Utils::readFileContents(Utils::stringToWstring(parsed["path"].get<std::string>()));
+								if (contents.size() > 0) {
+									auto texturePtr = std::shared_ptr<unsigned char[]>(new unsigned char[contents.size() + 1]);
+									memcpy(texturePtr.get(), contents.c_str(), contents.size());
+									texturePtr.get()[contents.size()] = 0;
+									g_Data.setCustomTextureOverride(true, std::make_shared<std::tuple<std::shared_ptr<unsigned char[]>, size_t>>(texturePtr, contents.size()));
+									box->title = "Success";
+									box->closeTimer = 0.3f;
+								} else {
+									box->title = "Error!";
+									box->message = "Could not read texture file (empty?)";
+									box->closeTimer = 2.f;
+								}
+							});
+							gamer.detach();
+						}
+					});
+
+					g_Data.sendPacketToInjector(packet);
+				}
 			}
 #endif
 		} else {
@@ -607,6 +655,10 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		auto box = g_Data.getFreshInfoBox();
 		if (box) {
 			box->fade();
+			if (box->fadeTarget == 1 && box->closeTimer <= 0 && box->closeTimer > -1)
+				box->fadeTarget = 0;
+			else if (box->closeTimer > 0 && box->fadeVal > 0.9f)
+				box->closeTimer -= 1.f / 60;
 			const float paddingHoriz = 40 * box->fadeVal;
 			const float paddingVert = 10 * box->fadeVal;
 			const float titleTextSize = box->fadeVal * 2;
@@ -622,18 +674,21 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				substring = substring.substr(brea);
 				lines++;
 			}
+			if (box->message.size() == 0)
+				lines = 0;
 
 			const float messageHeight = DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() * messageTextSize * lines;
 
 			float titleWidth = DrawUtils::getTextWidth(&box->title, titleTextSize);
 			float msgWidth = DrawUtils::getTextWidth(&box->message, messageTextSize);
+			vec2_t centerPos(wid.x / 2.f, wid.y / 9.f);
 			vec2_t textPos = vec2_t(wid.x / 2.f - titleWidth / 2.f, wid.y / 9.f);
 			vec2_t msgPos = vec2_t(wid.x / 2.f - msgWidth / 2.f, textPos.y + titleTextHeight + paddingVert);
 			vec4_t rectPos = vec4_t(
-				textPos.x - paddingHoriz,
-				textPos.y - paddingVert,
-				textPos.x + paddingHoriz + max(titleWidth, msgWidth),
-				textPos.y + paddingVert * 2 + titleTextHeight + messageHeight * lines);
+				centerPos.x - paddingHoriz - max(titleWidth, msgWidth) / 2,
+				centerPos.y - paddingVert,
+				centerPos.x + paddingHoriz + max(titleWidth, msgWidth) / 2,
+				centerPos.y + paddingVert * 2 + titleTextHeight + messageHeight * lines);
 			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), box->fadeVal);
 			DrawUtils::drawRectangle(rectPos, rcolors, box->fadeVal, 2.f);
 			DrawUtils::drawText(textPos, &box->title, MC_Color(), titleTextSize, box->fadeVal);
@@ -1172,7 +1227,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 			auto overrideGeo = std::get<1>(geoOverride);
 			newGeometryData = new TextHolder(*overrideGeo.get());
 		} else {  // Default Skin
-				  /*char* str;  // Obj text
+			/*char* str;  // Obj text
 			{
 				auto hResourceObj = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_OBJ), "TEXT");
 				auto hMemoryObj = LoadResource(g_Data.getDllModule(), hResourceObj);
@@ -1193,12 +1248,20 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 		newSkinData->SkinHeight = 128;
 		newSkinData->skinData = ptrSteve;
 		newSkinData->skinSize = sizeSteve;
+
+		auto texOverride = g_Data.getCustomTextureOverride();
+		auto texture = std::get<1>(texOverride);  // Put it here so it won't go out of scope until after it has been used
+		if (std::get<0>(texOverride)) {           // Enabled
+			newSkinData->skinData = std::get<0>(*texture.get()).get();
+			newSkinData->skinSize = std::get<1>(*texture.get());
+		}
+
 		//Logger::WriteBigLogFileF(newGeometryData->getTextLength() + 20, "Geometry: %s", newGeometryData->getText());
 		TextHolder* newSkinResourcePatch = new TextHolder(Utils::base64_decode("ewogICAiZ2VvbWV0cnkiIDogewogICAgICAiYW5pbWF0ZWRfZmFjZSIgOiAiZ2VvbWV0cnkuYW5pbWF0ZWRfZmFjZV9wZXJzb25hXzRjZGJiZmFjYTI0YTk2OGVfMF8wIiwKICAgICAgImRlZmF1bHQiIDogImdlb21ldHJ5LnBlcnNvbmFfNGNkYmJmYWNhMjRhOTY4ZV8wXzAiCiAgIH0KfQo="));
 
 		TextHolder* fakeName = g_Data.getFakeName();
 
-		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, newGeometryData == nullptr ? skinData : newSkinData, capeData, animatedImageDataArr, newGeometryData == nullptr ? skinResourcePatch : newSkinResourcePatch, newGeometryData == nullptr ? skinGeometryData : newGeometryData, skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, fakeName != nullptr ? fakeName : thirdPartyName, fakeName != nullptr ? true : thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
+		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, (newGeometryData == nullptr && !std::get<0>(texOverride)) ? skinData : newSkinData, capeData, animatedImageDataArr, newGeometryData == nullptr ? skinResourcePatch : newSkinResourcePatch, newGeometryData == nullptr ? skinGeometryData : newGeometryData, skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, fakeName != nullptr ? fakeName : thirdPartyName, fakeName != nullptr ? true : thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
 
 		if (hMemoryGeometry)
 			FreeResource(hMemoryGeometry);

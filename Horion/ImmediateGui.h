@@ -32,7 +32,7 @@ public:
 	vec4_t getSelectableSurface();
 	void draw(vec2_t mousePos, const char* label);
 	bool canClick() { return canClickB; };
-
+	void updatePos(vec2_t pos) { this->pos = pos; }
 	
 };
 
@@ -68,7 +68,7 @@ public:
 	void onMouseClickUpdate(int key, bool isDown);
 	void startFrame();
 	void endFrame();
-	bool Button(const char* label, vec2_t pos);
+	bool Button(const char* label, vec2_t pos, bool centered = false);
 };
 
 extern ImmediateGui ImGui;

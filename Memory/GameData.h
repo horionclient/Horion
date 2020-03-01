@@ -13,6 +13,7 @@
 #include "../SDK/CHIDController.h"
 #include "../SDK/CMoveInputHandler.h"
 #include "../SDK/CRakNetInstance.h"
+#include "../Utils/SkinUtil.h"
 #include "../Utils/TextFormat.h"
 #include "SlimMem.h"
 
@@ -36,6 +37,7 @@ struct InfoBoxData {
 	bool isOpen = true;
 	float fadeTarget = 1;
 	float fadeVal = 0;
+	float closeTimer = -1;
 	std::string title;
 	std::string message;
 
@@ -47,6 +49,8 @@ struct InfoBoxData {
 			isOpen = false;
 	}
 };
+
+struct SkinData;
 
 class GameData {
 private:
@@ -64,6 +68,8 @@ private:
 	int lastRequestId = 0;
 	std::shared_ptr<std::string> customGeometry;
 	bool customGeoActive = false;
+	std::shared_ptr<std::tuple<std::shared_ptr<unsigned char[]>, size_t>> customTexture;
+	bool customTextureActive = false;
 	std::queue<std::shared_ptr<InfoBoxData>> infoBoxQueue;
 
 	bool injectorConnectionActive = false;
@@ -129,10 +135,20 @@ public:
 		if (setActive)
 			this->customGeometry.swap(customGeoPtr);
 		else
-			this->customGeometry.swap(std::shared_ptr<std::string>());
+			this->customGeometry.reset();
 	}
 	inline std::tuple<bool, std::shared_ptr<std::string>> getCustomGeoOverride() {
 		return std::make_tuple(this->customGeoActive, this->customGeometry);
+	}
+	inline void setCustomTextureOverride(bool setActive, std::shared_ptr<std::tuple<std::shared_ptr<unsigned char[]>, size_t>> customTexturePtr) {
+		this->customTextureActive = setActive;
+		if (setActive)
+			this->customTexture.swap(customTexturePtr);
+		else
+			this->customTexture.reset();
+	}
+	inline auto getCustomTextureOverride() {
+		return std::make_tuple(this->customTextureActive, this->customTexture);
 	}
 	inline AccountInformation getAccountInformation() { return this->accountInformation; };
 	inline void setAccountInformation(AccountInformation newAcc) {

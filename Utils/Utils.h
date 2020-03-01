@@ -6,6 +6,8 @@
 #include <Windows.h>
 #include <Psapi.h>
 
+#include <fstream>
+#include <sstream>
 #include <algorithm>
 #include <ctime>
 #include <random>
@@ -384,6 +386,20 @@ public:
 		std::mt19937 generator(rd());
 		std::shuffle(str.begin(), str.end(), generator);
 		return str.substr(0, size);
+	}
+
+	static std::string readFileContents(std::wstring filePath) {
+		std::ifstream fileStr(filePath, std::ios::in | std::ios::binary);
+		if (fileStr) {
+			std::string contents;
+			fileStr.seekg(0, std::ios::end);
+			contents.resize(fileStr.tellg());
+			fileStr.seekg(0, std::ios::beg);
+			fileStr.read(&contents[0], contents.size());
+			fileStr.close();
+			return contents;
+		}
+		return "";
 	}
 
 	static uintptr_t FindSignatureModule(const char* szModule, const char* szSignature) {

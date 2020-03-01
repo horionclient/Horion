@@ -33,12 +33,19 @@ vec4_t ButtonInfo::getSelectableSurface() {
 
 void ButtonInfo::draw(vec2_t mousePos, const char* label) {
 	calculateSize(label);
-	DrawUtils::drawText(pos, &std::string(label), MC_Color());
+	auto surface = getSelectableSurface();
+	vec2_t textPos = pos;
+	if (centered) {
+		textPos.x -= DrawUtils::getTextWidth(&std::string(label)) / 2;
+		textPos.y -= DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() / 2;
+	}
+		
+	DrawUtils::drawText(textPos, &std::string(label), MC_Color());
 	if (isInSelectableSurface(mousePos)) {  // Mouse hovering over us
-		DrawUtils::fillRectangle(getSelectableSurface(), MC_Color(28, 50, 77, 1), 1);
+		DrawUtils::fillRectangle(surface, MC_Color(28, 50, 77, 1), 1);
 		this->canClickB = true;
 	} else {
-		DrawUtils::fillRectangle(getSelectableSurface(), MC_Color(13, 29, 48, 1), 1);
+		DrawUtils::fillRectangle(surface, MC_Color(13, 29, 48, 1), 1);
 		this->canClickB = false;
 	}		
 }
@@ -77,14 +84,15 @@ void ImmediateGui::endFrame() {
 	this->rightMb.isClicked = false;
 }
 
-bool ImmediateGui::Button(const char* label, vec2_t pos) {
+bool ImmediateGui::Button(const char* label, vec2_t pos, bool centered) {
 	auto id = Utils::getCrcHash(label);
 	if (this->components.find(id) == this->components.end()) {  // Create new button
-		this->components[id] = std::make_shared<ButtonInfo>(id, pos);
+		this->components[id] = std::make_shared<ButtonInfo>(id, pos, centered);
 	}
 	auto comp = this->components[id];
 	auto button = dynamic_cast<ButtonInfo*>(comp.get());
 
+	button->updatePos(pos);
 	button->draw(this->mousePos, label);
 	if (button->canClick() && this->leftMb.trySteal()) {  // Click
 		return true;
