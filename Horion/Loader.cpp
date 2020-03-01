@@ -269,19 +269,6 @@ DWORD WINAPI start(LPVOID lpParam) {
 	ClickGui::init();
 	Hooks::Init();
 
-	std::thread countThread([] {
-		while (isRunning) {
-			Sleep(1000);
-			g_Data.fps = g_Data.frameCount;
-			g_Data.frameCount = 0;
-			g_Data.cpsLeft = g_Data.leftclickCount;
-			g_Data.leftclickCount = 0;
-			g_Data.cpsRight = g_Data.rightclickCount;
-			g_Data.rightclickCount = 0;
-		}
-	});
-	countThread.detach();
-
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL);  // Checking Keypresses
 
 	logF("Waiting for injector");
@@ -297,6 +284,23 @@ DWORD WINAPI start(LPVOID lpParam) {
 	configMgr->init();
 
 	logF("Managers initialized");
+
+	Hooks::Enable();
+
+	logF("Hooks enabled");
+
+	std::thread countThread([] {
+		while (isRunning) {
+			Sleep(1000);
+			g_Data.fps = g_Data.frameCount;
+			g_Data.frameCount = 0;
+			g_Data.cpsLeft = g_Data.leftclickCount;
+			g_Data.leftclickCount = 0;
+			g_Data.cpsRight = g_Data.rightclickCount;
+			g_Data.rightclickCount = 0;
+		}
+	});
+	countThread.detach();
 
 	ExitThread(0);
 }

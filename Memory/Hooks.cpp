@@ -167,45 +167,22 @@ void Hooks::Init() {
 		void* _getSkinPack = reinterpret_cast<void*>(FindSignature("40 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? B8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 2B E0 48 C7 85 ?? ?? ?? ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 8B F2"));
 		g_Hooks.SkinRepository___loadSkinPackHook = std::make_unique<FuncHook>(_getSkinPack, Hooks::SkinRepository___loadSkinPack);
 
-
-	#ifdef TEST_DEBUG
+#ifdef TEST_DEBUG
 		void* addAction = reinterpret_cast<void*>(FindSignature("40 55 56 57 41 56 41 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 8B EA 4C 8B F1 4C 8B C2 48 8B 51 ?? 48 8B 49 ?? E8"));
 		g_Hooks.InventoryTransactionManager__addActionHook = std::make_unique<FuncHook>(addAction, Hooks::InventoryTransactionManager__addAction);
-	#endif
-	}
-	MH_EnableHook(MH_ALL_HOOKS);
+#endif
+	
+}
 // clang-format on
 }
 
 void Hooks::Restore() {
-	g_Hooks.GameMode_tickHook->Restore();
-	g_Hooks.ChatScreenController_sendChatMessageHook->Restore();
-	g_Hooks.RenderTextHook->Restore();
-	g_Hooks.AppPlatform_getGameEditionHook->Restore();
-	g_Hooks.PleaseAutoCompleteHook->Restore();
-	g_Hooks.LevelRendererPlayer_getFovHook->Restore();
-	g_Hooks.ChestBlockActor_tickHook->Restore();
-	g_Hooks.LoopbackPacketSender_sendToServerHook->Restore();
-	g_Hooks.MultiLevelPlayer_tickHook->Restore();
-	g_Hooks.GameMode_startDestroyBlockHook->Restore();
-	g_Hooks.HIDController_keyMouseHook->Restore();
-	g_Hooks.BlockLegacy_getRenderLayerHook->Restore();
-	g_Hooks.LevelRenderer_renderLevelHook->Restore();
-	g_Hooks.BlockLegacy_getLightEmissionHook->Restore();
-	g_Hooks.ClickFuncHook->Restore();
-	g_Hooks.MoveInputHandler_tickHook->Restore();
-	g_Hooks.ChestScreenController_tickHook->Restore();
-	g_Hooks.GetGammaHook->Restore();
-	g_Hooks.Actor_isInWaterHook->Restore();
-	g_Hooks.JumpPowerHook->Restore();
-	g_Hooks.MinecraftGame_onAppSuspendedHook->Restore();
-	g_Hooks.Actor_ladderUpHook->Restore();
-	g_Hooks.RakNetInstance_tickHook->Restore();
-	g_Hooks.GameMode_getPickRangeHook->Restore();
-	g_Hooks.PaintingRenderer__renderHook->Restore();
-	//g_Hooks.InventoryTransactionManager_addActionHook->Restore();
 	MH_DisableHook(MH_ALL_HOOKS);
 	Sleep(10);
+}
+
+void Hooks::Enable() {
+	MH_EnableHook(MH_ALL_HOOKS);
 }
 
 void Hooks::GameMode_tick(C_GameMode* _this) {
@@ -1265,7 +1242,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 			auto overrideGeo = std::get<1>(geoOverride);
 			newGeometryData = new TextHolder(*overrideGeo.get());
 		} else {  // Default Skin
-				  /*char* str;  // Obj text
+			/*char* str;  // Obj text
 			{
 				auto hResourceObj = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_OBJ), "TEXT");
 				auto hMemoryObj = LoadResource(g_Data.getDllModule(), hResourceObj);
@@ -1321,10 +1298,10 @@ void Hooks::PaintingRenderer__render(__int64 _this, __int64 a2, __int64 a3) {
 
 bool Hooks::DirectoryPackAccessStrategy__isTrusted(__int64 _this) {
 	static auto func = g_Hooks.DirectoryPackAccessStrategy__isTrustedHook->GetFastcall<bool, __int64>();
-	
+
 	if (Utils::getRttiBaseClassName(reinterpret_cast<void*>(_this)) == "DirectoryPackAccessStrategy")
 		return true;
-	
+
 	return func(_this);
 }
 

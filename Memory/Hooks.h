@@ -50,6 +50,7 @@ private:
 public:
 	static void Init();
 	static void Restore();
+	static void Enable();
 
 private:
 	static void GameMode_tick(C_GameMode* _this);
