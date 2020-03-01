@@ -14,7 +14,7 @@ bool BindCommand::execute(std::vector<std::string>* args) {
 	std::string moduleName = args->at(1);
 	assertTrue(moduleName.size() > 0);
 
-	IModule* mod = moduleMgr->getModuleByName(moduleName);
+	auto mod = moduleMgr->getModuleByName(moduleName);
 	if (mod == nullptr) {
 		clientMessageF("%sCould not find module with name: %s", RED, moduleName.c_str());
 		return true;
@@ -59,7 +59,7 @@ bool BindCommand::execute(std::vector<std::string>* args) {
 			keyCode -= 0x20;
 
 		if (keyCode >= 0x30 && keyCode <= 0x5A) {
-			IModule* mod = moduleMgr->getModuleByName(moduleName);
+			auto mod = moduleMgr->getModuleByName(moduleName);
 			if (mod == nullptr) {
 				clientMessageF("%sCould not find module with name: %s", RED, moduleName.c_str());
 			} else {

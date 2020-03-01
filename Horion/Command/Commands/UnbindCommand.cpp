@@ -13,7 +13,7 @@ bool UnbindCommand::execute(std::vector<std::string>* args) {
 	std::string moduleName = args->at(1);
 
 	if (moduleName.size() > 0) {
-		IModule* mod = moduleMgr->getModuleByName(moduleName);
+		auto mod = moduleMgr->getModuleByName(moduleName);
 		if (mod == nullptr) {
 			if (strcmp(moduleName.c_str(), "all") == 0) {
 				if (args->size() >= 3 && strcmp(args->at(2).c_str(), "force") == 0) {

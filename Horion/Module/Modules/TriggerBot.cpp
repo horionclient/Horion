@@ -20,7 +20,8 @@ void TriggerBot::onTick(C_GameMode* gm) {
 		if (!Target::isValidTarget(target))
 			return;
 
-		if (!moduleMgr->getModule<NoSwing>()->isEnabled()) localPlayer->swingArm();
+		if (!moduleMgr->getModule<NoSwing>()->isEnabled()) 
+			localPlayer->swingArm();
 		gm->attack(target);
 
 		Odelay = 0;

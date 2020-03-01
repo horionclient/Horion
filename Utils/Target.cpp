@@ -16,12 +16,9 @@ bool Target::isValidTarget(C_Entity* ent) {
 	if (ent == g_Data.getLocalPlayer())
 		return false;
 
-	static AntiBot* antibot = moduleMgr->getModule<AntiBot>();
-	if (antibot == nullptr) antibot = moduleMgr->getModule<AntiBot>();
-	static Hitbox* hitboxMod = moduleMgr->getModule<Hitbox>();
-	if (hitboxMod == nullptr) hitboxMod = moduleMgr->getModule<Hitbox>();
-	static Teams* teams = moduleMgr->getModule<Teams>();
-	if (teams == nullptr) teams = moduleMgr->getModule<Teams>();
+	static auto antibot = moduleMgr->getModule<AntiBot>();
+	static auto hitboxMod = moduleMgr->getModule<Hitbox>();
+	static auto teams = moduleMgr->getModule<Teams>();
 
 	if (!ent->isAlive())
 		return false;

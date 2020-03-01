@@ -16,14 +16,14 @@ const char* NameTags::getModuleName() {
 
 void drawNameTags(C_Entity* ent, bool isRegularEntitie) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
-	static NameTags* NameTagsMod = moduleMgr->getModule<NameTags>();
+	static auto nameTagsMod = moduleMgr->getModule<NameTags>();
 
 	if (ent != localPlayer) {
 		if (ent->timeSinceDeath > 0)
 			return;
 		if (ent->getNameTag()->getTextLength() < 1)
 			return;
-		if (Target::isValidTarget(ent) && NameTagsMod != nullptr)
+		if (Target::isValidTarget(ent) && nameTagsMod != nullptr)
 			DrawUtils::drawNameTags(ent, 0.95f);
 	}
 }

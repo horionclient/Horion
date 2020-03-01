@@ -15,7 +15,7 @@ bool ToggleCommand::execute(std::vector<std::string>* args) {
 
 	assertTrue(moduleName.size() > 0);
 
-	IModule* mod = moduleMgr->getModuleByName(moduleName);
+	auto mod = moduleMgr->getModuleByName(moduleName);
 	if (mod == nullptr) {
 		clientMessageF("%sCould not find Module with name: %s", RED, moduleName.c_str());
 	} else {

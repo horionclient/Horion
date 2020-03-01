@@ -216,8 +216,8 @@ void ClickGui::renderCategory(Category category) {
 				if (!ourWindow->isInAnimation && !isDragging && rectPos.contains(&mousePos)) {  // Is the Mouse hovering above us?
 					DrawUtils::fillRectangle(rectPos, selectedModuleColor, backgroundAlpha);
 					std::string tooltip = mod->getTooltip();
-					ClickGuiMod* clickgui = moduleMgr->getModule<ClickGuiMod>();
-					if (clickgui->showTooltips && tooltip.size() > 0)
+					static auto clickGuiMod = moduleMgr->getModule<ClickGuiMod>();
+					if (clickGuiMod->showTooltips && tooltip.size() > 0)
 						renderTooltip(&tooltip);
 					if (shouldToggleLeftClick && !ourWindow->isInAnimation) {  // Are we being clicked?
 						mod->toggle();
@@ -658,29 +658,27 @@ void ClickGui::onMouseClickUpdate(int key, bool isDown) {
 }
 
 void ClickGui::onKeyUpdate(int key, bool isDown) {
-	static IModule* clickGuiMod = moduleMgr->getModule<ClickGuiMod>();
-	if (clickGuiMod == NULL)
-		clickGuiMod = moduleMgr->getModule<ClickGuiMod>();
-	else {
-		if (!isDown)
-			return;
+	static auto clickGuiMod = moduleMgr->getModule<ClickGuiMod>();
+	
+	if (!isDown)
+		return;
 
-		if (!clickGuiMod->isEnabled()) {
-			timesRendered = 0;
-			return;
-		}
-
-		if (timesRendered < 10)
-			return;
+	if (!clickGuiMod->isEnabled()) {
 		timesRendered = 0;
-
-		switch (key) {
-		case VK_ESCAPE:
-			clickGuiMod->setEnabled(false);
-			return;
-		default:
-			if (key == clickGuiMod->getKeybind())
-				clickGuiMod->setEnabled(false);
-		}
+		return;
 	}
+
+	if (timesRendered < 10)
+		return;
+	timesRendered = 0;
+
+	switch (key) {
+	case VK_ESCAPE:
+		clickGuiMod->setEnabled(false);
+		return;
+	default:
+		if (key == clickGuiMod->getKeybind())
+			clickGuiMod->setEnabled(false);
+	}
+	
 }

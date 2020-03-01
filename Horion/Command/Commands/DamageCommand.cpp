@@ -16,10 +16,12 @@ bool DamageCommand::execute(std::vector<std::string>* args) {
 		clientMessageF("%sPlease put a number bigger than 0", RED);
 		return true;
 	}
-	if (moduleMgr->getModule<NoFall>()->isEnabled()) {
-		moduleMgr->getModule<NoFall>()->setEnabled(false);
+	auto noFallMod = moduleMgr->getModule<NoFall>();
+
+	if (noFallMod->isEnabled()) {
+		noFallMod->setEnabled(false);
 		g_Data.getLocalPlayer()->causeFallDamage(amount + 3.f);
-		moduleMgr->getModule<NoFall>()->setEnabled(true);
+		noFallMod->setEnabled(true);
 	} else {
 		g_Data.getLocalPlayer()->causeFallDamage(amount + 3.f);
 	}

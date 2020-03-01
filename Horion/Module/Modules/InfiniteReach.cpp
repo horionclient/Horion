@@ -16,30 +16,27 @@ const char* InfiniteReach::getModuleName() {
 static std::vector<C_Entity*> targetList0;
 
 void findEntities(C_Entity* currentEntity, bool isRegularEntitie) {
-	static InfiniteReach* InfiniteReachMod = static_cast<InfiniteReach*>(moduleMgr->getModule<InfiniteReach>());
-	if (InfiniteReachMod == 0)
-		InfiniteReachMod = static_cast<InfiniteReach*>(moduleMgr->getModule<InfiniteReach>());
-	else {
-		if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
-			return;
+	static auto infiniteReachMod = moduleMgr->getModule<InfiniteReach>();
+	
+	if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
+		return;
 
-		if (currentEntity == 0)
-			return;
+	if (currentEntity == 0)
+		return;
 
-		if (currentEntity->timeSinceDeath > 0 || currentEntity->damageTime >= 7)
-			return;
+	if (currentEntity->timeSinceDeath > 0 || currentEntity->damageTime >= 7)
+		return;
 
-		if (FriendList::findPlayer(currentEntity->getNameTag()->getText()))  // Skip Friend
-			return;
+	if (FriendList::findPlayer(currentEntity->getNameTag()->getText()))  // Skip Friend
+		return;
 
-		if (!Target::isValidTarget(currentEntity))
-			return;
+	if (!Target::isValidTarget(currentEntity))
+		return;
 
-		float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
+	float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
 
-		if (dist < InfiniteReachMod->range) {
-			targetList0.push_back(currentEntity);
-		}
+	if (dist < infiniteReachMod->range) {
+		targetList0.push_back(currentEntity);
 	}
 }
 
@@ -52,7 +49,8 @@ void InfiniteReach::onTick(C_GameMode* gm) {
 	Odelay++;
 
 	if (targetList0.size() > 0 && Odelay >= delay) {
-		if (!moduleMgr->getModule<NoSwing>()->isEnabled()) g_Data.getLocalPlayer()->swingArm();
+		if (!moduleMgr->getModule<NoSwing>()->isEnabled()) 
+			g_Data.getLocalPlayer()->swingArm();
 
 		float calcYaw = (gm->player->yaw + 90) * (PI / 180);
 		float calcPitch = (gm->player->pitch) * -(PI / 180);

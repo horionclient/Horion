@@ -273,6 +273,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	static auto oText = g_Hooks.RenderTextHook->GetFastcall<__int64, __int64, C_MinecraftUIRenderContext*>();
 	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
 	DrawUtils::setCtx(renderCtx, dat);
+	static auto hudModule = moduleMgr->getModule<HudModule>();
+	static auto clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 
 	{
 		static bool wasConnectedBefore = false;
@@ -386,19 +388,11 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			}
 #endif
 		} else {
-			static HudModule* hud = moduleMgr->getModule<HudModule>();
-			if (hud == nullptr)
-				hud = moduleMgr->getModule<HudModule>();
-			else {
-				shouldRenderTabGui = hud->tabgui && hud->isEnabled();
-				shouldRenderArrayList = hud->arraylist && hud->isEnabled();
-				shouldRenderWatermark = hud->watermark && hud->isEnabled();
-			}
+			shouldRenderTabGui = hudModule->tabgui && hudModule->isEnabled();
+			shouldRenderArrayList = hudModule->arraylist && hudModule->isEnabled();
+			shouldRenderWatermark = hudModule->watermark && hudModule->isEnabled();
 
-			static IModule* ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
-			if (ClickGuiModule == nullptr)
-				ClickGuiModule = moduleMgr->getModule<ClickGuiMod>();
-			else if (ClickGuiModule->isEnabled()) {
+			if (clickGuiModule->isEnabled()) {
 				ClickGui::render();
 				shouldRenderArrayList = false;
 				shouldRenderTabGui = false;
@@ -420,10 +414,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				mousePos.mul(windowSize);
 
 				// Draw Horion logo
-				static HudModule* hud = moduleMgr->getModule<HudModule>();
-				if (hud == nullptr)
-					hud = moduleMgr->getModule<HudModule>();
-				else if (shouldRenderWatermark) {
+				if (shouldRenderWatermark) {
 					constexpr float nameTextSize = 1.5f;
 					constexpr float versionTextSize = 0.7f;
 					static const float textHeight = (nameTextSize + versionTextSize * 0.7f /* We don't quite want the version string in its own line, just a bit below the name */) * DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight();
@@ -476,7 +467,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 								moduleName = moduleNameChr;
 							else {
 								char text[50];
-								sprintf_s(text, 50, "%s%s", moduleNameChr, hud->keybinds ? std::string(" [" + std::string(Utils::getKeybindName(keybind)) + "]").c_str() : "");
+								sprintf_s(text, 50, "%s%s", moduleNameChr, hudModule->keybinds ? std::string(" [" + std::string(Utils::getKeybindName(keybind)) + "]").c_str() : "");
 								moduleName = text;
 							}
 
@@ -515,13 +506,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					// Fill modContainerList with Modules
 					{
 						std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
-
 						for (auto it : *moduleList) {
-							//if (it->isEnabled())
-							{
-								HudModule* hud = moduleMgr->getModule<HudModule>();
-								if (it != hud) modContainerList.emplace(IModuleContainer(it));
-							}
+							if (it != hudModule)
+								modContainerList.emplace(IModuleContainer(it));
 						}
 					}
 
@@ -581,7 +568,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 						DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
 						DrawUtils::fillRectangle(leftRect, MC_Color(currColor), 1.f);
-						if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos) && hud->clickToggle) {
+						if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos) && hudModule->clickToggle) {
 							vec4_t selectedRect = rectPos;
 							selectedRect.x = leftRect.z;
 							if (leftMouseDown) {
@@ -604,12 +591,10 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 	// Zoom calc
 	{
-		static Zoom* zoomModule = moduleMgr->getModule<Zoom>();
-		if (zoomModule == nullptr) zoomModule = moduleMgr->getModule<Zoom>();
-		if (moduleMgr->isInitialized()) {
-			zoomModule->modifier = zoomModule->target - ((zoomModule->target - zoomModule->modifier) * 0.8f);
-			if (abs(zoomModule->modifier - zoomModule->target) < 0.1f && zoomModule->target != zoomModule->strength) zoomModule->zooming = false;
-		}
+		static auto zoomModule = moduleMgr->getModule<Zoom>();
+		zoomModule->modifier = zoomModule->target - ((zoomModule->target - zoomModule->modifier) * 0.8f);
+		if (abs(zoomModule->modifier - zoomModule->target) < 0.1f && zoomModule->target != zoomModule->strength)
+			zoomModule->zooming = false;
 	}
 
 	ImGui.endFrame();
@@ -663,10 +648,8 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightnes
 
 	static float rcolors[4];
 
-	static IModule* nightMod = moduleMgr->getModule<NightMode>();
-	if (nightMod == nullptr)
-		nightMod = moduleMgr->getModule<NightMode>();
-	else if (nightMod->isEnabled()) {
+	static auto nightMod = moduleMgr->getModule<NightMode>();
+	if (nightMod->isEnabled()) {
 		color[0] = 0.f;
 		color[1] = 0.f;
 		color[2] = 0.2f;
@@ -674,10 +657,8 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightnes
 		return color;
 	}
 
-	static IModule* mod = moduleMgr->getModule<RainbowSky>();
-	if (mod == nullptr)
-		mod = moduleMgr->getModule<RainbowSky>();
-	else if (mod->isEnabled()) {
+	static auto rainbowSkyMod = moduleMgr->getModule<RainbowSky>();
+	if (rainbowSkyMod->isEnabled()) {
 		if (rcolors[3] < 1) {
 			rcolors[0] = 1;
 			rcolors[1] = 0.2f;
@@ -701,10 +682,8 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightnes
 float Hooks::Dimension_getTimeOfDay(__int64 _this, int a2, float a3) {
 	static auto oGetTimeOfDay = g_Hooks.Dimension_getTimeOfDayHook->GetFastcall<float, __int64, int, float>();
 
-	static NightMode* nightMod = moduleMgr->getModule<NightMode>();
-	if (nightMod == nullptr)
-		nightMod = moduleMgr->getModule<NightMode>();
-	else if (nightMod->isEnabled()) {
+	static auto nightMod = moduleMgr->getModule<NightMode>();
+	if (nightMod->isEnabled()) {
 		return nightMod->modifier;
 	}
 
@@ -714,10 +693,8 @@ float Hooks::Dimension_getTimeOfDay(__int64 _this, int a2, float a3) {
 float Hooks::Dimension_getSunIntensity(__int64 a1, float a2, vec3_t* a3, float a4) {
 	static auto oGetSunIntensity = g_Hooks.Dimension_getSunIntensityHook->GetFastcall<float, __int64, float, vec3_t*, float>();
 
-	static IModule* nightMod = moduleMgr->getModule<NightMode>();
-	if (nightMod == nullptr)
-		nightMod = moduleMgr->getModule<NightMode>();
-	else if (nightMod->isEnabled()) {
+	static auto nightMod = moduleMgr->getModule<NightMode>();
+	if (nightMod->isEnabled()) {
 		return -0.5f;
 	}
 
@@ -737,21 +714,13 @@ void Hooks::Actor_lerpMotion(C_Entity* _this, vec3_t motVec) {
 	if (g_Data.getLocalPlayer() != _this)
 		return oLerp(_this, motVec);
 
-	static NoKnockBack* mod = moduleMgr->getModule<NoKnockBack>();
-	if (mod == nullptr)
-		mod = moduleMgr->getModule<NoKnockBack>();
-	else if (mod->isEnabled()) {
+	static auto noKnockbackmod = moduleMgr->getModule<NoKnockBack>();
+	if (noKnockbackmod->isEnabled()) {
 		static void* networkSender = reinterpret_cast<void*>(FindSignature("41 80 BF ?? ?? ?? ?? 00 0F 85 ?? ?? ?? ?? FF"));
-		if (networkSender == 0x0)
-			logF("Network Sender not Found!!!");
 		if (networkSender == _ReturnAddress()) {
-			if (mod->xModifier == 0 && mod->yModifier == 0)
-				return;
-			else {
-				motVec.x *= mod->xModifier;
-				motVec.y *= mod->yModifier;
-				motVec.z *= mod->xModifier;
-			}
+			motVec.x *= noKnockbackmod->xModifier;
+			motVec.y *= noKnockbackmod->yModifier;
+			motVec.z *= noKnockbackmod->xModifier;
 		}
 	}
 	oLerp(_this, motVec);
@@ -760,10 +729,8 @@ void Hooks::Actor_lerpMotion(C_Entity* _this, vec3_t motVec) {
 int Hooks::AppPlatform_getGameEdition(__int64 _this) {
 	static auto oGetEditon = g_Hooks.AppPlatform_getGameEditionHook->GetFastcall<signed int, __int64>();
 
-	static EditionFaker* mod = moduleMgr->getModule<EditionFaker>();
-	if (mod == nullptr)
-		mod = moduleMgr->getModule<EditionFaker>();
-	else if (mod->isEnabled()) {
+	static auto mod = moduleMgr->getModule<EditionFaker>();
+	if (mod->isEnabled()) {
 		return mod->getFakedEditon();
 	}
 
@@ -886,17 +853,14 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packet* packet) {
 	static auto oFunc = g_Hooks.LoopbackPacketSender_sendToServerHook->GetFastcall<void, C_LoopbackPacketSender*, C_Packet*>();
 
-	static Freecam* freecamMod = moduleMgr->getModule<Freecam>();
-	static Blink* blinkMod = moduleMgr->getModule<Blink>();
-	static NoPacket* noPacketMod = moduleMgr->getModule<NoPacket>();
+	static auto freecamMod = moduleMgr->getModule<Freecam>();
+	static auto blinkMod = moduleMgr->getModule<Blink>();
+	static auto noPacketMod = moduleMgr->getModule<NoPacket>();
 
-	if (freecamMod == nullptr || blinkMod == nullptr || noPacketMod == nullptr) {
-		freecamMod = moduleMgr->getModule<Freecam>();
-		blinkMod = moduleMgr->getModule<Blink>();
-		noPacketMod = moduleMgr->getModule<NoPacket>();
-	} else if (noPacketMod->isEnabled()) {
+	if (noPacketMod->isEnabled())
 		return;
-	} else if (freecamMod->isEnabled() || blinkMod->isEnabled()) {
+
+	if (freecamMod->isEnabled() || blinkMod->isEnabled()) {
 		if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
 			if (blinkMod->isEnabled()) {
 				if (packet->isInstanceOf<C_MovePlayerPacket>()) {
@@ -938,8 +902,7 @@ float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3) {
 	static void* renderItemInHand = reinterpret_cast<void*>(FindSignature("0F 28 F0 F3 44 0F 10 3D ?? ?? ?? ?? F3 41 0F 59 F7"));
 	static void* setupCamera = reinterpret_cast<void*>(FindSignature("44 0F 28 D8 F3 44 0F 59 1D ?? ?? ?? ?? 41 0F B6 4E ??"));
 
-	static Zoom* zoomModule = moduleMgr->getModule<Zoom>();
-	if (zoomModule == nullptr) zoomModule = moduleMgr->getModule<Zoom>();
+	static auto zoomModule = moduleMgr->getModule<Zoom>();
 
 	if (_ReturnAddress() == renderItemInHand) {
 		return oGetFov(_this, a2, a3);
@@ -964,44 +927,40 @@ void Hooks::MultiLevelPlayer_tick(C_EntityList* _this) {
 void Hooks::GameMode_startDestroyBlock(C_GameMode* _this, vec3_ti* a2, uint8_t face, void* a4, void* a5) {
 	static auto oFunc = g_Hooks.GameMode_startDestroyBlockHook->GetFastcall<void, C_GameMode*, vec3_ti*, uint8_t, void*, void*>();
 
-	static Nuker* nukerModule = moduleMgr->getModule<Nuker>();
-	static IModule* instaBreakModule = moduleMgr->getModule<InstaBreak>();
-	if (nukerModule == nullptr || instaBreakModule == nullptr) {
-		nukerModule = moduleMgr->getModule<Nuker>();
-		instaBreakModule = moduleMgr->getModule<InstaBreak>();
-	} else {
-		if (nukerModule->isEnabled()) {
-			vec3_ti tempPos;
+	static auto nukerModule = moduleMgr->getModule<Nuker>();
+	static auto instaBreakModule = moduleMgr->getModule<InstaBreak>();
 
-			const int range = nukerModule->getNukerRadius();
-			const bool isVeinMiner = nukerModule->isVeinMiner();
+	if (nukerModule->isEnabled()) {
+		vec3_ti tempPos;
 
-			C_BlockSource* region = g_Data.getLocalPlayer()->region;
-			int selectedBlockId = (*(region->getBlock(*a2)->blockLegacy))->blockId;
-			uint8_t selectedBlockData = region->getBlock(*a2)->data;
+		const int range = nukerModule->getNukerRadius();
+		const bool isVeinMiner = nukerModule->isVeinMiner();
 
-			for (int x = -range; x < range; x++) {
-				for (int y = -range; y < range; y++) {
-					for (int z = -range; z < range; z++) {
-						tempPos.x = a2->x + x;
-						tempPos.y = a2->y + y;
-						tempPos.z = a2->z + z;
-						if (tempPos.y > 0) {
-							C_Block* blok = region->getBlock(tempPos);
-							uint8_t data = blok->data;
-							int id = (*(blok->blockLegacy))->blockId;
-							if (id != 0 && (!isVeinMiner || (id == selectedBlockId && data == selectedBlockData)))
-								_this->destroyBlock(&tempPos, face);
-						}
+		C_BlockSource* region = g_Data.getLocalPlayer()->region;
+		int selectedBlockId = (*(region->getBlock(*a2)->blockLegacy))->blockId;
+		uint8_t selectedBlockData = region->getBlock(*a2)->data;
+
+		for (int x = -range; x < range; x++) {
+			for (int y = -range; y < range; y++) {
+				for (int z = -range; z < range; z++) {
+					tempPos.x = a2->x + x;
+					tempPos.y = a2->y + y;
+					tempPos.z = a2->z + z;
+					if (tempPos.y > 0) {
+						C_Block* blok = region->getBlock(tempPos);
+						uint8_t data = blok->data;
+						int id = (*(blok->blockLegacy))->blockId;
+						if (id != 0 && (!isVeinMiner || (id == selectedBlockId && data == selectedBlockData)))
+							_this->destroyBlock(&tempPos, face);
 					}
 				}
 			}
-			return;
 		}
-		if (instaBreakModule->isEnabled()) {
-			_this->destroyBlock(a2, face);
-			return;
-		}
+		return;
+	}
+	if (instaBreakModule->isEnabled()) {
+		_this->destroyBlock(a2, face);
+		return;
 	}
 
 	oFunc(_this, a2, face, a4, a5);
@@ -1018,10 +977,8 @@ void Hooks::HIDController_keyMouse(C_HIDController* _this, void* a2, void* a3) {
 int Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1) {
 	static auto oFunc = g_Hooks.BlockLegacy_getRenderLayerHook->GetFastcall<int, C_BlockLegacy*>();
 
-	static IModule* XrayModule = moduleMgr->getModule<Xray>();
-	if (XrayModule == nullptr)
-		XrayModule = moduleMgr->getModule<Xray>();
-	else if (XrayModule->isEnabled()) {
+	static auto xrayMod = moduleMgr->getModule<Xray>();
+	if (xrayMod->isEnabled()) {
 		char* text = a1->name.getText();
 		if (strstr(text, "ore") == NULL)
 			if (strcmp(text, "lava") != NULL)
@@ -1034,10 +991,8 @@ int Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1) {
 __int8* Hooks::BlockLegacy_getLightEmission(C_BlockLegacy* a1, __int8* a2) {
 	static auto oFunc = g_Hooks.BlockLegacy_getLightEmissionHook->GetFastcall<__int8*, C_BlockLegacy*, __int8*>();
 
-	static IModule* XrayModule = moduleMgr->getModule<Xray>();
-	if (XrayModule == nullptr)
-		XrayModule = moduleMgr->getModule<Xray>();
-	else if (XrayModule->isEnabled()) {
+	static auto xrayMod = moduleMgr->getModule<Xray>();
+	if (xrayMod->isEnabled()) {
 		*a2 = 15;
 		return a2;
 	}
@@ -1050,20 +1005,17 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3) 
 	using reloadShit_t = void(__fastcall*)(__int64);
 	static reloadShit_t reloadChunk = reinterpret_cast<reloadShit_t>(FindSignature("48 8B C4 56 57 41 54 41 56 41 57 48 83 EC ?? 48 C7 40 ?? FE FF FF FF 48 89 58 ?? 48 89 68 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B F9 4C"));
 
-	static IModule* xray = moduleMgr->getModule<Xray>();
-	if (xray == nullptr) {
-		xray = moduleMgr->getModule<Xray>();
-	} else {
-		static bool lastState = false;
-		if (lastState != xray->isEnabled()) {
-			lastState = xray->isEnabled();
-			unsigned long long* v5;  // rdi
-			unsigned long long* i;   // rbx
+	static auto xrayMod = moduleMgr->getModule<Xray>();
 
-			v5 = *(unsigned long long**)(_this + 32);
-			for (i = (unsigned long long*)*v5; i != v5; i = (unsigned long long*)*i)
-				reloadChunk(i[3]);
-		}
+	static bool lastState = false;
+	if (lastState != xrayMod->isEnabled()) {
+		lastState = xrayMod->isEnabled();
+		unsigned long long* v5;  // rdi
+		unsigned long long* i;   // rbx
+
+		v5 = *(unsigned long long**)(_this + 32);
+		for (i = (unsigned long long*)*v5; i != v5; i = (unsigned long long*)*i)
+			reloadChunk(i[3]);
 	}
 
 	return oFunc(_this, a2, a3);
@@ -1071,11 +1023,9 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3) 
 
 void Hooks::ClickFunc(__int64 a1, char mouseButton, bool isDown, __int16 mouseX, __int16 mouseY, __int16 a6, __int16 a7, char a8) {
 	static auto oFunc = g_Hooks.ClickFuncHook->GetFastcall<void, __int64, char, bool, __int16, __int16, __int16, __int16, char>();
-	static IModule* clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
+	static auto clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 
-	if (clickGuiModule == nullptr)
-		clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
-	else if (clickGuiModule->isEnabled()) {
+	if (clickGuiModule->isEnabled()) {
 		if (mouseButton != 0)  // Mouse click event
 			return;
 	}
@@ -1090,12 +1040,8 @@ __int64 Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity* a2) {
 __int64 Hooks::ChestScreenController_tick(C_ChestScreenController* a1) {
 	static auto oFunc = g_Hooks.ChestScreenController_tickHook->GetFastcall<__int64, C_ChestScreenController*>();
 
-	static ChestStealer* ChestStealerMod = moduleMgr->getModule<ChestStealer>();
-	if (ChestStealerMod == nullptr)
-		ChestStealerMod = moduleMgr->getModule<ChestStealer>();
-	else {
-		ChestStealerMod->chestScreenController = a1;
-	}
+	static auto chestStealerMod = moduleMgr->getModule<ChestStealer>();
+	chestStealerMod->chestScreenController = a1;
 
 	return oFunc(a1);
 }
@@ -1103,9 +1049,7 @@ __int64 Hooks::ChestScreenController_tick(C_ChestScreenController* a1) {
 __int64 Hooks::GetGamma(__int64 a1) {
 	static auto oFunc = g_Hooks.GetGammaHook->GetFastcall<__int64, __int64>();
 
-	static FullBright* fullBrightModule = moduleMgr->getModule<FullBright>();
-	if (fullBrightModule == nullptr)
-		fullBrightModule = moduleMgr->getModule<FullBright>();
+	static auto fullBrightModule = moduleMgr->getModule<FullBright>();
 
 	static __int64 v7 = 0;
 	if (v7 == 0) {
@@ -1115,9 +1059,7 @@ __int64 Hooks::GetGamma(__int64 a1) {
 		else
 			v7 = *(__int64*)(v6 + 0x138);
 	} else {
-		if (fullBrightModule != nullptr) {
-			fullBrightModule->gammaPtr = reinterpret_cast<float*>(v7 + 0xF0);
-		}
+		fullBrightModule->gammaPtr = reinterpret_cast<float*>(v7 + 0xF0);
 	}
 
 	return oFunc(a1);
@@ -1129,10 +1071,8 @@ bool Hooks::Actor_isInWater(C_Entity* _this) {
 	if (g_Data.getLocalPlayer() != _this)
 		return oFunc(_this);
 
-	static AirSwim* AirSwimModule = moduleMgr->getModule<AirSwim>();
-	if (AirSwimModule == nullptr)
-		AirSwimModule = moduleMgr->getModule<AirSwim>();
-	else if (AirSwimModule->isEnabled())
+	static auto airSwimModule = moduleMgr->getModule<AirSwim>();
+	if (airSwimModule->isEnabled())
 		return true;
 
 	return oFunc(_this);
@@ -1140,11 +1080,9 @@ bool Hooks::Actor_isInWater(C_Entity* _this) {
 
 void Hooks::JumpPower(C_Entity* a1, float a2) {
 	static auto oFunc = g_Hooks.JumpPowerHook->GetFastcall<void, C_Entity*, float>();
-	static HighJump* HighJumpMod = moduleMgr->getModule<HighJump>();
-	if (HighJumpMod == nullptr)
-		HighJumpMod = moduleMgr->getModule<HighJump>();
-	else if (HighJumpMod->isEnabled() && g_Data.getLocalPlayer() == a1) {
-		a1->velocity.y = HighJumpMod->jumpPower;
+	static auto highJumpMod = moduleMgr->getModule<HighJump>();
+	if (highJumpMod->isEnabled() && g_Data.getLocalPlayer() == a1) {
+		a1->velocity.y = highJumpMod->jumpPower;
 		return;
 	}
 	oFunc(a1, a2);
@@ -1159,10 +1097,8 @@ __int64 Hooks::MinecraftGame_onAppSuspended(__int64 _this) {
 void Hooks::Actor_ladderUp(C_Entity* _this) {
 	static auto oFunc = g_Hooks.Actor_ladderUpHook->GetFastcall<void, C_Entity*>();
 
-	static IModule* FastLadderModule = moduleMgr->getModule<FastLadder>();
-	if (FastLadderModule == nullptr)
-		FastLadderModule = moduleMgr->getModule<FastLadder>();
-	else if (FastLadderModule->isEnabled() && g_Data.getLocalPlayer() == _this) {
+	static auto fastLadderModule = moduleMgr->getModule<FastLadder>();
+	if (fastLadderModule->isEnabled() && g_Data.getLocalPlayer() == _this) {
 		_this->velocity.y = 0.6f;
 		return;
 	}
@@ -1172,12 +1108,10 @@ void Hooks::Actor_ladderUp(C_Entity* _this) {
 void Hooks::Actor_startSwimming(C_Entity* _this) {
 	static auto oFunc = g_Hooks.Actor_startSwimmingHook->GetFastcall<void, C_Entity*>();
 
-	static IModule* JesusModule = moduleMgr->getModule<Jesus>();
-	if (JesusModule == nullptr)
-		JesusModule = moduleMgr->getModule<Jesus>();
-	else if (JesusModule->isEnabled() && g_Data.getLocalPlayer() == _this) {
+	static auto JesusModule = moduleMgr->getModule<Jesus>();
+	if (JesusModule->isEnabled() && g_Data.getLocalPlayer() == _this)
 		return;
-	}
+
 	oFunc(_this);
 }
 
@@ -1191,22 +1125,16 @@ float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3) {
 	static auto oFunc = g_Hooks.GameMode_getPickRangeHook->GetFastcall<float, C_GameMode*, __int64, char>();
 
 	if (g_Data.getLocalPlayer() != nullptr) {
-		static ForceOpenCommandBlock* forceOpenCmdBlock = moduleMgr->getModule<ForceOpenCommandBlock>();
-		if (forceOpenCmdBlock == nullptr)
-			forceOpenCmdBlock = moduleMgr->getModule<ForceOpenCommandBlock>();
-		else if (forceOpenCmdBlock->isEnabled() && forceOpenCmdBlock->isInCommandBlock)
+		static auto forceOpenCmdBlock = moduleMgr->getModule<ForceOpenCommandBlock>();
+		if (forceOpenCmdBlock->isEnabled() && forceOpenCmdBlock->isInCommandBlock)
 			return forceOpenCmdBlock->distance;
 
-		static InfiniteBlockReach* infiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
-		if (infiniteBlockReachModule == nullptr)
-			infiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
-		else if (infiniteBlockReachModule->isEnabled())
+		static auto infiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
+		if (infiniteBlockReachModule->isEnabled())
 			return infiniteBlockReachModule->getBlockReach();
 
-		static ClickTP* clickTP = moduleMgr->getModule<ClickTP>();
-		if (clickTP == nullptr)
-			clickTP = moduleMgr->getModule<ClickTP>();
-		else if (clickTP->isEnabled())
+		static auto clickTP = moduleMgr->getModule<ClickTP>();
+		if (clickTP->isEnabled())
 			return 255;
 	}
 
@@ -1242,7 +1170,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 			auto overrideGeo = std::get<1>(geoOverride);
 			newGeometryData = new TextHolder(*overrideGeo.get());
 		} else {  // Default Skin
-			/*char* str;  // Obj text
+				  /*char* str;  // Obj text
 			{
 				auto hResourceObj = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_OBJ), "TEXT");
 				auto hMemoryObj = LoadResource(g_Data.getDllModule(), hResourceObj);

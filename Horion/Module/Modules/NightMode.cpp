@@ -12,7 +12,7 @@ const char* NightMode::getModuleName() {
 }
 
 void NightMode::onEnable() {
-	IModule* mod = moduleMgr->getModule<RainbowSky>();
-	if (mod != nullptr && mod->isEnabled())
-		mod->setEnabled(false);
+	static auto rainbowSkyMod = moduleMgr->getModule<RainbowSky>();
+	if (rainbowSkyMod->isEnabled())
+		rainbowSkyMod->setEnabled(false);
 }

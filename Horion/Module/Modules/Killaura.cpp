@@ -18,35 +18,32 @@ const char* Killaura::getModuleName() {
 static std::vector<C_Entity*> targetList;
 
 void findEntity(C_Entity* currentEntity, bool isRegularEntitie) {
-	static Killaura* killauraMod = static_cast<Killaura*>(moduleMgr->getModule<Killaura>());
-	if (killauraMod == 0)
-		killauraMod = static_cast<Killaura*>(moduleMgr->getModule<Killaura>());
-	else {
-		if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
+	static auto killauraMod = moduleMgr->getModule<Killaura>();
+	
+	if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
+		return;
+
+	if (currentEntity == 0)
+		return;
+
+	if (currentEntity->timeSinceDeath > 0 || currentEntity->damageTime >= 7)
+		return;
+
+	if (killauraMod->isMobAura && !isRegularEntitie) {
+		if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)
 			return;
 
-		if (currentEntity == 0)
+		if (!g_Data.getLocalPlayer()->canAttack(currentEntity, false))
 			return;
-
-		if (currentEntity->timeSinceDeath > 0 || currentEntity->damageTime >= 7)
+	} else {
+		if (!Target::isValidTarget(currentEntity))
 			return;
+	}
 
-		if (killauraMod->isMobAura && !isRegularEntitie) {
-			if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)
-				return;
+	float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
 
-			if (!g_Data.getLocalPlayer()->canAttack(currentEntity, false))
-				return;
-		} else {
-			if (!Target::isValidTarget(currentEntity))
-				return;
-		}
-
-		float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
-
-		if (dist < killauraMod->range) {
-			targetList.push_back(currentEntity);
-		}
+	if (dist < killauraMod->range) {
+		targetList.push_back(currentEntity);
 	}
 }
 
@@ -81,7 +78,8 @@ void Killaura::onTick(C_GameMode* gm) {
 	if (hasTarget && Odelay >= delay) {
 		if (autoweapon) findWeapon();
 
-		if (!moduleMgr->getModule<NoSwing>()->isEnabled()) g_Data.getLocalPlayer()->swing();
+		if (!moduleMgr->getModule<NoSwing>()->isEnabled()) 
+			g_Data.getLocalPlayer()->swing();
 
 		// Attack all entitys in targetList
 		if (isMulti) {
