@@ -28,8 +28,8 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			float offset = tabgui ? 60.f : 0.f;
 			vec4_t rectPos = vec4_t(2.5f, offset + 5.f, 50.5f, offset + 15.f);
 			vec2_t textPos = vec2_t(rectPos.x + 1.5f, rectPos.y + 1.f);
-			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(200, 200, 200, 1), 1.f);
+			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48), 1.f);
+			DrawUtils::drawText(textPos, &fpsText, MC_Color(200, 200, 200), 1.f);
 		}
 	}
 	{  // CPS
@@ -40,8 +40,8 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			if (fps) offset += 10.f;
 			vec4_t rectPos = vec4_t(2.5f, offset + 5.f, 50.5f, offset + 15.f);
 			vec2_t textPos = vec2_t(rectPos.x + 1.5f, rectPos.y + 1.f);
-			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
-			DrawUtils::drawText(textPos, &cpsText, MC_Color(200, 200, 200, 1), 1.f);
+			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48), 1.f);
+			DrawUtils::drawText(textPos, &cpsText, MC_Color(200, 200, 200), 1.f);
 		}
 	}
 	{  // Coordinates
@@ -56,12 +56,12 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			if (cps) offset += 10.f;
 			vec4_t rectPos = vec4_t(2.5f, offset + 5.f, 50.5f, offset + 35.f);
 			vec2_t textPos = vec2_t(rectPos.x + 1.5f, rectPos.y + 1.f);
-			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
-			DrawUtils::drawText(textPos, &coordsX, MC_Color(200, 200, 200, 1), 1.f);
+			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48), 1.f);
+			DrawUtils::drawText(textPos, &coordsX, MC_Color(200, 200, 200), 1.f);
 			textPos.y += 10.f;
-			DrawUtils::drawText(textPos, &coordsY, MC_Color(200, 200, 200, 1), 1.f);
+			DrawUtils::drawText(textPos, &coordsY, MC_Color(200, 200, 200), 1.f);
 			textPos.y += 10.f;
-			DrawUtils::drawText(textPos, &coordsZ, MC_Color(200, 200, 200, 1), 1.f);
+			DrawUtils::drawText(textPos, &coordsZ, MC_Color(200, 200, 200), 1.f);
 		}
 	}
 	{  // ArmorHUD

@@ -302,6 +302,8 @@ DWORD WINAPI start(LPVOID lpParam) {
 	});
 	countThread.detach();
 
+	logF("Count thread started");
+
 	ExitThread(0);
 }
 

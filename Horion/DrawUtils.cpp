@@ -218,7 +218,7 @@ void DrawUtils::drawImage(std::string FilePath, vec2_t& imagePos, vec2_t& ImageD
 
 	if (texturePtr != nullptr) {
 		renderCtx->drawImage(texturePtr, imagePos, ImageDimension, yot, idk);
-		renderCtx->flushImages(MC_Color(1.f, 1.f, 1.f, 1.f), flushImageAddr, (__int64)&hashedString);
+		renderCtx->flushImages(MC_Color(1.f, 1.f, 1.f), flushImageAddr, (__int64)&hashedString);
 	}
 }
 
@@ -239,9 +239,9 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 		rectPos.w = textPos.y + 10.f;
 		vec4_t subRectPos = rectPos;
 		subRectPos.y = subRectPos.w - 1.f;
-		fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 0.5f);
-		fillRectangle(subRectPos, MC_Color(28, 107, 201, 1), 0.5f);
-		drawText(textPos, &text, MC_Color(255, 255, 255, 1), textSize);
+		fillRectangle(rectPos, MC_Color(13, 29, 48), 0.5f);
+		fillRectangle(subRectPos, MC_Color(28, 107, 201), 0.5f);
+		drawText(textPos, &text, MC_Color(255, 255, 255), textSize);
 
 		if (ent->getEntityTypeId() == 63 && moduleMgr->getModule<NameTags>()->displayArmor) {  // is player, show armor
 			C_Player* player = static_cast<C_Player*>(ent);
@@ -293,8 +293,8 @@ void DrawUtils::drawKeystroke(char key, vec2_t pos) {
 	vec2_t textPos(
 		(rectPos.x + (rectPos.z - rectPos.x) / 2) - (DrawUtils::getTextWidth(&keyString) / 2.f),
 		rectPos.y + 10.f - DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() / 2.f);
-	fillRectangle(rectPos, GameData::isKeyDown(key) ? MC_Color(28, 50, 77, 1) : MC_Color(13, 29, 48, 1), 1.f);
-	drawText(textPos, &keyString, MC_Color(255, 255, 255, 1), 1.f, 1.f);
+	fillRectangle(rectPos, GameData::isKeyDown(key) ? MC_Color(28, 50, 77) : MC_Color(13, 29, 48), 1.f);
+	drawText(textPos, &keyString, MC_Color(255, 255, 255), 1.f, 1.f);
 }
 
 vec2_t DrawUtils::worldToScreen(vec3_t world) {
