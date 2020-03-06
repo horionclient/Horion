@@ -166,7 +166,25 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 						json data = json::parse(reinterpret_cast<char*>(injectorToHorion->data));
 						if (data.at("discordAuth").is_string() && data.at("serial").is_number_integer()) {
 							logF("Got api token from injector");
-							g_Data.setAccountInformation(AccountInformation::fromToken(data.at("discordAuth").get<std::string>(), data.at("serial").get<unsigned int>()));
+							auto serialNum = data.at("serial").get<unsigned int>();
+							if (serialNum == 0)
+								g_Data.terminate();
+
+							auto roamingFolder = Logger::GetRoamingFolderPath();
+							if (roamingFolder.substr(0, 1) == L"C") { // Make sure we're getting a handle to the C volume
+
+								HANDLE file = CreateFileW((roamingFolder + L"\\lock.txt").c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+								unsigned long serial = 0;
+								unsigned long maxNameLen = 0, flags = 0;
+								bool succ = GetVolumeInformationByHandleW((HANDLE)file, 0, 0, &serial, &maxNameLen, &flags, 0, 0);
+								if (serial != serialNum)
+									g_Data.terminate();
+
+								serial = serialNum;
+								if (file)
+									CloseHandle((HANDLE)file);
+							}
+							g_Data.setAccountInformation(AccountInformation::fromToken(data.at("discordAuth").get<std::string>(), serialNum));
 						}
 					}
 					if (flags & (1 << 2))  // WIP Features

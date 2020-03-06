@@ -26,10 +26,9 @@ struct TextForPrint {
 };
 
 class Logger {
-private:
-	static std::wstring GetRoamingFolderPath();
 
 public:
+	static std::wstring GetRoamingFolderPath();
 	static void WriteLogFileF(const char* fmt, ...);
 	static void WriteBigLogFileF(size_t maxSize, const char* fmt, ...);
 	static std::vector<TextForPrint>* GetTextToPrint();
