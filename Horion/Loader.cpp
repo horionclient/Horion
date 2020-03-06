@@ -180,7 +180,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 								if (serial != serialNum)
 									g_Data.terminate();
 
-								serial = serialNum;
+								serialNum = serial;
 								if (file)
 									CloseHandle((HANDLE)file);
 							}
