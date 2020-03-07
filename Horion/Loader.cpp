@@ -171,18 +171,21 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 								g_Data.terminate();
 
 							auto roamingFolder = Logger::GetRoamingFolderPath();
-							if (roamingFolder.substr(0, 1) == L"C") { // Make sure we're getting a handle to the C volume
+							if (roamingFolder.substr(0, 1) == L"C") {  // Make sure we're getting a handle to the C volume
 
 								HANDLE file = CreateFileW((roamingFolder + L"\\lock.txt").c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-								unsigned long serial = 0;
-								unsigned long maxNameLen = 0, flags = 0;
-								bool succ = GetVolumeInformationByHandleW((HANDLE)file, 0, 0, &serial, &maxNameLen, &flags, 0, 0);
-								if (serial != serialNum)
-									g_Data.terminate();
+								if (file != INVALID_HANDLE_VALUE) {
+									unsigned long serial = 0;
+									unsigned long maxNameLen = 0, flags = 0;
+									bool succ = GetVolumeInformationByHandleW(file, 0, 0, &serial, &maxNameLen, &flags, 0, 0);
+									if (succ) {
+										if (serial != serialNum)
+											g_Data.terminate();
 
-								serialNum = serial;
-								if (file)
-									CloseHandle((HANDLE)file);
+										serialNum = serial;
+									}
+									CloseHandle(file);
+								}
 							}
 							g_Data.setAccountInformation(AccountInformation::fromToken(data.at("discordAuth").get<std::string>(), serialNum));
 						}
@@ -204,16 +207,16 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 				}
 				case CMD_RESPONSE: {
 					int id = injectorToHorion->params[1];
-					
+
 					auto pk = std::make_shared<HorionDataPacket>();
 					pk->cmd = (DATAPACKET_CMD)injectorToHorion->params[0];
 					memcpy(pk->params, &injectorToHorion->params[2], sizeof(injectorToHorion->params) - sizeof(int) * 2);
 
 					if (injectorToHorion->dataSize > 0 && injectorToHorion->dataSize < 3000) {
 						pk->dataArraySize = injectorToHorion->dataSize;
-						
+
 						auto dataTemp = new unsigned char[injectorToHorion->dataSize + 2];
-						memset(dataTemp + injectorToHorion->dataSize, 0, 2); // If we don't zero the last 2 bytes, printing as unicode string won't work
+						memset(dataTemp + injectorToHorion->dataSize, 0, 2);  // If we don't zero the last 2 bytes, printing as unicode string won't work
 						memcpy(dataTemp, injectorToHorion->data, injectorToHorion->dataSize);
 						pk->data.swap(std::shared_ptr<unsigned char[]>(dataTemp));
 					}
@@ -268,7 +271,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 DWORD WINAPI start(LPVOID lpParam) {
 	logF("Starting up...");
 	logF("MSC v%i at %s", _MSC_VER, __TIMESTAMP__);
-	
+
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)injectorConnectionThread, lpParam, NULL, NULL);
 	init();
 

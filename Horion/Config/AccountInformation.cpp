@@ -1,7 +1,7 @@
 #include "AccountInformation.h"
+
 #include "../../Utils/Json.hpp"
 #include "../../include/WinHttpClient.h"
-
 
 AccountInformation::AccountInformation(std::string authTok, unsigned int serial) : isGuest(false), authToken(authTok), serialNum(serial){};
 AccountInformation::AccountInformation() : isGuest(true), authToken("none"){};
@@ -16,7 +16,15 @@ bool AccountInformation::verify() {
 	didVerify = true;
 
 	wchar_t fullUrl[200];
-	swprintf_s(fullUrl, 200, L"http://www.horionbeta.club:50451/api/beta/check?client=%S&serial=%u", authToken.c_str(), serialNum);
+
+#ifdef _DEBUG
+	const char* edition = "dev";
+#elif defined(_BETA)
+	const char* edition = "beta";
+#else
+	const char* edition = "public";
+#endif
+	swprintf_s(fullUrl, 200, L"http://www.horionbeta.club/api/beta/check?client=%S&serial=%u&edition=%S", authToken.c_str(), serialNum, edition);
 	WinHttpClient client(fullUrl);
 	client.SetTimeouts(1500, 3000, 2000, 3000);
 	bool boi = client.SendHttpRequest();
