@@ -171,9 +171,9 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 								g_Data.terminate();
 
 							auto roamingFolder = Logger::GetRoamingFolderPath();
-							if (roamingFolder.substr(0, 1) == L"C") {  // Make sure we're getting a handle to the C volume
+							if (roamingFolder.substr(0, 2) == L"C:") {  // Make sure we're getting a handle to the C volume
 
-								HANDLE file = CreateFileW((roamingFolder + L"\\lock.txt").c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+								HANDLE file = CreateFileW(roamingFolder.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, 0);
 								if (file != INVALID_HANDLE_VALUE) {
 									unsigned long serial = 0;
 									unsigned long maxNameLen = 0, flags = 0;
@@ -181,7 +181,6 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 									if (succ) {
 										if (serial != serialNum)
 											g_Data.terminate();
-
 										serialNum = serial;
 									}
 									CloseHandle(file);
