@@ -261,7 +261,7 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 	}
 }
 
-void DrawUtils::drawEntityBox(C_Entity* ent, float lineWidth) {
+void DrawUtils::drawEntityBox(C_Entity* ent, float lineWidth, bool is2d) {
 	vec3_t* start = ent->getPosOld();
 	vec3_t* end = ent->getPos();
 
@@ -270,7 +270,15 @@ void DrawUtils::drawEntityBox(C_Entity* ent, float lineWidth) {
 	AABB render(lerped, ent->width, ent->height, end->y - ent->aabb.lower.y);
 	render.upper.y += 0.1f;
 
-	drawBox(render.lower, render.upper, lineWidth);
+	if (is2d) {
+		vec2_t upperCorner;
+		vec2_t lowerCorner;
+		if (refdef->OWorldToScreen(origin, vec3_t(render.lower.x, render.lower.y, render.lower.z), lowerCorner, fov, screenSize) && refdef->OWorldToScreen(origin, vec3_t(render.upper.x, render.upper.y, render.upper.z), upperCorner, fov, screenSize)) {
+			drawRectangle(vec4_t(upperCorner.x, upperCorner.y, lowerCorner.x, lowerCorner.y), colorHolder, 1.f, 1.f);
+		}
+	} else {
+		drawBox(render.lower, render.upper, lineWidth);
+	}
 }
 
 void DrawUtils::drawItem(C_ItemStack* item, vec2_t ItemPos, float opacity, float scale, bool isEnchanted) {

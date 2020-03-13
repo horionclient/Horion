@@ -118,7 +118,7 @@ public:
 	static void drawText(vec2_t pos, std::string* text, MC_Color color, float textSize = 1, float alpha = 1, Fonts font = Fonts::SMOOTH);
 	static void drawBox(vec3_t lower, vec3_t upper, float lineWidth);
 	static void drawTracer(C_Entity* ent);
-	static void drawEntityBox(C_Entity* ent, float lineWidth);
+	static void drawEntityBox(C_Entity* ent, float lineWidth, bool is2d);
 	static void drawNameTags(C_Entity* ent, float textSize, bool drawHealth = false, bool useUnicodeFont = false);
 	static void drawItem(C_ItemStack* item, vec2_t ItemPos, float opacity, float scale, bool isEnchanted);
 	static void drawKeystroke(char key, vec2_t pos);
