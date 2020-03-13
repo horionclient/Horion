@@ -98,7 +98,6 @@ void Logger::WriteLogFileF(const char* fmt, ...) {
 void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...) {
 	if (!loggerActive)
 		return;
-#ifdef _DEBUG
 	FILE* pFile;
 
 	if (!initializedLogger) {
@@ -147,7 +146,6 @@ void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...) {
 		delete[] logMessage;
 	}
 	LeaveCriticalSection(&loggerLock);
-#endif
 }
 
 std::vector<TextForPrint>* Logger::GetTextToPrint() {

@@ -112,10 +112,11 @@ void GameData::updateGameData(C_GameMode* gameMode) {
 
 			if (guiData != nullptr && (vecLock == nullptr || TryEnterCriticalSection(vecLock))) {
 				auto* stringPrintVector = Logger::GetTextToPrint();
-
+#ifdef _DEBUG
 				for (std::vector<TextForPrint>::iterator it = stringPrintVector->begin(); it != stringPrintVector->end(); ++it) {
 					guiData->displayClientMessageF("%s%s%s%s", GOLD, it->time, RESET, it->text);
 				}
+#endif
 				stringPrintVector->clear();
 				if (vecLock != nullptr)
 					LeaveCriticalSection(vecLock);
