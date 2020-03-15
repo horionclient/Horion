@@ -28,5 +28,13 @@ void showAimedBlockInfo() {
 }
 
 bool TestCommand::execute(std::vector<std::string>* args) {
+	using give = __int64*(__fastcall*)(void**, void*, TextHolder);
+	void* ah = malloc(0x10);
+	void* h = malloc(0x100);
+	give func = (give)(0x7FF655094660);
+	__int64* a = func(&ah, h, TextHolder("beehive"));
+	free(h);
+	logF("%llX", a);
+	logF("2 : %llX", ah);
 	return true;
-}
+} 
