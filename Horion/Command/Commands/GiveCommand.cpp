@@ -76,7 +76,7 @@ bool GiveCommand::execute(std::vector<std::string>* args) {
 			if (itemData == 0) {
 				yot = new C_ItemStack(*blockItem, count);
 				if (yot->getItem()->itemId == 52 && args->at(4).size() > 0) {
-					std::unique_ptr<CompoundTag> tag = std::make_unique<CompoundTag>();
+					std::unique_ptr<C_CompoundTag> tag = std::make_unique<C_CompoundTag>();
 					tag->putString(EntityIdentifier,args->at(4));
 					yot->setUserData(std::move(tag));
 				}

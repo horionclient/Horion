@@ -278,8 +278,8 @@ public:
 		this->setVtable();
 	}
 
-	void setUserData(std::unique_ptr<CompoundTag> tag) {
-		using setUserData_t = void(__fastcall*)(C_ItemStack*, std::unique_ptr<CompoundTag>);
+	void setUserData(std::unique_ptr<C_CompoundTag> tag) {
+		using setUserData_t = void(__fastcall*)(C_ItemStack*, std::unique_ptr<C_CompoundTag>);
 		setUserData_t setUserData = reinterpret_cast<setUserData_t>(FindSignature("40 53 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B DA 48 8D 51 10 48 3B D3 74 20 48 8B 03 48 ?? ?? ?? ?? ?? ?? 48 8B 0A 48 89 02 48 85 C9 74 0B 48 8B 01 BA ?? ?? ?? ?? FF 10"));
 		setUserData(this, std::move(tag));
 	}

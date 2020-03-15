@@ -340,9 +340,11 @@ public:
 	virtual C_ItemStack *getEquippedTotem(void) const;
 	virtual __int64 consumeTotem(void);
 
+public:
+	virtual __int64 save(C_CompoundTag *);
+	virtual __int64 saveWithoutId(C_CompoundTag *);
+
 private:
-	virtual __int64 save(__int64 &);
-	virtual __int64 saveWithoutId(__int64 &);
 	virtual __int64 load(__int64 const &, __int64 &);
 	virtual __int64 loadLinks(__int64 const &, __int64);
 

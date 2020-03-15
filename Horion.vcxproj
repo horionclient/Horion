@@ -265,6 +265,13 @@
     <ClInclude Include="SDK\CRakNetInstance.h" />
     <ClInclude Include="SDK\CUIScene.h" />
     <ClInclude Include="SDK\CComplexInventoryTransaction.h" />
+    <ClInclude Include="SDK\MojangsonToken.h" />
+    <ClInclude Include="SDK\nbt\CompoundTag.h" />
+    <ClInclude Include="SDK\nbt\IntArrayTag.h" />
+    <ClInclude Include="SDK\nbt\IntTag.h" />
+    <ClInclude Include="SDK\nbt\LongTag.h" />
+    <ClInclude Include="SDK\nbt\Tag.h" />
+    <ClInclude Include="SDK\Tag.h" />
     <ClInclude Include="Utils\Json.hpp" />
     <ClInclude Include="Utils\SkinUtil.h" />
     <ClInclude Include="Utils\Target.h" />
