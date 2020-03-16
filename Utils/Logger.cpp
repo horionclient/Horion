@@ -44,7 +44,6 @@ std::wstring Logger::GetRoamingFolderPath() {
 void Logger::WriteLogFileF(const char* fmt, ...) {
 	if (!loggerActive)
 		return;
-#ifdef _DEBUG
 	FILE* pFile;
 
 	if (!initializedLogger) {
@@ -92,7 +91,6 @@ void Logger::WriteLogFileF(const char* fmt, ...) {
 		}
 	}
 	LeaveCriticalSection(&loggerLock);
-#endif
 }
 
 void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...) {
