@@ -167,8 +167,10 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 						if (data.at("discordAuth").is_string() && data.at("serial").is_number_integer()) {
 							logF("Got api token from injector");
 							auto serialNum = data.at("serial").get<unsigned int>();
-							if (serialNum == 0)
+							if (serialNum == 0) {
+								logF("Serial is null!");
 								g_Data.terminate();
+							}
 
 							auto roamingFolder = Logger::GetRoamingFolderPath();
 							if (roamingFolder.substr(0, 2) == L"C:") {  // Make sure we're getting a handle to the C volume
@@ -179,8 +181,10 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 									unsigned long maxNameLen = 0, flags = 0;
 									bool succ = GetVolumeInformationByHandleW(file, 0, 0, &serial, &maxNameLen, &flags, 0, 0);
 									if (succ) {
-										if (serial != serialNum)
+										if (serial != serialNum) {
+											logF("Serial doesn't match!");
 											g_Data.terminate();
+										}
 										serialNum = serial;
 									}
 									CloseHandle(file);
