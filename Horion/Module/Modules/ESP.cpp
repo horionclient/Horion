@@ -43,7 +43,10 @@ void doRenderStuff(C_Entity* ent, bool isRegularEntitie) {
 			DrawUtils::setColor(0.2f, 0.2f, 0.9f, max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
 		} else
 			DrawUtils::setColor(0.f, 0.f, 0.f, 0.f);
-		DrawUtils::drawEntityBox(ent, max(0.2f, 1 / max(1, (*localPlayer->getPos()).dist(*ent->getPos()))), espMod->is2d);  // Fancy math to give an illusion of good esp
+		if (espMod->is2d)
+			DrawUtils::draw2D(ent, max(0.2f, 1 / max(1, (*localPlayer->getPos()).dist(*ent->getPos())) * 10.f));
+		else 
+			DrawUtils::drawEntityBox(ent, max(0.2f, 1 / max(1, (*localPlayer->getPos()).dist(*ent->getPos()))));
 	}
 	
 }

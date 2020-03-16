@@ -261,7 +261,7 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 	}
 }
 
-void DrawUtils::drawEntityBox(C_Entity* ent, float lineWidth, bool is2d) {
+void DrawUtils::drawEntityBox(C_Entity* ent, float lineWidth) {
 	vec3_t* start = ent->getPosOld();
 	vec3_t* end = ent->getPos();
 
@@ -270,18 +270,86 @@ void DrawUtils::drawEntityBox(C_Entity* ent, float lineWidth, bool is2d) {
 	AABB render(lerped, ent->width, ent->height, end->y - ent->aabb.lower.y);
 	render.upper.y += 0.1f;
 
-	if (is2d) {
-		float yaw = g_Data.getLocalPlayer()->yaw * (PI / 180);
-		vec3_t upperCorner3D = vec3_t(ent->getPos()->x - (-cos(yaw) * ent->width / 2.f), ent->getPos()->y + ent->height, ent->getPos()->z - (sin(yaw) * ent->width / 2.f));
-		vec3_t lowerCorner3D = vec3_t(ent->getPos()->x + (-cos(yaw) * ent->width / 2.f), ent->getPos()->y, ent->getPos()->z + (sin(yaw) * ent->width / 2.f));
+	drawBox(render.lower, render.upper, lineWidth);
+}
 
-		vec2_t upperCorner = worldToScreen(upperCorner3D);
-		vec2_t lowerCorner = worldToScreen(lowerCorner3D);
+void DrawUtils::draw2D(C_Entity* ent, float lineWidth) {
+	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
 
-		drawRectangle(vec4_t(min(upperCorner.x, lowerCorner.x), min(upperCorner.y, lowerCorner.y), max(lowerCorner.x, upperCorner.x), max(lowerCorner.y, upperCorner.y)), colorHolder, 1.f, lineWidth * 3.f);
-	} else {
-		drawBox(render.lower, render.upper, lineWidth);
+	vec3_t upper = ent->getAABB()->upper;
+	vec3_t lower = ent->getAABB()->lower;
+	
+	vec3_t diff;
+	diff.x = upper.x - lower.x;
+	diff.y = upper.y - lower.y;
+	diff.z = upper.z - lower.z;
+
+	vec3_t cornerList[24];
+	cornerList[0] = vec3_t(lower.x, lower.y, lower.z);
+	cornerList[1] = vec3_t(lower.x + diff.x, lower.y, lower.z);
+
+	cornerList[2] = vec3_t(lower.x, lower.y, lower.z);
+	cornerList[3] = vec3_t(lower.x, lower.y, lower.z + diff.z);
+
+	cornerList[4] = vec3_t(lower.x + diff.x, lower.y, lower.z);
+	cornerList[5] = vec3_t(lower.x + diff.x, lower.y, lower.z + diff.z);
+
+	cornerList[6] = vec3_t(lower.x, lower.y, lower.z + diff.z);
+	cornerList[7] = vec3_t(lower.x + diff.x, lower.y, lower.z + diff.z);
+
+	cornerList[8] = vec3_t(lower.x, lower.y, lower.z);
+	cornerList[9] = vec3_t(lower.x, lower.y + diff.y, lower.z);
+
+	cornerList[10] = vec3_t(lower.x + diff.x, lower.y, lower.z);
+	cornerList[11] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z);
+
+	cornerList[12] = vec3_t(lower.x, lower.y, lower.z + diff.z);
+	cornerList[13] = vec3_t(lower.x, lower.y + diff.y, lower.z + diff.z);
+
+	cornerList[14] = vec3_t(lower.x + diff.x, lower.y, lower.z + diff.z);
+	cornerList[15] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z + diff.z);
+
+	cornerList[16] = vec3_t(lower.x, lower.y + diff.y, lower.z);
+	cornerList[17] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z);
+
+	cornerList[18] = vec3_t(lower.x, lower.y + diff.y, lower.z);
+	cornerList[19] = vec3_t(lower.x, lower.y + diff.y, lower.z + diff.z);
+
+	cornerList[20] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z);
+	cornerList[21] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z + diff.z);
+
+	cornerList[22] = vec3_t(lower.x, lower.y + diff.y, lower.z + diff.z);
+	cornerList[23] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z + diff.z);
+
+	vec2_t closestCorners[4];
+	for (int n = 0; n < 4; n++) {
+		double dist = INFINITE;
+		for (int i = 0; i < 24; i++) {
+			vec2_t corner;
+			if (refdef->OWorldToScreen(origin, cornerList[i], corner, fov, screenSize)) {
+				double yot;
+				switch (n) {
+					case 0:
+						yot = sqrt(pow(0 - corner.x, 2) + pow(0 - corner.y, 2) * 1.0);
+						break;
+					case 1:
+						yot = sqrt(pow(windowSize.x - corner.x, 2) + pow(0 - corner.y, 2) * 1.0);
+						break;
+					case 2:
+						yot = sqrt(pow(0 - corner.x, 2) + pow(windowSize.y - corner.y, 2) * 1.0);
+						break;
+					case 3:
+						yot = sqrt(pow(windowSize.x - corner.x, 2) + pow(windowSize.y - corner.y, 2) * 1.0);
+						break;
+				}
+				if (yot < dist) {
+					dist = yot;
+					closestCorners[n] = corner;
+				}
+			}
+		}
 	}
+	drawRectangle(vec4_t(closestCorners[0].x, closestCorners[0].y, closestCorners[3].x, closestCorners[3].y), colorHolder, 1.f, lineWidth);
 }
 
 void DrawUtils::drawItem(C_ItemStack* item, vec2_t ItemPos, float opacity, float scale, bool isEnchanted) {
