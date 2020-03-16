@@ -271,11 +271,14 @@ void DrawUtils::drawEntityBox(C_Entity* ent, float lineWidth, bool is2d) {
 	render.upper.y += 0.1f;
 
 	if (is2d) {
-		vec2_t upperCorner;
-		vec2_t lowerCorner;
-		if (refdef->OWorldToScreen(origin, vec3_t(render.lower.x, render.lower.y, render.lower.z), lowerCorner, fov, screenSize) && refdef->OWorldToScreen(origin, vec3_t(render.upper.x, render.upper.y, render.upper.z), upperCorner, fov, screenSize)) {
-			drawRectangle(vec4_t(upperCorner.x, upperCorner.y, lowerCorner.x, lowerCorner.y), colorHolder, 1.f, 1.f);
-		}
+		float yaw = g_Data.getLocalPlayer()->yaw * (PI / 180);
+		vec3_t upperCorner3D = vec3_t(ent->getPos()->x - (-cos(yaw) * ent->width / 2.f), ent->getPos()->y + ent->height, ent->getPos()->z - (sin(yaw) * ent->width / 2.f));
+		vec3_t lowerCorner3D = vec3_t(ent->getPos()->x + (-cos(yaw) * ent->width / 2.f), ent->getPos()->y, ent->getPos()->z + (sin(yaw) * ent->width / 2.f));
+
+		vec2_t upperCorner = worldToScreen(upperCorner3D);
+		vec2_t lowerCorner = worldToScreen(lowerCorner3D);
+
+		drawRectangle(vec4_t(min(upperCorner.x, lowerCorner.x), min(upperCorner.y, lowerCorner.y), max(lowerCorner.x, upperCorner.x), max(lowerCorner.y, upperCorner.y)), colorHolder, 1.f, lineWidth * 3.f);
 	} else {
 		drawBox(render.lower, render.upper, lineWidth);
 	}
