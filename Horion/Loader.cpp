@@ -298,10 +298,11 @@ DWORD WINAPI start(LPVOID lpParam) {
 	logF("Injector found");
 
 	cmdMgr->initCommands();
+	logF("Initialized command manager (1/3)");
 	moduleMgr->initModules();
+	logF("Initialized module manager (2/3)");
 	configMgr->init();
-
-	logF("Managers initialized");
+	logF("Initialized config manager (3/3)");
 
 	Hooks::Enable();
 	TabGui::init();

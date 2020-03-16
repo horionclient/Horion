@@ -12,6 +12,8 @@ ModuleManager::~ModuleManager() {
 }
 
 void ModuleManager::initModules() {
+	logF("Initializing modules");
+
 	this->moduleList.push_back(new HudModule());
 	this->moduleList.push_back(new Killaura());
 	this->moduleList.push_back(new ESP());

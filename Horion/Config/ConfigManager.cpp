@@ -106,6 +106,7 @@ void ConfigManager::saveConfig() {
 }
 
 void ConfigManager::init() {
+	logF("Initializing config");
 	loadConfig(currentConfig, true);
 }
 
