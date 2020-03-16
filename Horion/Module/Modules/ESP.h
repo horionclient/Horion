@@ -7,6 +7,7 @@ class ESP : public IModule {
 public:
 	bool isMobEsp = false;
 	bool doRainbow = true;
+	bool is2d = false;
 	ESP();
 	~ESP();
 

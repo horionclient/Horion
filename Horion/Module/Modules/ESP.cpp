@@ -5,6 +5,7 @@
 ESP::ESP() : IModule('O', Category::VISUAL, "Makes it easier to find entities around you") {
 	this->registerBoolSetting("rainbow", &this->doRainbow, this->doRainbow);
 	this->registerBoolSetting("MobEsp", &this->isMobEsp, this->isMobEsp);
+	this->registerBoolSetting("2d", &this->is2d, this->is2d);
 }
 
 ESP::~ESP() {
@@ -42,7 +43,7 @@ void doRenderStuff(C_Entity* ent, bool isRegularEntitie) {
 			DrawUtils::setColor(0.2f, 0.2f, 0.9f, max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
 		} else
 			DrawUtils::setColor(0.f, 0.f, 0.f, 0.f);
-		DrawUtils::drawEntityBox(ent, max(0.2f, 1 / max(1, (*localPlayer->getPos()).dist(*ent->getPos()))), true);  // Fancy math to give an illusion of good esp
+		DrawUtils::drawEntityBox(ent, max(0.2f, 1 / max(1, (*localPlayer->getPos()).dist(*ent->getPos()))), espMod->is2d);  // Fancy math to give an illusion of good esp
 	}
 	
 }
