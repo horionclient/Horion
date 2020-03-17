@@ -273,11 +273,18 @@ void DrawUtils::drawEntityBox(C_Entity* ent, float lineWidth) {
 }
 
 void DrawUtils::draw2D(C_Entity* ent, float lineWidth) {
-	vec2_t screenPos = worldToScreen(*ent->getPos());
-	vec2_t screenPos2 = worldToScreen(vec3_t(ent->getPos()->x, ent->getPos()->y + ent->height, ent->getPos()->z));
-	float height = abs(screenPos.y - screenPos2.y);
-	float length = height / 3.f;
-	drawRectangle(vec4_t(screenPos.x - length / 2.f, screenPos.y - height, screenPos.x + length / 2.f, screenPos.y), colorHolder, 1.f, lineWidth);
+	vec3_t base = *ent->getPos();
+	float yaw = g_Data.getLocalPlayer()->yaw;
+	float ofs = (yaw + 90.f) * (PI / 180);
+
+	vec3_t upperCorner = vec3_t(base.x - ent->width / 2.f * -sin(ofs), base.y, base.z - ent->width / 2.f * cos(ofs));
+	vec3_t lowerCorner = vec3_t(base.x + ent->width / 2.f * -sin(ofs), base.y - ent->height, base.z + ent->width / 2.f * cos(ofs));
+
+	vec2_t screenPos;
+	vec2_t screenPos2;
+
+	if (refdef->OWorldToScreen(origin, upperCorner, screenPos, fov, screenSize) && refdef->OWorldToScreen(origin, lowerCorner, screenPos2, fov, screenSize))
+		drawRectangle(vec4_t(min(screenPos.x, screenPos2.x), min(screenPos.y, screenPos2.y), max(screenPos.x, screenPos2.x), max(screenPos.y, screenPos2.y)), colorHolder, 1.f, lineWidth);
 }
 
 void DrawUtils::drawItem(C_ItemStack* item, vec2_t ItemPos, float opacity, float scale, bool isEnchanted) {
