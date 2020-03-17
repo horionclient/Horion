@@ -5,6 +5,7 @@ public:
 	Zoom();
 	~Zoom();
 
+	bool smooth = true;
 	bool zooming = false;
 	float strength = 20.f;
 	float target = 20.f;

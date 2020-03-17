@@ -977,6 +977,7 @@ float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3) {
 	}
 	if (_ReturnAddress() == setupCamera) {
 		g_Data.fov = -oGetFov(_this, a2, a3) + 110.f;
+		if (!zoomModule->smooth) return -zoomModule->target + 110.f;
 		return (moduleMgr->isInitialized() && zoomModule->zooming) ? -zoomModule->modifier + 110.f : oGetFov(_this, a2, a3);
 	}
 #ifdef _DEBUG

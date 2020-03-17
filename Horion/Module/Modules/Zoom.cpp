@@ -2,6 +2,7 @@
 
 Zoom::Zoom() : IModule('C', Category::VISUAL, "Zoom in!") {
 	registerFloatSetting("Strength", &this->strength, this->strength, 1.f, 100.f);
+	registerBoolSetting("Smooth", &this->smooth, this->smooth);
 }
 
 Zoom::~Zoom() {
