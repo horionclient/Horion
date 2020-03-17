@@ -13,6 +13,7 @@ const char* Tracer::getModuleName() {
 void Tracer::onPostRender(C_MinecraftUIRenderContext* ctx) {
 	if (!GameData::canUseMoveKeys()) return;
 	g_Data.forEachEntity([](C_Entity* ent, bool valid) {
+		DrawUtils::setColor(255, 255, 255, 1);
 		if(Target::isValidTarget(ent) && ent != g_Data.getLocalPlayer()) DrawUtils::drawTracer(ent);
 	});
 }

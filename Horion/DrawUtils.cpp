@@ -201,7 +201,7 @@ void DrawUtils::drawTracer(C_Entity* ent) {
 	vec2_t target;
 	refdef->OWorldToScreen(origin, *ent->getPos(), target, fov, screenSize);
 	vec2_t mid(((g_Data.getClientInstance()->getGuiData()->widthGame) / 2), ((g_Data.getClientInstance()->getGuiData()->heightGame) / 2));
-	if (target != vec2_t(0, 0)) DrawUtils::drawLine(mid, target, 0.2f);
+	if (target != vec2_t(0, 0)) DrawUtils::drawLine(mid, target, 0.3f);
 }
 
 void DrawUtils::drawImage(std::string FilePath, vec2_t& imagePos, vec2_t& ImageDimension, vec2_t& idk) {
