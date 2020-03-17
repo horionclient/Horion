@@ -280,11 +280,23 @@ void DrawUtils::draw2D(C_Entity* ent, float lineWidth) {
 	vec3_t upperCorner = vec3_t(base.x - ent->width / 2.f * -sin(ofs), base.y, base.z - ent->width / 2.f * cos(ofs));
 	vec3_t lowerCorner = vec3_t(base.x + ent->width / 2.f * -sin(ofs), base.y - ent->height, base.z + ent->width / 2.f * cos(ofs));
 
-	vec2_t screenPos;
-	vec2_t screenPos2;
+	vec2_t corners[4];
+	if (refdef->OWorldToScreen(origin, upperCorner, corners[0], fov, screenSize) && refdef->OWorldToScreen(origin, lowerCorner, corners[3], fov, screenSize)) {
+		corners[0] = vec2_t(min(corners[0].x, corners[3].x), min(corners[0].y, corners[3].y));
+		corners[1] = vec2_t(max(corners[0].x, corners[3].x), min(corners[0].y, corners[3].y));
+		corners[2] = vec2_t(min(corners[0].x, corners[3].x), max(corners[0].y, corners[3].y));
+		corners[3] = vec2_t(max(corners[0].x, corners[3].x), max(corners[0].y, corners[3].y));
 
-	if (refdef->OWorldToScreen(origin, upperCorner, screenPos, fov, screenSize) && refdef->OWorldToScreen(origin, lowerCorner, screenPos2, fov, screenSize))
-		drawRectangle(vec4_t(min(screenPos.x, screenPos2.x), min(screenPos.y, screenPos2.y), max(screenPos.x, screenPos2.x), max(screenPos.y, screenPos2.y)), colorHolder, 1.f, lineWidth);
+		float length = (corners[1].x - corners[0].x) / 4.f;
+		drawLine(corners[0], vec2_t(corners[0].x + length, corners[1].y), lineWidth);
+		drawLine(corners[0], vec2_t(corners[2].x, corners[0].y + length), lineWidth);
+		drawLine(vec2_t(corners[1].x - length, corners[0].y), corners[1], lineWidth);
+		drawLine(corners[1], vec2_t(corners[3].x, corners[1].y + length), lineWidth);
+		drawLine(vec2_t(corners[2].x, corners[2].y - length), corners[2], lineWidth);
+		drawLine(corners[2], vec2_t(corners[2].x + length, corners[3].y), lineWidth);
+		drawLine(vec2_t(corners[3].x - length, corners[2].y), corners[3], lineWidth);
+		drawLine(vec2_t(corners[1].x, corners[3].y - length), corners[3], lineWidth);
+	}
 }
 
 void DrawUtils::drawItem(C_ItemStack* item, vec2_t ItemPos, float opacity, float scale, bool isEnchanted) {

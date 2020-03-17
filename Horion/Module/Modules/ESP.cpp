@@ -44,7 +44,7 @@ void doRenderStuff(C_Entity* ent, bool isRegularEntitie) {
 		} else
 			return;
 		if (espMod->is2d)
-			DrawUtils::draw2D(ent, max(0.2f, 1 / max(1, (*localPlayer->getPos()).dist(*ent->getPos()))) * 3.f);
+			DrawUtils::draw2D(ent, max(0.4f, 1 / max(1, (*localPlayer->getPos()).dist(*ent->getPos()) * 3.f)));
 		else 
 			DrawUtils::drawEntityBox(ent, max(0.2f, 1 / max(1, (*localPlayer->getPos()).dist(*ent->getPos()))));
 	}
