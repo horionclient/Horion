@@ -9,6 +9,7 @@ Aimbot::Aimbot() : IModule('M', Category::COMBAT, "Automatically aims at the nea
 	this->registerFloatSetting("vertical speed", &this->verticalspeed, this->verticalspeed, 10.f, 90.f);
 	this->registerFloatSetting("horizontal range", &this->horizontalrange, this->horizontalrange, 20.f, 180.f);
 	this->registerFloatSetting("vertical range", &this->verticalrange, this->verticalrange, 20.f, 180.f);
+	this->registerBoolSetting("aimlock", &this->lock, this->lock);
 }
 
 Aimbot::~Aimbot() {
@@ -68,13 +69,15 @@ void Aimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			if (sword && !(selectedItemId == 268 || selectedItemId == 267 || selectedItemId == 272 || selectedItemId == 276 || selectedItemId == 283 /*swords*/ || selectedItemId == 271 || selectedItemId == 275 || selectedItemId == 279 || selectedItemId == 286 || selectedItemId == 258 /*axes*/))
 				return;
 
-			if (click && !g_Data.isLeftClickDown()) 
+			if (click && !g_Data.isLeftClickDown())
 				return;
 
-			appl.x /= (100.f - verticalspeed);
-			appl.y /= (100.f - horizontalspeed);
-			if (appl.x >= 1 || appl.x <= -1) appl.div(abs(appl.x));
-			if (appl.y >= 1 || appl.y <= -1) appl.div(abs(appl.y));
+			if (!this->lock) {
+				appl.x /= (100.f - verticalspeed);
+				appl.y /= (100.f - horizontalspeed);
+				if (appl.x >= 1 || appl.x <= -1) appl.div(abs(appl.x));
+				if (appl.y >= 1 || appl.y <= -1) appl.div(abs(appl.y));
+			}
 			if (!vertical)
 				appl.x = 0;
 			localPlayer->applyTurnDelta(&appl);
