@@ -388,6 +388,19 @@ public:
 		return str.substr(0, size);
 	}
 
+	static std::string getClipboardText() {
+		if (!OpenClipboard(nullptr)) {
+			return "";
+		} else {
+			HANDLE hData = GetClipboardData(CF_TEXT);
+			char* pszText = static_cast<char*>(GlobalLock(hData));
+			if (pszText == nullptr)
+				return "";
+			CloseClipboard();
+			return std::string(pszText);
+		}
+	}
+
 	static std::string readFileContents(std::wstring filePath) {
 		std::ifstream fileStr(filePath, std::ios::in | std::ios::binary);
 		if (fileStr) {

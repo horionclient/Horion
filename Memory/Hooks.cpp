@@ -797,6 +797,18 @@ int Hooks::AppPlatform_getGameEdition(__int64 _this) {
 void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4) {
 	static auto oAutoComplete = g_Hooks.PleaseAutoCompleteHook->GetFastcall<void, __int64, __int64, TextHolder*, int>();
 	char* tx = text->getText();
+
+	using syncShit_t = void(__fastcall*)(__int64*, TextHolder*);
+	static syncShit_t syncShit = nullptr;
+	static __int64* winrt_ptr;
+	if (syncShit == nullptr) {
+		uintptr_t sigOffset = FindSignature("48 8B 0D ?? ?? ?? ?? 48 8B 01 49 8B D6 FF 90 ?? 04");  // The 04 at the end might get invalid in the future
+		int offset = *reinterpret_cast<int*>(sigOffset + 3);
+		winrt_ptr = *reinterpret_cast<__int64**>(sigOffset + offset + 7);
+		int vtOffset = *reinterpret_cast<int*>(sigOffset + 15);
+		syncShit = reinterpret_cast<syncShit_t>(*reinterpret_cast<__int64*>(*winrt_ptr + vtOffset));
+	}
+
 	if (tx != nullptr && text->getTextLength() >= 1 && tx[0] == '.') {
 		std::string search = tx + 1;                                              // Dont include the '.'
 		std::transform(search.begin(), search.end(), search.begin(), ::tolower);  // make the search text lowercase
@@ -873,6 +885,36 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 				}
 			} else {
 				g_Data.getGuiData()->displayClientMessageF("==========");
+				if (firstResult.cmdAlias == ".give") {
+					char* message = text->getText();
+
+					std::unique_ptr<std::vector<std::string>> args = std::make_unique<std::vector<std::string>>();
+
+					std::string msgStr = message + 1;
+					size_t pos = msgStr.find(" "), initialPos = 0;
+					while (pos != std::string::npos) {
+						args->push_back(msgStr.substr(initialPos, pos - initialPos));
+						initialPos = pos + 1;
+
+						pos = msgStr.find(" ", initialPos);
+					}
+					args->push_back(msgStr.substr(initialPos, min(pos, msgStr.size()) - initialPos + 1));
+
+					std::string cmd = ((*args)[0]);
+					std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
+
+					if (args->size() > 4) {
+						std::string nbt = text->getText();
+						std::string tag = Utils::getClipboardText();
+						if (tag.size() > 1 && tag.front() == MojangsonToken::COMPOUND_START.getSymbol() && tag.back() == MojangsonToken::COMPOUND_END.getSymbol()) {
+							nbt += "COMPOUND_TAG";
+							text->setText(nbt);
+							syncShit(winrt_ptr, text);
+							g_Data.getGuiData()->displayClientMessage(&tag);
+						}
+					}
+					return;
+				}
 				if (firstResult.command->getUsage()[0] == 0x0)
 					g_Data.getGuiData()->displayClientMessageF("%s%s %s- %s", WHITE, firstResult.cmdAlias.c_str(), GRAY, firstResult.command->getDescription());
 				else
@@ -887,17 +929,6 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 
 				text->setText(firstResult.cmdAlias.substr(0, maxReplaceLength));  // Set text
 				// now sync with the UI thread
-				using syncShit_t = void(__fastcall*)(__int64*, TextHolder*);
-				static syncShit_t syncShit = nullptr;
-				static __int64* winrt_ptr;
-				if (syncShit == nullptr) {
-					uintptr_t sigOffset = FindSignature("48 8B 0D ?? ?? ?? ?? 48 8B 01 49 8B D6 FF 90 ?? 04");  // The 04 at the end might get invalid in the future
-					int offset = *reinterpret_cast<int*>(sigOffset + 3);
-					winrt_ptr = *reinterpret_cast<__int64**>(sigOffset + offset + 7);
-					int vtOffset = *reinterpret_cast<int*>(sigOffset + 15);
-					syncShit = reinterpret_cast<syncShit_t>(*reinterpret_cast<__int64*>(*winrt_ptr + vtOffset));
-				}
-
 				syncShit(winrt_ptr, text);
 			}
 		}

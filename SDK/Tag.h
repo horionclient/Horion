@@ -1,18 +1,7 @@
 #pragma once
-#include <algorithm>
-#include <iostream>
-#include <iterator>
-#include <list>
-#include <map>
-#include <sstream>
+#include "../Utils/Utils.h"
 #include "MojangsonToken.h"
-
-const int C_COMPOUND_START = 0;       // Parsing context
-const int C_COMPOUND_PAIR_KEY = 1;    // Parsing context
-const int C_COMPOUND_PAIR_VALUE = 2;  // Parsing context
-
-static const int C_ARRAY_START = 0;    // Parsing context
-static const int C_ARRAY_ELEMENT = 1;  // Parsing context
+#include "TextHolder.h"
 
 class Tag {
 public:
@@ -32,7 +21,7 @@ public:
 		return this->getId();
 	}
 
-	virtual char equals(Tag& tag) {
+	virtual bool equals(Tag& tag) {
 		return this->equals(tag);
 	}
 
@@ -64,12 +53,12 @@ public:
 
 class Mojangson {
 public:
-	static std::unique_ptr<Tag> parseTag(std::string& mojangson);
+	static inline std::unique_ptr<Tag> parseTag(std::string& mojangson);
 };
 
 class Handler {
 public:
-	static void handleWrite(Tag* value, std::stringstream& builder);
+	static inline void handleWrite(Tag* value, std::stringstream& builder);
 };
 
 class Int64Tag : public Tag {
@@ -167,7 +156,7 @@ public:
 	{
 		// try
 		{
-			value = stoi(string);
+			value = std::stoi(string);
 			//} catch (NumberFormatException nfe) {
 			//    throw new MojangsonParseException("\'" + string + "\'", MojangsonParseException.ParseExceptionReason.INVALID_FORMAT_NUM);
 			//}
@@ -200,7 +189,7 @@ public:
 	}
 
 	void setValue(std::string value) {
-		this->value = value;
+		this->value.setText(value);
 	}
 
 	void write(std::stringstream& builder) {
@@ -217,9 +206,9 @@ public:
 		char firstChar = string.at(0);
 
 		if (firstChar == MojangsonToken::STRING_QUOTES.getSymbol() && lastChar == MojangsonToken::STRING_QUOTES.getSymbol()) {
-			value = string.substr(1, string.length() - 1);
+			value.setText(string.substr(1, string.length() - 2));
 		} else {
-			value = string;
+			value.setText(string);
 		}
 	}
 };
@@ -232,7 +221,7 @@ public:
 	ShortTag(short value) {
 		static uintptr_t** ShortTagVtable = 0x0;
 		if (ShortTagVtable == 0x0) {
-			uintptr_t sigOffset = FindSignature("4C 8B 02 48 8D 05 ? ? ? ? 49 89 00 0F B7 41 ?? 66 41 89 40 ? 48 8B 02 C6 40 ? ? C3");
+			uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 49 89 00 0F B7 41 ?? 66 41 89 40 ? 48 8B 02 C6 40 ? ? C3");
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
 			ShortTagVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 			if (ShortTagVtable == 0x0 || sigOffset == 0x0)
@@ -270,7 +259,7 @@ public:
 
 		//try
 		{
-			value = stoi(string);
+			value = std::stoi(string);
 		}
 		//catch (NumberFormatException nfe) {
 		//throw new MojangsonParseException("\'" + string + "\'", MojangsonParseException.ParseExceptionReason.INVALID_FORMAT_NUM);
@@ -431,149 +420,12 @@ public:
 
 		// try
 		{
-			value = stoi(string);
+			value = std::stoi(string);
 		}
 		//catch (NumberFormatException nfe) {
 		//   throw new MojangsonParseException("\'" + string + "\'", MojangsonParseException.ParseExceptionReason.INVALID_FORMAT_NUM);
 		// }
 	}
-};
-
-class CompoundTag : public Tag {
-private:
-	//std::map<std::string, Tag> map;//Don't use or Crash
-	__int64* map;    //0x0008
-	size_t entries;  //0x0010
-
-public:
-	CompoundTag() {
-		memset(this, 0, sizeof(C_CompoundTag));
-		using constructor_t = void(__fastcall*)(CompoundTag*);
-		constructor_t func = reinterpret_cast<constructor_t>(FindSignature("48 89 4C 24 ?? 57 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 8B F9 48 8D 05 ?? ?? ?? ?? 48 89 01 48 8D 59"));
-		func(this);
-	}
-
-	void put(TextHolder& tag, std::unique_ptr<Tag> value) {
-		using put_t = void(__fastcall*)(CompoundTag*, TextHolder&, std::unique_ptr<Tag>);
-		static put_t func = reinterpret_cast<put_t>(FindSignature("4C 8B DC 53 56 57 48 ?? ?? ?? ?? ?? ?? 49 ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 49 8B F8 48 8B DA 49 89 53 ?? 4D 89 43 ?? 49 8B 30 48 85 F6"));
-		func(this, tag, std::move(value));
-	}
-
-	/*CompoundTag(std::map<std::string, Tag>& map) {
-		this->map = map;
-	}*/
-
-	void write(std::stringstream& builder) {
-		builder << MojangsonToken::COMPOUND_START.getSymbol();
-		bool start = true;
-
-		class CompoundTagVariant {
-		private:
-			char pad_0x0[0x20];  //0x0000
-
-		public:
-			TextHolder keyName;  //0x0020
-			Tag tag;             //0x0040
-		};
-
-		__int64* v10 = *(__int64**)(uintptr_t(this) + 0x8);
-		__int64* v11 = (__int64*)*v10;
-		__int64 i = 0;
-		if ((__int64*)*v10 != v10) {
-			do {
-				if (start) {
-					start = false;
-				} else {
-					builder << MojangsonToken::ELEMENT_SEPERATOR.getSymbol();
-				}
-				CompoundTagVariant* variant = reinterpret_cast<CompoundTagVariant*>(v11);
-
-				__int64** v17 = (__int64**)v11[2];
-				if (*((BYTE*)v17 + 0x19)) {
-					for (i = v11[1]; !*(BYTE*)(i + 0x19); i = *(__int64*)(i + 8)) {
-						if (v11 != *(__int64**)(i + 0x10))
-							break;
-						v11 = (__int64*)i;
-					}
-					v11 = (__int64*)i;
-				} else {
-					v11 = (__int64*)v11[2];
-					for (__int64* j = *v17; !*((BYTE*)j + 25); j = (__int64*)*j)
-						v11 = j;
-				}
-
-				builder << variant->keyName.getText() << MojangsonToken::ELEMENT_PAIR_SEPERATOR.getSymbol();
-				Handler::handleWrite(&variant->tag, builder);
-
-			} while (v11 != *(__int64**)(uintptr_t(this) + 0x8));
-		}
-
-		/*for (std::map<std::string, Tag>::iterator it = this->map.begin(); it != this->map.end(); it++) {
-			if (start) {
-				start = false;
-			} else {
-				builder << MojangsonToken::ELEMENT_SEPERATOR.getSymbol();
-			}
-
-			builder << it->first << MojangsonToken::ELEMENT_PAIR_SEPERATOR.getSymbol();
-			yeet::handleWrite(&it->second, builder);
-		}*/
-		builder << MojangsonToken::COMPOUND_END.getSymbol();
-	}
-
-	void read(std::string& string) {
-		int context = C_COMPOUND_START;
-		std::string tmp_key = "", tmp_val = "";
-		int scope = 0;
-		bool inString = false;
-
-		for (int index = 0; index < string.length(); index++) {
-			char character = string.at(index);
-
-			if (character == MojangsonToken::STRING_QUOTES.getSymbol()) {
-				inString = !inString;
-			}
-			if (character == MojangsonToken::WHITE_SPACE.getSymbol()) {
-				if (!inString)
-					continue;
-			}
-			if ((character == MojangsonToken::COMPOUND_START.getSymbol() || character == MojangsonToken::ARRAY_START.getSymbol()) && !inString) {
-				scope++;
-			}
-			if ((character == MojangsonToken::COMPOUND_END.getSymbol() || character == MojangsonToken::ARRAY_END.getSymbol()) && !inString) {
-				scope--;
-			}
-			if (context == C_COMPOUND_START) {
-				if (character != MojangsonToken::COMPOUND_START.getSymbol()) {
-					//parseException(index, character);
-					return;
-				}
-				context++;
-				continue;
-			}
-			if (context == C_COMPOUND_PAIR_KEY) {
-				if (character == MojangsonToken::ELEMENT_PAIR_SEPERATOR.getSymbol() && scope <= 1) {
-					context++;
-					continue;
-				}
-				tmp_key += character;
-				continue;
-			}
-			if (context == C_COMPOUND_PAIR_VALUE) {
-				if ((character == MojangsonToken::ELEMENT_SEPERATOR.getSymbol() || character == MojangsonToken::COMPOUND_END.getSymbol()) && scope <= 1 && !inString) {
-					context = C_COMPOUND_PAIR_KEY;
-					this->put(TextHolder(tmp_key), std::move(Mojangson::parseTag(tmp_val)));
-					tmp_key = tmp_val = "";
-					continue;
-				}
-				tmp_val += character;
-			}
-		}
-	}
-
-	// private void parseException(int index, char symbol) throws MojangsonParseException {
-	//   throw new MojangsonParseException("Index: " + index + ", symbol: \'" + symbol + "\'", MojangsonParseException.ParseExceptionReason.UNEXPECTED_SYMBOL);
-	//}
 };
 
 class ListTag : public Tag {
@@ -634,14 +486,15 @@ public:
 		builder << MojangsonToken::ARRAY_END.getSymbol();
 	}
 
-	
 	void read(std::string& string) {
+		static constexpr int C_ARRAY_START = 0;    // Parsing context
+		static constexpr int C_ARRAY_ELEMENT = 1;  // Parsing context
 		int context = C_ARRAY_START;
 		std::string tmpval = "";
 		int scope = 0;
 		bool inString = false;
 
-		for (int index = 0; index < string.length(); index++) {
+		for (size_t index = 0; index < string.size(); index++) {
 			char character = string.at(index);
 
 			if (character == MojangsonToken::STRING_QUOTES.getSymbol()) {
@@ -684,6 +537,159 @@ public:
 	// private void parseException(int index, char symbol) throws MojangsonParseException {
 	//  throw new MojangsonParseException("Index: " + index + ", symbol: \'" + symbol + "\'", MojangsonParseException.ParseExceptionReason.UNEXPECTED_SYMBOL);
 	// }*/
+};
+
+class CompoundTag : public Tag {
+private:
+	//std::map<std::string, Tag> map;//Don't use or Crash
+	__int64* map;    //0x0008
+	size_t entries;  //0x0010
+
+public:
+	CompoundTag() {
+		memset(this, 0, sizeof(CompoundTag));
+		using constructor_t = void(__fastcall*)(CompoundTag*);
+		constructor_t func = reinterpret_cast<constructor_t>(FindSignature("48 89 4C 24 ?? 57 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 8B F9 48 8D 05 ?? ?? ?? ?? 48 89 01 48 8D 59"));
+		func(this);
+	}
+
+	void put(TextHolder& tag, std::unique_ptr<Tag> value) {
+		using put_t = void(__fastcall*)(CompoundTag*, TextHolder&, std::unique_ptr<Tag>);
+		static put_t func = reinterpret_cast<put_t>(FindSignature("4C 8B DC 53 56 57 48 ?? ?? ?? ?? ?? ?? 49 ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 49 8B F8 48 8B DA 49 89 53 ?? 4D 89 43 ?? 49 8B 30 48 85 F6"));
+		func(this, tag, std::move(value));
+	}
+
+	/*void putCompound(TextHolder& text, std::unique_ptr<CompoundTag> tag) {
+		using putCompound_t = void(__fastcall*)(CompoundTag*, TextHolder&, std::unique_ptr<CompoundTag>);
+		static putCompound_t func = reinterpret_cast<putCompound_t>(FindSignature("40 53 56 57 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 49 8B D8 48 8B FA 48 89 54 24 ?? 48 89 5C ?? 40 49 83 38 ?? 74 4A"));
+		func(this, text, std::move(tag));
+	}
+
+	std::unique_ptr<CompoundTag> clone(CompoundTag** tag) {
+		using clone_t = std::unique_ptr<CompoundTag>(__fastcall*)(CompoundTag*, CompoundTag**);
+		static clone_t func = reinterpret_cast<clone_t>(FindSignature("48 89 54 24 ?? 57 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 8B FA 48 8B D9 C7 44 ?? ?? ?? ?? ?? ?? 33 C0 48 89 02 48 8B CA"));
+		return func(this, std::move(tag));
+	}*/
+
+	/*CompoundTag(std::map<std::string, Tag>& map) {
+		this->map = map;
+	}*/
+
+	void write(std::stringstream& builder) {
+		builder << MojangsonToken::COMPOUND_START.getSymbol();
+		bool start = true;
+
+		class CompoundTagVariant {
+		private:
+			char pad_0x0[0x20];  //0x0000
+
+		public:
+			TextHolder keyName;  //0x0020
+			Tag tag;             //0x0040
+		};
+
+		__int64* v10 = *(__int64**)(uintptr_t(this) + 0x8);
+		__int64* v11 = (__int64*)*v10;
+		__int64 i = 0;
+		if ((__int64*)*v10 != v10) {
+			do {
+				if (start) {
+					start = false;
+				} else {
+					builder << MojangsonToken::ELEMENT_SEPERATOR.getSymbol();
+				}
+				CompoundTagVariant* variant = reinterpret_cast<CompoundTagVariant*>(v11);
+
+				builder << variant->keyName.getText() << MojangsonToken::ELEMENT_PAIR_SEPERATOR.getSymbol();
+				Handler::handleWrite(&variant->tag, builder);
+
+				__int64** v17 = (__int64**)v11[2];
+				if (*((BYTE*)v17 + 0x19)) {
+					for (i = v11[1]; !*(BYTE*)(i + 0x19); i = *(__int64*)(i + 8)) {
+						if (v11 != *(__int64**)(i + 0x10))
+							break;
+						v11 = (__int64*)i;
+					}
+					v11 = (__int64*)i;
+				} else {
+					v11 = (__int64*)v11[2];
+					for (__int64* j = *v17; !*((BYTE*)j + 25); j = (__int64*)*j)
+						v11 = j;
+				}
+
+			} while (v11 != *(__int64**)(uintptr_t(this) + 0x8));
+		}
+
+		/*for (std::map<std::string, Tag>::iterator it = this->map.begin(); it != this->map.end(); it++) {
+			if (start) {
+				start = false;
+			} else {
+				builder << MojangsonToken::ELEMENT_SEPERATOR.getSymbol();
+			}
+
+			builder << it->first << MojangsonToken::ELEMENT_PAIR_SEPERATOR.getSymbol();
+			yeet::handleWrite(&it->second, builder);
+		}*/
+		builder << MojangsonToken::COMPOUND_END.getSymbol();
+	}
+
+	void read(std::string& string) {
+		static constexpr int C_COMPOUND_START = 0;       // Parsing context
+		static constexpr int C_COMPOUND_PAIR_KEY = 1;    // Parsing context
+		static constexpr int C_COMPOUND_PAIR_VALUE = 2;  // Parsing context
+
+		int context = C_COMPOUND_START;
+		std::string tmp_key = "", tmp_val = "";
+		int scope = 0;
+		bool inString = false;
+
+		for (int index = 0; index < string.length(); index++) {
+			char character = string.at(index);
+
+			if (character == MojangsonToken::STRING_QUOTES.getSymbol()) {
+				inString = !inString;
+			}
+			if (character == MojangsonToken::WHITE_SPACE.getSymbol()) {
+				if (!inString)
+					continue;
+			}
+			if ((character == MojangsonToken::COMPOUND_START.getSymbol() || character == MojangsonToken::ARRAY_START.getSymbol()) && !inString) {
+				scope++;
+			}
+			if ((character == MojangsonToken::COMPOUND_END.getSymbol() || character == MojangsonToken::ARRAY_END.getSymbol()) && !inString) {
+				scope--;
+			}
+			if (context == C_COMPOUND_START) {
+				if (character != MojangsonToken::COMPOUND_START.getSymbol()) {
+					//parseException(index, character);
+					return;
+				}
+				context++;
+				continue;
+			}
+			if (context == C_COMPOUND_PAIR_KEY) {
+				if (character == MojangsonToken::ELEMENT_PAIR_SEPERATOR.getSymbol() && scope <= 1) {
+					context++;
+					continue;
+				}
+				tmp_key += character;
+				continue;
+			}
+			if (context == C_COMPOUND_PAIR_VALUE) {
+				if ((character == MojangsonToken::ELEMENT_SEPERATOR.getSymbol() || character == MojangsonToken::COMPOUND_END.getSymbol()) && scope <= 1 && !inString) {
+					context = C_COMPOUND_PAIR_KEY;
+					this->put(TextHolder(tmp_key), std::move(Mojangson::parseTag(tmp_val)));
+					tmp_key = tmp_val = "";
+					continue;
+				}
+				tmp_val += character;
+			}
+		}
+	}
+
+	// private void parseException(int index, char symbol) throws MojangsonParseException {
+	//   throw new MojangsonParseException("Index: " + index + ", symbol: \'" + symbol + "\'", MojangsonParseException.ParseExceptionReason.UNEXPECTED_SYMBOL);
+	//}
 };
 
 void Handler::handleWrite(Tag* value, std::stringstream& builder) {
@@ -738,6 +744,9 @@ void Handler::handleWrite(Tag* value, std::stringstream& builder) {
 	 * @throws MojangsonParseException if the given Mojangson string could not be parsed.
 	 */
 std::unique_ptr<Tag> Mojangson::parseTag(std::string& mojangson) {
+	if (mojangson.front() == MojangsonToken::COMPOUND_START.getSymbol() && mojangson.back() != MojangsonToken::COMPOUND_END.getSymbol()) {
+			mojangson += '}';
+	}
 	if (mojangson.front() == MojangsonToken::STRING_QUOTES.getSymbol() && mojangson.back() == MojangsonToken::STRING_QUOTES.getSymbol()) {
 		std::unique_ptr<StringTag> val = std::make_unique<StringTag>("");
 		val->read(mojangson);

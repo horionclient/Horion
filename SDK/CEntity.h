@@ -341,8 +341,8 @@ public:
 	virtual __int64 consumeTotem(void);
 
 public:
-	virtual __int64 save(C_CompoundTag *);
-	virtual __int64 saveWithoutId(C_CompoundTag *);
+	virtual __int64 save(CompoundTag*);
+	virtual __int64 saveWithoutId(CompoundTag*);
 
 private:
 	virtual __int64 load(__int64 const &, __int64 &);

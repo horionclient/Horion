@@ -59,16 +59,16 @@ public:
 	}
 };
 
-MojangsonToken MojangsonToken::COMPOUND_START(0, "Compound_Start", '{');
-MojangsonToken MojangsonToken::COMPOUND_END(1, "Compound_End", '}');
-MojangsonToken MojangsonToken::ELEMENT_SEPERATOR(2, "Element_Seperator", ',');
-MojangsonToken MojangsonToken::ARRAY_START(3, "Array_Start", '[');
-MojangsonToken MojangsonToken::ARRAY_END(4, "Array_End", ']');
-MojangsonToken MojangsonToken::ELEMENT_PAIR_SEPERATOR(5, "Pair_Seperator", ':');
-MojangsonToken MojangsonToken::STRING_QUOTES(6, "String_Quotes", '\"');
-MojangsonToken MojangsonToken::DOUBLE_SUFFIX(8, "Double_Suffix", 'd');
-MojangsonToken MojangsonToken::BYTE_SUFFIX(9, "Byte_Suffix", 'b');
-MojangsonToken MojangsonToken::FLOAT_SUFFIX(10, "Float_Suffix", 'f');
-MojangsonToken MojangsonToken::SHORT_SUFFIX(11, "Short_Suffix", 's');
-MojangsonToken MojangsonToken::LONG_SUFFIX(12, "Long_Suffix", 'l');
-MojangsonToken MojangsonToken::WHITE_SPACE(13, "WhiteSpace", ' ');
+__declspec(selectany) MojangsonToken MojangsonToken::COMPOUND_START(0, "Compound_Start", '{');
+__declspec(selectany) MojangsonToken MojangsonToken::COMPOUND_END(1, "Compound_End", '}');
+__declspec(selectany) MojangsonToken MojangsonToken::ELEMENT_SEPERATOR(2, "Element_Seperator", ',');
+__declspec(selectany) MojangsonToken MojangsonToken::ARRAY_START(3, "Array_Start", '[');
+__declspec(selectany) MojangsonToken MojangsonToken::ARRAY_END(4, "Array_End", ']');
+__declspec(selectany) MojangsonToken MojangsonToken::ELEMENT_PAIR_SEPERATOR(5, "Pair_Seperator", ':');
+__declspec(selectany) MojangsonToken MojangsonToken::STRING_QUOTES(6, "String_Quotes", '\"');
+__declspec(selectany) MojangsonToken MojangsonToken::DOUBLE_SUFFIX(8, "Double_Suffix", 'd');
+__declspec(selectany) MojangsonToken MojangsonToken::BYTE_SUFFIX(9, "Byte_Suffix", 'b');
+__declspec(selectany) MojangsonToken MojangsonToken::FLOAT_SUFFIX(10, "Float_Suffix", 'f');
+__declspec(selectany) MojangsonToken MojangsonToken::SHORT_SUFFIX(11, "Short_Suffix", 's');
+__declspec(selectany) MojangsonToken MojangsonToken::LONG_SUFFIX(12, "Long_Suffix", 'l');
+__declspec(selectany) MojangsonToken MojangsonToken::WHITE_SPACE(13, "WhiteSpace", ' ');

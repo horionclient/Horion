@@ -6,6 +6,12 @@ GiveCommand::GiveCommand() : IMCCommand("give", "spawn items", "<itemName> <coun
 GiveCommand::~GiveCommand() {
 }
 
+class Fuck {
+public:
+	char pad_0x0[0x10];  //0x000
+	CompoundTag* tag;    //0x0010
+};
+
 bool GiveCommand::execute(std::vector<std::string>* args) {
 	assertTrue(args->size() > 2);
 
@@ -56,6 +62,13 @@ bool GiveCommand::execute(std::vector<std::string>* args) {
 		yot->count = count;
 
 	int slot = inv->getFirstEmptySlot();
+
+	if (args->size() > 4) {
+		std::string tag = Utils::getClipboardText();
+		if (tag.size() > 1 && tag.front() == MojangsonToken::COMPOUND_START.getSymbol() && tag.back() == MojangsonToken::COMPOUND_END.getSymbol()) {
+			yot->setUserData(std::move(Mojangson::parseTag(tag)));
+		}
+	}
 
 	C_InventoryAction* firstAction = nullptr;
 	C_InventoryAction* secondAction = nullptr;
