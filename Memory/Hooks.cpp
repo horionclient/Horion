@@ -885,26 +885,8 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 				}
 			} else {
 				g_Data.getGuiData()->displayClientMessageF("==========");
-				if (firstResult.cmdAlias == ".give") {
-					char* message = text->getText();
-
-					std::unique_ptr<std::vector<std::string>> args = std::make_unique<std::vector<std::string>>();
-
-					std::string msgStr = message + 1;
-					size_t pos = msgStr.find(" "), initialPos = 0;
-					while (pos != std::string::npos) {
-						args->push_back(msgStr.substr(initialPos, pos - initialPos));
-						initialPos = pos + 1;
-
-						pos = msgStr.find(" ", initialPos);
-					}
-					args->push_back(msgStr.substr(initialPos, min(pos, msgStr.size()) - initialPos + 1));
-
-					std::string cmd = ((*args)[0]);
-					std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
-
-					if (args->size() > 4) {
-						std::string nbt = text->getText();
+				if (strcmp(text->getText(),".give ") == 0) {
+						std::string nbt = ".give beehive 64 0 ";
 						std::string tag = Utils::getClipboardText();
 						if (tag.size() > 1 && tag.front() == MojangsonToken::COMPOUND_START.getSymbol() && tag.back() == MojangsonToken::COMPOUND_END.getSymbol()) {
 							nbt += "COMPOUND_TAG";
@@ -912,8 +894,6 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 							syncShit(winrt_ptr, text);
 							g_Data.getGuiData()->displayClientMessage(&tag);
 						}
-					}
-					return;
 				}
 				if (firstResult.command->getUsage()[0] == 0x0)
 					g_Data.getGuiData()->displayClientMessageF("%s%s %s- %s", WHITE, firstResult.cmdAlias.c_str(), GRAY, firstResult.command->getDescription());
