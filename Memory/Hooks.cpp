@@ -885,15 +885,15 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 				}
 			} else {
 				g_Data.getGuiData()->displayClientMessageF("==========");
-				if (strcmp(text->getText(),".give ") == 0) {
-						std::string nbt = ".give beehive 64 0 ";
-						std::string tag = Utils::getClipboardText();
-						if (tag.size() > 1 && tag.front() == MojangsonToken::COMPOUND_START.getSymbol() && tag.back() == MojangsonToken::COMPOUND_END.getSymbol()) {
-							nbt += "COMPOUND_TAG";
-							text->setText(nbt);
-							syncShit(winrt_ptr, text);
-							g_Data.getGuiData()->displayClientMessage(&tag);
-						}
+				if (strcmp(text->getText(), ".give ") == 0) {
+					std::string nbt = ".give beehive 64 0 ";
+					std::string tag = Utils::getClipboardText();
+					if (tag.size() > 1 && tag.front() == MojangsonToken::COMPOUND_START.getSymbol() && tag.back() == MojangsonToken::COMPOUND_END.getSymbol()) {
+						nbt += "COMPOUND_TAG";
+						text->setText(nbt);
+						syncShit(winrt_ptr, text);
+						g_Data.getGuiData()->displayClientMessage(&tag);
+					}
 				}
 				if (firstResult.command->getUsage()[0] == 0x0)
 					g_Data.getGuiData()->displayClientMessageF("%s%s %s- %s", WHITE, firstResult.cmdAlias.c_str(), GRAY, firstResult.command->getDescription());
@@ -1003,23 +1003,26 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* _this, vec3_ti* a2, uint8_t f
 
 		const int range = nukerModule->getNukerRadius();
 		const bool isVeinMiner = nukerModule->isVeinMiner();
+		const bool isAutoMode = nukerModule->isAutoMode();
 
 		C_BlockSource* region = g_Data.getLocalPlayer()->region;
 		int selectedBlockId = (*(region->getBlock(*a2)->blockLegacy))->blockId;
 		uint8_t selectedBlockData = region->getBlock(*a2)->data;
 
-		for (int x = -range; x < range; x++) {
-			for (int y = -range; y < range; y++) {
-				for (int z = -range; z < range; z++) {
-					tempPos.x = a2->x + x;
-					tempPos.y = a2->y + y;
-					tempPos.z = a2->z + z;
-					if (tempPos.y > 0) {
-						C_Block* blok = region->getBlock(tempPos);
-						uint8_t data = blok->data;
-						int id = (*(blok->blockLegacy))->blockId;
-						if (id != 0 && (!isVeinMiner || (id == selectedBlockId && data == selectedBlockData)))
-							_this->destroyBlock(&tempPos, face);
+		if (!isAutoMode) {
+			for (int x = -range; x < range; x++) {
+				for (int y = -range; y < range; y++) {
+					for (int z = -range; z < range; z++) {
+						tempPos.x = a2->x + x;
+						tempPos.y = a2->y + y;
+						tempPos.z = a2->z + z;
+						if (tempPos.y > 0) {
+							C_Block* blok = region->getBlock(tempPos);
+							uint8_t data = blok->data;
+							int id = (*(blok->blockLegacy))->blockId;
+							if (id != 0 && (!isVeinMiner || (id == selectedBlockId && data == selectedBlockData)))
+								_this->destroyBlock(&tempPos, face);
+						}
 					}
 				}
 			}
