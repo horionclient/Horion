@@ -401,6 +401,22 @@ public:
 		}
 	}
 
+	static void setClipboardText(std::string& text) {
+		if (!OpenClipboard(nullptr))
+			return;
+		EmptyClipboard();
+		HGLOBAL hg = GlobalAlloc(GMEM_MOVEABLE, text.size() + 1);
+		if (!hg) {
+			CloseClipboard();
+			return;
+		}
+		memcpy(GlobalLock(hg), text.c_str(), text.size() + 1);
+		GlobalUnlock(hg);
+		SetClipboardData(CF_TEXT, hg);
+		CloseClipboard();
+		GlobalFree(hg);
+	}
+
 	static std::string readFileContents(std::wstring filePath) {
 		std::ifstream fileStr(filePath, std::ios::in | std::ios::binary);
 		if (fileStr) {

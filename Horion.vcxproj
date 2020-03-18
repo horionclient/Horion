@@ -269,7 +269,6 @@
     <ClInclude Include="SDK\nbt\IntArrayTag.h" />
     <ClInclude Include="SDK\nbt\IntTag.h" />
     <ClInclude Include="SDK\nbt\LongTag.h" />
-    <ClInclude Include="SDK\nbt\Tag.h" />
     <ClInclude Include="SDK\Tag.h" />
     <ClInclude Include="Utils\Json.hpp" />
     <ClInclude Include="Utils\SkinUtil.h" />

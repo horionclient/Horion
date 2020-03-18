@@ -886,13 +886,24 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 			} else {
 				g_Data.getGuiData()->displayClientMessageF("==========");
 				if (strcmp(text->getText(), ".give ") == 0) {
-					std::string nbt = ".give beehive 64 0 ";
 					std::string tag = Utils::getClipboardText();
 					if (tag.size() > 1 && tag.front() == MojangsonToken::COMPOUND_START.getSymbol() && tag.back() == MojangsonToken::COMPOUND_END.getSymbol()) {
+						std::string nbt = ".give beehive 64 0 ";
 						nbt += "COMPOUND_TAG";
 						text->setText(nbt);
 						syncShit(winrt_ptr, text);
 						g_Data.getGuiData()->displayClientMessage(&tag);
+						return;
+					}
+				} else if (strcmp(text->getText(), ".nbt load") == 0) {
+					std::string tag = Utils::getClipboardText();
+					if (tag.size() > 1 && tag.front() == MojangsonToken::COMPOUND_START.getSymbol() && tag.back() == MojangsonToken::COMPOUND_END.getSymbol()) {
+						std::string nbt = ".nbt load ";
+						nbt += "COMPOUND_TAG";
+						text->setText(nbt);
+						syncShit(winrt_ptr, text);
+						g_Data.getGuiData()->displayClientMessage(&tag);
+						return;
 					}
 				}
 				if (firstResult.command->getUsage()[0] == 0x0)

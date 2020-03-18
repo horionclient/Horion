@@ -106,12 +106,10 @@ public:
 			string = string.substr(0, string.length() - 1);
 		}
 
-		//try
-		{
-			value = std::stol(string);
-			//} catch (NumberFormatException nfe) {
-			//    throw new MojangsonParseException("\'" + string + "\'", MojangsonParseException.ParseExceptionReason.INVALID_FORMAT_NUM);
-			// }
+		try {
+			value = std::stoull(string);
+		} catch (...) {
+			logF(" Unhandled exception for Int64Tag : %s", string.c_str());
 		}
 	}
 };
@@ -154,12 +152,10 @@ public:
 
 	void read(std::string& string)  //throws MojangsonParseException
 	{
-		// try
-		{
-			value = std::stoi(string);
-			//} catch (NumberFormatException nfe) {
-			//    throw new MojangsonParseException("\'" + string + "\'", MojangsonParseException.ParseExceptionReason.INVALID_FORMAT_NUM);
-			//}
+		try {
+			value = static_cast<int>(std::stoi(string));
+		} catch (...) {
+			logF(" Unhandled exception for IntTag : %s", string.c_str());
 		}
 	}
 };
@@ -257,13 +253,11 @@ public:
 			string = string.substr(0, string.length() - 1);
 		}
 
-		//try
-		{
-			value = std::stoi(string);
+		try {
+			value = static_cast<short>(std::stoi(string));
+		} catch (...) {
+			logF(" Unhandled exception for ShortTag : %s", string.c_str());
 		}
-		//catch (NumberFormatException nfe) {
-		//throw new MojangsonParseException("\'" + string + "\'", MojangsonParseException.ParseExceptionReason.INVALID_FORMAT_NUM);
-		//}
 	}
 };
 
@@ -311,13 +305,11 @@ public:
 			string = string.substr(0, string.length() - 1);
 		}
 
-		//try
-		{
-			value = std::stof(string);
+		try {
+			value = static_cast<float>(std::stof(string));
+		} catch (...) {
+			logF(" Unhandled exception for FloatTag : %s", string.c_str());
 		}
-		//catch (NumberFormatException nfe) {
-		//	throw new MojangsonParseException("\'" + string + "\'", MojangsonParseException.ParseExceptionReason.INVALID_FORMAT_NUM);
-		//}
 	}
 };
 
@@ -364,13 +356,11 @@ public:
 			string = string.substr(0, string.length() - 1);
 		}
 
-		//try
-		{
-			value = std::stod(string);
+		try {
+			value = static_cast<double>(std::stod(string));
+		} catch (...) {
+			logF(" Unhandled exception for DoubleTag : %s", string.c_str());
 		}
-		//catch (NumberFormatException nfe) {
-		//	throw new MojangsonParseException("\'" + string + "\'", MojangsonParseException.ParseExceptionReason.INVALID_FORMAT_NUM);
-		//}
 	}
 };
 
@@ -418,13 +408,11 @@ public:
 			string = string.substr(0, string.length() - 1);
 		}
 
-		// try
-		{
-			value = std::stoi(string);
+		try {
+			value = static_cast<char>(std::stoi(string));
+		} catch (...) {
+			logF(" Unhandled exception for ByteTag : %s", string.c_str());
 		}
-		//catch (NumberFormatException nfe) {
-		//   throw new MojangsonParseException("\'" + string + "\'", MojangsonParseException.ParseExceptionReason.INVALID_FORMAT_NUM);
-		// }
 	}
 };
 
@@ -600,8 +588,11 @@ public:
 				}
 				CompoundTagVariant* variant = reinterpret_cast<CompoundTagVariant*>(v11);
 
-				builder << variant->keyName.getText() << MojangsonToken::ELEMENT_PAIR_SEPERATOR.getSymbol();
-				Handler::handleWrite(&variant->tag, builder);
+				if (variant) {
+					builder << variant->keyName.getText() << MojangsonToken::ELEMENT_PAIR_SEPERATOR.getSymbol();
+					Handler::handleWrite(&variant->tag, builder);
+				}
+			
 
 				__int64** v17 = (__int64**)v11[2];
 				if (*((BYTE*)v17 + 0x19)) {
@@ -745,7 +736,7 @@ void Handler::handleWrite(Tag* value, std::stringstream& builder) {
 	 */
 std::unique_ptr<Tag> Mojangson::parseTag(std::string& mojangson) {
 	if (mojangson.front() == MojangsonToken::COMPOUND_START.getSymbol() && mojangson.back() != MojangsonToken::COMPOUND_END.getSymbol()) {
-			mojangson += '}';
+		mojangson += '}';
 	}
 	if (mojangson.front() == MojangsonToken::STRING_QUOTES.getSymbol() && mojangson.back() == MojangsonToken::STRING_QUOTES.getSymbol()) {
 		std::unique_ptr<StringTag> val = std::make_unique<StringTag>("");

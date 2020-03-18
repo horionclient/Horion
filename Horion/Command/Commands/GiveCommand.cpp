@@ -6,12 +6,6 @@ GiveCommand::GiveCommand() : IMCCommand("give", "spawn items", "<itemName> <coun
 GiveCommand::~GiveCommand() {
 }
 
-class Fuck {
-public:
-	char pad_0x0[0x10];  //0x000
-	CompoundTag* tag;    //0x0010
-};
-
 bool GiveCommand::execute(std::vector<std::string>* args) {
 	assertTrue(args->size() > 2);
 

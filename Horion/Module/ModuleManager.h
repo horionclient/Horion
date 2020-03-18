@@ -79,6 +79,7 @@
 #include "Modules/AirStuck.h"
 #include "Modules/Zoom.h"
 #include "Modules/Teams.h"
+#include "Modules/Nbt.h"
 
 #ifdef _DEBUG
 #include "Modules/TestModule.h"
