@@ -1,6 +1,6 @@
 #include "NbtCommand.h"
 
-NbtCommand::NbtCommand() : IMCCommand("nbt", "save or load NBT Tags (you have to point at an entity/block entity)", "<load/save>") {
+NbtCommand::NbtCommand() : IMCCommand("nbt", "read and write NBT tags to/from your clipboard (You have to point at an entity/block entity)", "<read/write>") {
 }
 
 NbtCommand::~NbtCommand() {
@@ -18,36 +18,36 @@ bool NbtCommand::execute(std::vector<std::string>* args) {
 	C_InventoryTransactionManager* manager = g_Data.getLocalPlayer()->getTransactionManager();
 	C_ItemStack* item = g_Data.getLocalPlayer()->getSelectedItem();
 
-	if (args->at(1) == "save") {
+	if (args->at(1) == "write") {
 		if (pointingStruct->entityPtr != nullptr) {
 			if(!(g_Data.getRakNetInstance()->serverIp.getTextLength() < 1)) {
-				clientMessageF("%sNbt Tags for mobs only works in local world !", RED);
+				clientMessageF("%sNBT tags for mobs only works in local world!", RED);
 				return true;
 			}
 			pointingStruct->entityPtr->save(tag.get());
 			std::stringstream build;
 			tag->write(build);
 			Utils::setClipboardText(build.str());
-			g_Data.getGuiData()->displayClientMessageF("%s%s", GREEN, "CompoundTag Copied :");
+			g_Data.getGuiData()->displayClientMessageF("%s%s", GREEN, "CompoundTag copied:");
 			g_Data.getClientInstance()->getGuiData()->displayClientMessage(&build.str());
 		} else if (blockActor != nullptr) {
 			blockActor->save(tag.get());
 			std::stringstream build;
 			tag->write(build);
 			Utils::setClipboardText(build.str());
-			g_Data.getGuiData()->displayClientMessageF("%s%s", GREEN, "CompoundTag Copied :");
+			g_Data.getGuiData()->displayClientMessageF("%s%s", GREEN, "CompoundTag copied:");
 			g_Data.getClientInstance()->getGuiData()->displayClientMessage(&build.str());
 		} else if (item != nullptr && item->tag != nullptr) {
 			std::stringstream build;
 			item->tag->write(build);
 			Utils::setClipboardText(build.str());
-			g_Data.getGuiData()->displayClientMessageF("%s%s", GREEN, "CompoundTag Copied :");
+			g_Data.getGuiData()->displayClientMessageF("%s%s", GREEN, "CompoundTag copied:");
 			g_Data.getClientInstance()->getGuiData()->displayClientMessage(&build.str());
 		} else {
-			clientMessageF("%sCouldn't find Nbt Tags!", RED);
+			clientMessageF("%sCouldn't find any NBT tags!", RED);
 			return true;
 		}
-	} else if (args->at(1) == "load") {
+	} else if (args->at(1) == "write") {
 		std::string tag = Utils::getClipboardText();
 
 		C_InventoryAction* firstAction = nullptr;
@@ -65,7 +65,7 @@ bool NbtCommand::execute(std::vector<std::string>* args) {
 		if (tag.size() > 1 && tag.front() == MojangsonToken::COMPOUND_START.getSymbol() && tag.back() == MojangsonToken::COMPOUND_END.getSymbol()) {
 			item->setUserData(std::move(Mojangson::parseTag(tag)));
 		} else {
-			clientMessageF("%sInvalid Nbt Tag!", RED);
+			clientMessageF("%sInvalid NBT tag!", RED);
 			return true;
 		}
 

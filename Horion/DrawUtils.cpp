@@ -273,12 +273,11 @@ void DrawUtils::drawEntityBox(C_Entity* ent, float lineWidth) {
 }
 
 void DrawUtils::draw2D(C_Entity* ent, float lineWidth) {
-	vec3_t base = *ent->getPos();
-	float yaw = g_Data.getLocalPlayer()->yaw;
-	float ofs = (yaw + 90.f) * (PI / 180);
+	vec3_t base = vec3_t(ent->eyePos0.x, ent->eyePos0.y + 0.15f, ent->eyePos0.z);
+	float ofs = (g_Data.getLocalPlayer()->yaw + 90.f) * (PI / 180);
 
-	vec3_t upperCorner = vec3_t(base.x - ent->width / 2.f * -sin(ofs), base.y, base.z - ent->width / 2.f * cos(ofs));
-	vec3_t lowerCorner = vec3_t(base.x + ent->width / 2.f * -sin(ofs), base.y - ent->height, base.z + ent->width / 2.f * cos(ofs));
+	vec3_t upperCorner = vec3_t(base.x - ent->width / 1.5f * -sin(ofs), base.y, base.z - ent->width / 1.5f * cos(ofs));
+	vec3_t lowerCorner = vec3_t(base.x + ent->width / 1.5f * -sin(ofs), base.y - ent->height, base.z + ent->width / 1.5f * cos(ofs));
 
 	vec2_t corners[4];
 	if (refdef->OWorldToScreen(origin, upperCorner, corners[0], fov, screenSize) && refdef->OWorldToScreen(origin, lowerCorner, corners[3], fov, screenSize)) {
