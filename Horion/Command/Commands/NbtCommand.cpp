@@ -18,7 +18,7 @@ bool NbtCommand::execute(std::vector<std::string>* args) {
 	C_InventoryTransactionManager* manager = g_Data.getLocalPlayer()->getTransactionManager();
 	C_ItemStack* item = g_Data.getLocalPlayer()->getSelectedItem();
 
-	if (args->at(1) == "write") {
+	if (args->at(1) == "read") {
 		if (pointingStruct->entityPtr != nullptr) {
 			if(!(g_Data.getRakNetInstance()->serverIp.getTextLength() < 1)) {
 				clientMessageF("%sNBT tags for mobs only works in local world!", RED);
