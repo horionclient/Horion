@@ -1,6 +1,6 @@
 #include "Nbt.h"
 
-Nbt::Nbt() : IModule(0x0, Category::PLAYER, "Print NBT Tags, Left click on mobs") {
+Nbt::Nbt() : IModule(0x0, Category::PLAYER, "Print NBT Tags, Left click on mobs (Only works on local worlds !)") {
 }
 
 Nbt::~Nbt() {
@@ -18,6 +18,9 @@ void Nbt::onTick(C_GameMode* gm) {
 	
 	if (GameData::isRightClickDown()) {  // && Utils::getClipboardText() != this->lastCopy) {
 		if (pointingStruct->entityPtr != nullptr) {
+
+			if (!(g_Data.getRakNetInstance()->serverIp.getTextLength() < 1))
+				return;
 			std::unique_ptr<CompoundTag> tag = std::make_unique<CompoundTag>();
 			pointingStruct->entityPtr->save(tag.get());
 			std::stringstream build;

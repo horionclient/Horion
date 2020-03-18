@@ -1,6 +1,6 @@
 #include "NbtCommand.h"
 
-NbtCommand::NbtCommand() : IMCCommand("nbt", "save or load NBT Tags", "<load/save>") {
+NbtCommand::NbtCommand() : IMCCommand("nbt", "save or load NBT Tags (you have to point at an entity/block entity)", "<load/save>") {
 }
 
 NbtCommand::~NbtCommand() {
@@ -20,6 +20,10 @@ bool NbtCommand::execute(std::vector<std::string>* args) {
 
 	if (args->at(1) == "save") {
 		if (pointingStruct->entityPtr != nullptr) {
+			if(!(g_Data.getRakNetInstance()->serverIp.getTextLength() < 1)) {
+				clientMessageF("%sNbt Tags for mobs only works in local world !", RED);
+				return true;
+			}
 			pointingStruct->entityPtr->save(tag.get());
 			std::stringstream build;
 			tag->write(build);
