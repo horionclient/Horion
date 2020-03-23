@@ -46,33 +46,21 @@ private:
 	__int64 unknown;                    // 0x0030
 public:
 	C_FontRepository_FontList* fontList;   //0x0038
-	C_FontRepository_FontList* fontList1;  //0x0040
+	//C_FontRepository_FontList* fontList1;  //0x0040
 };
 
 class MinecraftGame {
 private:
-	char filler[0xA0];  //0x0000
+	char filler[0x130];  //0x0000
 public:
-	uintptr_t defaultFont;  //0x00A0
+	C_FontRepository* fontRepository;  //0x130
 private:
-	char pad_0x00A8[0x78];  //0x00A8
+	char pad_0x128[0xF0];  //0x138
 public:
-	C_FontRepository* fontRepository;  //0x120
-private:
-	char pad_0x128[0x28];  //0x128
-public:
-	C_FontRepository* fontRepository1;  //0x150
-private:
-	char pad_0x0158[0xC0];  //0x158
-public:
-	bool canUseKeys;  //0x0218
+	bool canUseKeys;  //0x228
 
 	C_Font* getTheGoodFontThankYou() {
 		return fontRepository->fontList->fontEntries[7].font;
-	};
-
-	C_Font* getOldFont() {
-		return fontRepository1->fontList1->fontEntries[6].font;
 	};
 
 	C_Font* getTheBetterFontYes() {
@@ -152,37 +140,37 @@ public:
 
 class C_ClientInstance {
 private:
-	char firstPad[0x40];  //0x0008
+	char firstPad[0x90];  //0x0008
 public:
-	MinecraftGame* minecraftGame;  //0x0048
+	MinecraftGame* minecraftGame;  //0x0098
 private:
-	MinecraftGame* N0000080C;  //0x0050
+	MinecraftGame* N0000080C;  //0x00A0
 public:
-	MinecraftGame* N0000080D;  //0x0058
+	MinecraftGame* N0000080D;  //0x00A8
 private:
-	MinecraftGame* N0000080E;  //0x0060
+	MinecraftGame* N0000080E;  //0x00B0
 public:
-	Minecraft* minecraft;  //0x0068
+	Minecraft* minecraft;  //0x00B8
 private:
-	char pad_0x0068[0x8];  //0x0070
+	char pad_0x0068[0x8];  //0x00C0
 public:
-	LevelRenderer* levelRenderer;  //0x0078
+	LevelRenderer* levelRenderer;  //0x00C8
 private:
-	char pad_0x0078[0x8];  //0x0080
+	char pad_0x0078[0x8];  //0x00D0
 public:
-	C_LoopbackPacketSender* loopbackPacketSender;  //0x0088
+	C_LoopbackPacketSender* loopbackPacketSender;  //0x00D8
 private:
-	char pad_0x0088[0x18];  //0x0090
+	char pad_0x0088[0x18];  //0x00E0
 public:
-	PtrToGameSettings1* ptr;  //0x00A8
+	PtrToGameSettings1* ptr;  //0x00F8
 private:
-	char pad_0x00B0[0x8];  //0x00B0
+	char pad_0x00B0[0x8];  //0x0100
 public:
-	HitDetectSystem* hitDetectSystem;  //0x00B8
+	HitDetectSystem* hitDetectSystem;  //0x0108
 private:
-	char pad_0x00B8[0x30];  //0x00C0
+	char pad_0x00B8[0x30];  //0x0110
 public:
-	C_LocalPlayer* localPlayer;  //0x00F0
+	C_LocalPlayer* localPlayer;  //0x0140
 
 private:
 	virtual __int64 destructorClientInstance();
