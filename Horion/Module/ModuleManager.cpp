@@ -50,7 +50,6 @@ void ModuleManager::initModules() {
 	this->moduleList.push_back(new Hitbox());
 	this->moduleList.push_back(new Reach());
 	this->moduleList.push_back(new FullBright());
-	this->moduleList.push_back(new AirSwim());
 	this->moduleList.push_back(new InventoryMove());
 	this->moduleList.push_back(new HighJump());
 	this->moduleList.push_back(new NoWeb());

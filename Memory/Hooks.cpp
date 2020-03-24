@@ -47,8 +47,6 @@ void Hooks::Init() {
 			if (localPlayerVtable == 0x0 || sigOffset == 0x0)
 				logF("C_LocalPlayer signature not working!!!");
 			else {
-				g_Hooks.Actor_isInWaterHook = std::make_unique<FuncHook>(localPlayerVtable[61], Hooks::Actor_isInWater);
-
 				g_Hooks.Actor_startSwimmingHook = std::make_unique<FuncHook>(localPlayerVtable[181], Hooks::Actor_startSwimming);
 
 				g_Hooks.Actor_ladderUpHook = std::make_unique<FuncHook>(localPlayerVtable[321], Hooks::Actor_ladderUp);
@@ -128,9 +126,13 @@ void Hooks::Init() {
 
 		//void* sendtoServer = reinterpret_cast<void*>(FindSignature("48 89 5C 24 08 57 48 ?? ?? ?? ?? ?? ?? 0F B6 41 ?? 48 8B FA 88 42 ?? 48 8D 54 24 ?? 48 8B 59 ?? 48 8B CB E8 ?? ?? ?? ?? 45 33 C9"));
 		//g_Hooks.LoopbackPacketSender_sendToServerHook = std::make_unique<FuncHook>(sendtoServer, Hooks::LoopbackPacketSender_sendToServer);
+		uintptr_t** packetSenderVtable = reinterpret_cast<uintptr_t**>(*(uintptr_t*)g_Data.getClientInstance()->loopbackPacketSender);
+		g_Hooks.LoopbackPacketSender_sendToServerHook = std::make_unique<FuncHook>(packetSenderVtable[2], Hooks::LoopbackPacketSender_sendToServer);
 
 		//void* getFov = reinterpret_cast<void*>(FindSignature("40 53 48 83 EC ?? 0F 29 74 24 ?? 0F 29 7C 24 ?? 44 0F 29 44 24 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ??"));
 		//g_Hooks.LevelRendererPlayer_getFovHook = std::make_unique<FuncHook>(getFov, Hooks::LevelRendererPlayer_getFov);
+		void* getFov = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ? 57 48 83 EC ?? 0F 29 74 24 ? 0F 29 7C 24 ? 44 0F 29 44 24 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? F3 0F 10 3D ? ? ? ? 44 0F 28 C1"));
+		g_Hooks.LevelRendererPlayer_getFovHook = std::make_unique<FuncHook>(getFov, Hooks::LevelRendererPlayer_getFov);
 
 		void* tick_entityList = reinterpret_cast<void*>(FindSignature("48 89 ?? ?? ?? 57 48 83 EC ?? 48 8B ?? E8 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B D8 ?? ?? ?? ?? ?? ?? 48 99"));
 		g_Hooks.MultiLevelPlayer_tickHook = std::make_unique<FuncHook>(tick_entityList, Hooks::MultiLevelPlayer_tick);
@@ -140,6 +142,8 @@ void Hooks::Init() {
 
 		//void* renderLevel = reinterpret_cast<void*>(FindSignature("40 53 56 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B D8 48 8B FA 48 8B F1 33 D2"));
 		//g_Hooks.LevelRenderer_renderLevelHook = std::make_unique<FuncHook>(renderLevel, Hooks::LevelRenderer_renderLevel);
+		void* renderLevel = reinterpret_cast<void*>(FindSignature("48 8B C4 55 56 57 41 56 41 57 48 81 EC ? ? ? ? 48 C7 44 24 ? ? ? ? ? 48 89 58 ?? 0F 29 70 ?? 48 8B 05 ? ? ? ?"));
+		g_Hooks.LevelRenderer_renderLevelHook = std::make_unique<FuncHook>(renderLevel, Hooks::LevelRenderer_renderLevel);
 
 		void* clickHook = reinterpret_cast<void*>(FindSignature("48 8B C4 48 89 58 ?? 48 89 68 ?? 48 89 70 ?? 57 41 54 41 55 41 56 41 57 48 83 EC 60 44 ?? ?? ?? ?? ?? ?? ?? ?? 33 F6"));
 		g_Hooks.ClickFuncHook = std::make_unique<FuncHook>(clickHook, Hooks::ClickFunc);
@@ -208,32 +212,32 @@ void Hooks::SurvivalMode_tick(C_GameMode* _this) {
 void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 	static auto oSendMessage = g_Hooks.ChatScreenController_sendChatMessageHook->GetFastcall<void, void*>();
 
-	using addCommandToChatHistory_t = void(__fastcall*)(__int64*, char*);
+	using addCommandToChatHistory_t = void(__fastcall*)(__int64, char*);
 	static addCommandToChatHistory_t addCommandToChatHistory = reinterpret_cast<addCommandToChatHistory_t>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 83 79 ?? ?? 48 8B FA 48 8B D9 76 46 48 8B 41 ?? 48 89 74 24 ?? 33 F6"));
 
-	uintptr_t* textLength = reinterpret_cast<uintptr_t*>(_this + 0x710);
+	uintptr_t* textLength = reinterpret_cast<uintptr_t*>(_this + 0xA80);
 	if (*textLength) {
-		char* message = reinterpret_cast<char*>(_this + 0x700);
-		if (*reinterpret_cast<__int64*>(_this + 0x718) >= 0x10)
+		char* message = reinterpret_cast<char*>(_this + 0xA70);
+		if (*reinterpret_cast<__int64*>(_this + 0xA88) >= 0x10)
 			message = *reinterpret_cast<char**>(message);
 
 		if (*message == cmdMgr->prefix) {
 			cmdMgr->execute(message);
 
-			__int64* a1 = (__int64*)(*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0x668) + 0x20i64) + 0x960i64))(*(__int64*)(*(__int64*)(_this + 0x668) + 0x20i64));
-			addCommandToChatHistory(a1, (char*)(_this + 0x700));  // This will put the command in the chat history (Arrow up/down)
+			__int64 a1 = (*(__int64 (__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x970i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
+			addCommandToChatHistory(a1, (char*)(_this + 0xA70));  // This will put the command in the chat history (Arrow up/down)
 
 			__int64 v17 = 0;
-			__int64* v15 = *(__int64**)(*(__int64*)(_this + 0x668) + 0x20i64);
+			__int64* v15 = *(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64);
 			__int64 v16 = *v15;
 
-			if (*(BYTE*)(_this + 0x72A))
-				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x968))(v15);
+			if (*(BYTE*)(_this + 0xA9A))
+				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x978))(v15);
 			else
-				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x960))(v15);
-			*(DWORD*)(_this + 0x724) = *(DWORD*)(v17 + 0x20);
+				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x970))(v15);
+			*(DWORD*)(_this + 0xA94) = *(DWORD*)(v17 + 0x20);
 
-			*reinterpret_cast<__int64*>(_this + 0x710) = 0i64;
+			*reinterpret_cast<__int64*>(_this + 0xA80) = 0i64;
 			*message = 0x0;     // Remove command in textbox
 			*textLength = 0x0;  // text length
 			return;
@@ -802,7 +806,8 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 	static syncShit_t syncShit = nullptr;
 	static __int64* winrt_ptr;
 	if (syncShit == nullptr) {
-		uintptr_t sigOffset = FindSignature("48 8B 0D ?? ?? ?? ?? 48 8B 01 49 8B D6 FF 90 ?? 04");  // The 04 at the end might get invalid in the future
+		//uintptr_t sigOffset = FindSignature("48 8B 0D ?? ?? ?? ?? 48 8B 01 49 8B D6 FF 90 ?? 04");  // The 04 at the end might get invalid in the future
+		uintptr_t sigOffset = FindSignature("48 89 0D ? ? ? ? E8 ? ? ? ? B0 ? 48 8B 5C 24 ? 48 8B 6C 24 ? 48 83 C4");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		winrt_ptr = *reinterpret_cast<__int64**>(sigOffset + offset + 7);
 		int vtOffset = *reinterpret_cast<int*>(sigOffset + 15);
@@ -979,7 +984,9 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3) {
 	static auto oGetFov = g_Hooks.LevelRendererPlayer_getFovHook->GetFastcall<float, __int64, float, bool>();
 	static void* renderItemInHand = reinterpret_cast<void*>(FindSignature("0F 28 F0 F3 44 0F 10 3D ?? ?? ?? ?? F3 41 0F 59 F7"));
-	static void* setupCamera = reinterpret_cast<void*>(FindSignature("44 0F 28 D8 F3 44 0F 59 1D ?? ?? ?? ?? 41 0F B6 4E ??"));
+
+	//static void* setupCamera = reinterpret_cast<void*>(FindSignature("44 0F 28 D8 F3 44 0F 59 1D ?? ?? ?? ?? 41 0F B6 4E ??"));
+	static void* setupCamera = reinterpret_cast<void*>(FindSignature("0F 28 F8 F3 0F 59 3D ? ? ? ? 41 0F B6 4E ? 88 4C 24 ?? 44 0F B6 E1"));
 
 	static auto zoomModule = moduleMgr->getModule<Zoom>();
 
@@ -1086,7 +1093,8 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3) 
 	static auto oFunc = g_Hooks.LevelRenderer_renderLevelHook->GetFastcall<__int64, __int64, __int64, __int64>();
 
 	using reloadShit_t = void(__fastcall*)(__int64);
-	static reloadShit_t reloadChunk = reinterpret_cast<reloadShit_t>(FindSignature("48 8B C4 56 57 41 54 41 56 41 57 48 83 EC ?? 48 C7 40 ?? FE FF FF FF 48 89 58 ?? 48 89 68 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B F9 4C"));
+	//static reloadShit_t reloadChunk = reinterpret_cast<reloadShit_t>(FindSignature("48 8B C4 56 57 41 54 41 56 41 57 48 83 EC ?? 48 C7 40 ?? FE FF FF FF 48 89 58 ?? 48 89 68 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B F9 4C"));
+	static reloadShit_t reloadChunk = reinterpret_cast<reloadShit_t>(FindSignature("48 8B C4 56 57 41 54 41 56 41 57 48 ?? EC ? ? ? ? 48 C7 40 ? ? ? ? ? 48 89 58 ?? 48 89 68 ?? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B F9"));
 
 	static auto xrayMod = moduleMgr->getModule<Xray>();
 
@@ -1146,19 +1154,6 @@ __int64 Hooks::GetGamma(__int64 a1) {
 	}
 
 	return oFunc(a1);
-}
-
-bool Hooks::Actor_isInWater(C_Entity* _this) {
-	static auto oFunc = g_Hooks.Actor_isInWaterHook->GetFastcall<bool, C_Entity*>();
-
-	if (g_Data.getLocalPlayer() != _this)
-		return oFunc(_this);
-
-	static auto airSwimModule = moduleMgr->getModule<AirSwim>();
-	if (airSwimModule->isEnabled())
-		return true;
-
-	return oFunc(_this);
 }
 
 void Hooks::JumpPower(C_Entity* a1, float a2) {

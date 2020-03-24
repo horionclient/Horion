@@ -55,13 +55,9 @@ private:
 public:
 	int selectedHotbarSlot;  //0x0010
 private:
-	char pad_0x0014[0x8C];  //0x0014
+	char pad_0x0014[0x9C];  //0x0014
 public:
-	uint8_t holdingItem;  //0x00A0
-private:
-	char pad_0x00A1[0x7];  //0x00A1
-public:
-	C_Inventory* inventory;  //0x00A8
+	C_Inventory* inventory;  //0x00B0
 };
 
 class C_ContainerScreenController {

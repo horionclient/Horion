@@ -43,85 +43,80 @@ private:
 public:
 	vec3_t eyePos0;  //0x0110
 private:
-	char pad_0x11C[0x5C];  //0x11C
+	char pad_0x11C[0x70];  //0x11C
 public:
-	bool onGround;  //0x0178
+	float fallDistance; //0x18C
+	bool onGround;  //0x0190
 private:
-	char pad_0x179[0x1B];  //0x179
-public:
-	float fallDistance;  //0x194
-private:
-	char pad_0x198[0x7C];  //0x0198
+	char pad_0x179[0x83];  //0x191
 public:
 	float spectatorMode;  //0x0214
+	float stepHeight; //0x218
 private:
-	char pad_0x218[0x8];  //0x218
+	char pad_0x228[0x10];  //0x21C
 public:
-	float stepHeight;  //0x0220
+	float web;  //0x022C
 private:
-	char pad_0x228[0x14];  //0x224
+	char pad_0x23C[0x5];  //0x0230
 public:
-	float web;  //0x0238
+	bool didEnterWaterBool;  //0x0235
 private:
-	char pad_0x23C[0x1];  //0x023C
+	char pad_023E[0x4E];  //0x0236
 public:
-	bool didEnterWaterBool;  //0x023D
+	int ticksAlive;  //0x0284
 private:
-	char pad_023E[0x4E];  //0x023E
+	char pad_0290[0xB0];  //0x0288
 public:
-	int ticksAlive;  //0x028C
+	C_BlockSource *region;  //0x338
 private:
-	char pad_0290[0xB8];  //0x0290
+	char pad_0x350[0xE0];  //0x340
 public:
-	C_BlockSource *region;  //0x348
+	AABB aabb;  //0x0420
 private:
-	char pad_0x350[0xE0];  //0x350
+	char pad_0x448[0x4];  //0x0438
 public:
-	AABB aabb;  //0x0430
+	float width;        //0x043C
+	float height;       //0x0440
+	vec3_t currentPos;  //0x0444
+	vec3_t oldPos;      //0x0450
+	vec3_t velocity;    //0x045C
 private:
-	char pad_0x448[0x4];  //0x0448
+	char pad_0x0478[0x58];  //0x468
 public:
-	float width;        //0x044C
-	float height;       //0x0450
-	vec3_t currentPos;  //0x0454
-	vec3_t oldPos;      //0x0460
-	vec3_t velocity;    //0x046C
+	__int64 entityRuntimeId;  //0x4C0 //4B8
 private:
-	char pad_0x0478[0x58];  //0x478
+	char pad_0478[0x120];  //0x04C8
 public:
-	__int64 entityRuntimeId;  //0x4D0
+	float bodyYaw;     //0x05E8
+	float oldBodyYaw;  //0x05EC
+	float yawUnused1;  //0x05F0
+	float yawUnused2;  //0x05F4
+	int damageTime;    //0x05F8
 private:
-	char pad_0478[0x338];  //0x04D8
+	char pad_0824[0x88];  //0x05FC
 public:
-	float bodyYaw;     //0x0810
-	float oldBodyYaw;  //0x0814
-	float yawUnused1;  //0x0818
-	float yawUnused2;  //0x081C
-	int damageTime;    //0x0820
+	int timeSinceDeath;  //0x0684
 private:
-	char pad_0824[0x88];  //0x0824
+	char pad_08B0[0x1E0];  //0x0688
 public:
-	int timeSinceDeath;  //0x08AC
+	bool canFly;  //0x0868
 private:
-	char pad_08B0[0x1E0];  //0x08B0
+	char pad_0x0A95[0x61F];  //0x0869
 public:
-	bool canFly;  //0x0A90
+	int16_t itemData;        //0x0E88
+	int16_t itemId;          //0x0E8A
 private:
-	char pad_0x0A95[0x62F];  //0x0A91
-	int16_t itemData;  //0x10C0
-	int16_t itemId;    //0x10C2
-private:
-	char pad_10CC[0x1FC];  //0x10C4
+	char pad_10CC[0x1FC];  //0x0E8C
 public:
-	C_InventoryTransactionManager transac;  //0x12C0
+	C_InventoryTransactionManager transac;  //0x1088
 private:
-	char pad_0x1324[0xA6C];  //0x1324
+	char pad_0x1324[0xA80];  //0x10EC
 public:
-	int gamemode;  //0x1D94
+	int gamemode;  //0x1B6C
 private:
-	char pad_1DA4[0x198];  //0x1D98
+	char pad_1DA4[0x198];  //0x1B70
 public:
-	TextHolder uuid;  //0x1F30
+	TextHolder uuid;  //0x1D08
 
 public:
 	virtual bool hasComponent(__int64 const &) const;
@@ -341,8 +336,8 @@ public:
 	virtual __int64 consumeTotem(void);
 
 public:
-	virtual __int64 save(CompoundTag*);
-	virtual __int64 saveWithoutId(CompoundTag*);
+	virtual __int64 save(CompoundTag *);
+	virtual __int64 saveWithoutId(CompoundTag *);
 
 private:
 	virtual __int64 load(__int64 const &, __int64 &);
@@ -664,7 +659,7 @@ public:
 		return &this->aabb;
 	}
 
-	__int64* getUniqueId() {
+	__int64 *getUniqueId() {
 		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
 		__int64 *result;  // rax
 		__int64 v2;       // rcx
@@ -676,7 +671,6 @@ public:
 		}
 		return result;
 	}
-
 };
 
 class C_ServerPlayer;
@@ -686,11 +680,10 @@ public:
 	C_PlayerInventoryProxy *getSupplies() {
 		static unsigned int offset = 0;
 		if (offset == 0) {
-			offset = *reinterpret_cast<int *>(FindSignature("4C 8B 82 ?? ?? ?? ?? 48 8B B2") + 3);  // GameMode::startDestroyBlock -> GameMode::_canDestroy -> getSupplies
+			offset = *reinterpret_cast<int *>(FindSignature("4C 8B 8A ? ? ? ? 41 80 B9 ? ? ? ? ? 75 18 49 8B 89 ? ? ? ? 41 8B 51") + 3);  // GameMode::startDestroyBlock -> GameMode::_canDestroy -> getSupplies
 		}
 		return *reinterpret_cast<C_PlayerInventoryProxy **>(reinterpret_cast<__int64>(this) + offset);
 	};
-
 
 	C_ItemStack *getSelectedItem() {
 		auto supplies = this->getSupplies();
@@ -858,7 +851,6 @@ class C_ServerPlayer : public C_Player {
 
 class C_LocalPlayer : public C_Player {
 public:
-
 	void unlockAchievments() {  // MinecraftEventing::fireEventAwardAchievement
 		using fireEventAward = void(__fastcall *)(void *, int);
 		static fireEventAward fireEventAwardFunc = reinterpret_cast<fireEventAward>(FindSignature("48 85 C9 0F 84 ?? ?? ?? ?? 55 56 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 8B"));
