@@ -18,63 +18,64 @@ bool NbtCommand::execute(std::vector<std::string>* args) {
 	C_InventoryTransactionManager* manager = g_Data.getLocalPlayer()->getTransactionManager();
 	C_ItemStack* item = g_Data.getLocalPlayer()->getSelectedItem();
 
-	if (args->at(1) == "read") {
-		if (pointingStruct->entityPtr != nullptr) {
-			if(!(g_Data.getRakNetInstance()->serverIp.getTextLength() < 1)) {
-				clientMessageF("%sNBT tags for mobs only works in local world!", RED);
+	if (args->at(1) == "read" || args->at(1) == "save") {
+		std::stringstream build;
+
+		if (args->at(1) == "save" && item != nullptr) {
+			CompoundTag* boy = new CompoundTag();
+			item->save(&boy);
+			boy->write(build);
+			delete boy;
+		} else {
+			if (pointingStruct->entityPtr != nullptr) {
+				if (!(g_Data.getRakNetInstance()->serverIp.getTextLength() < 1)) {
+					clientMessageF("%sNBT tags for mobs only works in local world!", RED);
+					return true;
+				}
+				pointingStruct->entityPtr->save(tag.get());
+				tag->write(build);
+			} else if (blockActor != nullptr) {
+				blockActor->save(tag.get());
+				tag->write(build);
+			} else if (item != nullptr && item->tag != nullptr) {
+				item->tag->write(build);
+			} else {
+				clientMessageF("%sCouldn't find NBT tags!", RED);
 				return true;
 			}
-			pointingStruct->entityPtr->save(tag.get());
-			std::stringstream build;
-			tag->write(build);
-			Utils::setClipboardText(build.str());
-			g_Data.getGuiData()->displayClientMessageF("%s%s", GREEN, "CompoundTag copied:");
-			g_Data.getClientInstance()->getGuiData()->displayClientMessage(&build.str());
-		} else if (blockActor != nullptr) {
-			blockActor->save(tag.get());
-			std::stringstream build;
-			tag->write(build);
-			Utils::setClipboardText(build.str());
-			g_Data.getGuiData()->displayClientMessageF("%s%s", GREEN, "CompoundTag copied:");
-			g_Data.getClientInstance()->getGuiData()->displayClientMessage(&build.str());
-		} else if (item != nullptr && item->tag != nullptr) {
-			std::stringstream build;
-			item->tag->write(build);
-			Utils::setClipboardText(build.str());
-			g_Data.getGuiData()->displayClientMessageF("%s%s", GREEN, "CompoundTag copied:");
-			g_Data.getClientInstance()->getGuiData()->displayClientMessage(&build.str());
-		} else {
-			clientMessageF("%sCouldn't find any NBT tags!", RED);
-			return true;
 		}
-	} else if (args->at(1) == "write") {
+
+		Utils::setClipboardText(build.str());
+		g_Data.getGuiData()->displayClientMessageF("%s%s", GREEN, "CompoundTag copied:");
+		g_Data.getClientInstance()->getGuiData()->displayClientMessage(&build.str());
+	} else if ((args->at(1) == "write" || args->at(1) == "load") && item) {
 		std::string tag = Utils::getClipboardText();
 
-		C_InventoryAction* firstAction = nullptr;
-		C_InventoryAction* secondAction = nullptr;
-
 		{
-			firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, item, nullptr);
-			secondAction = new C_InventoryAction(0, nullptr, item, 507, 99999);
-			manager->addInventoryAction(*firstAction);
-			manager->addInventoryAction(*secondAction);
-			delete firstAction;
-			delete secondAction;
+			manager->addInventoryAction(C_InventoryAction(supplies->selectedHotbarSlot, item, nullptr));
+			manager->addInventoryAction(C_InventoryAction(0, nullptr, item, 507, 99999));
 		}
 
 		if (tag.size() > 1 && tag.front() == MojangsonToken::COMPOUND_START.getSymbol() && tag.back() == MojangsonToken::COMPOUND_END.getSymbol()) {
-			item->setUserData(std::move(Mojangson::parseTag(tag)));
+			if (args->at(1) == "write")
+				item->setUserData(std::move(Mojangson::parseTag(tag)));
+			else if (args->at(1) == "load") {
+				item->fromTag(*Mojangson::parseTag(tag).get());
+				item->count = 64;
+			}
 		} else {
 			clientMessageF("%sInvalid NBT tag!", RED);
 			return true;
 		}
 
-		firstAction = new C_InventoryAction(0, item, nullptr, 507, 99999);
-		secondAction = new C_InventoryAction(supplies->selectedHotbarSlot, nullptr, item);
-		manager->addInventoryAction(*firstAction);
-		manager->addInventoryAction(*secondAction);
-		delete firstAction;
-		delete secondAction;
+		{
+			manager->addInventoryAction(C_InventoryAction(0, item, nullptr, 507, 99999));
+			manager->addInventoryAction(C_InventoryAction(supplies->selectedHotbarSlot, nullptr, item));
+		}
+
+		g_Data.getGuiData()->displayClientMessageF("%s%s", GREEN, "Successfully loaded mojangson !");
+	} else {
+		g_Data.getGuiData()->displayClientMessageF("%s%s", RED, "Couldn't execute command correctly");
 	}
 
 	return true;
