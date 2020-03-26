@@ -238,6 +238,11 @@
     <ClInclude Include="Horion\Module\ModuleManager.h" />
     <ClInclude Include="Horion\Module\Modules\*.h" />
     <ClInclude Include="include\atlrx.h" />
+    <ClInclude Include="include\chakra\ChakraCommon.h" />
+    <ClInclude Include="include\chakra\ChakraCommonWindows.h" />
+    <ClInclude Include="include\chakra\ChakraCore.h" />
+    <ClInclude Include="include\chakra\ChakraCoreWindows.h" />
+    <ClInclude Include="include\chakra\ChakraDebug.h" />
     <ClInclude Include="include\RegExp.h" />
     <ClInclude Include="include\StringProcess.h" />
     <ClInclude Include="include\WinHttpClient.h" />
@@ -269,6 +274,8 @@
     <ClInclude Include="SDK\nbt\IntTag.h" />
     <ClInclude Include="SDK\nbt\LongTag.h" />
     <ClInclude Include="SDK\Tag.h" />
+    <ClInclude Include="Utils\ChakraHelper.h" />
+    <ClInclude Include="Utils\DllHelper.h" />
     <ClInclude Include="Utils\Json.hpp" />
     <ClInclude Include="Utils\SkinUtil.h" />
     <ClInclude Include="Utils\Target.h" />
