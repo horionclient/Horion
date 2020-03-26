@@ -16,7 +16,7 @@ bool AccountInformation::verify() {
 	didVerify = true;
 
 	wchar_t formatString[100]; // Little hack for xor'd url
-	swprintf_s(formatString, 100, L"%S", XorString("http://www.horionbeta.club/api/beta/check?client=%S&serial=%u&edition=%S"));
+	swprintf_s(formatString, 100, L"%S", XorString("https://www.horionbeta.club/api/beta/check?client=%S&serial=%u&edition=%S&compile=%S"));
 	
 	wchar_t fullUrl[200];
 
@@ -28,7 +28,7 @@ bool AccountInformation::verify() {
 	const char* edition = "public";
 #endif
 
-	swprintf_s(fullUrl, 200, formatString, authToken.c_str(), serialNum, edition);
+	swprintf_s(fullUrl, 200, formatString, authToken.c_str(), serialNum, edition, XorString(__TIME__));
 	WinHttpClient client(fullUrl);
 	client.SetTimeouts(1500, 3000, 2000, 3000);
 	bool boi = client.SendHttpRequest();
