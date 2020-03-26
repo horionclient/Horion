@@ -33,6 +33,11 @@ struct HorionDataPacket {
 	std::shared_ptr<unsigned char[]> data;
 };
 
+struct NetworkedData {
+	unsigned int xorKey = 0;
+	unsigned int localPlayerOffset = 0x94;  // Scrambled data
+};
+
 struct InfoBoxData {
 	bool isOpen = true;
 	float fadeTarget = 1;
@@ -82,8 +87,10 @@ private:
 	AccountInformation accountInformation = AccountInformation::asGuest();
 	static void retrieveClientInstance();
 	TextHolder* fakeName;
+	
 
 public:
+	NetworkedData networkedData;
 
 	static bool canUseMoveKeys();
 	static bool isKeyDown(int key);
@@ -211,7 +218,18 @@ public:
 	inline C_ClientInstance* getClientInstance() { return clientInstance; };
 	inline C_GuiData* getGuiData() { return clientInstance->getGuiData(); };
 	inline C_LocalPlayer* getLocalPlayer() {
-		localPlayer = clientInstance->getLocalPlayer();
+		#ifdef _BETA
+		unsigned int converted = networkedData.localPlayerOffset ^ networkedData.xorKey;
+		if (networkedData.localPlayerOffset < 0xA0 || converted < 0xA0)
+			localPlayer = nullptr;
+		else
+			localPlayer = *reinterpret_cast<C_LocalPlayer**>(reinterpret_cast<__int64>(clientInstance) + converted);
+		
+		#else
+		localPlayer = *reinterpret_cast<C_LocalPlayer**>(reinterpret_cast<__int64>(clientInstance) + 0xF0);
+		
+		//localPlayer = clientInstance->getLocalPlayer();
+		#endif
 		if (localPlayer == nullptr)
 			gameMode = nullptr;
 		return localPlayer;

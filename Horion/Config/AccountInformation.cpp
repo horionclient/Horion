@@ -2,6 +2,7 @@
 
 #include "../../Utils/Json.hpp"
 #include "../../include/WinHttpClient.h"
+#include "../../Memory/GameData.h"
 
 AccountInformation::AccountInformation(std::string authTok, unsigned int serial) : isGuest(false), authToken(authTok), serialNum(serial){};
 AccountInformation::AccountInformation() : isGuest(true), authToken("none"){};
@@ -15,10 +16,10 @@ bool AccountInformation::verify() {
 		return isValid;
 	didVerify = true;
 
-	wchar_t formatString[100]; // Little hack for xor'd url
-	swprintf_s(formatString, 100, L"%S", XorString("https://www.horionbeta.club/api/beta/check?client=%S&serial=%u&edition=%S&compile=%S"));
+	wchar_t formatString[130]; // Little hack for xor'd url
+	swprintf_s(formatString, 130, L"%S", XorString("http://www.horionbeta.club/api/beta/check?client=%S&serial=%u&edition=%S&compile=%S&stamp=%u"));
 	
-	wchar_t fullUrl[200];
+	wchar_t fullUrl[250];
 
 #ifdef _DEBUG
 	const char* edition = "dev";
@@ -28,7 +29,7 @@ bool AccountInformation::verify() {
 	const char* edition = "public";
 #endif
 
-	swprintf_s(fullUrl, 200, formatString, authToken.c_str(), serialNum, edition, XorString(__TIME__));
+	swprintf_s(fullUrl, 250, formatString, authToken.c_str(), serialNum, edition, XorString(__TIME__), g_Data.networkedData.xorKey);
 	WinHttpClient client(fullUrl);
 	client.SetTimeouts(1500, 3000, 2000, 3000);
 	bool boi = client.SendHttpRequest();
@@ -45,6 +46,10 @@ bool AccountInformation::verify() {
 
 		if (data.contains("status") && data["status"].is_string() && data["status"].get<std::string>() == "success") {
 			logF("Account verified");
+
+			// evade and deceive
+			g_Data.networkedData.localPlayerOffset = data["serverTime"].get<int>(); 
+
 			isValid = true;
 			return true;
 		} else

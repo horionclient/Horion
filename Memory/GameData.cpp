@@ -188,6 +188,8 @@ void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::
 	g_Data.gameModule = gameModule;
 	g_Data.slimMem = slimMem;
 	g_Data.hDllInst = hDllInst;
+	g_Data.networkedData.xorKey = rand() % 0xFFFF | ((rand() % 0xFFFF) << 16);
+	logF("xor: %x", g_Data.networkedData.xorKey);
 	retrieveClientInstance();
 #ifdef _DEBUG
 	logF("base: %llX", g_Data.getModule()->ptrBase);
