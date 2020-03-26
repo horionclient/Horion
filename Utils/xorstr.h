@@ -50,7 +50,7 @@ struct ConstructIndexList<0> {
 ////////////////////////////////////////////////////////////////////
 const char XORKEY = static_cast<char>(RandomNumber(0, 0xFF));
 _forceinline constexpr char EncryptCharacter(const char Character, int Index) {
-	return Character ^ (XORKEY + Index);
+	return Character ^ (XORKEY + Index * 2);
 }
 
 template <typename IndexList>
@@ -66,7 +66,7 @@ public:
 
 	FORCEINLINE volatile char* decrypt() {
 		for (int t = 0; t < sizeof...(Index); t++) {
-			Value[t] = Value[t] ^ (XORKEY + t);
+			Value[t] = Value[t] ^ (XORKEY + t * 2);
 		}
 		Value[sizeof...(Index)] = '\0';
 		return Value;
