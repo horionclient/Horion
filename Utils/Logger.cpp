@@ -41,7 +41,7 @@ std::wstring Logger::GetRoamingFolderPath() {
 	return std::wstring(roamingPathCStr, pathLength);
 }
 
-void Logger::WriteLogFileF(const char* fmt, ...) {
+void Logger::WriteLogFileF(volatile char* fmt, ...) {
 	if (!loggerActive)
 		return;
 	FILE* pFile;
@@ -74,7 +74,7 @@ void Logger::WriteLogFileF(const char* fmt, ...) {
 
 		va_list arg;
 		va_start(arg, fmt);
-		int numCharacters = vsprintf_s(logMessage, 300, fmt, arg);
+		int numCharacters = vsprintf_s(logMessage, 300, const_cast<const char*>(fmt), arg);
 		va_end(arg);
 		fprintf(pFile, "%s%s", timeStamp, logMessage);
 		fprintf(pFile, "\n");

@@ -14,10 +14,13 @@
 #include <iostream>
 #endif
 
+#include "xorstr.h"
+
 #pragma comment(lib, "runtimeobject")
 
 #ifndef logF
-#define logF Logger::WriteLogFileF
+//#define logF(x) Logger::WriteLogFileF(XorString(x))
+#define logF(x, ...) Logger::WriteLogFileF(XorString(x), __VA_ARGS__)
 #endif
 
 struct TextForPrint {
@@ -29,7 +32,7 @@ class Logger {
 
 public:
 	static std::wstring GetRoamingFolderPath();
-	static void WriteLogFileF(const char* fmt, ...);
+	static void WriteLogFileF(volatile char* fmt, ...);
 	static void WriteBigLogFileF(size_t maxSize, const char* fmt, ...);
 	static std::vector<TextForPrint>* GetTextToPrint();
 	static CRITICAL_SECTION* GetTextToPrintSection();
