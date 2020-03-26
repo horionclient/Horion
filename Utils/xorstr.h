@@ -49,7 +49,7 @@ struct ConstructIndexList<0> {
 
 ////////////////////////////////////////////////////////////////////
 const char XORKEY = static_cast<char>(RandomNumber(0, 0xFF));
-_forceinline constexpr char EncryptCharacter(const char Character, int Index) {
+__forceinline constexpr char EncryptCharacter(const char Character, int Index) {
 	return Character ^ (XORKEY + Index * 2);
 }
 
@@ -61,10 +61,10 @@ private:
 	volatile char Value[sizeof...(Index) + 1];
 
 public:
-	FORCEINLINE constexpr CXorString(const char* const String)
+	__forceinline constexpr CXorString(const char* const String)
 		: Value{EncryptCharacter(String[Index], Index)...} {}
 
-	FORCEINLINE volatile char* decrypt() {
+	__forceinline volatile char* decrypt() {
 		for (int t = 0; t < sizeof...(Index); t++) {
 			Value[t] = Value[t] ^ (XORKEY + t * 2);
 		}
@@ -72,7 +72,7 @@ public:
 		return Value;
 	}
 
-	FORCEINLINE char* get() {
+	__forceinline char* get() {
 		return Value;
 	}
 };
