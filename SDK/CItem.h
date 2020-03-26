@@ -279,26 +279,6 @@ public:
 		this->setVtable();
 	}
 
-	C_ItemStack(Tag const& tag) {
-		memset(this, 0x0, sizeof(C_ItemStack));
-		this->setVtable();
-		using ItemStackBase__loadItemF = void(__fastcall*)(C_ItemStack*,Tag const&);
-		static ItemStackBase__loadItemF ItemStackBase__loadItem = reinterpret_cast<ItemStackBase__loadItemF>(FindSignature("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 48 C7 45 ? ? ? ? ? 48 89 58 18 0F 29 70 B8 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA 4C 8B E9"));
-		ItemStackBase__loadItem(this, tag);
-	}
-
-	void fromTag(Tag const& tag) {
-		using ItemStackBase__loadItemF = void(__fastcall*)(C_ItemStack*,Tag const&);
-		static ItemStackBase__loadItemF fromTag = reinterpret_cast<ItemStackBase__loadItemF>(FindSignature("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 48 C7 45 ? ? ? ? ? 48 89 58 18 0F 29 70 B8 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA 4C 8B E9"));
-		fromTag(this, tag);
-	}
-
-	void save(CompoundTag** tag) {
-		using ItemStackBase__saveF = void(__fastcall*)(C_ItemStack*,CompoundTag**);
-		ItemStackBase__saveF save = reinterpret_cast<ItemStackBase__saveF>(FindSignature("40 55 56 57 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 C7 45 ? ? ? ? ? 48 89 9C 24 ? ? ? ? 48 8B F2 4C 8B F1 48 89 55"));
-		return save(this,tag);
-	}
-
 	void setUserData(std::unique_ptr<Tag> tag) {
 		using setUserData_t = void(__fastcall*)(C_ItemStack*, std::unique_ptr<Tag>);
 		setUserData_t setUserData = reinterpret_cast<setUserData_t>(FindSignature("40 53 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B DA 48 8D 51 10 48 3B D3 74 20 48 8B 03 48 ?? ?? ?? ?? ?? ?? 48 8B 0A 48 89 02 48 85 C9 74 0B 48 8B 01 BA ?? ?? ?? ?? FF 10"));
