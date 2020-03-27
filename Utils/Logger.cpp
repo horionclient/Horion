@@ -1,5 +1,7 @@
 #include "Logger.h"
 
+#include "Utils.h"
+
 #include <sstream>
 #include <windows.storage.h>
 #include <wrl.h>

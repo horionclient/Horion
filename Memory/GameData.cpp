@@ -46,9 +46,7 @@ bool GameData::isKeyDown(int key) {
 		if (sigOffset != 0x0) {
 			int offset = *reinterpret_cast<int*>((sigOffset + 3));                                         // Get Offset from code
 			keyMapOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instruction*/ 7;  // Offset is relative
-#ifdef _DEBUG
 			logF("KeyMap: %llX", keyMapOffset + g_Data.gameModule->ptrBase);
-#endif
 		}
 	}
 	// All keys are mapped as bools, though aligned as ints (4 byte)
