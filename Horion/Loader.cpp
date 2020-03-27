@@ -181,8 +181,8 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 									unsigned long maxNameLen = 0, flags = 0;
 									bool succ = GetVolumeInformationByHandleW(file, 0, 0, &serial, &maxNameLen, &flags, 0, 0);
 									if (succ) {
-										if (serial != serialNum) {
-											logF("Serial doesn't match!");
+										if (serial != serialNum) { // Dont print the raw values here, don't leak serials
+											logF("Serial doesn't match! (Diff: %lli)", (long long) serial - (long long)serialNum);
 											g_Data.terminate();
 										}
 										serialNum = serial;
