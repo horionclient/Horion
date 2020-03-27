@@ -369,8 +369,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				if (ImGui.Button("Custom Geometry", vec2_t(wid.x * 0.765f, wid.y * 0.92f))) {
 					HorionDataPacket packet;
 					packet.cmd = CMD_FILECHOOSER;
-					packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[200]));
-					strcpy_s((char*)packet.data.get(), 100, "{\"title\": \"Select a 3d object\", \"filter\":\"Object Files (*.obj)|*.obj\"}");
+					packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[300]));
+					memset(packet.data.get(), 0, 300);
+					strcpy_s((char*)packet.data.get(), 200, "{\"title\": \"Select a 3d object\", \"filter\":\"Object Files (*.obj)|*.obj\"}");
 					packet.dataArraySize = (int)strlen((char*)packet.data.get());
 					packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
 						if (pk->params[0] != 1 && std::get<0>(g_Data.getCustomGeoOverride())) {  // Dialog Canceled, reset geo
@@ -398,8 +399,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				if (ImGui.Button("Custom Texture", vec2_t(wid.x * 0.5f, wid.y * 0.92f), true)) {
 					HorionDataPacket packet;
 					packet.cmd = CMD_FILECHOOSER;
-					packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[200]));
-					strcpy_s((char*)packet.data.get(), 100, "{\"title\": \"Select a raw image file\", \"filter\":\"Raw image files (*.data, *.raw)|*.data;*.raw\"}");
+					packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[500]));
+					memset(packet.data.get(), 0, 500);
+					strcpy_s((char*)packet.data.get(), 400, "{\"title\": \"Select a raw image file\", \"filter\":\"Raw image files (*.data, *.raw)|*.data;*.raw\"}");
 					packet.dataArraySize = (int)strlen((char*)packet.data.get());
 					packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
 						if (pk->params[0] != 1 && std::get<0>(g_Data.getCustomTextureOverride())) {  // Dialog Canceled, reset texture

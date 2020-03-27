@@ -28,9 +28,12 @@ enum DATAPACKET_CMD : int {
 
 struct HorionDataPacket {
 	DATAPACKET_CMD cmd;
-	int params[5];
-	int dataArraySize;
+	int params[5] = {0};
+	int dataArraySize = 0;
 	std::shared_ptr<unsigned char[]> data;
+
+	HorionDataPacket() {
+	}
 };
 
 struct NetworkedData {
@@ -172,8 +175,11 @@ public:
 	inline void sendPacketToInjector(HorionDataPacket horionDataPack) {
 		if (!isInjectorConnectionActive())
 			throw std::exception("Horion injector connection not active");
-		if (horionDataPack.dataArraySize >= 3000)
+		if (horionDataPack.dataArraySize >= 3000) {
+			logF("Tried to send data packet with array size: %i %llX", horionDataPack.dataArraySize, horionDataPack.data.get());
 			throw std::exception("Data packet data too big");
+		}
+			
 		horionToInjectorQueue.push(horionDataPack);
 	}
 	inline int addInjectorResponseCallback(std::function<void(std::shared_ptr<HorionDataPacket>)> callback) {
