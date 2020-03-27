@@ -9,7 +9,7 @@ TeleportCommand::~TeleportCommand() {
 }
 
 bool TeleportCommand::execute(std::vector<std::string>* args) {
-	assertTrue(g_Data.getClientInstance()->getLocalPlayer() != nullptr);
+	assertTrue(g_Data.getLocalPlayer() != nullptr);
 	assertTrue(args->size() >= 4);
 
 	vec3_t pos;

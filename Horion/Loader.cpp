@@ -355,7 +355,7 @@ BOOL __stdcall DllMain(HMODULE hModule,
 		delete moduleMgr;
 		delete cmdMgr;
 		delete configMgr;
-		if (g_Data.getClientInstance()->getLocalPlayer() != nullptr) {
+		if (g_Data.getLocalPlayer() != nullptr) {
 			C_GuiData* guiData = g_Data.getClientInstance()->getGuiData();
 			if (guiData != nullptr && !GameData::shouldHide())
 				guiData->displayClientMessageF("%sUninjected!", RED);

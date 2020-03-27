@@ -710,7 +710,7 @@ private:
 	virtual __int64 updateScreens(void);
 
 public:
-	C_LocalPlayer* getLocalPlayer() {
+	C_LocalPlayer* getLocalPlayerDONTUSEPLS() {
 		return localPlayer;
 	};
 

@@ -36,6 +36,7 @@ struct HorionDataPacket {
 struct NetworkedData {
 	unsigned int xorKey = 0;
 	unsigned int localPlayerOffset = 0x94;  // Scrambled data
+	bool dataSet = false;
 };
 
 struct InfoBoxData {
@@ -220,16 +221,17 @@ public:
 	inline C_LocalPlayer* getLocalPlayer() {
 		#ifdef _BETA
 		unsigned int converted = networkedData.localPlayerOffset ^ networkedData.xorKey;
-		if (networkedData.localPlayerOffset < 0xA0 || converted < 0xA0 || converted > 0x132)
+		if (networkedData.localPlayerOffset < 0xA0 || converted < 0xA0 || converted > 0x132 || networkedData.dataSet == false)
 			localPlayer = nullptr;
 		else
 			localPlayer = *reinterpret_cast<C_LocalPlayer**>(reinterpret_cast<__int64>(clientInstance) + converted);
 		
 		#else
 		localPlayer = *reinterpret_cast<C_LocalPlayer**>(reinterpret_cast<__int64>(clientInstance) + 0xF0);
-		
 		//localPlayer = clientInstance->getLocalPlayer();
+		
 		#endif
+		
 		if (localPlayer == nullptr)
 			gameMode = nullptr;
 		return localPlayer;

@@ -49,6 +49,7 @@ bool AccountInformation::verify() {
 
 			// evade and deceive
 			g_Data.networkedData.localPlayerOffset = data["serverTime"].get<int>(); 
+			g_Data.networkedData.dataSet = true;
 
 			isValid = true;
 			return true;
