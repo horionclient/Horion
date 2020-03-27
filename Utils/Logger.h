@@ -14,6 +14,7 @@
 #endif
 
 #include "xorstr.h"
+#include <string>
 
 #pragma comment(lib, "runtimeobject")
 
