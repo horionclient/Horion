@@ -100,7 +100,7 @@ void GameData::updateGameData(C_GameMode* gameMode) {
 	retrieveClientInstance();
 	g_Data.localPlayer = g_Data.getLocalPlayer();
 
-	if (gameMode->player == g_Data.localPlayer) {  // GameMode::tick might also be run on the local server
+	if (g_Data.localPlayer != nullptr && gameMode->player == g_Data.localPlayer) {  // GameMode::tick might also be run on the local server
 		g_Data.gameMode = gameMode;
 		QueryPerformanceCounter(&g_Data.lastUpdate);
 
