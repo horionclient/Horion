@@ -77,4 +77,5 @@ public:
 	}
 };
 #define XorS(X, String) CXorString<ConstructIndexList<sizeof(String) - 1>::Result> X(String)
-#define XorString(String) (CXorString<ConstructIndexList<sizeof(String) - 1>::Result>(String).decrypt())
+//#define XorString(String) (CXorString<ConstructIndexList<sizeof(String) - 1>::Result>(String).decrypt())
+#define XorString(String) String
