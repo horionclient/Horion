@@ -24,6 +24,7 @@ void Reach::onEnable() {
 		if (sigOffset != 0x0) {
 			int offset = *reinterpret_cast<int*>((sigOffset + 6));  // Get Offset from code
 			reachPtr = reinterpret_cast<float*>(sigOffset + offset + 10);
+			originalReach = *reachPtr;
 		}
 	}
 	if (!VirtualProtect(reachPtr, sizeof(float), PAGE_EXECUTE_READWRITE, &oldProtect)) {
@@ -35,6 +36,7 @@ void Reach::onEnable() {
 }
 
 void Reach::onDisable() {
+	*reachPtr = originalReach;
 	if (reachPtr != 0)
 		VirtualProtect(reachPtr, sizeof(float), oldProtect, &oldProtect);
 }
