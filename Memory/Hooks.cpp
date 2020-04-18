@@ -1141,16 +1141,38 @@ __int64 Hooks::GetGamma(__int64 a1) {
 
 	static auto fullBrightModule = moduleMgr->getModule<FullBright>();
 
-	static __int64 v7 = 0;
-	if (v7 == 0) {
+	struct Option {
+		void* vtable;
+		char filler[0x20];        // 0x008
+		TextHolder internalName;  // 0x0028
+		TextHolder friendlyName;  // 0x0048 // only exists when the value is present in the options
+		
+		char filler2[0x88]; // 0x068
+		union {
+			float _float;
+			bool _bool;
+		} value;
+	};
+
+	static Option* gfx_gamma = 0;
+	if (gfx_gamma == 0) {
 		__int64 v6 = oFunc(a1);  // Calls to ClientInstance, returns options ptr
-		if (*(bool*)(v6 + 0x1001))
-			v7 = *(__int64*)(v6 + 0x7D8);
-		else
-			v7 = *(__int64*)(v6 + 0x138);
-	} else {
-		fullBrightModule->gammaPtr = reinterpret_cast<float*>(v7 + 0xF0);
-	}
+
+		static int numOptions = *reinterpret_cast<int*>(FindSignature("48 81 FB ?? ?? ?? ?? 72 ?? 4C 8B 7D") + 3);
+
+		//logF("%llX", v6);
+		//logF("Num Options: %i", numOptions);
+
+		for (int i = 0; i < numOptions; i++) {
+			Option* ptr = *reinterpret_cast<Option**>(v6 + 0x10 + i * 8);
+			if (ptr && strcmp(ptr->internalName.getText(), "gfx_gamma") == 0) {
+				//logF("%llX %s %s", v6 + 0x10 + i * 8, ptr->internalName.getText(), ptr->friendlyName.getText());
+				gfx_gamma = ptr;
+			}
+		}
+	} 
+	if (gfx_gamma)
+		fullBrightModule->gammaPtr = &gfx_gamma->value._float;
 
 	return oFunc(a1);
 }
