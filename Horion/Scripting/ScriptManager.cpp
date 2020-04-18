@@ -3,13 +3,24 @@
 ChakraApi chakra;
 ScriptManager scriptMgr;
 
-JsValueRef ScriptManager::prepareEntityFunctions(long long runtimeId) {
-	JsValueRef obj;
+void ScriptManager::prepareEntityFunctions(JsValueRef global) {
+	chakra.JsCreateObject_(&EntityFunctions::prototype);
+
+	chakra.defineFunction(EntityFunctions::prototype, L"isValid", EntityFunctions::isValid);
+	chakra.defineFunction(EntityFunctions::prototype, L"getPosition", EntityFunctions::getPosition);
+	chakra.defineFunction(EntityFunctions::prototype, L"getVelocity", EntityFunctions::getVelocity);
+	chakra.defineFunction(EntityFunctions::prototype, L"isOnGround", EntityFunctions::isOnGround);
+	chakra.defineFunction(EntityFunctions::prototype, L"getSize", EntityFunctions::getSize);
+}
+
+JsValueRef ScriptManager::prepareEntity(long long runtimeId) {
+	JsValueRef obj = JS_INVALID_REFERENCE;
 	EntityInfo* data = new EntityInfo(runtimeId);
 	auto err = chakra.JsCreateExternalObject_(
 		data, [](void* buf) {
 			delete buf;
-		}, &obj);
+		},
+		&obj);
 
 	if (err != JsNoError) {
 		logF("prepareEntityFunctions error: %X", err);
@@ -18,14 +29,31 @@ JsValueRef ScriptManager::prepareEntityFunctions(long long runtimeId) {
 		return null;
 	}
 
-	chakra.defineFunction(obj, L"isValid", EntityFunctions::isValid);
-	chakra.defineFunction(obj, L"getPosition", EntityFunctions::getPosition);
+	chakra.JsSetPrototype_(obj, EntityFunctions::prototype);
 
 	return obj;
 }
 
 void ScriptManager::prepareGlobals(JsValueRef global) {
 	chakra.defineFunction(global, L"log", GlobalFunctions::log);
+}
+
+void ScriptManager::prepareVector3Functions(JsValueRef global) {
+	chakra.JsCreateObject_(&Vector3Functions::prototype);
+
+	chakra.defineFunction(Vector3Functions::prototype, L"isValid", Vector3Functions::isValid);
+
+	chakra.defineProp(Vector3Functions::prototype, L"x", Vector3Functions::getX, 0);
+	chakra.defineProp(Vector3Functions::prototype, L"y", Vector3Functions::getY, 0);
+	chakra.defineProp(Vector3Functions::prototype, L"z", Vector3Functions::getZ, 0);
+	chakra.defineFunction(Vector3Functions::prototype, L"getX", Vector3Functions::getX);
+	chakra.defineFunction(Vector3Functions::prototype, L"getY", Vector3Functions::getY);
+	chakra.defineFunction(Vector3Functions::prototype, L"getZ", Vector3Functions::getZ);
+
+	chakra.defineFunction(Vector3Functions::prototype, L"toString", Vector3Functions::toString);
+
+	auto con = chakra.defineFunction(global, L"Vec3", Vector3Functions::constructor);
+	chakra.addPropertyToObj(con, L"prototype", Vector3Functions::prototype);
 }
 
 void ScriptManager::prepareGameFunctions(JsValueRef global) {
@@ -49,6 +77,8 @@ void ScriptManager::prepareContext(JsContextRef* ctx) {
 
 	prepareGlobals(globalObject);
 	prepareGameFunctions(globalObject);
+	prepareVector3Functions(globalObject);
+	prepareEntityFunctions(globalObject);
 }
 
 JsValueRef ScriptManager::prepareVector3(vec3_t vec) {
@@ -67,17 +97,13 @@ JsValueRef ScriptManager::prepareVector3(vec3_t vec) {
 		return null;
 	}
 
-	chakra.defineFunction(obj, L"isValid", Vector3Functions::isValid);
-
-	chakra.defineValueProp(obj, L"x", chakra.toNumber(vec.x), false);
-	chakra.defineValueProp(obj, L"y", chakra.toNumber(vec.y), false);
-	chakra.defineValueProp(obj, L"z", chakra.toNumber(vec.z), false);
+	chakra.JsSetPrototype_(obj, Vector3Functions::prototype);
 
 	return obj;
 }
 
 JsValueRef ScriptManager::getLocalPlayer() {
-	return this->prepareEntityFunctions(-1);
+	return this->prepareEntity(-1);
 }
 
 std::wstring ScriptManager::runScript(std::wstring script) {

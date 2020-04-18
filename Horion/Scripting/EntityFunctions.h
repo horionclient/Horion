@@ -37,6 +37,11 @@ private:
 	}
 
 public:
+	static JsValueRef prototype;
+
 	DECL_FUN(isValid);
 	DECL_FUN(getPosition);
+	DECL_FUN(getVelocity);
+	DECL_FUN(isOnGround);
+	DECL_FUN(getSize);
 };

@@ -45,6 +45,8 @@ public:
 	DECL_API(JsGetTrueValue);
 	DECL_API(JsGetFalseValue);
 	DECL_API(JsDoubleToNumber);
+	DECL_API(JsNumberToDouble);
+	DECL_API(JsSetPrototype);
 
 	void throwException(std::wstring error) {
 		JsValueRef errorValue;
@@ -62,13 +64,19 @@ public:
 		this->JsSetException_(errorObject);
 	}
 
+	JsValueRef toBoolean(bool boolVal) {
+		JsValueRef ref = JS_INVALID_REFERENCE;
+		this->JsBoolToBoolean_(boolVal, &ref);
+		return ref;
+	}
+
 	JsValueRef toNumber(double doubleVal) {
 		JsValueRef ref = JS_INVALID_REFERENCE;
 		this->JsDoubleToNumber_(doubleVal, &ref);
 		return ref;
 	}
 
-	void defineFunction(JsValueRef object, const wchar_t* callbackName, JsNativeFunction function, void* callbackState = nullptr) {
+	JsValueRef defineFunction(JsValueRef object, const wchar_t* callbackName, JsNativeFunction function, void* callbackState = nullptr) {
 		JsPropertyIdRef propertyId;
 		this->JsGetPropertyIdFromName_(callbackName, &propertyId);
 
@@ -76,6 +84,8 @@ public:
 		this->JsCreateFunction_(function, callbackState, &functionRef);
 
 		this->JsSetProperty_(object, propertyId, functionRef, true);
+
+		return functionRef;
 	}
 
 	void addPropertyToObj(JsValueRef obj, const wchar_t* name, JsValueRef prop) {

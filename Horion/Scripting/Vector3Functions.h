@@ -9,5 +9,12 @@ private:
 	static std::optional<vec3_t> getVecFromValue(JsValueRef);
 
 public:
+	static JsValueRef prototype;
+
 	DECL_FUN(isValid);
+	DECL_FUN(getX);
+	DECL_FUN(getY);
+	DECL_FUN(getZ);
+	DECL_FUN(toString);
+	DECL_FUN(constructor);
 };

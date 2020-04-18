@@ -48,8 +48,10 @@ extern ScriptManager scriptMgr;
 
 class ScriptManager {
 private:
-	JsValueRef prepareEntityFunctions(__int64 runtimeId);
+	void prepareEntityFunctions(JsValueRef global);
+	JsValueRef prepareEntity(__int64 runtimeId);
 	void prepareGlobals(JsValueRef global);
+	void prepareVector3Functions(JsValueRef global);
 	void prepareGameFunctions(JsValueRef global);
 	void prepareContext(JsContextRef* ctx);
 
