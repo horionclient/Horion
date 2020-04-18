@@ -4,7 +4,8 @@
 #include "../../../Utils/SkinUtil.h"
 #include "../../../resource.h"
 #include <thread>
-#include "../../../Utils/ChakraHelper.h"
+#include "../../Scripting/ScriptManager.h"
+
 
 class TestCommand : public IMCCommand {
 public:
