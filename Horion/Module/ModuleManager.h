@@ -137,7 +137,7 @@ public:
 
 		for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
 			IModule* mod = *it;
-			std::string modNameCopy = mod->getModuleName();
+			std::string modNameCopy = mod->getRawModuleName();
 			std::transform(modNameCopy.begin(), modNameCopy.end(), modNameCopy.begin(), ::tolower);
 			if (modNameCopy == nameCopy)
 				return mod;

@@ -4,6 +4,7 @@
 class Reach : public IModule {
 private:
 	float reachValue = 3;
+	float originalReach = 0;
 	float* reachPtr = nullptr;
 	DWORD oldProtect = 0;
 

@@ -1,4 +1,5 @@
 ﻿#include "Target.h"
+
 #include <regex>
 
 #include "../Horion/Module/ModuleManager.h"
@@ -37,7 +38,7 @@ bool Target::isValidTarget(C_Entity* ent) {
 			}
 		}
 		if (teams->isAlliedCheckEnabled()) {
-			C_LocalPlayer* p = g_Data.getLocalPlayer(); 
+			C_LocalPlayer* p = g_Data.getLocalPlayer();
 			if (p->isAlliedTo(ent)) return false;
 		}
 	}

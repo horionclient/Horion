@@ -7,7 +7,7 @@ PlayerTeleportCommand::~PlayerTeleportCommand() {
 }
 
 bool PlayerTeleportCommand::execute(std::vector<std::string>* args) {
-	assertTrue(g_Data.getClientInstance()->getLocalPlayer() != nullptr);
+	assertTrue(g_Data.getLocalPlayer() != nullptr);
 	assertTrue(args->size() > 1);  // .playertp <player>
 	std::string nameOfPlayer = args->at(1);
 	assertTrue(nameOfPlayer.size() > 0);

@@ -276,25 +276,37 @@ void DrawUtils::draw2D(C_Entity* ent, float lineWidth) {
 	vec3_t base = vec3_t(ent->eyePos0.x, ent->eyePos0.y + 0.15f, ent->eyePos0.z);
 	float ofs = (g_Data.getLocalPlayer()->yaw + 90.f) * (PI / 180);
 
-	vec3_t upperCorner = vec3_t(base.x - ent->width / 1.5f * -sin(ofs), base.y, base.z - ent->width / 1.5f * cos(ofs));
-	vec3_t lowerCorner = vec3_t(base.x + ent->width / 1.5f * -sin(ofs), base.y - ent->height, base.z + ent->width / 1.5f * cos(ofs));
+	vec3_t corners[4];
+	vec2_t corners2d[4];
 
-	vec2_t corners[4];
-	if (refdef->OWorldToScreen(origin, upperCorner, corners[0], fov, screenSize) && refdef->OWorldToScreen(origin, lowerCorner, corners[3], fov, screenSize)) {
-		corners[0] = vec2_t(min(corners[0].x, corners[3].x), min(corners[0].y, corners[3].y));
-		corners[1] = vec2_t(max(corners[0].x, corners[3].x), min(corners[0].y, corners[3].y));
-		corners[2] = vec2_t(min(corners[0].x, corners[3].x), max(corners[0].y, corners[3].y));
-		corners[3] = vec2_t(max(corners[0].x, corners[3].x), max(corners[0].y, corners[3].y));
+	corners[0] = vec3_t(base.x - ent->width / 1.5f * -sin(ofs), base.y, base.z - ent->width / 1.5f * cos(ofs));
+	corners[1] = vec3_t(base.x + ent->width / 1.5f * -sin(ofs), base.y, base.z + ent->width / 1.5f * cos(ofs));
+	corners[2] = vec3_t(base.x - ent->width / 1.5f * -sin(ofs), base.y - ent->height, base.z - ent->width / 1.5f * cos(ofs));
+	corners[3] = vec3_t(base.x + ent->width / 1.5f * -sin(ofs), base.y - ent->height, base.z + ent->width / 1.5f * cos(ofs));
 
-		float length = (corners[1].x - corners[0].x) / 4.f;
-		drawLine(corners[0], vec2_t(corners[0].x + length, corners[1].y), lineWidth);
-		drawLine(corners[0], vec2_t(corners[2].x, corners[0].y + length), lineWidth);
-		drawLine(vec2_t(corners[1].x - length, corners[0].y), corners[1], lineWidth);
-		drawLine(corners[1], vec2_t(corners[3].x, corners[1].y + length), lineWidth);
-		drawLine(vec2_t(corners[2].x, corners[2].y - length), corners[2], lineWidth);
-		drawLine(corners[2], vec2_t(corners[2].x + length, corners[3].y), lineWidth);
-		drawLine(vec2_t(corners[3].x - length, corners[2].y), corners[3], lineWidth);
-		drawLine(vec2_t(corners[1].x, corners[3].y - length), corners[3], lineWidth);
+	if (refdef->OWorldToScreen(origin, corners[0], corners2d[0], fov, screenSize) &&
+		refdef->OWorldToScreen(origin, corners[1], corners2d[1], fov, screenSize) &&
+		refdef->OWorldToScreen(origin, corners[2], corners2d[2], fov, screenSize) &&
+		refdef->OWorldToScreen(origin, corners[3], corners2d[3], fov, screenSize)) {
+		
+		float length = (corners2d[1].x - corners2d[0].x) / 4.f;
+
+		/*drawLine(corners2d[0], vec2_t(corners2d[0].x + length, corners2d[0].y), lineWidth);
+		drawLine(corners2d[0], vec2_t(corners2d[0].x, corners2d[0].y + length), lineWidth);
+
+		drawLine(vec2_t(corners2d[1].x - length, corners2d[1].y), corners2d[1], lineWidth);
+		drawLine(corners2d[1], vec2_t(corners2d[1].x, corners2d[1].y + length), lineWidth);
+
+		drawLine(vec2_t(corners2d[2].x, corners2d[2].y - length), corners2d[2], lineWidth);
+		drawLine(corners2d[2], vec2_t(corners2d[2].x + length, corners2d[2].y), lineWidth);
+
+		drawLine(vec2_t(corners2d[3].x, corners2d[3].y - length), corners2d[3], lineWidth);
+		drawLine(vec2_t(corners2d[3].x - length, corners2d[3].y), corners2d[3], lineWidth);	*/
+
+		drawLine(corners2d[0], corners2d[1], lineWidth);
+		drawLine(corners2d[0], corners2d[2], lineWidth);
+		drawLine(corners2d[3], corners2d[1], lineWidth);
+		drawLine(corners2d[3], corners2d[2], lineWidth);
 	}
 }
 

@@ -487,11 +487,9 @@ public:
 		const char* sig = szSignature;  // Put sig in here to access it in debugger
 										// This will not get optimized away because we are in debug
 										// Leave this in here to quickly find bad signatures in case of updates
-#ifdef SIG_DEBUG
-#ifdef logF
 		logF("Signature dead: %s", szSignature);
-#endif
-#else
+#ifndef SIG_DEBUG
+
 		const char* msgToTheOverwhelmedDebugger = "SIGNATURE NOT FOUND";
 		__debugbreak();
 

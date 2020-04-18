@@ -46,9 +46,7 @@ bool GameData::isKeyDown(int key) {
 		if (sigOffset != 0x0) {
 			int offset = *reinterpret_cast<int*>((sigOffset + 3));                                         // Get Offset from code
 			keyMapOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instruction*/ 7;  // Offset is relative
-#ifdef _DEBUG
 			logF("KeyMap: %llX", keyMapOffset + g_Data.gameModule->ptrBase);
-#endif
 		}
 	}
 	// All keys are mapped as bools, though aligned as ints (4 byte)
@@ -102,7 +100,7 @@ void GameData::updateGameData(C_GameMode* gameMode) {
 	retrieveClientInstance();
 	g_Data.localPlayer = g_Data.getLocalPlayer();
 
-	if (gameMode->player == g_Data.localPlayer) {  // GameMode::tick might also be run on the local server
+	if (g_Data.localPlayer != nullptr && gameMode->player == g_Data.localPlayer) {  // GameMode::tick might also be run on the local server
 		g_Data.gameMode = gameMode;
 		QueryPerformanceCounter(&g_Data.lastUpdate);
 
@@ -188,6 +186,7 @@ void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::
 	g_Data.gameModule = gameModule;
 	g_Data.slimMem = slimMem;
 	g_Data.hDllInst = hDllInst;
+	g_Data.networkedData.xorKey = rand() % 0xFFFF | ((rand() % 0xFFFF) << 16);
 	retrieveClientInstance();
 #ifdef _DEBUG
 	logF("base: %llX", g_Data.getModule()->ptrBase);

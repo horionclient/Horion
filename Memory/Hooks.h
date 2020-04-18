@@ -32,6 +32,29 @@
 class VMTHook;
 class FuncHook;
 
+struct CoolSkinData {
+	TextHolder unknown;
+	TextHolder unknown2;
+	TextHolder skinResourcePatch;  // 0x040
+	TextHolder geometryName; // 0x060 "geometry.humanoid.custom"
+	unsigned char gap2[0x40];      // 0x080
+	void* startAnimatedFrames;     // 0x0C0
+	void* endAnimatedFrames;       // 0x0C8
+	unsigned char gap3[0x8];      // 0x0D0
+	TextHolder geometryData;		// 0x0D8
+	TextHolder skinAnimationData;  // 0x0F8
+	unsigned char gap4[0x20];      // 0x118
+	bool isPremiumSkin;            // 0x138
+	bool isPersonaSkin;
+	bool isCapeOnClassicSkin;
+	void* startPersonaPieces;
+	void* endPersonaPieces;
+	unsigned char gap5[0x8];  // 0x150
+	TextHolder armSize;       // 0x158
+	unsigned char gap6[0x8];  // 0x178
+	void* startPieces;
+};
+
 class Hooks {
 private:
 	bool shouldRender = true;
@@ -71,17 +94,18 @@ private:
 	static bool Actor_isInWater(C_Entity* _this);
 	static void JumpPower(C_Entity* _this, float a2);
 	static __int64 MinecraftGame_onAppSuspended(__int64 _this);
-	static void Actor_ladderUp(C_Entity* _this);
+	static void Actor_ascendLadder(C_Entity* _this);
 	static void Actor_startSwimming(C_Entity* _this);
 	static void RakNetInstance_tick(C_RakNetInstance* _this, __int64 a2, __int64 a3);
 	static float GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3);
-	static __int64 ConnectionRequest_create(__int64 _this, __int64 privateKeyManager, void* a3, TextHolder* selfSignedId, TextHolder* serverAddress, __int64 clientRandomId, TextHolder* skinId, SkinData* a8, __int64 capeData, __int64 animatedImageDataArr, TextHolder* skinResourcePatch, TextHolder* skinGeometryData, TextHolder* skinAnimationData, bool isPremiumSkin, bool isPersonaSkin, TextHolder* deviceId, int inputMode, int uiProfile, int guiScale, TextHolder* languageCode, bool sendEduModeParams, TextHolder* tenantId, __int64 unused, TextHolder* platformUserId, TextHolder* thirdPartyName, bool thirdPartyNameOnly, TextHolder* platformOnlineId, TextHolder* platformOfflineId, bool isCapeOnClassicSkin, TextHolder* capeId);
+	static __int64 ConnectionRequest_create(__int64 _this, __int64 privateKeyManager, void* a3, TextHolder* selfSignedId, TextHolder* serverAddress, __int64 clientRandomId, TextHolder* skinId, SkinData* skinData, __int64 capeData, CoolSkinData* coolSkinStuff, TextHolder* deviceId, int inputMode, int uiProfile, int guiScale, TextHolder* languageCode, bool sendEduModeParams, TextHolder* tenantId, __int64 unused, TextHolder* platformUserId, TextHolder* thirdPartyName, bool thirdPartyNameOnly, TextHolder* platformOnlineId, TextHolder* platformOfflineId, TextHolder* capeId);
 	static void InventoryTransactionManager_addAction(C_InventoryTransactionManager* a1, C_InventoryAction* a2);
 	static void PaintingRenderer__render(__int64 _this, __int64 a2, __int64 a3);
 	static bool DirectoryPackAccessStrategy__isTrusted(__int64 _this);
 	static bool ReturnTrue(__int64 _this);
 	static __int64 SkinRepository___loadSkinPack(__int64 _this, __int64 pack, __int64 a3);
-	
+	static GamerTextHolder* toStyledString(__int64 strIn, GamerTextHolder* strOut);
+
 	std::unique_ptr<FuncHook> GameMode_tickHook;
 	std::unique_ptr<FuncHook> SurvivalMode_tickHook;
 	std::unique_ptr<FuncHook> ChatScreenController_sendChatMessageHook;
@@ -110,7 +134,7 @@ private:
 	std::unique_ptr<FuncHook> Actor_isInWaterHook;
 	std::unique_ptr<FuncHook> JumpPowerHook;
 	std::unique_ptr<FuncHook> MinecraftGame_onAppSuspendedHook;
-	std::unique_ptr<FuncHook> Actor_ladderUpHook;
+	std::unique_ptr<FuncHook> Actor_ascendLadderHook;
 	std::unique_ptr<FuncHook> Actor_startSwimmingHook;
 	std::unique_ptr<FuncHook> RakNetInstance_tickHook;
 	std::unique_ptr<FuncHook> GameMode_getPickRangeHook;
@@ -121,6 +145,7 @@ private:
 	std::unique_ptr<FuncHook> ZipPackAccessStrategy__isTrustedHook;
 	std::unique_ptr<FuncHook> SkinRepository___checkSignatureFileInPack;
 	std::unique_ptr<FuncHook> SkinRepository___loadSkinPackHook;
+	std::unique_ptr<FuncHook> toStyledStringHook;
 };
 
 extern Hooks g_Hooks;

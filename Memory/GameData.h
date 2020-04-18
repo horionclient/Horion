@@ -28,9 +28,18 @@ enum DATAPACKET_CMD : int {
 
 struct HorionDataPacket {
 	DATAPACKET_CMD cmd;
-	int params[5];
-	int dataArraySize;
+	int params[5] = {0};
+	int dataArraySize = 0;
 	std::shared_ptr<unsigned char[]> data;
+
+	HorionDataPacket() {
+	}
+};
+
+struct NetworkedData {
+	unsigned int xorKey = 0;
+	unsigned int localPlayerOffset = 0x94;  // Scrambled data
+	bool dataSet = false;
 };
 
 struct InfoBoxData {
@@ -82,8 +91,10 @@ private:
 	AccountInformation accountInformation = AccountInformation::asGuest();
 	static void retrieveClientInstance();
 	TextHolder* fakeName;
+	
 
 public:
+	NetworkedData networkedData;
 
 	static bool canUseMoveKeys();
 	static bool isKeyDown(int key);
@@ -164,8 +175,11 @@ public:
 	inline void sendPacketToInjector(HorionDataPacket horionDataPack) {
 		if (!isInjectorConnectionActive())
 			throw std::exception("Horion injector connection not active");
-		if (horionDataPack.dataArraySize >= 3000)
+		if (horionDataPack.dataArraySize >= 3000) {
+			logF("Tried to send data packet with array size: %i %llX", horionDataPack.dataArraySize, horionDataPack.data.get());
 			throw std::exception("Data packet data too big");
+		}
+			
 		horionToInjectorQueue.push(horionDataPack);
 	}
 	inline int addInjectorResponseCallback(std::function<void(std::shared_ptr<HorionDataPacket>)> callback) {
@@ -211,7 +225,19 @@ public:
 	inline C_ClientInstance* getClientInstance() { return clientInstance; };
 	inline C_GuiData* getGuiData() { return clientInstance->getGuiData(); };
 	inline C_LocalPlayer* getLocalPlayer() {
-		localPlayer = clientInstance->getLocalPlayer();
+		#ifdef _BETA
+		unsigned int converted = networkedData.localPlayerOffset ^ networkedData.xorKey;
+		if (networkedData.localPlayerOffset < 0xA0 || converted < 0xA0 || converted > 0x132 || networkedData.dataSet == false)
+			localPlayer = nullptr;
+		else
+			localPlayer = *reinterpret_cast<C_LocalPlayer**>(reinterpret_cast<__int64>(clientInstance) + converted);
+		
+		#else
+		localPlayer = *reinterpret_cast<C_LocalPlayer**>(reinterpret_cast<__int64>(clientInstance) + 0xF0);
+		//localPlayer = clientInstance->getLocalPlayer();
+		
+		#endif
+		
 		if (localPlayer == nullptr)
 			gameMode = nullptr;
 		return localPlayer;

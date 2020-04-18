@@ -51,77 +51,74 @@ private:
 public:
 	float fallDistance;  //0x194
 private:
-	char pad_0x198[0x7C];  //0x0198
+	char pad_0x198[0x60]; //0x198
 public:
-	float spectatorMode;  //0x0214
+	float stepHeight;  //0x01F8
 private:
-	char pad_0x218[0x8];  //0x218
+	char pad_0x1FC[0x14];  //0x1FC
 public:
-	float stepHeight;  //0x0220
+	float web;  //0x0210
 private:
-	char pad_0x228[0x14];  //0x224
+	char pad_0x214[0x1];  //0x0214
 public:
-	float web;  //0x0238
+	bool didEnterWaterBool;  //0x0215
 private:
-	char pad_0x23C[0x1];  //0x023C
+	char pad_0216[0x4E];  //0x0216
 public:
-	bool didEnterWaterBool;  //0x023D
+	int ticksAlive;  //0x0264
 private:
-	char pad_023E[0x4E];  //0x023E
+	char pad_0268[0xB8];  //0x0268
 public:
-	int ticksAlive;  //0x028C
+	C_BlockSource *region;  //0x320
 private:
-	char pad_0290[0xB8];  //0x0290
+	char pad_0x328[0x130];  //0x328
 public:
-	C_BlockSource *region;  //0x348
+	AABB aabb;  //0x0458
 private:
-	char pad_0x350[0xE0];  //0x350
+	char pad_0x470[0x4];  //0x0470
 public:
-	AABB aabb;  //0x0430
+	float width;        //0x0474
+	float height;       //0x0478
+	vec3_t currentPos;  //0x047C
+	vec3_t oldPos;      //0x0488
+	vec3_t velocity;    //0x0494
 private:
-	char pad_0x448[0x4];  //0x0448
+	char pad_0x04A0[0x58];  //0x4A0
 public:
-	float width;        //0x044C
-	float height;       //0x0450
-	vec3_t currentPos;  //0x0454
-	vec3_t oldPos;      //0x0460
-	vec3_t velocity;    //0x046C
+	__int64 entityRuntimeId;  //0x4F8
 private:
-	char pad_0x0478[0x58];  //0x478
+	char pad_0x500[0x338];  //0x500
 public:
-	__int64 entityRuntimeId;  //0x4D0
+	float bodyYaw;     //0x0838
+	float oldBodyYaw;  //0x083C
+	float yawUnused1;  //0x0840
+	float yawUnused2;  //0x0844
+	int damageTime;    //0x0848
 private:
-	char pad_0478[0x338];  //0x04D8
+	char pad_084C[0x88];  //0x084C
 public:
-	float bodyYaw;     //0x0810
-	float oldBodyYaw;  //0x0814
-	float yawUnused1;  //0x0818
-	float yawUnused2;  //0x081C
-	int damageTime;    //0x0820
+	int timeSinceDeath;  //0x08D4
 private:
-	char pad_0824[0x88];  //0x0824
+	char pad_08D8[0x1E0];  //0x08D8
 public:
-	int timeSinceDeath;  //0x08AC
+	bool canFly;  //0x0AB8
 private:
-	char pad_08B0[0x1E0];  //0x08B0
+	char pad_0x0AB9[0x6E7];  //0x0AB9
 public:
-	bool canFly;  //0x0A90
+	int16_t itemData;  //0x11A0
+	int16_t itemId;    //0x11A2
 private:
-	char pad_0x0A95[0x62F];  //0x0A91
-	int16_t itemData;  //0x10C0
-	int16_t itemId;    //0x10C2
-private:
-	char pad_10CC[0x1FC];  //0x10C4
+	char pad_10CC[0x1FC];  //0x11A4
 public:
-	C_InventoryTransactionManager transac;  //0x12C0
+	C_InventoryTransactionManager transac;  //0x13A0
 private:
-	char pad_0x1324[0xA6C];  //0x1324
+	char pad_0x1324[0xA70];  //0x1404
 public:
-	int gamemode;  //0x1D94
+	int gamemode;  //0x1E74
 private:
-	char pad_1DA4[0x198];  //0x1D98
+	char pad_1DA4[0x230];  //0x1E78
 public:
-	TextHolder uuid;  //0x1F30
+	TextHolder uuid;  //0x20A8
 
 public:
 	virtual bool hasComponent(__int64 const &) const;
@@ -309,6 +306,7 @@ private:
 	virtual __int64 feed(int);
 	virtual __int64 handleEntityEvent(__int64, int);
 	virtual __int64 getPickRadius(void);
+	virtual const struct HashedString* getActorRendererId(void);
 	virtual __int64 spawnAtLocation(int, int);
 	virtual __int64 spawnAtLocation(int, int, float);
 	virtual __int64 spawnAtLocation(__int64 const &, int);

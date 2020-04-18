@@ -181,11 +181,11 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 									unsigned long maxNameLen = 0, flags = 0;
 									bool succ = GetVolumeInformationByHandleW(file, 0, 0, &serial, &maxNameLen, &flags, 0, 0);
 									if (succ) {
-										if (serial != serialNum) {
-											logF("Serial doesn't match!");
+										/*if (serial != serialNum) { // Dont print the raw values here, don't leak serials
+											logF("Serial doesn't match! (Diff: %lli)", (long long) serial - (long long)serialNum);
 											g_Data.terminate();
 										}
-										serialNum = serial;
+										serialNum = serial;*/
 									}
 									CloseHandle(file);
 								}
@@ -355,7 +355,7 @@ BOOL __stdcall DllMain(HMODULE hModule,
 		delete moduleMgr;
 		delete cmdMgr;
 		delete configMgr;
-		if (g_Data.getClientInstance()->getLocalPlayer() != nullptr) {
+		if (g_Data.getLocalPlayer() != nullptr) {
 			C_GuiData* guiData = g_Data.getClientInstance()->getGuiData();
 			if (guiData != nullptr && !GameData::shouldHide())
 				guiData->displayClientMessageF("%sUninjected!", RED);
