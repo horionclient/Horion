@@ -3066,6 +3066,8 @@
     <ClCompile Include="Horion\Scripting\ScriptManager.cpp" />
     <ClCompile Include="Horion\Scripting\GlobalFunctions.cpp" />
     <ClCompile Include="Horion\Scripting\GameFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\EntityFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Vector3Functions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -6182,6 +6184,8 @@
     <ClInclude Include="Horion\Scripting\ScriptManager.h" />
     <ClInclude Include="Horion\Scripting\GlobalFunctions.h" />
     <ClInclude Include="Horion\Scripting\GameFunctions.h" />
+    <ClInclude Include="Horion\Scripting\EntityFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Vector3Functions.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Horion.rc" />

@@ -135,8 +135,9 @@ void GameData::setRakNetInstance(C_RakNetInstance* raknet) {
 	g_Data.raknetInstance = raknet;
 }
 
-void GameData::forEachEntity(void (*callback)(C_Entity*, bool)) {
+void GameData::forEachEntity(std::function<void(C_Entity*, bool)> callback) {
 
+	std::vector<C_Entity*> tickedEntities;
 	// New EntityList
 	{
 		// MultiplayerLevel::directTickEntities
@@ -147,7 +148,10 @@ void GameData::forEachEntity(void (*callback)(C_Entity*, bool)) {
 			__int64 actor = i[3];
 			if (actor && !*(char*)(actor + 0x361) && !*(char*)(actor + 0x362)) {
 				C_Entity* ent = reinterpret_cast<C_Entity*>(actor);
-				callback(ent, false);
+				if (std::find(tickedEntities.begin(), tickedEntities.end(), ent) == tickedEntities.end()) {
+					callback(ent, false);
+					tickedEntities.push_back(ent);
+				}
 			}
 		}
 	}
@@ -165,7 +169,10 @@ void GameData::forEachEntity(void (*callback)(C_Entity*, bool)) {
 			if (listSize < 1000 && listSize > 1) {
 				for (size_t i = 0; i < listSize; i++) {
 					C_Entity* current = entList->get(i);
-					callback(current, true);
+					if (std::find(tickedEntities.begin(), tickedEntities.end(), current) == tickedEntities.end()) {
+						callback(current, true);
+						tickedEntities.push_back(current);
+					}
 				}
 			}
 		}

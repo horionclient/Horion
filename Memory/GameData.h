@@ -266,7 +266,7 @@ public:
 
 	inline LARGE_INTEGER getLastUpdateTime() { return lastUpdate; };
 
-	void forEachEntity(void (*callback)(C_Entity*, bool));
+	void forEachEntity(std::function<void(C_Entity*, bool)>);
 
 	int getFPS() { return fps; };
 	int getLeftCPS() { return cpsLeft; };
