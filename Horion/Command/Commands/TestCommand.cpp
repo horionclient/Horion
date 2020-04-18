@@ -27,17 +27,6 @@ void showAimedBlockInfo() {
 }
 
 bool TestCommand::execute(std::vector<std::string>* args) {
-	assertTrue(args->size() > 1);
-	std::ostringstream os;
-	for (int i = 1; i < args->size(); i++) {
-		if (i > 1)
-			os << " ";
-		os << args->at(i);
-	}
-	auto str = os.str();
 	
-
-	auto wstr = Utils::stringToWstring(str);
-	scriptMgr.runScript(wstr);
 	return true;
 }

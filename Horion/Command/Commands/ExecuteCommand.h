@@ -1,10 +1,13 @@
 #pragma once
+
 #include "ICommand.h"
 
-class TestCommand : public IMCCommand {
+#include "../../Scripting/ScriptManager.h"
+
+class ExecuteCommand : public IMCCommand {
 public:
-	TestCommand();
-	~TestCommand();
+	ExecuteCommand();
+	~ExecuteCommand();
 
 	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;

@@ -80,7 +80,7 @@ JsValueRef ScriptManager::getLocalPlayer() {
 	return this->prepareEntityFunctions(-1);
 }
 
-void ScriptManager::runScript(std::wstring script) {
+std::wstring ScriptManager::runScript(std::wstring script) {
 	JsRuntimeHandle runtime;
 	JsContextRef context;
 	JsValueRef result = 0;
@@ -106,9 +106,13 @@ void ScriptManager::runScript(std::wstring script) {
 		}
 	}
 
+	std::wstring returnString = L"No result";
+
 	if (result != JS_INVALID_REFERENCE)
-		logF("result: %S", chakra.valueToString(result).c_str());
+		returnString = chakra.valueToString(result);
 
 	chakra.JsSetCurrentContext_(JS_INVALID_REFERENCE);
 	chakra.JsDisposeRuntime_(runtime);
+
+	return returnString;
 }
