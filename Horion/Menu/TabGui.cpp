@@ -35,12 +35,12 @@ int renderedLevel;
 struct LabelContainer {
 	const char* text = 0;
 	bool enabled = false;
-	IModule* mod = 0;
+	std::shared_ptr<IModule> mod = 0;
 };
 
 std::vector<LabelContainer> labelList;
 
-void TabGui::renderLabel(const char* text, IModule* mod) {
+void TabGui::renderLabel(const char* text, std::shared_ptr<IModule> mod) {
 	//size_t strlength = strlen(text) + 1;
 	//char* alloc = new char[strlength];
 	//strcpy_s(alloc, strlength, text);
@@ -169,9 +169,9 @@ void TabGui::render() {
 
 	// Render all modules
 	if (level >= 0) {
-		std::vector<IModule*>* modules = moduleMgr->getModuleList();
-		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
-			IModule* mod = *it;
+		std::vector<std::shared_ptr<IModule>>* modules = moduleMgr->getModuleList();
+		for (std::vector<std::shared_ptr<IModule>>::iterator it = modules->begin(); it != modules->end(); ++it) {
+			auto mod = *it;
 			if (selected[0].selectedItemId == static_cast<int>(mod->getCategory())) {
 				auto name = mod->getModuleName();
 				renderLabel(name, mod);

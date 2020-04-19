@@ -5,4 +5,5 @@
 class HorionFunctions {
 public:
 	DECL_FUN(getCommandManager);
+	DECL_FUN(getModuleManager);
 };

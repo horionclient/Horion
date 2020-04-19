@@ -11,11 +11,11 @@ ModulesCommand::~ModulesCommand() {
 }
 
 bool ModulesCommand::execute(std::vector<std::string>* args) {
-	std::vector<IModule*>* modules = moduleMgr->getModuleList();
+	std::vector<std::shared_ptr<IModule>>* modules = moduleMgr->getModuleList();
 	g_Data.getGuiData()->displayClientMessageF("==========");
 	g_Data.getGuiData()->displayClientMessageF("Modules (%i):", modules->size());
 	for (auto it = modules->begin(); it != modules->end(); ++it) {
-		IModule* mod = *it;
+		auto mod = *it;
 		g_Data.getGuiData()->displayClientMessageF("%s %s- %s%s", mod->getModuleName(), GRAY, ITALIC, mod->getTooltip());
 	}
 

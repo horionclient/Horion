@@ -224,9 +224,10 @@
     <ClCompile Include="Horion\Scripting\Functions\GlobalFunctions.cpp" />
     <ClCompile Include="Horion\Scripting\Functions\HorionFunctions.cpp" />
     <ClCompile Include="Horion\Scripting\Functions\LocalPlayerFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\ModuleManagerFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\Vector3Functions.cpp" />
     <ClCompile Include="Horion\Scripting\ScriptInstance.cpp" />
     <ClCompile Include="Horion\Scripting\ScriptManager.cpp" />
-    <ClCompile Include="Horion\Scripting\Functions\Vector3Functions.cpp" />
     <ClCompile Include="Memory\GameData.cpp" />
     <ClCompile Include="Memory\Hooks.cpp" />
     <ClCompile Include="Memory\SlimMem.cpp" />
@@ -256,9 +257,10 @@
     <ClInclude Include="Horion\Scripting\Functions\GlobalFunctions.h" />
     <ClInclude Include="Horion\Scripting\Functions\HorionFunctions.h" />
     <ClInclude Include="Horion\Scripting\Functions\LocalPlayerFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\ModuleManagerFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\Vector3Functions.h" />
     <ClInclude Include="Horion\Scripting\ScriptInstance.h" />
     <ClInclude Include="Horion\Scripting\ScriptManager.h" />
-    <ClInclude Include="Horion\Scripting\Functions\Vector3Functions.h" />
     <ClInclude Include="include\atlrx.h" />
     <ClInclude Include="include\chakra\ChakraCommon.h" />
     <ClInclude Include="include\chakra\ChakraCommonWindows.h" />

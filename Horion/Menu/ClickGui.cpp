@@ -32,10 +32,10 @@ float currentXOffset = 0;
 
 int timesRendered = 0;
 
-void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>* modList) {
-	std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
+void ClickGui::getModuleListByCategory(Category category, std::vector<std::shared_ptr<IModule>>* modList) {
+	std::vector<std::shared_ptr<IModule>>* moduleList = moduleMgr->getModuleList();
 
-	for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
+	for (std::vector<std::shared_ptr<IModule>>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
 		if ((*it)->getCategory() == category)
 			modList->push_back(*it);
 	}
@@ -152,7 +152,7 @@ void ClickGui::renderCategory(Category category) {
 	currentYOffset = yOffset;
 
 	// Get All Modules in our category
-	std::vector<IModule*> moduleList;
+	std::vector<std::shared_ptr<IModule>> moduleList;
 	getModuleListByCategory(category, &moduleList);
 
 	// Get max width of all text
@@ -197,8 +197,8 @@ void ClickGui::renderCategory(Category category) {
 			currentYOffset -= ourWindow->animation * moduleList.size() * (textHeight + (textPadding * 2));
 		}
 
-		for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it) {
-			IModule* mod = *it;
+		for (std::vector<std::shared_ptr<IModule>>::iterator it = moduleList.begin(); it != moduleList.end(); ++it) {
+			auto mod = *it;
 			std::string textStr = mod->getModuleName();
 
 			vec2_t textPos = vec2_t(
@@ -549,8 +549,8 @@ void ClickGui::renderCategory(Category category) {
 					ourWindow->animation = 0;
 				ourWindow->isInAnimation = true;
 
-				for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it) {
-					IModule* mod = *it;
+				for (std::vector<std::shared_ptr<IModule>>::iterator it = moduleList.begin(); it != moduleList.end(); ++it) {
+					auto mod = *it;
 					std::shared_ptr<ClickModule> clickMod = getClickModule(ourWindow, mod->getRawModuleName());
 					clickMod->isExtended = false;
 				}

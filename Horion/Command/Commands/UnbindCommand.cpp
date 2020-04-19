@@ -12,30 +12,31 @@ bool UnbindCommand::execute(std::vector<std::string>* args) {
 	assertTrue(args->size() >= 2);
 	std::string moduleName = args->at(1);
 
-	if (moduleName.size() > 0) {
-		auto mod = moduleMgr->getModuleByName(moduleName);
-		if (mod == nullptr) {
-			if (strcmp(moduleName.c_str(), "all") == 0) {
-				if (args->size() >= 3 && strcmp(args->at(2).c_str(), "force") == 0) {
-					std::vector<IModule*>* modules = moduleMgr->getModuleList();
-					for (auto it = modules->begin(); it != modules->end(); ++it) {
-						IModule* mod = *it;
-						mod->setKeybind(0x0);
-					}
-					clientMessageF("%sUnbound all modules!", YELLOW);
-				} else {
-					clientMessageF("%sAre you sure? This will unbind %sALL%s%s modules!", RED, BOLD, RESET, RED);
-					clientMessageF("%sUse %s.unbind all force%s to unbind all modules", RED, WHITE, RED);
-				}
-			} else {
-				clientMessageF("%sCould not find module with name: %s", RED, moduleName.c_str());
+	assertTrue(moduleName.size() > 0);
+
+	if (moduleName == "all") {
+		if (args->size() >= 3 && args->at(2) == "force") {
+			std::vector<std::shared_ptr<IModule>>* modules = moduleMgr->getModuleList();
+			for (auto it = modules->begin(); it != modules->end(); ++it) {
+				auto mod = *it;
+				mod->setKeybind(0x0);
 			}
+			clientMessageF("%sUnbound all modules!", YELLOW);
 		} else {
-			mod->setKeybind(0x0);
-			clientMessageF("%sSuccessfully unbound %s!", GREEN, mod->getModuleName());
+			clientMessageF("%sAre you sure? This will unbind %sALL%s%s modules!", RED, BOLD, RESET, RED);
+			clientMessageF("%sUse %s.unbind all force%s to unbind all modules", RED, WHITE, RED);
 		}
-	} else {
-		return false;
+		return true;
 	}
+
+	auto modOpt = moduleMgr->getModuleByName(moduleName);
+	if (!modOpt.has_value()) {
+		clientMessageF("%sCould not find module with name: %s", RED, moduleName.c_str());
+		return true;
+	} 
+
+	auto mod = modOpt.value();
+	mod->setKeybind(0x0);
+	clientMessageF("%sSuccessfully unbound %s!", GREEN, mod->getModuleName());
 	return true;
 }

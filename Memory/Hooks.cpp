@@ -535,7 +535,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				if (moduleMgr->isInitialized() && shouldRenderArrayList) {
 					struct IModuleContainer {
 						// Struct used to Sort IModules in a std::set
-						IModule* backingModule;
+						std::shared_ptr<IModule> backingModule;
 						std::string moduleName;
 						bool enabled;
 						int keybind;
@@ -543,7 +543,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						vec2_t* pos;
 						bool shouldRender = true;
 
-						IModuleContainer(IModule* mod) {
+						IModuleContainer(std::shared_ptr<IModule> mod) {
 							const char* moduleNameChr = mod->getModuleName();
 							this->enabled = mod->isEnabled();
 							this->keybind = mod->getKeybind();
@@ -592,9 +592,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					std::set<IModuleContainer> modContainerList;
 					// Fill modContainerList with Modules
 					{
-						std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
+						std::vector<std::shared_ptr<IModule>>* moduleList = moduleMgr->getModuleList();
 						for (auto it : *moduleList) {
-							if (it != hudModule)
+							if (it.get() != hudModule)
 								modContainerList.emplace(IModuleContainer(it));
 						}
 					}

@@ -94,6 +94,12 @@ public:
 		return ref;
 	}
 
+	JsValueRef nullValue() {
+		JsValueRef ref = JS_INVALID_REFERENCE;
+		this->JsGetNullValue_(&ref);
+		return ref;
+	}
+
 	std::optional<std::wstring> tryGetStringFromArgs(JsValueRef* args, int argumentCount) {
 		if (argumentCount < 1)
 			return std::optional<std::wstring>();
@@ -210,8 +216,8 @@ public:
 			if (err == JsNoError)
 				return std::wstring(resultWC, stringLength);
 			else
-				return std::wstring(L"error#") + std::to_wstring(err);
+				return std::wstring(L"error1#") + std::to_wstring(err);
 		} else
-			return std::wstring(L"error#") + std::to_wstring(err);
+			return std::wstring(L"error2#") + std::to_wstring(err);
 	}
 };

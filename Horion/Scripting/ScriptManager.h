@@ -9,7 +9,8 @@ class ScriptManager;
 typedef enum _ExternalDataType {
 	Invalid = 0,
 	EntityDataType,
-	Vector3DataType
+	Vector3DataType,
+	ModuleDataType
 } ExternalDataType;
 
 struct ExternalDataStruct {
@@ -37,6 +38,17 @@ struct JVector3 : ExternalDataStruct {
 	}
 };
 
+class IModule;
+
+struct JModule : ExternalDataStruct {
+	std::shared_ptr<IModule> modPtr;
+
+	JModule(std::shared_ptr<IModule> mod) {
+		this->dataType = ModuleDataType;
+		this->modPtr = mod;
+	}
+};
+
 extern ChakraApi chakra;
 extern ScriptManager scriptMgr;
 #define DECL_FUN(m) static JsValueRef CALLBACK m(JsValueRef, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState)
@@ -54,6 +66,7 @@ extern ScriptManager scriptMgr;
 #include "Functions/LocalPlayerFunctions.h"
 #include "Functions/HorionFunctions.h"
 #include "Functions/CommandManagerFunctions.h"
+#include "Functions/ModuleManagerFunctions.h"
 
 class ScriptManager {
 private:
@@ -64,12 +77,14 @@ private:
 	void prepareGameFunctions(JsValueRef global);
 	void prepareHorionFunctions(JsValueRef global);
 	void prepareCommandManagerFunctions(JsValueRef global);
+	void prepareModuleManagerFunctions(JsValueRef global);
+	void prepareModuleFunctions(JsValueRef global);
 	void prepareContext(JsContextRef* ctx);
-
 	
 public:
 	JsValueRef prepareEntity(__int64 runtimeId);
 	JsValueRef prepareVector3(vec3_t vec);
+	JsValueRef prepareModule(std::shared_ptr<IModule> mod);
 	JsValueRef getLocalPlayer();
 	std::wstring runScript(std::wstring);
 	void importScriptFolder(std::string path);

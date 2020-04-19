@@ -85,6 +85,7 @@ void ScriptManager::prepareGameFunctions(JsValueRef global) {
 
 void ScriptManager::prepareHorionFunctions(JsValueRef global) {
 	this->prepareCommandManagerFunctions(global);
+	this->prepareModuleManagerFunctions(global);
 	
 	JsValueRef horionObject;
 	chakra.JsCreateObject_(&horionObject);
@@ -92,12 +93,31 @@ void ScriptManager::prepareHorionFunctions(JsValueRef global) {
 	chakra.addPropertyToObj(global, L"Horion", horionObject);
 
 	chakra.defineFunction(horionObject, L"getCommandManager", HorionFunctions::getCommandManager);
+	chakra.defineFunction(horionObject, L"getModuleManager", HorionFunctions::getModuleManager);
 }
 
 void ScriptManager::prepareCommandManagerFunctions(JsValueRef global) {
 	chakra.JsCreateObject_(&CommandManagerFunctions::commandManagerObject);
 
 	chakra.defineFunction(CommandManagerFunctions::commandManagerObject, L"executeCommand", CommandManagerFunctions::executeCommand);
+}
+
+void ScriptManager::prepareModuleManagerFunctions(JsValueRef global) {
+	prepareModuleFunctions(global);
+
+	chakra.JsCreateObject_(&ModuleManagerFunctions::moduleManagerObject);
+
+	chakra.defineFunction(ModuleManagerFunctions::moduleManagerObject, L"getModuleByName", ModuleManagerFunctions::getModuleByName);
+}
+
+void ScriptManager::prepareModuleFunctions(JsValueRef global) {
+	chakra.JsCreateObject_(&ModuleManagerFunctions::modulePrototype);
+
+	chakra.defineFunction(ModuleManagerFunctions::modulePrototype, L"getName", ModuleManagerFunctions::Module_getName);
+	chakra.defineFunction(ModuleManagerFunctions::modulePrototype, L"toString", ModuleManagerFunctions::Module_toString);
+	chakra.defineFunction(ModuleManagerFunctions::modulePrototype, L"isEnabled", ModuleManagerFunctions::Module_isEnabled);
+	chakra.defineFunction(ModuleManagerFunctions::modulePrototype, L"setEnabled", ModuleManagerFunctions::Module_setEnabled);
+	chakra.defineFunction(ModuleManagerFunctions::modulePrototype, L"toggle", ModuleManagerFunctions::Module_toggle);
 }
 
 void ScriptManager::prepareContext(JsContextRef* ctx) {
@@ -139,6 +159,34 @@ JsValueRef ScriptManager::prepareVector3(vec3_t vec) {
 	return obj;
 }
 
+JsValueRef ScriptManager::prepareModule(std::shared_ptr<IModule> mod) {
+	JsValueRef obj = 0;
+	JModule* data = new JModule(mod);
+	auto err = chakra.JsCreateExternalObject_(
+		data, [](void* buf) {
+			delete buf;
+		},
+		&obj);
+
+	if (err != JsNoError) {
+		logF("prepareModule error: %X", err);
+		JsValueRef null;
+		chakra.JsGetNullValue_(&null);
+		return null;
+	}
+
+	err = chakra.JsSetPrototype_(obj, ModuleManagerFunctions::modulePrototype);
+
+	if (err != JsNoError) {
+		logF("prepareModule error2: %X", err);
+		JsValueRef null;
+		chakra.JsGetNullValue_(&null);
+		return null;
+	}
+
+	return obj;
+}
+
 JsValueRef ScriptManager::getLocalPlayer() {
 	return this->prepareEntity(-1);
 }
@@ -158,14 +206,14 @@ std::wstring ScriptManager::runScript(std::wstring script) {
 	auto err = chakra.JsRunScript_(script.c_str(), JS_SOURCE_CONTEXT_NONE, L"", &result);
 
 	std::wstring returnString = L"No result";
+	bool hasException;
+	chakra.JsHasException_(&hasException);
 
-	if (err != JsNoError) {
+	if (err != JsNoError || hasException) {
 		logF("Script run failed: %X", err);
 
 		returnString = L"Error! " + std::to_wstring(err) + L", you can find a stack trace in the console";
 
-		bool hasException;
-		chakra.JsHasException_(&hasException);
 		if (hasException) {
 			JsValueRef exception;
 			chakra.JsGetAndClearException_(&exception);
