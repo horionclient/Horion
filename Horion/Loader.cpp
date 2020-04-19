@@ -123,6 +123,8 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	QueryPerformanceCounter(&timeSinceLastMessage);
 	QueryPerformanceCounter(&timeSinceLastPing);
 
+	bool loggedIn = false;
+
 	while (isRunning) {
 		Sleep(5);
 		LARGE_INTEGER endTime;
@@ -160,6 +162,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 				switch (injectorToHorion->cmd) {
 				case CMD_INIT: {
 					logF("Got CMD_INIT from injector");
+					loggedIn = true;
 					int flags = injectorToHorion->params[0];
 					if (flags & (1 << 0) && injectorToHorion->dataSize > 0 && injectorToHorion->dataSize < sizeof(injectorToHorion->data)) {  // Has Json data
 						injectorToHorion->data[sizeof(injectorToHorion->data) - 1] = '\0';
@@ -227,11 +230,50 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 					g_Data.callInjectorResponseCallback(id, pk);
 					break;
 				}
+				case CMD_LOG: {
+					// discard for now
+					break;
+				}
 				default:
 					break;
 				}
 
 				injectorToHorion->isUnread = false;
+			}
+
+			// Send log messages
+			{
+				auto* vecLock = Logger::GetTextToPrintSection();
+
+				if (loggedIn && vecLock != nullptr && TryEnterCriticalSection(vecLock)) {
+					auto* stringPrintVector = Logger::GetTextToSend();
+#if defined(_DEBUG) or defined(_BETA)
+					if (stringPrintVector->size() > 0 && g_Data.isPacketToInjectorQueueEmpty()) {
+						auto str = *stringPrintVector->begin();
+						stringPrintVector->erase(stringPrintVector->begin());
+
+						auto wstr = Utils::stringToWstring(str->text);
+
+						wchar_t* ident = L"log ";
+						size_t identLength = wcslen(ident);
+						size_t textLength = wcslen(wstr.c_str()) + identLength;
+						 
+						HorionDataPacket packet;
+						packet.cmd = CMD_LOG;
+						packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[(textLength + 1) * sizeof(wchar_t)]));
+						int leng = (textLength + 1) * sizeof(wchar_t);
+						wcscpy_s((wchar_t*)packet.data.get(), textLength, ident);
+						wcscpy_s((wchar_t*)(packet.data.get() + identLength * sizeof(wchar_t)), textLength - identLength + 1, wstr.c_str());
+						packet.dataArraySize = (int)wcslen((wchar_t*)packet.data.get()) * sizeof(wchar_t);
+
+						g_Data.sendPacketToInjector(packet);
+					}
+#else
+					stringPrintVector->clear();
+#endif
+
+					LeaveCriticalSection(vecLock);
+				}
 			}
 
 			if (!horionToInjector->isUnread && !g_Data.isPacketToInjectorQueueEmpty()) {

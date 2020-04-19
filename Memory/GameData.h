@@ -24,7 +24,8 @@ enum DATAPACKET_CMD : int {
 	CMD_OPENBROWSER,
 	CMD_FILECHOOSER,
 	CMD_RESPONSE,
-	CMD_FOLDERCHOOSER // sets permissions for a whole folder and sends the path over
+	CMD_FOLDERCHOOSER, // sets permissions for a whole folder and sends the path over
+	CMD_LOG
 };
 
 struct HorionDataPacket {
