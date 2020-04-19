@@ -21,6 +21,8 @@ void ScriptManager::prepareLocalPlayerPrototype(JsValueRef proto) {
 	chakra.defineFunction(proto, L"setPosition", LocalPlayerFunctions::setPosition);
 	chakra.defineFunction(proto, L"setVelocity", LocalPlayerFunctions::setVelocity);
 	chakra.defineFunction(proto, L"toString", LocalPlayerFunctions::toString);
+	chakra.defineFunction(proto, L"setViewAngles", LocalPlayerFunctions::setViewAngles);
+	chakra.defineFunction(proto, L"setIsOnGround", LocalPlayerFunctions::setIsOnGround);
 }
 
 JsValueRef ScriptManager::prepareEntity(long long runtimeId) {
@@ -138,19 +140,26 @@ std::wstring ScriptManager::runScript(std::wstring script) {
 
 	auto err = chakra.JsRunScript_(script.c_str(), JS_SOURCE_CONTEXT_NONE, L"", &result);
 
+	std::wstring returnString = L"No result";
+
 	if (err != JsNoError) {
 		logF("Script run failed: %X", err);
+
+		returnString = L"Error in script! " + std::to_wstring(err) + L", you can find a stack trace in the log";
 
 		bool hasException;
 		chakra.JsHasException_(&hasException);
 		if (hasException) {
 			JsValueRef exception;
 			chakra.JsGetAndClearException_(&exception);
-			logF("Exception: %S", chakra.valueToString(exception).c_str());
+			JsValueRef stack;
+			chakra.getProperty(exception, L"stack", &stack);
+			if (chakra.isNullOrUndefined(stack))
+				logF("Exception: %S", chakra.valueToString(exception).c_str());
+			else 
+				logF("Exception stack: %S", chakra.valueToString(stack).c_str());
 		}
 	}
-
-	std::wstring returnString = L"No result";
 
 	if (result != JS_INVALID_REFERENCE)
 		returnString = chakra.valueToString(result);

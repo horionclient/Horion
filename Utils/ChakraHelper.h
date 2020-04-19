@@ -1,7 +1,9 @@
 #pragma once
-#include "DllHelper.h"
-#include "../include/chakra/ChakraCore.h"
 #include <string>
+
+#include "../include/chakra/ChakraCore.h"
+#include "DllHelper.h"
+#include <optional>
 
 #ifndef DECL_API
 #define DECL_API(f) decltype(f)* f##_ = _dll[#f]
@@ -49,6 +51,8 @@ public:
 	DECL_API(JsDoubleToNumber);
 	DECL_API(JsNumberToDouble);
 	DECL_API(JsSetPrototype);
+	DECL_API(JsGetProperty);
+	DECL_API(JsBooleanToBool);
 
 	void throwException(std::wstring error) {
 		JsValueRef errorValue;
@@ -87,6 +91,17 @@ public:
 	JsValueRef falseValue() {
 		JsValueRef ref = JS_INVALID_REFERENCE;
 		this->JsGetFalseValue_(&ref);
+		return ref;
+	}
+
+	std::optional<bool> tryGetBoolFromArgs(JsValueRef* args, int argumentCount) {
+		if (argumentCount < 1)
+			return std::optional<bool>();
+
+		bool ref = false;
+		auto err = this->JsBooleanToBool_(args[0], &ref);
+		if (err != JsNoError)
+			return std::optional<bool>();
 		return ref;
 	}
 
@@ -158,6 +173,12 @@ public:
 		bool result;
 		this->JsDefineProperty_(object, namePropertyId, propertyDesc, &result);
 		return result;
+	}
+
+	void getProperty(JsValueRef obj, wchar_t* str, JsValueRef* prop) {
+		JsPropertyIdRef namePropertyId;
+		this->JsGetPropertyIdFromName_(str, &namePropertyId);
+		this->JsGetProperty_(obj, namePropertyId, prop);
 	}
 
 	bool isNullOrUndefined(JsValueRef ref) {

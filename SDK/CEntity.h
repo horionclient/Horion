@@ -36,8 +36,14 @@ public:
 		};
 		vec2_t viewAngles;
 	};
-	float pitch2;  //0x00F8
-	float yaw2;    //0x00FC
+	union {
+		struct {
+			float pitch2;  //0x00F0
+			float yaw2;    //0x00F4
+		};
+		vec2_t viewAngles2;
+	};
+
 private:
 	char pad_0100[0x10];  //0x0100
 public:
