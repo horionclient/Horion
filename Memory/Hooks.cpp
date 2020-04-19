@@ -294,8 +294,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			LARGE_INTEGER end, elapsed;
 			QueryPerformanceCounter(&end);
 			elapsed.QuadPart = end.QuadPart - start.QuadPart;
-			elapsed.QuadPart /= frequency.QuadPart;
-			if (elapsed.QuadPart > 1) {
+			float elapsedFlot = (float)elapsed.QuadPart / frequency.QuadPart;
+			if (elapsedFlot > 1.5f) {
 				vec2_t windowSize = dat->windowSize;
 
 				DrawUtils::fillRectangle(vec4_t(0, 0, windowSize.x, windowSize.y), MC_Color(0.2f, 0.2f, 0.2f), 0.8f);

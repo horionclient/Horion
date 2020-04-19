@@ -94,6 +94,18 @@ public:
 		return ref;
 	}
 
+	std::optional<std::wstring> tryGetStringFromArgs(JsValueRef* args, int argumentCount) {
+		if (argumentCount < 1)
+			return std::optional<std::wstring>();
+
+		const wchar_t* ref = 0;
+		size_t length = 0;
+		auto err = this->JsStringToPointer_(args[0], &ref, &length); 
+		if (err != JsNoError)
+			return std::optional<std::wstring>();
+		return std::optional<std::wstring>(std::wstring(ref, length));
+	}
+
 	std::optional<bool> tryGetBoolFromArgs(JsValueRef* args, int argumentCount) {
 		if (argumentCount < 1)
 			return std::optional<bool>();

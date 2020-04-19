@@ -1,12 +1,6 @@
 #include "LocalPlayerFunctions.h"
 
 #ifndef ENTITY_INVALID
-#define chok chakra
-
-#define THROW(m)                \
-	chok.throwTypeException(m); \
-	return JS_INVALID_REFERENCE
-
 #define ENTITY_INVALID                                                                                        \
 	THROW(L"Entity is invalid! Check if your entity is still valid with entity.isValid()")
 

@@ -218,9 +218,11 @@
     <ClCompile Include="Horion\Menu\TabGui.cpp" />
     <ClCompile Include="Horion\Module\ModuleManager.cpp" />
     <ClCompile Include="Horion\Module\Modules\*.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\CommandManagerFunctions.cpp" />
     <ClCompile Include="Horion\Scripting\Functions\EntityFunctions.cpp" />
     <ClCompile Include="Horion\Scripting\Functions\GameFunctions.cpp" />
     <ClCompile Include="Horion\Scripting\Functions\GlobalFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\HorionFunctions.cpp" />
     <ClCompile Include="Horion\Scripting\Functions\LocalPlayerFunctions.cpp" />
     <ClCompile Include="Horion\Scripting\ScriptInstance.cpp" />
     <ClCompile Include="Horion\Scripting\ScriptManager.cpp" />
@@ -248,9 +250,11 @@
     <ClInclude Include="Horion\Menu\TabGui.h" />
     <ClInclude Include="Horion\Module\ModuleManager.h" />
     <ClInclude Include="Horion\Module\Modules\*.h" />
+    <ClInclude Include="Horion\Scripting\Functions\CommandManagerFunctions.h" />
     <ClInclude Include="Horion\Scripting\Functions\EntityFunctions.h" />
     <ClInclude Include="Horion\Scripting\Functions\GameFunctions.h" />
     <ClInclude Include="Horion\Scripting\Functions\GlobalFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\HorionFunctions.h" />
     <ClInclude Include="Horion\Scripting\Functions\LocalPlayerFunctions.h" />
     <ClInclude Include="Horion\Scripting\ScriptInstance.h" />
     <ClInclude Include="Horion\Scripting\ScriptManager.h" />

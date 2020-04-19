@@ -55,7 +55,7 @@ void ScriptManager::prepareGlobals(JsValueRef global) {
 	chakra.defineFunction(global, L"log", GlobalFunctions::log);
 }
 
-void ScriptManager::prepareVector3Functions(JsValueRef global) {
+void ScriptManager::prepareVector3Prototype(JsValueRef global) {
 	chakra.JsCreateObject_(&Vector3Functions::prototype);
 
 	chakra.defineFunction(Vector3Functions::prototype, L"isValid", Vector3Functions::isValid);
@@ -74,16 +74,30 @@ void ScriptManager::prepareVector3Functions(JsValueRef global) {
 }
 
 void ScriptManager::prepareGameFunctions(JsValueRef global) {
-	JsValueRef hostObject;
-	chakra.JsCreateObject_(&hostObject);
+	JsValueRef gameObject;
+	chakra.JsCreateObject_(&gameObject);
 
-	JsPropertyIdRef hostPropertyId;
-	chakra.JsGetPropertyIdFromName_(L"Game", &hostPropertyId);
+	chakra.addPropertyToObj(global, L"Game", gameObject);
 
-	chakra.JsSetProperty_(global, hostPropertyId, hostObject, true);
+	chakra.defineFunction(gameObject, L"getClient", GameFunctions::getClient);
+	chakra.defineFunction(gameObject, L"getLocalPlayer", GameFunctions::getLocalPlayer);
+}
 
-	chakra.defineFunction(hostObject, L"getClient", GameFunctions::getClient);
-	chakra.defineFunction(hostObject, L"getLocalPlayer", GameFunctions::getLocalPlayer);
+void ScriptManager::prepareHorionFunctions(JsValueRef global) {
+	this->prepareCommandManagerFunctions(global);
+	
+	JsValueRef horionObject;
+	chakra.JsCreateObject_(&horionObject);
+
+	chakra.addPropertyToObj(global, L"Horion", horionObject);
+
+	chakra.defineFunction(horionObject, L"getCommandManager", HorionFunctions::getCommandManager);
+}
+
+void ScriptManager::prepareCommandManagerFunctions(JsValueRef global) {
+	chakra.JsCreateObject_(&CommandManagerFunctions::commandManagerObject);
+
+	chakra.defineFunction(CommandManagerFunctions::commandManagerObject, L"executeCommand", CommandManagerFunctions::executeCommand);
 }
 
 void ScriptManager::prepareContext(JsContextRef* ctx) {
@@ -93,8 +107,9 @@ void ScriptManager::prepareContext(JsContextRef* ctx) {
 	chakra.JsGetGlobalObject_(&globalObject);
 
 	prepareGlobals(globalObject);
+	prepareHorionFunctions(globalObject);
 	prepareGameFunctions(globalObject);
-	prepareVector3Functions(globalObject);
+	prepareVector3Prototype(globalObject);
 
 	chakra.JsCreateObject_(&EntityFunctions::prototype);
 	prepareEntityPrototype(EntityFunctions::prototype);
