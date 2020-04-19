@@ -6,6 +6,7 @@
 #include <Windows.h>
 
 #include <vector>
+#include <memory>
 
 #ifdef _DEBUG
 #include <ios>
