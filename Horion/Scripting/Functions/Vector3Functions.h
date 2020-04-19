@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../Utils/HMath.h"
-#include "ScriptManager.h"
+#include "../../../Utils/HMath.h"
+#include "../ScriptManager.h"
 #include <optional>
 
 class Vector3Functions {

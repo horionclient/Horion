@@ -41,11 +41,11 @@ extern ChakraApi chakra;
 extern ScriptManager scriptMgr;
 #define DECL_FUN(m) static JsValueRef CALLBACK m(JsValueRef, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState)
 
-#include "GameFunctions.h"
-#include "EntityFunctions.h"
-#include "GlobalFunctions.h"
-#include "Vector3Functions.h"
-#include "LocalPlayerFunctions.h"
+#include "Functions/GameFunctions.h"
+#include "Functions/EntityFunctions.h"
+#include "Functions/GlobalFunctions.h"
+#include "Functions/Vector3Functions.h"
+#include "Functions/LocalPlayerFunctions.h"
 
 class ScriptManager {
 private:

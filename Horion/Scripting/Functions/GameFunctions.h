@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ScriptManager.h"
+#include "../ScriptManager.h"
 
 class GameFunctions {
 public:

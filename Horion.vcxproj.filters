@@ -2997,10 +2997,6 @@
     <ClCompile Include="Horion\Module\Modules\*.cpp" />
     <ClCompile Include="Horion\Module\Modules\*.cpp" />
     <ClCompile Include="Horion\Scripting\ScriptManager.cpp" />
-    <ClCompile Include="Horion\Scripting\GlobalFunctions.cpp" />
-    <ClCompile Include="Horion\Scripting\GameFunctions.cpp" />
-    <ClCompile Include="Horion\Scripting\EntityFunctions.cpp" />
-    <ClCompile Include="Horion\Scripting\Vector3Functions.cpp" />
     <ClCompile Include="Horion\Command\Commands\*.cpp" />
     <ClCompile Include="Horion\Command\Commands\*.cpp" />
     <ClCompile Include="Horion\Command\Commands\*.cpp" />
@@ -3106,7 +3102,12 @@
     <ClCompile Include="Horion\Module\Modules\*.cpp" />
     <ClCompile Include="Horion\Module\Modules\*.cpp" />
     <ClCompile Include="Horion\Module\Modules\*.cpp" />
-    <ClCompile Include="Horion\Scripting\LocalPlayerFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\EntityFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\GameFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\GlobalFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\LocalPlayerFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\Vector3Functions.cpp" />
+    <ClCompile Include="Horion\Scripting\ScriptInstance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Config\ConfigManager.h" />
@@ -6154,10 +6155,6 @@
     <ClInclude Include="Utils\ChakraHelper.h" />
     <ClInclude Include="Utils\DllHelper.h" />
     <ClInclude Include="Horion\Scripting\ScriptManager.h" />
-    <ClInclude Include="Horion\Scripting\GlobalFunctions.h" />
-    <ClInclude Include="Horion\Scripting\GameFunctions.h" />
-    <ClInclude Include="Horion\Scripting\EntityFunctions.h" />
-    <ClInclude Include="Horion\Scripting\Vector3Functions.h" />
     <ClInclude Include="Horion\Command\Commands\*.h" />
     <ClInclude Include="Horion\Command\Commands\*.h" />
     <ClInclude Include="Horion\Command\Commands\*.h" />
@@ -6263,7 +6260,12 @@
     <ClInclude Include="Horion\Module\Modules\*.h" />
     <ClInclude Include="Horion\Module\Modules\*.h" />
     <ClInclude Include="Horion\Module\Modules\*.h" />
-    <ClInclude Include="Horion\Scripting\LocalPlayerFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\EntityFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\GameFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\GlobalFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\LocalPlayerFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\Vector3Functions.h" />
+    <ClInclude Include="Horion\Scripting\ScriptInstance.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Horion.rc" />

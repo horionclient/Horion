@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../Memory/GameData.h"
-#include "../../SDK/CEntity.h"
-#include "ScriptManager.h"
+#include "../../../Memory/GameData.h"
+#include "../../../SDK/CEntity.h"
+#include "../ScriptManager.h"
 
 class EntityFunctions {
 public:
