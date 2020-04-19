@@ -28,6 +28,11 @@ struct TextForPrint {
 	char text[100];
 };
 
+struct TextForPrintBig {
+	char time[20];
+	char text[2900];
+};
+
 class Logger {
 
 public:
@@ -35,6 +40,7 @@ public:
 	static void WriteLogFileF(volatile char* fmt, ...);
 	static void WriteBigLogFileF(size_t maxSize, const char* fmt, ...);
 	static std::vector<TextForPrint>* GetTextToPrint();
+	static std::vector<std::shared_ptr<TextForPrintBig>>* GetTextToSend();
 	static CRITICAL_SECTION* GetTextToPrintSection();
 	//static std::vector<TextForPrint*> stringPrintVector;
 	static void Disable();
