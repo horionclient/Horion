@@ -3,7 +3,9 @@
 #include "../include/chakra/ChakraCore.h"
 #include <string>
 
+#ifndef DECL_API
 #define DECL_API(f) decltype(f)* f##_ = _dll[#f]
+#endif
 
 class ChakraApi {
 	DllHelper _dll{"Chakra.dll"};
@@ -73,6 +75,18 @@ public:
 	JsValueRef toNumber(double doubleVal) {
 		JsValueRef ref = JS_INVALID_REFERENCE;
 		this->JsDoubleToNumber_(doubleVal, &ref);
+		return ref;
+	}
+
+	JsValueRef trueValue() {
+		JsValueRef ref = JS_INVALID_REFERENCE;
+		this->JsGetTrueValue_(&ref);
+		return ref;
+	}
+
+	JsValueRef falseValue() {
+		JsValueRef ref = JS_INVALID_REFERENCE;
+		this->JsGetFalseValue_(&ref);
 		return ref;
 	}
 

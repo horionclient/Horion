@@ -1,5 +1,14 @@
 #include "EntityFunctions.h"
 
+// this fixes intellisense somehow
+#ifndef ENTITY_INVALID
+#define chok chakra
+
+#define ENTITY_INVALID                                                                                                             \
+	chok.throwTypeException(L"Entity is invalid! Check if your entity is still valid with entity.isValid()"); \
+	return JS_INVALID_REFERENCE;
+#endif
+
 JsValueRef EntityFunctions::prototype;
 
 JsValueRef CALLBACK EntityFunctions::isValid(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
@@ -13,18 +22,16 @@ JsValueRef CALLBACK EntityFunctions::isValid(JsValueRef callee, bool isConstruct
 JsValueRef CALLBACK EntityFunctions::getPosition(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
 	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
 	if (ent == nullptr) {
-		chakra.throwTypeException(L"Entity is invalid! Check if your entity is still valid with entity.isValid()");
-		return JS_INVALID_REFERENCE;
+		ENTITY_INVALID;
 	}
 	
-	return scriptMgr.prepareVector3(ent->aabb.lower);
+	return scriptMgr.prepareVector3(*ent->getPos());
 }
 
 JsValueRef CALLBACK EntityFunctions::getVelocity(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
 	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
 	if (ent == nullptr) {
-		chakra.throwTypeException(L"Entity is invalid! Check if your entity is still valid with entity.isValid()");
-		return JS_INVALID_REFERENCE;
+		ENTITY_INVALID;
 	}
 
 	return scriptMgr.prepareVector3(ent->velocity);
@@ -33,8 +40,7 @@ JsValueRef CALLBACK EntityFunctions::getVelocity(JsValueRef callee, bool isConst
 JsValueRef CALLBACK EntityFunctions::isOnGround(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
 	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
 	if (ent == nullptr) {
-		chakra.throwTypeException(L"Entity is invalid! Check if your entity is still valid with entity.isValid()");
-		return JS_INVALID_REFERENCE;
+		ENTITY_INVALID;
 	}
 
 	return chakra.toBoolean(ent->onGround);
@@ -43,9 +49,50 @@ JsValueRef CALLBACK EntityFunctions::isOnGround(JsValueRef callee, bool isConstr
 JsValueRef CALLBACK EntityFunctions::getSize(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
 	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
 	if (ent == nullptr) {
-		chakra.throwTypeException(L"Entity is invalid! Check if your entity is still valid with entity.isValid()");
-		return JS_INVALID_REFERENCE;
+		ENTITY_INVALID;
 	}
 
 	return scriptMgr.prepareVector3(vec3_t(ent->width, ent->height, ent->width));
+}
+
+JsValueRef CALLBACK EntityFunctions::toString(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
+	if (ent == nullptr) {
+		wchar_t* name = L"Entity(invalid)";
+		JsValueRef ref;
+		chakra.JsPointerToString_(name, wcslen(name), &ref);
+		return ref;
+	}
+
+	wchar_t* name = L"Entity(isValid=true)";
+	JsValueRef ref;
+	chakra.JsPointerToString_(name, wcslen(name), &ref);
+	return ref;
+}
+
+JsValueRef CALLBACK EntityFunctions::getViewAngles(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
+	if (ent == nullptr) {
+		ENTITY_INVALID;
+	}
+
+	return scriptMgr.prepareVector3(vec3_t(ent->viewAngles, 0));
+}
+
+JsValueRef CALLBACK EntityFunctions::getPitch(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
+	if (ent == nullptr) {
+		ENTITY_INVALID;
+	}
+
+	return chakra.toNumber(ent->pitch);
+}
+
+JsValueRef CALLBACK EntityFunctions::getYaw(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
+	if (ent == nullptr) {
+		ENTITY_INVALID;
+	}
+
+	return chakra.toNumber(ent->yaw);
 }

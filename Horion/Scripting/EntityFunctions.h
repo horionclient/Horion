@@ -5,7 +5,7 @@
 #include "ScriptManager.h"
 
 class EntityFunctions {
-private:
+public:
 	static C_Entity* getEntityFromValue(JsValueRef value) {
 		JsValueType type;
 		chakra.JsGetValueType_(value, &type);
@@ -36,7 +36,6 @@ private:
 		return foundEntity;
 	}
 
-public:
 	static JsValueRef prototype;
 
 	DECL_FUN(isValid);
@@ -44,4 +43,8 @@ public:
 	DECL_FUN(getVelocity);
 	DECL_FUN(isOnGround);
 	DECL_FUN(getSize);
+	DECL_FUN(toString);
+	DECL_FUN(getViewAngles);
+	DECL_FUN(getPitch);
+	DECL_FUN(getYaw);
 };

@@ -84,8 +84,15 @@ struct vec3_t {
 	};
 
 	vec3_t() { x = y = z = 0; }
+	vec3_t(int a, int b, int c) : x((float)a), y((float)b), z((float)c) {}
+	vec3_t(double a, double b, double c) : x((float)a), y((float)b), z((float)c) {}
 	vec3_t(float a, float b, float c) : x(a), y(b), z(c) {}
 	vec3_t(float a, float b) : x(a), y(b), z(0) {}
+	vec3_t(const vec2_t &copy, float zP) {
+		x = copy.x;
+		y = copy.y;
+		z = zP;
+	}
 	vec3_t(const vec3_t &copy) {
 		x = copy.x;
 		y = copy.y;

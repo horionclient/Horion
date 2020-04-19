@@ -45,10 +45,12 @@ extern ScriptManager scriptMgr;
 #include "EntityFunctions.h"
 #include "GlobalFunctions.h"
 #include "Vector3Functions.h"
+#include "LocalPlayerFunctions.h"
 
 class ScriptManager {
 private:
-	void prepareEntityFunctions(JsValueRef global);
+	void prepareEntityPrototype(JsValueRef proto);
+	void prepareLocalPlayerPrototype(JsValueRef proto);
 	JsValueRef prepareEntity(__int64 runtimeId);
 	void prepareGlobals(JsValueRef global);
 	void prepareVector3Functions(JsValueRef global);
