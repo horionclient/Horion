@@ -1,5 +1,7 @@
 #include "ScriptManager.h"
 
+#include <filesystem>
+
 ChakraApi chakra;
 ScriptManager scriptMgr;
 
@@ -145,7 +147,7 @@ std::wstring ScriptManager::runScript(std::wstring script) {
 	if (err != JsNoError) {
 		logF("Script run failed: %X", err);
 
-		returnString = L"Error in script! " + std::to_wstring(err) + L", you can find a stack trace in the log";
+		returnString = L"Error! " + std::to_wstring(err) + L", you can find a stack trace in the console";
 
 		bool hasException;
 		chakra.JsHasException_(&hasException);
@@ -168,4 +170,27 @@ std::wstring ScriptManager::runScript(std::wstring script) {
 	chakra.JsDisposeRuntime_(runtime);
 
 	return returnString;
+}
+
+void ScriptManager::importScriptFolder(std::string path) {
+	//logF("Importing script from path: %s", path.c_str());
+	for (const auto& entry : std::filesystem::directory_iterator(path)) {
+		if (entry.is_regular_file()) {
+			wchar_t fname[100];
+			wchar_t ext[7];
+			auto err = _wsplitpath_s(entry.path().c_str(), 0, 0, 0, 0, fname, 100, ext, 7);
+			if (err != 0)
+				continue;
+			std::wstring fileName = std::wstring(fname) + ext;
+			if (fileName == L"start.js") {
+				
+				std::wstring contents = Utils::wreadFileContents(entry.path());
+				
+				auto ret = this->runScript(contents);
+				logF("Script returned: %S", ret.c_str());
+				return;
+			}
+		}
+	}
+	logF("Could not find start script! Create a file called start.js in your folder.");
 }

@@ -76,7 +76,7 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 		Sleep(2);
 	}
 	logF("Stopping Threads...");
-	Sleep(150);  // Give the threads a bit of time to exit
+	Sleep(200);  // Give the threads a bit of time to exit
 
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1);  // Uninject
 }
@@ -126,7 +126,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	bool loggedIn = false;
 
 	while (isRunning) {
-		Sleep(5);
+		Sleep(2);
 		LARGE_INTEGER endTime;
 		QueryPerformanceCounter(&endTime);
 		bool isConnected = horionToInjector->isPresent && injectorToHorion->isPresent && horionToInjector->protocolVersion >= injectorToHorion->protocolVersion;
@@ -231,7 +231,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 					break;
 				}
 				case CMD_LOG: {
-					// discard for now
+					
 					break;
 				}
 				default:
@@ -245,15 +245,15 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 			{
 				auto* vecLock = Logger::GetTextToPrintSection();
 
-				if (loggedIn && vecLock != nullptr && TryEnterCriticalSection(vecLock)) {
+				if (loggedIn && g_Data.isPacketToInjectorQueueEmpty() && vecLock != nullptr && TryEnterCriticalSection(vecLock)) {
 					auto* stringPrintVector = Logger::GetTextToSend();
 #if defined(_DEBUG) or defined(_BETA)
 					if (stringPrintVector->size() > 0 && g_Data.isPacketToInjectorQueueEmpty()) {
 						auto str = *stringPrintVector->begin();
 						stringPrintVector->erase(stringPrintVector->begin());
-
+						
 						auto wstr = Utils::stringToWstring(str->text);
-
+						
 						wchar_t* ident = L"log ";
 						size_t identLength = wcslen(ident);
 						size_t textLength = wcslen(wstr.c_str()) + identLength;
@@ -261,11 +261,11 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 						HorionDataPacket packet;
 						packet.cmd = CMD_LOG;
 						packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[(textLength + 1) * sizeof(wchar_t)]));
-						int leng = (textLength + 1) * sizeof(wchar_t);
+						size_t leng = (textLength + 1) * sizeof(wchar_t);
 						wcscpy_s((wchar_t*)packet.data.get(), textLength, ident);
 						wcscpy_s((wchar_t*)(packet.data.get() + identLength * sizeof(wchar_t)), textLength - identLength + 1, wstr.c_str());
 						packet.dataArraySize = (int)wcslen((wchar_t*)packet.data.get()) * sizeof(wchar_t);
-
+						
 						g_Data.sendPacketToInjector(packet);
 					}
 #else
@@ -301,7 +301,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	horionToInjector->isPresent = false;
 	memset(magicValues, 0, sizeof(magicValues));
 	memset(magicArray, 0, sizeof(magicValues) + sizeof(uintptr_t) * 2);
-	Sleep(100);
+	Sleep(150);
 	delete *horionToInjectorPtr;
 	delete *injectorToHorionPtr;
 	delete[] magicArray;

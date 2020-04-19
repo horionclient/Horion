@@ -31,6 +31,7 @@
 #include "Commands/SetprefixCommand.h"
 #include "Commands/NbtCommand.h"
 #include "Commands/ExecuteCommand.h"
+#include "Commands/ScriptCommand.h"
 
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"

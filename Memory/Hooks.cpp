@@ -371,7 +371,37 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 #if defined(_BETA) or defined(_DEBUG)
 			// Draw Custom Geo Button
 			if (g_Data.allowWIPFeatures()) {
-				if (ImGui.Button("Custom Geometry", vec2_t(wid.x * 0.765f, wid.y * 0.92f))) {
+				if (ImGui.Button("Load Script Folder", vec2_t(wid.x * (0.765f - 0.5f), wid.y * 0.92f), true)) {
+					HorionDataPacket packet;
+					packet.cmd = CMD_FOLDERCHOOSER;
+					packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[300]));
+					memset(packet.data.get(), 0, 300);
+					strcpy_s((char*)packet.data.get(), 200, "{\"title\": \"Select a Script Folder\", \"filter\":\".js\"}");
+					packet.dataArraySize = (int)strlen((char*)packet.data.get());
+					packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
+						if (pk->params[0] != 1) {  // Dialog Canceled, reset geo
+							auto box = g_Data.addInfoBox("Scripting", "Invalid Folder");
+							box->closeTimer = 1;
+							return;
+						}
+
+						wchar_t* jsonData = reinterpret_cast<wchar_t*>(pk->data.get());
+						std::wstring jsonDataStr(jsonData);
+
+						json parsed = json::parse(jsonDataStr);
+						if (parsed["path"].is_string()) {
+							auto box = g_Data.addInfoBox("Importing Script", "Please wait...");
+							std::thread gamer([parsed, box]() {
+								scriptMgr.importScriptFolder(parsed["path"].get<std::string>());
+								box->fadeTarget = 0;
+							});
+							gamer.detach();
+						}
+					});
+
+					g_Data.sendPacketToInjector(packet);
+				}
+				if (ImGui.Button("Custom Geometry", vec2_t(wid.x * 0.765f, wid.y * 0.92f), true)) {
 					HorionDataPacket packet;
 					packet.cmd = CMD_FILECHOOSER;
 					packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[300]));

@@ -431,6 +431,20 @@ public:
 		return "";
 	}
 
+	static std::wstring wreadFileContents(std::wstring filePath) {
+		std::wifstream fileStr(filePath, std::ios::in | std::ios::binary);
+		if (fileStr) {
+			std::wstring contents;
+			fileStr.seekg(0, std::ios::end);
+			contents.resize(fileStr.tellg());
+			fileStr.seekg(0, std::ios::beg);
+			fileStr.read(&contents[0], contents.size());
+			fileStr.close();
+			return contents;
+		}
+		return L"";
+	}
+
 	static uintptr_t FindSignatureModule(const char* szModule, const char* szSignature) {
 		const char* pattern = szSignature;
 		uintptr_t firstMatch = 0;
@@ -509,6 +523,14 @@ public:
 	static std::string sanitize(std::string text);
 
 	static std::wstring stringToWstring(std::string txt);
+
+	static bool endsWith(std::wstring const& fullString, std::wstring const& ending) {
+		if (fullString.length() >= ending.length()) {
+			return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
+		} else {
+			return false;
+		}
+	}
 
 	static void ApplyRainbow(float* rcolors, const float modifier = 0.003f) {
 		if (rcolors[3] < 1) {

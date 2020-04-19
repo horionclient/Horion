@@ -61,5 +61,6 @@ public:
 	JsValueRef prepareVector3(vec3_t vec);
 	JsValueRef getLocalPlayer();
 	std::wstring runScript(std::wstring);
+	void importScriptFolder(std::string path);
 };
 
