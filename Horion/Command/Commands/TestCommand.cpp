@@ -27,6 +27,8 @@ void showAimedBlockInfo() {
 }
 
 bool TestCommand::execute(std::vector<std::string>* args) {
-	
+	g_Data.getLocalPlayer()->openContainer(g_Data.getClientInstance()->getPointerStruct()->block);
+		//C_Block* b = g_Data.getLocalPlayer()->region->getBlock(g_Data.getClientInstance()->getPointerStruct()->block);
+	//logF(" block : %llX", b);
 	return true;
 }

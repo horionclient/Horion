@@ -44,7 +44,6 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new CommandBlockExploitCommand());
 	commandList.push_back(new NameSpoofCommand());
 	commandList.push_back(new NbtCommand());
-	commandList.push_back(new ExecuteCommand());
 #endif
 
 #ifdef _DEBUG

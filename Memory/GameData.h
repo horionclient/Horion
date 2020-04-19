@@ -23,9 +23,7 @@ enum DATAPACKET_CMD : int {
 	CMD_PONG,
 	CMD_OPENBROWSER,
 	CMD_FILECHOOSER,
-	CMD_RESPONSE,
-	CMD_FOLDERCHOOSER, // sets permissions for a whole folder and sends the path over
-	CMD_LOG
+	CMD_RESPONSE
 };
 
 struct HorionDataPacket {
@@ -268,7 +266,7 @@ public:
 
 	inline LARGE_INTEGER getLastUpdateTime() { return lastUpdate; };
 
-	void forEachEntity(std::function<void(C_Entity*, bool)>);
+	void forEachEntity(void (*callback)(C_Entity*, bool));
 
 	int getFPS() { return fps; };
 	int getLeftCPS() { return cpsLeft; };
