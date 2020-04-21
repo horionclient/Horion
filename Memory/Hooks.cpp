@@ -90,6 +90,82 @@ void Hooks::Init() {
 		}
 	}
 
+	// d3d11
+	{
+		/*const auto hModDXGI = GetModuleHandle(L"DXGI.dll");
+		const auto hModD3D11 = GetModuleHandle(L"D3D11.dll");
+
+		const auto hD3D11CreateDeviceAndSwapChain = static_cast<LPVOID>(GetProcAddress(hModD3D11, "D3D11CreateDeviceAndSwapChain"));
+
+		const D3D_FEATURE_LEVEL featureLevelArray[3] = {
+			D3D_FEATURE_LEVEL_10_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_11_0
+		};
+
+
+		DXGI_SWAP_CHAIN_DESC sd;
+		{
+			ZeroMemory(&sd, sizeof(sd));
+			sd.BufferCount = 2;
+			sd.BufferDesc.Width = 0;
+			sd.BufferDesc.Height = 0;
+			sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			sd.BufferDesc.RefreshRate.Numerator = 60;
+			sd.BufferDesc.RefreshRate.Denominator = 1;
+			sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+			sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+			sd.OutputWindow = (HWND)0x780f84; // insert window found from process hacker here
+			sd.SampleDesc.Count = 1;
+			sd.SampleDesc.Quality = 0;
+			sd.Windowed = TRUE;
+			sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+		}
+	
+        IDXGISwapChain* pSwapChain;
+
+		const auto hr11 = static_cast<HRESULT(WINAPI *)(
+        IDXGIAdapter*,
+        D3D_DRIVER_TYPE,
+        HMODULE,
+        UINT,
+        const D3D_FEATURE_LEVEL*,
+        UINT,
+        UINT,
+        const DXGI_SWAP_CHAIN_DESC*,
+        IDXGISwapChain**,
+        ID3D11Device**,
+        D3D_FEATURE_LEVEL*,
+        ID3D11DeviceContext**)>(hD3D11CreateDeviceAndSwapChain)(
+			nullptr,
+			D3D_DRIVER_TYPE_HARDWARE,
+			nullptr,
+			0,
+			featureLevelArray,
+			1,
+			D3D11_SDK_VERSION,
+			&sd,
+			&pSwapChain,
+			0,
+			0,
+			0);
+
+		if (pSwapChain) {
+			logF("swap vtable: %llX", *pSwapChain);
+			pSwapChain->Release();
+		}*/
+		
+		uintptr_t sigOffset = FindSignature("48 8B 0D ?? ?? ?? ?? 48 8B 91 ?? ?? ?? ?? E8");
+		if (sigOffset != 0x0) {
+			int startOffsetOffset = *reinterpret_cast<int*>((sigOffset + 3));
+			uintptr_t startOffset = sigOffset + startOffsetOffset + /*length of instruction*/ 7;  
+			size_t secondOffset = (size_t) *reinterpret_cast<int*>((sigOffset + 10));
+			auto swapChain = g_Data.getSlimMem()->ReadPtr<__int64>(startOffset, {0, secondOffset, 0x170});
+			auto vtable = *reinterpret_cast<uintptr_t**>(swapChain);
+
+			g_Hooks.swapchain__presentHook = std::make_unique<FuncHook>(vtable[8], Hooks::swapChain__present);
+		}
+
+	}
+
 	// Signatures
 	{
 		void* surv_tick = reinterpret_cast<void*>(FindSignature("48 8B C4 55 57 41 56 48 8D 68 A1 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 8B F9 8B 41"));
@@ -329,7 +405,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	static auto hudModule = moduleMgr->getModule<HudModule>();
 	static auto clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 
-	ImGui.startFrame();
+	HImGui.startFrame();
 
 	g_Data.frameCount++;
 
@@ -378,7 +454,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 #if defined(_BETA) or defined(_DEBUG)
 			// Draw Custom Geo Button
 			if (g_Data.allowWIPFeatures()) {
-				if (ImGui.Button("Load Script Folder", vec2_t(wid.x * (0.765f - 0.5f), wid.y * 0.92f), true)) {
+				if (HImGui.Button("Load Script Folder", vec2_t(wid.x * (0.765f - 0.5f), wid.y * 0.92f), true)) {
 					HorionDataPacket packet;
 					packet.cmd = CMD_FOLDERCHOOSER;
 					packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[300]));
@@ -408,7 +484,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 					g_Data.sendPacketToInjector(packet);
 				}
-				if (ImGui.Button("Custom Geometry", vec2_t(wid.x * 0.765f, wid.y * 0.92f), true)) {
+				if (HImGui.Button("Custom Geometry", vec2_t(wid.x * 0.765f, wid.y * 0.92f), true)) {
 					HorionDataPacket packet;
 					packet.cmd = CMD_FILECHOOSER;
 					packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[300]));
@@ -438,7 +514,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 					g_Data.sendPacketToInjector(packet);
 				}
-				if (ImGui.Button("Custom Texture", vec2_t(wid.x * 0.5f, wid.y * 0.92f), true)) {
+				if (HImGui.Button("Custom Texture", vec2_t(wid.x * 0.5f, wid.y * 0.92f), true)) {
 					HorionDataPacket packet;
 					packet.cmd = CMD_FILECHOOSER;
 					packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[500]));
@@ -691,7 +767,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			zoomModule->zooming = false;
 	}
 
-	ImGui.endFrame();
+	HImGui.endFrame();
 	DrawUtils::flush();
 
 	// Draw Info / Alert Boxes
@@ -1528,7 +1604,7 @@ __int64 Hooks::prepFeaturedServers(__int64 a1) {
 		return ret;
 
 	prepCoolBean();
-	
+
 	return ret;
 }
 
@@ -1538,6 +1614,49 @@ __int64 Hooks::prepFeaturedServersFirstTime(__int64 a1, __int64 a2) {
 	prepCoolBean();
 
 	auto ret = func(a1, a2);
+
+	return ret;
+}
+
+HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT flags) {
+	static auto func = g_Hooks.swapchain__presentHook->GetFastcall<HRESULT, IDXGISwapChain*, UINT, UINT>();
+	
+#ifdef _DEBUG
+	static bool init = false;
+	if (!init) {
+		DXGI_SWAP_CHAIN_DESC desc;
+		chain->GetDesc(&desc);
+
+		ID3D11Device* device;
+		chain->GetDevice(__uuidof(ID3D11Device), (void**)&device);
+
+		ID3D11DeviceContext* context;
+		device->GetImmediateContext(&context);
+
+		ImGui::CreateContext();
+		ImGui_ImplWin32_Init(desc.OutputWindow);
+		ImGui_ImplDX11_Init(device, context);
+
+		init = true;
+	}
+
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	ImGui::Begin("bean");
+
+	ImGui::Text("Hello");
+	ImGui::Button("World!");
+
+	ImGui::End();
+
+	ImGui::EndFrame();
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+#endif
+	auto ret = func(chain, syncInterval, flags);
+
 
 	return ret;
 }

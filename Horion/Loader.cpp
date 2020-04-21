@@ -58,7 +58,7 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 				bool* oldKey = reinterpret_cast<bool*>(clickMap + key);
 				if (newKey != *oldKey) {
 					ClickGui::onMouseClickUpdate((int)key, newKey);
-					ImGui.onMouseClickUpdate((int)key, newKey);
+					HImGui.onMouseClickUpdate((int)key, newKey);
 					if (newKey == true) {
 						if ((int)key == 0)
 							g_Data.leftclickCount++;

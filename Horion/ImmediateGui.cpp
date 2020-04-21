@@ -1,6 +1,6 @@
 #include "ImmediateGui.h"
 
-ImmediateGui ImGui;
+ImmediateGui HImGui;
 
 ComponentInfo::ComponentInfo(int id) : id(id) {
 }

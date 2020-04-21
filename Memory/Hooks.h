@@ -28,6 +28,11 @@
 #include <intrin.h>
 #include <thread>
 #include <dxgi.h>
+#include <d3d11.h>
+
+#include "../include/imgui/imgui.h"
+#include "../include/imgui/examples/imgui_impl_dx11.h"
+#include "../include/imgui/examples/imgui_impl_win32.h"
 
 class VMTHook;
 class FuncHook;
@@ -107,6 +112,7 @@ private:
 	static GamerTextHolder* toStyledString(__int64 strIn, GamerTextHolder* strOut);
 	static __int64 prepFeaturedServers(__int64 a1);
 	static __int64 prepFeaturedServersFirstTime(__int64 a1, __int64 a2);
+	static HRESULT swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT flags);
 
 	std::unique_ptr<FuncHook> GameMode_tickHook;
 	std::unique_ptr<FuncHook> SurvivalMode_tickHook;
@@ -150,6 +156,7 @@ private:
 	std::unique_ptr<FuncHook> toStyledStringHook;
 	std::unique_ptr<FuncHook> prepFeaturedServersHook;
 	std::unique_ptr<FuncHook> prepFeaturedServersFirstTimeHook;
+	std::unique_ptr<FuncHook> swapchain__presentHook;
 };
 
 extern Hooks g_Hooks;

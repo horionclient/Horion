@@ -71,4 +71,4 @@ public:
 	bool Button(const char* label, vec2_t pos, bool centered = false);
 };
 
-extern ImmediateGui ImGui;
+extern ImmediateGui HImGui;
