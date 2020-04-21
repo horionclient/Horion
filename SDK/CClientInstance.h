@@ -82,6 +82,10 @@ public:
 	const bool canUseKeybinds() {
 		return canUseKeys;
 	};
+
+	__int64 getServerEntries() {
+		return Utils::CallVFunc<30, __int64>(this);
+	}
 };
 
 class C_GuiData {

@@ -177,8 +177,15 @@ void Hooks::Init() {
 		void* addAction = reinterpret_cast<void*>(FindSignature("40 55 56 57 41 56 41 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 8B EA 4C 8B F1 4C 8B C2 48 8B 51 ?? 48 8B 49 ?? E8"));
 		g_Hooks.InventoryTransactionManager__addActionHook = std::make_unique<FuncHook>(addAction, Hooks::InventoryTransactionManager__addAction);
 #endif
-	
-}
+		
+		void* prepFeaturedServers = reinterpret_cast<void*>(FindSignature("48 8B C4 55 57 41 56 48 8D ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 58 ?? 48 89 70 ?? 0F 29 70 ?? 48 8B 05"));
+		g_Hooks.prepFeaturedServersHook = std::make_unique<FuncHook>(prepFeaturedServers, Hooks::prepFeaturedServers);
+		
+		void* prepFeaturedServersFirstTime = reinterpret_cast<void*>(FindSignature("48 8B C4 57 41 54 41 55 41 56 41 57 48 83 EC ?? 48 C7 40 ?? FE FF FF FF 48 89 58 ?? 48 89 68 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B FA"));
+		g_Hooks.prepFeaturedServersFirstTimeHook = std::make_unique<FuncHook>(prepFeaturedServersFirstTime, Hooks::prepFeaturedServersFirstTime);
+		
+	}
+
 // clang-format on
 }
 
@@ -1176,8 +1183,8 @@ __int64 Hooks::GetGamma(__int64 a1) {
 		char filler[0x20];        // 0x008
 		TextHolder internalName;  // 0x0028
 		TextHolder friendlyName;  // 0x0048 // only exists when the value is present in the options
-		
-		char filler2[0x88]; // 0x068
+
+		char filler2[0x88];  // 0x068
 		union {
 			float _float;
 			bool _bool;
@@ -1200,7 +1207,7 @@ __int64 Hooks::GetGamma(__int64 a1) {
 				gfx_gamma = ptr;
 			}
 		}
-	} 
+	}
 	if (gfx_gamma)
 		fullBrightModule->gammaPtr = &gfx_gamma->value._float;
 
@@ -1426,4 +1433,111 @@ GamerTextHolder* Hooks::toStyledString(__int64 strIn, GamerTextHolder* strOut) {
 	}
 
 	return func(strIn, strOut);
+}
+
+void prepCoolBean() {
+	if (g_Data.getClientInstance() && g_Data.getClientInstance()->minecraftGame->getServerEntries() && *reinterpret_cast<__int64*>(g_Data.getClientInstance()->minecraftGame->getServerEntries() + 0x50)) {
+		auto serverEntries = g_Data.getClientInstance()->minecraftGame->getServerEntries() + 0x48;
+
+		struct ThirdPartyServer {
+			TextHolder serverName;
+			TextHolder uuid;
+			TextHolder masterPlayerAccount;
+			TextHolder serverName2;
+			TextHolder lobbyDescription;
+			TextHolder domain;            // contains the last two parts of the domain .hivebedrock.network .mineplex.com
+			TextHolder pathToServerIcon;  // C:\Users\user\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalCache\minecraftpe\ContentCache\ThirdPartyServer\\<file hash>.jpg
+			TextHolder serverAddress;
+			int coolBoye;
+
+			ThirdPartyServer() {
+				memset(this, 0, sizeof(ThirdPartyServer));
+			}
+		};
+
+		struct BeansEntry {
+			BeansEntry* nextEntry;
+			BeansEntry* prevEntry;
+			TextHolder masterPlayer;
+			float unk;
+			char filler[0x3c];
+			TextHolder masterPlayer2;
+			TextHolder serverName;
+			char filler2[8];
+			std::shared_ptr<ThirdPartyServer>* start;  // array
+			std::shared_ptr<ThirdPartyServer>* end;    // end of array
+		};
+
+		auto listEnd = *reinterpret_cast<BeansEntry**>(serverEntries);
+
+		auto current = listEnd;
+		int count = 0;
+		while (listEnd != current->nextEntry) {
+			current = current->nextEntry;
+			count++;
+		}
+		if (count > 5)  // we already added a server
+			goto end;
+
+		// make new one
+		BeansEntry* epic = new BeansEntry();
+		epic->nextEntry = listEnd;
+		epic->prevEntry = current;
+		epic->masterPlayer.setText("");
+		epic->unk = current->unk;
+		memcpy(epic->filler, current->filler, sizeof(BeansEntry::filler));
+		epic->masterPlayer2.setText("");
+		epic->serverName.setText("Epic");
+		memcpy(epic->filler2, current->filler2, sizeof(BeansEntry::filler2));
+
+		auto cT = current->start[0].get();
+
+		std::shared_ptr<ThirdPartyServer>* start = new std::shared_ptr<ThirdPartyServer>[1];
+
+		{
+			ThirdPartyServer* t = new ThirdPartyServer();
+
+			t->coolBoye = cT->coolBoye;
+			t->uuid.setText("");
+			t->masterPlayerAccount = cT->masterPlayerAccount;
+			t->lobbyDescription = cT->lobbyDescription;
+			t->pathToServerIcon.setText("");
+			t->serverName.setText("Horion Server");
+			t->serverName2.setText("Horion Server");  // This is the one actually displayed
+			t->domain.setText(".horionbeta.club");
+			t->serverAddress.setText("mc.horionbeta.club");
+			start[0] = std::shared_ptr<ThirdPartyServer>(t);
+		}
+
+		epic->start = start;
+		epic->end = &start[1];
+
+		current->nextEntry = epic;
+
+		// increase count
+		*reinterpret_cast<__int64*>(g_Data.getClientInstance()->minecraftGame->getServerEntries() + 0x50) += 1;
+	end:;
+	}
+}
+
+__int64 Hooks::prepFeaturedServers(__int64 a1) {
+	static auto func = g_Hooks.prepFeaturedServersHook->GetFastcall<__int64, __int64>();
+	auto ret = func(a1);
+
+	if (g_Data.getClientInstance() == nullptr)
+		return ret;
+
+	prepCoolBean();
+	
+	return ret;
+}
+
+__int64 Hooks::prepFeaturedServersFirstTime(__int64 a1, __int64 a2) {
+	static auto func = g_Hooks.prepFeaturedServersFirstTimeHook->GetFastcall<__int64, __int64, __int64>();
+
+	prepCoolBean();
+
+	auto ret = func(a1, a2);
+
+	return ret;
 }

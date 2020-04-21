@@ -132,19 +132,30 @@ public:
 	}
 
 	void setText(std::string str) {
+		this->deleteText();
 		memset(this, 0, sizeof(TextHolder));
 		textLength = str.size();
 		alignedTextLength = textLength | 0xF;
-		if (str.size() < 16)
-			strcpy_s(inlineText, 16, str.c_str());
-		else {
+		if (str.size() < 16) {
+			memcpy(inlineText, str.c_str(), str.size());
+			if (str.size() < 15)
+				inlineText[str.size()] = 0;
+		} else {
 			size_t size = str.size();
-			char* ptr = reinterpret_cast<char*>(malloc(size + 1));
-			if (ptr != 0x0) {
-				strcpy_s(ptr, size + 1, str.c_str());
+			if (size + 1 >= 0x1000)
+				size += 8;
+
+			pText = reinterpret_cast<char*>(malloc(size + 1));
+			alignedTextLength = size;
+			if (size + 1 >= 0x1000) {
+				*reinterpret_cast<char**>(pText) = pText;
+				pText += 8;
 			}
 
-			pText = ptr;
+			if (pText != 0x0) {
+				memcpy(pText, str.c_str(), str.size());
+				pText[str.size()] = 0;
+			}
 		}
 	}
 

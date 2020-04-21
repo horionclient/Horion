@@ -105,6 +105,8 @@ private:
 	static bool ReturnTrue(__int64 _this);
 	static __int64 SkinRepository___loadSkinPack(__int64 _this, __int64 pack, __int64 a3);
 	static GamerTextHolder* toStyledString(__int64 strIn, GamerTextHolder* strOut);
+	static __int64 prepFeaturedServers(__int64 a1);
+	static __int64 prepFeaturedServersFirstTime(__int64 a1, __int64 a2);
 
 	std::unique_ptr<FuncHook> GameMode_tickHook;
 	std::unique_ptr<FuncHook> SurvivalMode_tickHook;
@@ -146,6 +148,8 @@ private:
 	std::unique_ptr<FuncHook> SkinRepository___checkSignatureFileInPack;
 	std::unique_ptr<FuncHook> SkinRepository___loadSkinPackHook;
 	std::unique_ptr<FuncHook> toStyledStringHook;
+	std::unique_ptr<FuncHook> prepFeaturedServersHook;
+	std::unique_ptr<FuncHook> prepFeaturedServersFirstTimeHook;
 };
 
 extern Hooks g_Hooks;
