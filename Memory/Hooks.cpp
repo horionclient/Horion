@@ -1620,7 +1620,7 @@ __int64 Hooks::prepFeaturedServersFirstTime(__int64 a1, __int64 a2) {
 
 HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT flags) {
 	static auto func = g_Hooks.swapchain__presentHook->GetFastcall<HRESULT, IDXGISwapChain*, UINT, UINT>();
-	
+
 #ifdef _DEBUG
 	static bool init = false;
 	if (!init) {
@@ -1642,9 +1642,24 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
+
+	ImGuiIO& io = ImGui::GetIO();
+	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
+	if (dat) {
+		io.DisplaySize = ImVec2(dat->windowSizeReal.x, dat->windowSizeReal.y);
+	}
+
 	ImGui::NewFrame();
 
+
 	ImGui::Begin("bean");
+
+	ImGui::Text("Hello");
+	ImGui::Button("World!");
+
+	ImGui::End();
+
+	ImGui::Begin("wat");
 
 	ImGui::Text("Hello");
 	ImGui::Button("World!");
@@ -1656,7 +1671,6 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 #endif
 	auto ret = func(chain, syncInterval, flags);
-
 
 	return ret;
 }

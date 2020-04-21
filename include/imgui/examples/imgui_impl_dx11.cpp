@@ -25,6 +25,7 @@
 //  2018-02-06: Misc: Removed call to ImGui::Shutdown() which is not available from 1.60 WIP, user needs to call CreateContext/DestroyContext themselves.
 //  2016-05-07: DirectX11: Disabling depth-write.
 
+#include "../../../Utils/Logger.h"
 #include "../imgui.h"
 #include "imgui_impl_dx11.h"
 
@@ -140,6 +141,8 @@ void ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data)
         return;
     if (ctx->Map(g_pIB, 0, D3D11_MAP_WRITE_DISCARD, 0, &idx_resource) != S_OK)
         return;
+
+
     ImDrawVert* vtx_dst = (ImDrawVert*)vtx_resource.pData;
     ImDrawIdx* idx_dst = (ImDrawIdx*)idx_resource.pData;
     for (int n = 0; n < draw_data->CmdListsCount; n++)
@@ -344,7 +347,7 @@ bool    ImGui_ImplDX11_CreateDeviceObjects()
         return false;
     if (g_pFontSampler)
         ImGui_ImplDX11_InvalidateDeviceObjects();
-
+	logF("ImGui_ImplDX11_CreateDeviceObjects");
     // By using D3DCompile() from <d3dcompiler.h> / d3dcompiler.lib, we introduce a dependency to a given version of d3dcompiler_XX.dll (see D3DCOMPILER_DLL_A)
     // If you would like to use this DX11 sample code but remove this dependency you can:
     //  1) compile once, save the compiled shader blobs into a file or source code and pass them to CreateVertexShader()/CreatePixelShader() [preferred solution]

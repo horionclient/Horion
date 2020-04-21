@@ -52,6 +52,9 @@
 //  2017-10-23: Inputs: Using Win32 ::SetCapture/::GetCapture() to retrieve mouse positions outside the client area when dragging.
 //  2016-11-12: Inputs: Only call Win32 ::SetCursor(NULL) when io.MouseDrawCursor is set.
 
+
+#include "../../../Utils/Logger.h"
+
 // Win32 Data
 static HWND                 g_hWnd = NULL;
 static INT64                g_Time = 0;
@@ -211,16 +214,17 @@ static void ImGui_ImplWin32_UpdateGamepads()
 #endif // #ifndef IMGUI_IMPL_WIN32_DISABLE_GAMEPAD
 }
 
-void    ImGui_ImplWin32_NewFrame()
+void ImGui_ImplWin32_NewFrame()
 {
     ImGuiIO& io = ImGui::GetIO();
     IM_ASSERT(io.Fonts->IsBuilt() && "Font atlas not built! It is generally built by the renderer back-end. Missing call to renderer _NewFrame() function? e.g. ImGui_ImplOpenGL3_NewFrame().");
 
     // Setup display size (every frame to accommodate for window resizing)
-    RECT rect;
+    /*RECT rect;
     ::GetClientRect(g_hWnd, &rect);
     io.DisplaySize = ImVec2((float)(rect.right - rect.left), (float)(rect.bottom - rect.top));
-
+	logF("Display: %f, %f", io.DisplaySize.x, io.DisplaySize.y);
+    */
     // Setup time step
     INT64 current_time;
     ::QueryPerformanceCounter((LARGE_INTEGER *)&current_time);
