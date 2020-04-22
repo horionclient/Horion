@@ -107,8 +107,8 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>$(ProjectDir)minhook;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>D:\ProgrammeX\Dxx\Lib\x64;$(ProjectDir)minhook;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\ProgrammeX\Dxx\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\lib\x64;$(ProjectDir)minhook;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
@@ -176,6 +176,7 @@
     <Link />
     <Link>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <AdditionalDependencies>D3DX11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -275,6 +276,10 @@
     <ClInclude Include="include\chakra\ChakraCore.h" />
     <ClInclude Include="include\chakra\ChakraCoreWindows.h" />
     <ClInclude Include="include\chakra\ChakraDebug.h" />
+    <ClInclude Include="include\d3dx11.h" />
+    <ClInclude Include="include\d3dx11async.h" />
+    <ClInclude Include="include\d3dx11core.h" />
+    <ClInclude Include="include\d3dx11effect.h" />
     <ClInclude Include="include\imgui\examples\imgui_impl_dx11.h" />
     <ClInclude Include="include\imgui\examples\imgui_impl_win32.h" />
     <ClInclude Include="include\imgui\imconfig.h" />

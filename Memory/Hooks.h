@@ -29,6 +29,9 @@
 #include <thread>
 #include <dxgi.h>
 #include <d3d11.h>
+#include <d3dcompiler.h>
+
+#include "../include/d3dx11async.h"
 
 #include "../include/imgui/imgui.h"
 #include "../include/imgui/examples/imgui_impl_dx11.h"

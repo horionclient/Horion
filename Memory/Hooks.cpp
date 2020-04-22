@@ -1603,7 +1603,8 @@ __int64 Hooks::prepFeaturedServers(__int64 a1) {
 	if (g_Data.getClientInstance() == nullptr)
 		return ret;
 
-	prepCoolBean();
+	if (g_Data.allowWIPFeatures())
+		prepCoolBean();
 
 	return ret;
 }
@@ -1611,7 +1612,8 @@ __int64 Hooks::prepFeaturedServers(__int64 a1) {
 __int64 Hooks::prepFeaturedServersFirstTime(__int64 a1, __int64 a2) {
 	static auto func = g_Hooks.prepFeaturedServersFirstTimeHook->GetFastcall<__int64, __int64, __int64>();
 
-	prepCoolBean();
+	if (g_Data.allowWIPFeatures())
+		prepCoolBean();
 
 	auto ret = func(a1, a2);
 
@@ -1622,24 +1624,167 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 	static auto func = g_Hooks.swapchain__presentHook->GetFastcall<HRESULT, IDXGISwapChain*, UINT, UINT>();
 
 #ifdef _DEBUG
+
+#ifndef _D3DVECTOR
+	typedef struct _D3DVECTOR3 {
+		float x;
+		float y;
+		float z;
+
+		_D3DVECTOR3(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {}
+		_D3DVECTOR3() {}
+	} D3DVECTOR3;
+
+	typedef struct _D3DVECTOR4 {
+		float x;
+		float y;
+		float z;
+		float w;
+
+		_D3DVECTOR4(float x1, float y1, float z1, float w1) : x(x1), y(y1), z(z1), w(w1) {}
+		_D3DVECTOR4() {}
+	} D3DVECTOR4;
+#endif
+	struct VertexType {
+		_D3DVECTOR3 position;
+		_D3DVECTOR4 color;
+	};
+
+
 	static bool init = false;
+	static ID3D11Device* device;
+	static ID3D11DeviceContext* context;
+	static ID3D11Buffer *vertexBuffer, *indexBuffer;
+	static ID3D11InputLayout* m_pInputLayout;
+	static ID3D11VertexShader* m_vertexShader;
+	static VertexType *vertices;
+
 	if (!init) {
 		DXGI_SWAP_CHAIN_DESC desc;
 		chain->GetDesc(&desc);
 
-		ID3D11Device* device;
 		chain->GetDevice(__uuidof(ID3D11Device), (void**)&device);
 
-		ID3D11DeviceContext* context;
 		device->GetImmediateContext(&context);
 
-		ImGui::CreateContext();
-		ImGui_ImplWin32_Init(desc.OutputWindow);
-		ImGui_ImplDX11_Init(device, context);
+		D3D11_BUFFER_DESC bufferDesc;
+
+		D3D11_INPUT_ELEMENT_DESC lineRectLayout[] =
+			{
+				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}
+			};
+
+		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		bufferDesc.ByteWidth = 50 * sizeof(0xC + 0x10);
+		bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		bufferDesc.MiscFlags = 0;
+
+		char* shader =
+			"struct VS_INPUT \
+		{														 \
+			float4 vPosition : POSITION;										\
+			 float4 color : COLOR;									\
+		}; \
+ \
+		struct VS_OUTPUT { \
+			float4 vPosition : SV_POSITION; \
+			float4 vColor : COLOR;	\
+		}; \
+		VS_OUTPUT VSMain(VS_INPUT Input) { \
+			VS_OUTPUT Output; \
+ \
+			Output.vPosition = Input.vPosition;\
+			Output.vColor = Input.color; \
+			return Output; \
+		} \
+		";
+
+		UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
+		ID3DBlob* shaderBlob = nullptr;
+		ID3DBlob* errorBlob = nullptr;
+		auto res = D3DCompile(shader, strlen(shader), 0, 0, 0, "VSMain", "vs_4_0_level_9_1", flags, 0, &shaderBlob, &errorBlob);
+		logF("result: %llX", res);
+		if (!FAILED(res)) {
+			// Create the vertex shader from the buffer.
+			res = device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &m_vertexShader);
+			logF("vresult: %llX", res);
+			if (!FAILED(res)) {
+				res = device->CreateInputLayout(lineRectLayout, 1, shaderBlob->GetBufferPointer(),
+												shaderBlob->GetBufferSize(), &m_pInputLayout);
+				logF("vresult3 : %llX", res);
+			}
+		}
+
+		{
+			unsigned long* indices = new unsigned long[5];
+			D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
+			D3D11_SUBRESOURCE_DATA vertexData, indexData;
+
+			//create the vertex array
+			vertices = new VertexType[3];
+
+			float left = 10 / (float)600, right = 500 / (float)60, top = 50 / (float)60, bottom = 500 / (float)60;
+
+			//load the vertex array with data
+			vertices[0].position = D3DVECTOR3(left, top, 0);
+			vertices[0].color = D3DVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+			vertices[1].position = D3DVECTOR3(right, top, 0);
+			vertices[1].color = D3DVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+			vertices[2].position = D3DVECTOR3(right, bottom, 0);
+			vertices[2].color = D3DVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+			//create the index array
+			indices = new unsigned long[3];
+			//load the index array with data
+			for (int i = 0; i < 3; i++)
+				indices[i] = i;
+
+			HRESULT result;
+
+			//set up the description of the dynamic vertex buffer
+			vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;  //enables recreation and movement of vertices
+			vertexBufferDesc.ByteWidth = sizeof(VertexType) * 3 ;
+			vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+			vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;  //couples with dynamic
+			vertexBufferDesc.MiscFlags = 0;
+			vertexBufferDesc.StructureByteStride = 0;
+			//give the subresource structure a pointer to the vertex data
+			vertexData.pSysMem = vertices;
+			vertexData.SysMemPitch = 0;
+			vertexData.SysMemSlicePitch = 0;
+
+			//now create the vertex buffer
+			result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
+			if (FAILED(result)) {
+				logF("CreateBuffer %llX", result);
+			}
+
+			//set up the description of the static index buffer
+			indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+			indexBufferDesc.ByteWidth = sizeof(unsigned long) * 3;
+			indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+			indexBufferDesc.CPUAccessFlags = 0;
+			indexBufferDesc.MiscFlags = 0;
+			indexBufferDesc.StructureByteStride = 0;
+			//give the subresource structure a pointer to the index data
+			indexData.pSysMem = indices;
+			indexData.SysMemPitch = 0;
+			indexData.SysMemSlicePitch = 0;
+
+			//create the index buffer
+			result = device->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
+			if (FAILED(result)) {
+				logF("CreateBuffer2 %llX", result);
+
+			}
+		}
 
 		init = true;
 	}
 
+	/*
+	
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 
@@ -1668,7 +1813,35 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 
 	ImGui::EndFrame();
 	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());*/
+
+	unsigned int stride = sizeof(VertexType);
+	unsigned int offset = 0;
+
+	//lock the vertex buffer so it can be written to
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	auto result = context->Map(vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result)) {
+		return false;
+	}
+
+	auto verticesPtr = (VertexType*)mappedResource.pData;
+
+	//copy the data into the vertex buffer
+	memcpy(verticesPtr, (void*)vertices, (sizeof(VertexType) * 3));
+
+	context->Unmap(vertexBuffer, 0);
+
+	//context->VSSetShader(m_vertexShader, 0, 0);
+	//context->PSSetShader(0, 0, 0);
+	context->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+	context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//context->IASetInputLayout(m_pInputLayout);
+
+	
+	
+	context->DrawIndexed(3, 0, 0);
 #endif
 	auto ret = func(chain, syncInterval, flags);
 
