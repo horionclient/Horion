@@ -1623,7 +1623,7 @@ __int64 Hooks::prepFeaturedServersFirstTime(__int64 a1, __int64 a2) {
 HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT flags) {
 	static auto func = g_Hooks.swapchain__presentHook->GetFastcall<HRESULT, IDXGISwapChain*, UINT, UINT>();
 
-#ifdef _DEBUG
+#if 0
 
 #ifndef _D3DVECTOR
 	typedef struct _D3DVECTOR3 {
@@ -1646,7 +1646,7 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 	} D3DVECTOR4;
 #endif
 	struct VertexType {
-		_D3DVECTOR3 position;
+		_D3DVECTOR4 position;
 		_D3DVECTOR4 color;
 	};
 
@@ -1671,12 +1671,13 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 
 		D3D11_INPUT_ELEMENT_DESC lineRectLayout[] =
 			{
-				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}
+				{"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0}
 			};
+			
 
 		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-		bufferDesc.ByteWidth = 50 * sizeof(0xC + 0x10);
+		bufferDesc.ByteWidth = 50 * sizeof(VertexType);
 		bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		bufferDesc.MiscFlags = 0;
@@ -1711,7 +1712,7 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 			res = device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &m_vertexShader);
 			logF("vresult: %llX", res);
 			if (!FAILED(res)) {
-				res = device->CreateInputLayout(lineRectLayout, 1, shaderBlob->GetBufferPointer(),
+				res = device->CreateInputLayout(lineRectLayout, 2, shaderBlob->GetBufferPointer(),
 												shaderBlob->GetBufferSize(), &m_pInputLayout);
 				logF("vresult3 : %llX", res);
 			}
@@ -1728,11 +1729,11 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 			float left = 10 / (float)600, right = 500 / (float)60, top = 50 / (float)60, bottom = 500 / (float)60;
 
 			//load the vertex array with data
-			vertices[0].position = D3DVECTOR3(left, top, 0);
+			vertices[0].position = D3DVECTOR4(left, top, 0, 1);
 			vertices[0].color = D3DVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
-			vertices[1].position = D3DVECTOR3(right, top, 0);
+			vertices[1].position = D3DVECTOR4(right, top, 0, 1);
 			vertices[1].color = D3DVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
-			vertices[2].position = D3DVECTOR3(right, bottom, 0);
+			vertices[2].position = D3DVECTOR4(right, bottom, 0, 1);
 			vertices[2].color = D3DVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
 			//create the index array
 			indices = new unsigned long[3];
@@ -1832,14 +1833,12 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 
 	context->Unmap(vertexBuffer, 0);
 
-	//context->VSSetShader(m_vertexShader, 0, 0);
-	//context->PSSetShader(0, 0, 0);
+	context->VSSetShader(m_vertexShader, 0, 0);
+	context->PSSetShader(0, 0, 0);
 	context->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 	context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//context->IASetInputLayout(m_pInputLayout);
-
-	
+	context->IASetInputLayout(m_pInputLayout);
 	
 	context->DrawIndexed(3, 0, 0);
 #endif
