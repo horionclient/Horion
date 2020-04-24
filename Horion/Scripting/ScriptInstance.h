@@ -22,10 +22,12 @@ private:
 	void runPromises();
 
 public:
-	std::mutex moduleLock;
-
 	ScriptInstance(std::wstring startScript);
 	~ScriptInstance();
+
+	std::wstring getStartScriptPath() {
+		return this->startScriptPath;
+	}
 
 	void callCallback(JsValueRef ref) {
 		this->callbackQueue.push(ref);

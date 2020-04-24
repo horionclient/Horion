@@ -6,8 +6,6 @@ ScriptInstance::ScriptInstance(std::wstring startScript) {
 
 ScriptInstance::~ScriptInstance() {
 	if (this->isRunning) {
-		logF("joining script thread");
-		
 		if (this->runtimeHandle != JS_INVALID_RUNTIME_HANDLE)
 			chakra.JsDisableRuntimeExecution_(this->runtimeHandle);
 		this->isRunning = false;

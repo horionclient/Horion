@@ -30,8 +30,13 @@ bool ScriptCommand::execute(std::vector<std::string>* args) {
 			if (parsed["path"].is_string()) {
 				auto box = g_Data.addInfoBox("Importing Script", "Please wait...");
 				std::thread gamer([parsed, box]() {
-					scriptMgr.importScriptFolder(parsed["path"].get<std::string>());
-					box->fadeTarget = 0;
+					auto result = scriptMgr.importScriptFolder(parsed["path"].get<std::string>());
+					if (result)
+						box->fadeTarget = 0;
+					else {
+						box->message = "Script import error, \ncheck the console";
+						box->closeTimer = 2;
+					}
 				});
 				gamer.detach();
 			}

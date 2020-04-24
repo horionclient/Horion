@@ -280,8 +280,7 @@ std::wstring ScriptManager::runScript(std::wstring script) {
 	return returnString;
 }
 
-void ScriptManager::importScriptFolder(std::string path) {
-	//logF("Importing script from path: %s", path.c_str());
+bool ScriptManager::importScriptFolder(std::string path) {
 	for (const auto& entry : std::filesystem::directory_iterator(path)) {
 		if (entry.is_regular_file()) {
 			wchar_t fname[100];
@@ -291,15 +290,24 @@ void ScriptManager::importScriptFolder(std::string path) {
 				continue;
 			std::wstring fileName = std::wstring(fname) + ext;
 			if (fileName == L"start.js") {
+				// check if script with that name is active already
+				for (auto it = this->scriptInstances.begin(); it != this->scriptInstances.end(); it++) {
+					auto startScriptPath = (*it)->getStartScriptPath();
+					if (entry.path() == startScriptPath) {
+						logF("Script already loaded!!!");
+						return false;
+					}
+				}
 				auto script = std::make_unique<ScriptInstance>(entry.path());
 				script->run();
 				this->scriptInstances.push_back(std::move(script));
 				
-				return;
+				return true;
 			}
 		}
 	}
 	logF("Could not find start script! Create a file called start.js in your folder.");
+	return false;
 }
 
 void ScriptManager::unloadAllScripts() {

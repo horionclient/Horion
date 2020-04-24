@@ -125,7 +125,7 @@ public:
 	JsValueRef prepareJsModule(std::shared_ptr<JavascriptModule> mod, ContextObjects* objs);
 	JsValueRef getLocalPlayer(ContextObjects* obs);
 	std::wstring runScript(std::wstring);
-	void importScriptFolder(std::string path);
+	bool importScriptFolder(std::string path);
 	void unloadAllScripts();
 };
 
