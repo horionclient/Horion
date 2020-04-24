@@ -4,8 +4,6 @@
 #include "../../Utils/Logger.h"
 #include "../../Utils/HMath.h"
 
-class ScriptManager;
-
 typedef enum _ExternalDataType {
 	Invalid = 0,
 	EntityDataType,
@@ -47,7 +45,13 @@ struct JModule : ExternalDataStruct {
 		this->dataType = ModuleDataType;
 		this->modPtr = mod;
 	}
+
+	~JModule() {
+		logF("JModule destroyed");
+		
+	}
 };
+class ScriptManager;
 
 extern ChakraApi chakra;
 extern ScriptManager scriptMgr;
@@ -68,25 +72,60 @@ extern ScriptManager scriptMgr;
 #include "Functions/CommandManagerFunctions.h"
 #include "Functions/ModuleManagerFunctions.h"
 
+#include "ScriptInstance.h"
+
+class ScriptInstance;
+class JavascriptModule;
+
+struct ContextObjects {
+public:
+	JsValueRef vec3Prototype = JS_INVALID_REFERENCE;
+	JsValueRef entityPrototype = JS_INVALID_REFERENCE;
+	JsValueRef localPlayerPrototype = JS_INVALID_REFERENCE;
+	JsValueRef moduleManager = JS_INVALID_REFERENCE;
+	JsValueRef commandManager = JS_INVALID_REFERENCE;
+	JsValueRef modulePrototype = JS_INVALID_REFERENCE;
+	JsValueRef jsModulePrototype = JS_INVALID_REFERENCE;
+	ScriptInstance* scriptInstance = 0;
+
+	/*
+	~ContextObjects(){
+		if (vec3Prototype != JS_INVALID_REFERENCE)
+			chakra.JsRelease_(vec3Prototype, 0);
+		if (entityPrototype != JS_INVALID_REFERENCE)
+			chakra.JsRelease_(entityPrototype, 0);
+		if (localPlayerPrototype != JS_INVALID_REFERENCE)
+			chakra.JsRelease_(localPlayerPrototype, 0);
+	}*/
+};
+
 class ScriptManager {
 private:
-	void prepareEntityPrototype(JsValueRef proto);
-	void prepareLocalPlayerPrototype(JsValueRef proto);
+
+	std::vector<std::unique_ptr<ScriptInstance>> scriptInstances;
+
 	void prepareGlobals(JsValueRef global);
-	void prepareVector3Prototype(JsValueRef global);
-	void prepareGameFunctions(JsValueRef global);
-	void prepareHorionFunctions(JsValueRef global);
-	void prepareCommandManagerFunctions(JsValueRef global);
-	void prepareModuleManagerFunctions(JsValueRef global);
-	void prepareModuleFunctions(JsValueRef global);
-	void prepareContext(JsContextRef* ctx);
+
+	void prepareVector3Prototype(JsValueRef global, ContextObjects*);
+	void prepareEntityPrototype(JsValueRef proto, ContextObjects* objs);
+	void prepareLocalPlayerPrototype(JsValueRef proto, ContextObjects* objs);
+	
+	void prepareGameFunctions(JsValueRef global, ContextObjects* objs);
+	void prepareHorionFunctions(JsValueRef global, ContextObjects* obj);
+	void prepareCommandManagerFunctions(JsValueRef global, ContextObjects* obj);
+	void prepareModuleManagerFunctions(JsValueRef global, ContextObjects* obj);
+	void prepareModuleFunctions(JsValueRef proto, ContextObjects* obj);
+	void prepareJsModuleFunctions(JsValueRef proto, ContextObjects* obj);
 	
 public:
-	JsValueRef prepareEntity(__int64 runtimeId);
-	JsValueRef prepareVector3(vec3_t vec);
-	JsValueRef prepareModule(std::shared_ptr<IModule> mod);
-	JsValueRef getLocalPlayer();
+	void prepareContext(JsContextRef* ctx, ContextObjects* obj);
+	JsValueRef prepareEntity(__int64 runtimeId, ContextObjects* obj);
+	JsValueRef prepareVector3(vec3_t vec, ContextObjects* obj);
+	JsValueRef prepareModule(std::shared_ptr<IModule> mod, ContextObjects* objs);
+	JsValueRef prepareJsModule(std::shared_ptr<JavascriptModule> mod, ContextObjects* objs);
+	JsValueRef getLocalPlayer(ContextObjects* obs);
 	std::wstring runScript(std::wstring);
 	void importScriptFolder(std::string path);
+	void unloadAllScripts();
 };
 

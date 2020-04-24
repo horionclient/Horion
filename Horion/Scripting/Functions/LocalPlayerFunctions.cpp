@@ -6,8 +6,6 @@
 
 #endif
 
-JsValueRef LocalPlayerFunctions::prototype;
-
 JsValueRef CALLBACK LocalPlayerFunctions::setPosition(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
 	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
 	if (ent == nullptr) {

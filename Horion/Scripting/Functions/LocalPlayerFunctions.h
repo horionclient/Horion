@@ -6,7 +6,6 @@
 
 class LocalPlayerFunctions {
 public:
-	static JsValueRef prototype;
 
 	DECL_FUN(setPosition);
 	DECL_FUN(setVelocity);

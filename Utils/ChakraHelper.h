@@ -53,6 +53,17 @@ public:
 	DECL_API(JsSetPrototype);
 	DECL_API(JsGetProperty);
 	DECL_API(JsBooleanToBool);
+	DECL_API(JsCallFunction);
+	DECL_API(JsDisableRuntimeExecution);
+
+	std::wstring exceptionToString(JsValueRef ref) {
+		JsValueRef stack;
+		this->getProperty(ref, L"stack", &stack);
+		if (this->isNullOrUndefined(stack))
+			return this->valueToString(ref);
+		else
+			return this->valueToString(stack);
+	}
 
 	void throwException(std::wstring error) {
 		JsValueRef errorValue;
@@ -100,13 +111,26 @@ public:
 		return ref;
 	}
 
-	std::optional<std::wstring> tryGetStringFromArgs(JsValueRef* args, int argumentCount) {
+	std::optional<JsValueRef> tryGetFunctionFromArgs(JsValueRef arg, int argumentCount) {
+		if (argumentCount < 1)
+			return std::optional <JsValueRef>();
+
+		JsValueType type = JsUndefined;
+		this->JsGetValueType_(arg, &type);
+
+		if (type != JsFunction)
+			return std::optional<JsValueRef>();
+
+		return arg;
+	}
+
+	std::optional<std::wstring> tryGetStringFromArgs(JsValueRef args, int argumentCount) {
 		if (argumentCount < 1)
 			return std::optional<std::wstring>();
 
 		const wchar_t* ref = 0;
 		size_t length = 0;
-		auto err = this->JsStringToPointer_(args[0], &ref, &length); 
+		auto err = this->JsStringToPointer_(args, &ref, &length); 
 		if (err != JsNoError)
 			return std::optional<std::wstring>();
 		return std::optional<std::wstring>(std::wstring(ref, length));
@@ -206,6 +230,8 @@ public:
 	}
 
 	std::wstring valueToString(JsValueRef value) {
+		if (value == JS_INVALID_REFERENCE)
+			return L"INVALID_REFERENCE";
 		JsValueRef resultJSString;
 		auto err = JsConvertValueToString_(value, &resultJSString);
 		if (err == JsNoError) {

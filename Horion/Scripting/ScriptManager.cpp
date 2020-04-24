@@ -5,29 +5,7 @@
 ChakraApi chakra;
 ScriptManager scriptMgr;
 
-void ScriptManager::prepareEntityPrototype(JsValueRef proto) {
-	chakra.defineFunction(proto, L"isValid", EntityFunctions::isValid);
-	chakra.defineFunction(proto, L"getPosition", EntityFunctions::getPosition);
-	chakra.defineFunction(proto, L"getVelocity", EntityFunctions::getVelocity);
-	chakra.defineFunction(proto, L"isOnGround", EntityFunctions::isOnGround);
-	chakra.defineFunction(proto, L"getSize", EntityFunctions::getSize);
-	chakra.defineFunction(proto, L"toString", EntityFunctions::toString);
-	chakra.defineFunction(proto, L"getViewAngles", EntityFunctions::getViewAngles);
-	chakra.defineFunction(proto, L"getYaw", EntityFunctions::getYaw);
-	chakra.defineFunction(proto, L"getPitch", EntityFunctions::getPitch);
-}
-
-void ScriptManager::prepareLocalPlayerPrototype(JsValueRef proto) {
-	prepareEntityPrototype(proto);
-
-	chakra.defineFunction(proto, L"setPosition", LocalPlayerFunctions::setPosition);
-	chakra.defineFunction(proto, L"setVelocity", LocalPlayerFunctions::setVelocity);
-	chakra.defineFunction(proto, L"toString", LocalPlayerFunctions::toString);
-	chakra.defineFunction(proto, L"setViewAngles", LocalPlayerFunctions::setViewAngles);
-	chakra.defineFunction(proto, L"setIsOnGround", LocalPlayerFunctions::setIsOnGround);
-}
-
-JsValueRef ScriptManager::prepareEntity(long long runtimeId) {
+JsValueRef ScriptManager::prepareEntity(long long runtimeId, ContextObjects* objs) {
 	JsValueRef obj = JS_INVALID_REFERENCE;
 	EntityInfo* data = new EntityInfo(runtimeId);
 	auto err = chakra.JsCreateExternalObject_(
@@ -44,9 +22,9 @@ JsValueRef ScriptManager::prepareEntity(long long runtimeId) {
 	}
 
 	if (data->isLocalPlayer)
-		chakra.JsSetPrototype_(obj, LocalPlayerFunctions::prototype);
+		chakra.JsSetPrototype_(obj, objs->localPlayerPrototype);
 	else
-		chakra.JsSetPrototype_(obj, EntityFunctions::prototype);
+		chakra.JsSetPrototype_(obj, objs->entityPrototype);
 
 	return obj;
 }
@@ -55,90 +33,133 @@ void ScriptManager::prepareGlobals(JsValueRef global) {
 	chakra.defineFunction(global, L"log", GlobalFunctions::log);
 }
 
-void ScriptManager::prepareVector3Prototype(JsValueRef global) {
-	chakra.JsCreateObject_(&Vector3Functions::prototype);
+void ScriptManager::prepareVector3Prototype(JsValueRef global, ContextObjects* obj) {
+	chakra.JsCreateObject_(&obj->vec3Prototype);
+	chakra.JsAddRef_(obj->vec3Prototype, 0);
 
-	chakra.defineFunction(Vector3Functions::prototype, L"isValid", Vector3Functions::isValid);
+	chakra.defineFunction(obj->vec3Prototype, L"isValid", Vector3Functions::isValid, obj);
 
-	chakra.defineProp(Vector3Functions::prototype, L"x", Vector3Functions::getX, 0);
-	chakra.defineProp(Vector3Functions::prototype, L"y", Vector3Functions::getY, 0);
-	chakra.defineProp(Vector3Functions::prototype, L"z", Vector3Functions::getZ, 0);
-	chakra.defineFunction(Vector3Functions::prototype, L"getX", Vector3Functions::getX);
-	chakra.defineFunction(Vector3Functions::prototype, L"getY", Vector3Functions::getY);
-	chakra.defineFunction(Vector3Functions::prototype, L"getZ", Vector3Functions::getZ);
+	chakra.defineProp(obj->vec3Prototype, L"x", Vector3Functions::getX, 0);
+	chakra.defineProp(obj->vec3Prototype, L"y", Vector3Functions::getY, 0);
+	chakra.defineProp(obj->vec3Prototype, L"z", Vector3Functions::getZ, 0);
+	chakra.defineFunction(obj->vec3Prototype, L"getX", Vector3Functions::getX, obj);
+	chakra.defineFunction(obj->vec3Prototype, L"getY", Vector3Functions::getY, obj);
+	chakra.defineFunction(obj->vec3Prototype, L"getZ", Vector3Functions::getZ, obj);
 
-	chakra.defineFunction(Vector3Functions::prototype, L"toString", Vector3Functions::toString);
+	chakra.defineFunction(obj->vec3Prototype, L"toString", Vector3Functions::toString, obj);
 
-	auto con = chakra.defineFunction(global, L"Vec3", Vector3Functions::constructor);
-	chakra.addPropertyToObj(con, L"prototype", Vector3Functions::prototype);
+	auto con = chakra.defineFunction(global, L"Vec3", Vector3Functions::constructor, obj);
+	chakra.addPropertyToObj(con, L"prototype", obj->vec3Prototype);
 }
 
-void ScriptManager::prepareGameFunctions(JsValueRef global) {
+void ScriptManager::prepareEntityPrototype(JsValueRef proto, ContextObjects* objs) {
+	chakra.defineFunction(proto, L"isValid", EntityFunctions::isValid, objs);
+	chakra.defineFunction(proto, L"getPosition", EntityFunctions::getPosition, objs);
+	chakra.defineFunction(proto, L"getVelocity", EntityFunctions::getVelocity, objs);
+	chakra.defineFunction(proto, L"isOnGround", EntityFunctions::isOnGround, objs);
+	chakra.defineFunction(proto, L"getSize", EntityFunctions::getSize, objs);
+	chakra.defineFunction(proto, L"toString", EntityFunctions::toString, objs);
+	chakra.defineFunction(proto, L"getViewAngles", EntityFunctions::getViewAngles, objs);
+	chakra.defineFunction(proto, L"getYaw", EntityFunctions::getYaw, objs);
+	chakra.defineFunction(proto, L"getPitch", EntityFunctions::getPitch, objs);
+}
+
+void ScriptManager::prepareLocalPlayerPrototype(JsValueRef proto, ContextObjects* objs) {
+	prepareEntityPrototype(proto, objs);
+
+	chakra.defineFunction(proto, L"setPosition", LocalPlayerFunctions::setPosition, objs);
+	chakra.defineFunction(proto, L"setVelocity", LocalPlayerFunctions::setVelocity, objs);
+	chakra.defineFunction(proto, L"toString", LocalPlayerFunctions::toString, objs);
+	chakra.defineFunction(proto, L"setViewAngles", LocalPlayerFunctions::setViewAngles, objs);
+	chakra.defineFunction(proto, L"setIsOnGround", LocalPlayerFunctions::setIsOnGround, objs);
+}
+
+void ScriptManager::prepareGameFunctions(JsValueRef global, ContextObjects* objs) {
 	JsValueRef gameObject;
 	chakra.JsCreateObject_(&gameObject);
 
 	chakra.addPropertyToObj(global, L"Game", gameObject);
 
-	chakra.defineFunction(gameObject, L"getClient", GameFunctions::getClient);
-	chakra.defineFunction(gameObject, L"getLocalPlayer", GameFunctions::getLocalPlayer);
+	chakra.defineFunction(gameObject, L"getClient", GameFunctions::getClient, objs);
+	chakra.defineFunction(gameObject, L"getLocalPlayer", GameFunctions::getLocalPlayer, objs);
 }
 
-void ScriptManager::prepareHorionFunctions(JsValueRef global) {
-	this->prepareCommandManagerFunctions(global);
-	this->prepareModuleManagerFunctions(global);
-	
+void ScriptManager::prepareHorionFunctions(JsValueRef global, ContextObjects* obj) {
+	this->prepareCommandManagerFunctions(global, obj);
+	this->prepareModuleManagerFunctions(global, obj);
+
 	JsValueRef horionObject;
 	chakra.JsCreateObject_(&horionObject);
 
 	chakra.addPropertyToObj(global, L"Horion", horionObject);
 
-	chakra.defineFunction(horionObject, L"getCommandManager", HorionFunctions::getCommandManager);
-	chakra.defineFunction(horionObject, L"getModuleManager", HorionFunctions::getModuleManager);
+	chakra.defineFunction(horionObject, L"getCommandManager", HorionFunctions::getCommandManager, obj);
+	chakra.defineFunction(horionObject, L"getModuleManager", HorionFunctions::getModuleManager, obj);
 }
 
-void ScriptManager::prepareCommandManagerFunctions(JsValueRef global) {
-	chakra.JsCreateObject_(&CommandManagerFunctions::commandManagerObject);
+void ScriptManager::prepareCommandManagerFunctions(JsValueRef global, ContextObjects* objs) {
+	chakra.JsCreateObject_(&objs->commandManager);
+	chakra.JsAddRef_(objs->commandManager, 0);
 
-	chakra.defineFunction(CommandManagerFunctions::commandManagerObject, L"executeCommand", CommandManagerFunctions::executeCommand);
+	chakra.defineFunction(objs->commandManager, L"executeCommand", CommandManagerFunctions::executeCommand, objs);
 }
 
-void ScriptManager::prepareModuleManagerFunctions(JsValueRef global) {
-	prepareModuleFunctions(global);
+void ScriptManager::prepareModuleManagerFunctions(JsValueRef global, ContextObjects* obj) {
+	chakra.JsCreateObject_(&obj->modulePrototype);
+	chakra.JsAddRef_(obj->modulePrototype, 0);
+	prepareModuleFunctions(obj->modulePrototype, obj);
 
-	chakra.JsCreateObject_(&ModuleManagerFunctions::moduleManagerObject);
+	chakra.JsCreateObject_(&obj->jsModulePrototype);
+	chakra.JsAddRef_(obj->jsModulePrototype, 0);
+	prepareJsModuleFunctions(obj->jsModulePrototype, obj);
 
-	chakra.defineFunction(ModuleManagerFunctions::moduleManagerObject, L"getModuleByName", ModuleManagerFunctions::getModuleByName);
+	chakra.JsCreateObject_(&obj->moduleManager);
+	chakra.JsAddRef_(obj->moduleManager, 0);
+
+	chakra.defineFunction(obj->moduleManager, L"getModuleByName", ModuleManagerFunctions::getModuleByName, obj);
+
+	if (obj->scriptInstance != nullptr) {
+		// enable module register support
+
+		chakra.defineFunction(obj->moduleManager, L"registerModule", ModuleManagerFunctions::registerModule, obj);
+	}
 }
 
-void ScriptManager::prepareModuleFunctions(JsValueRef global) {
-	chakra.JsCreateObject_(&ModuleManagerFunctions::modulePrototype);
-
-	chakra.defineFunction(ModuleManagerFunctions::modulePrototype, L"getName", ModuleManagerFunctions::Module_getName);
-	chakra.defineFunction(ModuleManagerFunctions::modulePrototype, L"toString", ModuleManagerFunctions::Module_toString);
-	chakra.defineFunction(ModuleManagerFunctions::modulePrototype, L"isEnabled", ModuleManagerFunctions::Module_isEnabled);
-	chakra.defineFunction(ModuleManagerFunctions::modulePrototype, L"setEnabled", ModuleManagerFunctions::Module_setEnabled);
-	chakra.defineFunction(ModuleManagerFunctions::modulePrototype, L"toggle", ModuleManagerFunctions::Module_toggle);
+void ScriptManager::prepareModuleFunctions(JsValueRef proto, ContextObjects* obj) {
+	chakra.defineFunction(proto, L"getName", ModuleManagerFunctions::Module_getName, obj);
+	chakra.defineFunction(proto, L"toString", ModuleManagerFunctions::Module_toString, obj);
+	chakra.defineFunction(proto, L"isEnabled", ModuleManagerFunctions::Module_isEnabled, obj);
+	chakra.defineFunction(proto, L"setEnabled", ModuleManagerFunctions::Module_setEnabled, obj);
+	chakra.defineFunction(proto, L"toggle", ModuleManagerFunctions::Module_toggle, obj);
 }
 
-void ScriptManager::prepareContext(JsContextRef* ctx) {
+void ScriptManager::prepareJsModuleFunctions(JsValueRef proto, ContextObjects* obj) {
+	prepareModuleFunctions(proto, obj);
+
+	chakra.defineFunction(proto, L"registerCallback", ModuleManagerFunctions::JsModule_registerCallback, obj);
+}
+
+void ScriptManager::prepareContext(JsContextRef* ctx, ContextObjects* obj) {
 	chakra.JsSetCurrentContext_(*ctx);
 
 	JsValueRef globalObject;
 	chakra.JsGetGlobalObject_(&globalObject);
 
 	prepareGlobals(globalObject);
-	prepareHorionFunctions(globalObject);
-	prepareGameFunctions(globalObject);
-	prepareVector3Prototype(globalObject);
+	prepareHorionFunctions(globalObject, obj);
+	prepareGameFunctions(globalObject, obj);
+	prepareVector3Prototype(globalObject, obj);
 
-	chakra.JsCreateObject_(&EntityFunctions::prototype);
-	prepareEntityPrototype(EntityFunctions::prototype);
+	chakra.JsCreateObject_(&obj->entityPrototype);
+	chakra.JsAddRef_(obj->entityPrototype, 0);
+	prepareEntityPrototype(obj->entityPrototype, obj);
 
-	chakra.JsCreateObject_(&LocalPlayerFunctions::prototype);
-	prepareLocalPlayerPrototype(LocalPlayerFunctions::prototype);
+	chakra.JsCreateObject_(&obj->localPlayerPrototype);
+	chakra.JsAddRef_(obj->localPlayerPrototype, 0);
+	prepareLocalPlayerPrototype(obj->localPlayerPrototype, obj);
 }
 
-JsValueRef ScriptManager::prepareVector3(vec3_t vec) {
+JsValueRef ScriptManager::prepareVector3(vec3_t vec, ContextObjects* objs) {
 	JsValueRef obj;
 	JVector3* data = new JVector3(vec);
 	auto err = chakra.JsCreateExternalObject_(
@@ -154,12 +175,12 @@ JsValueRef ScriptManager::prepareVector3(vec3_t vec) {
 		return null;
 	}
 
-	chakra.JsSetPrototype_(obj, Vector3Functions::prototype);
+	chakra.JsSetPrototype_(obj, objs->vec3Prototype);
 
 	return obj;
 }
 
-JsValueRef ScriptManager::prepareModule(std::shared_ptr<IModule> mod) {
+JsValueRef ScriptManager::prepareModule(std::shared_ptr<IModule> mod, ContextObjects* objs) {
 	JsValueRef obj = 0;
 	JModule* data = new JModule(mod);
 	auto err = chakra.JsCreateExternalObject_(
@@ -175,7 +196,7 @@ JsValueRef ScriptManager::prepareModule(std::shared_ptr<IModule> mod) {
 		return null;
 	}
 
-	err = chakra.JsSetPrototype_(obj, ModuleManagerFunctions::modulePrototype);
+	err = chakra.JsSetPrototype_(obj, objs->modulePrototype);
 
 	if (err != JsNoError) {
 		logF("prepareModule error2: %X", err);
@@ -187,8 +208,36 @@ JsValueRef ScriptManager::prepareModule(std::shared_ptr<IModule> mod) {
 	return obj;
 }
 
-JsValueRef ScriptManager::getLocalPlayer() {
-	return this->prepareEntity(-1);
+JsValueRef ScriptManager::prepareJsModule(std::shared_ptr<JavascriptModule> mod, ContextObjects* objs) {
+	JsValueRef obj = 0;
+	JModule* data = new JModule(mod);
+	auto err = chakra.JsCreateExternalObject_(
+		data, [](void* buf) {
+			delete buf;
+		},
+		&obj);
+
+	if (err != JsNoError) {
+		logF("prepareModule2 error: %X", err);
+		JsValueRef null;
+		chakra.JsGetNullValue_(&null);
+		return null;
+	}
+
+	err = chakra.JsSetPrototype_(obj, objs->jsModulePrototype);
+
+	if (err != JsNoError) {
+		logF("prepareModule2 error2: %X", err);
+		JsValueRef null;
+		chakra.JsGetNullValue_(&null);
+		return null;
+	}
+
+	return obj;
+}
+
+JsValueRef ScriptManager::getLocalPlayer(ContextObjects* obs) {
+	return this->prepareEntity(-1, obs);
 }
 
 std::wstring ScriptManager::runScript(std::wstring script) {
@@ -196,12 +245,13 @@ std::wstring ScriptManager::runScript(std::wstring script) {
 	JsContextRef context;
 	JsValueRef result = 0;
 
-	chakra.JsCreateRuntime_((_JsRuntimeAttributes)((int)JsRuntimeAttributeDisableFatalOnOOM | (int)JsRuntimeAttributeAllowScriptInterrupt), nullptr, &runtime);
+	chakra.JsCreateRuntime_((_JsRuntimeAttributes)((int)JsRuntimeAttributeDisableFatalOnOOM | (int)JsRuntimeAttributeAllowScriptInterrupt | (int)JsRuntimeAttributeDisableBackgroundWork), nullptr, &runtime);
 	chakra.JsSetRuntimeMemoryLimit_(runtime, 50000000);  // 50MB
 
 	chakra.JsCreateContext_(runtime, &context);
 	chakra.JsSetCurrentContext_(context);
-	prepareContext(&context);
+	ContextObjects objs;
+	prepareContext(&context, &objs);
 
 	auto err = chakra.JsRunScript_(script.c_str(), JS_SOURCE_CONTEXT_NONE, L"", &result);
 
@@ -217,12 +267,7 @@ std::wstring ScriptManager::runScript(std::wstring script) {
 		if (hasException) {
 			JsValueRef exception;
 			chakra.JsGetAndClearException_(&exception);
-			JsValueRef stack;
-			chakra.getProperty(exception, L"stack", &stack);
-			if (chakra.isNullOrUndefined(stack))
-				logF("Exception: %S", chakra.valueToString(exception).c_str());
-			else 
-				logF("Exception stack: %S", chakra.valueToString(stack).c_str());
+			logF("Exception: %S", chakra.exceptionToString(exception).c_str());
 		}
 	}
 
@@ -246,14 +291,17 @@ void ScriptManager::importScriptFolder(std::string path) {
 				continue;
 			std::wstring fileName = std::wstring(fname) + ext;
 			if (fileName == L"start.js") {
+				auto script = std::make_unique<ScriptInstance>(entry.path());
+				script->run();
+				this->scriptInstances.push_back(std::move(script));
 				
-				std::wstring contents = Utils::wreadFileContents(entry.path());
-				
-				auto ret = this->runScript(contents);
-				logF("Script returned: %S", ret.c_str());
 				return;
 			}
 		}
 	}
 	logF("Could not find start script! Create a file called start.js in your folder.");
+}
+
+void ScriptManager::unloadAllScripts() {
+	this->scriptInstances.clear();
 }

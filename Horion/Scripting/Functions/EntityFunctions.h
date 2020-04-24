@@ -36,8 +36,6 @@ public:
 		return foundEntity;
 	}
 
-	static JsValueRef prototype;
-
 	DECL_FUN(isValid);
 	DECL_FUN(getPosition);
 	DECL_FUN(getVelocity);

@@ -4,6 +4,8 @@
 #include <vector>
 #include <optional>
 #include <memory>
+#include <mutex>
+#include <shared_mutex>
 
 #include "../../Memory/GameData.h"
 #include "../../Utils/Json.hpp"
@@ -94,6 +96,7 @@ private:
 	GameData* gameData;
 	std::vector<std::shared_ptr<IModule>> moduleList;
 	bool initialized = false;
+	std::shared_mutex moduleListMutex;
 
 public:
 	~ModuleManager();
@@ -107,6 +110,11 @@ public:
 	void onPreRender(C_MinecraftUIRenderContext* renderCtx);
 	void onPostRender(C_MinecraftUIRenderContext* renderCtx);
 	void onSendPacket(C_Packet*);
+
+	std::shared_lock<std::shared_mutex> lockModuleList() { return std::shared_lock(this->moduleListMutex); }
+	std::unique_lock<std::shared_mutex> lockModuleListExclusive() { return std::unique_lock(this->moduleListMutex); }
+	
+	std::shared_mutex* getModuleListLock() { return &this->moduleListMutex; }
 
 	bool isInitialized() { return initialized; };
 	std::vector<std::shared_ptr<IModule>>* getModuleList();
@@ -123,6 +131,7 @@ public:
 	TRet* getModule() {
 		if (!isInitialized())
 			return nullptr;
+		auto lock = this->lockModuleList();
 		for (auto pMod : moduleList) {
 			if (auto pRet = dynamic_cast<typename std::remove_pointer<TRet>::type*>(pMod.get())){
 				
@@ -138,7 +147,8 @@ public:
 			return nullptr;
 		std::string nameCopy = name;
 		std::transform(nameCopy.begin(), nameCopy.end(), nameCopy.begin(), ::tolower);
-
+		
+		auto lock = this->lockModuleList();
 		for (std::vector<std::shared_ptr<IModule>>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
 			std::shared_ptr<IModule> mod = *it;
 			std::string modNameCopy = mod->getRawModuleName();

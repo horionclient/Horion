@@ -12,7 +12,8 @@ enum class Category {
 	MOVEMENT = 2,
 	PLAYER = 3,
 	BUILD = 4,
-	EXPLOITS = 5
+	EXPLOITS = 5,
+	CUSTOM = 6
 };
 
 enum class ValueType {

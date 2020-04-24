@@ -11,6 +11,7 @@ ModulesCommand::~ModulesCommand() {
 }
 
 bool ModulesCommand::execute(std::vector<std::string>* args) {
+	auto lock = moduleMgr->lockModuleList();
 	std::vector<std::shared_ptr<IModule>>* modules = moduleMgr->getModuleList();
 	g_Data.getGuiData()->displayClientMessageF("==========");
 	g_Data.getGuiData()->displayClientMessageF("Modules (%i):", modules->size());

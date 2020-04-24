@@ -6,8 +6,6 @@
 	THROW(L"Entity is invalid! Check if your entity is still valid with entity.isValid()")
 #endif
 
-JsValueRef EntityFunctions::prototype;
-
 JsValueRef CALLBACK EntityFunctions::isValid(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
 	bool isValid = EntityFunctions::getEntityFromValue(arguments[0]) != nullptr;
 	JsValueRef isValidBoolean;
@@ -22,7 +20,7 @@ JsValueRef CALLBACK EntityFunctions::getPosition(JsValueRef callee, bool isConst
 		ENTITY_INVALID;
 	}
 	
-	return scriptMgr.prepareVector3(*ent->getPos());
+	return scriptMgr.prepareVector3(*ent->getPos(), reinterpret_cast<ContextObjects*>(callbackState));
 }
 
 JsValueRef CALLBACK EntityFunctions::getVelocity(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
@@ -31,7 +29,7 @@ JsValueRef CALLBACK EntityFunctions::getVelocity(JsValueRef callee, bool isConst
 		ENTITY_INVALID;
 	}
 
-	return scriptMgr.prepareVector3(ent->velocity);
+	return scriptMgr.prepareVector3(ent->velocity, reinterpret_cast<ContextObjects*>(callbackState));
 }
 
 JsValueRef CALLBACK EntityFunctions::isOnGround(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
@@ -49,7 +47,7 @@ JsValueRef CALLBACK EntityFunctions::getSize(JsValueRef callee, bool isConstruct
 		ENTITY_INVALID;
 	}
 
-	return scriptMgr.prepareVector3(vec3_t(ent->width, ent->height, ent->width));
+	return scriptMgr.prepareVector3(vec3_t(ent->width, ent->height, ent->width), reinterpret_cast<ContextObjects*>(callbackState));
 }
 
 JsValueRef CALLBACK EntityFunctions::toString(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
@@ -73,7 +71,7 @@ JsValueRef CALLBACK EntityFunctions::getViewAngles(JsValueRef callee, bool isCon
 		ENTITY_INVALID;
 	}
 
-	return scriptMgr.prepareVector3(vec3_t(ent->viewAngles, 0));
+	return scriptMgr.prepareVector3(vec3_t(ent->viewAngles, 0), reinterpret_cast<ContextObjects*>(callbackState));
 }
 
 JsValueRef CALLBACK EntityFunctions::getPitch(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {

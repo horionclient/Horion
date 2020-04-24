@@ -76,6 +76,7 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 		Sleep(2);
 	}
 	logF("Stopping Threads...");
+	g_Data.terminate();
 	Sleep(200);  // Give the threads a bit of time to exit
 
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1);  // Uninject
@@ -385,6 +386,7 @@ BOOL __stdcall DllMain(HMODULE hModule,
 	case DLL_PROCESS_DETACH:
 		isRunning = false;
 
+		scriptMgr.unloadAllScripts();
 		configMgr->saveConfig();
 		moduleMgr->disable();
 		cmdMgr->disable();

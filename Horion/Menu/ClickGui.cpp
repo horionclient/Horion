@@ -33,6 +33,7 @@ float currentXOffset = 0;
 int timesRendered = 0;
 
 void ClickGui::getModuleListByCategory(Category category, std::vector<std::shared_ptr<IModule>>* modList) {
+	auto lock = moduleMgr->lockModuleList();
 	std::vector<std::shared_ptr<IModule>>* moduleList = moduleMgr->getModuleList();
 
 	for (std::vector<std::shared_ptr<IModule>>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {

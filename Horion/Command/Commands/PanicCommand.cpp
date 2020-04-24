@@ -9,6 +9,7 @@ PanicCommand::~PanicCommand() {
 }
 
 bool PanicCommand::execute(std::vector<std::string>* args) {
+	auto lock = moduleMgr->lockModuleList();
 	std::vector<std::shared_ptr<IModule>> * modules = moduleMgr->getModuleList();
 
 	for (auto it = modules->begin(); it != modules->end(); ++it) {

@@ -11,8 +11,6 @@ private:
 public:
 	static std::optional<vec3_t> getVecFromArguments(JsValueRef*, int argCount);
 
-	static JsValueRef prototype;
-
 	DECL_FUN(isValid);
 	DECL_FUN(getX);
 	DECL_FUN(getY);

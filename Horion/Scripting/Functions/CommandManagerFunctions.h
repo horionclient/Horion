@@ -5,7 +5,5 @@
 
 class CommandManagerFunctions {
 public:
-	static JsValueRef commandManagerObject;
-
 	DECL_FUN(executeCommand);
 };

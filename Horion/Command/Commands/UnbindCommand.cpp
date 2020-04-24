@@ -16,6 +16,7 @@ bool UnbindCommand::execute(std::vector<std::string>* args) {
 
 	if (moduleName == "all") {
 		if (args->size() >= 3 && args->at(2) == "force") {
+			auto lock = moduleMgr->lockModuleList();
 			std::vector<std::shared_ptr<IModule>>* modules = moduleMgr->getModuleList();
 			for (auto it = modules->begin(); it != modules->end(); ++it) {
 				auto mod = *it;

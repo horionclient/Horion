@@ -1,7 +1,5 @@
 #include "Vector3Functions.h"
 
-JsValueRef Vector3Functions::prototype;
-
 std::optional<vec3_t> Vector3Functions::getVecFromValue(JsValueRef ref) {
 	JsValueType type;
 	auto err = chakra.JsGetValueType_(ref, &type);
@@ -120,5 +118,5 @@ JsValueRef CALLBACK Vector3Functions::constructor(JsValueRef callee, bool isCons
 	chakra.JsNumberToDouble_(arguments[2], &y);
 	chakra.JsNumberToDouble_(arguments[3], &z);
 
-	return scriptMgr.prepareVector3(vec3_t((float)x, (float)y, (float)z));
+	return scriptMgr.prepareVector3(vec3_t((float)x, (float)y, (float)z), reinterpret_cast<ContextObjects*>(callbackState));
 }

@@ -1,6 +1,6 @@
 #include "ScriptCommand.h"
 
-ScriptCommand::ScriptCommand() : IMCCommand("script", "Manage scripts", "<exec>") {
+ScriptCommand::ScriptCommand() : IMCCommand("script", "Manage scripts", "<load|unloadall>") {
 }
 
 ScriptCommand::~ScriptCommand() {
@@ -9,7 +9,7 @@ ScriptCommand::~ScriptCommand() {
 bool ScriptCommand::execute(std::vector<std::string>* args) {
 	assertTrue(args->size() >= 2);
 	std::string action = args->at(1);
-	if (action == "exec") {
+	if (action == "load") {
 		HorionDataPacket packet;
 		packet.cmd = CMD_FOLDERCHOOSER;
 		packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[300]));
@@ -38,6 +38,9 @@ bool ScriptCommand::execute(std::vector<std::string>* args) {
 		});
 
 		g_Data.sendPacketToInjector(packet);
+		return true;
+	} else if (action == "unloadall") {
+		scriptMgr.unloadAllScripts();
 		return true;
 	}
 	

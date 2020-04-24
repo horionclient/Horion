@@ -76,7 +76,7 @@ void TabGui::renderLevel() {
 
 	selected[renderedLevel].interp();  // Converge to selected item
 	if (renderedLevel < level)
-		selected[renderedLevel].rollbackVal = 1; // Speed up animation when we are in the next menu already
+		selected[renderedLevel].rollbackVal = 1;  // Speed up animation when we are in the next menu already
 
 	// Second loop: Render everything
 	int i = 0;
@@ -136,7 +136,7 @@ void TabGui::renderLevel() {
 
 		if (renderedLevel > level) {
 			selected[renderedLevel].rollback();
-		}else
+		} else
 			selected[renderedLevel].rollin();
 		DrawUtils::fillRectangle(selectedPos, MC_Color(28, 107, 201), alphaVal);
 	}
@@ -152,7 +152,7 @@ void TabGui::renderLevel() {
 void TabGui::render() {
 	if (!moduleMgr->isInitialized())
 		return;
-	if (!GameData::canUseMoveKeys()) 
+	if (!GameData::canUseMoveKeys())
 		level = -1;
 	renderedLevel = 0;
 	yOffset = 4;
@@ -169,6 +169,8 @@ void TabGui::render() {
 
 	// Render all modules
 	if (level >= 0) {
+		auto lock = moduleMgr->lockModuleList();
+		
 		std::vector<std::shared_ptr<IModule>>* modules = moduleMgr->getModuleList();
 		for (std::vector<std::shared_ptr<IModule>>::iterator it = modules->begin(); it != modules->end(); ++it) {
 			auto mod = *it;
@@ -176,7 +178,8 @@ void TabGui::render() {
 				auto name = mod->getModuleName();
 				renderLabel(name, mod);
 			}
-		}
+		}	
+
 		renderLevel();
 	}
 }

@@ -1,9 +1,7 @@
 #include "CommandManagerFunctions.h"
 
-JsValueRef CommandManagerFunctions::commandManagerObject;
-
 JsValueRef CALLBACK CommandManagerFunctions::executeCommand(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
-	auto commandOpt = chakra.tryGetStringFromArgs(&arguments[1], argumentCount - 1);
+	auto commandOpt = chakra.tryGetStringFromArgs(arguments[1], argumentCount - 1);
 	if (!commandOpt.has_value()) {
 		THROW(L"Invalid command specified");
 	}

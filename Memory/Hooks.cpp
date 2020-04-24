@@ -675,6 +675,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					std::set<IModuleContainer> modContainerList;
 					// Fill modContainerList with Modules
 					{
+						auto lock = moduleMgr->lockModuleList();
 						std::vector<std::shared_ptr<IModule>>* moduleList = moduleMgr->getModuleList();
 						for (auto it : *moduleList) {
 							if (it.get() != hudModule)
