@@ -83,7 +83,7 @@ public:
 	static void setColor(float r, float g, float b, float a);  // rgba, values from 0 to 1
 	static inline void tess__begin(__int64 tesselator) {
 		if (!*(BYTE*)(tesselator + 0x1FC) && !*(BYTE*)(tesselator + 0x1B5)) {
-			mce__VertexFormat__disableHalfFloats(tesselator, 0, 0);  //guessed with tess_begin in 1.12
+			mce__VertexFormat__disableHalfFloats(tesselator, 0, 0);  
 			*(BYTE*)(tesselator + 8) = 3;
 			*(BYTE*)(tesselator + 0x1B4) = 0;
 			*(WORD*)(tesselator + 0x1FC) = 1;
@@ -91,7 +91,7 @@ public:
 			*(__int64*)(tesselator + 0x150) = *(__int64*)(tesselator + 0x148);
 			if (!*(BYTE*)tesselator)
 				*(BYTE*)(tesselator + 0xD0) = 1;
-			Tessellator__initializeFormat(tesselator + 8, 0x66i64);  //same
+			//Tessellator__initializeFormat(tesselator + 8, 0x66i64);  
 		}
 	}
 	static C_Font* getFont(Fonts font);

@@ -7,7 +7,7 @@ C_GuiData* guiData;
 __int64 a2;
 __int64 tesselator;
 float* colorHolder;
-glmatrixf* refdef;
+std::shared_ptr<glmatrixf> refdef;
 vec2_t fov;
 vec2_t screenSize;
 vec3_t origin;
@@ -16,7 +16,7 @@ C_TexturePtr* texturePtr = nullptr;
 
 static __int64* tess_end_base = 0x0;
 
-tess_vertex_t tess_vertex = reinterpret_cast<tess_vertex_t>(FindSignature("48 8B C4 48 89 78 ?? 55 48 8D 68"));
+tess_vertex_t tess_vertex = reinterpret_cast<tess_vertex_t>(FindSignature("48 8B C4 48 89 78 ?? 55 48 8D 68")); 
 tess_end_t tess_end = reinterpret_cast<tess_end_t>(FindSignature("40 53 56 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 49 8B F0 48 8B DA 48 8B F9"));
 mce__VertexFormat__disableHalfFloats_t mce__VertexFormat__disableHalfFloats = reinterpret_cast<mce__VertexFormat__disableHalfFloats_t>(FindSignature("48 83 EC 28 4C 8B C9 C7 81 ?? ?? ?? ?? ?? ?? ?? ?? C6 81 ?? ?? ?? ?? ?? C6 81 ?? ?? ?? ?? ?? C6 81"));
 Tessellator__initializeFormat_t Tessellator__initializeFormat = reinterpret_cast<Tessellator__initializeFormat_t>(FindSignature("48 89 74 24 ?? 57 48 83 EC 20 4C 8B 41 ?? 48 8B FA 4C 2B 41 ?? 48 8B F1 48 83 C1 08 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 49 F7 E8 48 D1 FA 48 8B C2 48 C1 E8 3F 48 03 D0 48 3B FA"));
@@ -43,7 +43,8 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* gui) {
 	colorHolder = *reinterpret_cast<float**>(a2 + 0x30);
 
 	glmatrixf* badrefdef = g_Data.getClientInstance()->getRefDef();
-	refdef = badrefdef->correct();
+	
+	refdef = std::shared_ptr<glmatrixf>(badrefdef->correct());
 	fov = g_Data.getClientInstance()->getFov();
 	screenSize.x = gui->widthGame;
 	screenSize.y = gui->heightGame;
