@@ -1858,6 +1858,8 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 	context->DrawIndexed(3, 0, 0);
 #endif
 
+#ifdef _DEBUG
+
 	// Once the swap chain is created, create a render target view.  This will
 	// allow Direct3D to render graphics to the window.
 
@@ -1923,7 +1925,7 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 	// the render loop will generally be throttled to the screen refresh rate, typically around
 	// 60 Hz, by sleeping the application on Present until the screen is refreshed.
 	
-
+#endif  // DEBUG
 	return func(chain, syncInterval, flags);
 }
 
