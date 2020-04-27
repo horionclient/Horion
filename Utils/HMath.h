@@ -58,6 +58,11 @@ struct vec2_t {
 		return *this;
 	}
 
+	vec2_t normalized() {
+		div(magnitude());
+		return *this;
+	}
+
 	vec2_t &normAngles() {
 		while (x > 89.9f)
 			x -= 180.0f;
@@ -375,8 +380,7 @@ struct vec4_t {
 	float &operator[](int i) { return v[i]; };
 	float operator[](int i) const { return v[i]; };
 
-	__forceinline
-	bool contains(vec2_t *point) {
+	__forceinline bool contains(vec2_t *point) {
 		if (point->x <= x || point->y <= y)
 			return false;
 

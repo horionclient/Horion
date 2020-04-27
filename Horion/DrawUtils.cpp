@@ -16,7 +16,7 @@ C_TexturePtr* texturePtr = nullptr;
 
 static __int64* tess_end_base = 0x0;
 
-tess_vertex_t tess_vertex = reinterpret_cast<tess_vertex_t>(FindSignature("48 8B C4 48 89 78 ?? 55 48 8D 68")); 
+tess_vertex_t tess_vertex = reinterpret_cast<tess_vertex_t>(FindSignature("48 8B C4 48 89 78 ?? 55 48 8D 68"));
 tess_end_t tess_end = reinterpret_cast<tess_end_t>(FindSignature("40 53 56 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 49 8B F0 48 8B DA 48 8B F9"));
 mce__VertexFormat__disableHalfFloats_t mce__VertexFormat__disableHalfFloats = reinterpret_cast<mce__VertexFormat__disableHalfFloats_t>(FindSignature("48 83 EC 28 4C 8B C9 C7 81 ?? ?? ?? ?? ?? ?? ?? ?? C6 81 ?? ?? ?? ?? ?? C6 81 ?? ?? ?? ?? ?? C6 81"));
 Tessellator__initializeFormat_t Tessellator__initializeFormat = reinterpret_cast<Tessellator__initializeFormat_t>(FindSignature("48 89 74 24 ?? 57 48 83 EC 20 4C 8B 41 ?? 48 8B FA 4C 2B 41 ?? 48 8B F1 48 83 C1 08 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 49 F7 E8 48 D1 FA 48 8B C2 48 C1 E8 3F 48 03 D0 48 3B FA"));
@@ -43,7 +43,7 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* gui) {
 	colorHolder = *reinterpret_cast<float**>(a2 + 0x30);
 
 	glmatrixf* badrefdef = g_Data.getClientInstance()->getRefDef();
-	
+
 	refdef = std::shared_ptr<glmatrixf>(badrefdef->correct());
 	fov = g_Data.getClientInstance()->getFov();
 	screenSize.x = gui->widthGame;
@@ -145,57 +145,123 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float
 	renderCtx->drawText(fontPtr, posF, &text, color.arr, alpha, 0, &textMeasure, &caretMeasureData);
 }
 
-void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth) {
+void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth, bool outline) {
+	
 	vec3_t diff;
 	diff.x = upper.x - lower.x;
 	diff.y = upper.y - lower.y;
 	diff.z = upper.z - lower.z;
 
-	vec3_t cornerList[24];
-	cornerList[0] = vec3_t(lower.x, lower.y, lower.z);
-	cornerList[1] = vec3_t(lower.x + diff.x, lower.y, lower.z);
+	
+	vec3_t vertices[8];
+	vertices[0] = vec3_t(lower.x, lower.y, lower.z);
+	vertices[1] = vec3_t(lower.x + diff.x, lower.y, lower.z);
+	vertices[2] = vec3_t(lower.x, lower.y + diff.y, lower.z);
+	vertices[3] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z);
+	vertices[4] = vec3_t(lower.x, lower.y, lower.z + diff.z);
+	vertices[5] = vec3_t(lower.x + diff.x, lower.y, lower.z + diff.z);
+	vertices[6] = vec3_t(lower.x, lower.y + diff.y, lower.z + diff.z);
+	vertices[7] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z + diff.z);
 
-	cornerList[2] = vec3_t(lower.x, lower.y, lower.z);
-	cornerList[3] = vec3_t(lower.x, lower.y, lower.z + diff.z);
-
-	cornerList[4] = vec3_t(lower.x + diff.x, lower.y, lower.z);
-	cornerList[5] = vec3_t(lower.x + diff.x, lower.y, lower.z + diff.z);
-
-	cornerList[6] = vec3_t(lower.x, lower.y, lower.z + diff.z);
-	cornerList[7] = vec3_t(lower.x + diff.x, lower.y, lower.z + diff.z);
-
-	cornerList[8] = vec3_t(lower.x, lower.y, lower.z);
-	cornerList[9] = vec3_t(lower.x, lower.y + diff.y, lower.z);
-
-	cornerList[10] = vec3_t(lower.x + diff.x, lower.y, lower.z);
-	cornerList[11] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z);
-
-	cornerList[12] = vec3_t(lower.x, lower.y, lower.z + diff.z);
-	cornerList[13] = vec3_t(lower.x, lower.y + diff.y, lower.z + diff.z);
-
-	cornerList[14] = vec3_t(lower.x + diff.x, lower.y, lower.z + diff.z);
-	cornerList[15] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z + diff.z);
-
-	cornerList[16] = vec3_t(lower.x, lower.y + diff.y, lower.z);
-	cornerList[17] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z);
-
-	cornerList[18] = vec3_t(lower.x, lower.y + diff.y, lower.z);
-	cornerList[19] = vec3_t(lower.x, lower.y + diff.y, lower.z + diff.z);
-
-	cornerList[20] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z);
-	cornerList[21] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z + diff.z);
-
-	cornerList[22] = vec3_t(lower.x, lower.y + diff.y, lower.z + diff.z);
-	cornerList[23] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z + diff.z);
-
-	vec2_t Screen1;
-	vec2_t Screen2;
-
-	for (int i = 0; i < 24; i += 2) {
-		if (refdef->OWorldToScreen(origin, cornerList[i], Screen1, fov, screenSize) && refdef->OWorldToScreen(origin, cornerList[i + 1], Screen2, fov, screenSize)) {
-			drawLine(Screen1, Screen2, lineWidth);
+	// Convert to screen coord
+	std::vector<std::tuple<int, vec2_t>> screenCords;
+	for (int i = 0; i < 8; i++) {
+		vec2_t screen;
+		if (refdef->OWorldToScreen(origin, vertices[i], screen, fov, screenSize)) {
+			screenCords.push_back(std::make_tuple(outline ? (int) screenCords.size() : i, screen));
 		}
 	}
+	if (screenCords.size() < 2)
+		return;  // No lines possible
+
+	if (!outline) {
+		for (auto it = screenCords.begin(); it != screenCords.end(); it++) {
+			auto from = *it;
+			auto fromOrig = vertices[std::get<0>(from)];
+
+			for (auto it2 = screenCords.begin(); it2 != screenCords.end(); it2++) {
+				auto to = *it2;
+				auto toOrig = vertices[std::get<0>(to)];
+
+				bool shouldDraw = false;
+				// X direction
+				shouldDraw |= fromOrig.y == toOrig.y && fromOrig.z == toOrig.z && fromOrig.x < toOrig.x; 
+				// Y direction
+				shouldDraw |= fromOrig.x == toOrig.x && fromOrig.z == toOrig.z && fromOrig.y < toOrig.y; 
+				// Z direction
+				shouldDraw |= fromOrig.x == toOrig.x && fromOrig.y == toOrig.y && fromOrig.z < toOrig.z; 
+				
+				if (shouldDraw)
+					drawLine(std::get<1>(from), std::get<1>(to), lineWidth);
+			}
+		}
+
+		return;
+	}
+	// Find start vertex
+	auto it = screenCords.begin();
+	std::tuple<int, vec2_t> start = *it;
+	it++;
+	for (; it != screenCords.end(); it++) {
+		auto cur = *it;
+		if (std::get<1>(cur).x < std::get<1>(start).x) {
+			start = cur;
+		}
+	}
+
+	// Follow outer line
+	std::vector<int> indices;
+
+	auto current = start;
+	indices.push_back(std::get<0>(current));
+	vec2_t lastDir(0, -1);
+	do {
+		float smallestAngle = PI * 2;
+		vec2_t smallestDir;
+		std::tuple<int, vec2_t> smallestE;
+		for (auto it3 = screenCords.begin(); it3 != screenCords.end(); it3++) {
+			auto cur = *it3;
+			if (std::get<0>(current) == std::get<0>(cur))
+				continue;
+			//if (std::find(indices.begin(), indices.end(), std::get<0>(cur)) != indices.end())
+			//	continue;
+
+			// angle between vecs
+			vec2_t dir = vec2_t(std::get<1>(cur)).sub(std::get<1>(current));
+			float angle = atan2(dir.y, dir.x) - atan2(lastDir.y, lastDir.x);
+			if (angle > PI) {
+				angle -= 2 * PI;
+			} else if (angle <= -PI) {
+				angle += 2 * PI;
+			}
+			if (angle >= 0 && angle < smallestAngle) {
+				smallestAngle = angle;
+				smallestDir = dir;
+				smallestE = cur;
+			}
+		}
+		indices.push_back(std::get<0>(smallestE));
+		lastDir = smallestDir;
+		current = smallestE;
+	} while (std::get<0>(current) != std::get<0>(start) && indices.size() < 8);
+
+	// draw
+	
+	vec2_t lastVertex;
+	bool hasLastVertex = false;
+	for (auto it2 = indices.begin(); it2 != indices.end(); it2++) {
+		vec2_t curVertex = std::get<1>(screenCords[*it2]);
+		if (!hasLastVertex) {
+			hasLastVertex = true;
+			lastVertex = curVertex;
+			continue;
+		}
+		
+		drawLine(lastVertex, curVertex, lineWidth);
+		lastVertex = curVertex;
+	}
+
+	
 }
 
 void DrawUtils::drawTracer(C_Entity* ent) {
@@ -289,7 +355,6 @@ void DrawUtils::draw2D(C_Entity* ent, float lineWidth) {
 		refdef->OWorldToScreen(origin, corners[1], corners2d[1], fov, screenSize) &&
 		refdef->OWorldToScreen(origin, corners[2], corners2d[2], fov, screenSize) &&
 		refdef->OWorldToScreen(origin, corners[3], corners2d[3], fov, screenSize)) {
-		
 		float length = (corners2d[1].x - corners2d[0].x) / 4.f;
 
 		/*drawLine(corners2d[0], vec2_t(corners2d[0].x + length, corners2d[0].y), lineWidth);
