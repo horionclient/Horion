@@ -136,7 +136,6 @@ void GameData::setRakNetInstance(C_RakNetInstance* raknet) {
 }
 
 void GameData::forEachEntity(std::function<void(C_Entity*, bool)> callback) {
-
 	std::vector<C_Entity*> tickedEntities;
 	// New EntityList
 	{
@@ -180,13 +179,16 @@ void GameData::forEachEntity(std::function<void(C_Entity*, bool)> callback) {
 }
 
 void GameData::addChestToList(C_ChestBlockActor* chest) {
+	if (chest == nullptr || !chest->isMainSubchest())
+		return;
+	AABB chestAabb = chest->getFullAABB();
 	std::lock_guard<std::mutex> listGuard(g_Data.chestListMutex);
 	for (auto it = g_Data.chestList.begin(); it != g_Data.chestList.end(); ++it)
-		if (**it == chest->aabb)
+		if (**it == chestAabb)
 			return;
 
-	auto toAdd = std::make_shared<AABB>(chest->aabb);
-	g_Data.chestList.insert(toAdd);
+	auto toAdd = std::make_shared<AABB>(chestAabb);
+	g_Data.chestList.push_back(toAdd);
 }
 
 void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem, HMODULE hDllInst) {

@@ -138,6 +138,12 @@ struct vec3_t {
 		z += f;
 		return *this;
 	};
+	vec3_t &add(float x1, float y1, float z1) {
+		x += x1;
+		y += y1;
+		z += z1;
+		return *this;
+	};
 	vec3_t &sub(float f) {
 		x -= f;
 		y -= f;
@@ -324,6 +330,10 @@ struct vec3_ti {
 	}
 
 	vec3_ti(int *v) : x(v[0]), y(v[1]), z(v[2]) {}
+	
+	vec3_t toVec3t() {
+		return vec3_t(x, y, z);
+	}
 
 	bool iszero() const { return x == 0 && y == 0 && z == 0; }
 
@@ -564,6 +574,7 @@ struct AABB {
 	vec3_t lower;
 	vec3_t upper;
 	AABB() {}
+	AABB(vec3_t l, vec3_t h) : lower(l), upper(h){};
 	AABB(const AABB &aabb) {
 		lower = vec3_t(aabb.lower);
 		upper = vec3_t(aabb.upper);

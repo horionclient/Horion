@@ -23,19 +23,26 @@ void ChestESP::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	}
 	Utils::ApplyRainbow(rcolors, 0.0015f);
 
-	auto listLock = g_Data.lockChestList();
-	std::set<std::shared_ptr<AABB>>* chestList = g_Data.getChestList();
+	auto ourListLock = std::scoped_lock(this->listLock);
 
-	for (auto iter = chestList->begin(); iter != chestList->end(); ++iter) {
+	for (auto iter = bufferedChestList.begin(); iter != bufferedChestList.end(); ++iter) {
 		DrawUtils::setColor(1.f, 0.3f, 0.3f, 0.6f);
 		DrawUtils::drawBox((*iter)->lower, (*iter)->upper, max(0.2f, 1 / max(1, g_Data.getLocalPlayer()->eyePos0.dist((*iter)->lower))), true);  // Fancy math to give an illusion of good esp
 	}
 }
 
 void ChestESP::onTick(C_GameMode* gm) {
-	tickTimeout++;
+	/*tickTimeout++;
 	if (tickTimeout > 60) {
 		tickTimeout = 0;
 		g_Data.clearChestList();
-	}
+	}*/
+	// Swap list
+	auto listLock = g_Data.lockChestList();
+	auto* chestList = g_Data.getChestList();
+	auto ourListLock = std::scoped_lock(this->listLock);
+
+	this->bufferedChestList.clear();
+	this->bufferedChestList.insert(this->bufferedChestList.end(), chestList->begin(), chestList->end());
+	chestList->clear();
 }

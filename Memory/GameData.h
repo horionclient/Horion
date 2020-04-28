@@ -72,7 +72,7 @@ private:
 	C_HIDController* hidController = 0;
 	C_RakNetInstance* raknetInstance = 0;
 	HMODULE hDllInst = 0;
-	std::set<std::shared_ptr<AABB>> chestList;
+	std::vector<std::shared_ptr<AABB>> chestList;
 	std::mutex chestListMutex;
 	std::queue<HorionDataPacket> horionToInjectorQueue;
 	std::map<int, std::function<void(std::shared_ptr<HorionDataPacket>)>> injectorToHorionResponseCallbacks;
@@ -260,7 +260,7 @@ public:
 	C_EntityList* getEntityList() { return entityList; };
 	C_HIDController** getHIDController() { return &hidController; };
 	C_RakNetInstance* getRakNetInstance() { return raknetInstance; };
-	std::set<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
+	std::vector<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
 	auto lockChestList() { return std::lock_guard<std::mutex>(this->chestListMutex); }
 
 	void setFakeName(TextHolder* name) { fakeName = name; };
