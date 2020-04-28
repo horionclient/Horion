@@ -1871,9 +1871,12 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 HRESULT Hooks::swapChain__ResizeBuffers(IDXGISwapChain* chain, UINT bufferCount, UINT Width, UINT Height, DXGI_FORMAT Newformat, UINT SwapChainFlags) {
 	
 	auto func = g_Hooks.swapchain__resizeBuffersHook->GetFastcall<HRESULT, IDXGISwapChain*, UINT, UINT, UINT, DXGI_FORMAT, UINT>();
-	HRESULT ret = func(chain, bufferCount, Width, Height, Newformat, SwapChainFlags);
+	
 
+#ifdef TEST_DIRECTX
 	GameWnd.OnWindowSizeChanged(static_cast<int>(Width), static_cast<int>(Height));
+#endif
+	HRESULT ret = func(chain, bufferCount, Width, Height, Newformat, SwapChainFlags);
 
 	return ret;
 }
