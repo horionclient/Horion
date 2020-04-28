@@ -1858,7 +1858,7 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 	context->DrawIndexed(3, 0, 0);
 #endif
 
-#ifdef _DEBUG
+#if 0
 
 	// Once the swap chain is created, create a render target view.  This will
 	// allow Direct3D to render graphics to the window.

@@ -97,6 +97,29 @@ public:
 		}
 	}
 
+	TextHolder(size_t allocSize) {
+		memset(this, 0, sizeof(TextHolder));
+		textLength = 0;
+		alignedTextLength = allocSize | 0xF;
+		if (alignedTextLength < 16) {
+			memset(&inlineText, 0, 16);
+		} else {
+			size_t size = alignedTextLength;
+			if (size + 1 >= 0x1000)
+				size += 8;
+
+			pText = reinterpret_cast<char*>(malloc(size + 1));
+			alignedTextLength = size;
+			if (size + 1 >= 0x1000) {
+				*reinterpret_cast<char**>(pText) = pText;
+				
+				pText += 8;
+				memset(pText, 0, alignedTextLength - 8);
+			}else
+				memset(pText, 0, alignedTextLength);
+		}
+	}
+
 	TextHolder(void* ptr, size_t sizeOfData) {
 		memset(this, 0, sizeof(TextHolder));
 		textLength = sizeOfData;
@@ -176,6 +199,13 @@ public:
 
 	GamerTextHolder() {
 		memset(this, 0, sizeof(GamerTextHolder));
+	}
+
+	char* getText() {
+		if (alignedTextLength < 16)
+			return this->inlineText;
+		else
+			return this->pText;
 	}
 
 	void copyFrom(TextHolder* copy) {
