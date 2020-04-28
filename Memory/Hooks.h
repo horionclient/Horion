@@ -24,6 +24,7 @@
 #include "../resource.h"
 #include "GameData.h"
 #include "MinHook.h"
+#include "../Horion/Game/Game.h"
 
 #include <intrin.h>
 #include <thread>
@@ -117,6 +118,7 @@ private:
 	static __int64 prepFeaturedServersFirstTime(__int64 a1, __int64 a2);
 	static HRESULT swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT flags);
 	static __int64 InGamePlayScreen___renderLevel(__int64 playScreen, __int64 a2, __int64 a3);
+	static HRESULT swapChain__ResizeBuffers(IDXGISwapChain* chain, UINT bufferCount, UINT Width, UINT Height,DXGI_FORMAT Newformat,UINT SwapChainFlags);
 
 	std::unique_ptr<FuncHook> GameMode_tickHook;
 	std::unique_ptr<FuncHook> SurvivalMode_tickHook;
@@ -162,6 +164,7 @@ private:
 	std::unique_ptr<FuncHook> prepFeaturedServersFirstTimeHook;
 	std::unique_ptr<FuncHook> swapchain__presentHook;
 	std::unique_ptr<FuncHook> InGamePlayScreen___renderLevelHook;
+	std::unique_ptr<FuncHook> swapchain__resizeBuffersHook;
 };
 
 extern Hooks g_Hooks;

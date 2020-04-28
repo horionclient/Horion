@@ -213,6 +213,7 @@
     <ClCompile Include="Horion\Command\CommandMgr.cpp" />
     <ClCompile Include="Horion\DrawUtils.cpp" />
     <ClCompile Include="Horion\FriendList\FriendList.cpp" />
+    <ClCompile Include="Horion\Game\Game.cpp" />
     <ClCompile Include="Horion\GuiUtils.cpp" />
     <ClCompile Include="Horion\ImmediateGui.cpp" />
     <ClCompile Include="Horion\Loader.cpp" />
@@ -331,6 +332,9 @@
     <ClInclude Include="Horion\Command\CommandMgr.h" />
     <ClInclude Include="Horion\DrawUtils.h" />
     <ClInclude Include="Horion\FriendList\FriendList.h" />
+    <ClInclude Include="Horion\Game\Game.h" />
+    <ClInclude Include="Horion\Game\Header.h" />
+    <ClInclude Include="Horion\Game\StepTimer.h" />
     <ClInclude Include="Horion\GuiUtils.h" />
     <ClInclude Include="Horion\ImmediateGui.h" />
     <ClInclude Include="Horion\Loader.h" />
@@ -490,10 +494,8 @@
     <ClInclude Include="Utils\xorstr.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Horion.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include=".clang-format" />
+    <None Include="packages.config" />
     <None Include="resources\coolroblox.json" />
     <None Include="resources\Steve.dat" />
   </ItemGroup>
@@ -502,7 +504,24 @@
       <FileType>Document</FileType>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="bitmap1.bmp" />
+    <Image Include="icon1.ico" />
+    <Image Include="resources\cat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Horion.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\Microsoft.XAudio2.Redist.1.2.0\build\native\Microsoft.XAudio2.Redist.targets" Condition="Exists('packages\Microsoft.XAudio2.Redist.1.2.0\build\native\Microsoft.XAudio2.Redist.targets')" />
+    <Import Project="packages\directxtk_desktop_2017.2020.2.24.4\build\native\directxtk_desktop_2017.targets" Condition="Exists('packages\directxtk_desktop_2017.2020.2.24.4\build\native\directxtk_desktop_2017.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Ce projet fait référence à des packages NuGet qui sont manquants sur cet ordinateur. Utilisez l'option de restauration des packages NuGet pour les télécharger. Pour plus d'informations, consultez http://go.microsoft.com/fwlink/?LinkID=322105. Le fichier manquant est : {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.XAudio2.Redist.1.2.0\build\native\Microsoft.XAudio2.Redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.XAudio2.Redist.1.2.0\build\native\Microsoft.XAudio2.Redist.targets'))" />
+    <Error Condition="!Exists('packages\directxtk_desktop_2017.2020.2.24.4\build\native\directxtk_desktop_2017.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk_desktop_2017.2020.2.24.4\build\native\directxtk_desktop_2017.targets'))" />
+  </Target>
 </Project>

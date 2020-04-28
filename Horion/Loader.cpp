@@ -391,6 +391,7 @@ BOOL __stdcall DllMain(HMODULE hModule,
 		moduleMgr->disable();
 		cmdMgr->disable();
 		Hooks::Restore();
+		GameWnd.OnDeactivated();
 
 		logF("Removing logger");
 		Logger::Disable();
