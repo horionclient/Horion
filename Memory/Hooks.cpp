@@ -1,5 +1,9 @@
 ﻿#include "Hooks.h"
 
+#include <wrl.h>
+using namespace Microsoft::WRL;
+
+
 Hooks g_Hooks;
 bool isTicked = false;
 bool overrideStyledReturn = false;
@@ -160,6 +164,8 @@ void Hooks::Init() {
 			size_t secondOffset = (size_t) *reinterpret_cast<int*>((sigOffset + 10));
 			auto swapChain = g_Data.getSlimMem()->ReadPtr<__int64>(startOffset, {0, secondOffset, 0x170});
 			auto vtable = *reinterpret_cast<uintptr_t**>(swapChain);
+
+			logF(" %llX",vtable[8]);
 
 			g_Hooks.swapchain__presentHook = std::make_unique<FuncHook>(vtable[8], Hooks::swapChain__present);
 		}
@@ -1851,9 +1857,76 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 	
 	context->DrawIndexed(3, 0, 0);
 #endif
-	auto ret = func(chain, syncInterval, flags);
 
-	return ret;
+#ifdef _DEBUG
+
+	// Once the swap chain is created, create a render target view.  This will
+	// allow Direct3D to render graphics to the window.
+
+	ComPtr<ID3D11Texture2D> backBuffer;
+
+	chain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
+
+	ID3D11Device* pDevice = nullptr;
+	IDXGISwapChain* pSwapchain = chain;
+	ID3D11DeviceContext* pContext = nullptr;
+	ID3D11RenderTargetView* pRenderTargetView = nullptr;
+	ID3D11VertexShader* pVertexShader = nullptr;
+	ID3D11InputLayout* pVertexLayout = nullptr;
+	ID3D11PixelShader* pPixelShader = nullptr;
+	ID3D11Buffer* pVertexBuffer = nullptr;
+	ID3D11Buffer* pIndexBuffer = nullptr;
+	ID3D11Buffer* pConstantBuffer = nullptr;
+
+	
+	HRESULT hr = pSwapchain->GetDevice(__uuidof(ID3D11Device), (void**)&pDevice);
+	//if (FAILED(hr))
+		//return false;
+
+	pDevice->GetImmediateContext(&pContext);
+
+	pContext->OMGetRenderTargets(1, &pRenderTargetView, nullptr);
+
+	pDevice->CreateRenderTargetView(
+			backBuffer.Get(),
+			nullptr,
+			&pRenderTargetView);
+
+	// After the render target view is created, specify that the viewport,
+	// which describes what portion of the window to draw to, should cover
+	// the entire window.
+
+	D3D11_TEXTURE2D_DESC backBufferDesc = {0};
+	backBuffer->GetDesc(&backBufferDesc);
+
+	D3D11_VIEWPORT viewport;
+	viewport.TopLeftX = 0.0f;
+	viewport.TopLeftY = 0.0f;
+	viewport.Width = static_cast<float>(backBufferDesc.Width);
+	viewport.Height = static_cast<float>(backBufferDesc.Height);
+	viewport.MinDepth = D3D11_MIN_DEPTH;
+	viewport.MaxDepth = D3D11_MAX_DEPTH;
+
+	pContext->RSSetViewports(1, &viewport);
+
+	 pContext->OMSetRenderTargets(
+		1,
+		&pRenderTargetView,
+		nullptr  // Use no depth stencil.
+	);
+
+	// Clear the render target to a solid color.
+	const float clearColor[4] = {0.1f, 0.8f, 0.8f, 0.1f};
+	pContext->ClearRenderTargetView(
+		pRenderTargetView,
+		clearColor);
+
+	// Present the rendered image to the window.  Because the maximum frame latency is set to 1,
+	// the render loop will generally be throttled to the screen refresh rate, typically around
+	// 60 Hz, by sleeping the application on Present until the screen is refreshed.
+	
+#endif  // DEBUG
+	return func(chain, syncInterval, flags);
 }
 
 __int64 Hooks::InGamePlayScreen___renderLevel(__int64 playScreen, __int64 a2, __int64 a3) {
