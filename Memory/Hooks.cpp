@@ -1363,9 +1363,11 @@ float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3) {
 	static auto oFunc = g_Hooks.GameMode_getPickRangeHook->GetFastcall<float, C_GameMode*, __int64, char>();
 
 	if (g_Data.getLocalPlayer() != nullptr) {
+#ifdef _BETA
 		static auto forceOpenCmdBlock = moduleMgr->getModule<ForceOpenCommandBlock>();
 		if (forceOpenCmdBlock->isEnabled() && forceOpenCmdBlock->isInCommandBlock)
 			return forceOpenCmdBlock->distance;
+#endif
 
 		static auto infiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
 		if (infiniteBlockReachModule->isEnabled())
