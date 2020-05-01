@@ -14,15 +14,6 @@ void ChestESP::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	if (!g_Data.isInGame() || !GameData::canUseMoveKeys() || g_Data.getLocalPlayer() == nullptr)
 		return;
 	//if (listSize < 1000 && listSize > 1) {
-	static float rcolors[4];
-	if (rcolors[3] < 1) {
-		rcolors[0] = 0.2f;
-		rcolors[1] = 0.2f;
-		rcolors[2] = 1.f;
-		rcolors[3] = 1;
-	}
-	Utils::ApplyRainbow(rcolors, 0.0015f);
-
 	auto ourListLock = std::scoped_lock(this->listLock);
 
 	for (auto iter = bufferedChestList.begin(); iter != bufferedChestList.end(); ++iter) {
