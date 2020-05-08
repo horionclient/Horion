@@ -20,10 +20,6 @@ void Zoom::onEnable() {
 	zooming = true;
 }
 
-void Zoom::onPostRender(C_MinecraftUIRenderContext* ctx) {
-	target = strength;
-}
-
 void Zoom::onDisable() {
 	target = g_Data.fov;
 }

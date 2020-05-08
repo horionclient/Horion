@@ -350,6 +350,8 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 
 	g_Hooks.shouldRender = uiscene->isPlayScreen();
 
+	bool alwaysRender = moduleMgr->isInitialized() && moduleMgr->getModule<HudModule>()->alwaysShow;
+
 	TextHolder alloc;
 	uiscene->getScreenName(&alloc);
 
@@ -357,8 +359,7 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 		strcpy_s(g_Hooks.currentScreenName, alloc.getText());
 
 	if (!g_Hooks.shouldRender) {
-		if (strcmp(alloc.getText(), "pause_screen") == 0 || strcmp(alloc.getText(), "hud_screen") == 0 || strcmp(alloc.getText(), "start_screen") == 0 || (alloc.getTextLength() >= 11 && strncmp(alloc.getText(), "play_screen", 11)) == 0)
-			g_Hooks.shouldRender = true;
+		g_Hooks.shouldRender = alwaysRender || (strcmp(alloc.getText(), "start_screen") == 0 || (alloc.getTextLength() >= 11 && strncmp(alloc.getText(), "play_screen", 11)) == 0);
 	}
 	alloc.resetWithoutDelete();
 
@@ -424,6 +425,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 	__int64 retval = oText(a1, renderCtx);
 
+	bool shouldPostRender = true;
 	bool shouldRenderArrayList = true;
 	bool shouldRenderTabGui = true;
 	bool shouldRenderWatermark = true;
@@ -441,10 +443,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		disabledRcolors[3] = 1;
 	}
 
-	// Call PostRender() functions
 	{
-		moduleMgr->onPostRender(renderCtx);
-
 		// Main Menu
 		std::string screenName(g_Hooks.currentScreenName);
 		if (strcmp(screenName.c_str(), "start_screen") == 0) {
@@ -576,6 +575,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 			if (clickGuiModule->isEnabled()) {
 				ClickGui::render();
+				shouldPostRender = false;
 				shouldRenderArrayList = false;
 				shouldRenderTabGui = false;
 				shouldRenderWatermark = false;
@@ -775,11 +775,13 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	// Zoom calc
 	{
 		static auto zoomModule = moduleMgr->getModule<Zoom>();
+		if(zoomModule->isEnabled()) zoomModule->target = zoomModule->strength;
 		zoomModule->modifier = zoomModule->target - ((zoomModule->target - zoomModule->modifier) * 0.8f);
-		if (abs(zoomModule->modifier - zoomModule->target) < 0.1f && zoomModule->target != zoomModule->strength)
+		if (abs(zoomModule->modifier - zoomModule->target) < 0.1f && !zoomModule->isEnabled())
 			zoomModule->zooming = false;
 	}
 
+	if (shouldPostRender) moduleMgr->onPostRender(renderCtx);
 	HImGui.endFrame();
 	DrawUtils::flush();
 
@@ -1121,11 +1123,14 @@ float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3) {
 	}
 	if (_ReturnAddress() == setupCamera) {
 		g_Data.fov = -oGetFov(_this, a2, a3) + 110.f;
-		if (!zoomModule->smooth) return -zoomModule->target + 110.f;
-		return (moduleMgr->isInitialized() && zoomModule->zooming) ? -zoomModule->modifier + 110.f : oGetFov(_this, a2, a3);
+		if (moduleMgr->isInitialized()) {
+			if (!zoomModule->smooth && zoomModule->isEnabled()) return -zoomModule->target + 110.f;
+			if (zoomModule->smooth && zoomModule->zooming) return -zoomModule->modifier + 110.f;
+		}
+		return oGetFov(_this, a2, a3);
 	}
 #ifdef _DEBUG
-	logF("LevelRendererPlayer_getFov Return Addres: %llX", _ReturnAddress());
+	logF("LevelRendererPlayer_getFov Return Address: %llX", _ReturnAddress());
 	__debugbreak();  // IF we reach here, a sig is broken
 #endif
 	return oGetFov(_this, a2, a3);

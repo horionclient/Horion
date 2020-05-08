@@ -15,6 +15,5 @@ public:
 	virtual bool isFlashMode() override;
 	virtual const char* getModuleName() override;
 	virtual void onEnable() override;
-	virtual void onPostRender(C_MinecraftUIRenderContext* ctx) override;
 	virtual void onDisable() override;
 };
