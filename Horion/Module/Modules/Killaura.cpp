@@ -17,23 +17,23 @@ const char* Killaura::getModuleName() {
 
 static std::vector<C_Entity*> targetList;
 
-void findEntity(C_Entity* currentEntity, bool isRegularEntitie) {
+void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 	static auto killauraMod = moduleMgr->getModule<Killaura>();
+
+	if (currentEntity == NULL)
+		return;
 	
 	if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
 		return;
 
-	if (currentEntity == 0)
+	if (!g_Data.getLocalPlayer()->canAttack(currentEntity, false))
 		return;
 
-	if (currentEntity->timeSinceDeath > 0 || currentEntity->damageTime >= 7)
+	if (!g_Data.getLocalPlayer()->isAlive())
 		return;
 
-	if (killauraMod->isMobAura && !isRegularEntitie) {
+	if (killauraMod->isMobAura) {
 		if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)
-			return;
-
-		if (!g_Data.getLocalPlayer()->canAttack(currentEntity, false))
 			return;
 	} else {
 		if (!Target::isValidTarget(currentEntity))
