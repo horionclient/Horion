@@ -1378,8 +1378,8 @@ float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3) {
 		if (infiniteBlockReachModule->isEnabled())
 			return infiniteBlockReachModule->getBlockReach();
 
-		static auto clickTP = moduleMgr->getModule<Teleport>();
-		if (clickTP->isEnabled())
+		static auto teleportModule = moduleMgr->getModule<Teleport>();
+		if (teleportModule->isEnabled())
 			return 255;
 	}
 

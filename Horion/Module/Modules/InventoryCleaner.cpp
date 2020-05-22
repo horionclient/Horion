@@ -109,8 +109,12 @@ std::vector<int> InventoryCleaner::findUselessItems() {
 						uselessItems.push_back(i);
 					else
 						items.push_back(itemStack);
-				} else if (std::find(items.begin(), items.end(), itemStack) == items.end())
-					items.push_back(itemStack);
+				} else if (std::find(items.begin(), items.end(), itemStack) == items.end()) {
+					if ((*itemStack->item)->itemId == 261 && !isLastItem(*itemStack->item))
+						uselessItems.push_back(i);
+					else
+						items.push_back(itemStack);	
+				}
 			}
 		}
 
