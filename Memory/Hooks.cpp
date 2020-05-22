@@ -906,7 +906,7 @@ void Hooks::Actor_lerpMotion(C_Entity* _this, vec3_t motVec) {
 	if (g_Data.getLocalPlayer() != _this)
 		return oLerp(_this, motVec);
 
-	static auto noKnockbackmod = moduleMgr->getModule<NoKnockBack>();
+	static auto noKnockbackmod = moduleMgr->getModule<Velocity>();
 	if (noKnockbackmod->isEnabled()) {
 		static void* networkSender = reinterpret_cast<void*>(FindSignature("41 80 BF ?? ?? ?? ?? 00 0F 85 ?? ?? ?? ?? FF"));
 		if (networkSender == _ReturnAddress()) {
@@ -1378,7 +1378,7 @@ float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3) {
 		if (infiniteBlockReachModule->isEnabled())
 			return infiniteBlockReachModule->getBlockReach();
 
-		static auto clickTP = moduleMgr->getModule<ClickTP>();
+		static auto clickTP = moduleMgr->getModule<Teleport>();
 		if (clickTP->isEnabled())
 			return 255;
 	}

@@ -1,6 +1,6 @@
 #include "BedFucker.h"
 
-BedFucker::BedFucker() : IModule(VK_NUMPAD9, Category::EXPLOITS, "Destroys beds around you") {
+BedFucker::BedFucker() : IModule(VK_NUMPAD9, Category::MISC, "Destroys beds around you") {
 	registerIntSetting("Range", &this->range, this->range, 1, 10);
 	registerBoolSetting("Beds", &this->beds, this->beds);
 	registerBoolSetting("Eggs", &this->eggs, this->eggs);

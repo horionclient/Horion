@@ -1,6 +1,6 @@
 #include "Crasher.h"
 
-Crasher::Crasher() : IModule(0x0, Category::EXPLOITS, "Crash Realms Servers") {
+Crasher::Crasher() : IModule(0x0, Category::MISC, "Crash Realms Servers") {
 }
 
 Crasher::~Crasher() {

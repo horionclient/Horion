@@ -110,11 +110,11 @@ void ClickGui::renderCategory(Category category) {
 		case Category::PLAYER:
 			categoryName = "Player";
 			break;
-		case Category::BUILD:
-			categoryName = "Build";
+		case Category::WORLD:
+			categoryName = "World";
 			break;
-		case Category::EXPLOITS:
-			categoryName = "Exploits";
+		case Category::MISC:
+			categoryName = "Misc";
 			break;
 		}
 	}
@@ -137,10 +137,10 @@ void ClickGui::renderCategory(Category category) {
 		case Category::PLAYER:
 			ourWindow->pos.x = 315;
 			break;
-		case Category::BUILD:
+		case Category::WORLD:
 			ourWindow->pos.x = 415;
 			break;
-		case Category::EXPLOITS:
+		case Category::MISC:
 			ourWindow->pos.x = 490;
 			break;
 		}
@@ -634,8 +634,8 @@ void ClickGui::render() {
 	renderCategory(Category::VISUAL);
 	renderCategory(Category::MOVEMENT);
 	renderCategory(Category::PLAYER);
-	renderCategory(Category::BUILD);
-	renderCategory(Category::EXPLOITS);
+	renderCategory(Category::WORLD);
+	renderCategory(Category::MISC);
 
 	shouldToggleLeftClick = false;
 	shouldToggleRightClick = false;

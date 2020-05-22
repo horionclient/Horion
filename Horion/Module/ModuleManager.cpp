@@ -22,7 +22,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Aimbot()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new ChestESP()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new NoKnockBack()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new Velocity()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new RainbowSky()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new AirJump()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Step()));
@@ -66,9 +66,9 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Criticals()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Bhop()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Tower()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new BugUp()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new AntiVoid()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new MidClick()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new ClickTP()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new Teleport()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new NoFriends()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Spammer()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new ChestAura()));
