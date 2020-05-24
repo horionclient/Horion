@@ -6,6 +6,7 @@ Killaura::Killaura() : IModule('P', Category::COMBAT, "Attacks entities around y
 	this->registerFloatSetting("range", &this->range, this->range, 2.f, 20.f);
 	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
 	this->registerBoolSetting("AutoWeapon", &this->autoweapon, this->autoweapon);
+	this->registerBoolSetting("Silent Rotations", &this->silent, this->silent);
 }
 
 Killaura::~Killaura() {
@@ -101,8 +102,7 @@ void Killaura::onEnable() {
 }
 
 void Killaura::onSendPacket(C_Packet* packet) {
-	if (packet->isInstanceOf<C_MovePlayerPacket>()) {
-		vec2_t angle = this->angle;
+	if (packet->isInstanceOf<C_MovePlayerPacket>() && silent) {
 		if (this->hasTarget) {
 			C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
 			movePacket->pitch = angle.x;
