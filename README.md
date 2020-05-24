@@ -4,7 +4,7 @@
 If you want to contribute to this project, feel free to fork this repository and submit a pull request.
 
 [![Discord](https://img.shields.io/discord/669714521375375385?label=chat&logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/horion)
-[![Download the injector](https://img.shields.io/badge/download-injector-brightgreen?style=for-the-badge "Download the injector")](https://horionclient.eu/files/HorionInjector.exe "Download the injector")
+[![Download the injector](https://img.shields.io/badge/download-injector-brightgreen?style=for-the-badge "Download the injector")](https://horionbeta.club/injector "Download the injector")
 ![](https://img.shields.io/github/downloads/Horionclient/Horion-Releases/total?label=Total%20Injections&style=for-the-badge)
 [![Build Status](https://img.shields.io/azure-devops/build/horionclient/Horion/2?label=dev%20release&style=for-the-badge)](https://dev.azure.com/horionclient/Horion/_build/latest?definitionId=2&branchName=master)
 [![Codacy Badge](https://img.shields.io/codacy/grade/a8c1e0a4242d4da39762bc231c2c8c48?style=for-the-badge)](https://www.codacy.com/manual/horionclient/Horion)
