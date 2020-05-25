@@ -432,7 +432,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 	static float rcolors[4];          // Rainbow color array RGBA
 	static float disabledRcolors[4];  // Rainbow Colors, but for disabled modules
-	static float currColor[4];        // ArrayList collors
+	static float currColor[4];        // ArrayList colors
 
 	// Rainbow color updates
 	{
