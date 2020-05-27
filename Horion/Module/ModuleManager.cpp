@@ -41,7 +41,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new NoPacket()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Speed()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Xray()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new BedFucker()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new Fucker()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new NoSlowDown()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new AutoTotem()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new InfiniteReach()));

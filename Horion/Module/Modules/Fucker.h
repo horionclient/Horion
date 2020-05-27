@@ -2,7 +2,7 @@
 #include "Module.h"
 #include "../ModuleManager.h"
 
-class BedFucker : public IModule {
+class Fucker : public IModule {
 private:
 	int range = 5;
 	bool beds = true;
@@ -13,13 +13,10 @@ private:
 	bool barrels = false;
 
 public:
-	BedFucker();
-	~BedFucker();
+	Fucker();
+	~Fucker();
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
-	virtual void onEnable() override;
-	virtual void onDisable() override;
-	int delay = 0;
 };

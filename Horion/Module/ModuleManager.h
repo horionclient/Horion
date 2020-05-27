@@ -19,7 +19,7 @@
 #include "Modules/AutoSneak.h"
 #include "Modules/AutoSprint.h"
 #include "Modules/AutoTotem.h"
-#include "Modules/BedFucker.h"
+#include "Modules/Fucker.h"
 #include "Modules/Bhop.h"
 #include "Modules/Blink.h"
 #include "Modules/BowAimbot.h"
