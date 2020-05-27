@@ -11,7 +11,7 @@ const char* TestModule::getModuleName() {
 }
 
 bool TestModule::isFlashMode() {
-	return true;
+	return false;
 }
 
 void TestModule::onEnable() {
@@ -27,5 +27,4 @@ void TestModule::onSendPacket(C_Packet* p) {
 }
 
 void TestModule::onDisable() {
-	g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
 }

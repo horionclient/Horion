@@ -380,9 +380,9 @@ private:
 
 public:
 	virtual void causeFallDamage(float);
+	virtual void handleFallDistanceOnServer(float, bool);
 
 private:
-	virtual __int64 handleFallDistanceOnServer(float, bool);
 	virtual __int64 playSynchronizedSound(__int64, vec3_t const &, __int64 const &, bool);
 	virtual __int64 playSynchronizedSound(__int64, vec3_t const &, int, bool);
 	virtual __int64 onSynchedDataUpdate(int);

@@ -85,6 +85,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Zoom()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Teams()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Nbt()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new Godmode()));
 
 #if defined(_BETA) or defined(_DEBUG)
 		this->moduleList.push_back(std::shared_ptr<IModule>(new ForceOpenCommandBlock()));
@@ -92,7 +93,6 @@ void ModuleManager::initModules() {
 
 #ifdef _DEBUG
 		this->moduleList.push_back(std::shared_ptr<IModule>(new PacketLogger()));
-
 		this->moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
 #endif
 

@@ -62,7 +62,6 @@
 #include "Modules/NoSlowDown.h"
 #include "Modules/NoWeb.h"
 #include "Modules/Nuker.h"
-#include "Modules/PacketLogger.h"
 #include "Modules/Phase.h"
 #include "Modules/RainbowSky.h"
 #include "Modules/Reach.h"
@@ -84,8 +83,10 @@
 #include "Modules/Zoom.h"
 #include "Modules/Teams.h"
 #include "Modules/Nbt.h"
+#include "Modules/Godmode.h"
 
 #ifdef _DEBUG
+#include "Modules/PacketLogger.h"
 #include "Modules/TestModule.h"
 #endif
 
