@@ -1,6 +1,6 @@
 #include "Freecam.h"
 
-Freecam::Freecam() : IModule('V', Category::EXPLOITS, "Move your cam without moving the player") {
+Freecam::Freecam() : IModule('V', Category::MISC, "Move your cam without moving the player") {
 }
 
 Freecam::~Freecam() {

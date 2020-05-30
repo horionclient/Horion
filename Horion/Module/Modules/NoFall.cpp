@@ -11,11 +11,13 @@ const char* NoFall::getModuleName() {
 }
 
 void NoFall::onSendPacket(C_Packet* packet) {
-	if (packet->isInstanceOf<C_MovePlayerPacket>()) {
-		C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
-		movePacket->onGround = true;
-	} else if (packet->isInstanceOf<C_ActorFallPacket>()) {
-		C_ActorFallPacket* fallPacket = reinterpret_cast<C_ActorFallPacket*>(packet);
-		fallPacket->fallDistance = 0.f;
+	if (g_Data.getLocalPlayer() != nullptr && g_Data.getLocalPlayer()->fallDistance > 2.f) {
+		if (packet->isInstanceOf<C_MovePlayerPacket>()) {
+			C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+			movePacket->onGround = true;
+		} else if (packet->isInstanceOf<C_ActorFallPacket>()) {
+			C_ActorFallPacket* fallPacket = reinterpret_cast<C_ActorFallPacket*>(packet);
+			fallPacket->fallDistance = 0.f;
+		}
 	}
 }

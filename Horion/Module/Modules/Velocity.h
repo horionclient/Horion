@@ -2,12 +2,12 @@
 
 #include "Module.h"
 
-class NoKnockBack : public IModule {
+class Velocity : public IModule {
 public:
 	float xModifier = 0.f;
 	float yModifier = 0.f;
-	NoKnockBack();
-	~NoKnockBack();
+	Velocity();
+	~Velocity();
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;

@@ -1,6 +1,6 @@
 #pragma once
 #include "Module.h"
-class ClickTP : public IModule {
+class Teleport : public IModule {
 private:
 	bool hasClicked = false;
 	bool onlyHand = false;
@@ -9,8 +9,8 @@ private:
 	vec3_t tpPos;
 
 public:
-	ClickTP();
-	~ClickTP();
+	Teleport();
+	~Teleport();
 
 	// Inherited via IModule
 	virtual void onTick(C_GameMode* gm) override;

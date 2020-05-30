@@ -13,6 +13,7 @@ bool PlayerTeleportCommand::execute(std::vector<std::string>* args) {
 	assertTrue(nameOfPlayer.size() > 0);
 	std::string nameOfPlayerLower = std::string(nameOfPlayer);
 	std::transform(nameOfPlayerLower.begin(), nameOfPlayerLower.end(), nameOfPlayerLower.begin(), ::tolower);
+	nameOfPlayerLower = Utils::sanitize(nameOfPlayerLower);
 
 	C_EntityList* entList = g_Data.getEntityList();
 	size_t listSize = entList->getListSize();

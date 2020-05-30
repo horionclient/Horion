@@ -1,18 +1,18 @@
-#include "ClickTP.h"
+#include "Teleport.h"
 
-ClickTP::ClickTP() : IModule(0x0, Category::EXPLOITS, "Click a block to teleport to it") {
+Teleport::Teleport() : IModule(0x0, Category::MISC, "Click a block to teleport to it") {
 	registerBoolSetting("Only Hand", &this->onlyHand, this->onlyHand);
 	registerBoolSetting("Bypass", &this->bypass, this->bypass);
 }
 
-ClickTP::~ClickTP() {
+Teleport::~Teleport() {
 }
 
-const char* ClickTP::getModuleName() {
+const char* Teleport::getModuleName() {
 	return "Teleport";
 }
 
-void ClickTP::onTick(C_GameMode* gm) {
+void Teleport::onTick(C_GameMode* gm) {
 
 	if (!GameData::canUseMoveKeys()) 
 		return;

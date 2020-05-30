@@ -13,6 +13,8 @@ private:
 	void findWeapon();
 	vec2_t angle = vec2_t(0, 0);
 	bool hasTarget = false;
+	bool silent = true;
+
 public:
 	bool isMobAura = false;
 	float range = 6;

@@ -68,9 +68,6 @@ void DrawUtils::setColor(float r, float g, float b, float a) {
 }
 
 C_Font* DrawUtils::getFont(Fonts font) {
-	static bool check = strcmp(GameData::getGameVersion()->getText(), "1.14.0");
-	if (check == 0)
-		return g_Data.getClientInstance()->N0000080D->getOldFont();
 	switch (font) {
 	case Fonts::SMOOTH:
 		return g_Data.getClientInstance()->N0000080D->getTheGoodFontThankYou();
@@ -301,7 +298,7 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 		textPos.x -= textStr / 2.f;
 		rectPos.x = textPos.x - 1.f;
 		rectPos.y = textPos.y - 1.f;
-		rectPos.z = textPos.x + textStr + 25.f;
+		rectPos.z = textPos.x + textStr;
 		rectPos.w = textPos.y + 10.f;
 		vec4_t subRectPos = rectPos;
 		subRectPos.y = subRectPos.w - 1.f;
@@ -311,7 +308,7 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 
 		if (ent->getEntityTypeId() == 63 && moduleMgr->getModule<NameTags>()->displayArmor) {  // is player, show armor
 			C_Player* player = static_cast<C_Player*>(ent);
-			static float constexpr scale = 0.4f;
+			static float constexpr scale = 0.5f;
 			static float constexpr opacity = 0.25f;
 			static float constexpr spacing = scale + 15.f;
 			float x = rectPos.z - 25.f;
@@ -357,7 +354,7 @@ void DrawUtils::draw2D(C_Entity* ent, float lineWidth) {
 		refdef->OWorldToScreen(origin, corners[3], corners2d[3], fov, screenSize)) {
 		float length = (corners2d[1].x - corners2d[0].x) / 4.f;
 
-		/*drawLine(corners2d[0], vec2_t(corners2d[0].x + length, corners2d[0].y), lineWidth);
+		drawLine(corners2d[0], vec2_t(corners2d[0].x + length, corners2d[0].y), lineWidth);
 		drawLine(corners2d[0], vec2_t(corners2d[0].x, corners2d[0].y + length), lineWidth);
 
 		drawLine(vec2_t(corners2d[1].x - length, corners2d[1].y), corners2d[1], lineWidth);
@@ -367,12 +364,12 @@ void DrawUtils::draw2D(C_Entity* ent, float lineWidth) {
 		drawLine(corners2d[2], vec2_t(corners2d[2].x + length, corners2d[2].y), lineWidth);
 
 		drawLine(vec2_t(corners2d[3].x, corners2d[3].y - length), corners2d[3], lineWidth);
-		drawLine(vec2_t(corners2d[3].x - length, corners2d[3].y), corners2d[3], lineWidth);	*/
+		drawLine(vec2_t(corners2d[3].x - length, corners2d[3].y), corners2d[3], lineWidth);	
 
-		drawLine(corners2d[0], corners2d[1], lineWidth);
+		/*drawLine(corners2d[0], corners2d[1], lineWidth);
 		drawLine(corners2d[0], corners2d[2], lineWidth);
 		drawLine(corners2d[3], corners2d[1], lineWidth);
-		drawLine(corners2d[3], corners2d[2], lineWidth);
+		drawLine(corners2d[3], corners2d[2], lineWidth);*/
 	}
 }
 

@@ -1,6 +1,6 @@
 #include "Derp.h"
 
-Derp::Derp() : IModule(0x0, Category::EXPLOITS, "lol you stupid") {
+Derp::Derp() : IModule(0x0, Category::MISC, "lol you stupid") {
 	this->registerBoolSetting("ihaveastroke", &this->epicStroke, this->epicStroke);
 	this->registerBoolSetting("packet mode", &this->packetMode, this->packetMode);
 }
@@ -13,7 +13,6 @@ const char* Derp::getModuleName() {
 }
 
 void Derp::onTick(C_GameMode* gm) {
-
 	if (packetMode) {
 		C_MovePlayerPacket* p = new C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
 		if (epicStroke) {

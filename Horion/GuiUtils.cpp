@@ -9,6 +9,3 @@ void GuiUtils::drawCrossLine(vec2_t pos, MC_Color col, float lineWidth, float cr
 	if (secondCross)
 		DrawUtils::drawLine(vec2_t(pos.x, pos.y - crossSize), vec2_t(pos.x, pos.y + crossSize), lineWidth);
 }
-
-void GuiUtils::checkBox() {
-}

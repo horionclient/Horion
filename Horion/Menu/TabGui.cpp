@@ -163,8 +163,8 @@ void TabGui::render() {
 	renderLabel("Visual");
 	renderLabel("Movement");
 	renderLabel("Player");
-	renderLabel("Build");
-	renderLabel("Exploits");
+	renderLabel("World");
+	renderLabel("Misc");
 	renderLevel();
 
 	// Render all modules

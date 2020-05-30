@@ -6,6 +6,7 @@ Killaura::Killaura() : IModule('P', Category::COMBAT, "Attacks entities around y
 	this->registerFloatSetting("range", &this->range, this->range, 2.f, 20.f);
 	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
 	this->registerBoolSetting("AutoWeapon", &this->autoweapon, this->autoweapon);
+	this->registerBoolSetting("Silent Rotations", &this->silent, this->silent);
 }
 
 Killaura::~Killaura() {
@@ -17,23 +18,23 @@ const char* Killaura::getModuleName() {
 
 static std::vector<C_Entity*> targetList;
 
-void findEntity(C_Entity* currentEntity, bool isRegularEntitie) {
+void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 	static auto killauraMod = moduleMgr->getModule<Killaura>();
+
+	if (currentEntity == NULL)
+		return;
 	
 	if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
 		return;
 
-	if (currentEntity == 0)
+	if (!g_Data.getLocalPlayer()->canAttack(currentEntity, false))
 		return;
 
-	if (currentEntity->timeSinceDeath > 0 || currentEntity->damageTime >= 7)
+	if (!g_Data.getLocalPlayer()->isAlive())
 		return;
 
-	if (killauraMod->isMobAura && !isRegularEntitie) {
+	if (killauraMod->isMobAura) {
 		if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)
-			return;
-
-		if (!g_Data.getLocalPlayer()->canAttack(currentEntity, false))
 			return;
 	} else {
 		if (!Target::isValidTarget(currentEntity))
@@ -101,8 +102,7 @@ void Killaura::onEnable() {
 }
 
 void Killaura::onSendPacket(C_Packet* packet) {
-	if (packet->isInstanceOf<C_MovePlayerPacket>()) {
-		vec2_t angle = this->angle;
+	if (packet->isInstanceOf<C_MovePlayerPacket>() && silent) {
 		if (this->hasTarget) {
 			C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
 			movePacket->pitch = angle.x;

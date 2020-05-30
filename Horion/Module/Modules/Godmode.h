@@ -1,18 +1,17 @@
 #pragma once
-#include "..\ModuleManager.h"
 #include "Module.h"
-
-class BugUp : public IModule {
+class Godmode : public IModule {
 private:
-	int distance = 5;
-	vec3_t savepos;
+	int regendelay = 5;
+	int regenvalue = 5;
+	int delay = 0;
 
 public:
-	C_MoveInputHandler* inputHandler = nullptr;
-	BugUp();
-	~BugUp();
+	Godmode();
+	~Godmode();
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
+	virtual void onSendPacket(C_Packet* p) override;
 };

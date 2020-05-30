@@ -1,6 +1,6 @@
 #include "ForceOpenCommandBlock.h"
 
-ForceOpenCommandBlock::ForceOpenCommandBlock() : IModule(0x0, Category::EXPLOITS, "Open command blocks even if you are not operator") {
+ForceOpenCommandBlock::ForceOpenCommandBlock() : IModule(0x0, Category::MISC, "Open command blocks even if you are not operator") {
 }
 
 ForceOpenCommandBlock::~ForceOpenCommandBlock() {

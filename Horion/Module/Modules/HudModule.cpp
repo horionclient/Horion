@@ -11,6 +11,7 @@ HudModule::HudModule() : IModule(0x0, Category::VISUAL, "Displays ArrayList/TabG
 	registerBoolSetting("Keystrokes", &this->keystrokes, this->keystrokes);
 	registerBoolSetting("Show FPS", &this->fps, this->fps);
 	registerBoolSetting("Show CPS", &this->cps, this->cps);
+	registerBoolSetting("Always show", &this->alwaysShow, this->alwaysShow);
 }
 
 HudModule::~HudModule() {
@@ -23,7 +24,7 @@ const char* HudModule::getModuleName() {
 void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
 	{  // FPS
-		if (!(g_Data.getLocalPlayer() == nullptr || !this->fps || !GameData::canUseMoveKeys())) {
+		if (!(g_Data.getLocalPlayer() == nullptr || !this->fps)) {
 			std::string fpsText = "FPS: " + std::to_string(g_Data.getFPS());
 			float offset = tabgui ? 60.f : 0.f;
 			vec4_t rectPos = vec4_t(2.5f, offset + 5.f, 50.5f, offset + 15.f);
@@ -33,7 +34,7 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		}
 	}
 	{  // CPS
-		if (!(g_Data.getLocalPlayer() == nullptr || !this->cps || !GameData::canUseMoveKeys())) {
+		if (!(g_Data.getLocalPlayer() == nullptr || !this->cps)) {
 			std::string cpsText = "CPS: " + std::to_string(g_Data.getLeftCPS()) + " - " + std::to_string(g_Data.getRightCPS());
 			float offset = 0.f;
 			if (tabgui) offset += 60.f;
@@ -45,7 +46,7 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		}
 	}
 	{  // Coordinates
-		if (!(g_Data.getLocalPlayer() == nullptr || !this->coordinates || !GameData::canUseMoveKeys())) {
+		if (!(g_Data.getLocalPlayer() == nullptr || !this->coordinates)) {
 			vec3_t* pos = g_Data.getLocalPlayer()->getPos();
 			std::string coordsX = "X: " + std::to_string((int)pos->x);
 			std::string coordsY = "Y: " + std::to_string((int)pos->y);

@@ -13,8 +13,7 @@ JsValueRef CALLBACK LocalPlayerFunctions::setPosition(JsValueRef callee, bool is
 	}
 	auto vecOpt = Vector3Functions::getVecFromArguments(&arguments[1], argumentCount - 1);
 	if (!vecOpt.has_value()) {
-		chakra.throwTypeException(L"Invalid vector!");
-		return JS_INVALID_REFERENCE;
+		THROW(L"Invalid vector!");
 	}
 
 	ent->setPos(vecOpt.value());

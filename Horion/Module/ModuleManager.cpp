@@ -22,7 +22,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Aimbot()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new ChestESP()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new NoKnockBack()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new Velocity()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new RainbowSky()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new AirJump()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Step()));
@@ -41,7 +41,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new NoPacket()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Speed()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Xray()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new BedFucker()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new Fucker()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new NoSlowDown()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new AutoTotem()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new InfiniteReach()));
@@ -66,9 +66,9 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Criticals()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Bhop()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Tower()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new BugUp()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new AntiVoid()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new MidClick()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new ClickTP()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new Teleport()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new NoFriends()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Spammer()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new ChestAura()));
@@ -85,6 +85,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Zoom()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Teams()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Nbt()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new Godmode()));
 
 #if defined(_BETA) or defined(_DEBUG)
 		this->moduleList.push_back(std::shared_ptr<IModule>(new ForceOpenCommandBlock()));
@@ -92,7 +93,6 @@ void ModuleManager::initModules() {
 
 #ifdef _DEBUG
 		this->moduleList.push_back(std::shared_ptr<IModule>(new PacketLogger()));
-
 		this->moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
 #endif
 
