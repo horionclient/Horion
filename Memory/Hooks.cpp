@@ -1,6 +1,5 @@
 ﻿#include "Hooks.h"
 
-
 Hooks g_Hooks;
 bool isTicked = false;
 bool overrideStyledReturn = false;
@@ -266,7 +265,9 @@ void Hooks::Init() {
 		
 		void* prepFeaturedServersFirstTime = reinterpret_cast<void*>(FindSignature("48 8B C4 57 41 54 41 55 41 56 41 57 48 83 EC ?? 48 C7 40 ?? FE FF FF FF 48 89 58 ?? 48 89 68 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B FA"));
 		g_Hooks.prepFeaturedServersFirstTimeHook = std::make_unique<FuncHook>(prepFeaturedServersFirstTime, Hooks::prepFeaturedServersFirstTime);
-		
+	
+		//void* cube__compile = reinterpret_cast<void*>(FindSignature("48 8B C4 53 41 56 41 57 48 81 EC ?? ?? ?? ?? 4C 8B 79 ??"));
+		//g_Hooks.cube__compileHook = std::make_unique<FuncHook>(cube__compile, Hooks::Cube__compile);
 	}
 
 // clang-format on
@@ -1409,7 +1410,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 			auto overrideGeo = std::get<1>(geoOverride);
 			newGeometryData = new TextHolder(*overrideGeo.get());
 		} else {  // Default Skin
-				  /*char* str;  // Obj text
+			/*char* str;  // Obj text
 			{
 				auto hResourceObj = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_OBJ), "TEXT");
 				auto hMemoryObj = LoadResource(g_Data.getDllModule(), hResourceObj);
@@ -1858,27 +1859,52 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 	context->DrawIndexed(3, 0, 0);
 #endif
 
-//#define TEST_DIRECTX
+	//#define TEST_DIRECTX
 
 #ifdef TEST_DIRECTX
 	if (!GameWnd.isInitialized())
-		GameWnd.Init(chain,g_Data.getDllModule());
+		GameWnd.Init(chain, g_Data.getDllModule());
 	else
 		GameWnd.Render();
-	
+
 #endif  // DEBUG
 	return func(chain, syncInterval, flags);
 }
 
 HRESULT Hooks::swapChain__ResizeBuffers(IDXGISwapChain* chain, UINT bufferCount, UINT Width, UINT Height, DXGI_FORMAT Newformat, UINT SwapChainFlags) {
-	
 	auto func = g_Hooks.swapchain__resizeBuffersHook->GetFastcall<HRESULT, IDXGISwapChain*, UINT, UINT, UINT, DXGI_FORMAT, UINT>();
-	
 
 #ifdef TEST_DIRECTX
 	GameWnd.OnWindowSizeChanged(static_cast<int>(Width), static_cast<int>(Height));
 #endif
 	HRESULT ret = func(chain, bufferCount, Width, Height, Newformat, SwapChainFlags);
+
+	return ret;
+}
+
+__int64 Hooks::Cube__compile(__int64 a1, __int64 a2) {
+	auto func = g_Hooks.cube__compileHook->GetFastcall<__int64, __int64, __int64>();
+
+	auto ret = func(a1, a2);
+
+	auto end = *reinterpret_cast<__int64*>(a1 + 0x38);
+	auto it = *reinterpret_cast<__int64*>(a1 + 0x30);
+	auto boi = it + 0x1C;
+	while (it != end) {  // loop through PolygonQuad
+
+		if (it != boi + 0x34) {
+			auto iter2 = boi - 0xC;
+			do {
+				// PolygonQuad::compile
+				float* floatyBoi = reinterpret_cast<float*>(iter2 - 16);
+				logF("%.1f %.1f %.1f", floatyBoi[0], floatyBoi[1], floatyBoi[2]);
+				iter2 += 0x14;
+
+			} while (iter2 - 0x10 != boi + 0x34);
+		}
+		boi += 0x50;
+		it += 0x50;
+	}
 
 	return ret;
 }

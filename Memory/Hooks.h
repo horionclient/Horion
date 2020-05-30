@@ -119,6 +119,8 @@ private:
 	static HRESULT swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT flags);
 	static __int64 InGamePlayScreen___renderLevel(__int64 playScreen, __int64 a2, __int64 a3);
 	static HRESULT swapChain__ResizeBuffers(IDXGISwapChain* chain, UINT bufferCount, UINT Width, UINT Height,DXGI_FORMAT Newformat,UINT SwapChainFlags);
+	static __int64 Cube__compile(__int64 a1, __int64 a2);
+	
 
 	std::unique_ptr<FuncHook> GameMode_tickHook;
 	std::unique_ptr<FuncHook> SurvivalMode_tickHook;
@@ -165,6 +167,7 @@ private:
 	std::unique_ptr<FuncHook> swapchain__presentHook;
 	std::unique_ptr<FuncHook> InGamePlayScreen___renderLevelHook;
 	std::unique_ptr<FuncHook> swapchain__resizeBuffersHook;
+	std::unique_ptr<FuncHook> cube__compileHook;
 };
 
 extern Hooks g_Hooks;
