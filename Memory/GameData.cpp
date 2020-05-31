@@ -144,12 +144,12 @@ void GameData::forEachEntity(std::function<void(C_Entity*, bool)> callback) {
 	// New EntityList
 	{
 		// MultiplayerLevel::directTickEntities
-		// 48 89 5C 24 08 48 89 74  24 18 57 48 83 EC 20 48 8B 7A 20 48 8B F2 48 8B  BF F8 01 00 00 48 8B 1F
 		__int64 region = reinterpret_cast<__int64>(g_Data.getLocalPlayer()->region);
 		__int64* entityIdMap = *(__int64**)(*(__int64*)(region + 0x20) + 0x150i64);
 		for (__int64* i = (__int64*)*entityIdMap; i != entityIdMap; i = (__int64*)*i) {
 			__int64 actor = i[3];
-			if (actor && !*(char*)(actor + 0x361) && !*(char*)(actor + 0x362)) {
+			// !isRemoved() && !isGlobal()
+			if (actor && !*(char*)(actor + 0x389) && !*(char*)(actor + 0x38A)) {
 				C_Entity* ent = reinterpret_cast<C_Entity*>(actor);
 				if (std::find(tickedEntities.begin(), tickedEntities.end(), ent) == tickedEntities.end()) {
 					callback(ent, false);
@@ -169,7 +169,7 @@ void GameData::forEachEntity(std::function<void(C_Entity*, bool)> callback) {
 		} else {
 			size_t listSize = entList->getListSize();
 			//logF("listSize: %li", listSize);
-			if (listSize < 1000 && listSize > 1) {
+			if (listSize < 5000 && listSize > 1) {
 				for (size_t i = 0; i < listSize; i++) {
 					C_Entity* current = entList->get(i);
 					if (std::find(tickedEntities.begin(), tickedEntities.end(), current) == tickedEntities.end()) {
