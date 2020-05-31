@@ -19,12 +19,16 @@
 //   # binary_to_compressed_c.exe myfont.ttf MyFont > myfont.cpp
 //   # binary_to_compressed_c.exe -base85 myfont.ttf MyFont > myfont.cpp
 
+
+
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
 
+#pragma warning(push)
+#pragma warning(disable : 4244)
 // stb_compress* from stb.h - declaration
 typedef unsigned int stb_uint;
 typedef unsigned char stb_uchar;
@@ -259,7 +263,7 @@ static int stb_compress_chunk(stb_uchar *history,
         int best = 2, dist=0;
 
         if (q+65536 > end)
-            match_max = end-q;
+            match_max = (stb_uint)(end-q);
         else
             match_max = 65536;
 
@@ -380,5 +384,6 @@ stb_uint stb_compress(stb_uchar *out, stb_uchar *input, stb_uint length)
 
     stb_compress_inner(input, length);
 
-    return stb__out - out;
+    return (stb_uint)(stb__out - out);
 }
+#pragma warning(pop)

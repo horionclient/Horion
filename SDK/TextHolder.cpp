@@ -5,7 +5,7 @@
 void GamerTextHolder::copyFrom(TextHolder *copy) {
 	typedef void*(__cdecl * _malloctype)(size_t);
 
-	static auto _malloc = reinterpret_cast<_malloctype>(GetProcAddress(GetModuleHandle("api-ms-win-crt-heap-l1-1-0"), "malloc"));
+	static auto _malloc = reinterpret_cast<_malloctype>(GetProcAddress(GetModuleHandleA("api-ms-win-crt-heap-l1-1-0"), "malloc"));
 
 	deleteText();
 	memset(this, 0, sizeof(TextHolder));
@@ -34,7 +34,7 @@ void GamerTextHolder::copyFrom(TextHolder *copy) {
 }
 void GamerTextHolder::deleteText() {
 	typedef void(__cdecl * _freetype)(void*);
-	static auto _free = reinterpret_cast<_freetype>(GetProcAddress(GetModuleHandle("api-ms-win-crt-heap-l1-1-0"), "free"));
+	static auto _free = reinterpret_cast<_freetype>(GetProcAddress(GetModuleHandleA("api-ms-win-crt-heap-l1-1-0"), "free"));
 
 	if (textLength >= 16 && pText != nullptr) {
 		if (textLength + 1 >= 0x1000) {

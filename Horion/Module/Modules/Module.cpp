@@ -265,16 +265,16 @@ void SettingEntry::makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
 		case ValueType::BOOL_T:
 			break;
 		case ValueType::INT64_T:
-			value->int64 = fmax(minValue->int64, fmin(maxValue->int64, value->int64));
+			value->int64 = max(minValue->int64, min(maxValue->int64, value->int64));
 			break;
 		case ValueType::DOUBLE_T:
-			value->_double = fmax(minValue->_double, fmin(maxValue->_double, value->_double));
+			value->_double = max(minValue->_double, min(maxValue->_double, value->_double));
 			break;
 		case ValueType::FLOAT_T:
-			value->_float = fmax(minValue->_float, fmin(maxValue->_float, value->_float));
+			value->_float = max(minValue->_float, min(maxValue->_float, value->_float));
 			break;
 		case ValueType::INT_T:
-			value->_int = fmax(minValue->_int, fmin(maxValue->_int, value->_int));
+			value->_int = max(minValue->_int, min(maxValue->_int, value->_int));
 			break;
 		default:
 			logF("unrecognized value %i", valueType);

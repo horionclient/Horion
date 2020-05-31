@@ -19,7 +19,7 @@ void ChestESP::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 
 	for (auto iter = bufferedChestList.begin(); iter != bufferedChestList.end(); ++iter) {
 		DrawUtils::setColor(1.f, 0.3f, 0.3f, 0.6f);
-		DrawUtils::drawBox((*iter)->lower, (*iter)->upper, fmax(0.2f, 1 / fmax(1, g_Data.getLocalPlayer()->eyePos0.dist((*iter)->lower))), true);  // Fancy math to give an illusion of good esp
+		DrawUtils::drawBox((*iter)->lower, (*iter)->upper, (float)fmax(0.2f, 1 / (float)fmax(1, g_Data.getLocalPlayer()->eyePos0.dist((*iter)->lower))), true);  // Fancy math to give an illusion of good esp
 	}
 }
 
