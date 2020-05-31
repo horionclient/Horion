@@ -35,3 +35,27 @@ void JavascriptModule::onTick(C_GameMode* gm) {
 	
 	p->getScriptInstance()->callCallback(callback);
 }
+void JavascriptModule::onEnable() {
+	auto p = this->backingScriptModule.lock();
+	if (!p)
+		return;
+
+	auto lock = p->lockCallbacks();
+	auto callback = p->getCallback(L"onEnable");
+	if (callback == JS_INVALID_REFERENCE)
+		return;
+
+	p->getScriptInstance()->callCallback(callback);
+}
+void JavascriptModule::onDisable() {
+	auto p = this->backingScriptModule.lock();
+	if (!p)
+		return;
+
+	auto lock = p->lockCallbacks();
+	auto callback = p->getCallback(L"onDisable");
+	if (callback == JS_INVALID_REFERENCE)
+		return;
+
+	p->getScriptInstance()->callCallback(callback);
+}
