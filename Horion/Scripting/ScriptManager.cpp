@@ -313,3 +313,6 @@ bool ScriptManager::importScriptFolder(std::string path) {
 void ScriptManager::unloadAllScripts() {
 	this->scriptInstances.clear();
 }
+size_t ScriptManager::getNumEnabledScripts() {
+	return this->scriptInstances.size();
+}

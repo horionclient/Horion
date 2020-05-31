@@ -1,6 +1,7 @@
 #include "TabGui.h"
 
 #include <Windows.h>
+#include "../Scripting/ScriptManager.h"
 
 struct SelectedItemInformation {
 	int selectedItemId = 0;
@@ -167,6 +168,8 @@ void TabGui::render() {
 	renderLabel("Player");
 	renderLabel("World");
 	renderLabel("Misc");
+	if(scriptMgr.getNumEnabledScripts() > 0)
+		renderLabel("Scripts");
 	renderLevel();
 
 	// Render all modules

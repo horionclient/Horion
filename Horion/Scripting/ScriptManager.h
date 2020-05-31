@@ -127,5 +127,6 @@ public:
 	std::wstring runScript(std::wstring);
 	bool importScriptFolder(std::string path);
 	void unloadAllScripts();
+	size_t getNumEnabledScripts();
 };
 
