@@ -359,7 +359,7 @@ void ClickGui::renderCategory(Category category) {
 
 										const float minValue = setting->minValue->_float;
 										const float maxValue = setting->maxValue->_float - minValue;
-										float value = fmax(0, setting->value->_float - minValue);  // Value is now always > 0 && < maxValue
+										float value = (float) fmax(0, setting->value->_float - minValue);  // Value is now always > 0 && < maxValue
 										if (value > maxValue)
 											value = maxValue;
 										value /= maxValue;  // Value is now in range 0 - 1
@@ -605,8 +605,8 @@ void ClickGui::renderCategory(Category category) {
 			ourWindow->pos.y = windowSize.y - ourWindow->size.y;
 		}
 
-		ourWindow->pos.x = fmax(0, ourWindow->pos.x);
-		ourWindow->pos.y = fmax(0, ourWindow->pos.y);
+		ourWindow->pos.x = (float)fmax(0, ourWindow->pos.x);
+		ourWindow->pos.y = (float)fmax(0, ourWindow->pos.y);
 	}
 
 	moduleList.clear();
