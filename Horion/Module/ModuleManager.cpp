@@ -1,4 +1,8 @@
 #include "ModuleManager.h"
+#include "../../Utils/Logger.h"
+#include "../../Utils/Json.hpp"
+
+using json = nlohmann::json;
 
 ModuleManager::ModuleManager(GameData* gameData) {
 	this->gameData = gameData;
@@ -120,7 +124,8 @@ void ModuleManager::disable() {
 	}
 }
 
-void ModuleManager::onLoadConfig(json* conf) {
+void ModuleManager::onLoadConfig(void* confVoid) {
+	auto conf = reinterpret_cast<json*>(confVoid);
 	if (!isInitialized())
 		return;
 	auto lock = this->lockModuleList();
@@ -134,7 +139,8 @@ void ModuleManager::onLoadConfig(json* conf) {
 	this->getModule<AntiBot>()->setEnabled(true);
 }
 
-void ModuleManager::onSaveConfig(json* conf) {
+void ModuleManager::onSaveConfig(void* confVoid) {
+	auto conf = reinterpret_cast<json*>(confVoid);
 	if (!isInitialized())
 		return;
 	auto lock = this->lockModuleList();

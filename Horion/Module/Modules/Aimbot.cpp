@@ -36,9 +36,6 @@ void Aimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	size_t listSize = entList->getListSize();
 
 	if (listSize > 1000) {
-#ifdef _DEBUG
-		logF("Big ent list wtf men %i", listSize);
-#endif
 		return;
 	}
 

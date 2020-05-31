@@ -18,7 +18,6 @@ bool FriendListCommand::execute(std::vector<std::string>* args) {
 	size_t listSize = entList->getListSize();
 
 	if (listSize > 10000) {
-		logF("Big ent list wtf men %i", listSize);
 		return true;
 	}
 

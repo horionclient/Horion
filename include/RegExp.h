@@ -48,7 +48,7 @@ inline bool ParseRegExp(const std::wstring &regExp, bool caseSensitive, int grou
     {
         return false;
     }
-    CAtlRegExp<> re;
+    CAtlRegExp<CAtlRECharTraitsW> re;
     REParseError error = re.Parse(regExp.c_str(), caseSensitive);
     if (error != REPARSE_ERROR_OK)
     {
@@ -62,7 +62,7 @@ inline bool ParseRegExp(const std::wstring &regExp, bool caseSensitive, int grou
     }
     wcscpy_s(pSource, source.size()+1, source.c_str());
     BOOL bSucceed = TRUE;
-    CAtlREMatchContext<> mc;
+    CAtlREMatchContext<CAtlRECharTraitsW> mc;
     const wchar_t *pFrom = pSource;
     const wchar_t *pTo = NULL;
     while (bSucceed)

@@ -1,4 +1,5 @@
 #include "ClickGui.h"
+#include <Windows.h>
 
 bool isLeftClickDown = false;
 bool isRightClickDown = false;
@@ -160,7 +161,7 @@ void ClickGui::renderCategory(Category category) {
 	{
 		for (auto it = moduleList.begin(); it != moduleList.end(); ++it) {
 			std::string label = (*it)->getModuleName();
-			windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&label, textSize, Fonts::SMOOTH));
+			windowSize->x = fmax(windowSize->x, DrawUtils::getTextWidth(&label, textSize, Fonts::SMOOTH));
 		}
 	}
 
@@ -317,7 +318,7 @@ void ClickGui::renderCategory(Category category) {
 										name[0] = toupper(name[0]);
 
 									std::string elTexto = name;
-									windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 10 /* because we add 10 to text padding + checkbox*/);
+									windowSize->x = fmax(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 10 /* because we add 10 to text padding + checkbox*/);
 									DrawUtils::drawText(textPos, &elTexto, isFocused ? MC_Color(1.0f, 1.0f, 1.0f) : MC_Color(0.8f, 0.8f, 0.8f), textSize);
 									currentYOffset += textHeight + (textPadding * 2);
 								}
@@ -332,7 +333,7 @@ void ClickGui::renderCategory(Category category) {
 										name[0] = toupper(name[0]);
 
 									std::string elTexto = name;
-									windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
+									windowSize->x = fmax(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
 									DrawUtils::drawText(textPos, &elTexto, MC_Color(1.0f, 1.0f, 1.0f), textSize);
 									currentYOffset += textPadding + textHeight;
 									rectPos.w = currentYOffset;
@@ -358,7 +359,7 @@ void ClickGui::renderCategory(Category category) {
 
 										const float minValue = setting->minValue->_float;
 										const float maxValue = setting->maxValue->_float - minValue;
-										float value = max(0, setting->value->_float - minValue);  // Value is now always > 0 && < maxValue
+										float value = fmax(0, setting->value->_float - minValue);  // Value is now always > 0 && < maxValue
 										if (value > maxValue)
 											value = maxValue;
 										value /= maxValue;  // Value is now in range 0 - 1
@@ -423,7 +424,7 @@ void ClickGui::renderCategory(Category category) {
 										name[0] = toupper(name[0]);
 
 									std::string elTexto = name;
-									windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
+									windowSize->x = fmax(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
 									DrawUtils::drawText(textPos, &elTexto, MC_Color(1.0f, 1.0f, 1.0f), textSize);
 									currentYOffset += textPadding + textHeight;
 									rectPos.w = currentYOffset;
@@ -449,7 +450,7 @@ void ClickGui::renderCategory(Category category) {
 
 										const float minValue = (float)setting->minValue->_int;
 										const float maxValue = (float)setting->maxValue->_int - minValue;
-										float value = (float)max(0, setting->value->_int - minValue);  // Value is now always > 0 && < maxValue
+										float value = (float)fmax(0, setting->value->_int - minValue);  // Value is now always > 0 && < maxValue
 										if (value > maxValue)
 											value = maxValue;
 										value /= maxValue;  // Value is now in range 0 - 1
@@ -507,7 +508,7 @@ void ClickGui::renderCategory(Category category) {
 								sprintf_s(alc, 100, "Not implemented (%s)", setting->name);
 								std::string elTexto = alc;
 								// Adjust window size if our text is too  t h i c c
-								windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
+								windowSize->x = fmax(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
 
 								DrawUtils::drawText(textPos, &elTexto, MC_Color(1.0f, 1.0f, 1.0f), textSize);
 								currentYOffset += textHeight + (textPadding * 2);
@@ -604,8 +605,8 @@ void ClickGui::renderCategory(Category category) {
 			ourWindow->pos.y = windowSize.y - ourWindow->size.y;
 		}
 
-		ourWindow->pos.x = max(0, ourWindow->pos.x);
-		ourWindow->pos.y = max(0, ourWindow->pos.y);
+		ourWindow->pos.x = fmax(0, ourWindow->pos.x);
+		ourWindow->pos.y = fmax(0, ourWindow->pos.y);
 	}
 
 	moduleList.clear();

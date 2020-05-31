@@ -12,7 +12,5 @@ public:
 	bool isMovingBackward;  //0x77
 	bool isMovingLeft;      //0x78
 	bool isMovingRight;     //0x79
-	__int64 ClearMovementState() {
-		return Utils::CallVFunc<4, __int64>(this);
-	};
+	__int64 ClearMovementState();;
 };

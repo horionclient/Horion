@@ -71,7 +71,7 @@ private:
 	C_EntityList* entityList = 0;
 	C_HIDController* hidController = 0;
 	C_RakNetInstance* raknetInstance = 0;
-	HMODULE hDllInst = 0;
+	void* hDllInst = 0;
 	std::vector<std::shared_ptr<AABB>> chestList;
 	std::mutex chestListMutex;
 	std::queue<HorionDataPacket> horionToInjectorQueue;
@@ -89,11 +89,10 @@ private:
 	bool shouldTerminateB = false;
 	bool shouldHideB = false;
 	bool isAllowingWIPFeatures = false;
-	LARGE_INTEGER lastUpdate;
+	__int64 lastUpdate;
 	AccountInformation accountInformation = AccountInformation::asGuest();
 	static void retrieveClientInstance();
 	TextHolder* fakeName;
-	
 
 public:
 	NetworkedData networkedData;
@@ -109,7 +108,7 @@ public:
 	static void hide();
 	static void terminate();
 	static void updateGameData(C_GameMode* gameMode);
-	static void initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem, HMODULE hDllInst);
+	static void initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem, void* hDllInst);
 	static void addChestToList(C_ChestBlockActor* ChestBlock2);
 	static void EntityList_tick(C_EntityList* list);
 	static void setHIDController(C_HIDController* Hid);
@@ -174,29 +173,13 @@ public:
 			#endif
 		}
 	}
-	inline void sendPacketToInjector(HorionDataPacket horionDataPack) {
-		if (!isInjectorConnectionActive())
-			throw std::exception("Horion injector connection not active");
-		if (horionDataPack.dataArraySize >= 3000) {
-			logF("Tried to send data packet with array size: %i %llX", horionDataPack.dataArraySize, horionDataPack.data.get());
-			throw std::exception("Data packet data too big");
-		}
-			
-		horionToInjectorQueue.push(horionDataPack);
-	}
+	void sendPacketToInjector(HorionDataPacket horionDataPack);
 	inline int addInjectorResponseCallback(std::function<void(std::shared_ptr<HorionDataPacket>)> callback) {
 		lastRequestId++;
 		this->injectorToHorionResponseCallbacks[lastRequestId] = callback;
 		return lastRequestId;
 	}
-	inline void callInjectorResponseCallback(int id, std::shared_ptr<HorionDataPacket> packet) {
-		if (this->injectorToHorionResponseCallbacks.find(id) == this->injectorToHorionResponseCallbacks.end()) {
-			logF("No response callback for request with id=%i!", id);
-			return;
-		}
-		this->injectorToHorionResponseCallbacks[id](packet);
-		this->injectorToHorionResponseCallbacks.erase(id);
-	}
+	void callInjectorResponseCallback(int id, std::shared_ptr<HorionDataPacket> packet);
 	inline bool allowWIPFeatures() {
 #ifdef _DEBUG
 		return true;
@@ -223,7 +206,7 @@ public:
 		horionToInjectorQueue.pop();
 		return pk;
 	};
-	inline HMODULE getDllModule() { return hDllInst; };
+	inline void* getDllModule() { return hDllInst; };
 	inline C_ClientInstance* getClientInstance() { return clientInstance; };
 	inline C_GuiData* getGuiData() { return clientInstance->getGuiData(); };
 	inline C_LocalPlayer* getLocalPlayer() {
@@ -266,7 +249,7 @@ public:
 	void setFakeName(TextHolder* name) { fakeName = name; };
 	TextHolder* getFakeName() { return fakeName; };
 
-	inline LARGE_INTEGER getLastUpdateTime() { return lastUpdate; };
+	inline __int64 getLastUpdateTime() { return lastUpdate; };
 
 	void forEachEntity(std::function<void(C_Entity*, bool)>);
 

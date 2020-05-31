@@ -1,4 +1,5 @@
 #include "HudModule.h"
+#include "../../DrawUtils.h"
 
 HudModule::HudModule() : IModule(0x0, Category::VISUAL, "Displays ArrayList/TabGUI") {
 	registerBoolSetting("TabGui", &this->tabgui, this->tabgui);

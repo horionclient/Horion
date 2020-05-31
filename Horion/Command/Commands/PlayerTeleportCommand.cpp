@@ -1,4 +1,5 @@
 #include "PlayerTeleportCommand.h"
+#include "../../../Utils/Utils.h"
 
 PlayerTeleportCommand::PlayerTeleportCommand() : IMCCommand("playertp", "Teleports to players coordinates", "<NameOfThePlayer>") {
 }
@@ -20,7 +21,6 @@ bool PlayerTeleportCommand::execute(std::vector<std::string>* args) {
 	vec3_t pos;
 
 	if (listSize > 5000) {
-		logF("Big ent list wtf men %i", listSize);
 		return true;
 	}
 	std::string playerName;

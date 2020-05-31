@@ -217,7 +217,7 @@ public:
 		return result;
 	}
 
-	void getProperty(JsValueRef obj, wchar_t* str, JsValueRef* prop) {
+	void getProperty(JsValueRef obj, const wchar_t* str, JsValueRef* prop) {
 		JsPropertyIdRef namePropertyId;
 		this->JsGetPropertyIdFromName_(str, &namePropertyId);
 		this->JsGetProperty_(obj, namePropertyId, prop);

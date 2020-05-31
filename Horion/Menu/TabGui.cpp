@@ -1,5 +1,7 @@
 #include "TabGui.h"
 
+#include <Windows.h>
+
 struct SelectedItemInformation {
 	int selectedItemId = 0;
 	float currentSelectedItemInterpol = 0;
@@ -66,7 +68,7 @@ void TabGui::renderLevel() {
 	for (auto it = labelList.begin(); it != labelList.end(); ++it) {
 		labelListLength++;
 		std::string label = it->text;
-		maxLength = max(maxLength, DrawUtils::getTextWidth(&label, textSize));
+		maxLength = fmax(maxLength, DrawUtils::getTextWidth(&label, textSize));
 	}
 
 	if (selected[renderedLevel].selectedItemId < 0)

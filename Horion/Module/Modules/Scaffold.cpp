@@ -1,4 +1,5 @@
 #include "Scaffold.h"
+#include "../../DrawUtils.h"
 
 Scaffold::Scaffold() : IModule(VK_NUMPAD1, Category::WORLD, "Automatically build blocks beneath you") {
 	registerBoolSetting("AutoSelect", &this->autoselect, this->autoselect);

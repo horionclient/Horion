@@ -1,4 +1,6 @@
 #include "NbtCommand.h"
+#include "../../../Utils/Utils.h"
+#include "../../../SDK/Tag.h"
 
 NbtCommand::NbtCommand() : IMCCommand("nbt", "read and write NBT tags to/from your clipboard (You have to point at an entity/block entity)", "<read/write>") {
 }
@@ -45,9 +47,10 @@ bool NbtCommand::execute(std::vector<std::string>* args) {
 			}
 		}
 
-		Utils::setClipboardText(build.str());
+		auto builtStr = build.str();
+		Utils::setClipboardText(builtStr);
 		g_Data.getGuiData()->displayClientMessageF("%s%s", GREEN, "CompoundTag copied:");
-		g_Data.getClientInstance()->getGuiData()->displayClientMessage(&build.str());
+		g_Data.getClientInstance()->getGuiData()->displayClientMessage(&builtStr);
 	} else if ((args->at(1) == "write" || args->at(1) == "load") && item) {
 		std::string tag = Utils::getClipboardText();
 

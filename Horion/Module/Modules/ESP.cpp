@@ -25,12 +25,12 @@ void doRenderStuff(C_Entity* ent, bool isRegularEntitie) {
 		if (ent->timeSinceDeath > 0)
 			return;
 		if (FriendList::findPlayer(ent->getNameTag()->getText()) && !moduleMgr->getModule<NoFriends>()->isEnabled()) {
-			DrawUtils::setColor(0.1f, 0.9f, 0.1f, max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
+			DrawUtils::setColor(0.1f, 0.9f, 0.1f, fmax(0.1f, fmin(1.f, 15 / (ent->damageTime + 1))));
 		} else if (Target::isValidTarget(ent)) {
 			if (espMod->doRainbow)
-				DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
+				DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], fmax(0.1f, fmin(1.f, 15 / (ent->damageTime + 1))));
 			else
-				DrawUtils::setColor(0.9f, 0.9f, 0.9f, max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
+				DrawUtils::setColor(0.9f, 0.9f, 0.9f, fmax(0.1f, fmin(1.f, 15 / (ent->damageTime + 1))));
 		} else if (espMod->isMobEsp) {
 			if (ent->getNameTag()->getTextLength() <= 1 && ent->getEntityTypeId() == 63)
 				return;
@@ -40,13 +40,13 @@ void doRenderStuff(C_Entity* ent, bool isRegularEntitie) {
 
 			if (!g_Data.getLocalPlayer()->canAttack(ent, false))
 				return;
-			DrawUtils::setColor(0.2f, 0.2f, 0.9f, max(0.1f, min(1.f, 15 / (ent->damageTime + 1))));
+			DrawUtils::setColor(0.2f, 0.2f, 0.9f, fmax(0.1f, fmin(1.f, 15 / (ent->damageTime + 1))));
 		} else
 			return;
 		if (espMod->is2d)
-			DrawUtils::draw2D(ent, max(0.4f, 1 / max(1, (*localPlayer->getPos()).dist(*ent->getPos()) * 3.f)));
+			DrawUtils::draw2D(ent, fmax(0.4f, 1 / fmax(1, (*localPlayer->getPos()).dist(*ent->getPos()) * 3.f)));
 		else 
-			DrawUtils::drawEntityBox(ent, max(0.2f, 1 / max(1, (*localPlayer->getPos()).dist(*ent->getPos()))));
+			DrawUtils::drawEntityBox(ent, fmax(0.2f, 1 / fmax(1, (*localPlayer->getPos()).dist(*ent->getPos()))));
 	}
 	
 }

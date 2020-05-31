@@ -1,10 +1,9 @@
 #pragma once
 
-#include <string>
-
 #include "../../../Memory/GameData.h"
 #include "../../FriendList/FriendList.h"
-#include "../../DrawUtils.h"
+//#include "../../DrawUtils.h"
+#include "../../../Utils/keys.h"
 
 enum class Category {
 	COMBAT = 0,
@@ -47,27 +46,7 @@ struct SettingEntry {
 	// ClickGui Data
 	bool isDragging = false;  // This is incredibly hacky and i wanted to avoid this as much as possible but i want to get this clickgui done
 
-	void makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
-		switch (valueType) {
-		case ValueType::TEXT_T:
-		case ValueType::BOOL_T:
-			break;
-		case ValueType::INT64_T:
-			value->int64 = max(minValue->int64, min(maxValue->int64, value->int64));
-			break;
-		case ValueType::DOUBLE_T:
-			value->_double = max(minValue->_double, min(maxValue->_double, value->_double));
-			break;
-		case ValueType::FLOAT_T:
-			value->_float = max(minValue->_float, min(maxValue->_float, value->_float));
-			break;
-		case ValueType::INT_T:
-			value->_int = max(minValue->_int, min(maxValue->_int, value->_int));
-			break;
-		default:
-			logF("unrecognized value %i", valueType);
-		}
-	}
+	void makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt();
 };
 
 class IModule {

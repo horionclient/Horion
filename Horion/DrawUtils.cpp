@@ -1,6 +1,7 @@
 ﻿#include "DrawUtils.h"
 
 #include "Module/ModuleManager.h"
+#include <Windows.h>
 
 C_MinecraftUIRenderContext* renderCtx;
 C_GuiData* guiData;
@@ -26,7 +27,7 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* gui) {
 	LARGE_INTEGER Frequency;
 	QueryPerformanceFrequency(&Frequency);
 	QueryPerformanceCounter(&EndingTime);
-	ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - g_Data.getLastUpdateTime().QuadPart;
+	ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - g_Data.getLastUpdateTime();
 
 	ElapsedMicroseconds.QuadPart *= 1000000;
 	ElapsedMicroseconds.QuadPart /= Frequency.QuadPart / 20;
@@ -281,7 +282,8 @@ void DrawUtils::drawImage(std::string FilePath, vec2_t& imagePos, vec2_t& ImageD
 
 	if (texturePtr != nullptr) {
 		renderCtx->drawImage(texturePtr, imagePos, ImageDimension, yot, idk);
-		renderCtx->flushImages(MC_Color(1.f, 1.f, 1.f), flushImageAddr, (__int64)&hashedString);
+		MC_Color col(1.f, 1.f, 1.f);
+		renderCtx->flushImages(col, flushImageAddr, (__int64)&hashedString);
 	}
 }
 

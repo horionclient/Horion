@@ -8,7 +8,7 @@
 #include <shared_mutex>
 
 #include "../../Memory/GameData.h"
-#include "../../Utils/Json.hpp"
+
 #include "Modules/Aimbot.h"
 #include "Modules/AirJump.h"
 #include "Modules/AirSwim.h"
@@ -90,7 +90,6 @@
 #include "Modules/TestModule.h"
 #endif
 
-using json = nlohmann::json;
 
 class ModuleManager {
 private:
@@ -104,8 +103,8 @@ public:
 	ModuleManager(GameData* gameData);
 	void initModules();
 	void disable();
-	void onLoadConfig(json* conf);
-	void onSaveConfig(json* conf);
+	void onLoadConfig(void* conf);
+	void onSaveConfig(void* conf);
 	void onTick(C_GameMode* gameMode);
 	void onKeyUpdate(int key, bool isDown);
 	void onPreRender(C_MinecraftUIRenderContext* renderCtx);

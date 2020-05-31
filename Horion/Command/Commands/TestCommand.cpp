@@ -1,4 +1,5 @@
 #include "TestCommand.h"
+#include "../../../Utils/Logger.h"
 
 TestCommand::TestCommand() : IMCCommand("test", "Test for Debugging purposes", "") {
 }

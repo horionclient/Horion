@@ -53,13 +53,13 @@ JsValueRef CALLBACK EntityFunctions::getSize(JsValueRef callee, bool isConstruct
 JsValueRef CALLBACK EntityFunctions::toString(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
 	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
 	if (ent == nullptr) {
-		wchar_t* name = L"Entity(invalid)";
+		const wchar_t* name = L"Entity(invalid)";
 		JsValueRef ref;
 		chakra.JsPointerToString_(name, wcslen(name), &ref);
 		return ref;
 	}
 
-	wchar_t* name = L"Entity(isValid=true)";
+	const wchar_t* name = L"Entity(isValid=true)";
 	JsValueRef ref;
 	chakra.JsPointerToString_(name, wcslen(name), &ref);
 	return ref;

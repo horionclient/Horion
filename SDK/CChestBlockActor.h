@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../Utils/HMath.h"
-#include "../Utils/Utils.h"
 #include "CEntityList.h"
 #include "TextHolder.h"
 
@@ -45,17 +44,7 @@ public:
 		return AABB(first.toVec3t().add(0.0625, 0, 0.0625), second.toVec3t().add(1 - 0.0625, 1 - 1.f / 8, 1 - 0.0625));
 	}
 
-	bool isBarrelBlock() {
-		GamerTextHolder alloc;
-		Utils::CallVFunc<25, void, GamerTextHolder*, __int64>(this, &alloc, 0);
-		return strcmp(alloc.getText(), "container.barrel") == 0;
-	}
+	bool isBarrelBlock();
 
-	AABB getObstructionAABB() {
-		void* coolPtr = malloc(sizeof(AABB) + 4);
-		Utils::CallVFunc<40, void, void*>(this, coolPtr);
-		AABB ret = *reinterpret_cast<AABB*>(coolPtr);
-		free(coolPtr);
-		return ret;
-	}
+	AABB getObstructionAABB();
 };

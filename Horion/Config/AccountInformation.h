@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include "../../Utils/Logger.h"
-
 class AccountInformation {
 private:
 	bool isGuest;

@@ -37,13 +37,13 @@ JsValueRef CALLBACK LocalPlayerFunctions::setVelocity(JsValueRef callee, bool is
 JsValueRef CALLBACK LocalPlayerFunctions::toString(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
 	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
 	if (ent == nullptr) {
-		wchar_t* name = L"LocalPlayer(invalid)";
+		const wchar_t* name = L"LocalPlayer(invalid)";
 		JsValueRef ref;
 		chakra.JsPointerToString_(name, wcslen(name), &ref);
 		return ref;
 	}
 	
-	wchar_t* name = L"LocalPlayer(isValid=true)";
+	const wchar_t* name = L"LocalPlayer(isValid=true)";
 	JsValueRef ref;
 	chakra.JsPointerToString_(name, wcslen(name), &ref);
 	return ref;

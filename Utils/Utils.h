@@ -3,8 +3,6 @@
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
-#include <Windows.h>
-#include <Psapi.h>
 
 #include <fstream>
 #include <sstream>
@@ -13,7 +11,6 @@
 #include <random>
 #include <vector>
 
-#include "Logger.h"
 //#include "xorstr.h"
 
 static const char* const KeyNames[] = {
@@ -388,34 +385,9 @@ public:
 		return str.substr(0, size);
 	}
 
-	static std::string getClipboardText() {
-		if (!OpenClipboard(nullptr)) {
-			return "";
-		} else {
-			HANDLE hData = GetClipboardData(CF_TEXT);
-			char* pszText = static_cast<char*>(GlobalLock(hData));
-			if (pszText == nullptr)
-				return "";
-			CloseClipboard();
-			return std::string(pszText);
-		}
-	}
+	static std::string getClipboardText();
 
-	static void setClipboardText(std::string& text) {
-		if (!OpenClipboard(nullptr))
-			return;
-		EmptyClipboard();
-		HGLOBAL hg = GlobalAlloc(GMEM_MOVEABLE, text.size() + 1);
-		if (!hg) {
-			CloseClipboard();
-			return;
-		}
-		memcpy(GlobalLock(hg), text.c_str(), text.size() + 1);
-		GlobalUnlock(hg);
-		SetClipboardData(CF_TEXT, hg);
-		CloseClipboard();
-		GlobalFree(hg);
-	}
+	static void setClipboardText(std::string& text);
 
 	static std::string readFileContents(std::wstring filePath) {
 		std::ifstream fileStr(filePath, std::ios::in | std::ios::binary);
@@ -445,76 +417,7 @@ public:
 		return L"";
 	}
 
-	static uintptr_t FindSignatureModule(const char* szModule, const char* szSignature) {
-		const char* pattern = szSignature;
-		uintptr_t firstMatch = 0;
-		static const uintptr_t rangeStart = (uintptr_t)GetModuleHandleA(szModule);
-		static MODULEINFO miModInfo;
-		static bool init = false;
-		if (!init) {
-			init = true;
-			GetModuleInformation(GetCurrentProcess(), (HMODULE)rangeStart, &miModInfo, sizeof(MODULEINFO));
-		}
-		static const uintptr_t rangeEnd = rangeStart + miModInfo.SizeOfImage;
-
-		BYTE patByte = GET_BYTE(pattern);
-		const char* oldPat = pattern;
-
-		for (uintptr_t pCur = rangeStart; pCur < rangeEnd; pCur++) {
-			if (!*pattern)
-				return firstMatch;
-
-			while (*(PBYTE)pattern == ' ')
-				pattern++;
-
-			if (!*pattern)
-				return firstMatch;
-
-			if (oldPat != pattern) {
-				oldPat = pattern;
-				if (*(PBYTE)pattern != '\?')
-					patByte = GET_BYTE(pattern);
-			}
-
-			if (*(PBYTE)pattern == '\?' || *(BYTE*)pCur == patByte) {
-				if (!firstMatch)
-					firstMatch = pCur;
-
-				if (!pattern[2])
-					return firstMatch;
-
-				//if (*(PWORD)pattern == '\?\?' || *(PBYTE)pattern != '\?')
-				//pattern += 3;
-
-				//else
-				pattern += 2;
-			} else {
-				pattern = szSignature;
-				firstMatch = 0;
-			}
-		}
-#ifdef _DEBUG
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-variable"
-#endif
-		const char* sig = szSignature;  // Put sig in here to access it in debugger
-										// This will not get optimized away because we are in debug
-										// Leave this in here to quickly find bad signatures in case of updates
-		logF("Signature dead: %s", szSignature);
-#ifndef SIG_DEBUG
-
-		const char* msgToTheOverwhelmedDebugger = "SIGNATURE NOT FOUND";
-		__debugbreak();
-
-		throw std::exception("Signature not found");
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
-#endif
-#endif
-		return 0u;
-	}
+	static uintptr_t FindSignatureModule(const char* szModule, const char* szSignature);
 
 	static void GetCurrentSystemTime(tm& timeInfo);
 

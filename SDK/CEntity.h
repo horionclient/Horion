@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../Utils/HMath.h"
-#include "../Utils/Utils.h"
 #include "CBlockLegacy.h"
 #include "CEntityList.h"
 #include "CInventory.h"
@@ -655,14 +654,7 @@ private:
 	virtual __int64 tickWorld(__int64 const &);
 
 public:
-	C_InventoryTransactionManager *getTransactionManager() {
-		static unsigned int offset = 0;
-		if (offset == 0) {
-			// EnchantCommand::execute
-			offset = *reinterpret_cast<int *>(FindSignature("48 8D 8B ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 48 8D 8D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8D 8D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B ?? ?? ?? 8B") + 3);
-		}
-		return reinterpret_cast<C_InventoryTransactionManager *>(reinterpret_cast<__int64>(this) + offset);
-	}
+	C_InventoryTransactionManager *getTransactionManager();
 
 	AABB *getAABB() {
 		return &this->aabb;
@@ -687,13 +679,7 @@ class C_ServerPlayer;
 
 class C_Player : public C_Entity {
 public:
-	C_PlayerInventoryProxy *getSupplies() {
-		static unsigned int offset = 0;
-		if (offset == 0) {
-			offset = *reinterpret_cast<int *>(FindSignature("4C 8B 82 ?? ?? ?? ?? 48 8B B2") + 3);  // GameMode::startDestroyBlock -> GameMode::_canDestroy -> getSupplies
-		}
-		return *reinterpret_cast<C_PlayerInventoryProxy **>(reinterpret_cast<__int64>(this) + offset);
-	};
+	C_PlayerInventoryProxy *getSupplies();;
 
 
 	C_ItemStack *getSelectedItem() {
@@ -863,12 +849,7 @@ class C_ServerPlayer : public C_Player {
 class C_LocalPlayer : public C_Player {
 public:
 
-	void unlockAchievments() {  // MinecraftEventing::fireEventAwardAchievement
-		using fireEventAward = void(__fastcall *)(void *, int);
-		static fireEventAward fireEventAwardFunc = reinterpret_cast<fireEventAward>(FindSignature("48 85 C9 0F 84 ?? ?? ?? ?? 55 56 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 8B"));
-		for (int i = 0; i < 100; i++)
-			fireEventAwardFunc(this, i);
-	}
+	void unlockAchievments();
 
 	void swingArm() {
 		//using SwingArm = void(__thiscall*)(void*);
@@ -881,15 +862,6 @@ public:
 		static Turn TurnFunc = reinterpret_cast<Turn>(FindSignature("4C 8B DC 55 57 ?? ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? 45 ?? ?? ?? ?? ?? ?? ?? 48 8B 05 D6 D4 A5 01 48 33 C4 48 89 45 ?? 49 89 5B ?? 48 8B F9 ?? ?? ?? ?? ?? ?? ?? 48 8B DA 4D 89 73 E8 41 0F 29 73 D8 41 0F 29 7B C8 48 8B 01 FF 90 ?? ?? ?? ?? F2 0F 10 03"));
 		TurnFunc(this, viewAngles);
 	}*/
-	void applyTurnDelta(vec2_t *viewAngleDelta) {
-		using applyTurnDelta = void(__thiscall *)(void *, vec2_t *);
-		static applyTurnDelta TurnDelta = reinterpret_cast<applyTurnDelta>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B D9 0F 29 74 24 ?? 48 8B 89 ?? ?? ?? ?? 48 8B ?? 0F 29 7C 24 ?? 44 0F"));
-		TurnDelta(this, viewAngleDelta);
-	}
-	void setGameModeType(int gma) {
-		// Player::setPlayerGameType
-		using setGameMode = void(__thiscall *)(void *, int);
-		static setGameMode Game_Mode = reinterpret_cast<setGameMode>(FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 89 ?? 24 ?? 48 89 ?? 24 ?? 8B FA 48 8B D9 8B B1"));
-		Game_Mode(this, gma);
-	}
+	void applyTurnDelta(vec2_t *viewAngleDelta);
+	void setGameModeType(int gma);
 };

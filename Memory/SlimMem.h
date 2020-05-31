@@ -12,14 +12,14 @@
 ** -------------------------------------------------------------------------*/
 
 // clang-format off
-#include <windows.h>   //Windows-functions (OpenProcess, RPM, WPM, etc)
-#include <tlhelp32.h>  //Functions that gather process-information
-#include <Psapi.h>     //Functions that gather module-information
+//#include <windows.h>   //Windows-functions (OpenProcess, RPM, WPM, etc)
+//#include <tlhelp32.h>  //Functions that gather process-information
+//#include <Psapi.h>     //Functions that gather module-information
 
 #include <algorithm>    //transform-function that is used to apply the tolower-function to a wstring
 #include <cassert>      //Used for debugging
 #include <cctype>       //tolower-function that converts a char to lowercase
-#include <iostream>     //cout
+//#include <iostream>     //cout
 #include <map>          //Data-container that saves parsed modules
 #include <memory>       //unique_ptr
 #include <string>       //String/WString implementation
@@ -35,14 +35,6 @@ namespace SlimUtils {
 //Enable error-reports
 #define REPORT_ERRORS
 
-inline bool IsProcessHandleValid(HANDLE h) { return h > (void*)0 && h != INVALID_HANDLE_VALUE; };
-inline bool IsHandleValid(HANDLE h) { return h != INVALID_HANDLE_VALUE; }
-inline BOOL ProperlyCloseHandle(HANDLE h) {
-	auto const b = CloseHandle(h);
-	assert(b);
-	return b;
-}
-
 struct SlimModule;
 struct SigScanResult;
 class SlimMem;
@@ -52,13 +44,11 @@ class SlimMem;
 	*/
 struct SlimModule {
 	std::uintptr_t ptrBase;
-	DWORD dwSize;
-	MODULEENTRY32W module;
+	unsigned long dwSize;
 
-	SlimModule(const MODULEENTRY32W& mod, const SlimMem&) {
-		ptrBase = (std::uintptr_t)mod.modBaseAddr;
-		dwSize = mod.modBaseSize;
-		module = mod;
+	SlimModule(std::uintptr_t base, unsigned long baseSize) {
+		ptrBase = base;
+		dwSize = baseSize;
 	}
 };
 
@@ -67,9 +57,9 @@ struct SlimModule {
 	*/
 struct SigScanResult {
 	bool m_Success;
-	BYTE* m_Data = 0;
-	DWORD m_DataLength;
-	DWORD m_Offset;
+	unsigned char* m_Data = 0;
+	unsigned long m_DataLength;
+	unsigned long m_Offset;
 
 	SigScanResult() : m_Success(false), m_Data(nullptr), m_DataLength(0), m_Offset(0) {
 	}
@@ -77,9 +67,9 @@ struct SigScanResult {
 	SigScanResult(bool p_Success) : m_Success(p_Success), m_Data(nullptr), m_DataLength(0), m_Offset(0) {
 	}
 
-	SigScanResult(bool p_Success, DWORD p_Offset, BYTE* p_Data, DWORD p_DataLength) : m_Success(p_Success), m_DataLength(p_DataLength), m_Offset(p_Offset) {
+	SigScanResult(bool p_Success, unsigned long p_Offset, unsigned char* p_Data, unsigned long p_DataLength) : m_Success(p_Success), m_DataLength(p_DataLength), m_Offset(p_Offset) {
 		if (p_Data != nullptr) {
-			m_Data = new BYTE[m_DataLength];
+			m_Data = new unsigned char[m_DataLength];
 			memcpy_s(m_Data, m_DataLength, p_Data, m_DataLength);
 		}
 	}
@@ -102,18 +92,18 @@ struct SigScanResult {
 
 		if (other.m_Data != nullptr) {
 			this->m_DataLength = other.m_DataLength;
-			this->m_Data = new BYTE[other.m_DataLength];
+			this->m_Data = new unsigned char[other.m_DataLength];
 			memcpy_s(this->m_Data, this->m_DataLength, other.m_Data, other.m_DataLength);
 		}
 		return *this;
 	}
 
 	template <typename T>
-	bool Read(T& value, DWORD index) const {
+	bool Read(T& value, unsigned long index) const {
 		if (index + sizeof(T) >= m_DataLength)
 			return false;
 
-		value = *(T*)(reinterpret_cast<DWORD>(m_Data) + index);
+		value = *(T*)(reinterpret_cast<unsigned long>(m_Data) + index);
 		return true;
 	}
 };
@@ -121,10 +111,10 @@ struct SigScanResult {
 /*
 	Offers a simple collection of combination of process-access flags
 	*/
-enum ProcessAccess : DWORD {
-	Full = PROCESS_ALL_ACCESS,
-	ReadOnly = PROCESS_VM_OPERATION | PROCESS_VM_READ,
-	WriteOnly = PROCESS_VM_OPERATION | PROCESS_VM_WRITE,
+enum ProcessAccess : unsigned long {
+	Full = ((0x000F0000L) | (0x00100000L) | 0xFFFF),
+	ReadOnly = 0x0008 | 0x0010,
+	WriteOnly = 0x0008 | 0x0020,
 	ReadWrite = ReadOnly | WriteOnly
 };
 
@@ -133,7 +123,7 @@ enum ProcessAccess : DWORD {
 	*/
 class SlimMem {
 public:
-	SlimMem() : m_hProc(INVALID_HANDLE_VALUE), m_dwPID(0) {}
+	SlimMem() : m_hProc((void*)-1), m_dwPID(0) {}
 	SlimMem(const SlimMem& copy);
 	~SlimMem();
 
@@ -144,15 +134,15 @@ public:
 	}
 
 	bool Open(const wchar_t* lpwstrProcessName, ProcessAccess flags);
-	bool Open(const wchar_t* lpwstrProcessName, DWORD dwFlags);
-	bool Open(DWORD dwPID, ProcessAccess flags);
-	bool Open(DWORD dwPID, DWORD dwFlags);
+	bool Open(const wchar_t* lpwstrProcessName, unsigned long dwFlags);
+	bool Open(unsigned long dwPID, ProcessAccess flags);
+	bool Open(unsigned long dwPID, unsigned long dwFlags);
 	void Close();
 
-	bool HasProcessHandle() const { return IsProcessHandleValid(m_hProc); }
+	bool HasProcessHandle() const;
 	const SlimModule* GetModule(const wchar_t* lpwstrModuleName) const;
 	bool ParseModules();
-	SigScanResult PerformSigScan(const BYTE* bufPattern, const char* lpcstrMask, const SlimModule* Module, DWORD startFromOffset);
+	SigScanResult PerformSigScan(const unsigned char* bufPattern, const char* lpcstrMask, const SlimModule* Module, unsigned long startFromOffset);
 
 	template <typename T>
 	T Read(std::uintptr_t ptrAddress) const;
@@ -160,7 +150,7 @@ public:
 	//		template <typename T>
 	//bool Read(std::uintptr_t ptrAddress, T& value) const;
 
-	//BYTE* ReadRaw(std::uintptr_t ptrAddress, int size) const;
+	//unsigned char* ReadRaw(std::uintptr_t ptrAddress, int size) const;
 	//wchar_t * ReadRawWide(std::uintptr_t ptrAddress, int size) const;
 
 	template <typename T>
@@ -172,9 +162,9 @@ public:
 	//inline bool WriteRaw(std::uintptr_t ptrAddress, uint8_t value[], size_t length) const;
 	//inline bool WriteRawChar(std::uintptr_t ptrAddress, char value[], size_t length) const;
 
-	static BOOL GetPID(const wchar_t* lpwstrProcessName, DWORD* pid);
-	HANDLE m_hProc;
-	DWORD m_dwPID;
+	static bool GetPID(const wchar_t* lpwstrProcessName, unsigned long* pid);
+	void* m_hProc;
+	unsigned long m_dwPID;
 	std::map<std::wstring, std::unique_ptr<SlimModule>> m_mModules;
 
 private:
@@ -207,7 +197,7 @@ inline T SlimMem::Read(std::uintptr_t ptrAddress) const {
 	{
 		static_assert(std::is_trivially_copyable<T>::value, "Invalid RPM/WPM type");
 
-		SIZE_T bytesRead;
+		SIZE_T unsigned charsRead;
 
 		if (!this->HasProcessHandle())
 			return false;
@@ -217,11 +207,11 @@ inline T SlimMem::Read(std::uintptr_t ptrAddress) const {
 
 
 
-	inline BYTE * SlimMem::ReadRaw(std::uintptr_t ptrAddress, int size) const
+	inline unsigned char * SlimMem::ReadRaw(std::uintptr_t ptrAddress, int size) const
 	{
 		//static_assert(std::is_trivially_copyable<T>::value, "Invalid RPM/WPM type");
 
-		BYTE* arr = new BYTE[size];
+		unsigned char* arr = new unsigned char[size];
 		if (!this->HasProcessHandle())
 			return arr;
 

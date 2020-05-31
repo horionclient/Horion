@@ -1,6 +1,7 @@
 #include "Module.h"
 
 #include "../../../Utils/Json.hpp"
+#include "../../../Utils/Logger.h"
 
 using json = nlohmann::json;
 
@@ -257,4 +258,25 @@ bool IModule::isEnabled() {
 
 const char* IModule::getTooltip() {
 	return this->tooltip;
+}
+void SettingEntry::makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
+	switch (valueType) {
+		case ValueType::TEXT_T:
+		case ValueType::BOOL_T:
+			break;
+		case ValueType::INT64_T:
+			value->int64 = fmax(minValue->int64, fmin(maxValue->int64, value->int64));
+			break;
+		case ValueType::DOUBLE_T:
+			value->_double = fmax(minValue->_double, fmin(maxValue->_double, value->_double));
+			break;
+		case ValueType::FLOAT_T:
+			value->_float = fmax(minValue->_float, fmin(maxValue->_float, value->_float));
+			break;
+		case ValueType::INT_T:
+			value->_int = fmax(minValue->_int, fmin(maxValue->_int, value->_int));
+			break;
+		default:
+			logF("unrecognized value %i", valueType);
+	}
 }

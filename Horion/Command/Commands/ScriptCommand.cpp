@@ -12,7 +12,8 @@ bool ScriptCommand::execute(std::vector<std::string>* args) {
 	if (action == "load") {
 		HorionDataPacket packet;
 		packet.cmd = CMD_FOLDERCHOOSER;
-		packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[300]));
+		auto temp = std::shared_ptr<unsigned char[]>(new unsigned char[300]);
+		packet.data.swap(temp);
 		memset(packet.data.get(), 0, 300);
 		strcpy_s((char*)packet.data.get(), 200, "{\"title\": \"Select a Script Folder\", \"filter\":\".js\"}");
 		packet.dataArraySize = (int)strlen((char*)packet.data.get());

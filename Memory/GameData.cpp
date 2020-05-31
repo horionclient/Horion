@@ -1,5 +1,9 @@
 #include "GameData.h"
 
+#include <Windows.h>
+#include "../Utils/Logger.h"
+#include "../Utils/Utils.h"
+
 GameData g_Data;
 
 void GameData::retrieveClientInstance() {
@@ -102,7 +106,7 @@ void GameData::updateGameData(C_GameMode* gameMode) {
 
 	if (g_Data.localPlayer != nullptr && gameMode->player == g_Data.localPlayer) {  // GameMode::tick might also be run on the local server
 		g_Data.gameMode = gameMode;
-		QueryPerformanceCounter(&g_Data.lastUpdate);
+		QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&g_Data.lastUpdate));
 
 		if (g_Data.localPlayer != nullptr) {
 			C_GuiData* guiData = g_Data.clientInstance->getGuiData();
@@ -191,7 +195,7 @@ void GameData::addChestToList(C_ChestBlockActor* chest) {
 	g_Data.chestList.push_back(toAdd);
 }
 
-void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem, HMODULE hDllInst) {
+void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem, void* hDllInst) {
 	g_Data.gameModule = gameModule;
 	g_Data.slimMem = slimMem;
 	g_Data.hDllInst = hDllInst;
@@ -204,4 +208,22 @@ void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::
 	if (g_Data.clientInstance != nullptr)
 		logF("minecraftGame: %llX", g_Data.clientInstance->minecraftGame);
 #endif
+}
+void GameData::sendPacketToInjector(HorionDataPacket horionDataPack) {
+	if (!isInjectorConnectionActive())
+		throw std::exception("Horion injector connection not active");
+	if (horionDataPack.dataArraySize >= 3000) {
+		logF("Tried to send data packet with array size: %i %llX", horionDataPack.dataArraySize, horionDataPack.data.get());
+		throw std::exception("Data packet data too big");
+	}
+
+	horionToInjectorQueue.push(horionDataPack);
+}
+void GameData::callInjectorResponseCallback(int id, std::shared_ptr<HorionDataPacket> packet) {
+	if (this->injectorToHorionResponseCallbacks.find(id) == this->injectorToHorionResponseCallbacks.end()) {
+		logF("No response callback for request with id=%i!", id);
+		return;
+	}
+	this->injectorToHorionResponseCallbacks[id](packet);
+	this->injectorToHorionResponseCallbacks.erase(id);
 }

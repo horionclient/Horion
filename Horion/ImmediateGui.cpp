@@ -9,7 +9,8 @@ ButtonInfo::ButtonInfo(int id, vec2_t pos, bool centered) : ComponentInfo(id), p
 }
 
 void ButtonInfo::calculateSize(const char* txt) {
-	this->size = {DrawUtils::getTextWidth(&std::string(txt)), DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight()};
+	std::string str(txt);
+	this->size = {DrawUtils::getTextWidth(&str), DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight()};
 }
 
 bool ButtonInfo::isInSelectableSurface(vec2_t mouse) {
@@ -35,12 +36,13 @@ void ButtonInfo::draw(vec2_t mousePos, const char* label) {
 	calculateSize(label);
 	auto surface = getSelectableSurface();
 	vec2_t textPos = pos;
+	std::string str(label);
 	if (centered) {
-		textPos.x -= DrawUtils::getTextWidth(&std::string(label)) / 2;
+		textPos.x -= DrawUtils::getTextWidth(&str) / 2;
 		textPos.y -= DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() / 2;
 	}
 		
-	DrawUtils::drawText(textPos, &std::string(label), MC_Color());
+	DrawUtils::drawText(textPos, &str, MC_Color());
 	if (isInSelectableSurface(mousePos)) {  // Mouse hovering over us
 		DrawUtils::fillRectangle(surface, MC_Color(28, 50, 77), 1);
 		this->canClickB = true;

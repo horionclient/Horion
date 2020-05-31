@@ -3,8 +3,6 @@
 
 #include <math.h>
 
-#include <iostream>
-
 static constexpr float DEG_RAD2 = PI / 360.0f;
 static constexpr float DEG_RAD = 180.0f / PI;
 
@@ -589,6 +587,7 @@ struct AABB {
 	}
 };
 
+/*
 inline int random(int start, int end) {
 	return rand() % (end - start + 1) + start;
 }
@@ -596,3 +595,4 @@ inline int random(int start, int end) {
 inline float randomf(int start, int end) {
 	return (float)random(start, end);
 }
+*/

@@ -1,4 +1,5 @@
 ﻿#include "Hooks.h"
+#include "../SDK/Tag.h"
 
 Hooks g_Hooks;
 bool isTicked = false;
@@ -464,7 +465,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				if (HImGui.Button("Load Script Folder", vec2_t(wid.x * (0.765f - 0.5f), wid.y * 0.92f), true)) {
 					HorionDataPacket packet;
 					packet.cmd = CMD_FOLDERCHOOSER;
-					packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[300]));
+					auto tmp = std::shared_ptr<unsigned char[]>(new unsigned char[300]);
+					packet.data.swap(tmp);
 					memset(packet.data.get(), 0, 300);
 					strcpy_s((char*)packet.data.get(), 200, "{\"title\": \"Select a Script Folder\", \"filter\":\".js\"}");
 					packet.dataArraySize = (int)strlen((char*)packet.data.get());
@@ -499,7 +501,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				if (HImGui.Button("Custom Geometry", vec2_t(wid.x * 0.765f, wid.y * 0.92f), true)) {
 					HorionDataPacket packet;
 					packet.cmd = CMD_FILECHOOSER;
-					packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[300]));
+					auto tmp = std::shared_ptr<unsigned char[]>(new unsigned char[300]);
+					packet.data.swap(tmp);
 					memset(packet.data.get(), 0, 300);
 					strcpy_s((char*)packet.data.get(), 200, "{\"title\": \"Select a 3d object\", \"filter\":\"Object Files (*.obj)|*.obj\"}");
 					packet.dataArraySize = (int)strlen((char*)packet.data.get());
@@ -529,7 +532,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				if (HImGui.Button("Custom Texture", vec2_t(wid.x * 0.5f, wid.y * 0.92f), true)) {
 					HorionDataPacket packet;
 					packet.cmd = CMD_FILECHOOSER;
-					packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[500]));
+					auto tmp = std::shared_ptr<unsigned char[]>(new unsigned char[500]);
+					packet.data.swap(tmp);
 					memset(packet.data.get(), 0, 500);
 					strcpy_s((char*)packet.data.get(), 400, "{\"title\": \"Select a raw image file\", \"filter\":\"Raw image files (*.data, *.raw)|*.data;*.raw\"}");
 					packet.dataArraySize = (int)strlen((char*)packet.data.get());
@@ -1396,16 +1400,16 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 		logF("Connection Request: InputMode: %i UiProfile: %i GuiScale: %i", inputMode, uiProfile, guiScale);
 
 		//Logger::WriteBigLogFileF(skinGeometryData->getTextLength() + 20, "Geometry: %s", skinGeometryData->getText());
-		auto hResourceGeometry = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_TEXT1), "TEXT");
-		auto hMemoryGeometry = LoadResource(g_Data.getDllModule(), hResourceGeometry);
+		auto hResourceGeometry = FindResourceA((HMODULE)g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_TEXT1), "TEXT");
+		auto hMemoryGeometry = LoadResource((HMODULE)g_Data.getDllModule(), hResourceGeometry);
 
-		auto sizeGeometry = SizeofResource(g_Data.getDllModule(), hResourceGeometry);
+		auto sizeGeometry = SizeofResource((HMODULE)g_Data.getDllModule(), hResourceGeometry);
 		auto ptrGeometry = LockResource(hMemoryGeometry);
 
-		auto hResourceSteve = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_STEVE), (char*)RT_RCDATA);
-		auto hMemorySteve = LoadResource(g_Data.getDllModule(), hResourceSteve);
+		auto hResourceSteve = FindResourceA((HMODULE)g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_STEVE), (char*)RT_RCDATA);
+		auto hMemorySteve = LoadResource((HMODULE)g_Data.getDllModule(), hResourceSteve);
 
-		auto sizeSteve = SizeofResource(g_Data.getDllModule(), hResourceSteve);
+		auto sizeSteve = SizeofResource((HMODULE)g_Data.getDllModule(), hResourceSteve);
 		auto ptrSteve = LockResource(hMemorySteve);
 
 		//std::unique_ptr<TextHolder> newGeometryData(new TextHolder(ptrGeometry, sizeGeometry));

@@ -3,6 +3,7 @@
 #include "../../Utils/Json.hpp"
 #include "../../include/WinHttpClient.h"
 #include "../../Memory/GameData.h"
+#include "../../Utils/Logger.h"
 
 AccountInformation::AccountInformation(std::string authTok, unsigned int serial) : isGuest(false), authToken(authTok), serialNum(serial){};
 AccountInformation::AccountInformation() : isGuest(true), authToken("none"){};

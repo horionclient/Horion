@@ -225,7 +225,8 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 						auto dataTemp = new unsigned char[injectorToHorion->dataSize + 2];
 						memset(dataTemp + injectorToHorion->dataSize, 0, 2);  // If we don't zero the last 2 bytes, printing as unicode string won't work
 						memcpy(dataTemp, injectorToHorion->data, injectorToHorion->dataSize);
-						pk->data.swap(std::shared_ptr<unsigned char[]>(dataTemp));
+						auto tmp = std::shared_ptr<unsigned char[]>(dataTemp);
+						pk->data.swap(tmp);
 					}
 
 					g_Data.callInjectorResponseCallback(id, pk);
@@ -255,13 +256,14 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 						
 						auto wstr = Utils::stringToWstring(str->text);
 						
-						wchar_t* ident = L"log ";
+						const wchar_t* ident = L"log ";
 						size_t identLength = wcslen(ident);
 						size_t textLength = wcslen(wstr.c_str()) + identLength;
 						 
 						HorionDataPacket packet;
 						packet.cmd = CMD_LOG;
-						packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[(textLength + 1) * sizeof(wchar_t)]));
+						auto tmp = std::shared_ptr<unsigned char[]>(new unsigned char[(textLength + 1) * sizeof(wchar_t)]);
+						packet.data.swap(tmp);
 						size_t leng = (textLength + 1) * sizeof(wchar_t);
 						wcscpy_s((wchar_t*)packet.data.get(), textLength, ident);
 						wcscpy_s((wchar_t*)(packet.data.get() + identLength * sizeof(wchar_t)), textLength - identLength + 1, wstr.c_str());
@@ -391,7 +393,7 @@ BOOL __stdcall DllMain(HMODULE hModule,
 		moduleMgr->disable();
 		cmdMgr->disable();
 		Hooks::Restore();
-		GameWnd.OnDeactivated();
+		//GameWnd.OnDeactivated();
 
 		logF("Removing logger");
 		Logger::Disable();
