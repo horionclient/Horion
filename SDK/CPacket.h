@@ -60,6 +60,17 @@ public:
 	bool isInVoid;
 };
 
+class C_PlayerActionPacket : public C_Packet {
+public:
+	C_PlayerActionPacket();
+	char pad_0x8[0x20];  //0x8
+	vec3_t blockPosition; // 0x28
+	int face; // 0x34
+	int action; // 0x38
+	__int64 entityRuntimeId; // 0x40
+};
+
+
 class C_MobEquipmentPacket : public C_Packet {
 public:
 	C_MobEquipmentPacket();
@@ -70,11 +81,11 @@ private:
 							  //public:
 	__int64 entityRuntimeId;  //0x28
 	C_ItemStack item;         //0x30
-	int inventorySlot;        // 0xB8
-	int hotbarSlot;           // 0xBC
-	char windowId;            //0xC0
-	char windowId1;           //0xC0
-	char inventorySlot1;      //0xC4
+	int inventorySlot;        // 0xB8 DONT USE FOR PACKET SENDING
+	int hotbarSlot;           // 0xBC DONT USE FOR PACKET SENDING
+	char windowId;            //0xC0  DONT USE FOR PACKET SENDING
+	char windowId1;           //0xC1  DONT USE FOR PACKET SENDING
+	char inventorySlot1;      //0xC2
 	char hotbarSlot1;         //0xC3
 	char windowId2;           //0xC4 ALL OF THIS IS PROBABLY BROKEN, DONT USE
 private:

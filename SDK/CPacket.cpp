@@ -152,3 +152,17 @@ C_MovePlayerPacket::C_MovePlayerPacket(C_LocalPlayer* player, vec3_t pos) {
 	onGround = true;
 	mode = 0;
 }
+C_PlayerActionPacket::C_PlayerActionPacket() {
+	static uintptr_t** playerActionPacketVtable = 0x0;
+	if (playerActionPacketVtable == 0x0) {
+		uintptr_t sigOffset = FindSignature("48 8D 0D ?? ?? ?? ?? 48 89 4C 24 ?? 48 89 54 24 ?? 48 89 54 24 ?? 40 0F B6 CF");
+		int offset = *reinterpret_cast<int*>(sigOffset + 3);
+		playerActionPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+#ifdef _DEBUG
+		if (playerActionPacketVtable == 0x0 || sigOffset == 0x0)
+			__debugbreak();
+#endif
+	}
+	memset(this, 0, sizeof(C_PlayerActionPacket));  // Avoid overwriting vtable
+	vTable = playerActionPacketVtable;
+}
