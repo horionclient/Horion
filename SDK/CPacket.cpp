@@ -83,7 +83,7 @@ C_MobEquipmentPacket::C_MobEquipmentPacket() {
 C_MobEquipmentPacket::C_MobEquipmentPacket(__int64 entityRuntimeId, C_ItemStack& item, int hotbarSlot, int inventorySlot) {
 	memset(this, 0x0, sizeof(C_MobEquipmentPacket));
 	using MobEquimentPacketConstructor_t = void(__fastcall*)(C_MobEquipmentPacket*, __int64, C_ItemStack&, int, int, char);
-	static MobEquimentPacketConstructor_t MobEquimentPacketConstructor = reinterpret_cast<MobEquimentPacketConstructor_t>(FindSignature("48 89 4C 24 08 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 48 41 8B D9 48 8B F9 C7 41 ?? ?? ?? ?? ?? C7 41 ?? ?? ?? ?? ?? C6 41 ?? 00 48 ?? ?? ?? ?? ?? ?? ?? 48 8D 05 ?? ?? ?? ??"));
+	static MobEquimentPacketConstructor_t MobEquimentPacketConstructor = reinterpret_cast<MobEquimentPacketConstructor_t>(FindSignature("48 89 4C 24 08 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 48 48 89 74 24 50 41 8B F9 48 8B F1"));
 	if (MobEquimentPacketConstructor != 0)
 		MobEquimentPacketConstructor(this, entityRuntimeId, item, hotbarSlot, inventorySlot, 0);
 }

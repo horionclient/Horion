@@ -78,7 +78,7 @@ public:
 
 private:
 	char pad_0x8[0x20];       //0x0
-							  //public:
+public:
 	__int64 entityRuntimeId;  //0x28
 	C_ItemStack item;         //0x30
 	int inventorySlot;        // 0xB8 DONT USE FOR PACKET SENDING

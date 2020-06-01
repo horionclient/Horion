@@ -28,6 +28,7 @@ void showAimedBlockInfo() {
 }
 
 bool TestCommand::execute(std::vector<std::string>* args) {
+	C_LocalPlayer* player = g_Data.getLocalPlayer();
 	
 	return true;
 }

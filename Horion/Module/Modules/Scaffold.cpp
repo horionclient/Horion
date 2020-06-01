@@ -1,8 +1,7 @@
 #include "Scaffold.h"
-#include "../../DrawUtils.h"
 
 Scaffold::Scaffold() : IModule(VK_NUMPAD1, Category::WORLD, "Automatically build blocks beneath you") {
-	registerBoolSetting("AutoSelect", &this->autoselect, this->autoselect);
+	registerBoolSetting("Spoof", &this->spoof, this->spoof);
 }
 
 Scaffold::~Scaffold() {
@@ -14,8 +13,6 @@ const char* Scaffold::getModuleName() {
 
 bool Scaffold::tryScaffold(vec3_t blockBelow) {
 	blockBelow = blockBelow.floor();
-
-	DrawUtils::drawBox(blockBelow, vec3_t(blockBelow).add(1), 0.4f);
 
 	// BlockSource::getBlock()::getMaterial()::isReplaceable()
 	C_Block* block = g_Data.getLocalPlayer()->region->getBlock(vec3_ti(blockBelow));
@@ -54,7 +51,7 @@ bool Scaffold::tryScaffold(vec3_t blockBelow) {
 			i++;
 		}
 		if (foundCandidate) {
-			if (autoselect) findBlock();
+			if (spoof) findBlock();
 			g_Data.getCGameMode()->buildBlock(blok, i);
 			delete blok;
 
@@ -66,13 +63,15 @@ bool Scaffold::tryScaffold(vec3_t blockBelow) {
 }
 
 bool Scaffold::findBlock() {
+	__int64 id = *g_Data.getLocalPlayer()->getUniqueId();
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
 	for (int n = 0; n < 9; n++) {
 		C_ItemStack* stack = inv->getItemStack(n);
 		if (stack->item != NULL) {
-			if ((*stack->item)->itemId < 256 && (*stack->item)->itemId != 0) {
-				supplies->selectedHotbarSlot = n;
+			if ((*stack->item)->isBlock() && (*stack->item)->itemId != 0) {
+				C_MobEquipmentPacket* a = new C_MobEquipmentPacket(id, *stack, n, n);
+				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
 				return true;
 			}
 		}
@@ -80,13 +79,13 @@ bool Scaffold::findBlock() {
 	return false;
 }
 
-void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
+void Scaffold::onTick(C_GameMode* gm) {
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	if (!g_Data.canUseMoveKeys())
 		return;
 	auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
-	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()) && !autoselect)  // Block in hand?
+	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()) && !spoof)  // Block in hand?
 		return;
 
 	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block below the player
@@ -98,10 +97,8 @@ void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	vec3_t vel = g_Data.getLocalPlayer()->velocity;
 	vel.normalize();  // Only use values from 0 - 1
 
-	DrawUtils::setColor(0.3f, 0.2f, 0.8f, 1);
 	if (!tryScaffold(blockBelow)) {
 		if (speed > 0.05f) {  // Are we actually walking?
-			DrawUtils::setColor(0.8f, 0.8f, 0.2f, 1);
 			blockBelow.z -= vel.z * 0.4f;
 			if (!tryScaffold(blockBelow)) {
 				blockBelow.x -= vel.x * 0.4f;
