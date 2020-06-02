@@ -117,8 +117,7 @@ void ModuleManager::initModules() {
 
 void ModuleManager::disable() {
 	auto lock = this->lockModuleList();
-	for (std::vector<std::shared_ptr<IModule>>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
-		auto mod = *it;
+	for (auto& mod : this->moduleList) {
 		if (mod->isEnabled())
 			mod->setEnabled(false);
 	}
@@ -129,8 +128,7 @@ void ModuleManager::onLoadConfig(void* confVoid) {
 	if (!isInitialized())
 		return;
 	auto lock = this->lockModuleList();
-	for (std::vector<std::shared_ptr<IModule>>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
-		auto mod = *it;
+	for (auto& mod : this->moduleList) {
 		mod->onLoadConfig(conf);
 	}
 
@@ -144,8 +142,7 @@ void ModuleManager::onSaveConfig(void* confVoid) {
 	if (!isInitialized())
 		return;
 	auto lock = this->lockModuleList();
-	for (std::vector<std::shared_ptr<IModule>>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
-		auto mod = *it;
+	for (auto& mod : this->moduleList) {
 		mod->onSaveConfig(conf);
 	}
 }
@@ -154,10 +151,20 @@ void ModuleManager::onTick(C_GameMode* gameMode) {
 	if (!isInitialized())
 		return;
 	auto lock = this->lockModuleList();
-	for (std::vector<std::shared_ptr<IModule>>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
-		auto mod = *it;
+	for (auto& mod : this->moduleList) {
 		if (mod->isEnabled())
 			mod->onTick(gameMode);
+	}
+}
+
+void ModuleManager::onAttack(C_Entity* attackEnt) {
+	if (!isInitialized())
+		return;
+
+	auto lock = this->lockModuleList();
+	for (auto& mod : this->moduleList) {
+		if (mod->isEnabled())
+			mod->onAttack(attackEnt);
 	}
 }
 
@@ -165,8 +172,7 @@ void ModuleManager::onKeyUpdate(int key, bool isDown) {
 	if (!isInitialized())
 		return;
 	auto lock = this->lockModuleList();
-	for (std::vector<std::shared_ptr<IModule>>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
-		auto mod = *it;
+	for (auto& mod : this->moduleList) {
 		mod->onKeyUpdate(key, isDown);
 	}
 }
@@ -176,9 +182,8 @@ void ModuleManager::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 		return;
 	auto mutex = this->lockModuleList();
 
-	for (std::vector<std::shared_ptr<IModule>>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
-		auto mod = *it;
-		if (mod->isEnabled())
+	for (auto& mod : this->moduleList) {
+			if (mod->isEnabled())
 			mod->onPreRender(renderCtx);
 	}
 }
@@ -188,9 +193,8 @@ void ModuleManager::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		return;
 	auto mutex = this->lockModuleList();
 
-	for (std::vector<std::shared_ptr<IModule>>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
-		auto mod = *it;
-		if (mod->isEnabled())
+	for (auto& mod : this->moduleList) {
+			if (mod->isEnabled())
 			mod->onPostRender(renderCtx);
 	}
 }
@@ -199,7 +203,7 @@ void ModuleManager::onSendPacket(C_Packet* packet) {
 	if (!isInitialized())
 		return;
 	auto lock = this->lockModuleList();
-	for (auto it : moduleList) {
+	for (auto& it : moduleList) {
 		if (it->isEnabled())
 			it->onSendPacket(packet);
 	}
@@ -216,8 +220,8 @@ int ModuleManager::getModuleCount() {
 int ModuleManager::getEnabledModuleCount() {
 	int i = 0;
 	auto lock = this->lockModuleList();
-	for (auto it = (&moduleList)->begin(); it != (&moduleList)->end(); ++it) {
-		if ((*it)->isEnabled()) i++;
+	for (auto& it : moduleList) {
+		if (it->isEnabled()) i++;
 	}
 	return i;
 }

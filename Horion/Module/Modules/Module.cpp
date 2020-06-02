@@ -200,8 +200,7 @@ void IModule::onSaveConfig(void* confVoid) {
 
 	json obj = {};
 	//auto obj = conf->at(modName);
-	for (auto it = this->settings.begin(); it != this->settings.end(); ++it) {
-		SettingEntry* sett = *it;
+	for (auto sett : this->settings) {
 		switch (sett->valueType) {
 		case ValueType::FLOAT_T:
 			obj.emplace(sett->name, sett->value->_float);
@@ -259,6 +258,9 @@ bool IModule::isEnabled() {
 const char* IModule::getTooltip() {
 	return this->tooltip;
 }
+void IModule::onAttack(C_Entity*) {
+}
+
 void SettingEntry::makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
 	switch (valueType) {
 		case ValueType::TEXT_T:
