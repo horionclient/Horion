@@ -44,7 +44,7 @@ std::wstring Logger::GetRoamingFolderPath() {
 	return std::wstring(roamingPathCStr, pathLength);
 }
 
-void Logger::WriteLogFileF(const char* fmt, ...) {
+void Logger::WriteLogFileF(volatile char* fmt, ...) {
 	if (!loggerActive)
 		return;
 	FILE* pFile;

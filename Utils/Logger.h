@@ -21,7 +21,7 @@
 
 #ifndef logF
 //#define logF(x) Logger::WriteLogFileF(XorString(x))
-#define logF(x, ...) Logger::WriteLogFileF(x, __VA_ARGS__)
+#define logF(x, ...) Logger::WriteLogFileF(XorString(x), __VA_ARGS__)
 #endif
 
 struct TextForPrint {
@@ -38,7 +38,7 @@ class Logger {
 
 public:
 	static std::wstring GetRoamingFolderPath();
-	static void WriteLogFileF(const char* fmt, ...);
+	static void WriteLogFileF(volatile char* fmt, ...);
 	static void WriteBigLogFileF(size_t maxSize, const char* fmt, ...);
 	static std::vector<TextForPrint>* GetTextToPrint();
 	static std::vector<std::shared_ptr<TextForPrintBig>>* GetTextToSend();
