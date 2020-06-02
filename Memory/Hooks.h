@@ -96,7 +96,7 @@ private:
 	static int BlockLegacy_getRenderLayer(C_BlockLegacy* a1);
 	static __int8* BlockLegacy_getLightEmission(C_BlockLegacy* _this, __int8* a2);
 	static __int64 LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3);
-	static void ClickFunc(__int64 a1, char a2, bool a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
+	static void ClickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
 	static __int64 MoveInputHandler_tick(C_MoveInputHandler* _this, C_Entity* a2);
 	static __int64 ChestScreenController_tick(C_ChestScreenController* _this);
 	static __int64 GetGamma(__int64 a1);

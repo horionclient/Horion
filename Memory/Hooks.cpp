@@ -1249,15 +1249,15 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3) 
 	return oFunc(_this, a2, a3);
 }
 
-void Hooks::ClickFunc(__int64 a1, char mouseButton, bool isDown, __int16 mouseX, __int16 mouseY, __int16 a6, __int16 a7, char a8) {
-	static auto oFunc = g_Hooks.ClickFuncHook->GetFastcall<void, __int64, char, bool, __int16, __int16, __int16, __int16, char>();
+void Hooks::ClickFunc(__int64 a1, char mouseButton, char isDown, __int16 mouseX, __int16 mouseY, __int16 a6, __int16 a7, char a8) {
+	static auto oFunc = g_Hooks.ClickFuncHook->GetFastcall<void, __int64, char, char, __int16, __int16, __int16, __int16, char>();
 	static auto clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 
 	if (clickGuiModule->isEnabled()) {
 		if (mouseButton != 0)  // Mouse click event
 			return;
 	}
-	oFunc(a1, mouseButton, isDown, mouseX, mouseY, a6, a7, a8);
+	return oFunc(a1, mouseButton, isDown, mouseX, mouseY, a6, a7, a8);
 }
 
 __int64 Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity* a2) {
