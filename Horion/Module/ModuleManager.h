@@ -84,6 +84,7 @@
 #include "Modules/Teams.h"
 #include "Modules/Nbt.h"
 #include "Modules/Godmode.h"
+#include "Modules/Freelook.h"
 
 #ifdef _DEBUG
 #include "Modules/PacketLogger.h"

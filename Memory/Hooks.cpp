@@ -271,6 +271,9 @@ void Hooks::Init() {
 	
 		//void* cube__compile = reinterpret_cast<void*>(FindSignature("48 8B C4 53 41 56 41 57 48 81 EC ?? ?? ?? ?? 4C 8B 79 ??"));
 		//g_Hooks.cube__compileHook = std::make_unique<FuncHook>(cube__compile, Hooks::Cube__compile);
+
+		void* localPlayerUpdateFromCam = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 80 BA"));
+		g_Hooks.LocalPlayer__updateFromCameraHook = std::make_unique<FuncHook>(localPlayerUpdateFromCam, Hooks::LocalPlayer__updateFromCamera);
 	}
 
 // clang-format on
@@ -1927,4 +1930,22 @@ __int64 Hooks::InGamePlayScreen___renderLevel(__int64 playScreen, __int64 a2, __
 __int64 Hooks::GameMode_attack(C_GameMode* _this, C_Entity* ent) {
 	auto func = g_Hooks.GameMode_attackHook->GetFastcall<__int64, C_GameMode*, C_Entity*>();
 	return func(_this, ent);
+}
+void Hooks::LocalPlayer__updateFromCamera(__int64 a1, C_Camera* camera) {
+	auto func = g_Hooks.LocalPlayer__updateFromCameraHook->GetFastcall<__int64, __int64, C_Camera*>();
+	auto freelookMod = moduleMgr->getModule<Freelook>();
+
+	if(freelookMod->redirectMouse){
+		freelookMod->cameraFacesFront = camera->facesPlayerFront;
+		freelookMod->isThirdPerson = camera->renderPlayerModel;
+		if(freelookMod->resetViewTick >= 0){
+			camera->setOrientationDeg(-freelookMod->lastCameraAngle.x, freelookMod->lastCameraAngle.y, 0);
+		}else{
+			camera->getPlayerRotation(&freelookMod->lastCameraAngle);
+		}
+
+		return;
+	}
+
+	func(a1, camera);
 }

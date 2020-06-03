@@ -90,6 +90,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Teams()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Nbt()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Godmode()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new Freelook()));
 
 #if defined(_BETA) or defined(_DEBUG)
 		this->moduleList.push_back(std::shared_ptr<IModule>(new ForceOpenCommandBlock()));
@@ -152,7 +153,7 @@ void ModuleManager::onTick(C_GameMode* gameMode) {
 		return;
 	auto lock = this->lockModuleList();
 	for (auto& mod : this->moduleList) {
-		if (mod->isEnabled())
+		if (mod->isEnabled() || mod->callWhenDisabled())
 			mod->onTick(gameMode);
 	}
 }
@@ -163,7 +164,7 @@ void ModuleManager::onAttack(C_Entity* attackEnt) {
 
 	auto lock = this->lockModuleList();
 	for (auto& mod : this->moduleList) {
-		if (mod->isEnabled())
+		if (mod->isEnabled() || mod->callWhenDisabled())
 			mod->onAttack(attackEnt);
 	}
 }
@@ -183,7 +184,7 @@ void ModuleManager::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	auto mutex = this->lockModuleList();
 
 	for (auto& mod : this->moduleList) {
-			if (mod->isEnabled())
+		if (mod->isEnabled() || mod->callWhenDisabled())
 			mod->onPreRender(renderCtx);
 	}
 }
@@ -194,7 +195,7 @@ void ModuleManager::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	auto mutex = this->lockModuleList();
 
 	for (auto& mod : this->moduleList) {
-			if (mod->isEnabled())
+		if (mod->isEnabled() || mod->callWhenDisabled())
 			mod->onPostRender(renderCtx);
 	}
 }
@@ -204,7 +205,7 @@ void ModuleManager::onSendPacket(C_Packet* packet) {
 		return;
 	auto lock = this->lockModuleList();
 	for (auto& it : moduleList) {
-		if (it->isEnabled())
+		if (it->isEnabled() || it->callWhenDisabled())
 			it->onSendPacket(packet);
 	}
 }

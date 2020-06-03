@@ -260,6 +260,9 @@ const char* IModule::getTooltip() {
 }
 void IModule::onAttack(C_Entity*) {
 }
+bool IModule::callWhenDisabled() {
+	return false;
+}
 
 void SettingEntry::makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
 	switch (valueType) {

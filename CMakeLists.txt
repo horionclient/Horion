@@ -361,4 +361,4 @@ add_library(Horion SHARED
         Utils/Utils.cpp
         Utils/Utils.h
         Utils/xorstr.h
-        resource.h SDK/TextHolder.cpp SDK/CChestBlockActor.cpp SDK/Tag.cpp Utils/keys.h SDK/CBlockLegacy.cpp SDK/CItem.cpp SDK/CInventory.cpp SDK/CInventoryTransaction.cpp SDK/CEntity.cpp SDK/CComplexInventoryTransaction.cpp SDK/CPacket.cpp SDK/CMinecraftUIRenderContext.cpp SDK/CClientInstance.cpp SDK/CMoveInputHandler.cpp)
+        resource.h SDK/TextHolder.cpp SDK/CChestBlockActor.cpp SDK/Tag.cpp Utils/keys.h SDK/CBlockLegacy.cpp SDK/CItem.cpp SDK/CInventory.cpp SDK/CInventoryTransaction.cpp SDK/CEntity.cpp SDK/CComplexInventoryTransaction.cpp SDK/CPacket.cpp SDK/CMinecraftUIRenderContext.cpp SDK/CClientInstance.cpp SDK/CMoveInputHandler.cpp SDK/CImageBuffer.h Horion/Module/Modules/Freelook.cpp Horion/Module/Modules/Freelook.h SDK/CCamera.h SDK/CCamera.cpp)

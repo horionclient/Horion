@@ -97,5 +97,6 @@ public:
 	virtual void toggle();
 	virtual bool isEnabled();
 	virtual void onSendPacket(C_Packet*);
+	virtual bool callWhenDisabled();
 	const char* getTooltip();
 };

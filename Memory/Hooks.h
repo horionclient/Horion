@@ -19,6 +19,7 @@
 #include "../SDK/CRakNetInstance.h"
 #include "../SDK/CUIScene.h"
 #include "../SDK/TextHolder.h"
+#include "../SDK/CCamera.h"
 #include "../Utils/TextFormat.h"
 #include "../Utils/SkinUtil.h"
 #include "../resource.h"
@@ -121,6 +122,7 @@ private:
 	static __int64 InGamePlayScreen___renderLevel(__int64 playScreen, __int64 a2, __int64 a3);
 	static HRESULT swapChain__ResizeBuffers(IDXGISwapChain* chain, UINT bufferCount, UINT Width, UINT Height,DXGI_FORMAT Newformat,UINT SwapChainFlags);
 	static __int64 Cube__compile(__int64 a1, __int64 a2);
+	static void LocalPlayer__updateFromCamera(__int64 a1, C_Camera* a2);
 
 	std::unique_ptr<FuncHook> GameMode_tickHook;
 	std::unique_ptr<FuncHook> SurvivalMode_tickHook;
@@ -169,6 +171,7 @@ private:
 	std::unique_ptr<FuncHook> InGamePlayScreen___renderLevelHook;
 	std::unique_ptr<FuncHook> swapchain__resizeBuffersHook;
 	std::unique_ptr<FuncHook> cube__compileHook;
+	std::unique_ptr<FuncHook> LocalPlayer__updateFromCameraHook;
 };
 
 extern Hooks g_Hooks;

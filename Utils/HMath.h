@@ -5,8 +5,10 @@
 
 static constexpr float DEG_RAD2 = PI / 360.0f;
 static constexpr float DEG_RAD = 180.0f / PI;
+static constexpr float RAD_DEG = PI / 180.f;
 
 struct vec2_t {
+
 	float x, y;
 	vec2_t() { x = y = 0; }
 	vec2_t(float a, float b) : x(a), y(b) {}
@@ -62,9 +64,9 @@ struct vec2_t {
 	}
 
 	vec2_t &normAngles() {
-		while (x > 89.9f)
+		while (x > 90.f)
 			x -= 180.0f;
-		while (x < -89.9f)
+		while (x < -90.f)
 			x += 180.0f;
 
 		while (y > 180.0f)
