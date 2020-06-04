@@ -4,7 +4,7 @@ project(Horion)
 set(CMAKE_CXX_STANDARD 17)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    add_compile_options(-Wno-dynamic-class-memaccess -Wno-microsoft-goto -Wno-delete-incomplete -ftime-trace /EHsc /Ob1)
+    add_compile_options(-Wno-dynamic-class-memaccess -Wno-microsoft-goto -Wno-delete-incomplete /EHsc /Ob1)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     add_compile_options(/MP /Ob1)
 endif()
@@ -361,4 +361,4 @@ add_library(Horion SHARED
         Utils/Utils.cpp
         Utils/Utils.h
         Utils/xorstr.h
-        resource.h SDK/TextHolder.cpp SDK/CChestBlockActor.cpp SDK/Tag.cpp Utils/keys.h SDK/CBlockLegacy.cpp SDK/CItem.cpp SDK/CInventory.cpp SDK/CInventoryTransaction.cpp SDK/CEntity.cpp SDK/CComplexInventoryTransaction.cpp SDK/CPacket.cpp SDK/CMinecraftUIRenderContext.cpp SDK/CClientInstance.cpp SDK/CMoveInputHandler.cpp SDK/CImageBuffer.h Horion/Module/Modules/Freelook.cpp Horion/Module/Modules/Freelook.h SDK/CCamera.h SDK/CCamera.cpp)
+        resource.h SDK/TextHolder.cpp SDK/CChestBlockActor.cpp SDK/Tag.cpp Utils/keys.h SDK/CBlockLegacy.cpp SDK/CItem.cpp SDK/CInventory.cpp SDK/CInventoryTransaction.cpp SDK/CEntity.cpp SDK/CComplexInventoryTransaction.cpp SDK/CPacket.cpp SDK/CMinecraftUIRenderContext.cpp SDK/CClientInstance.cpp SDK/CMoveInputHandler.cpp SDK/CImageBuffer.h Horion/Module/Modules/Freelook.cpp Horion/Module/Modules/Freelook.h SDK/CCamera.h SDK/CCamera.cpp Horion/Module/Modules/NoHurtcam.cpp Horion/Module/Modules/NoHurtcam.h)

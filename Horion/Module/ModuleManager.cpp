@@ -91,6 +91,8 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Nbt()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Godmode()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Freelook()));
+		//this->moduleList.push_back(std::shared_ptr<IModule>(new AutoSneak())); broken
+		this->moduleList.push_back(std::shared_ptr<IModule>(new NoHurtcam()));
 
 #if defined(_BETA) or defined(_DEBUG)
 		this->moduleList.push_back(std::shared_ptr<IModule>(new ForceOpenCommandBlock()));

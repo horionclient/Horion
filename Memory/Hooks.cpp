@@ -1934,18 +1934,31 @@ __int64 Hooks::GameMode_attack(C_GameMode* _this, C_Entity* ent) {
 void Hooks::LocalPlayer__updateFromCamera(__int64 a1, C_Camera* camera) {
 	auto func = g_Hooks.LocalPlayer__updateFromCameraHook->GetFastcall<__int64, __int64, C_Camera*>();
 	auto freelookMod = moduleMgr->getModule<Freelook>();
+	auto noHurtcamMod = moduleMgr->getModule<NoHurtcam>();
 
 	if(freelookMod->redirectMouse){
 		freelookMod->cameraFacesFront = camera->facesPlayerFront;
 		freelookMod->isThirdPerson = camera->renderPlayerModel;
 		if(freelookMod->resetViewTick >= 0){
-			camera->setOrientationDeg(-freelookMod->lastCameraAngle.x, freelookMod->lastCameraAngle.y, 0);
+			camera->setOrientationDeg(freelookMod->lastCameraAngle.x, freelookMod->lastCameraAngle.y, 0);
 		}else{
 			camera->getPlayerRotation(&freelookMod->lastCameraAngle);
 		}
 
 		return;
 	}
+	if(noHurtcamMod->isEnabled() && g_Data.isInGame() && g_Data.getLocalPlayer()->isAlive()){
+		vec2_t rot;
+		camera->getPlayerRotation(&rot);
+		if(camera->facesPlayerFront){
+			rot.x *= -1; // rotate back
+			rot.y += 180;
+			rot = rot.normAngles();
+		}
+
+		camera->setOrientationDeg(rot.x, rot.y, 0);
+	}
+
 
 	func(a1, camera);
 }

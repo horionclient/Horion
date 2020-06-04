@@ -85,6 +85,7 @@
 #include "Modules/Nbt.h"
 #include "Modules/Godmode.h"
 #include "Modules/Freelook.h"
+#include "Modules/NoHurtcam.h"
 
 #ifdef _DEBUG
 #include "Modules/PacketLogger.h"
