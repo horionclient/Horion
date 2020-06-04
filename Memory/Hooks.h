@@ -123,6 +123,7 @@ private:
 	static HRESULT swapChain__ResizeBuffers(IDXGISwapChain* chain, UINT bufferCount, UINT Width, UINT Height,DXGI_FORMAT Newformat,UINT SwapChainFlags);
 	static __int64 Cube__compile(__int64 a1, __int64 a2);
 	static void LocalPlayer__updateFromCamera(__int64 a1, C_Camera* a2);
+	static bool Mob__isImmobile(C_Entity*);
 
 	std::unique_ptr<FuncHook> GameMode_tickHook;
 	std::unique_ptr<FuncHook> SurvivalMode_tickHook;
@@ -172,6 +173,7 @@ private:
 	std::unique_ptr<FuncHook> swapchain__resizeBuffersHook;
 	std::unique_ptr<FuncHook> cube__compileHook;
 	std::unique_ptr<FuncHook> LocalPlayer__updateFromCameraHook;
+	std::unique_ptr<FuncHook> Mob__isImmobileHook;
 };
 
 extern Hooks g_Hooks;

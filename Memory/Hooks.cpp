@@ -274,6 +274,9 @@ void Hooks::Init() {
 
 		void* localPlayerUpdateFromCam = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 80 BA"));
 		g_Hooks.LocalPlayer__updateFromCameraHook = std::make_unique<FuncHook>(localPlayerUpdateFromCam, Hooks::LocalPlayer__updateFromCamera);
+
+		void* MobIsImmobile = reinterpret_cast<void*>(FindSignature("40 53 48 83 EC ?? 80 B9 ?? ?? ?? ?? 00 48 8B D9 75 ?? 48 8B 89"));
+		g_Hooks.Mob__isImmobileHook = std::make_unique<FuncHook>(MobIsImmobile, Hooks::Mob__isImmobile);
 	}
 
 // clang-format on
@@ -1961,4 +1964,13 @@ void Hooks::LocalPlayer__updateFromCamera(__int64 a1, C_Camera* camera) {
 
 
 	func(a1, camera);
+}
+bool Hooks::Mob__isImmobile(C_Entity* ent) {
+	auto func = g_Hooks.Mob__isImmobileHook->GetFastcall<bool, C_Entity*>();
+
+	static auto antiImmobileMod = moduleMgr->getModule<AntiImmobile>();
+	if(antiImmobileMod->isEnabled() && ent == g_Data.getLocalPlayer())
+		return false;
+
+	return func(ent);
 }
