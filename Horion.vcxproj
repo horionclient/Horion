@@ -301,6 +301,7 @@
     <ClCompile Include="Horion\Module\Modules\Fly.cpp" />
     <ClCompile Include="Horion\Module\Modules\ForceOpenCommandBlock.cpp" />
     <ClCompile Include="Horion\Module\Modules\Freecam.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Freelook.cpp" />
     <ClCompile Include="Horion\Module\Modules\Fucker.cpp" />
     <ClCompile Include="Horion\Module\Modules\FullBright.cpp" />
     <ClCompile Include="Horion\Module\Modules\Glide.cpp" />
@@ -371,6 +372,7 @@
     <ClCompile Include="Memory\Hooks.cpp" />
     <ClCompile Include="Memory\SlimMem.cpp" />
     <ClCompile Include="SDK\CBlockLegacy.cpp" />
+    <ClCompile Include="SDK\CCamera.cpp" />
     <ClCompile Include="SDK\CChestBlockActor.cpp" />
     <ClCompile Include="SDK\CClientInstance.cpp" />
     <ClCompile Include="SDK\CComplexInventoryTransaction.cpp" />
@@ -464,6 +466,7 @@
     <ClInclude Include="Horion\Module\Modules\Fly.h" />
     <ClInclude Include="Horion\Module\Modules\ForceOpenCommandBlock.h" />
     <ClInclude Include="Horion\Module\Modules\Freecam.h" />
+    <ClInclude Include="Horion\Module\Modules\Freelook.h" />
     <ClInclude Include="Horion\Module\Modules\Fucker.h" />
     <ClInclude Include="Horion\Module\Modules\FullBright.h" />
     <ClInclude Include="Horion\Module\Modules\Glide.h" />
@@ -550,6 +553,7 @@
     <ClInclude Include="Memory\MinHook.h" />
     <ClInclude Include="Memory\SlimMem.h" />
     <ClInclude Include="SDK\CBlockLegacy.h" />
+    <ClInclude Include="SDK\CCamera.h" />
     <ClInclude Include="SDK\CChestBlockActor.h" />
     <ClInclude Include="SDK\CClientInstance.h" />
     <ClInclude Include="SDK\CClientInstanceScreenModel.h" />

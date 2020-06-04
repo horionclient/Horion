@@ -69,16 +69,13 @@
     <ClCompile Include="Horion\Module\Modules\AutoSneak.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSprint.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoTotem.cpp" />
-    <ClCompile Include="Horion\Module\Modules\BedFucker.cpp" />
     <ClCompile Include="Horion\Module\Modules\Bhop.cpp" />
     <ClCompile Include="Horion\Module\Modules\Blink.cpp" />
     <ClCompile Include="Horion\Module\Modules\BowAimbot.cpp" />
-    <ClCompile Include="Horion\Module\Modules\BugUp.cpp" />
     <ClCompile Include="Horion\Module\Modules\ChestAura.cpp" />
     <ClCompile Include="Horion\Module\Modules\ChestESP.cpp" />
     <ClCompile Include="Horion\Module\Modules\ChestStealer.cpp" />
     <ClCompile Include="Horion\Module\Modules\ClickGuiMod.cpp" />
-    <ClCompile Include="Horion\Module\Modules\ClickTP.cpp" />
     <ClCompile Include="Horion\Module\Modules\Criticals.cpp" />
     <ClCompile Include="Horion\Module\Modules\Derp.cpp" />
     <ClCompile Include="Horion\Module\Modules\EditionFaker.cpp" />
@@ -105,7 +102,6 @@
     <ClCompile Include="Horion\Module\Modules\NameTags.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoFall.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoFriends.cpp" />
-    <ClCompile Include="Horion\Module\Modules\NoKnockBack.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoPacket.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoSlowDown.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoWeb.cpp" />
@@ -6557,6 +6553,8 @@
     <ClCompile Include="Utils\Target.cpp" />
     <ClCompile Include="Utils\TextFormat.cpp" />
     <ClCompile Include="Utils\Utils.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Freelook.cpp" />
+    <ClCompile Include="SDK\CCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Module\Modules\AirJump.h" />
@@ -6640,16 +6638,13 @@
     <ClInclude Include="Horion\Module\Modules\AutoSneak.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSprint.h" />
     <ClInclude Include="Horion\Module\Modules\AutoTotem.h" />
-    <ClInclude Include="Horion\Module\Modules\BedFucker.h" />
     <ClInclude Include="Horion\Module\Modules\Bhop.h" />
     <ClInclude Include="Horion\Module\Modules\Blink.h" />
     <ClInclude Include="Horion\Module\Modules\BowAimbot.h" />
-    <ClInclude Include="Horion\Module\Modules\BugUp.h" />
     <ClInclude Include="Horion\Module\Modules\ChestAura.h" />
     <ClInclude Include="Horion\Module\Modules\ChestESP.h" />
     <ClInclude Include="Horion\Module\Modules\ChestStealer.h" />
     <ClInclude Include="Horion\Module\Modules\ClickGuiMod.h" />
-    <ClInclude Include="Horion\Module\Modules\ClickTP.h" />
     <ClInclude Include="Horion\Module\Modules\Crasher.h" />
     <ClInclude Include="Horion\Module\Modules\Criticals.h" />
     <ClInclude Include="Horion\Module\Modules\CrystalAura.h" />
@@ -6683,7 +6678,6 @@
     <ClInclude Include="Horion\Module\Modules\NightMode.h" />
     <ClInclude Include="Horion\Module\Modules\NoFall.h" />
     <ClInclude Include="Horion\Module\Modules\NoFriends.h" />
-    <ClInclude Include="Horion\Module\Modules\NoKnockBack.h" />
     <ClInclude Include="Horion\Module\Modules\NoPacket.h" />
     <ClInclude Include="Horion\Module\Modules\NoSlowDown.h" />
     <ClInclude Include="Horion\Module\Modules\NoSwing.h" />
@@ -12823,6 +12817,8 @@
     <ClInclude Include="Utils\TextFormat.h" />
     <ClInclude Include="Utils\Utils.h" />
     <ClInclude Include="Utils\xorstr.h" />
+    <ClInclude Include="Horion\Module\Modules\Freelook.h" />
+    <ClInclude Include="SDK\CCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\coolroblox.json" />
