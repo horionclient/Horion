@@ -33,8 +33,15 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 	if (!g_Data.getLocalPlayer()->isAlive())
 		return;
 
+	if(!currentEntity->isAlive())
+		return;
+
 	if (killauraMod->isMobAura) {
 		if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)
+			return;
+		if(currentEntity->width <= 0.01f || currentEntity->height <= 0.01f) // Don't hit this pesky antibot on 2b2e.org
+			return;
+		if(currentEntity->getEntityTypeId() == 64) // item
 			return;
 	} else {
 		if (!Target::isValidTarget(currentEntity))
