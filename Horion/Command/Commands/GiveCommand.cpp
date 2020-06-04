@@ -46,7 +46,7 @@ bool GiveCommand::execute(std::vector<std::string>* args) {
 	} else {
 		void* ItemPtr = malloc(0x8);
 		C_Item*** cStack = getItemFromId(ItemPtr, itemId);
-		if (**cStack == NULL) {
+		if (cStack == nullptr || *cStack == nullptr || **cStack == nullptr) {
 			clientMessageF("%sInvalid item ID!", RED);
 			return true;
 		}
