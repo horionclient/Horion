@@ -88,7 +88,6 @@ public:
 	virtual bool isArmor(void) const;
 	virtual bool isDye(void) const;
 	virtual bool isFertilizer(int) const;
-	virtual bool isGlint(__int64 const&) const;
 	virtual bool isGlint(C_ItemStack const&) const;
 	virtual bool isThrowable(void) const;
 	virtual bool isPattern(void) const;
@@ -103,6 +102,7 @@ public:
 	virtual bool isLiquidClipItem(int) const;
 
 private:
+	virtual bool requiresInteract();
 	virtual __int64 appendFormattedHovertext(C_ItemStack const&, __int64&, std::string&, bool) const;
 
 public:
@@ -125,17 +125,17 @@ public:
 	virtual bool isMultiColorTinted(C_ItemStack const&) const;
 
 private:
-	virtual __int64 getColor(__int64 const&) const;
+	//virtual __int64 getColor(__int64 const&) const;
 	virtual __int64 getColor(C_ItemStack const&) const;
 	virtual __int64 getBaseColor(C_ItemStack const&) const;
 	virtual __int64 getSecondaryColor(C_ItemStack const&) const;
-	virtual __int64 saveAdditionalData(__int64 const&, __int64&) const;
 	virtual __int64 saveAdditionalData(C_ItemStack const&, __int64&) const;
-	/*	virtual __int64 readAdditionalData(C_ItemStack&, __int64 const&)const;
-		virtual __int64 readAdditionalData(__int64&, __int64 const&)const;
+	virtual __int64 readAdditionalData(C_ItemStack&, __int64 const&)const;
+	/*	virtual __int64 readAdditionalData(__int64&, __int64 const&)const;
 	public:
-		virtual bool isTintable(void)const;
+
 	private:*/
+	virtual bool isTintable(void)const;
 	virtual __int64 use(C_ItemStack&, C_Entity&) const;
 	virtual __int64 dispense(C_BlockSource&, __int64&, int, vec3_t const&, unsigned char) const;
 	virtual __int64 useTimeDepleted(__int64&, __int64*, C_Entity*) const;
@@ -153,13 +153,13 @@ private:
 	virtual __int64 buildEffectDescriptionName(C_ItemStack const&) const;
 	//virtual __int64 buildCategoryDescriptionName(__int64 const&)const;
 	virtual __int64 buildCategoryDescriptionName(C_ItemStack const&) const;
-	virtual __int64 readUserData(__int64&, __int64&, __int64&) const;
+	//virtual __int64 readUserData(__int64&, __int64&, __int64&) const;
 	virtual __int64 readUserData(C_ItemStack&, __int64&, __int64&) const;
 	//virtual __int64 writeUserData(__int64 const&, __int64&)const;
 	virtual __int64 writeUserData(C_ItemStack const&, __int64&) const;
 
 public:
-	virtual int getMaxStackSize(void) const;
+	virtual int getMaxStackSize(void* itemDescriptor) const;
 
 private:
 	virtual __int64 inventoryTick(C_ItemStack&, __int64&, C_Entity&, int, bool) const;
@@ -169,19 +169,19 @@ private:
 	virtual __int64 getCooldownTime(void) const;
 	virtual __int64 fixupOnLoad(__int64&) const;
 	virtual __int64 fixupOnLoad(C_ItemStack&) const;
-	virtual __int64 getDamageValue(C_ItemStack const&) const;
+	//virtual __int64 getDamageValue(C_ItemStack const&) const;
 	virtual __int64 getDamageValue(__int64 const&) const;
 
 public:
 	virtual void setDamageValue(C_ItemStack&, short) const;
-	virtual void setDamageValue(__int64&, short) const;
+	//virtual void setDamageValue(__int64&, short) const;
 
 private:
 	virtual __int64 getInHandUpdateType(C_Entity const&, __int64 const&, __int64 const&, bool, bool) const;
 	virtual __int64 getInHandUpdateType(C_Entity const&, C_ItemStack const&, C_ItemStack const&, bool, bool) const;
 
 public:
-	virtual bool isSameItem(__int64 const&, __int64 const&) const;
+	//virtual bool isSameItem(__int64 const&, __int64 const&) const;
 	virtual bool isSameItem(C_ItemStack const&, C_ItemStack const&) const;
 
 private:
@@ -198,11 +198,13 @@ private:
 public:
 	virtual void setIcon(std::string const&, int);
 	virtual void setIcon(__int64 const&);
+	virtual void setIconAtlas(__int64 const&);
 	virtual bool canBeCharged(void) const;
 
 private:
 	virtual __int64 playSoundIncrementally(__int64 const&, __int64&) const;
 	virtual __int64 playSoundIncrementally(C_ItemStack const&, __int64&) const;
+	virtual bool isCustomArmor();
 	virtual __int64 getAuxValuesDescription(void) const;
 	virtual __int64 _checkUseOnPermissions(C_Entity&, __int64&, unsigned char const&, vec3_ti const&) const;
 	virtual __int64 _checkUseOnPermissions(C_Entity&, C_ItemStack&, unsigned char const&, vec3_ti const&) const;

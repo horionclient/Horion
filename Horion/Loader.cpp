@@ -259,17 +259,20 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 						const wchar_t* ident = L"log ";
 						size_t identLength = wcslen(ident);
 						size_t textLength = wcslen(wstr.c_str()) + identLength;
-						 
-						HorionDataPacket packet;
-						packet.cmd = CMD_LOG;
-						auto tmp = std::shared_ptr<unsigned char[]>(new unsigned char[(textLength + 1) * sizeof(wchar_t)]);
-						packet.data.swap(tmp);
-						size_t leng = (textLength + 1) * sizeof(wchar_t);
-						wcscpy_s((wchar_t*)packet.data.get(), textLength, ident);
-						wcscpy_s((wchar_t*)(packet.data.get() + identLength * sizeof(wchar_t)), textLength - identLength + 1, wstr.c_str());
-						packet.dataArraySize = (int)wcslen((wchar_t*)packet.data.get()) * sizeof(wchar_t);
-						
-						g_Data.sendPacketToInjector(packet);
+
+						if(textLength < 2990){
+							HorionDataPacket packet;
+							packet.cmd = CMD_LOG;
+							auto tmp = std::shared_ptr<unsigned char[]>(new unsigned char[(textLength + 1) * sizeof(wchar_t)]);
+							packet.data.swap(tmp);
+							size_t leng = (textLength + 1) * sizeof(wchar_t);
+							wcscpy_s((wchar_t*)packet.data.get(), textLength, ident);
+							wcscpy_s((wchar_t*)(packet.data.get() + identLength * sizeof(wchar_t)), textLength - identLength + 1, wstr.c_str());
+							packet.dataArraySize = (int)wcslen((wchar_t*)packet.data.get()) * sizeof(wchar_t);
+
+							if(packet.dataArraySize < 2999)
+								g_Data.sendPacketToInjector(packet);
+						}
 					}
 #else
 					stringPrintVector->clear();

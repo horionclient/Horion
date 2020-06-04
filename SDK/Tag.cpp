@@ -153,7 +153,7 @@ void DoubleTag::read(std::string& string)  //throws MojangsonParseException
 ByteTag::ByteTag(char value) {
 	static uintptr_t** ByteTagVtable = 0x0;
 	if (ByteTagVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? 48 89 08 C6 40 08 ?? 48 89 03 48 8B C3 48 83 C4 ?? 5B C3 B9 ? ? ? ? E8 ? ? ? ? 48 89 44 24 ?");
+		uintptr_t sigOffset = FindSignature("48 8D 0D ?? ?? ?? ?? 48 89 08 C6 40 ?? 00 48 89 03 48 8B C3 48 83 C4");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		ByteTagVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 		if (ByteTagVtable == 0x0 || sigOffset == 0x0)

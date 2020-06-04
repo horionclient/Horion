@@ -76,11 +76,11 @@ std::vector<int> InventoryCleaner::findStackableItems() {
 	for (int i = 0; i < 36; i++) {
 		C_ItemStack* itemStack = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(i);
 		if (itemStack->item != nullptr) {
-			if ((*itemStack->item)->getMaxStackSize() > itemStack->count) {
+			if ((*itemStack->item)->getMaxStackSize(0) > itemStack->count) {
 				for (int i2 = 0; i2 < 36; i2++) {
 					if (i2 == i) continue;
 					C_ItemStack* itemStack2 = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(i2);
-					if ((*itemStack2->item)->getMaxStackSize() > itemStack->count) {
+					if ((*itemStack2->item)->getMaxStackSize(0) > itemStack->count) {
 						if (*itemStack->item == *itemStack2->item) {
 							if ((std::find(stackableSlot.begin(), stackableSlot.end(), i2) == stackableSlot.end())) stackableSlot.push_back(i2);
 							if ((std::find(stackableSlot.begin(), stackableSlot.end(), i) == stackableSlot.end())) stackableSlot.push_back(i);
