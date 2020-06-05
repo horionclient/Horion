@@ -23,17 +23,14 @@ bool Tower::tryTower(vec3_t blockBelow) {
 
 	DrawUtils::drawBox(blockBelow, vec3_t(blockBelow).add(1), 0.4f);
 
-	// BlockSource::getBlock()::getMaterial()::isReplaceable()
 	C_Block* block = g_Data.getLocalPlayer()->region->getBlock(vec3_ti(blockBelow));
-	//logF("block: %llX", block);
 	C_BlockLegacy* blockLegacy = *(block->blockLegacy);
-	//logF("blockLegacy: %llX", blockLegacy);
 	if (blockLegacy->material->isReplaceable) {
-		vec3_ti* blok = new vec3_ti(blockBelow);
+		vec3_ti blok(blockBelow);
 
 		// Find neighbour
 		static std::vector<vec3_ti*> checklist;
-		if (checklist.size() == 0) {
+		if (checklist.empty()) {
 			checklist.push_back(new vec3_ti(0, -1, 0));
 			checklist.push_back(new vec3_ti(0, 1, 0));
 
@@ -45,18 +42,14 @@ bool Tower::tryTower(vec3_t blockBelow) {
 		}
 		bool foundCandidate = false;
 		int i = 0;
-		for (auto it = checklist.begin(); it != checklist.end(); ++it) {
-			vec3_ti* current = *it;
-
-			vec3_ti* calc = blok->subAndReturn(*current);
-			if (!(*(g_Data.getLocalPlayer()->region->getBlock(*calc)->blockLegacy))->material->isReplaceable) {
+		for (auto current : checklist) {
+			vec3_ti calc = blok.sub(*current);
+			if (!(*(g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy))->material->isReplaceable) {
 				// Found a solid block to click
 				foundCandidate = true;
-				blok->set(calc);
-				delete calc;
+				blok = calc;
 				break;
 			}
-			delete calc;
 			i++;
 		}
 		if (foundCandidate && GameData::isKeyDown(*input->spaceBarKey)) {
@@ -65,12 +58,10 @@ bool Tower::tryTower(vec3_t blockBelow) {
 			moveVec.y = motion;
 			moveVec.z = g_Data.getLocalPlayer()->velocity.z;
 			g_Data.getLocalPlayer()->lerpMotion(moveVec);
-			g_Data.getCGameMode()->buildBlock(blok, i);
-			delete blok;
+			g_Data.getCGameMode()->buildBlock(&blok, i);
 
 			return true;
 		}
-		delete blok;
 	}
 	return false;
 }

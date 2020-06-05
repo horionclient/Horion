@@ -404,3 +404,9 @@ vec2_t DrawUtils::worldToScreen(vec3_t world) {
 	refdef->OWorldToScreen(origin, world, ret, fov, screenSize);
 	return ret;
 }
+void DrawUtils::drawLine3d(vec3_t start, vec3_t end, float lineWidth) {
+	vec2_t sc1, sc2;
+	if (refdef->OWorldToScreen(origin, start, sc1, fov, screenSize) && refdef->OWorldToScreen(origin, end, sc2, fov, screenSize)) {
+		drawLine(sc1, sc2, lineWidth);
+	}
+}

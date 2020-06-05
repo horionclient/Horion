@@ -97,6 +97,7 @@ public:
 	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = Fonts::SMOOTH);
 
 	static void drawLine(vec2_t start, vec2_t end, float lineWidth);  // rgba
+	static void drawLine3d(vec3_t start, vec3_t end, float lineWidth);
 	static inline void fillRectangle(vec4_t pos, const MC_Color col, float alpha) {
 		float posF[4];  // vec4_t(startX, startY, endX, endY);
 		posF[0] = pos.x;

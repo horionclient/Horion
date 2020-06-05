@@ -1,5 +1,7 @@
 #include "Scaffold.h"
 
+#include "../../../Utils/Logger.h"
+
 Scaffold::Scaffold() : IModule(VK_NUMPAD1, Category::WORLD, "Automatically build blocks beneath you") {
 	registerBoolSetting("Spoof", &this->spoof, this->spoof);
 }
@@ -8,23 +10,21 @@ Scaffold::~Scaffold() {
 }
 
 const char* Scaffold::getModuleName() {
-	return ("Scaffold");
+	return "Scaffold";
 }
 
 bool Scaffold::tryScaffold(vec3_t blockBelow) {
 	blockBelow = blockBelow.floor();
 
-	// BlockSource::getBlock()::getMaterial()::isReplaceable()
 	C_Block* block = g_Data.getLocalPlayer()->region->getBlock(vec3_ti(blockBelow));
-	//logF("block: %llX", block);
 	C_BlockLegacy* blockLegacy = *(block->blockLegacy);
-	//logF("blockLegacy: %llX", blockLegacy);
 	if (blockLegacy->material->isReplaceable) {
-		vec3_ti* blok = new vec3_ti(blockBelow);
+
+		vec3_ti blok(blockBelow);
 
 		// Find neighbour
 		static std::vector<vec3_ti*> checklist;
-		if (checklist.size() == 0) {
+		if (checklist.empty()) {
 			checklist.push_back(new vec3_ti(0, -1, 0));
 			checklist.push_back(new vec3_ti(0, 1, 0));
 
@@ -34,30 +34,25 @@ bool Scaffold::tryScaffold(vec3_t blockBelow) {
 			checklist.push_back(new vec3_ti(-1, 0, 0));
 			checklist.push_back(new vec3_ti(1, 0, 0));
 		}
+
 		bool foundCandidate = false;
 		int i = 0;
-		for (auto it = checklist.begin(); it != checklist.end(); ++it) {
-			vec3_ti* current = *it;
-
-			vec3_ti* calc = blok->subAndReturn(*current);
-			if (!(*(g_Data.getLocalPlayer()->region->getBlock(*calc)->blockLegacy))->material->isReplaceable) {
+		for (auto current : checklist) {
+			vec3_ti calc = blok.sub(*current);
+			if (!(*(g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy))->material->isReplaceable) {
 				// Found a solid block to click
 				foundCandidate = true;
-				blok->set(calc);
-				delete calc;
+				blok = calc;
 				break;
 			}
-			delete calc;
 			i++;
 		}
 		if (foundCandidate) {
 			if (spoof) findBlock();
-			g_Data.getCGameMode()->buildBlock(blok, i);
-			delete blok;
+			g_Data.getCGameMode()->buildBlock(&blok, i);
 
 			return true;
 		}
-		delete blok;
 	}
 	return false;
 }
@@ -68,9 +63,9 @@ bool Scaffold::findBlock() {
 	C_Inventory* inv = supplies->inventory;
 	for (int n = 0; n < 9; n++) {
 		C_ItemStack* stack = inv->getItemStack(n);
-		if (stack->item != NULL) {
+		if (stack->item != nullptr) {
 			if ((*stack->item)->isBlock() && (*stack->item)->itemId != 0) {
-				C_MobEquipmentPacket* a = new C_MobEquipmentPacket(id, *stack, n, n);
+				auto* a = new C_MobEquipmentPacket(id, *stack, n, n);
 				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
 				return true;
 			}

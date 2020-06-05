@@ -54,9 +54,10 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	{  // Coordinates
 		if (!(g_Data.getLocalPlayer() == nullptr || !this->coordinates)) {
 			vec3_t* pos = g_Data.getLocalPlayer()->getPos();
-			std::string coordsX = "X: " + std::to_string((int)pos->x);
-			std::string coordsY = "Y: " + std::to_string((int)pos->y);
-			std::string coordsZ = "Z: " + std::to_string((int)pos->z);
+
+			std::string coordsX = "X: " + std::to_string((int)floorf(pos->x));
+			std::string coordsY = "Y: " + std::to_string((int)floorf(pos->y));
+			std::string coordsZ = "Z: " + std::to_string((int)floorf(pos->z));
 			vec4_t rectPos = vec4_t(2.5f, startY + 5.f, 50.5f, startY + 35.f);
 			vec2_t textPos = vec2_t(rectPos.x + 1.5f, rectPos.y + 1.f);
 			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48), 1.f);
