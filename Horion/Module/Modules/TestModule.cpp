@@ -41,10 +41,18 @@ void TestModule::onEnable() {
 	}).detach();
 }
 
+vec3_t lastPos = {0, 0, 0};
 
 void TestModule::onTick(C_GameMode* gm) {
 	//if(gm->player->onGround)
 	//	logF("yeet");
+
+	logF("z:%.2f, %i", gm->player->eyePos0.z, gm->player->onGround);
+	auto nowPos = gm->player->eyePos0;
+
+	//logF("mag: %.3f", nowPos.dist(lastPos) / (1.f / 20));
+
+	lastPos = gm->player->eyePos0;
 }
 
 void TestModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {

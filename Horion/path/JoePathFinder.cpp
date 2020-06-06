@@ -5,8 +5,11 @@
 #include "../../Utils/Logger.h"
 
 constexpr float WALKING_SPEED = 4.32f;
-constexpr float JUMP_TIME = 1.2f;
-constexpr float DROP_TIME = 1.2f;
+constexpr float SPRINT_SPEED = 5.61f;
+constexpr float JUMP_TIME = 0.6f;
+constexpr float DROP1_TIME = 0.4f;
+constexpr float DROP2_TIME = 0.55f;
+constexpr float DROP3_TIME = 0.65f;
 
 JoePathFinder::JoePathFinder(vec3_ti start, C_BlockSource* reg) : startPos(start), region(reg) {
 }
@@ -95,18 +98,40 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 			if(!canStandOn(newPos.add(0, -1, 0), reg)){
 				if(isDiagonal)
 					continue;
+				// maybe drop?
 
 				if(isObstructedPlayer(newPos, reg)) // walk to drop
 					continue;
 
-				newPos = newPos.sub(0, 1, 0); // maybe drop?
-				if(!canStandOn(newPos.add(0, -1, 0), reg)) // TODO: 2 block drop
-					continue;
+				newPos = newPos.add(0, -1, 0);
 
 				if(isObstructed(newPos, reg)) // block below walk to drop
 					continue;
 
-				edges.emplace_back(startNodeRef, findNode(allNodes, newPos), DROP_TIME, JoeSegmentType::DROP);
+				if(!canStandOn(newPos.add(0, -1, 0), reg)) { // stand on block for drop1
+					newPos = newPos.sub(0, 1, 0);
+					if(isObstructed(newPos, reg))
+						continue;
+
+					if(!canStandOn(newPos.add(0, -1, 0), reg)){ // stand on block for drop2
+						newPos = newPos.sub(0, 1, 0);
+						if(isObstructed(newPos, reg))
+							continue;
+
+						if(!canStandOn(newPos.add(0, -1, 0), reg)) // stand on block for drop3
+							continue;
+
+						// 3 Block drop
+						edges.emplace_back(startNodeRef, findNode(allNodes, newPos), DROP3_TIME, JoeSegmentType::DROP);
+						continue;
+					}
+
+					// 2 Block drop
+					edges.emplace_back(startNodeRef, findNode(allNodes, newPos), DROP2_TIME, JoeSegmentType::DROP);
+					continue;
+				}
+
+				edges.emplace_back(startNodeRef, findNode(allNodes, newPos), DROP1_TIME, JoeSegmentType::DROP);
 				continue;
 			}
 
