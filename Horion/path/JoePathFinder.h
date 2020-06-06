@@ -11,6 +11,8 @@ private:
 	JoePath currentPath;
 	C_BlockSource* region;
 public:
+	bool terminateSearch = false;
+
 	JoePathFinder(vec3_ti start, C_BlockSource* reg);
 
 	JoePath findPathTo(vec3_ti endNode);

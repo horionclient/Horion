@@ -25,6 +25,8 @@ public:
 	float color[4];
 };
 
+class C_Entity;
+
 class C_BlockLegacy {
 public:
 	uintptr_t** Vtable;   //0x0000
@@ -42,6 +44,7 @@ private:
 	char pad_0x0106[0xA];  //0x0106
 public:
 	AABB aabb;  //0x00C8
+
 };
 
 class C_Block {

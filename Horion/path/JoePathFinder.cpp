@@ -3,6 +3,7 @@
 #include <vector>
 #include <queue>
 #include "../../Utils/Logger.h"
+#include "../../Utils/Utils.h"
 
 constexpr float WALKING_SPEED = 4.32f;
 constexpr float SPRINT_SPEED = 5.61f;
@@ -10,7 +11,6 @@ constexpr float JUMP_TIME = 0.6f;
 constexpr float DROP1_TIME = 0.4f;
 constexpr float DROP2_TIME = 0.55f;
 constexpr float DROP3_TIME = 0.65f;
-
 JoePathFinder::JoePathFinder(vec3_ti start, C_BlockSource* reg) : startPos(start), region(reg) {
 }
 
@@ -49,17 +49,44 @@ NodeRef findNode(std::vector<Node>& allNodes, vec3_ti& pos){
 			return NodeRef(i);
 	}
 
-	allNodes.emplace_back(pos, 0, 500000);
+	allNodes.emplace_back(pos, 0, 5000);
 	return NodeRef(allNodes.size() - 1);
+}
+
+__forceinline bool isDangerous(vec3_ti pos, C_BlockSource* reg){
+	auto obs1 = reg->getBlock(pos)->toLegacy();
+	if(obs1->material->isLiquid)
+		return true;
+
+	// contact damage based
+	{
+		// there is a function called dealsContactDamage but it takes in so many parameters + plant growth that its not useful anymore
+		static uintptr_t** cactusBlockVtable = nullptr;
+		if (cactusBlockVtable == nullptr) {
+			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 49 89 06 41 88 9E ?? ?? ?? ?? 41 C6");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			cactusBlockVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+		}
+
+		if(obs1->Vtable == cactusBlockVtable)
+			return true;
+		// there should be a sweet berry vtable here as well but the vtable was really aids so i resorted to block names
+		if(obs1->tileName.getTextLength() > 20 && strcmp(obs1->tileName.getText() + 5 /*cutoff tile. prefix*/, "sweet_berry_bush") == 0)
+			return true;
+	}
+	return false;
+}
+__forceinline bool isDangerousPlayer(vec3_ti pos, C_BlockSource* reg){
+	return isDangerous(pos, reg) || isDangerous(pos.add(0, 1, 0), reg);
 }
 
 __forceinline bool canStandOn(vec3_ti pos, C_BlockSource* reg){
 	auto standOn = reg->getBlock(pos)->toLegacy();
-	return standOn->material->isSolid;
+	return standOn->material->isSolid && !isDangerous(pos, reg);
 }
 __forceinline bool isObstructed(vec3_ti pos, C_BlockSource* reg){
 	auto obs1 = reg->getBlock(pos)->toLegacy();
-	return obs1->material->isBlockingMotion;
+	return obs1->material->isBlockingMotion || isDangerous(pos, reg);
 }
 __forceinline bool isObstructedPlayer(vec3_ti pos, C_BlockSource* reg){
 	return isObstructed(pos, reg) || isObstructed(pos.add(0, 1, 0), reg);
@@ -141,6 +168,9 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 			if(isDiagonal){ // We need to check if either x or z are obstruction-less
 				if(isObstructedPlayer(startNode.pos.add(x, 0, 0), reg) && isObstructedPlayer(startNode.pos.add(0, 0, z), reg))
 					continue;
+
+				if(isDangerousPlayer(startNode.pos.add(x, 0, 0), reg) || isDangerousPlayer(startNode.pos.add(0, 0, z), reg))
+					continue;
 			}
 
 			static const float diagonalSpeed = sqrt(1 + 1) / WALKING_SPEED;
@@ -154,7 +184,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 }
 
 float costHeuristic(vec3_ti current, vec3_ti end){ // The cost heuristic always has to be lower or equal to the actual cost
-	return current.toVec3t().dist(end.toVec3t()) / (WALKING_SPEED * 1.1f);
+	return current.toVec3t().dist(end.toVec3t()) / (WALKING_SPEED * 1.05f);
 }
 
 JoePath JoePathFinder::findPathTo(vec3_ti endNode) {
@@ -172,6 +202,9 @@ JoePath JoePathFinder::findPathTo(vec3_ti endNode) {
 		Node& cur = allNodes[curRef.index];
 		if(!cur.isUpToDate)
 			continue;
+
+		if(this->terminateSearch)
+			break;
 
 		if(cur.pos == endNode || true){
 			std::vector<JoeSegment> segments;
