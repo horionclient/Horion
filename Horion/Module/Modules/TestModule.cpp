@@ -1,6 +1,7 @@
 #include "TestModule.h"
 #include "../../../Utils/Logger.h"
 #include "../../path/JoePathFinder.h"
+#include "../../path/JoeMovementController.h"
 
 TestModule::TestModule() : IModule(0, Category::MISC, "For testing purposes") {
 }
@@ -17,6 +18,7 @@ bool TestModule::isFlashMode() {
 }
 
 bool found = false;
+std::shared_ptr<JoeMovementController> movementController;
 JoePathFinder* pathFinder = nullptr;
 JoePath path;
 
@@ -38,6 +40,7 @@ void TestModule::onEnable() {
 	pathFinder = new JoePathFinder(startNode, player->region);
 	std::thread([&](){
 	  path = pathFinder->findPathTo(vec3_ti(-2, 4, 2));
+	  movementController = std::make_unique<JoeMovementController>(path);
 	  found = true;
 	  Sleep(50);
 	  logF("Done");
@@ -62,7 +65,15 @@ void TestModule::onTick(C_GameMode* gm) {
 	delay++;
 	if(delay == 200 && pathFinder && !found) // 10 sec
 		pathFinder->terminateSearch = true;
+
+
 	lastPos = gm->player->eyePos0;
+}
+
+void TestModule::onMove(C_MoveInputHandler* hand){
+	if(found && movementController){
+		movementController->step(g_Data.getLocalPlayer(), g_Data.getClientInstance()->getMoveTurnInput());
+	}
 }
 
 void TestModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {

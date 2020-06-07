@@ -229,5 +229,14 @@ int ModuleManager::getEnabledModuleCount() {
 	}
 	return i;
 }
+void ModuleManager::onMove(C_MoveInputHandler* hand) {
+	if (!isInitialized())
+		return;
+	auto lock = this->lockModuleList();
+	for (auto& it : moduleList) {
+		if (it->isEnabled() || it->callWhenDisabled())
+			it->onMove(hand);
+	}
+}
 
 ModuleManager* moduleMgr = new ModuleManager(&g_Data);

@@ -23,3 +23,12 @@ void JoeSegment::draw() {
 			break;
 	}
 }
+JoeSegmentType JoeSegment::getSegmentType() const {
+	return segmentType;
+}
+const vec3_ti& JoeSegment::getStart() const {
+	return start;
+}
+const vec3_ti& JoeSegment::getEnd() const {
+	return end;
+}

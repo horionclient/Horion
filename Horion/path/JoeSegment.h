@@ -16,4 +16,7 @@ private:
 public:
 	JoeSegment(JoeSegmentType type, vec3_ti& start, vec3_ti& stop);
 	void draw();
+	JoeSegmentType getSegmentType() const;
+	const vec3_ti& getStart() const;
+	const vec3_ti& getEnd() const;
 };

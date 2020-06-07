@@ -17,53 +17,50 @@ struct vec2_t {
 		y = copy.y;
 		return *this;
 	}
+
+	static vec2_t fromAngle(float angle){
+		return vec2_t(-sin(angle), cos(angle));
+	}
+
 	bool operator==(const vec2_t &o) const { return x == o.x && y == o.y; }
 	bool operator!=(const vec2_t &o) const { return x != o.x || y != o.y; }
 
-	vec2_t &sub(float f) {
-		x -= f;
-		y -= f;
-		return *this;
+	vec2_t sub(float f) {
+		return vec2_t(x - f, y - f);
 	}
-	vec2_t &div(float f) {
-		x /= f;
-		y /= f;
-		return *this;
+	vec2_t div(float f) {
+		return vec2_t(x / f, y / f);
 	}
 
-	vec2_t &div(const vec2_t &o) {
-		x /= o.x;
-		y /= o.y;
-		return *this;
+	vec2_t div(const vec2_t &o) {
+		return vec2_t(x / o.x, y / o.y);
 	}
-	vec2_t &mul(const vec2_t &o) {
-		x *= o.x;
-		y *= o.y;
-		return *this;
+	vec2_t mul(const vec2_t &o) {
+		return vec2_t(x * o.x, y * o.y);
 	}
-	vec2_t &mul(float f) {
-		x *= f;
-		y *= f;
-		return *this;
+	vec2_t mul(float f) {
+		return vec2_t(x * f, y * f);
 	}
-
-	vec2_t &sub(const vec2_t &o) {
-		x -= o.x;
-		y -= o.y;
-		return *this;
+	vec2_t sub(const vec2_t &o) {
+		return vec2_t(x - o.x, y - o.y);
 	}
-	vec2_t &add(const vec2_t &o) {
-		x += o.x;
-		y += o.y;
-		return *this;
+	vec2_t add(const vec2_t &o) {
+		return vec2_t(x + o.x, y + o.y);
 	}
 
 	vec2_t normalized() {
-		div(magnitude());
-		return *this;
+		return div(magnitude());
 	}
 
-	vec2_t &normAngles() {
+	vec2_t cross(){
+		return vec2_t(-y, x);
+	}
+
+	float dot(const vec2_t &o) const { return x * o.x + y * o.y; }
+
+	vec2_t normAngles() {
+		float x = this->x;
+		float y = this->y;
 		while (x > 90.f)
 			x -= 180.0f;
 		while (x < -90.f)
@@ -73,7 +70,7 @@ struct vec2_t {
 			y -= 360.0f;
 		while (y < -180.0f)
 			y += 360.0f;
-		return *this;
+		return vec2_t(x, y);
 	}
 
 	float squaredlen() const { return x * x + y * y; }

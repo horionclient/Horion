@@ -65,12 +65,12 @@ struct SkinData;
 
 class GameData {
 private:
-	C_ClientInstance* clientInstance = 0;
-	C_LocalPlayer* localPlayer = 0;
-	C_GameMode* gameMode = 0;
-	C_EntityList* entityList = 0;
-	C_HIDController* hidController = 0;
-	C_RakNetInstance* raknetInstance = 0;
+	C_ClientInstance* clientInstance = nullptr;
+	C_LocalPlayer* localPlayer = nullptr;
+	C_GameMode* gameMode = nullptr;
+	C_EntityList* entityList = nullptr;
+	C_HIDController* hidController = nullptr;
+	C_RakNetInstance* raknetInstance = nullptr;
 	void* hDllInst = 0;
 	std::vector<std::shared_ptr<AABB>> chestList;
 	std::mutex chestListMutex;
@@ -245,14 +245,10 @@ public:
 	C_RakNetInstance* getRakNetInstance() { return raknetInstance; };
 	std::vector<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
 	auto lockChestList() { return std::lock_guard<std::mutex>(this->chestListMutex); }
-
 	void setFakeName(TextHolder* name) { fakeName = name; };
 	TextHolder* getFakeName() { return fakeName; };
-
 	inline __int64 getLastUpdateTime() { return lastUpdate; };
-
 	void forEachEntity(std::function<void(C_Entity*, bool)>);
-
 	int getFPS() { return fps; };
 	int getLeftCPS() { return cpsLeft; };
 	int getRightCPS() { return cpsRight; };

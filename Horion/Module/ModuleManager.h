@@ -114,6 +114,7 @@ public:
 	void onKeyUpdate(int key, bool isDown);
 	void onPreRender(C_MinecraftUIRenderContext* renderCtx);
 	void onPostRender(C_MinecraftUIRenderContext* renderCtx);
+	void onMove(C_MoveInputHandler* handler);
 	void onSendPacket(C_Packet*);
 
 	std::shared_lock<std::shared_mutex> lockModuleList() { return std::shared_lock(this->moduleListMutex); }

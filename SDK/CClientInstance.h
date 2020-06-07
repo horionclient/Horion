@@ -135,6 +135,8 @@ public:
 	PtrToGameSettings2* ptr;
 };
 
+class C_MoveInputHandler;
+
 class C_ClientInstance {
 private:
 	char firstPad[0x40];  //0x0008
@@ -550,9 +552,7 @@ private:
 
 public:
 	virtual void setMoveTurnInput(__int64);
-
-private:
-	virtual __int64 getMoveTurnInput(void);
+	virtual C_MoveInputHandler* getMoveTurnInput(void);
 
 public:
 	virtual void setupPersistentControls(__int64);

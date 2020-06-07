@@ -263,6 +263,8 @@ void IModule::onAttack(C_Entity*) {
 bool IModule::callWhenDisabled() {
 	return false;
 }
+void IModule::onMove(C_MoveInputHandler*) {
+}
 
 void SettingEntry::makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
 	switch (valueType) {

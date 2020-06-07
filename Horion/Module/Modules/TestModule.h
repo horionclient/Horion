@@ -15,6 +15,7 @@ public:
 	virtual void onTick(C_GameMode* gm) override;
 	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
 	virtual void onSendPacket(C_Packet* p) override;
+	virtual void onMove(C_MoveInputHandler* hand) override;
 	virtual void onDisable() override;
 	
 };

@@ -1268,7 +1268,9 @@ void Hooks::ClickFunc(__int64 a1, char mouseButton, char isDown, __int16 mouseX,
 
 __int64 Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity* a2) {
 	static auto oTick = g_Hooks.MoveInputHandler_tickHook->GetFastcall<__int64, C_MoveInputHandler*, C_Entity*>();
-	return oTick(a1, a2);
+	auto ret = oTick(a1, a2);
+	moduleMgr->onMove(a1);
+	return ret;
 }
 
 __int64 Hooks::ChestScreenController_tick(C_ChestScreenController* a1) {
