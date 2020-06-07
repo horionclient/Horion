@@ -85,8 +85,26 @@ __forceinline bool canStandOn(vec3_ti pos, C_BlockSource* reg){
 	return standOn->material->isSolid && !isDangerous(pos, reg);
 }
 __forceinline bool isObstructed(vec3_ti pos, C_BlockSource* reg){
-	auto obs1 = reg->getBlock(pos)->toLegacy();
-	return obs1->material->isBlockingMotion || isDangerous(pos, reg);
+	auto block = reg->getBlock(pos);
+	auto obs1 = block->toLegacy();
+	if(obs1->material->isBlockingMotion)
+		return true;
+
+	// Snow blocks
+	{
+		static uintptr_t** snowBlockVtable = nullptr; // TopSnowBlock
+		if (snowBlockVtable == nullptr) {
+			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 03 C6 83 ?? ?? ?? ?? 01 F3");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			snowBlockVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+		}
+
+		AABB aabb;
+		if(obs1->Vtable == snowBlockVtable && obs1->getCollisionShape(&aabb, block, reg, &pos, nullptr))
+			return true;
+	}
+
+	return isDangerous(pos, reg);
 }
 __forceinline bool isObstructedPlayer(vec3_ti pos, C_BlockSource* reg){
 	return isObstructed(pos, reg) || isObstructed(pos.add(0, 1, 0), reg);
@@ -103,7 +121,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 
 			vec3_ti newPos = startNode.pos.add(x,0, z);
 
-			if(isObstructed(newPos, reg)){
+			if(isObstructed(newPos, reg)){ // lower block obstructed
 				// maybe jump?
 				if(isDiagonal)
 					continue;
@@ -130,53 +148,45 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 				if(isObstructedPlayer(newPos, reg)) // walk to drop
 					continue;
 
-				newPos = newPos.add(0, -1, 0);
+				int dropLength = 0;
+				while(dropLength < 3){
+					dropLength++;
+					newPos = newPos.add(0, -1, 0); // drop down 1 block
 
-				if(isObstructed(newPos, reg)) // block below walk to drop
-					continue;
+					if(isObstructed(newPos, reg)) // block below walk to drop
+						goto searchLoop;
 
-				if(!canStandOn(newPos.add(0, -1, 0), reg)) { // stand on block for drop1
-					newPos = newPos.sub(0, 1, 0);
-					if(isObstructed(newPos, reg))
+					if(!canStandOn(newPos.add(0, -1, 0), reg)) // block to stand on after drop
 						continue;
 
-					if(!canStandOn(newPos.add(0, -1, 0), reg)){ // stand on block for drop2
-						newPos = newPos.sub(0, 1, 0);
-						if(isObstructed(newPos, reg))
-							continue;
-
-						if(!canStandOn(newPos.add(0, -1, 0), reg)) // stand on block for drop3
-							continue;
-
-						// 3 Block drop
-						edges.emplace_back(startNodeRef, findNode(allNodes, newPos), DROP3_TIME, JoeSegmentType::DROP);
-						continue;
-					}
-
-					// 2 Block drop
-					edges.emplace_back(startNodeRef, findNode(allNodes, newPos), DROP2_TIME, JoeSegmentType::DROP);
-					continue;
+					const float dropTime = dropLength == 1 ? DROP1_TIME : (dropLength == 2 ? DROP2_TIME : DROP3_TIME);
+					edges.emplace_back(startNodeRef, findNode(allNodes, newPos), dropTime, JoeSegmentType::DROP);
+					goto searchLoop;
 				}
 
-				edges.emplace_back(startNodeRef, findNode(allNodes, newPos), DROP1_TIME, JoeSegmentType::DROP);
 				continue;
 			}
 
+			// upper block obstructed?
 			if(isObstructed(newPos.add(0, 1, 0), reg))
 				continue;
 
-			if(isDiagonal){ // We need to check if either x or z are obstruction-less
+			if(isDiagonal){
+				// Check if either x or z are obstruction-less
 				if(isObstructedPlayer(startNode.pos.add(x, 0, 0), reg) && isObstructedPlayer(startNode.pos.add(0, 0, z), reg))
 					continue;
 
+				// Check if both x and z aren't dangerous (we don't want to run into cacti)
 				if(isDangerousPlayer(startNode.pos.add(x, 0, 0), reg) || isDangerousPlayer(startNode.pos.add(0, 0, z), reg))
 					continue;
 			}
 
-			static const float diagonalSpeed = sqrt(1 + 1) / WALKING_SPEED;
+			static const float diagonalSpeed = sqrtf(1 + 1) / WALKING_SPEED;
 			static const float straightSpeed = 1 / WALKING_SPEED;
 			float cost = isDiagonal ? diagonalSpeed : straightSpeed;
 			edges.emplace_back(startNodeRef, findNode(allNodes, newPos), cost, JoeSegmentType::WALK);
+
+			searchLoop:; // "continue" for nested loops
 		}
 	}
 

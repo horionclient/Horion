@@ -26,6 +26,8 @@ public:
 };
 
 class C_Entity;
+class C_Block;
+class C_BlockSource;
 
 class C_BlockLegacy {
 public:
@@ -45,6 +47,7 @@ private:
 public:
 	AABB aabb;  //0x00C8
 
+	bool getCollisionShape(AABB* collShapeOut, C_Block* block, C_BlockSource* blockSource, const vec3_ti* pos, C_Entity* actor);
 };
 
 class C_Block {

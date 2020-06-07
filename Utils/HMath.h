@@ -477,6 +477,7 @@ struct glmatrixf {
 struct AABB {
 	vec3_t lower;
 	vec3_t upper;
+	bool isZero = false;
 	AABB() {}
 	AABB(vec3_t l, vec3_t h) : lower(l), upper(h){};
 	AABB(const AABB &aabb) {

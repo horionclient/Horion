@@ -11,3 +11,6 @@ C_BlockActor* C_BlockSource::getBlockEntity(const vec3_ti& block) {
 	static getBlockEntity_t getBlockEntity = reinterpret_cast<getBlockEntity_t>(FindSignature("40 53 48 83 EC ?? 8B 02 48 8B DA C1 F8 ?? 89 44 24 ?? 8B 42 ?? 48 8D 54 24 ? C1 F8 04 89 44 24 ?? E8 ? ? ? ? 48 85 C0 74 31"));
 	return getBlockEntity(this, block);
 }
+bool C_BlockLegacy::getCollisionShape(AABB* collShapeOut, C_Block* block, C_BlockSource* blockSource, const vec3_ti* pos, C_Entity* actor) {
+	return Utils::CallVFunc<4, bool, AABB*, C_Block*, C_BlockSource*, const vec3_ti*, C_Entity*>(this, collShapeOut, block, blockSource, pos, actor);
+}

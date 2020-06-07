@@ -37,7 +37,7 @@ void TestModule::onEnable() {
 
 	pathFinder = new JoePathFinder(startNode, player->region);
 	std::thread([&](){
-	  path = pathFinder->findPathTo(vec3_ti(159, 52, 413));
+	  path = pathFinder->findPathTo(vec3_ti(-2, 4, 2));
 	  found = true;
 	  Sleep(50);
 	  logF("Done");
