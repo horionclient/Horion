@@ -248,6 +248,9 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 					// we can't stand on landing zone for jump
 					if(isObstructed(newPos.add(0, -1, 0), reg)) // we can't move it down
 						goto tryLargerParkourJump;
+					if(isDangerous(startNode.pos.add(x,-1, z), reg, true))
+						goto tryLargerParkourJump;
+
 					// move landing zone down?
 					auto dropPos = newPos.add(0, -1, 0);
 					if(!canStandOn(dropPos.add(0, -1, 0), reg)) // we can't stand on the lowered landing zone :(
