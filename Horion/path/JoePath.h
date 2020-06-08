@@ -19,5 +19,5 @@ public:
 	auto getSegment(size_t seg){
 		return this->segments[seg];
 	}
-	void draw() const;
+	void draw(int) const;
 };

@@ -17,6 +17,11 @@ void JoeSegment::draw() {
 			DrawUtils::drawLine3d(start.toVec3t().add(0.5f, 0, 0.5f), start.toVec3t().add(0.5f, 1, 0.5f), 1);
 			DrawUtils::drawLine3d(start.toVec3t().add(0.5f, 1, 0.5f), end.toVec3t().add(0.5f, 0, 0.5f), 1);
 			break;
+		case PARKOUR_JUMP_SINGLE:{
+			auto middle = start.toVec3t().add(0.5f, 0, 0.5f).add(end.sub(start).toVec3t().mul(0.5f).add(0, 1, 0));
+			DrawUtils::drawLine3d(start.toVec3t().add(0.5f, 0, 0.5f), middle, 1);
+			DrawUtils::drawLine3d(middle, end.toVec3t().add(0.5f, 0, 0.5f), 1);
+		} break;
 		case WALK:
 		default:
 			DrawUtils::drawLine3d(start.toVec3t().add(0.5f, 0, 0.5f), end.toVec3t().add(0.5f, 0, 0.5f), 1);

@@ -22,7 +22,8 @@ void TestModule::onEnable() {
 
 
 void TestModule::onTick(C_GameMode* gm) {
-
+	if(!gm->player->onGround)
+		logF("ssss");
 }
 
 void TestModule::onMove(C_MoveInputHandler* hand){

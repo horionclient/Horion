@@ -6,7 +6,8 @@ enum JoeSegmentType{
 	INVALID = -1,
 	WALK = 0,
 	JUMP,
-	DROP
+	DROP,
+	PARKOUR_JUMP_SINGLE,
 };
 
 class JoeSegment {

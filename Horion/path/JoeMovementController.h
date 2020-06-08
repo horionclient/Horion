@@ -18,4 +18,5 @@ public:
 	bool isDone(){
 		return currentPathSegment >= currentPath->getNumSegments();
 	}
+	int getCurrentPathSegment() const;
 };

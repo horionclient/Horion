@@ -36,7 +36,6 @@ void FollowPathModule::onEnable() {
 		auto tempPath = pathFinder->findPath();
 		this->path = std::make_shared<JoePath>(tempPath.getAllSegments());
 		this->movementController = std::make_unique<JoeMovementController>(path);
-		logF("Found path");
 	}).detach();
 }
 
@@ -56,10 +55,10 @@ void FollowPathModule::onTick(C_GameMode *mode) {
 
 void FollowPathModule::onPostRender(C_MinecraftUIRenderContext *renderCtx) {
 	if(this->movementController && this->path){
-		this->path->draw();
+		this->path->draw(this->movementController->getCurrentPathSegment());
 	}else if(this->pathFinder){
 		JoePath localPath = this->pathFinder->getCurrentPath();
-		localPath.draw(); // copy so we avoid drawing while its being updated by the pathfinder
+		localPath.draw(-1); // copy so we avoid drawing while its being updated by the pathfinder
 	}
 }
 void FollowPathModule::onMove(C_MoveInputHandler *handler) {

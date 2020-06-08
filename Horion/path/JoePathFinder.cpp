@@ -62,8 +62,16 @@ __forceinline bool isDangerous(vec3_ti pos, C_BlockSource* reg){
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
 			cactusBlockVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 		}
+		static uintptr_t** cobwebVtable = nullptr;
+		if (cobwebVtable == nullptr) {
+			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 06 C6 86 ?? 00 00 00 00 0F B6 05 ?? ?? ?? ?? 88 86 ?? ?? ?? ?? C6 86 ?? ?? ?? ?? ?? C7 86 ?? ?? ?? ?? ?? ?? ?? ?? 48");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			cobwebVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+		}
 
 		if(obs1->Vtable == cactusBlockVtable)
+			return true;
+		if(obs1->Vtable == cobwebVtable)
 			return true;
 		// there should be a sweet berry vtable here as well but the vtable was really aids so i resorted to block names
 		if(obs1->tileName.getTextLength() > 20 && strcmp(obs1->tileName.getText() + 5 /*cutoff tile. prefix*/, "sweet_berry_bush") == 0)
@@ -76,8 +84,18 @@ __forceinline bool isDangerousPlayer(vec3_ti pos, C_BlockSource* reg){
 }
 
 __forceinline bool canStandOn(vec3_ti pos, C_BlockSource* reg){
-	auto standOn = reg->getBlock(pos)->toLegacy();
-	return standOn->material->isSolid && !isDangerous(pos, reg);
+	auto block = reg->getBlock(pos);
+	auto standOn = block->toLegacy();
+	if(!standOn->material->isSolid)
+		return false;
+	if(isDangerous(pos, reg))
+		return false;
+
+	AABB aabb;
+	if(!standOn->getCollisionShape(&aabb, block, reg, &pos, nullptr))
+		return false;
+
+	return aabb.isFullBlock();
 }
 __forceinline bool isObstructed(vec3_ti pos, C_BlockSource* reg){
 	auto block = reg->getBlock(pos);
@@ -116,7 +134,8 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 
 			vec3_ti newPos = startNode.pos.add(x,0, z);
 
-			if(isObstructed(newPos, reg)){ // lower block obstructed
+			// lower block obstructed
+			if(isObstructed(newPos, reg)){
 				// maybe jump?
 				if(isDiagonal)
 					continue;
@@ -158,7 +177,18 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 					edges.emplace_back(startNodeRef, findNode(allNodes, newPos), dropTime, JoeSegmentType::DROP);
 					goto searchLoop;
 				}
+				// Can't drop, maybe parkour jump?
 
+				if(isObstructed(startNode.pos.add(0, 2, 0), reg)) // directly above our head
+					continue;
+				if(isObstructed(newPos.add(0, 2, 0), reg)) // above old walk target
+					continue;
+
+				newPos = startNode.pos.add(x * 2,0, z * 2);
+				if(isObstructedPlayer(newPos, reg)) // landing zone
+					continue;
+
+				edges.emplace_back(startNodeRef, findNode(allNodes, newPos), PARKOUR_JUMP1_TIME, JoeSegmentType::PARKOUR_JUMP_SINGLE);
 				continue;
 			}
 

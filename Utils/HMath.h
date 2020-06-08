@@ -494,6 +494,11 @@ struct AABB {
 	bool operator==(const AABB &rhs) const {
 		return lower == rhs.lower && upper == rhs.upper;
 	}
+
+	bool isFullBlock(){
+		auto diff = lower.sub(upper);
+		return fabsf(diff.y) == 1 && fabsf(diff.x) == 1 && fabsf(diff.z) == 1;
+	}
 };
 
 /*
