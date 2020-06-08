@@ -85,13 +85,17 @@ __forceinline bool isDangerousPlayer(vec3_ti pos, C_BlockSource* reg, bool allow
 	return isDangerous(pos, reg, allowWater) || isDangerous(pos.add(0, 1, 0), reg, allowWater);
 }
 
-__forceinline bool canStandOn(vec3_ti pos, C_BlockSource* reg){
+__forceinline bool canStandOn(vec3_ti pos, C_BlockSource* reg, bool inWater = false){
 	auto block = reg->getBlock(pos);
 	auto standOn = block->toLegacy();
-	if(!standOn->material->isSolid)
+	bool validWater = inWater && standOn->material->isLiquid && !standOn->material->isSuperHot;
+	if(!standOn->material->isSolid && !validWater)
 		return false;
-	if(isDangerous(pos, reg, false))
+	if(isDangerous(pos, reg, inWater))
 		return false;
+
+	if(validWater)
+		return true;
 
 	AABB aabb;
 	if(!standOn->getCollisionShape(&aabb, block, reg, &pos, nullptr))
@@ -165,7 +169,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 			}
 
 			// Check if we can stand on the block
-			if(!canStandOn(newPos.add(0, -1, 0), reg)){
+			if(!canStandOn(newPos.add(0, -1, 0), reg, isInWater)){
 				if(isDiagonal || isInWater)
 					continue;
 				// maybe drop?
@@ -193,6 +197,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 				}
 				if(dropLength == 3){ // no drop found, lets try water drops
 					auto dropPos = newPos.add(0, -1 * dropLength, 0);
+					int numWaterBlocks = 0;
 					while(dropPos.y > 1){
 						dropPos.y--;
 						dropLength++;
@@ -201,14 +206,30 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 							break;
 						}
 
-						if(!canStandOn(dropPos.add(0, -1, 0), reg)) // block to stand on after drop
+						auto block = reg->getBlock(dropPos)->toLegacy();
+						auto isWaterBlock = block->material->isLiquid && !block->material->isSuperHot;
+						if(isWaterBlock)
+							numWaterBlocks++;
+						else{
+							numWaterBlocks = 0;
+							continue;
+						}
+
+						if(!canStandOn(dropPos.add(0, -1, 0), reg) && numWaterBlocks < 19 /*we dont need a block to stand on with that much water*/) // block to stand on after drop
 							continue;
 
-						auto block = reg->getBlock(dropPos)->toLegacy();
-						if(!block->material->isLiquid || block->material->isSuperHot)
-							continue;
+						// find out how deep the water is
+						float waterDepth = 1;
+						while(waterDepth < 20){ // make sure we don't drop too deep
+							auto blockTest = reg->getBlock(dropPos.add(0, waterDepth, 0))->toLegacy();
+							if(!blockTest->material->isLiquid || blockTest->material->isSuperHot)
+								break;
+
+							waterDepth++;
+						}
 
 						const float dropTime = FALL_N_BLOCKS_COST[dropLength] + maxWalkSpeed * 0.8f;
+						dropPos = dropPos.add(0, waterDepth - 1, 0);
 						edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), dropTime, JoeSegmentType::DROP);
 						break;
 					}

@@ -37,6 +37,7 @@ void FollowPathModule::onEnable() {
 		if(tempPath.getNumSegments() == 0 || !this->isEnabled()){
 			this->path.reset();
 			this->movementController.reset();
+			this->setEnabled(false);
 			return;
 		}
 
@@ -72,8 +73,6 @@ void FollowPathModule::onMove(C_MoveInputHandler *handler) {
 		this->movementController->step(g_Data.getLocalPlayer(), g_Data.getClientInstance()->getMoveTurnInput());
 		if(this->movementController->isDone()){
 			this->setEnabled(false);
-			logF("movement controller disableed ");
 		}
-
 	}
 }
