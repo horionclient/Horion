@@ -6,13 +6,16 @@
 
 class JoeMovementController {
 private:
-	JoePath currentPath;
+	std::shared_ptr<JoePath> currentPath;
 	int currentPathSegment = 0;
 public:
 	bool overrideViewAngles = false;
 	vec2_t targetViewAngles = {0, 0};
 
-	JoeMovementController(JoePath path);
+	JoeMovementController(std::shared_ptr<JoePath> path);
 
 	void step(C_LocalPlayer* player, C_MoveInputHandler* movementHandler);
+	bool isDone(){
+		return currentPathSegment >= currentPath->getNumSegments();
+	}
 };

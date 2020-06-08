@@ -87,6 +87,7 @@
 #include "Modules/Freelook.h"
 #include "Modules/NoHurtcam.h"
 #include "Modules/AntiImmobile.h"
+#include "Modules/FollowPathModule.h"
 
 #ifdef _DEBUG
 #include "Modules/PacketLogger.h"

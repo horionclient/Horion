@@ -3,6 +3,7 @@
 #include "../../../Utils/Utils.h"
 #include <sstream>
 
+
 TestCommand::TestCommand() : IMCCommand("test", "Test for Debugging purposes", "") {
 }
 
@@ -31,6 +32,7 @@ void showAimedBlockInfo() {
 
 bool TestCommand::execute(std::vector<std::string>* args) {
 	C_LocalPlayer* player = g_Data.getLocalPlayer();
+
 
 	return true;
 }

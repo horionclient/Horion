@@ -16,6 +16,7 @@ private:
 	std::unique_ptr<JoeGoal> goal;
 public:
 	bool terminateSearch = false;
+	float pathSearchTimeout = 10.f;
 
 	JoePathFinder(vec3_ti start, C_BlockSource* reg, std::unique_ptr<JoeGoal> goal);
 

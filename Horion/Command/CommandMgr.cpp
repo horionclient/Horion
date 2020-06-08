@@ -46,6 +46,7 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new NbtCommand());
 	commandList.push_back(new ExecuteCommand());
 	commandList.push_back(new ScriptCommand());
+	commandList.push_back(new PathCommand());
 #endif
 
 #ifdef _DEBUG

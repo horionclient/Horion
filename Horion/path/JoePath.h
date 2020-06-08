@@ -10,6 +10,9 @@ public:
 	JoePath(const std::vector<JoeSegment>& segments);
 	JoePath();
 
+	auto& getAllSegments(){
+		return segments;
+	}
 	size_t getNumSegments(){
 		return this->segments.size();
 	}

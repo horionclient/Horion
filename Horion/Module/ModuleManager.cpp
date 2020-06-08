@@ -97,6 +97,7 @@ void ModuleManager::initModules() {
 
 #if defined(_BETA) or defined(_DEBUG)
 		this->moduleList.push_back(std::shared_ptr<IModule>(new ForceOpenCommandBlock()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new FollowPathModule()));
 #endif
 
 #ifdef _DEBUG

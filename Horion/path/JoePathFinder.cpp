@@ -4,7 +4,7 @@
 #include <queue>
 #include "../../Utils/Logger.h"
 #include "../../Utils/Utils.h"
-
+#include <chrono>
 
 JoePathFinder::JoePathFinder(vec3_ti start, C_BlockSource* reg, std::unique_ptr<JoeGoal> goal) : startPos(start), region(reg), goal(std::move(goal)) {
 }
@@ -176,8 +176,8 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 					continue;
 			}
 
-			static const float diagonalSpeed = sqrtf(1 + 1) / WALKING_SPEED;
-			static const float straightSpeed = 1 / WALKING_SPEED;
+			static const float diagonalSpeed = sqrtf(1 + 1) / SPRINT_SPEED;
+			static const float straightSpeed = 1 / SPRINT_SPEED;
 			float cost = isDiagonal ? diagonalSpeed : straightSpeed;
 			edges.emplace_back(startNodeRef, findNode(allNodes, newPos), cost, JoeSegmentType::WALK);
 
@@ -200,6 +200,12 @@ JoePath JoePathFinder::findPath() {
 	openSet.emplace(0);
 
 	int numNodes = 0;
+	int numEdges = 0;
+
+	if(this->pathSearchTimeout < 0 || this->pathSearchTimeout > 1000)
+		this->pathSearchTimeout = 10;
+
+	auto pathSearchStart = std::chrono::high_resolution_clock::now();
 
 	while(!openSet.empty()){
 		auto curRef = openSet.top();
@@ -224,16 +230,25 @@ JoePath JoePathFinder::findPath() {
 			}
 			std::reverse(segments.begin(), segments.end());
 			if(this->goal->isInGoal(cur.pos)){
-				logF("Time for traversal: %f", cur.gScore);
+				auto now = std::chrono::high_resolution_clock::now();
+				std::chrono::duration<float> diff = now - pathSearchStart;
+				logF("Found path! Traversal: %.2f Segments: %i Time: %.2fs Total Nodes: %i NodesVisited: %i Edges: %i", cur.gScore, segments.size(), diff.count(), allNodes.size(), numNodes, numEdges);
 				return JoePath(segments);
 			}
 
 			this->currentPath = JoePath(segments);
+
+			// check for timeout
+			auto now = std::chrono::high_resolution_clock::now();
+			std::chrono::duration<float> diff = now - pathSearchStart;
+			if(diff.count() > this->pathSearchTimeout)
+				break;
 		}
 		cur.isClosed = true;
 		cur.isInOpenSet = false;
 
 		auto edges = findEdges(allNodes, cur, this->region, curRef); // cur gets invalidated here
+		numEdges += edges.size();
 		for(auto edge : edges){
 			auto& edgeEndNode = allNodes[edge.endNode.index];
 			if(edgeEndNode.isClosed)
@@ -260,6 +275,9 @@ JoePath JoePathFinder::findPath() {
 		}
 		//Sleep(100);
 	}
+	auto now = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<float> diff = now - pathSearchStart;
+	logF("Could not find path! Time: %.2fs Total Nodes: %i NodesVisited: %i Edges: %i", diff.count(), allNodes.size(), numNodes, numEdges);
 
 	return JoePath();
 }

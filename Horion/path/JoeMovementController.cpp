@@ -2,22 +2,20 @@
 
 #include "../../Utils/Logger.h"
 #include <utility>
-JoeMovementController::JoeMovementController(JoePath path) : currentPath(std::move(path)) {
+JoeMovementController::JoeMovementController(std::shared_ptr<JoePath> path) : currentPath(path) {
 }
-
 
 void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *movementHandler) {
 	movementHandler->clearMovementState();
-	if(this->currentPathSegment < 0 || this->currentPathSegment >= this->currentPath.getNumSegments()){
+	if(this->currentPathSegment < 0 || this->currentPathSegment >= this->currentPath->getNumSegments()){
 		this->overrideViewAngles = false;
-
 		return;
 	}
 
 	auto pPos = player->eyePos0;
 	pPos.y -= 1.62f;
 
-	auto curSeg = this->currentPath.getSegment(this->currentPathSegment);
+	auto curSeg = this->currentPath->getSegment(this->currentPathSegment);
 
 	auto startBpos = curSeg.getStart();
 	auto start = startBpos.toVec3t().add(0.5f, 0, 0.5f);
@@ -26,9 +24,9 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 
 	auto nextSegEnd = vec3_t();
 
-	bool hasNextSeg = this->currentPathSegment < this->currentPath.getNumSegments() - 1;
+	bool hasNextSeg = this->currentPathSegment < this->currentPath->getNumSegments() - 1;
 	if(hasNextSeg)
-		nextSegEnd = this->currentPath.getSegment(this->currentPathSegment + 1).getEnd().toVec3t().add(0.5f, 0, 0.5f);
+		nextSegEnd = this->currentPath->getSegment(this->currentPathSegment + 1).getEnd().toVec3t().add(0.5f, 0, 0.5f);
 	// we should probably make seperate classes for each segment type at some point, but im just doing it here for now for faster prototyping
 	switch(curSeg.getSegmentType()){
 	case JUMP:
