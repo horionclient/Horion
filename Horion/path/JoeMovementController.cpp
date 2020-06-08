@@ -63,6 +63,14 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 			auto tangent = end.sub(start);
 			tangent.y = 0;
 			tangent = tangent.normalize();
+
+			float distToEnd = end.sub(pPos).dot(tangent);
+			if(distToEnd > 0 && distToEnd < 0.5f + 0.35f){
+				// maybe stuck on the block above end pos?
+				walkTarget = end;
+				goto WALK;
+			}
+
 			auto lastPossibleJumpTarget = start.add(tangent.mul(0.5f + 0.3f));
 			walkTarget = start.add(tangent.mul(0.6f));
 

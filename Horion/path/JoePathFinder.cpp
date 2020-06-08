@@ -216,9 +216,12 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 			if(isObstructed(newPos.add(0, 1, 0), reg))
 				continue;
 
+			int isDiagonalObstructed = 0;
 			if(isDiagonal){
 				// Check if either x or z are obstruction-less
-				if(isObstructedPlayer(startNode.pos.add(x, 0, 0), reg) && isObstructedPlayer(startNode.pos.add(0, 0, z), reg))
+				isDiagonalObstructed += isObstructedPlayer(startNode.pos.add(x, 0, 0), reg);
+				isDiagonalObstructed += isObstructedPlayer(startNode.pos.add(0, 0, z), reg);
+				if(isDiagonalObstructed == 2) // both obstructed
 					continue;
 
 				// Check if both x and z aren't dangerous (we don't want to run into cacti)
@@ -228,7 +231,8 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 
 			static const float diagonalSpeed = sqrtf(1 + 1) / SPRINT_SPEED;
 			static const float straightSpeed = 1 / SPRINT_SPEED;
-			float cost = isDiagonal ? diagonalSpeed : straightSpeed;
+			static const float diagonalSlowSpeed = sqrtf(1 + 1) / WALKING_SPEED;
+			float cost = isDiagonal ? (isDiagonalObstructed ? diagonalSlowSpeed : diagonalSpeed) : straightSpeed;
 			edges.emplace_back(startNodeRef, findNode(allNodes, newPos), cost, JoeSegmentType::WALK);
 
 			searchLoop:; // "continue" for nested loops

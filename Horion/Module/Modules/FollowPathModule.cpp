@@ -34,6 +34,12 @@ void FollowPathModule::onEnable() {
 	std::thread([&](){
 		auto ref = this->pathFinder; // so it won't get deleted when followpathmodule is disabled
 		auto tempPath = pathFinder->findPath();
+		if(tempPath.getNumSegments() == 0 || !this->isEnabled()){
+			this->path.reset();
+			this->movementController.reset();
+			return;
+		}
+
 		this->path = std::make_shared<JoePath>(tempPath.getAllSegments());
 		this->movementController = std::make_unique<JoeMovementController>(path);
 	}).detach();
