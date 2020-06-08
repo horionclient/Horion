@@ -185,7 +185,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 					continue;
 
 				newPos = startNode.pos.add(x * 2,0, z * 2);
-				if(isObstructedPlayer(newPos, reg)) // landing zone
+				if(isObstructedPlayer(newPos, reg) || !canStandOn(newPos.add(0, -1, 0), reg)) // landing zone
 					continue;
 
 				edges.emplace_back(startNodeRef, findNode(allNodes, newPos), PARKOUR_JUMP1_TIME, JoeSegmentType::PARKOUR_JUMP_SINGLE);
