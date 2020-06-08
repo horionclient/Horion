@@ -20,7 +20,7 @@ bool PathCommand::execute(std::vector<std::string> *args) {
 
 	auto cmd = args->at(1);
 	if(cmd == "y"){
-		assertTrue(args->size() >= 2);
+		assertTrue(args->size() > 2);
 		int yLevel = assertInt(args->at(2));
 		assertTrue(yLevel > 0 && yLevel < 256);
 
@@ -31,7 +31,7 @@ bool PathCommand::execute(std::vector<std::string> *args) {
 		return true;
 	}
 	if(cmd == "xz"){
-		assertTrue(args->size() >= 3);
+		assertTrue(args->size() > 3);
 		int x = assertInt(args->at(2));
 		int z = assertInt(args->at(3));
 
@@ -42,10 +42,10 @@ bool PathCommand::execute(std::vector<std::string> *args) {
 		return true;
 	}
 	if(cmd == "xyz"){
-		assertTrue(args->size() >= 3);
+		assertTrue(args->size() > 4);
 		int x = assertInt(args->at(2));
 		int y = assertInt(args->at(3));
-		int z = assertInt(args->at(3));
+		int z = assertInt(args->at(4));
 
 		mod->goal = std::make_unique<JoeGoalXYZ>(vec3_ti(x, y, z));
 		mod->setEnabled(true);

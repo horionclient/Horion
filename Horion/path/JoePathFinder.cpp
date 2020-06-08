@@ -179,16 +179,36 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 				}
 
 				// maybe parkour jump?
-				if(isObstructed(startNode.pos.add(0, 2, 0), reg)) // directly above our head
-					continue;
+				bool canJump = !isObstructed(startNode.pos.add(0, 2, 0), reg);// directly above our head
+
 				if(isObstructed(newPos.add(0, 2, 0), reg)) // above old walk target
-					continue;
+					canJump = false;
 
-				newPos = startNode.pos.add(x * 2,0, z * 2);
-				if(isObstructedPlayer(newPos, reg) || !canStandOn(newPos.add(0, -1, 0), reg)) // landing zone
+				newPos = startNode.pos.add(x * 2,0, z * 2); // 2 block distance, 1 block gap
+				if(isObstructedPlayer(newPos, reg)) // landing zone
 					continue;
+				if(!canStandOn(newPos.add(0, -1, 0), reg)){
+					// we can't stand on landing zone for jump
+					if(isObstructed(newPos.add(0, -1, 0), reg)) // we can't move it down
+						goto tryLargerParkourJump;
+					// move landing zone down?
+					auto dropPos = newPos.add(0, -1, 0);
+					if(!canStandOn(dropPos.add(0, -1, 0), reg)) // we can't stand on the lowered landing zone :(
+						goto tryLargerParkourJump;
 
-				edges.emplace_back(startNodeRef, findNode(allNodes, newPos), PARKOUR_JUMP1_TIME, JoeSegmentType::PARKOUR_JUMP_SINGLE);
+					// walk to lower landing zone
+					constexpr float time = 2 / SPRINT_SPEED;
+					edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), time, JoeSegmentType::WALK);
+					goto tryLargerParkourJump;
+				}
+
+				if(canJump){
+					edges.emplace_back(startNodeRef, findNode(allNodes, newPos), PARKOUR_JUMP1_TIME, JoeSegmentType::PARKOUR_JUMP_SINGLE);
+					continue; // we don't need to try a larger jump, we could just walk there
+				}
+			tryLargerParkourJump:
+				// TODO
+
 				continue;
 			}
 
