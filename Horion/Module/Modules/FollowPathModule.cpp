@@ -64,7 +64,10 @@ void FollowPathModule::onPostRender(C_MinecraftUIRenderContext *renderCtx) {
 void FollowPathModule::onMove(C_MoveInputHandler *handler) {
 	if(this->movementController){
 		this->movementController->step(g_Data.getLocalPlayer(), g_Data.getClientInstance()->getMoveTurnInput());
-		if(this->movementController->isDone())
+		if(this->movementController->isDone()){
 			this->setEnabled(false);
+			logF("movement controller disableed ");
+		}
+
 	}
 }

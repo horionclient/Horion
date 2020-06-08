@@ -165,20 +165,20 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 				int dropLength = 0;
 				while(dropLength < 3){
 					dropLength++;
-					newPos = newPos.add(0, -1, 0); // drop down 1 block
+					auto dropPos = newPos.add(0, -1, 0); // drop down 1 block
 
-					if(isObstructed(newPos, reg)) // block below walk to drop
+					if(isObstructed(dropPos, reg)) // block below walk to drop
 						goto searchLoop;
 
-					if(!canStandOn(newPos.add(0, -1, 0), reg)) // block to stand on after drop
+					if(!canStandOn(dropPos.add(0, -1, 0), reg)) // block to stand on after drop
 						continue;
 
 					const float dropTime = dropLength == 1 ? DROP1_TIME : (dropLength == 2 ? DROP2_TIME : DROP3_TIME);
-					edges.emplace_back(startNodeRef, findNode(allNodes, newPos), dropTime, JoeSegmentType::DROP);
-					goto searchLoop;
+					edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), dropTime, JoeSegmentType::DROP);
+					break; // Also allow parkour jumo
 				}
-				// Can't drop, maybe parkour jump?
 
+				// maybe parkour jump?
 				if(isObstructed(startNode.pos.add(0, 2, 0), reg)) // directly above our head
 					continue;
 				if(isObstructed(newPos.add(0, 2, 0), reg)) // above old walk target
@@ -307,7 +307,7 @@ JoePath JoePathFinder::findPath() {
 	}
 	auto now = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float> diff = now - pathSearchStart;
-	logF("Could not find path! Time: %.2fs Total Nodes: %i NodesVisited: %i Edges: %i", diff.count(), allNodes.size(), numNodes, numEdges);
+	logF("Could not find path! Time: %.2fs Total Nodes: %i NodesVisited: %i Edges: %i term: %i", diff.count(), allNodes.size(), numNodes, numEdges, terminateSearch);
 
 	return JoePath();
 }
