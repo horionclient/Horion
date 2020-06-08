@@ -22,7 +22,7 @@ bool PathCommand::execute(std::vector<std::string> *args) {
 		int yLevel = assertInt(args->at(2));
 		assertTrue(yLevel > 0 && yLevel < 256);
 
-		mod->goal = std::make_unique<JoeGoalY>(yLevel);
+		mod->goal = std::make_unique<JoeGoalY>((float)yLevel);
 		mod->setEnabled(true);
 
 		clientMessageF("Starting search...");

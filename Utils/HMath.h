@@ -19,7 +19,7 @@ struct vec2_t {
 	}
 
 	static vec2_t fromAngle(float angle){
-		return vec2_t(-sin(angle), cos(angle));
+		return vec2_t((float)-sin(angle), (float)cos(angle));
 	}
 
 	bool operator==(const vec2_t &o) const { return x == o.x && y == o.y; }
@@ -259,7 +259,7 @@ struct vec3_ti {
 		return vec3_ti(x + a, y + b, z + c);
 	};
 
-	vec3_ti sub(float ox, float oy, float oz) {
+	vec3_ti sub(int ox, int oy, int oz) {
 		return vec3_ti(x - ox, y - oy, z - oz);
 	}
 

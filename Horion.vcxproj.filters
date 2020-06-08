@@ -252,16 +252,13 @@
     <ClCompile Include="Horion\Module\Modules\AutoSneak.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSprint.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoTotem.cpp" />
-    <ClCompile Include="Horion\Module\Modules\BedFucker.cpp" />
     <ClCompile Include="Horion\Module\Modules\Bhop.cpp" />
     <ClCompile Include="Horion\Module\Modules\Blink.cpp" />
     <ClCompile Include="Horion\Module\Modules\BowAimbot.cpp" />
-    <ClCompile Include="Horion\Module\Modules\BugUp.cpp" />
     <ClCompile Include="Horion\Module\Modules\ChestAura.cpp" />
     <ClCompile Include="Horion\Module\Modules\ChestESP.cpp" />
     <ClCompile Include="Horion\Module\Modules\ChestStealer.cpp" />
     <ClCompile Include="Horion\Module\Modules\ClickGuiMod.cpp" />
-    <ClCompile Include="Horion\Module\Modules\ClickTP.cpp" />
     <ClCompile Include="Horion\Module\Modules\Crasher.cpp" />
     <ClCompile Include="Horion\Module\Modules\Criticals.cpp" />
     <ClCompile Include="Horion\Module\Modules\CrystalAura.cpp" />
@@ -294,7 +291,6 @@
     <ClCompile Include="Horion\Module\Modules\NightMode.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoFall.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoFriends.cpp" />
-    <ClCompile Include="Horion\Module\Modules\NoKnockBack.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoPacket.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoSlowDown.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoSwing.cpp" />
@@ -6549,6 +6545,16 @@
     <ClCompile Include="SDK\CCamera.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoHurtcam.cpp" />
     <ClCompile Include="Horion\Module\Modules\AntiImmobile.cpp" />
+    <ClCompile Include="Horion\Module\Modules\FollowPathModule.cpp" />
+    <ClCompile Include="Horion\Command\Commands\PathCommand.cpp" />
+    <ClCompile Include="Horion\path\JoeMovementController.cpp" />
+    <ClCompile Include="Horion\path\JoePath.cpp" />
+    <ClCompile Include="Horion\path\JoePathFinder.cpp" />
+    <ClCompile Include="Horion\path\JoeSegment.cpp" />
+    <ClCompile Include="Horion\path\goals\JoeGoal.cpp" />
+    <ClCompile Include="Horion\path\goals\JoeGoalXYZ.cpp" />
+    <ClCompile Include="Horion\path\goals\JoeGoalXZ.cpp" />
+    <ClCompile Include="Horion\path\goals\JoeGoalY.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Module\Modules\AirJump.h" />
@@ -6848,16 +6854,13 @@
     <ClInclude Include="Horion\Module\Modules\AutoSneak.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSprint.h" />
     <ClInclude Include="Horion\Module\Modules\AutoTotem.h" />
-    <ClInclude Include="Horion\Module\Modules\BedFucker.h" />
     <ClInclude Include="Horion\Module\Modules\Bhop.h" />
     <ClInclude Include="Horion\Module\Modules\Blink.h" />
     <ClInclude Include="Horion\Module\Modules\BowAimbot.h" />
-    <ClInclude Include="Horion\Module\Modules\BugUp.h" />
     <ClInclude Include="Horion\Module\Modules\ChestAura.h" />
     <ClInclude Include="Horion\Module\Modules\ChestESP.h" />
     <ClInclude Include="Horion\Module\Modules\ChestStealer.h" />
     <ClInclude Include="Horion\Module\Modules\ClickGuiMod.h" />
-    <ClInclude Include="Horion\Module\Modules\ClickTP.h" />
     <ClInclude Include="Horion\Module\Modules\Crasher.h" />
     <ClInclude Include="Horion\Module\Modules\Criticals.h" />
     <ClInclude Include="Horion\Module\Modules\CrystalAura.h" />
@@ -6890,7 +6893,6 @@
     <ClInclude Include="Horion\Module\Modules\NightMode.h" />
     <ClInclude Include="Horion\Module\Modules\NoFall.h" />
     <ClInclude Include="Horion\Module\Modules\NoFriends.h" />
-    <ClInclude Include="Horion\Module\Modules\NoKnockBack.h" />
     <ClInclude Include="Horion\Module\Modules\NoPacket.h" />
     <ClInclude Include="Horion\Module\Modules\NoSlowDown.h" />
     <ClInclude Include="Horion\Module\Modules\NoSwing.h" />
@@ -12807,6 +12809,17 @@
     <ClInclude Include="SDK\CCamera.h" />
     <ClInclude Include="Horion\Module\Modules\NoHurtcam.h" />
     <ClInclude Include="Horion\Module\Modules\AntiImmobile.h" />
+    <ClInclude Include="Horion\Module\Modules\FollowPathModule.h" />
+    <ClInclude Include="Horion\Command\Commands\PathCommand.h" />
+    <ClInclude Include="Horion\path\JoeConstants.h" />
+    <ClInclude Include="Horion\path\JoeMovementController.h" />
+    <ClInclude Include="Horion\path\JoePath.h" />
+    <ClInclude Include="Horion\path\JoePathFinder.h" />
+    <ClInclude Include="Horion\path\JoeSegment.h" />
+    <ClInclude Include="Horion\path\goals\JoeGoal.h" />
+    <ClInclude Include="Horion\path\goals\JoeGoalXYZ.h" />
+    <ClInclude Include="Horion\path\goals\JoeGoalXZ.h" />
+    <ClInclude Include="Horion\path\goals\JoeGoalY.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\coolroblox.json" />

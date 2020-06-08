@@ -15,11 +15,11 @@ float JoeGoalXZ::heuristicEstimation(vec3_ti node, vec3_ti target) {
 	float straight;
 	float diagonal;
 	if (x < z) {
-		straight = z - x;
-		diagonal = x;
+		straight = (float)z - x;
+		diagonal = (float)x;
 	} else {
-		straight = x - z;
-		diagonal = z;
+		straight = (float)x - z;
+		diagonal = (float)z;
 	}
 	static const float SQRT_2 = sqrtf(2);
 	diagonal *= SQRT_2;

@@ -44,8 +44,8 @@ NodeRef findNode(std::vector<Node>& allNodes, vec3_ti& pos){
 			return NodeRef(i);
 	}
 
-	allNodes.emplace_back(pos, 0, 5000);
-	return NodeRef(allNodes.size() - 1);
+	allNodes.emplace_back(pos, 0.f, 5000.f);
+	return NodeRef((int) allNodes.size() - 1);
 }
 
 __forceinline bool isDangerous(vec3_ti pos, C_BlockSource* reg){
@@ -196,7 +196,7 @@ JoePath JoePathFinder::findPath() {
 	auto cmp = [&](NodeRef left, NodeRef right) { return allNodes[left.index].fScore > allNodes[right.index].fScore; };
 	std::priority_queue<NodeRef, std::vector<NodeRef>, decltype(cmp)> openSet(cmp);
 
-	allNodes.emplace_back(startPos, this->goal->getHeuristicEstimation(startPos), 0);
+	allNodes.emplace_back(startPos, this->goal->getHeuristicEstimation(startPos), 0.f);
 	openSet.emplace(0);
 
 	int numNodes = 0;
@@ -248,7 +248,7 @@ JoePath JoePathFinder::findPath() {
 		cur.isInOpenSet = false;
 
 		auto edges = findEdges(allNodes, cur, this->region, curRef); // cur gets invalidated here
-		numEdges += edges.size();
+		numEdges += (int)edges.size();
 		for(auto edge : edges){
 			auto& edgeEndNode = allNodes[edge.endNode.index];
 			if(edgeEndNode.isClosed)
@@ -270,7 +270,7 @@ JoePath JoePathFinder::findPath() {
 				auto& gamer = allNodes.emplace_back(edgeEndNode.pos, heuristic, tentativeScore);
 				gamer.cameFrom.edgeType = edge.type;
 				gamer.cameFrom.nodeBefore = curRef;
-				openSet.push(allNodes.size() - 1);
+				openSet.push((int)allNodes.size() - 1);
 			}
 		}
 		//Sleep(100);
