@@ -21,9 +21,14 @@ void TestModule::onEnable() {
 }
 
 
+vec3_t lastPos{};
 void TestModule::onTick(C_GameMode* gm) {
-	if(!gm->player->onGround)
-		logF("ssss");
+
+	auto diff = gm->player->eyePos0.sub(lastPos);
+	diff.y = 0;
+	logF("%.2f", diff.magnitudexz() / (1.f / 20));
+
+	lastPos = gm->player->eyePos0;
 }
 
 void TestModule::onMove(C_MoveInputHandler* hand){

@@ -88,6 +88,16 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 			goto WALK;
 		}
 	} break;
+	case WATER_WALK: {
+		if(player->isInWater()){
+			movementHandler->isJumping = 1;
+			if(pPos.sub(end).magnitudexz() < 0.2f){
+				this->currentPathSegment++;
+				break;
+			}
+		}
+		goto WALK;
+	} break;
 	WALK:;
 	case WALK: {
 		auto pPosD = pPos; // p
