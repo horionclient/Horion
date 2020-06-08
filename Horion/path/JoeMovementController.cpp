@@ -30,7 +30,7 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 
 	auto walkTarget = end;
 	bool enableNextSegmentSmoothing = true;
-	float dComp = 3;
+	float dComp = 4;
 
 	// we should probably make seperate classes for each segment type at some point, but im just doing it here for now for faster prototyping
 	switch(curSeg.getSegmentType()){

@@ -254,7 +254,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 						goto tryLargerParkourJump;
 
 					// walk to lower landing zone
-					constexpr float time = 2 / SPRINT_SPEED;
+					constexpr float time = (2 + 0.05f /*small penalty*/) / SPRINT_SPEED;
 					edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), time, JoeSegmentType::WALK);
 					goto tryLargerParkourJump;
 				}
