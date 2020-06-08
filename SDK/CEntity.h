@@ -22,6 +22,7 @@ public:
 
 class C_Player;
 
+#pragma pack(push, 4)
 class C_Entity {
 public:
 	uintptr_t *ptrToPtrToEntList;  //0x0008
@@ -79,9 +80,6 @@ private:
 	char pad_0x328[0x130];  //0x328
 public:
 	AABB aabb;  //0x0458
-private:
-	char pad_0x470[0x4];  //0x0470
-public:
 	float width;        //0x0474
 	float height;       //0x0478
 	vec3_t currentPos;  //0x047C
@@ -674,6 +672,8 @@ public:
 	}
 
 };
+
+#pragma pack(pop)
 
 class C_ServerPlayer;
 

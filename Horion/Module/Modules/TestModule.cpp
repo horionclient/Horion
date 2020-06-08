@@ -39,7 +39,7 @@ void TestModule::onEnable() {
 
 	pathFinder = new JoePathFinder(startNode, player->region);
 	std::thread([&](){
-	  path = pathFinder->findPathTo(vec3_ti(-2, 4, 2));
+	  path = pathFinder->findPathTo(vec3_ti(98, 5, 261));
 	  movementController = std::make_unique<JoeMovementController>(path);
 	  found = true;
 	  Sleep(50);
@@ -60,12 +60,9 @@ void TestModule::onTick(C_GameMode* gm) {
 	//vec3_ti bPos = nowPos.sub(vec3_t(0.f, 1.62f, 0.f));
 	//auto block = gm->player->region->getBlock(bPos);
 
-	//logF("mag: %.3f", nowPos.dist(lastPos) / (1.f / 20));
-
 	delay++;
-	if(delay == 200 && pathFinder && !found) // 10 sec
+	if(delay == 15 * 20 && pathFinder && !found) // 10 sec
 		pathFinder->terminateSearch = true;
-
 
 	lastPos = gm->player->eyePos0;
 }

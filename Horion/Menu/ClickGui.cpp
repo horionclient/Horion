@@ -171,9 +171,9 @@ void ClickGui::renderCategory(Category category) {
 	{
 		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
 		vec2_t windowSizeReal = g_Data.getClientInstance()->getGuiData()->windowSizeReal;
-		
-		mousePos.div(windowSizeReal);
-		mousePos.mul(windowSize);
+
+		mousePos = mousePos.div(windowSizeReal);
+		mousePos = mousePos.mul(windowSize);
 	}
 
 	float categoryHeaderYOffset = currentYOffset;
@@ -559,7 +559,7 @@ void ClickGui::renderCategory(Category category) {
 			if (isDragging && Utils::getCrcHash(categoryName) == draggedWindow) {  // WE are being dragged
 				if (isLeftClickDown) {                                      // Still dragging
 					vec2_t diff = vec2_t(mousePos).sub(dragStart);
-					ourWindow->pos.add(diff);
+					ourWindow->pos = ourWindow->pos.add(diff);
 					dragStart = mousePos;
 				} else {  // Stopped dragging
 					isDragging = false;

@@ -206,6 +206,8 @@ JoePath JoePathFinder::findPathTo(vec3_ti endNode) {
 	allNodes.emplace_back(startPos, costHeuristic(startPos, endNode), 0);
 	openSet.emplace(0);
 
+	int numNodes = 0;
+
 	while(!openSet.empty()){
 		auto curRef = openSet.top();
 		openSet.pop();
@@ -213,10 +215,12 @@ JoePath JoePathFinder::findPathTo(vec3_ti endNode) {
 		if(!cur.isUpToDate)
 			continue;
 
+		numNodes++;
+
 		if(this->terminateSearch)
 			break;
 
-		if(cur.pos == endNode || true){
+		if(cur.pos == endNode || numNodes % 75 == 0){
 			std::vector<JoeSegment> segments;
 			auto node = cur;
 			while(node.pos != startPos){

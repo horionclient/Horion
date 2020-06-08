@@ -120,6 +120,9 @@ struct vec3_t {
 	vec3_t mul(float f) {
 		return vec3_t(x * f, y * f, z * f);
 	};
+	vec3_t mul(float x1, float y1, float z1) {
+		return vec3_t(x * x1, y * y1, z * z1);
+	};
 	vec3_t div(float f) {
 		return vec3_t(x / f, y / f, z / f);
 	};
@@ -239,7 +242,7 @@ struct vec3_ti {
 
 	vec3_ti(int *v) : x(v[0]), y(v[1]), z(v[2]) {}
 	
-	vec3_t toVec3t() {
+	vec3_t toVec3t() const {
 		return vec3_t(x, y, z);
 	}
 
@@ -475,6 +478,7 @@ struct AABB {
 	vec3_t lower;
 	vec3_t upper;
 	bool isZero = false;
+	char padding[3];
 	AABB() {}
 	AABB(vec3_t l, vec3_t h) : lower(l), upper(h){};
 	AABB(const AABB &aabb) {
@@ -482,8 +486,9 @@ struct AABB {
 		upper = vec3_t(aabb.upper);
 	}
 	AABB(vec3_t lower, float width, float height, float eyeHeight) {
-		this->lower = lower.sub(vec3_t(width, eyeHeight * 2, width).div(2));
-		upper = vec3_t(lower.x + width, lower.y + height, lower.z + width);
+		lower = lower.sub(vec3_t(width, eyeHeight * 2, width).div(2));
+		this->lower = lower;
+		this->upper = {lower.x + width, lower.y + height, lower.z + width};
 	}
 
 	bool operator==(const AABB &rhs) const {

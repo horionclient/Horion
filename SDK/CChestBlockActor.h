@@ -31,7 +31,7 @@ public:
 
 	AABB getFullAABB() {
 		if (!isPaired()) {
-			if (isBarrelBlock())
+			if (isBarrelBlock() || isShulkerBlock())
 				return AABB(this->posI.toVec3t(), this->posI.toVec3t().add(1));
 			return AABB(this->posI.toVec3t().add(0.0625, 0, 0.0625), this->posI.toVec3t().add(1 - 0.0625, 1 - 1.f/8, 1 - 0.0625));
 		}
@@ -45,6 +45,7 @@ public:
 	}
 
 	bool isBarrelBlock();
+	bool isShulkerBlock();
 
 	AABB getObstructionAABB();
 };

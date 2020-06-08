@@ -136,7 +136,7 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float
 	posF[2] = pos.y;
 	posF[3] = pos.y + 1000;
 
-	TextMeasureData textMeasure;
+	TextMeasureData textMeasure{};
 	memset(&textMeasure, 0, sizeof(TextMeasureData));
 	textMeasure.textSize = textSize;
 
@@ -308,8 +308,10 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 		fillRectangle(subRectPos, MC_Color(28, 107, 201), 0.5f);
 		drawText(textPos, &text, MC_Color(255, 255, 255), textSize);
 
-		if (ent->getEntityTypeId() == 63 && moduleMgr->getModule<NameTags>()->displayArmor) {  // is player, show armor
-			C_Player* player = static_cast<C_Player*>(ent);
+		static auto nameTagsMod = moduleMgr->getModule<NameTags>();
+
+		if (ent->getEntityTypeId() == 63 && nameTagsMod->displayArmor) {  // is player, show armor
+			auto* player = static_cast<C_Player*>(ent);
 			static float constexpr scale = 0.5f;
 			static float constexpr opacity = 0.25f;
 			static float constexpr spacing = scale + 15.f;
