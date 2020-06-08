@@ -5,13 +5,8 @@
 #include "../../Utils/Logger.h"
 #include "../../Utils/Utils.h"
 
-constexpr float WALKING_SPEED = 4.32f;
-constexpr float SPRINT_SPEED = 5.61f;
-constexpr float JUMP_TIME = 0.6f;
-constexpr float DROP1_TIME = 0.4f;
-constexpr float DROP2_TIME = 0.55f;
-constexpr float DROP3_TIME = 0.65f;
-JoePathFinder::JoePathFinder(vec3_ti start, C_BlockSource* reg) : startPos(start), region(reg) {
+
+JoePathFinder::JoePathFinder(vec3_ti start, C_BlockSource* reg, std::unique_ptr<JoeGoal> goal) : startPos(start), region(reg), goal(std::move(goal)) {
 }
 
 struct NodeRef {
@@ -193,17 +188,15 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 	return edges;
 }
 
-float costHeuristic(vec3_ti current, vec3_ti end){ // The cost heuristic always has to be lower or equal to the actual cost
-	return current.toVec3t().dist(end.toVec3t()) / (WALKING_SPEED * 1.05f);
-}
-
-JoePath JoePathFinder::findPathTo(vec3_ti endNode) {
+JoePath JoePathFinder::findPath() {
+	if(this->goal->isInGoal(startPos))
+		return JoePath();
 	std::vector<Node> allNodes;
 
 	auto cmp = [&](NodeRef left, NodeRef right) { return allNodes[left.index].fScore > allNodes[right.index].fScore; };
 	std::priority_queue<NodeRef, std::vector<NodeRef>, decltype(cmp)> openSet(cmp);
 
-	allNodes.emplace_back(startPos, costHeuristic(startPos, endNode), 0);
+	allNodes.emplace_back(startPos, this->goal->getHeuristicEstimation(startPos), 0);
 	openSet.emplace(0);
 
 	int numNodes = 0;
@@ -220,7 +213,7 @@ JoePath JoePathFinder::findPathTo(vec3_ti endNode) {
 		if(this->terminateSearch)
 			break;
 
-		if(cur.pos == endNode || numNodes % 75 == 0){
+		if(this->goal->isInGoal(cur.pos) || numNodes % 75 == 0){
 			std::vector<JoeSegment> segments;
 			auto node = cur;
 			while(node.pos != startPos){
@@ -230,7 +223,7 @@ JoePath JoePathFinder::findPathTo(vec3_ti endNode) {
 				node = prevNode;
 			}
 			std::reverse(segments.begin(), segments.end());
-			if(cur.pos == endNode){
+			if(this->goal->isInGoal(cur.pos)){
 				logF("Time for traversal: %f", cur.gScore);
 				return JoePath(segments);
 			}
@@ -248,7 +241,7 @@ JoePath JoePathFinder::findPathTo(vec3_ti endNode) {
 			float tentativeScore = allNodes[curRef.index].gScore + edge.cost;
 			if(tentativeScore >= edgeEndNode.gScore)
 				continue;
-			float heuristic = tentativeScore + costHeuristic(edgeEndNode.pos, endNode);
+			float heuristic = tentativeScore + this->goal->getHeuristicEstimation(edgeEndNode.pos);
 
 			if(!edgeEndNode.isInOpenSet){ // not in open set
 				edgeEndNode.isInOpenSet = true;

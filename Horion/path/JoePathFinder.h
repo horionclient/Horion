@@ -3,18 +3,22 @@
 #include "../../Utils/HMath.h"
 #include "JoePath.h"
 #include "JoeSegment.h"
+#include "goals/JoeGoal.h"
 #include "../../SDK/CBlockLegacy.h"
+#include "JoeConstants.h"
+#include <memory>
 
 class JoePathFinder {
 private:
 	vec3_ti startPos;
 	JoePath currentPath;
 	C_BlockSource* region;
+	std::unique_ptr<JoeGoal> goal;
 public:
 	bool terminateSearch = false;
 
-	JoePathFinder(vec3_ti start, C_BlockSource* reg);
+	JoePathFinder(vec3_ti start, C_BlockSource* reg, std::unique_ptr<JoeGoal> goal);
 
-	JoePath findPathTo(vec3_ti endNode);
+	JoePath findPath();
 	const JoePath& getCurrentPath() const;
 };

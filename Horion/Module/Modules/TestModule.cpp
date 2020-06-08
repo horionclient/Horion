@@ -2,6 +2,8 @@
 #include "../../../Utils/Logger.h"
 #include "../../path/JoePathFinder.h"
 #include "../../path/JoeMovementController.h"
+#include "../../path/goals/JoeGoalXZ.h"
+#include "../../path/goals/JoeGoalY.h"
 
 TestModule::TestModule() : IModule(0, Category::MISC, "For testing purposes") {
 }
@@ -37,9 +39,9 @@ void TestModule::onEnable() {
 	vec3_ti startNode((int)floorf(pPos.x), (int)roundf(pPos.y - 1.62f), (int)floorf(pPos.z));
 	logF("Start node: %i %i %i", startNode.x, startNode.y, startNode.z);
 
-	pathFinder = new JoePathFinder(startNode, player->region);
+	pathFinder = new JoePathFinder(startNode, player->region, std::make_unique<JoeGoalY>(30));
 	std::thread([&](){
-	  path = pathFinder->findPathTo(vec3_ti(98, 5, 261));
+	  path = pathFinder->findPath();
 	  movementController = std::make_unique<JoeMovementController>(path);
 	  found = true;
 	  Sleep(50);
