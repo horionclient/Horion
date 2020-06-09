@@ -178,61 +178,64 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 				if(isObstructedPlayer(newPos, reg)) // walk to drop
 					continue;
 
-				int dropLength = 0;
-				while(dropLength < 3){
-					dropLength++;
-					auto dropPos = newPos.add(0, -1 * dropLength, 0); // drop down 1 block
-
-					if(isObstructed(dropPos, reg, true)){// block below walk to drop
-						dropLength = -1;
-						break;
-					}
-
-					if(!canStandOn(dropPos.add(0, -1, 0), reg)) // block to stand on after drop
-						continue;
-
-					const float dropTime = FALL_N_BLOCKS_COST[dropLength] + walkOffBlockSpeed;
-					edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), dropTime, JoeSegmentType::DROP);
-					dropLength = -1;
-					break; // Also allow parkour jump
-				}
-				if(dropLength == 3){ // no drop found, lets try water drops
-					auto dropPos = newPos.add(0, -1 * dropLength, 0);
-					int numWaterBlocks = 0;
-					while(dropPos.y > 1){
-						dropPos.y--;
+				// Drop down
+				{
+					int dropLength = 0;
+					while(dropLength < 3){
 						dropLength++;
+						auto dropPos = newPos.add(0, -1 * dropLength, 0); // drop down 1 block
 
 						if(isObstructed(dropPos, reg, true)){// block below walk to drop
+							dropLength = -1;
 							break;
 						}
 
-						auto block = reg->getBlock(dropPos)->toLegacy();
-						auto isWaterBlock = block->material->isLiquid && !block->material->isSuperHot;
-						if(isWaterBlock)
-							numWaterBlocks++;
-						else{
-							numWaterBlocks = 0;
+						if(!canStandOn(dropPos.add(0, -1, 0), reg)) // block to stand on after drop
 							continue;
-						}
-
-						if(!canStandOn(dropPos.add(0, -1, 0), reg) && numWaterBlocks < 19 /*we dont need a block to stand on with that much water*/) // block to stand on after drop
-							continue;
-
-						// find out how deep the water is
-						float waterDepth = 1;
-						while(waterDepth < 20){ // make sure we don't drop too deep
-							auto blockTest = reg->getBlock(dropPos.add(0, waterDepth, 0))->toLegacy();
-							if(!blockTest->material->isLiquid || blockTest->material->isSuperHot)
-								break;
-
-							waterDepth++;
-						}
 
 						const float dropTime = FALL_N_BLOCKS_COST[dropLength] + walkOffBlockSpeed;
-						dropPos = dropPos.add(0, waterDepth - 1, 0);
 						edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), dropTime, JoeSegmentType::DROP);
-						break;
+						dropLength = -1;
+						break; // Also allow parkour jump
+					}
+					if(dropLength == 3){ // no drop found, lets try water drops
+						auto dropPos = newPos.add(0, -1 * dropLength, 0);
+						int numWaterBlocks = 0;
+						while(dropPos.y > 1){
+							dropPos.y--;
+							dropLength++;
+
+							if(isObstructed(dropPos, reg, true)){// block below walk to drop
+								break;
+							}
+
+							auto block = reg->getBlock(dropPos)->toLegacy();
+							auto isWaterBlock = block->material->isLiquid && !block->material->isSuperHot;
+							if(isWaterBlock)
+								numWaterBlocks++;
+							else{
+								numWaterBlocks = 0;
+								continue;
+							}
+
+							if(!canStandOn(dropPos.add(0, -1, 0), reg) && numWaterBlocks < 19 /*we dont need a block to stand on with that much water*/) // block to stand on after drop
+								continue;
+
+							// find out how deep the water is
+							float waterDepth = 1;
+							while(waterDepth < 20){ // make sure we don't drop too deep
+								auto blockTest = reg->getBlock(dropPos.add(0, waterDepth, 0))->toLegacy();
+								if(!blockTest->material->isLiquid || blockTest->material->isSuperHot)
+									break;
+
+								waterDepth++;
+							}
+
+							const float dropTime = FALL_N_BLOCKS_COST[dropLength] + walkOffBlockSpeed;
+							dropPos = dropPos.add(0, waterDepth - 1, 0);
+							edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), dropTime, JoeSegmentType::DROP);
+							break;
+						}
 					}
 				}
 
@@ -258,21 +261,23 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 					continue;
 				}
 
-				if(!canStandOn(newPos.add(0, -1, 0), reg)){
-					// we can't stand on landing zone for jump
-					if(isObstructed(newPos.add(0, -1, 0), reg)) // we can't move it down
-						goto tryLargerParkourJump;
-					if(isDangerous(startNode.pos.add(x,-1, z), reg, true))
-						goto tryLargerParkourJump;
+				if(!canStandOn(newPos.add(0, -1, 0), reg)){ // we can't stand on parkour jump landing zone, move it down and walk there?
+					for(int dropLength = 1; dropLength <= 3; dropLength++){
+						auto dropPos = newPos.add(0, -1 * dropLength, 0);
+						if(isObstructed(dropPos, reg)) // we can't move it down, something in the way
+							goto tryLargerParkourJump;
+						if(isDangerous(startNode.pos.add(x,-1 * dropLength, z), reg, false))
+							goto tryLargerParkourJump;
 
-					// move landing zone down?
-					auto dropPos = newPos.add(0, -1, 0);
-					if(!canStandOn(dropPos.add(0, -1, 0), reg)) // we can't stand on the lowered landing zone :(
-						goto tryLargerParkourJump;
+						// can we stand
+						if(!canStandOn(dropPos.add(0, -1, 0), reg)) // we can't stand on the lowered landing zone :(
+							continue;
 
-					// walk to lower landing zone
-					constexpr float time = (2 + 0.05f /*small penalty*/) / SPRINT_SPEED;
-					edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), time, JoeSegmentType::WALK);
+						// walk to lower landing zone
+						float time = (2 + 0.05f /*small penalty*/) / maxWalkSpeed + FALL_N_BLOCKS_COST[dropLength];
+						edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), time, JoeSegmentType::WALK);
+						goto tryLargerParkourJump;
+					}
 					goto tryLargerParkourJump;
 				}
 
