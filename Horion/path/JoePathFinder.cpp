@@ -190,7 +190,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 							break;
 						}
 
-						if(!canStandOn(dropPos.add(0, -1, 0), reg)) // block to stand on after drop
+						if(!canStandOn(dropPos.add(0, -1, 0), reg, isInWater)) // block to stand on after drop
 							continue;
 
 						const float dropTime = FALL_N_BLOCKS_COST[dropLength] + walkOffBlockSpeed;

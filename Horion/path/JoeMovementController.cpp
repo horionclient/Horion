@@ -46,11 +46,12 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 		goto WALK;
 	} break;
 	case DROP: {
-		if(player->onGround || player->isInWater()){
-			if(fabsf(pPos.y - end.y) < 0.1f && pPos.sub(end).magnitudexz() < 0.5f && player->velocity.y > -0.1f){// Check for end condition
+		bool inWater = player->isInWater();
+		if(player->onGround || inWater){
+			if(fabsf(pPos.y - end.y) < (inWater ? 0.2f : 0.1f) && pPos.sub(end).magnitudexz() < 0.5f && player->velocity.y > -0.1f){// Check for end condition
 				this->stateInfo.nextSegment();
 				break;
-			}else if(player->isInWater() && (pPos.y < end.y || player->velocity.y < 0.1f))
+			}else if(inWater && (pPos.y < end.y || player->velocity.y < 0.12f))
 				movementHandler->isJumping = 1;
 		}
 		goto WALK;
