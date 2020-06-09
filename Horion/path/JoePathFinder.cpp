@@ -140,6 +140,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 	const float diagonalSpeed = SQRT2 / maxWalkSpeed;
 	const float straightSpeed = 1 / maxWalkSpeed;
 	const float diagonalSlowSpeed = SQRT2 / fminf(maxWalkSpeed, WALKING_SPEED);
+	const float walkOffBlockSpeed = 0.8f / maxWalkSpeed;
 
 	for(int x = -1; x <= 1; x++){
 		for(int z = -1; z <= 1; z++){
@@ -190,7 +191,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 					if(!canStandOn(dropPos.add(0, -1, 0), reg)) // block to stand on after drop
 						continue;
 
-					const float dropTime = FALL_N_BLOCKS_COST[dropLength] + maxWalkSpeed * 0.8f;
+					const float dropTime = FALL_N_BLOCKS_COST[dropLength] + walkOffBlockSpeed;
 					edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), dropTime, JoeSegmentType::DROP);
 					dropLength = -1;
 					break; // Also allow parkour jump
@@ -228,7 +229,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 							waterDepth++;
 						}
 
-						const float dropTime = FALL_N_BLOCKS_COST[dropLength] + maxWalkSpeed * 0.8f;
+						const float dropTime = FALL_N_BLOCKS_COST[dropLength] + walkOffBlockSpeed;
 						dropPos = dropPos.add(0, waterDepth - 1, 0);
 						edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), dropTime, JoeSegmentType::DROP);
 						break;
@@ -249,6 +250,8 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 					auto jumpPos = newPos.add(0, 1, 0);
 
 					if(!canStandOn(jumpPos.add(0, -1, 0), reg))
+						continue;
+					if(isObstructedPlayer(jumpPos, reg, false))
 						continue;
 
 					edges.emplace_back(startNodeRef, findNode(allNodes, jumpPos), PARKOUR_JUMP1_TIME, JoeSegmentType::PARKOUR_JUMP_SINGLE);

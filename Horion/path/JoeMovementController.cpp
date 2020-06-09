@@ -68,7 +68,7 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 			tangent = tangent.normalize();
 
 			float distToEnd = end.sub(pPos).dot(tangent);
-			if(distToEnd > 0 && distToEnd < 0.5f + 0.35f){
+			if(distToEnd > 0.f && distToEnd < 0.5f + 0.35f){
 				// maybe stuck on the block above end pos?
 				walkTarget = end;
 				goto WALK;
@@ -78,7 +78,11 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 			walkTarget = start.add(tangent); // This is not actually on a block anymore, but if we make this smaller the movement controller will stop moving at the jump target
 
 			auto posToJumpTarg = lastPossibleJumpTarget.sub(pPos).dot(tangent);
-			if(posToJumpTarg < 0.3f && posToJumpTarg > 0 && player->velocity.dot(tangent) > 0.08f){
+
+			float maxJumpDist = 0.3f;
+			if(start.sub(end).magnitudexz() <= 1.1f)
+				maxJumpDist = 0.7f;
+			if(posToJumpTarg < maxJumpDist && posToJumpTarg > 0 && player->velocity.dot(tangent) > 0.07f){
 				// jump
 				movementHandler->isJumping = 1;
 				goto WALK;
@@ -86,7 +90,10 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 			goto WALK;
 		}else{
 			enableNextSegmentSmoothing = false;
-			walkTarget = end;
+			auto tangent = end.sub(start);
+			tangent.y = 0;
+			tangent = tangent.normalize();
+			walkTarget = end.sub(tangent.mul(0.4f));
 			dComp = 5;
 			goto WALK;
 		}
