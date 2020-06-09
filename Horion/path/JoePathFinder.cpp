@@ -308,8 +308,23 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 					continue;
 			}
 
-
 			float cost = isDiagonal ? (isDiagonalObstructed ? diagonalSlowSpeed : diagonalSpeed) : straightSpeed;
+			if(isInWater){
+				// check if the block is a flowing block
+				auto block = reg->getBlock(newPos)->toLegacy();
+				if(block->material->isLiquid){
+					vec3_t flow{};
+					block->liquidGetFlow(&flow, reg, &newPos);
+					if(!flow.iszero()){
+						auto tangent = newPos.sub(startNode.pos).toVec3t();
+						tangent.y = 0;
+						tangent = tangent.normalize();
+
+						auto prevCost = cost;
+						cost = 1 / fmaxf(0.1f, maxWalkSpeed + tangent.dot(flow) * 0.07f * 20);
+					}
+				}
+			}
 			edges.emplace_back(startNodeRef, findNode(allNodes, newPos), cost, isInWater ? JoeSegmentType::WATER_WALK : JoeSegmentType::WALK);
 
 			searchLoop:; // "continue" for nested loops
