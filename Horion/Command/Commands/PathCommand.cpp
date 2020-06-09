@@ -5,7 +5,7 @@
 #include "../../path/goals/JoeGoalXZ.h"
 #include "../../path/goals/JoeGoalXYZ.h"
 
-PathCommand::PathCommand() : IMCCommand("path", "Joe path", "<y|xz> [args]"){
+PathCommand::PathCommand() : IMCCommand("path", "Joe path", "<y|xz|xyz> [args]"){
 	this->registerAlias("joe");
 }
 PathCommand::~PathCommand() {

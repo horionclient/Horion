@@ -193,7 +193,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 					const float dropTime = FALL_N_BLOCKS_COST[dropLength] + maxWalkSpeed * 0.8f;
 					edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), dropTime, JoeSegmentType::DROP);
 					dropLength = -1;
-					break; // Also allow parkour jumo
+					break; // Also allow parkour jump
 				}
 				if(dropLength == 3){ // no drop found, lets try water drops
 					auto dropPos = newPos.add(0, -1 * dropLength, 0);
@@ -242,8 +242,19 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 					canJump = false;
 
 				newPos = startNode.pos.add(x * 2,0, z * 2); // 2 block distance, 1 block gap
-				if(isObstructedPlayer(newPos, reg)) // landing zone
+				if(isObstructedPlayer(newPos, reg)){// landing zone
+					// maybe jump up?
+					if(!canJump)
+						continue;
+					auto jumpPos = newPos.add(0, 1, 0);
+
+					if(!canStandOn(jumpPos.add(0, -1, 0), reg))
+						continue;
+
+					edges.emplace_back(startNodeRef, findNode(allNodes, jumpPos), PARKOUR_JUMP1_TIME, JoeSegmentType::PARKOUR_JUMP_SINGLE);
 					continue;
+				}
+
 				if(!canStandOn(newPos.add(0, -1, 0), reg)){
 					// we can't stand on landing zone for jump
 					if(isObstructed(newPos.add(0, -1, 0), reg)) // we can't move it down
