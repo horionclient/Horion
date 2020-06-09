@@ -26,7 +26,13 @@ void TestModule::onTick(C_GameMode* gm) {
 
 	auto diff = gm->player->eyePos0.sub(lastPos);
 	diff.y = 0;
-	logF("%.2f", gm->player->velocity.y); // diff.magnitudexz() / (1.f / 20)
+	auto player = g_Data.getLocalPlayer();
+	auto pPos = player->eyePos0;
+	vec3_ti startNode((int)floorf(pPos.x), (int)roundf(pPos.y - 1.62f), (int)floorf(pPos.z));
+	auto block = player->region->getBlock(startNode);
+	vec3_t flow{};
+	block->toLegacy()->liquidGetFlow(&flow, player->region, &startNode);
+	//logF("%.2f", gm->player->velocity.y); // diff.magnitudexz() / (1.f / 20)
 
 	lastPos = gm->player->eyePos0;
 }

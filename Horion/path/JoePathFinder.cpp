@@ -50,10 +50,10 @@ NodeRef findNode(std::vector<Node>& allNodes, vec3_ti& pos){
 
 __forceinline bool isDangerous(vec3_ti pos, C_BlockSource* reg, bool allowWater){
 	auto obs1 = reg->getBlock(pos)->toLegacy();
-	if(obs1->material->isLiquid){
-		if(!allowWater || obs1->material->isSuperHot)
-			return true;
-	}
+	if(obs1->material->isSuperHot)
+		return true;
+	if(obs1->material->isLiquid && !allowWater)
+		return true;
 
 	// contact damage based
 	{
@@ -140,7 +140,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 	const float diagonalSpeed = SQRT2 / maxWalkSpeed;
 	const float straightSpeed = 1 / maxWalkSpeed;
 	const float diagonalSlowSpeed = SQRT2 / fminf(maxWalkSpeed, WALKING_SPEED);
-	const float walkOffBlockSpeed = 0.8f / maxWalkSpeed;
+	const float walkOffBlockTime = 0.8f / maxWalkSpeed;
 
 	for(int x = -1; x <= 1; x++){
 		for(int z = -1; z <= 1; z++){
@@ -193,7 +193,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 						if(!canStandOn(dropPos.add(0, -1, 0), reg, isInWater)) // block to stand on after drop
 							continue;
 
-						const float dropTime = FALL_N_BLOCKS_COST[dropLength] + walkOffBlockSpeed;
+						const float dropTime = FALL_N_BLOCKS_COST[dropLength] + walkOffBlockTime;
 						edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), dropTime, JoeSegmentType::DROP);
 						dropLength = -1;
 						break; // Also allow parkour jump
@@ -231,7 +231,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 								waterDepth++;
 							}
 
-							const float dropTime = FALL_N_BLOCKS_COST[dropLength] + walkOffBlockSpeed;
+							const float dropTime = FALL_N_BLOCKS_COST[dropLength] + walkOffBlockTime;
 							dropPos = dropPos.add(0, waterDepth - 1, 0);
 							edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), dropTime, JoeSegmentType::DROP);
 							break;
@@ -274,7 +274,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 							continue;
 
 						// walk to lower landing zone
-						float time = (2 + 0.05f /*small penalty*/) / maxWalkSpeed + FALL_N_BLOCKS_COST[dropLength];
+						float time = fmaxf((2 + 0.05f /*small penalty*/) / maxWalkSpeed, FALL_N_BLOCKS_COST[dropLength] + walkOffBlockTime);
 						edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), time, JoeSegmentType::WALK);
 						goto tryLargerParkourJump;
 					}

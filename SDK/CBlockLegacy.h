@@ -5,10 +5,8 @@
 //#include "Tag.h"
 
 class C_Material {
-private:
-	char pad[0x4];
-
 public:
+	int type; // 5 for water, 6 for lava
 	bool isFlammable;
 	bool isNeverBuildable;
 	bool isAlwaysDestroyable;
@@ -46,7 +44,10 @@ private:
 	char pad_0x0106[0xA];  //0x0106
 public:
 	AABB aabb;  //0x00C8
+	// 0x00E4
 
+	int liquidGetDepth(C_BlockSource*, const vec3_ti* pos);
+	void liquidGetFlow(vec3_t* flowOut, C_BlockSource*, const vec3_ti* pos);
 	bool getCollisionShape(AABB* collShapeOut, C_Block* block, C_BlockSource* blockSource, const vec3_ti* pos, C_Entity* actor);
 };
 
@@ -55,13 +56,13 @@ private:
 	uintptr_t** vtable;
 
 public:
-	uint8_t data;
+	uint8_t data; // 0x8
 
 private:
 	char pad[0x7];
 
 public:
-	C_BlockLegacy** blockLegacy;
+	C_BlockLegacy** blockLegacy; // 0x10
 
 	inline C_BlockLegacy* toLegacy() { return *blockLegacy; }
 };

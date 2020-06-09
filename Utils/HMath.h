@@ -47,6 +47,9 @@ struct vec2_t {
 	vec2_t add(const vec2_t &o) {
 		return vec2_t(x + o.x, y + o.y);
 	}
+	vec2_t add(float ox, float oy) {
+		return vec2_t(x + ox, y + oy);
+	}
 
 	vec2_t normalized() {
 		return div(magnitude());
