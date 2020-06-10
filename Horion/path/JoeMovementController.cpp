@@ -34,6 +34,7 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 	float dComp = 4;
 	vec3_t addedDiff{0, 0, 0};
 
+
 	// we should probably make seperate classes for each segment type at some point, but im just doing it here for now for faster prototyping
 	switch(curSeg.getSegmentType()){
 	case JUMP: {
@@ -140,7 +141,7 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 				this->stateInfo.nextSegment();
 				break;
 			}
-			if(end.y > start.y && sideError > 0.15f)
+			if(end.y > start.y && sideError > 0.15f && pPos.y - end.y < -0.1f)
 				walkTarget = start.add(tangent.mul(0.2f)); // center if we need to get up a block
 			vec3_t flow{};
 

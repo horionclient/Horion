@@ -116,6 +116,11 @@ __forceinline bool canStandOn(const vec3_ti& pos, C_BlockSource* reg, bool inWat
 	auto block = reg->getBlock(pos);
 	auto standOn = block->toLegacy();
 	bool validWater = inWater && standOn->material->isLiquid && !standOn->material->isSuperHot;
+	if(validWater){
+		// block above has to be water as well
+		auto swimIn = reg->getBlock(pos.add(0, 1, 0))->toLegacy();
+		validWater = swimIn->material->isLiquid && !swimIn->material->isSuperHot;
+	}
 	if(!standOn->material->isSolid && !validWater)
 		return false;
 	if(isDangerous(pos, reg, inWater))
