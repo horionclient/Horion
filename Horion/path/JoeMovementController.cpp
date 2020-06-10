@@ -14,6 +14,7 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 
 	auto pPos = player->eyePos0;
 	pPos.y -= 1.62f;
+	vec3_ti playerNode((int)floorf(pPos.x), (int)roundf(pPos.y), (int)floorf(pPos.z));
 
 	auto curSeg = this->currentPath->getSegment(this->stateInfo.currentPathSegment);
 
@@ -41,6 +42,8 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 				this->stateInfo.nextSegment();
 				break;
 			}
+			if(pPos.y - end.y > -0.01f)
+				goto WALK;
 			auto tangent = end.sub(start);
 			tangent.y = 0;
 			tangent = tangent.normalize();
@@ -50,7 +53,7 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 
 			auto posToJumpTarg = lastPossibleJumpTarget.sub(pPos).dot(tangent);
 
-			float maxJumpDist = 0.7f;
+			float maxJumpDist = 0.5f;
 
 			if(posToJumpTarg < maxJumpDist && posToJumpTarg > 0){
 				// jump
@@ -131,11 +134,11 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 			if(end.y > start.y && sideError > 0.15f)
 				walkTarget = start.add(tangent.mul(0.2f)); // center if we need to get up a block
 			vec3_t flow{};
-			vec3_ti startNode((int)floorf(pPos.x), (int)roundf(pPos.y), (int)floorf(pPos.z));
-			auto block = player->region->getBlock(startNode);
+
+			auto block = player->region->getBlock(playerNode);
 			if(!block->toLegacy()->material->isLiquid)
-				block = player->region->getBlock(startNode.add(0, -1, 0));
-			block->toLegacy()->liquidGetFlow(&flow, player->region, &startNode);
+				block = player->region->getBlock(playerNode.add(0, -1, 0));
+			block->toLegacy()->liquidGetFlow(&flow, player->region, &playerNode);
 			flow = flow.mul(-1 * 0.07f * 10);
 			addedDiff = flow;
 		}
