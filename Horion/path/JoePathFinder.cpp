@@ -109,7 +109,16 @@ __forceinline bool canStandOn(vec3_ti pos, C_BlockSource* reg, bool inWater = fa
 	if(!standOn->getCollisionShape(&aabb, block, reg, &pos, nullptr))
 		return false;
 
-	return aabb.isFullBlock();
+	auto diff = aabb.lower.sub(aabb.upper);
+
+	if(ceilf(aabb.upper.y) - aabb.upper.y > 0.13f /* 0.125 for soulsand and farmland*/)
+		return false;
+
+	if(ceilf(aabb.upper.x) - aabb.upper.x > 0.07f /* 0.0625 for chests*/)
+		return false;
+	if(ceilf(aabb.upper.z) - aabb.upper.z > 0.07f /* 0.0625 for chests*/)
+		return false;
+	return fabsf(diff.x) > 0.85f && fabsf(diff.x) > 0.85f;
 }
 __forceinline bool isObstructed(vec3_ti pos, C_BlockSource* reg, bool allowWater = false){
 	auto block = reg->getBlock(pos);
