@@ -283,7 +283,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 						auto dropPos = newPos.add(0, -1 * dropLength, 0);
 						if(isObstructed(dropPos, reg)) // we can't move it down, something in the way
 							goto tryLargerParkourJump;
-						if(isDangerous(startNode.pos.add(x,-1 * dropLength, z), reg, false))
+						if(isObstructed(startNode.pos.add(x,-1 * dropLength, z), reg, false))
 							goto tryLargerParkourJump;
 
 						// can we stand

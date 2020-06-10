@@ -37,11 +37,25 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 	switch(curSeg.getSegmentType()){
 	case JUMP: {
 		if(player->onGround){
-			if(fabsf(pPos.y - start.y) < 0.1f){
-				movementHandler->isJumping = 1;
-			}else if(fabsf(pPos.y - end.y) < 0.1f && pPos.dist(end) < 0.5f){// Check for end condition
+			if(fabsf(pPos.y - end.y) < 0.1f && pPos.dist(end) < 0.5f){// Check for end condition
 				this->stateInfo.nextSegment();
 				break;
+			}
+			auto tangent = end.sub(start);
+			tangent.y = 0;
+			tangent = tangent.normalize();
+
+			auto lastPossibleJumpTarget = start.add(tangent.mul(0.25f));
+			walkTarget = start.add(tangent); // This is not actually on a block anymore, but if we make this smaller the movement controller will stop moving at the jump target
+
+			auto posToJumpTarg = lastPossibleJumpTarget.sub(pPos).dot(tangent);
+
+			float maxJumpDist = 0.7f;
+
+			if(posToJumpTarg < maxJumpDist && posToJumpTarg > 0){
+				// jump
+				movementHandler->isJumping = 1;
+				goto WALK;
 			}
 		}
 		goto WALK;
