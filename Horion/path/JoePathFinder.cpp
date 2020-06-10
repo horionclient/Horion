@@ -70,10 +70,18 @@ __forceinline bool isDangerous(vec3_ti pos, C_BlockSource* reg, bool allowWater)
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
 			cobwebVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 		}
+		static uintptr_t** witherRoseVtable = nullptr;
+		if (witherRoseVtable == nullptr) {
+			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 06 48 B9");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			witherRoseVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+		}
 
 		if(obs1->Vtable == cactusBlockVtable)
 			return true;
 		if(obs1->Vtable == cobwebVtable)
+			return true;
+		if(obs1->Vtable == witherRoseVtable)
 			return true;
 		// there should be a sweet berry vtable here as well but the vtable was really aids so i resorted to block names
 		if(obs1->tileName.getTextLength() > 20 && strcmp(obs1->tileName.getText() + 5 /*cutoff tile. prefix*/, "sweet_berry_bush") == 0)
