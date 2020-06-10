@@ -48,7 +48,7 @@ NodeRef findNode(std::vector<Node>& allNodes, vec3_ti& pos){
 	return NodeRef((int) allNodes.size() - 1);
 }
 
-__forceinline bool isDangerous(vec3_ti pos, C_BlockSource* reg, bool allowWater){
+__forceinline bool isDangerous(const vec3_ti& pos, C_BlockSource* reg, bool allowWater){
 	auto obs1 = reg->getBlock(pos)->toLegacy();
 	if(obs1->material->isSuperHot)
 		return true;
@@ -76,12 +76,20 @@ __forceinline bool isDangerous(vec3_ti pos, C_BlockSource* reg, bool allowWater)
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
 			witherRoseVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 		}
+		static uintptr_t** magmaBlockVtable = nullptr;
+		if (magmaBlockVtable == nullptr) {
+			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 49 89 06 41 88 9E ?? ?? ?? ?? 41 88 9E ?? ?? ?? ?? 41");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			magmaBlockVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+		}
 
 		if(obs1->Vtable == cactusBlockVtable)
 			return true;
 		if(obs1->Vtable == cobwebVtable)
 			return true;
 		if(obs1->Vtable == witherRoseVtable)
+			return true;
+		if(obs1->Vtable == magmaBlockVtable)
 			return true;
 		// there should be a sweet berry vtable here as well but the vtable was really aids so i resorted to block names
 		if(obs1->tileName.getTextLength() > 20 && strcmp(obs1->tileName.getText() + 5 /*cutoff tile. prefix*/, "sweet_berry_bush") == 0)
@@ -93,7 +101,7 @@ __forceinline bool isDangerousPlayer(vec3_ti pos, C_BlockSource* reg, bool allow
 	return isDangerous(pos, reg, allowWater) || isDangerous(pos.add(0, 1, 0), reg, allowWater);
 }
 
-__forceinline bool canStandOn(vec3_ti pos, C_BlockSource* reg, bool inWater = false){
+__forceinline bool canStandOn(const vec3_ti& pos, C_BlockSource* reg, bool inWater = false){
 	auto block = reg->getBlock(pos);
 	auto standOn = block->toLegacy();
 	bool validWater = inWater && standOn->material->isLiquid && !standOn->material->isSuperHot;
@@ -118,9 +126,9 @@ __forceinline bool canStandOn(vec3_ti pos, C_BlockSource* reg, bool inWater = fa
 		return false;
 	if(ceilf(aabb.upper.z) - aabb.upper.z > 0.07f /* 0.0625 for chests*/)
 		return false;
-	return fabsf(diff.x) > 0.85f && fabsf(diff.x) > 0.85f;
+	return fabsf(diff.x) > 0.85f && fabsf(diff.z) > 0.85f;
 }
-__forceinline bool isObstructed(vec3_ti pos, C_BlockSource* reg, bool allowWater = false){
+__forceinline bool isObstructed(const vec3_ti& pos, C_BlockSource* reg, bool allowWater = false){
 	auto block = reg->getBlock(pos);
 	auto obs1 = block->toLegacy();
 	if(obs1->material->isBlockingMotion)
@@ -239,7 +247,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 								continue;
 
 							// find out how deep the water is
-							float waterDepth = 1;
+							int waterDepth = 1;
 							while(waterDepth < 20){ // make sure we don't drop too deep
 								auto blockTest = reg->getBlock(dropPos.add(0, waterDepth, 0))->toLegacy();
 								if(!blockTest->material->isLiquid || blockTest->material->isSuperHot)
@@ -343,8 +351,6 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 				}
 			}
 			edges.emplace_back(startNodeRef, findNode(allNodes, newPos), cost, isInWater ? JoeSegmentType::WATER_WALK : JoeSegmentType::WALK);
-
-			searchLoop:; // "continue" for nested loops
 		}
 	}
 
@@ -382,7 +388,7 @@ JoePath JoePathFinder::findPath() {
 		if(this->terminateSearch)
 			break;
 
-		if(this->goal->isInGoal(cur.pos) || numNodes % 75 == 0){
+		if(this->goal->isInGoal(cur.pos) || numNodes % 150 == 0){
 			std::vector<JoeSegment> segments;
 			auto node = cur;
 			while(node.pos != startPos){

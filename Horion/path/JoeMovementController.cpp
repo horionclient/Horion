@@ -190,8 +190,10 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 		//logF("%.2f %.2f %.2f %i", diff2d.x, diff2d.y, pPos.y, player->onGround);
 
 		if(pPos.dist(end) < 0.2f){
-			this->stateInfo.nextSegment();
-			break;
+			if(hasNextSeg || player->velocity.magnitudexz() < 0.02f /*slow down for last segment*/){
+				this->stateInfo.nextSegment();
+				break;
+			}
 		}
 
 	} break;
