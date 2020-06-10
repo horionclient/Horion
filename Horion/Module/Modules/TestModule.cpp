@@ -21,6 +21,7 @@ void TestModule::onEnable() {
 }
 
 
+
 vec3_t lastPos{};
 void TestModule::onTick(C_GameMode* gm) {
 
@@ -30,6 +31,7 @@ void TestModule::onTick(C_GameMode* gm) {
 	auto pPos = player->eyePos0;
 	vec3_ti startNode((int)floorf(pPos.x), (int)roundf(pPos.y - 1.62f), (int)floorf(pPos.z));
 	auto block = player->region->getBlock(startNode);
+
 	vec3_t flow{};
 	block->toLegacy()->liquidGetFlow(&flow, player->region, &startNode);
 	lastPos = gm->player->eyePos0;

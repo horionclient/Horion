@@ -5,13 +5,17 @@
 #include "../../Utils/Logger.h"
 #include "../../Utils/Utils.h"
 #include <chrono>
+#include <unordered_map>
 
 JoePathFinder::JoePathFinder(vec3_ti start, C_BlockSource* reg, std::unique_ptr<JoeGoal> goal) : startPos(start), region(reg), goal(std::move(goal)) {
 }
 
 struct NodeRef {
-	int index;
-	NodeRef(int index) : index(index) {}
+	__int64 hash;
+	__forceinline bool isInvalid() const{
+		return hash == 0xFFFFFFFFFFFFFFFF;
+	}
+	NodeRef(__int64 hash) : hash(hash) {}
 };
 
 struct Node {
@@ -24,9 +28,8 @@ struct Node {
 	} cameFrom;
 	bool isClosed;
 	bool isInOpenSet;
-	bool isUpToDate;
 
-	Node(const vec3_ti& pos, float fScore, float gScore) : pos(pos), fScore(fScore), gScore(gScore), isClosed(false), isInOpenSet(false), isUpToDate(true) {}
+	Node(const vec3_ti& pos, float fScore, float gScore) : pos(pos), fScore(fScore), gScore(gScore), isClosed(false), isInOpenSet(false) {}
 };
 
 struct Edge {
@@ -36,16 +39,24 @@ struct Edge {
 
 	Edge(const NodeRef& startNode, const NodeRef& endNode, float cost, JoeSegmentType type) : startNode(startNode), endNode(endNode), cost(cost), type(type) {}
 };
+__forceinline unsigned __int64 rotBy(int in, unsigned int by){
+	auto mut = static_cast<unsigned __int64>(in);
+	return ((mut & 0x7FFFFFui64) | ((static_cast<unsigned int>(in) >> 8u) & 0x800000u)/*copy sign bit*/) << by;
+}
 
-NodeRef findNode(std::vector<Node>& allNodes, vec3_ti& pos){
-	for(int i = 0; i < allNodes.size(); i++){
-		auto cur = allNodes.at(i);
-		if(cur.pos == pos && cur.isUpToDate)
-			return NodeRef(i);
+__forceinline unsigned __int64 posToHash(const vec3_ti& pos){
+	return rotBy(pos.x, 0) | rotBy(pos.z, 24) | (static_cast<unsigned __int64>(pos.y) << 48u);
+}
+
+NodeRef findNode(std::unordered_map<unsigned __int64, Node>& allNodes, vec3_ti& pos){
+	auto posHash = posToHash(pos);
+	auto res = allNodes.find(posHash);
+	if(res != allNodes.end()){
+		return NodeRef(posHash);
 	}
 
-	allNodes.emplace_back(pos, 0.f, 5000.f);
-	return NodeRef((int) allNodes.size() - 1);
+	allNodes.emplace(posHash, Node(pos, 0.f, 5000.f));
+	return NodeRef(posHash);
 }
 
 __forceinline bool isDangerous(const vec3_ti& pos, C_BlockSource* reg, bool allowWater){
@@ -154,7 +165,7 @@ __forceinline bool isObstructedPlayer(vec3_ti pos, C_BlockSource* reg, bool allo
 	return isObstructed(pos, reg, allowWater) || isObstructed(pos.add(0, 1, 0), reg);
 }
 
-std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_BlockSource* reg, NodeRef startNodeRef){
+std::vector<Edge> findEdges(std::unordered_map<unsigned __int64, Node>& allNodes, Node startNode, C_BlockSource* reg, NodeRef startNodeRef){
 	std::vector<Edge> edges;
 	auto startBlock = reg->getBlock(startNode.pos)->toLegacy();
 	bool isInWater = startBlock->material->isLiquid && !startBlock->material->isSuperHot;
@@ -357,16 +368,25 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 	return edges;
 }
 
+
+
 JoePath JoePathFinder::findPath() {
 	if(this->goal->isInGoal(startPos))
 		return JoePath();
-	std::vector<Node> allNodes;
+	std::unordered_map<unsigned __int64, Node> allNodes;
 
-	auto cmp = [&](NodeRef left, NodeRef right) { return allNodes[left.index].fScore > allNodes[right.index].fScore; };
+	auto cmp = [&](NodeRef left, NodeRef right) {
+		if(left.isInvalid())
+			return false;
+		if(right.isInvalid())
+			return true;
+		return allNodes.at(left.hash).fScore > allNodes.at(right.hash).fScore;
+	};
 	std::priority_queue<NodeRef, std::vector<NodeRef>, decltype(cmp)> openSet(cmp);
 
-	allNodes.emplace_back(startPos, this->goal->getHeuristicEstimation(startPos), 0.f);
-	openSet.emplace(0);
+	auto startHash = posToHash(startPos);
+	allNodes.emplace(startHash, Node(startPos, this->goal->getHeuristicEstimation(startPos), 0.f));
+	openSet.emplace(startHash);
 
 	int numNodes = 0;
 	int numEdges = 0;
@@ -379,9 +399,9 @@ JoePath JoePathFinder::findPath() {
 	while(!openSet.empty()){
 		auto curRef = openSet.top();
 		openSet.pop();
-		Node& cur = allNodes[curRef.index];
-		if(!cur.isUpToDate)
+		if(curRef.isInvalid())
 			continue;
+		Node& cur = allNodes.at(curRef.hash);
 
 		numNodes++;
 
@@ -393,7 +413,7 @@ JoePath JoePathFinder::findPath() {
 			auto node = cur;
 			while(node.pos != startPos){
 				auto prev = node.cameFrom;
-				auto prevNode = allNodes[prev.nodeBefore.index];
+				auto prevNode = allNodes.at(prev.nodeBefore.hash);
 				segments.emplace_back(prev.edgeType, prevNode.pos, node.pos);
 				node = prevNode;
 			}
@@ -417,29 +437,29 @@ JoePath JoePathFinder::findPath() {
 		cur.isInOpenSet = false;
 
 		auto edges = findEdges(allNodes, cur, this->region, curRef); // cur gets invalidated here
+		cur = allNodes.at(curRef.hash);
 		numEdges += (int)edges.size();
 		for(auto edge : edges){
-			auto& edgeEndNode = allNodes[edge.endNode.index];
+			auto& edgeEndNode = allNodes.at(edge.endNode.hash);
 			if(edgeEndNode.isClosed)
 				continue;
-			float tentativeScore = allNodes[curRef.index].gScore + edge.cost;
+			float tentativeScore = cur.gScore + edge.cost;
 			if(tentativeScore >= edgeEndNode.gScore)
 				continue;
 			float heuristic = tentativeScore + this->goal->getHeuristicEstimation(edgeEndNode.pos);
 
+			edgeEndNode.cameFrom.edgeType = edge.type;
+			edgeEndNode.cameFrom.nodeBefore = curRef;
+			edgeEndNode.gScore = tentativeScore;
+			edgeEndNode.fScore = heuristic;
+
 			if(!edgeEndNode.isInOpenSet){ // not in open set
 				edgeEndNode.isInOpenSet = true;
-				edgeEndNode.cameFrom.edgeType = edge.type;
-				edgeEndNode.cameFrom.nodeBefore = curRef;
-				edgeEndNode.gScore = tentativeScore;
-				edgeEndNode.fScore = heuristic;
 				openSet.push(edge.endNode);
 			}else{
-				edgeEndNode.isUpToDate = false;
-				auto& gamer = allNodes.emplace_back(edgeEndNode.pos, heuristic, tentativeScore);
-				gamer.cameFrom.edgeType = edge.type;
-				gamer.cameFrom.nodeBefore = curRef;
-				openSet.push((int)allNodes.size() - 1);
+				// remove from openset
+
+				openSet.push(edge.endNode);
 			}
 		}
 		//Sleep(100);
