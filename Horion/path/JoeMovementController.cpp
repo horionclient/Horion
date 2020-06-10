@@ -42,6 +42,11 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 				this->stateInfo.nextSegment();
 				break;
 			}
+			if(player->getTicksUsingItem() > 0 && fabsf(pPos.y - end.y) > 0.1f){
+				walkTarget = start;
+				goto WALK;
+			}
+
 			if(pPos.y - end.y > -0.01f)
 				goto WALK;
 			auto tangent = end.sub(start);
@@ -81,6 +86,10 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 			if(fabsf(pPos.y - end.y) < 0.1f && pPos.dist(end) < 0.5f){// Check for end condition
 				this->stateInfo.nextSegment();
 				break;
+			}
+			if(player->getTicksUsingItem() > 0 && fabsf(pPos.y - end.y) > 0.1f){
+				walkTarget = start;
+				goto WALK;
 			}
 			auto tangent = end.sub(start);
 			tangent.y = 0;
@@ -148,6 +157,11 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 	case WALK: {
 		auto pPosD = pPos; // p
 		pPosD.add(player->velocity.mul(dComp, 0, dComp)); // d
+
+		if(player->onGround && end.y < start.y && fabsf(start.y - pPosD.y) < 0.1f && player->getTicksUsingItem() > 0 && end.sub(start).magnitudexz() > 1.5f){
+			// drop with a gap
+			walkTarget = start;
+		}
 
 		vec3_t diff3d = walkTarget.sub(pPosD);
 		vec2_t diff2d = {diff3d.x, diff3d.z};

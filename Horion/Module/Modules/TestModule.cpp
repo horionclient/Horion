@@ -32,8 +32,6 @@ void TestModule::onTick(C_GameMode* gm) {
 	auto block = player->region->getBlock(startNode);
 	vec3_t flow{};
 	block->toLegacy()->liquidGetFlow(&flow, player->region, &startNode);
-	//logF("%.2f", gm->player->velocity.y); // diff.magnitudexz() / (1.f / 20)
-
 	lastPos = gm->player->eyePos0;
 }
 
