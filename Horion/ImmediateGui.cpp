@@ -67,8 +67,8 @@ void ImmediateGui::startFrame() {
 	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
 	vec2_t windowSizeReal = g_Data.getClientInstance()->getGuiData()->windowSizeReal;
 	this->mousePos = *g_Data.getClientInstance()->getMousePos();
-	this->mousePos.div(windowSizeReal);
-	this->mousePos.mul(windowSize);
+	this->mousePos = this->mousePos.div(windowSizeReal);
+	this->mousePos = this->mousePos.mul(windowSize);
 
 	this->leftMb.update();
 	this->rightMb.update();

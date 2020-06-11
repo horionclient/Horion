@@ -34,6 +34,13 @@ void FollowPathModule::onEnable() {
 	std::thread([&](){
 		auto ref = this->pathFinder; // so it won't get deleted when followpathmodule is disabled
 		auto tempPath = pathFinder->findPath();
+		if(tempPath.getNumSegments() == 0 || !this->isEnabled()){
+			this->path.reset();
+			this->movementController.reset();
+			this->setEnabled(false);
+			return;
+		}
+
 		this->path = std::make_shared<JoePath>(tempPath.getAllSegments());
 		this->movementController = std::make_unique<JoeMovementController>(path);
 	}).detach();
@@ -54,6 +61,11 @@ void FollowPathModule::onTick(C_GameMode *mode) {
 }
 
 void FollowPathModule::onPostRender(C_MinecraftUIRenderContext *renderCtx) {
+	if(!g_Data.isInGame()){
+		this->setEnabled(false);
+		return;
+	}
+
 	if(this->movementController && this->path){
 		this->path->draw(this->movementController->getCurrentPathSegment());
 	}else if(this->pathFinder){
@@ -66,8 +78,6 @@ void FollowPathModule::onMove(C_MoveInputHandler *handler) {
 		this->movementController->step(g_Data.getLocalPlayer(), g_Data.getClientInstance()->getMoveTurnInput());
 		if(this->movementController->isDone()){
 			this->setEnabled(false);
-			logF("movement controller disableed ");
 		}
-
 	}
 }

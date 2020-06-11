@@ -11,7 +11,7 @@ float JoeGoalY::getHeuristicEstimation(vec3_ti pos) {
 }
 float JoeGoalY::heuristicEstimation(vec3_ti node, float target) {
 	if(node.y > target)
-		return 0.99f * DROP3_TIME * ((node.y - target) / 3);
+		return FALL_N_BLOCKS_COST[(int)floorf(node.y - target)] * 0.99f;
 	if(target > node.y)
 		return (target - node.y) * JUMP_TIME * 0.99f;
 	return 0;

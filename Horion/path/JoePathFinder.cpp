@@ -5,13 +5,17 @@
 #include "../../Utils/Logger.h"
 #include "../../Utils/Utils.h"
 #include <chrono>
+#include <unordered_map>
 
 JoePathFinder::JoePathFinder(vec3_ti start, C_BlockSource* reg, std::unique_ptr<JoeGoal> goal) : startPos(start), region(reg), goal(std::move(goal)) {
 }
 
 struct NodeRef {
-	int index;
-	NodeRef(int index) : index(index) {}
+	__int64 hash;
+	__forceinline bool isInvalid() const{
+		return hash == 0xFFFFFFFFFFFFFFFF;
+	}
+	NodeRef(__int64 hash) : hash(hash) {}
 };
 
 struct Node {
@@ -24,9 +28,8 @@ struct Node {
 	} cameFrom;
 	bool isClosed;
 	bool isInOpenSet;
-	bool isUpToDate;
 
-	Node(const vec3_ti& pos, float fScore, float gScore) : pos(pos), fScore(fScore), gScore(gScore), isClosed(false), isInOpenSet(false), isUpToDate(true) {}
+	Node(const vec3_ti& pos, float fScore, float gScore) : pos(pos), fScore(fScore), gScore(gScore), isClosed(false), isInOpenSet(false) {}
 };
 
 struct Edge {
@@ -36,21 +39,31 @@ struct Edge {
 
 	Edge(const NodeRef& startNode, const NodeRef& endNode, float cost, JoeSegmentType type) : startNode(startNode), endNode(endNode), cost(cost), type(type) {}
 };
-
-NodeRef findNode(std::vector<Node>& allNodes, vec3_ti& pos){
-	for(int i = 0; i < allNodes.size(); i++){
-		auto cur = allNodes.at(i);
-		if(cur.pos == pos && cur.isUpToDate)
-			return NodeRef(i);
-	}
-
-	allNodes.emplace_back(pos, 0.f, 5000.f);
-	return NodeRef((int) allNodes.size() - 1);
+__forceinline unsigned __int64 rotBy(int in, unsigned int by){
+	auto mut = static_cast<unsigned __int64>(in);
+	return ((mut & 0x7FFFFFui64) | ((static_cast<unsigned int>(in) >> 8u) & 0x800000u)/*copy sign bit*/) << by;
 }
 
-__forceinline bool isDangerous(vec3_ti pos, C_BlockSource* reg){
+__forceinline unsigned __int64 posToHash(const vec3_ti& pos){
+	return rotBy(pos.x, 0) | rotBy(pos.z, 24) | (static_cast<unsigned __int64>(pos.y) << 48u);
+}
+
+NodeRef findNode(std::unordered_map<unsigned __int64, Node>& allNodes, vec3_ti& pos){
+	auto posHash = posToHash(pos);
+	auto res = allNodes.find(posHash);
+	if(res != allNodes.end()){
+		return NodeRef(posHash);
+	}
+
+	allNodes.emplace(posHash, Node(pos, 0.f, 5000.f));
+	return NodeRef(posHash);
+}
+
+__forceinline bool isDangerous(const vec3_ti& pos, C_BlockSource* reg, bool allowWater){
 	auto obs1 = reg->getBlock(pos)->toLegacy();
-	if(obs1->material->isLiquid)
+	if(obs1->material->isSuperHot)
+		return true;
+	if(obs1->material->isLiquid && !allowWater)
 		return true;
 
 	// contact damage based
@@ -68,10 +81,26 @@ __forceinline bool isDangerous(vec3_ti pos, C_BlockSource* reg){
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
 			cobwebVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 		}
+		static uintptr_t** witherRoseVtable = nullptr;
+		if (witherRoseVtable == nullptr) {
+			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 06 48 B9");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			witherRoseVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+		}
+		static uintptr_t** magmaBlockVtable = nullptr;
+		if (magmaBlockVtable == nullptr) {
+			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 49 89 06 41 88 9E ?? ?? ?? ?? 41 88 9E ?? ?? ?? ?? 41");
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
+			magmaBlockVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+		}
 
 		if(obs1->Vtable == cactusBlockVtable)
 			return true;
 		if(obs1->Vtable == cobwebVtable)
+			return true;
+		if(obs1->Vtable == witherRoseVtable)
+			return true;
+		if(obs1->Vtable == magmaBlockVtable)
 			return true;
 		// there should be a sweet berry vtable here as well but the vtable was really aids so i resorted to block names
 		if(obs1->tileName.getTextLength() > 20 && strcmp(obs1->tileName.getText() + 5 /*cutoff tile. prefix*/, "sweet_berry_bush") == 0)
@@ -79,52 +108,85 @@ __forceinline bool isDangerous(vec3_ti pos, C_BlockSource* reg){
 	}
 	return false;
 }
-__forceinline bool isDangerousPlayer(vec3_ti pos, C_BlockSource* reg){
-	return isDangerous(pos, reg) || isDangerous(pos.add(0, 1, 0), reg);
+__forceinline bool isDangerousPlayer(vec3_ti pos, C_BlockSource* reg, bool allowWater = false){
+	return isDangerous(pos, reg, allowWater) || isDangerous(pos.add(0, 1, 0), reg, allowWater);
 }
 
-__forceinline bool canStandOn(vec3_ti pos, C_BlockSource* reg){
+__forceinline bool canStandOn(const vec3_ti& pos, C_BlockSource* reg, bool inWater = false){
 	auto block = reg->getBlock(pos);
 	auto standOn = block->toLegacy();
-	if(!standOn->material->isSolid)
+	bool validWater = inWater && standOn->material->isLiquid && !standOn->material->isSuperHot;
+	if(validWater){
+		// block above has to be water as well
+		auto swimIn = reg->getBlock(pos.add(0, 1, 0))->toLegacy();
+		validWater = swimIn->material->isLiquid && !swimIn->material->isSuperHot;
+	}
+	if(!standOn->material->isSolid && !validWater)
 		return false;
-	if(isDangerous(pos, reg))
+	if(isDangerous(pos, reg, inWater))
 		return false;
+
+	if(validWater)
+		return true;
 
 	AABB aabb;
 	if(!standOn->getCollisionShape(&aabb, block, reg, &pos, nullptr))
 		return false;
 
-	return aabb.isFullBlock();
+	auto diff = aabb.lower.sub(aabb.upper);
+
+	if(ceilf(aabb.upper.y) - aabb.upper.y > 0.13f /* 0.125 for soulsand and farmland*/)
+		return false;
+
+	if(ceilf(aabb.upper.x) - aabb.upper.x > 0.07f /* 0.0625 for chests*/)
+		return false;
+	if(ceilf(aabb.upper.z) - aabb.upper.z > 0.07f /* 0.0625 for chests*/)
+		return false;
+	return fabsf(diff.x) > 0.85f && fabsf(diff.z) > 0.85f;
 }
-__forceinline bool isObstructed(vec3_ti pos, C_BlockSource* reg){
+__forceinline bool isObstructed(const vec3_ti& pos, C_BlockSource* reg, bool allowWater = false){
 	auto block = reg->getBlock(pos);
 	auto obs1 = block->toLegacy();
 	if(obs1->material->isBlockingMotion)
 		return true;
 
+	AABB aabb{};
+	bool hasBox = obs1->getCollisionShape(&aabb, block, reg, &pos, nullptr);
+	/*
 	// Snow blocks
 	{
 		static uintptr_t** snowBlockVtable = nullptr; // TopSnowBlock
 		if (snowBlockVtable == nullptr) {
 			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 03 C6 83 ?? ?? ?? ?? 01 F3");
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
-			snowBlockVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+			snowBlockVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + *length of instruction* 7);
 		}
 
-		AABB aabb;
-		if(obs1->Vtable == snowBlockVtable && obs1->getCollisionShape(&aabb, block, reg, &pos, nullptr))
+
+		if(obs1->Vtable == snowBlockVtable hasBox
 			return true;
-	}
+	}*/
+	if(hasBox)
+		return true;
 
-	return isDangerous(pos, reg);
+	return isDangerous(pos, reg, allowWater);
 }
-__forceinline bool isObstructedPlayer(vec3_ti pos, C_BlockSource* reg){
-	return isObstructed(pos, reg) || isObstructed(pos.add(0, 1, 0), reg);
+__forceinline bool isObstructedPlayer(vec3_ti pos, C_BlockSource* reg, bool allowWater = false){
+	return isObstructed(pos, reg, allowWater) || isObstructed(pos.add(0, 1, 0), reg);
 }
 
-std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_BlockSource* reg, NodeRef startNodeRef){
+std::vector<Edge> findEdges(std::unordered_map<unsigned __int64, Node>& allNodes, Node startNode, C_BlockSource* reg, NodeRef startNodeRef){
 	std::vector<Edge> edges;
+	auto startBlock = reg->getBlock(startNode.pos)->toLegacy();
+	bool isInWater = startBlock->material->isLiquid && !startBlock->material->isSuperHot;
+	float maxWalkSpeed = isInWater ? WATER_SPEED : SPRINT_SPEED;
+
+	static const float SQRT2 = sqrtf(2);
+
+	const float diagonalSpeed = SQRT2 / maxWalkSpeed;
+	const float straightSpeed = 1 / maxWalkSpeed;
+	const float diagonalSlowSpeed = SQRT2 / fminf(maxWalkSpeed, WALKING_SPEED);
+	const float walkOffBlockTime = 0.8f / maxWalkSpeed;
 
 	for(int x = -1; x <= 1; x++){
 		for(int z = -1; z <= 1; z++){
@@ -135,7 +197,7 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 			vec3_ti newPos = startNode.pos.add(x,0, z);
 
 			// lower block obstructed
-			if(isObstructed(newPos, reg)){
+			if(isObstructed(newPos, reg, true)){
 				// maybe jump?
 				if(isDiagonal)
 					continue;
@@ -149,33 +211,77 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 				if(isObstructedPlayer(newPos, reg))
 					continue;
 
-				edges.emplace_back(startNodeRef, findNode(allNodes, newPos), JUMP_TIME, JoeSegmentType::JUMP);
+				edges.emplace_back(startNodeRef, findNode(allNodes, newPos), JUMP_TIME, isInWater ? JoeSegmentType::WATER_WALK : JoeSegmentType::JUMP);
 				continue;
 			}
 
 			// Check if we can stand on the block
-			if(!canStandOn(newPos.add(0, -1, 0), reg)){
-				if(isDiagonal)
+			if(!canStandOn(newPos.add(0, -1, 0), reg, isInWater)){
+				if(isDiagonal || isInWater)
 					continue;
 				// maybe drop?
 
 				if(isObstructedPlayer(newPos, reg)) // walk to drop
 					continue;
 
-				int dropLength = 0;
-				while(dropLength < 3){
-					dropLength++;
-					auto dropPos = newPos.add(0, -1, 0); // drop down 1 block
+				// Drop down
+				{
+					int dropLength = 0;
+					while(dropLength < 3){
+						dropLength++;
+						auto dropPos = newPos.add(0, -1 * dropLength, 0); // drop down 1 block
 
-					if(isObstructed(dropPos, reg)) // block below walk to drop
-						goto searchLoop;
+						if(isObstructed(dropPos, reg, true)){// block below walk to drop
+							dropLength = -1;
+							break;
+						}
 
-					if(!canStandOn(dropPos.add(0, -1, 0), reg)) // block to stand on after drop
-						continue;
+						if(!canStandOn(dropPos.add(0, -1, 0), reg, isInWater)) // block to stand on after drop
+							continue;
 
-					const float dropTime = dropLength == 1 ? DROP1_TIME : (dropLength == 2 ? DROP2_TIME : DROP3_TIME);
-					edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), dropTime, JoeSegmentType::DROP);
-					break; // Also allow parkour jumo
+						const float dropTime = FALL_N_BLOCKS_COST[dropLength] + walkOffBlockTime;
+						edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), dropTime, JoeSegmentType::DROP);
+						dropLength = -1;
+						break; // Also allow parkour jump
+					}
+					if(dropLength == 3){ // no drop found, lets try water drops
+						auto dropPos = newPos.add(0, -1 * dropLength, 0);
+						int numWaterBlocks = 0;
+						while(dropPos.y > 1){
+							dropPos.y--;
+							dropLength++;
+
+							if(isObstructed(dropPos, reg, true))// block below walk to drop
+								break;
+
+							auto block = reg->getBlock(dropPos)->toLegacy();
+							auto isWaterBlock = block->material->isLiquid && !block->material->isSuperHot;
+							if(isWaterBlock)
+								numWaterBlocks++;
+							else{
+								numWaterBlocks = 0;
+								continue;
+							}
+
+							if(!canStandOn(dropPos.add(0, -1, 0), reg) && numWaterBlocks < 17 /*we dont need a block to stand on with that much water*/) // block to stand on after drop
+								continue;
+
+							// find out how deep the water is
+							int waterDepth = 1;
+							while(waterDepth < 19){ // make sure we don't drop too deep
+								auto blockTest = reg->getBlock(dropPos.add(0, waterDepth, 0))->toLegacy();
+								if(!blockTest->material->isLiquid || blockTest->material->isSuperHot)
+									break;
+
+								waterDepth++;
+							}
+
+							const float dropTime = FALL_N_BLOCKS_COST[dropLength] + walkOffBlockTime;
+							dropPos = dropPos.add(0, waterDepth - 1, 0);
+							edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), dropTime, JoeSegmentType::DROP);
+							break;
+						}
+					}
 				}
 
 				// maybe parkour jump?
@@ -185,20 +291,38 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 					canJump = false;
 
 				newPos = startNode.pos.add(x * 2,0, z * 2); // 2 block distance, 1 block gap
-				if(isObstructedPlayer(newPos, reg)) // landing zone
-					continue;
-				if(!canStandOn(newPos.add(0, -1, 0), reg)){
-					// we can't stand on landing zone for jump
-					if(isObstructed(newPos.add(0, -1, 0), reg)) // we can't move it down
-						goto tryLargerParkourJump;
-					// move landing zone down?
-					auto dropPos = newPos.add(0, -1, 0);
-					if(!canStandOn(dropPos.add(0, -1, 0), reg)) // we can't stand on the lowered landing zone :(
-						goto tryLargerParkourJump;
+				if(isObstructedPlayer(newPos, reg)){// landing zone
+					// maybe jump up?
+					if(!canJump)
+						continue;
+					auto jumpPos = newPos.add(0, 1, 0);
 
-					// walk to lower landing zone
-					constexpr float time = 2 / SPRINT_SPEED;
-					edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), time, JoeSegmentType::WALK);
+					if(!canStandOn(jumpPos.add(0, -1, 0), reg))
+						continue;
+					if(isObstructedPlayer(jumpPos, reg, false))
+						continue;
+
+					edges.emplace_back(startNodeRef, findNode(allNodes, jumpPos), PARKOUR_JUMP1_TIME, JoeSegmentType::PARKOUR_JUMP_SINGLE);
+					continue;
+				}
+
+				if(!canStandOn(newPos.add(0, -1, 0), reg)){ // we can't stand on parkour jump landing zone, move it down and walk there?
+					for(int dropLength = 1; dropLength <= 3; dropLength++){
+						auto dropPos = newPos.add(0, -1 * dropLength, 0);
+						if(isObstructed(dropPos, reg)) // we can't move it down, something in the way
+							goto tryLargerParkourJump;
+						if(isObstructed(startNode.pos.add(x,-1 * dropLength, z), reg, false))
+							goto tryLargerParkourJump;
+
+						// can we stand
+						if(!canStandOn(dropPos.add(0, -1, 0), reg)) // we can't stand on the lowered landing zone :(
+							continue;
+
+						// walk to lower landing zone
+						float time = fmaxf((2 + 0.05f /*small penalty*/) / maxWalkSpeed, FALL_N_BLOCKS_COST[dropLength] + walkOffBlockTime);
+						edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), time, JoeSegmentType::WALK);
+						goto tryLargerParkourJump;
+					}
 					goto tryLargerParkourJump;
 				}
 
@@ -216,9 +340,12 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 			if(isObstructed(newPos.add(0, 1, 0), reg))
 				continue;
 
+			int isDiagonalObstructed = 0;
 			if(isDiagonal){
 				// Check if either x or z are obstruction-less
-				if(isObstructedPlayer(startNode.pos.add(x, 0, 0), reg) && isObstructedPlayer(startNode.pos.add(0, 0, z), reg))
+				isDiagonalObstructed += isObstructedPlayer(startNode.pos.add(x, 0, 0), reg, true);
+				isDiagonalObstructed += isObstructedPlayer(startNode.pos.add(0, 0, z), reg, true);
+				if(isDiagonalObstructed == 2) // both obstructed
 					continue;
 
 				// Check if both x and z aren't dangerous (we don't want to run into cacti)
@@ -226,28 +353,49 @@ std::vector<Edge> findEdges(std::vector<Node>& allNodes, Node startNode, C_Block
 					continue;
 			}
 
-			static const float diagonalSpeed = sqrtf(1 + 1) / SPRINT_SPEED;
-			static const float straightSpeed = 1 / SPRINT_SPEED;
-			float cost = isDiagonal ? diagonalSpeed : straightSpeed;
-			edges.emplace_back(startNodeRef, findNode(allNodes, newPos), cost, JoeSegmentType::WALK);
+			float cost = isDiagonal ? (isDiagonalObstructed ? diagonalSlowSpeed : diagonalSpeed) : straightSpeed;
+			if(isInWater){
+				// check if the block is a flowing block
+				auto block = reg->getBlock(newPos)->toLegacy();
+				if(block->material->isLiquid){
+					vec3_t flow{};
+					block->liquidGetFlow(&flow, reg, &newPos);
+					if(!flow.iszero()){
+						auto tangent = newPos.sub(startNode.pos).toVec3t();
+						tangent.y = 0;
+						tangent = tangent.normalize();
 
-			searchLoop:; // "continue" for nested loops
+						auto prevCost = cost;
+						cost = 1 / fmaxf(0.1f, maxWalkSpeed + tangent.dot(flow) * 0.07f * 20);
+					}
+				}
+			}
+			edges.emplace_back(startNodeRef, findNode(allNodes, newPos), cost, isInWater ? JoeSegmentType::WATER_WALK : JoeSegmentType::WALK);
 		}
 	}
 
 	return edges;
 }
 
+
+
 JoePath JoePathFinder::findPath() {
 	if(this->goal->isInGoal(startPos))
 		return JoePath();
-	std::vector<Node> allNodes;
+	std::unordered_map<unsigned __int64, Node> allNodes;
 
-	auto cmp = [&](NodeRef left, NodeRef right) { return allNodes[left.index].fScore > allNodes[right.index].fScore; };
+	auto cmp = [&](NodeRef left, NodeRef right) {
+		if(left.isInvalid())
+			return false;
+		if(right.isInvalid())
+			return true;
+		return allNodes.at(left.hash).fScore > allNodes.at(right.hash).fScore;
+	};
 	std::priority_queue<NodeRef, std::vector<NodeRef>, decltype(cmp)> openSet(cmp);
 
-	allNodes.emplace_back(startPos, this->goal->getHeuristicEstimation(startPos), 0.f);
-	openSet.emplace(0);
+	auto startHash = posToHash(startPos);
+	allNodes.emplace(startHash, Node(startPos, this->goal->getHeuristicEstimation(startPos), 0.f));
+	openSet.emplace(startHash);
 
 	int numNodes = 0;
 	int numEdges = 0;
@@ -260,21 +408,21 @@ JoePath JoePathFinder::findPath() {
 	while(!openSet.empty()){
 		auto curRef = openSet.top();
 		openSet.pop();
-		Node& cur = allNodes[curRef.index];
-		if(!cur.isUpToDate)
+		if(curRef.isInvalid())
 			continue;
+		Node& cur = allNodes.at(curRef.hash);
 
 		numNodes++;
 
 		if(this->terminateSearch)
 			break;
 
-		if(this->goal->isInGoal(cur.pos) || numNodes % 75 == 0){
+		if(this->goal->isInGoal(cur.pos) || numNodes % 1200 == 0){
 			std::vector<JoeSegment> segments;
 			auto node = cur;
 			while(node.pos != startPos){
 				auto prev = node.cameFrom;
-				auto prevNode = allNodes[prev.nodeBefore.index];
+				auto prevNode = allNodes.at(prev.nodeBefore.hash);
 				segments.emplace_back(prev.edgeType, prevNode.pos, node.pos);
 				node = prevNode;
 			}
@@ -298,29 +446,29 @@ JoePath JoePathFinder::findPath() {
 		cur.isInOpenSet = false;
 
 		auto edges = findEdges(allNodes, cur, this->region, curRef); // cur gets invalidated here
+		cur = allNodes.at(curRef.hash);
 		numEdges += (int)edges.size();
 		for(auto edge : edges){
-			auto& edgeEndNode = allNodes[edge.endNode.index];
+			auto& edgeEndNode = allNodes.at(edge.endNode.hash);
 			if(edgeEndNode.isClosed)
 				continue;
-			float tentativeScore = allNodes[curRef.index].gScore + edge.cost;
+			float tentativeScore = cur.gScore + edge.cost;
 			if(tentativeScore >= edgeEndNode.gScore)
 				continue;
 			float heuristic = tentativeScore + this->goal->getHeuristicEstimation(edgeEndNode.pos);
 
+			edgeEndNode.cameFrom.edgeType = edge.type;
+			edgeEndNode.cameFrom.nodeBefore = curRef;
+			edgeEndNode.gScore = tentativeScore;
+			edgeEndNode.fScore = heuristic;
+
 			if(!edgeEndNode.isInOpenSet){ // not in open set
 				edgeEndNode.isInOpenSet = true;
-				edgeEndNode.cameFrom.edgeType = edge.type;
-				edgeEndNode.cameFrom.nodeBefore = curRef;
-				edgeEndNode.gScore = tentativeScore;
-				edgeEndNode.fScore = heuristic;
 				openSet.push(edge.endNode);
 			}else{
-				edgeEndNode.isUpToDate = false;
-				auto& gamer = allNodes.emplace_back(edgeEndNode.pos, heuristic, tentativeScore);
-				gamer.cameFrom.edgeType = edge.type;
-				gamer.cameFrom.nodeBefore = curRef;
-				openSet.push((int)allNodes.size() - 1);
+				// remove from openset
+
+				openSet.push(edge.endNode);
 			}
 		}
 		//Sleep(100);

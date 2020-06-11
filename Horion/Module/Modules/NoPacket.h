@@ -7,4 +7,6 @@ public:
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
+	bool allowAutoStart() override;
+	void onEnable() override;
 };

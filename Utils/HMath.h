@@ -47,6 +47,9 @@ struct vec2_t {
 	vec2_t add(const vec2_t &o) {
 		return vec2_t(x + o.x, y + o.y);
 	}
+	vec2_t add(float ox, float oy) {
+		return vec2_t(x + ox, y + oy);
+	}
 
 	vec2_t normalized() {
 		return div(magnitude());
@@ -251,19 +254,19 @@ struct vec3_ti {
 	bool operator==(const vec3_ti &o) const { return x == o.x && y == o.y && z == o.z; }
 	bool operator!=(const vec3_ti &o) const { return x != o.x || y != o.y || z != o.z; }
 
-	vec3_ti add(int f) {
+	vec3_ti add(int f) const {
 		return vec3_ti(x + f, y + f, z + f);
 	}
 
-	vec3_ti add(int a, int b, int c) {
+	vec3_ti add(int a, int b, int c) const {
 		return vec3_ti(x + a, y + b, z + c);
 	};
 
-	vec3_ti sub(int ox, int oy, int oz) {
+	vec3_ti sub(int ox, int oy, int oz) const {
 		return vec3_ti(x - ox, y - oy, z - oz);
 	}
 
-	vec3_ti sub(const vec3_ti& o) {
+	vec3_ti sub(const vec3_ti& o) const {
 		return vec3_ti(x - o.x, y - o.y, z - o.z);
 	}
 
@@ -273,7 +276,7 @@ struct vec3_ti {
 		z = o->z;
 	};
 
-	vec3_t toFloatVector() {
+	vec3_t toFloatVector() const {
 		vec3_t vec;
 		vec.x = (float)x;
 		vec.y = (float)y;

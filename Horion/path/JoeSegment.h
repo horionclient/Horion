@@ -8,6 +8,7 @@ enum JoeSegmentType{
 	JUMP,
 	DROP,
 	PARKOUR_JUMP_SINGLE,
+	WATER_WALK
 };
 
 class JoeSegment {

@@ -1084,7 +1084,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	static auto blinkMod = moduleMgr->getModule<Blink>();
 	static auto noPacketMod = moduleMgr->getModule<NoPacket>();
 
-	if (noPacketMod->isEnabled())
+	if (noPacketMod->isEnabled() && g_Data.isInGame())
 		return;
 
 	if (freecamMod->isEnabled() || blinkMod->isEnabled()) {

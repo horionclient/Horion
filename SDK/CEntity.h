@@ -671,6 +671,10 @@ public:
 		return result;
 	}
 
+	int getTicksUsingItem(){
+		return *reinterpret_cast<int*>(reinterpret_cast<__int64>(this) + 0x1188);
+	}
+
 };
 
 #pragma pack(pop)

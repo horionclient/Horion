@@ -21,9 +21,20 @@ void TestModule::onEnable() {
 }
 
 
+
+vec3_t lastPos{};
 void TestModule::onTick(C_GameMode* gm) {
-	if(!gm->player->onGround)
-		logF("ssss");
+
+	auto diff = gm->player->eyePos0.sub(lastPos);
+	diff.y = 0;
+	auto player = g_Data.getLocalPlayer();
+	auto pPos = player->eyePos0;
+	vec3_ti startNode((int)floorf(pPos.x), (int)roundf(pPos.y - 1.62f), (int)floorf(pPos.z));
+	auto block = player->region->getBlock(startNode);
+
+	vec3_t flow{};
+	block->toLegacy()->liquidGetFlow(&flow, player->region, &startNode);
+	lastPos = gm->player->eyePos0;
 }
 
 void TestModule::onMove(C_MoveInputHandler* hand){
