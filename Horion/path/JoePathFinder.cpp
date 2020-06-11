@@ -413,7 +413,7 @@ JoePath JoePathFinder::findPath() {
 		if(this->terminateSearch)
 			break;
 
-		if(this->goal->isInGoal(cur.pos) || numNodes % 150 == 0){
+		if(this->goal->isInGoal(cur.pos) || numNodes % 1200 == 0){
 			std::vector<JoeSegment> segments;
 			auto node = cur;
 			while(node.pos != startPos){

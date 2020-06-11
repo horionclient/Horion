@@ -53,6 +53,37 @@ bool PathCommand::execute(std::vector<std::string> *args) {
 		clientMessageF("Starting search...");
 		return true;
 	}
+	if(cmd == "p" || cmd == "player"){
+		std::string nameOfPlayer = args->at(2);
+		assertTrue(!nameOfPlayer.empty());
+		std::string nameOfPlayerLower = std::string(nameOfPlayer);
+		std::transform(nameOfPlayerLower.begin(), nameOfPlayerLower.end(), nameOfPlayerLower.begin(), ::tolower);
+		nameOfPlayerLower = Utils::sanitize(nameOfPlayerLower);
+
+		vec3_t pos{};
+		auto playerFinder = [&](C_Entity* e, bool isNewList){
+			if(e == g_Data.getLocalPlayer())
+				return;
+			std::string name(e->getNameTag()->getText());
+			std::transform(name.begin(), name.end(), name.begin(), ::tolower);
+
+			if (name.find(nameOfPlayerLower) == std::string::npos)
+			  return;
+
+			pos = e->eyePos0;
+		};
+		g_Data.forEachEntity(playerFinder);
+
+		if(pos.iszero()){
+			clientMessageF("%s Player \"%s\" could not be found!", GOLD, nameOfPlayer.c_str());
+			return true;
+		}
+
+		vec3_ti endNode((int)floorf(pos.x), (int)roundf(pos.y - 1.62f), (int)floorf(pos.z));
+		mod->goal = std::make_unique<JoeGoalXYZ>(endNode);
+		mod->setEnabled(true);
+		clientMessageF("Starting search...");
+	}
 
 
 	return false;

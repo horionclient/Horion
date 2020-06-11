@@ -77,6 +77,9 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 				break;
 			}else if(inWater && (pPos.y < end.y || player->velocity.y < 0.12f))
 				movementHandler->isJumping = 1;
+		}else{
+			dComp = 10;
+			enableNextSegmentSmoothing = false;
 		}
 		goto WALK;
 	} break;
@@ -157,12 +160,18 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 	WALK:;
 	case WALK: {
 		auto pPosD = pPos; // p
+
+		if(!player->onGround && dComp < 8){
+			dComp = 8;
+		}
+
 		pPosD.add(player->velocity.mul(dComp, 0, dComp)); // d
 
 		if(player->onGround && end.y < start.y && fabsf(start.y - pPosD.y) < 0.1f && player->getTicksUsingItem() > 0 && end.sub(start).magnitudexz() > 1.5f){
 			// drop with a gap
 			walkTarget = start;
 		}
+
 
 		vec3_t diff3d = walkTarget.sub(pPosD);
 		vec2_t diff2d = {diff3d.x, diff3d.z};

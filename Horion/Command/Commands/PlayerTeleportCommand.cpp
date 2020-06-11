@@ -11,7 +11,7 @@ bool PlayerTeleportCommand::execute(std::vector<std::string>* args) {
 	assertTrue(g_Data.getLocalPlayer() != nullptr);
 	assertTrue(args->size() > 1);  // .playertp <player>
 	std::string nameOfPlayer = args->at(1);
-	assertTrue(nameOfPlayer.size() > 0);
+	assertTrue(!nameOfPlayer.empty());
 	std::string nameOfPlayerLower = std::string(nameOfPlayer);
 	std::transform(nameOfPlayerLower.begin(), nameOfPlayerLower.end(), nameOfPlayerLower.begin(), ::tolower);
 	nameOfPlayerLower = Utils::sanitize(nameOfPlayerLower);
