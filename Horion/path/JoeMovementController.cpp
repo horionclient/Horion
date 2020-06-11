@@ -91,7 +91,7 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 				this->stateInfo.nextSegment();
 				break;
 			}
-			if(player->getTicksUsingItem() > 0 && fabsf(pPos.y - end.y) > 0.1f){
+			if(player->getTicksUsingItem() > 0 && fabsf(pPos.y - start.y) < 0.1f && pPos.dist(end) > 0.85f){
 				walkTarget = start;
 				goto WALK;
 			}

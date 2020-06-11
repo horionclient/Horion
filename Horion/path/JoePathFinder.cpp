@@ -150,19 +150,24 @@ __forceinline bool isObstructed(const vec3_ti& pos, C_BlockSource* reg, bool all
 	if(obs1->material->isBlockingMotion)
 		return true;
 
+	AABB aabb{};
+	bool hasBox = obs1->getCollisionShape(&aabb, block, reg, &pos, nullptr);
+	/*
 	// Snow blocks
 	{
 		static uintptr_t** snowBlockVtable = nullptr; // TopSnowBlock
 		if (snowBlockVtable == nullptr) {
 			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 03 C6 83 ?? ?? ?? ?? 01 F3");
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
-			snowBlockVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+			snowBlockVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + *length of instruction* 7);
 		}
 
-		AABB aabb;
-		if(obs1->Vtable == snowBlockVtable && obs1->getCollisionShape(&aabb, block, reg, &pos, nullptr))
+
+		if(obs1->Vtable == snowBlockVtable hasBox
 			return true;
-	}
+	}*/
+	if(hasBox)
+		return true;
 
 	return isDangerous(pos, reg, allowWater);
 }
@@ -246,9 +251,8 @@ std::vector<Edge> findEdges(std::unordered_map<unsigned __int64, Node>& allNodes
 							dropPos.y--;
 							dropLength++;
 
-							if(isObstructed(dropPos, reg, true)){// block below walk to drop
+							if(isObstructed(dropPos, reg, true))// block below walk to drop
 								break;
-							}
 
 							auto block = reg->getBlock(dropPos)->toLegacy();
 							auto isWaterBlock = block->material->isLiquid && !block->material->isSuperHot;
@@ -259,12 +263,12 @@ std::vector<Edge> findEdges(std::unordered_map<unsigned __int64, Node>& allNodes
 								continue;
 							}
 
-							if(!canStandOn(dropPos.add(0, -1, 0), reg) && numWaterBlocks < 19 /*we dont need a block to stand on with that much water*/) // block to stand on after drop
+							if(!canStandOn(dropPos.add(0, -1, 0), reg) && numWaterBlocks < 17 /*we dont need a block to stand on with that much water*/) // block to stand on after drop
 								continue;
 
 							// find out how deep the water is
 							int waterDepth = 1;
-							while(waterDepth < 20){ // make sure we don't drop too deep
+							while(waterDepth < 19){ // make sure we don't drop too deep
 								auto blockTest = reg->getBlock(dropPos.add(0, waterDepth, 0))->toLegacy();
 								if(!blockTest->material->isLiquid || blockTest->material->isSuperHot)
 									break;

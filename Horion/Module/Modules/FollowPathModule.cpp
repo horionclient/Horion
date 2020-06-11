@@ -61,6 +61,11 @@ void FollowPathModule::onTick(C_GameMode *mode) {
 }
 
 void FollowPathModule::onPostRender(C_MinecraftUIRenderContext *renderCtx) {
+	if(!g_Data.isInGame()){
+		this->setEnabled(false);
+		return;
+	}
+
 	if(this->movementController && this->path){
 		this->path->draw(this->movementController->getCurrentPathSegment());
 	}else if(this->pathFinder){
