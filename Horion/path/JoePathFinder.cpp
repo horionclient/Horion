@@ -6,6 +6,7 @@
 #include "../../Utils/Utils.h"
 #include <chrono>
 #include <unordered_map>
+#include <numeric>
 
 JoePathFinder::JoePathFinder(vec3_ti start, C_BlockSource* reg, std::unique_ptr<JoeGoal> goal) : startPos(start), region(reg), goal(std::move(goal)) {
 }
@@ -16,6 +17,7 @@ struct NodeRef {
 		return hash == 0xFFFFFFFFFFFFFFFF;
 	}
 	NodeRef(__int64 hash) : hash(hash) {}
+	NodeRef() : hash(-1) {};
 };
 
 struct Node {
@@ -55,7 +57,7 @@ NodeRef findNode(std::unordered_map<unsigned __int64, Node>& allNodes, vec3_ti& 
 		return NodeRef(posHash);
 	}
 
-	allNodes.emplace(posHash, Node(pos, 0.f, 5000.f));
+	allNodes.emplace(posHash, Node(pos, 0.f, 10000000.f));
 	return NodeRef(posHash);
 }
 
@@ -377,7 +379,15 @@ std::vector<Edge> findEdges(std::unordered_map<unsigned __int64, Node>& allNodes
 	return edges;
 }
 
-
+std::pair<float, float> getSlope(std::vector<float>& x, std::vector<float>& y){
+	const auto n    = x.size();
+	const auto s_x  = std::accumulate(x.begin(), x.end(), 0.0);
+	const auto s_y  = std::accumulate(y.begin(), y.end(), 0.0);
+	const auto s_xx = std::inner_product(x.begin(), x.end(), x.begin(), 0.0);
+	const auto s_xy = std::inner_product(x.begin(), x.end(), y.begin(), 0.0);
+	const auto a    = (n * s_xy - s_x * s_y) / (n * s_xx - s_x * s_x);
+	return std::make_pair(a, (s_y / n) - (a * (s_x / n)));
+}
 
 JoePath JoePathFinder::findPath() {
 	if(this->goal->isInGoal(startPos))
@@ -431,10 +441,10 @@ JoePath JoePathFinder::findPath() {
 				auto now = std::chrono::high_resolution_clock::now();
 				std::chrono::duration<float> diff = now - pathSearchStart;
 				logF("Found path! Traversal: %.2f Segments: %i Time: %.2fs Total Nodes: %i NodesVisited: %i Edges: %i", cur.gScore, segments.size(), diff.count(), allNodes.size(), numNodes, numEdges);
-				return JoePath(segments);
+				return JoePath(segments, false);
 			}
 
-			this->currentPath = JoePath(segments);
+			this->currentPath = JoePath(segments, false);
 
 			// check for timeout
 			auto now = std::chrono::high_resolution_clock::now();
@@ -475,7 +485,81 @@ JoePath JoePathFinder::findPath() {
 	}
 	auto now = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float> diff = now - pathSearchStart;
-	logF("Could not find path! Time: %.2fs Total Nodes: %i NodesVisited: %i Edges: %i term: %i", diff.count(), allNodes.size(), numNodes, numEdges, terminateSearch);
+	//logF("Could not find path! Time: %.2fs Total Nodes: %i NodesVisited: %i Edges: %i term: %i", diff.count(), allNodes.size(), numNodes, numEdges, terminateSearch);
+	// Did not find path, return incomplete one
+
+	if(this->terminateSearch)
+		return JoePath();
+
+	const float coefficients[] = { 1.1f, 1.5f, 2.f, 2.5f, 3.f, 3.5f, 4.f, 3.5f, 5.f, 10.f, 20.f, 100.f };
+	constexpr auto coefficientSize = 12;
+	constexpr float maxCost = 1000000;
+	float bestHeuristicSoFar[coefficientSize] = { };
+	std::fill_n(bestHeuristicSoFar, coefficientSize, maxCost);
+	NodeRef bestSoFar[coefficientSize] = {};
+
+	int numDist[coefficientSize][150] = {};
+	float heuristicByDist[coefficientSize][150] = {};
+	for(auto& nodeDesc : allNodes){
+
+		auto& node = nodeDesc.second;
+		auto dist = (int)roundf(node.pos.toVec3t().dist(startPos.toVec3t()));
+
+		for(int i = 0; i < coefficientSize; i++){
+
+			float heuristic = (node.fScore - node.gScore) + node.gScore / coefficients[i];
+			if(dist < 150){
+				heuristicByDist[i][dist] += heuristic;
+				numDist[i][dist]++;
+			}
+			if (heuristic < bestHeuristicSoFar[i]) {
+				bestHeuristicSoFar[i] = heuristic;
+				bestSoFar[i] = NodeRef(static_cast<__int64>(nodeDesc.first));
+			}
+		}
+	}
+
+	auto chosenCoeff = -1;
+	float coeffSlope = 10;
+	for(int coeff = 0; coeff < coefficientSize; coeff++){
+		std::vector<float> xAxis, yAxis;
+		for(int i = 0; i < 150; i++){
+			if(numDist[coeff][i] == 0)
+				continue;
+			xAxis.push_back(i);
+			yAxis.push_back(heuristicByDist[coeff][i] / (float)numDist[coeff][i]);
+		}
+		auto slope = getSlope(xAxis, yAxis);
+
+		if(slope.first < coeffSlope){
+			chosenCoeff = coeff;
+			coeffSlope = slope.first;
+			if(slope.first < 0)
+				break;
+		}
+	}
+
+	for(int i = 0; i < coefficientSize; i++){
+		if(bestHeuristicSoFar[i] == maxCost){
+			continue;
+		}
+
+		auto& bestNode = allNodes.at(bestSoFar[i].hash);
+		float dist = startPos.toFloatVector().dist(bestNode.pos.toFloatVector());
+		if((chosenCoeff == i && dist > 5) || dist >= 100){
+			// reconstruct path from here
+			std::vector<JoeSegment> segments;
+			auto node = bestNode;
+			while(node.pos != startPos){
+				auto prev = node.cameFrom;
+				auto prevNode = allNodes.at(prev.nodeBefore.hash);
+				segments.emplace_back(prev.edgeType, prevNode.pos, node.pos);
+				node = prevNode;
+			}
+			std::reverse(segments.begin(), segments.end());
+			return JoePath(segments, true);
+		}
+	}
 
 	return JoePath();
 }

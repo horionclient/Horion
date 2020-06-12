@@ -1,6 +1,6 @@
 #include "JoePath.h"
 #include "../DrawUtils.h"
-JoePath::JoePath(const std::vector<JoeSegment>& segments) : segments(segments) {}
+JoePath::JoePath(const std::vector<JoeSegment>& segments, bool isIncomplete) : segments(segments), isIncomplete(isIncomplete) {}
 JoePath::JoePath() : segments() {
 }
 void JoePath::draw(int highlight) const {
@@ -16,4 +16,13 @@ void JoePath::draw(int highlight) const {
 			DrawUtils::setColor(13 / 255.f, 29 / 255.f, 48 / 255.f, 1);
 		seg.draw();
 	}
+}
+bool JoePath::isIncomplete1() const {
+	return isIncomplete;
+}
+void JoePath::cutoff(float percentageKeep) {
+	if(this->getNumSegments() == 0)
+		return;
+	int numKeep = (int)ceilf(this->getNumSegments() * percentageKeep);
+	this->segments.erase(this->segments.begin() + numKeep, this->segments.end());
 }

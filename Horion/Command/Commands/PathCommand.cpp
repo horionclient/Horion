@@ -83,6 +83,8 @@ bool PathCommand::execute(std::vector<std::string> *args) {
 		mod->goal = std::make_unique<JoeGoalXYZ>(endNode);
 		mod->setEnabled(true);
 		clientMessageF("Starting search...");
+
+		return true;
 	}
 
 

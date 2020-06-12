@@ -1217,7 +1217,8 @@ int Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1) {
 		if (strstr(text, "ore") == NULL)
 			if (strcmp(text, "lava") != NULL)
 				if (strcmp(text, "water") != NULL)
-					return 10;
+					if (strcmp(text, "portal") != NULL)
+						return 10;
 	}
 	return oFunc(a1);
 }

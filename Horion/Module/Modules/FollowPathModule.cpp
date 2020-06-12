@@ -30,7 +30,7 @@ void FollowPathModule::onEnable() {
 	logF("Start node: %i %i %i", startNode.x, startNode.y, startNode.z);
 
 	this->pathFinder = std::make_shared<JoePathFinder>(startNode, player->region, std::move(this->goal));
-	this->pathFinder->pathSearchTimeout = 15;
+	this->pathFinder->pathSearchTimeout = 3;
 	std::thread([&](){
 		auto ref = this->pathFinder; // so it won't get deleted when followpathmodule is disabled
 		auto tempPath = pathFinder->findPath();
@@ -38,10 +38,18 @@ void FollowPathModule::onEnable() {
 			this->path.reset();
 			this->movementController.reset();
 			this->setEnabled(false);
+			if(g_Data.getGuiData() != nullptr)
+				g_Data.getGuiData()->displayClientMessageF("%sCould not find a path!", RED);
 			return;
 		}
 
-		this->path = std::make_shared<JoePath>(tempPath.getAllSegments());
+		if(g_Data.getGuiData() != nullptr)
+			g_Data.getGuiData()->displayClientMessageF("%sFound %s path!", tempPath.isIncomplete1() ? YELLOW : GREEN, tempPath.isIncomplete1() ? "incomplete" : "complete");
+		if(tempPath.isIncomplete1()){
+			tempPath.cutoff(0.9f);
+		}
+
+		this->path = std::make_shared<JoePath>(tempPath.getAllSegments(), tempPath.isIncomplete1());
 		this->movementController = std::make_unique<JoeMovementController>(path);
 	}).detach();
 }
