@@ -80,10 +80,8 @@ void Killaura::onTick(C_GameMode* gm) {
 
 	g_Data.forEachEntity(findEntity);
 
-	hasTarget = !targetList.empty();
-
 	Odelay++;
-	if (hasTarget && Odelay >= delay) {
+	if (!targetList.empty() &&Odelay >= delay) {
 		if (autoweapon) findWeapon();
 
 		if (!moduleMgr->getModule<NoSwing>()->isEnabled()) 
@@ -92,11 +90,9 @@ void Killaura::onTick(C_GameMode* gm) {
 		// Attack all entitys in targetList
 		if (isMulti) {
 			for (int i = 0; i < targetList.size(); i++) {
-				angle = g_Data.getClientInstance()->levelRenderer->origin.CalcAngle(*targetList[i]->getPos());
 				g_Data.getCGameMode()->attack(targetList[i]);
 			}
 		} else {
-			angle = g_Data.getClientInstance()->levelRenderer->origin.CalcAngle(*targetList[0]->getPos());
 			g_Data.getCGameMode()->attack(targetList[0]);
 		}
 		Odelay = 0;
@@ -109,9 +105,10 @@ void Killaura::onEnable() {
 }
 
 void Killaura::onSendPacket(C_Packet* packet) {
-	if (packet->isInstanceOf<C_MovePlayerPacket>() && silent) {
-		if (this->hasTarget) {
+	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && silent) {
+		if (!targetList.empty()) {
 			C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos());
 			movePacket->pitch = angle.x;
 			movePacket->headYaw = angle.y;
 			movePacket->yaw = angle.y;
