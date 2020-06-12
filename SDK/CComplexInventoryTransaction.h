@@ -5,9 +5,7 @@
 
 class C_ComplexInventoryTransaction {
 public:
-	C_ComplexInventoryTransaction() {
-		memset(this, 0, sizeof(C_ComplexInventoryTransaction));
-	}
+	C_ComplexInventoryTransaction();
 	C_ComplexInventoryTransaction(C_InventoryTransaction& transac);
 	uintptr_t** vTable;              //0x0000
 	int actionType;                  //0x8

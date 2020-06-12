@@ -1977,3 +1977,29 @@ bool Hooks::Mob__isImmobile(C_Entity* ent) {
 
 	return func(ent);
 }
+void Hooks::InventoryTransactionManager__addAction(C_InventoryTransactionManager* _this, C_InventoryAction& action) {
+	auto func = g_Hooks.InventoryTransactionManager__addActionHook->GetFastcall<void, C_InventoryTransactionManager*, C_InventoryAction&>();
+
+#ifdef TEST_DEBUG
+	char* srcName = "none";
+	if(action.sourceItem.item && *action.sourceItem.item)
+		srcName = (*action.sourceItem.item)->name.getText();
+	char* targetName = "none";
+	if(action.targetItem.item && *action.targetItem.item)
+		targetName = (*action.targetItem.item)->name.getText();
+	logF("%i %i %i %s %s", action.type, action.slot, action.sourceType, srcName, targetName, action.sourceType);
+
+
+
+	/*if(/*action.slot == 14 && action.sourceType == 124 && strcmp(targetName, "none") == 0 && *strcmp(srcName, "stone_shovel") == 0){
+		std::string tag = "{ench:[{id:9s,lvl:1s}]}";
+		action.sourceItem.setUserData(std::move(Mojangson::parseTag(tag)));
+	}
+	if(/*action.slot == 2 && action.sourceType == 256 && strcmp(srcName, "none") == 0 &&* strcmp(targetName, "stone_shovel") == 0){
+		std::string tag = "{ench:[{id:9s,lvl:1s}]}";
+		action.targetItem.setUserData(std::move(Mojangson::parseTag(tag)));
+	}*/
+#endif
+
+	func(_this, action);
+}

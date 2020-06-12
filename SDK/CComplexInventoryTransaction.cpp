@@ -3,7 +3,7 @@
 C_ComplexInventoryTransaction::C_ComplexInventoryTransaction(C_InventoryTransaction& transac) {
 	static uintptr_t** ComplexInventoryTransactionVtable = 0x0;
 	if (ComplexInventoryTransactionVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 15 ?? ?? ?? ?? 49 89 53 C0 49 89 43 E0 48 8B 01 49 8D 53 C0");
+		uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 03 89 73 08 48");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		ComplexInventoryTransactionVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -19,6 +19,20 @@ C_ComplexInventoryTransaction::C_ComplexInventoryTransaction(C_InventoryTransact
 	if (constructor != 0)
 		constructor(boi + 0x10, transac);
 	this->actionType = 0;
+}
+C_ComplexInventoryTransaction::C_ComplexInventoryTransaction() {
+	memset(this, 0, sizeof(C_ComplexInventoryTransaction));
+	static uintptr_t** ComplexInventoryTransactionVtable = 0x0;
+	if (ComplexInventoryTransactionVtable == 0x0) {
+		uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 03 89 73 08 48");
+		int offset = *reinterpret_cast<int*>(sigOffset + 3);
+		ComplexInventoryTransactionVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+#ifdef _DEBUG
+		if (ComplexInventoryTransactionVtable == 0x0 || sigOffset == 0x0)
+			__debugbreak();
+#endif
+	}
+	vTable = ComplexInventoryTransactionVtable;
 }
 C_ItemUseInventoryTransaction::C_ItemUseInventoryTransaction() {
 	memset(this, 0x0, sizeof(C_ItemUseInventoryTransaction));

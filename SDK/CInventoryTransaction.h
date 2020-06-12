@@ -18,8 +18,8 @@ public:
 	}
 
 public:
-	int type;        //0x0
-	int sourceType;  //0x4
+	int type;        //0x0  // named sourceType in nukkit
+	int sourceType;  //0x4 // sometimes windowId
 private:
 	int unknown;  //0x8
 public:
@@ -30,7 +30,11 @@ public:
 
 class C_InventoryTransaction {
 private:
-	char pad_0x0[0x58];  //0x0
+	char pad_0x0[8];
+public:
+	__int64 ptr; // 0x008
+private:
+	char pad_0x10[0x58 - 16];  //0x10
 };
 
 class C_InventoryTransactionManager {
