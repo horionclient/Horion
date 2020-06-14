@@ -215,8 +215,11 @@ void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::
 	logF("base: %llX", g_Data.getModule()->ptrBase);
 	logF("clientInstance %llX", g_Data.clientInstance);
 	logF("localPlayer %llX", g_Data.getLocalPlayer());
-	if (g_Data.clientInstance != nullptr)
+	if (g_Data.clientInstance != nullptr){
 		logF("minecraftGame: %llX", g_Data.clientInstance->minecraftGame);
+		logF("levelRenderer: %llX", g_Data.clientInstance->levelRenderer);
+	}
+
 #endif
 }
 void GameData::sendPacketToInjector(HorionDataPacket horionDataPack) {

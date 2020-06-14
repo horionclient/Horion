@@ -68,7 +68,15 @@ void FollowPathModule::onTick(C_GameMode *mode) {
 
 }
 
-void FollowPathModule::onPostRender(C_MinecraftUIRenderContext *renderCtx) {
+void FollowPathModule::onMove(C_MoveInputHandler *handler) {
+	if(this->movementController){
+		this->movementController->step(g_Data.getLocalPlayer(), g_Data.getClientInstance()->getMoveTurnInput());
+		if(this->movementController->isDone()){
+			this->setEnabled(false);
+		}
+	}
+}
+void FollowPathModule::onLevelRender() {
 	if(!g_Data.isInGame()){
 		this->setEnabled(false);
 		return;
@@ -79,13 +87,5 @@ void FollowPathModule::onPostRender(C_MinecraftUIRenderContext *renderCtx) {
 	}else if(this->pathFinder){
 		JoePath localPath = this->pathFinder->getCurrentPath();
 		localPath.draw(-1); // copy so we avoid drawing while its being updated by the pathfinder
-	}
-}
-void FollowPathModule::onMove(C_MoveInputHandler *handler) {
-	if(this->movementController){
-		this->movementController->step(g_Data.getLocalPlayer(), g_Data.getClientInstance()->getMoveTurnInput());
-		if(this->movementController->isDone()){
-			this->setEnabled(false);
-		}
 	}
 }

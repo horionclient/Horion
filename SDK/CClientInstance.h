@@ -18,6 +18,10 @@ private:
 	char pad_0x0000[0x860];  //0x0000
 public:
 	vec3_t origin;  //0x0860
+
+	__int64 getLevelRendererPlayer(){
+		return reinterpret_cast<__int64>(this) + 0x310;
+	}
 };
 class HitDetectSystem;
 
@@ -136,6 +140,7 @@ public:
 };
 
 class C_MoveInputHandler;
+class C_CameraManager;
 
 class C_ClientInstance {
 private:
@@ -170,6 +175,16 @@ private:
 	char pad_0x00B8[0x30];  //0x00C0
 public:
 	C_LocalPlayer* localPlayer;  //0x00F0
+private:
+	char pad[0x380]; // 0x00F8
+public:
+	struct {
+		char pad[0x228];
+		struct {
+			__int64 materialPtr;
+			size_t refCount;
+		} entityLineMaterial;
+	} *itemInHandRenderer; // 0x0478
 
 private:
 	virtual __int64 destructorClientInstance();
@@ -418,7 +433,9 @@ private:
 	virtual __int64 getHolosceneRenderer(void) const;
 	virtual __int64 getLevelRenderer(void) const;
 	virtual __int64 getLevelRendererCameraProxy(void) const;
-	virtual __int64 sub_1400CCC00(void) const;
+public:
+	virtual C_CameraManager* getCameraManager(void) const;
+private:
 	virtual __int64 sub_1400CCC08(void) const;
 	virtual __int64 getLightTexture(void);
 

@@ -265,6 +265,8 @@ bool IModule::callWhenDisabled() {
 }
 void IModule::onMove(C_MoveInputHandler*) {
 }
+void IModule::onLevelRender() {
+}
 
 void SettingEntry::makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
 	switch (valueType) {

@@ -26,3 +26,20 @@ void C_Camera::getPlayerRotation(vec2_t* angOut) {
 	angOut->x = (float)((float)(angles.x * 57.295776) + *(float *)(reinterpret_cast<__int64>(this) + 268)) * v4;
 	angOut->normAngles();
 }
+void C_Camera::getForwardVector(vec3_t* forward) {
+	vec3_t eulerAngles;
+	this->getEulerAngles(&eulerAngles);
+
+	float calcYaw = eulerAngles.y - (90 * (PI / 180));
+	float calcPitch = -eulerAngles.x;
+
+	forward->x = cos(calcYaw) * cos(calcPitch);
+	forward->y = sin(calcPitch);
+	forward->z = sin(calcYaw) * cos(calcPitch);
+}
+
+C_Camera* C_CameraManager::getCameraOrDebugCamera() {
+	using camerManager_getCameraOrDebugCamera_t = C_Camera*(__fastcall*)(C_CameraManager*);
+	static auto camerManager_getCameraOrDebugCamera = reinterpret_cast<camerManager_getCameraOrDebugCamera_t>(FindSignature("40 53 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 80 39 00 48 8B D9 74 ?? 48"));
+	return camerManager_getCameraOrDebugCamera(this);
+}

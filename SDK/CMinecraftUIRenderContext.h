@@ -61,7 +61,7 @@ public:
 	virtual void flushText(float timeSinceLastFlush);                       // time used for ticking the obfuscated text
 	virtual __int64 drawImage(C_TexturePtr* texturePtr, vec2_t& ImagePos, vec2_t& ImageDimension,__int64& a4,vec2_t& idk);  // didnt bother putting in the parameters
 	virtual __int64 drawNinesliceNOTIMPLEMENTED();
-	virtual __int64 flushImages(MC_Color& color,__int64 flushImageAddr,__int64 hashedString);
+	virtual __int64 flushImages(MC_Color& color, __int64 flushImageAddr, __int64 hashedString);
 	virtual __int64 beginSharedMeshBatchNOTIMPLEMENTED();
 	virtual __int64 endSharedMeshBatchNOTIMPLEMENTED();
 	virtual void drawRectangle(const float* pos, const float* color, float alpha, int lineWidth);  // line width is guessed

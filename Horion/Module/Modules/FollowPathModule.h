@@ -19,6 +19,6 @@ public:
 	void onTick(C_GameMode *mode) override;
 	void onEnable() override;
 	void onDisable() override;
-	void onPostRender(C_MinecraftUIRenderContext *renderCtx) override;
+	void onLevelRender() override;
 	void onMove(C_MoveInputHandler *handler) override;
 };

@@ -239,5 +239,14 @@ void ModuleManager::onMove(C_MoveInputHandler* hand) {
 			it->onMove(hand);
 	}
 }
+void ModuleManager::onLevelRender() {
+	if (!isInitialized())
+		return;
+	auto lock = this->lockModuleList();
+	for (auto& it : moduleList) {
+		if (it->isEnabled() || it->callWhenDisabled())
+			it->onLevelRender();
+	}
+}
 
 ModuleManager* moduleMgr = new ModuleManager(&g_Data);

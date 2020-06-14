@@ -90,6 +90,7 @@ public:
 	virtual void onAttack(C_Entity*);
 	virtual void onPreRender(C_MinecraftUIRenderContext* renderCtx);
 	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx);
+	virtual void onLevelRender();
 	virtual void onMove(C_MoveInputHandler*);
 	virtual void onLoadConfig(void* conf);
 	virtual void onSaveConfig(void* conf);

@@ -12,8 +12,6 @@ enum class Fonts { DEFAULT,
 				   SMOOTH,
 				   RUNE };
 
-using tess_vertex_t = void(__fastcall*)(__int64 _this, float v1, float v2, float v3);
-using tess_end_t = void(__fastcall*)(__int64, __int64 tesselator, __int64*);
 using mce__VertexFormat__disableHalfFloats_t = void(__fastcall*)(__int64, int, int);
 using Tessellator__initializeFormat_t = void(__fastcall*)(__int64, __int64);
 
@@ -78,26 +76,15 @@ struct MC_Color {
 class DrawUtils {
 public:
 	static void setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* guiData);
+	static void setGameRenderContext(__int64 ctx);
 	static void flush();
 	static void setColor(float r, float g, float b, float a);  // rgba, values from 0 to 1
-	static inline void tess__begin(__int64 tesselator) {
-		if (!*(unsigned char*)(tesselator + 0x1FC) && !*(unsigned char*)(tesselator + 0x1B5)) {
-			mce__VertexFormat__disableHalfFloats(tesselator, 0, 0);  
-			*(unsigned char*)(tesselator + 8) = 3;
-			*(unsigned char*)(tesselator + 0x1B4) = 0;
-			*(unsigned short*)(tesselator + 0x1FC) = 1;
-			*(unsigned int*)(tesselator + 0x16C) = 0;
-			*(__int64*)(tesselator + 0x150) = *(__int64*)(tesselator + 0x148);
-			if (!*(unsigned char*)tesselator)
-				*(unsigned char*)(tesselator + 0xD0) = 1;
-			//Tessellator__initializeFormat(tesselator + 8, 0x66i64);  
-		}
-	}
+	static inline void tess__begin(__int64 tesselator);
 	static C_Font* getFont(Fonts font);
 	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = Fonts::SMOOTH);
 
 	static void drawLine(vec2_t start, vec2_t end, float lineWidth);  // rgba
-	static void drawLine3d(vec3_t start, vec3_t end, float lineWidth);
+	static void drawLine3d(const vec3_t& start, const vec3_t& end);
 	static inline void fillRectangle(vec4_t pos, const MC_Color col, float alpha) {
 		float posF[4];  // vec4_t(startX, startY, endX, endY);
 		posF[0] = pos.x;
@@ -117,13 +104,12 @@ public:
 
 	static void drawText(vec2_t pos, std::string* text, MC_Color color, float textSize = 1, float alpha = 1, Fonts font = Fonts::SMOOTH);
 	static void drawBox(vec3_t lower, vec3_t upper, float lineWidth, bool outline = false);
-	static void drawTracer(C_Entity* ent);
 	static void drawEntityBox(C_Entity* ent, float lineWidth);
 	static void draw2D(C_Entity* ent, float lineWidth);
 	static void drawNameTags(C_Entity* ent, float textSize, bool drawHealth = false, bool useUnicodeFont = false);
 	static void drawItem(C_ItemStack* item, vec2_t ItemPos, float opacity, float scale, bool isEnchanted);
 	static void drawKeystroke(char key, vec2_t pos);
 
-	static vec2_t worldToScreen(vec3_t world);
+	static vec2_t worldToScreen(const vec3_t& world);
 };
 

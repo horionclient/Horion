@@ -381,6 +381,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
 	DrawUtils::setCtx(renderCtx, dat);
 
+
 	{
 		static bool wasConnectedBefore = false;
 		static LARGE_INTEGER start;
@@ -1251,7 +1252,13 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3) 
 			reloadChunk(i[3]);
 	}
 
-	return oFunc(_this, a2, a3);
+	auto ret = oFunc(_this, a2, a3);
+
+	DrawUtils::setGameRenderContext(a2);
+	moduleMgr->onLevelRender();
+	DrawUtils::setGameRenderContext(0);
+
+	return ret;
 }
 
 void Hooks::ClickFunc(__int64 a1, char mouseButton, char isDown, __int16 mouseX, __int16 mouseY, __int16 a6, __int16 a7, char a8) {
@@ -1962,7 +1969,6 @@ void Hooks::LocalPlayer__updateFromCamera(__int64 a1, C_Camera* camera) {
 
 		camera->setOrientationDeg(rot.x, rot.y, 0);
 	}
-
 
 	func(a1, camera);
 }

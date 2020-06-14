@@ -115,6 +115,7 @@ public:
 	void onKeyUpdate(int key, bool isDown);
 	void onPreRender(C_MinecraftUIRenderContext* renderCtx);
 	void onPostRender(C_MinecraftUIRenderContext* renderCtx);
+	void onLevelRender();
 	void onMove(C_MoveInputHandler* handler);
 	void onSendPacket(C_Packet*);
 

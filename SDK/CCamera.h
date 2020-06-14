@@ -20,10 +20,16 @@ private:
 public:
 	bool facesPlayerFront; // 0x108
 
+	void getForwardVector(vec3_t*);
 	void getEulerAngles(vec3_t*);
 	void getPlayerRotation(vec2_t*);
 	void setOrientation(float pitch, float yaw, float roll);
 	void setOrientationDeg(float pitch, float yaw, float roll) {
 		setOrientation((-yaw - 180) * RAD_DEG, -pitch * RAD_DEG, roll * RAD_DEG);
 	}
+};
+
+class C_CameraManager {
+public:
+	C_Camera* getCameraOrDebugCamera();
 };
