@@ -315,8 +315,8 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 			static float constexpr scale = 0.5f;
 			static float constexpr opacity = 0.25f;
 			static float constexpr spacing = scale + 15.f;
-			float x = rectPos.z - 25.f;
-			float y = rectPos.w - 10.f;
+			float x = rectPos.z - 40.f;
+			float y = rectPos.w - 20.f;
 			for (int i = 0; i < 4; i++) {
 				C_ItemStack* stack = player->getArmor(i);
 				if (stack->item != nullptr) {

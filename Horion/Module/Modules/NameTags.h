@@ -4,6 +4,7 @@
 
 class NameTags : public IModule {
 public:
+	std::set<std::string> nameTags;
 	bool displayArmor = true;
 	NameTags();
 	~NameTags();

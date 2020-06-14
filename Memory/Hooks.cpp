@@ -277,6 +277,9 @@ void Hooks::Init() {
 
 		void* MobIsImmobile = reinterpret_cast<void*>(FindSignature("40 53 48 83 EC ?? 80 B9 ?? ?? ?? ?? 00 48 8B D9 75 ?? 48 8B 89"));
 		g_Hooks.Mob__isImmobileHook = std::make_unique<FuncHook>(MobIsImmobile, Hooks::Mob__isImmobile);
+
+		void* renderNameTags = reinterpret_cast<void*>(FindSignature("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 C7 45 ? ? ? ? ? 48 89 58 ? 0F 29 70 ? 0F 29 78 ? 44 0F 29 40 ? 44 0F 29 48 ? 48 8B 05 ? ? ? ? 48 33 C4"));
+		g_Hooks.LevelRendererPlayer__renderNameTagsHook = std::make_unique<FuncHook>(renderNameTags,Hooks::LevelRendererPlayer__renderNameTags);
 	}
 
 // clang-format on
@@ -2002,4 +2005,17 @@ void Hooks::InventoryTransactionManager__addAction(C_InventoryTransactionManager
 #endif
 
 	func(_this, action);
+}
+
+void Hooks::LevelRendererPlayer__renderNameTags(__int64 a1, __int64 a2, TextHolder* a3, __int64 a4) {
+	static auto func = g_Hooks.LevelRendererPlayer__renderNameTagsHook->GetFastcall<void, __int64, __int64, TextHolder*, __int64>();
+	static auto nameTagsMod = moduleMgr->getModule<NameTags>();
+
+	if (nameTagsMod->isEnabled() && nameTagsMod->nameTags.size() > 0) {
+		if (nameTagsMod->nameTags.find(a3->getText()) != nameTagsMod->nameTags.end())
+			return;
+	}
+
+
+	return func(a1, a2, a3, a4);
 }
