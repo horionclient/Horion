@@ -926,9 +926,7 @@ void Hooks::Actor_lerpMotion(C_Entity* _this, vec3_t motVec) {
 	if (noKnockbackmod->isEnabled()) {
 		static void* networkSender = reinterpret_cast<void*>(FindSignature("41 80 BF ?? ?? ?? ?? 00 0F 85 ?? ?? ?? ?? FF"));
 		if (networkSender == _ReturnAddress()) {
-			motVec.x *= noKnockbackmod->xModifier;
-			motVec.y *= noKnockbackmod->yModifier;
-			motVec.z *= noKnockbackmod->xModifier;
+			motVec = _this->velocity.lerp(motVec, noKnockbackmod->xModifier, noKnockbackmod->yModifier, noKnockbackmod->xModifier);
 		}
 	}
 	oLerp(_this, motVec);
