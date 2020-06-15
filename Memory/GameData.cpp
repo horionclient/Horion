@@ -123,7 +123,7 @@ void GameData::updateGameData(C_GameMode* gameMode) {
 						break;
 					}
 
-					guiData->displayClientMessageF("%s%s%s%s", GOLD, it->time, RESET, it->text);
+					guiData->displayClientMessageNoSendF("%s%s%s%s", GOLD, it->time, RESET, it->text);
 				}
 				stringPrintVector->erase(stringPrintVector->begin(), it);
 #else

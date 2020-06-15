@@ -36,9 +36,11 @@ public:
 	static std::wstring GetRoamingFolderPath();
 	static void WriteLogFileF(volatile char* fmt, ...);
 	static void WriteBigLogFileF(size_t maxSize, const char* fmt, ...);
+	static void SendToConsoleF(const char* msg);
 	static std::vector<TextForPrint>* GetTextToPrint();
 	static std::vector<std::shared_ptr<TextForPrintBig>>* GetTextToSend();
 	static std::lock_guard<std::mutex> GetTextToPrintLock();
+	static std::lock_guard<std::mutex> GetTextToInjectorLock();
 	//static std::vector<TextForPrint*> stringPrintVector;
 	static void Disable();
 };

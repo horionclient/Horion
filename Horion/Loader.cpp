@@ -233,7 +233,15 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 					break;
 				}
 				case CMD_LOG: {
-					
+					if(injectorToHorion->dataSize > 4 && injectorToHorion->dataSize < 2999){
+						injectorToHorion->data[injectorToHorion->dataSize] = 0; // null terminator
+
+						char* command = reinterpret_cast<char*>(&injectorToHorion->data[3]);
+						if(command[1] == cmdMgr->prefix)
+							command++;
+
+						cmdMgr->execute(command);
+					}
 					break;
 				}
 				default:
@@ -245,7 +253,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 
 			// Send log messages
 			{
-				auto vecLock = Logger::GetTextToPrintLock();
+				auto vecLock = Logger::GetTextToInjectorLock();;
 
 				if (loggedIn && g_Data.isPacketToInjectorQueueEmpty()) {
 					auto* stringPrintVector = Logger::GetTextToSend();

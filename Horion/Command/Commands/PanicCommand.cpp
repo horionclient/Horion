@@ -16,6 +16,6 @@ bool PanicCommand::execute(std::vector<std::string>* args) {
 		auto mod = *it;
 		mod->setEnabled(false);
 	}
-	g_Data.getGuiData()->displayClientMessageF("%sDisabled all Modules!", YELLOW);
+	clientMessageF("%sDisabled all Modules!", YELLOW);
 	return true;
 }

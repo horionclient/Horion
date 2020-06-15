@@ -1,5 +1,6 @@
 #include "CClientInstance.h"
 #include "../Utils/Utils.h"
+#include "../Utils/Logger.h"
 #include <cstdarg>
 
 __int64 MinecraftGame::getServerEntries() {
@@ -16,12 +17,21 @@ void C_GuiData::displayClientMessage(std::string *a2) {
 void C_GuiData::displayClientMessageF(const char *fmt, ...) {
 	va_list arg;
 	va_start(arg, fmt);
-	displayClientMessageVA(fmt, arg);
+	displayClientMessageVA(fmt, arg, true);
 	va_end(arg);
 }
-void C_GuiData::displayClientMessageVA(const char *fmt, va_list lis) {
+void C_GuiData::displayClientMessageVA(const char *fmt, va_list lis, bool sendToInjector) {
 	char message[300];
 	vsprintf_s(message, 300, fmt, lis);
 	std::string msg(message);
+	if(sendToInjector)
+		Logger::SendToConsoleF(message);
 	displayClientMessage(&msg);
+
+}
+void C_GuiData::displayClientMessageNoSendF(const char *fmt, ...) {
+	va_list arg;
+	va_start(arg, fmt);
+	displayClientMessageVA(fmt, arg, false);
+	va_end(arg);
 }

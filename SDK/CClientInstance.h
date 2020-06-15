@@ -112,10 +112,11 @@ public:
 		vec2_t windowSize;  //0x0028
 	};
 
-	void displayClientMessageVA(const char* fmt, va_list lis);
+	void displayClientMessageVA(const char* fmt, va_list lis, bool sendToInjector = true);
 
 	void displayClientMessageF(const char* fmt, ...);
-	void displayClientMessage(std::string* a2);;
+	void displayClientMessageNoSendF(const char* fmt, ...);
+	void displayClientMessage(std::string* a2);
 };
 
 struct PtrToGameSettings3 {

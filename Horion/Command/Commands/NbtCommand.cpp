@@ -49,8 +49,8 @@ bool NbtCommand::execute(std::vector<std::string>* args) {
 
 		auto builtStr = build.str();
 		Utils::setClipboardText(builtStr);
-		g_Data.getGuiData()->displayClientMessageF("%s%s", GREEN, "CompoundTag copied:");
-		g_Data.getClientInstance()->getGuiData()->displayClientMessage(&builtStr);
+		clientMessageF("%s%s", GREEN, "CompoundTag copied:");
+		clientMessageF(builtStr.c_str());
 	} else if ((args->at(1) == "write" || args->at(1) == "load") && item) {
 		std::string tag = Utils::getClipboardText();
 
@@ -76,9 +76,9 @@ bool NbtCommand::execute(std::vector<std::string>* args) {
 			manager->addInventoryAction(C_InventoryAction(supplies->selectedHotbarSlot, nullptr, item));
 		}
 
-		g_Data.getGuiData()->displayClientMessageF("%s%s", GREEN, "Successfully loaded mojangson !");
+		clientMessageF("%s%s", GREEN, "Successfully loaded mojangson !");
 	} else {
-		g_Data.getGuiData()->displayClientMessageF("%s%s", RED, "Couldn't execute command correctly");
+		clientMessageF("%s%s", RED, "Couldn't execute command correctly");
 	}
 
 	return true;
