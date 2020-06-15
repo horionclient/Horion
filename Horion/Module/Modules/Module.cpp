@@ -274,16 +274,16 @@ void SettingEntry::makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
 		case ValueType::BOOL_T:
 			break;
 		case ValueType::INT64_T:
-			value->int64 = max(minValue->int64, min(maxValue->int64, value->int64));
+			value->int64 = std::max(minValue->int64, std::min(maxValue->int64, value->int64));
 			break;
 		case ValueType::DOUBLE_T:
-			value->_double = max(minValue->_double, min(maxValue->_double, value->_double));
+			value->_double = std::max(minValue->_double, std::min(maxValue->_double, value->_double));
 			break;
 		case ValueType::FLOAT_T:
-			value->_float = max(minValue->_float, min(maxValue->_float, value->_float));
+			value->_float = std::max(minValue->_float, std::min(maxValue->_float, value->_float));
 			break;
 		case ValueType::INT_T:
-			value->_int = max(minValue->_int, min(maxValue->_int, value->_int));
+			value->_int = std::max(minValue->_int, std::min(maxValue->_int, value->_int));
 			break;
 		default:
 			logF("unrecognized value %i", valueType);

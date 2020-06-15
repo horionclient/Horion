@@ -2,6 +2,10 @@
 
 #include "../Utils/Utils.h"
 #include "../Utils/Logger.h"
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <Windows.h>
 
 Int64Tag::Int64Tag(__int64 value) {
 	static uintptr_t** Int64TagVtable = 0x0;

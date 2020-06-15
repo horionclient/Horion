@@ -1,10 +1,6 @@
 #pragma once
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#include <Windows.h>
-
+#include <mutex>
 #include <vector>
 #include <memory>
 
@@ -42,13 +38,7 @@ public:
 	static void WriteBigLogFileF(size_t maxSize, const char* fmt, ...);
 	static std::vector<TextForPrint>* GetTextToPrint();
 	static std::vector<std::shared_ptr<TextForPrintBig>>* GetTextToSend();
-	static CRITICAL_SECTION* GetTextToPrintSection();
+	static std::lock_guard<std::mutex> GetTextToPrintLock();
 	//static std::vector<TextForPrint*> stringPrintVector;
 	static void Disable();
 };
-
-extern char logPath[200];
-extern bool initializedLogger;
-extern CRITICAL_SECTION loggerLock;
-extern CRITICAL_SECTION vecLock;
-extern std::vector<TextForPrint> stringPrintVector;

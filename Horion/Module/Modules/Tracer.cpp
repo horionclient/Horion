@@ -2,7 +2,6 @@
 #include "../../DrawUtils.h"
 
 #include "../../../SDK/CCamera.h"
-#include "../../../Utils/Logger.h"
 
 Tracer::Tracer() : IModule('R', Category::VISUAL, "Draws lines to ESP highlighted entities") {
 }

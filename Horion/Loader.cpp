@@ -173,17 +173,17 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 							auto serialNum = data.at("serial").get<unsigned int>();
 							if (serialNum == 0) {
 								logF("Serial is null!");
-								g_Data.terminate();
+								GameData::terminate();
 							}
 
 							auto roamingFolder = Logger::GetRoamingFolderPath();
 							if (roamingFolder.substr(0, 2) == L"C:") {  // Make sure we're getting a handle to the C volume
 
-								HANDLE file = CreateFileW(roamingFolder.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, 0);
+								HANDLE file = CreateFileW(roamingFolder.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, 0);
 								if (file != INVALID_HANDLE_VALUE) {
 									unsigned long serial = 0;
-									unsigned long maxNameLen = 0, flags = 0;
-									bool succ = GetVolumeInformationByHandleW(file, 0, 0, &serial, &maxNameLen, &flags, 0, 0);
+									unsigned long maxNameLen = 0, flags2 = 0;
+									bool succ = GetVolumeInformationByHandleW(file, 0, 0, &serial, &maxNameLen, &flags2, nullptr, 0);
 									if (succ) {
 										/*if (serial != serialNum) { // Dont print the raw values here, don't leak serials
 											logF("Serial doesn't match! (Diff: %lli)", (long long) serial - (long long)serialNum);
@@ -245,9 +245,9 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 
 			// Send log messages
 			{
-				auto* vecLock = Logger::GetTextToPrintSection();
+				auto vecLock = Logger::GetTextToPrintLock();
 
-				if (loggedIn && g_Data.isPacketToInjectorQueueEmpty() && vecLock != nullptr && TryEnterCriticalSection(vecLock)) {
+				if (loggedIn && g_Data.isPacketToInjectorQueueEmpty()) {
 					auto* stringPrintVector = Logger::GetTextToSend();
 #if defined(_DEBUG) or defined(_BETA)
 					if (stringPrintVector->size() > 0 && g_Data.isPacketToInjectorQueueEmpty()) {
@@ -277,8 +277,6 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 #else
 					stringPrintVector->clear();
 #endif
-
-					LeaveCriticalSection(vecLock);
 				}
 			}
 

@@ -110,9 +110,9 @@ void GameData::updateGameData(C_GameMode* gameMode) {
 
 		if (g_Data.localPlayer != nullptr) {
 			C_GuiData* guiData = g_Data.clientInstance->getGuiData();
-			auto* vecLock = Logger::GetTextToPrintSection();
+			auto vecLock = Logger::GetTextToPrintLock();
 
-			if (guiData != nullptr && (vecLock == nullptr || TryEnterCriticalSection(vecLock))) {
+			if (guiData != nullptr) {
 				auto* stringPrintVector = Logger::GetTextToPrint();
 #ifdef _DEBUG
 				int numPrinted = 0;
@@ -129,9 +129,6 @@ void GameData::updateGameData(C_GameMode* gameMode) {
 #else
 				stringPrintVector->clear();
 #endif
-
-				if (vecLock != nullptr)
-					LeaveCriticalSection(vecLock);
 			}
 		}
 	}
