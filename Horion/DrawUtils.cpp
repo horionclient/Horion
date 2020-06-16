@@ -133,7 +133,7 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth) {
 	modX *= lineWidth;
 	modY *= lineWidth;
 
-	DrawUtils::tess__begin(tesselator);
+	DrawUtils::tess__begin(tesselator, 3);
 
 	tess_vertex(tesselator, start.x + modX, start.y + modY, 0);
 	tess_vertex(tesselator, start.x - modX, start.y - modY, 0);
@@ -424,7 +424,7 @@ void DrawUtils::drawLine3d(const vec3_t& start, const vec3_t& end) {
 
 	auto myTess = *reinterpret_cast<__int64*>(game3dContext + 0xA8);
 
-	DrawUtils::tess__begin(myTess);
+	DrawUtils::tess__begin(myTess, 4);
 
 	auto start1 = start.sub(origin);
 	auto end1 = end.sub(origin);
@@ -434,10 +434,10 @@ void DrawUtils::drawLine3d(const vec3_t& start, const vec3_t& end) {
 
 	tess_end(game3dContext, myTess, entityFlatStaticMaterial);
 }
-void DrawUtils::tess__begin(__int64 tesselator) {
+void DrawUtils::tess__begin(__int64 tesselator, int vertexFormat) {
 	if (!*(unsigned char*)(tesselator + 0x1FC) && !*(unsigned char*)(tesselator + 0x1B5)) {
 		mce__VertexFormat__disableHalfFloats(tesselator, 0, 0);
-		*(unsigned char*)(tesselator + 8) = 3;
+		*(unsigned char*)(tesselator + 8) = vertexFormat;
 		*(unsigned char*)(tesselator + 0x1B4) = 0;
 		*(unsigned short*)(tesselator + 0x1FC) = 1;
 		*(unsigned int*)(tesselator + 0x16C) = 0;

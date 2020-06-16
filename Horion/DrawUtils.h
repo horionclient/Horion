@@ -73,13 +73,17 @@ struct MC_Color {
 	};
 };
 
+enum VertexFormat {
+
+};
+
 class DrawUtils {
 public:
 	static void setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* guiData);
 	static void setGameRenderContext(__int64 ctx);
 	static void flush();
 	static void setColor(float r, float g, float b, float a);  // rgba, values from 0 to 1
-	static inline void tess__begin(__int64 tesselator);
+	static inline void tess__begin(__int64 tesselator, int vertexFormat = 3);
 	static C_Font* getFont(Fonts font);
 	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = Fonts::SMOOTH);
 
