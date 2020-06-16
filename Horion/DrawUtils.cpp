@@ -437,7 +437,7 @@ void DrawUtils::drawLine3d(const vec3_t& start, const vec3_t& end) {
 void DrawUtils::tess__begin(__int64 tesselator) {
 	if (!*(unsigned char*)(tesselator + 0x1FC) && !*(unsigned char*)(tesselator + 0x1B5)) {
 		mce__VertexFormat__disableHalfFloats(tesselator, 0, 0);
-		*(unsigned char*)(tesselator + 8) = 4;
+		*(unsigned char*)(tesselator + 8) = 3;
 		*(unsigned char*)(tesselator + 0x1B4) = 0;
 		*(unsigned short*)(tesselator + 0x1FC) = 1;
 		*(unsigned int*)(tesselator + 0x16C) = 0;
