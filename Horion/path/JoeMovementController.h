@@ -28,4 +28,5 @@ public:
 		return stateInfo.currentPathSegment >= currentPath->getNumSegments();
 	}
 	int getCurrentPathSegment() const;
+	const std::shared_ptr<JoePath>& getCurrentPath() const;
 };

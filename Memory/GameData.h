@@ -73,6 +73,8 @@ private:
 	C_RakNetInstance* raknetInstance = nullptr;
 	void* hDllInst = 0;
 	std::vector<std::shared_ptr<AABB>> chestList;
+	std::vector<std::string> textPrintList;
+	std::mutex textPrintLock;
 	std::mutex chestListMutex;
 	std::queue<HorionDataPacket> horionToInjectorQueue;
 	std::map<int, std::function<void(std::shared_ptr<HorionDataPacket>)>> injectorToHorionResponseCallbacks;
@@ -114,6 +116,7 @@ public:
 	static void setHIDController(C_HIDController* Hid);
 	static void setRakNetInstance(C_RakNetInstance* raknet);
 	static TextHolder* getGameVersion();
+	static void log(const char* fmt, ...);
 	float fov = 0.f;
 	int fps = 0;
 	int frameCount = 0;

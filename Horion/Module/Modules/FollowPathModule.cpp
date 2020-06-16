@@ -12,6 +12,25 @@ const char *FollowPathModule::getModuleName() {
 #endif
 }
 
+void FollowPathModule::startSearch(vec3_ti startNode, C_BlockSource* region, float searchTimeout, std::function<void(bool, JoePath)> callback){
+	if(this->pathFinder){
+		logF("Already searching!");
+		return;
+	}
+	this->pathFinder = std::make_shared<JoePathFinder>(startNode, region, this->goal);
+	this->pathFinder->pathSearchTimeout = searchTimeout;
+	std::thread([this, callback](){
+		auto ref = this->pathFinder; // so it won't get deleted when followpathmodule is disabled
+		auto tempPath = this->pathFinder->findPath();
+		this->pathFinder.reset();
+		if(tempPath.getNumSegments() == 0 || !this->isEnabled()){
+			callback(false, tempPath);
+			return;
+		}
+		callback(true, tempPath);
+	}).detach();
+}
+
 void FollowPathModule::onEnable() {
 	if(!g_Data.isInGame() || !g_Data.getLocalPlayer()->isAlive()){
 		setEnabled(false);
@@ -27,39 +46,37 @@ void FollowPathModule::onEnable() {
 	auto player = g_Data.getLocalPlayer();
 	auto pPos = player->eyePos0;
 	vec3_ti startNode((int)floorf(pPos.x), (int)roundf(pPos.y - 1.62f), (int)floorf(pPos.z));
-	logF("Start node: %i %i %i", startNode.x, startNode.y, startNode.z);
 
-	this->pathFinder = std::make_shared<JoePathFinder>(startNode, player->region, std::move(this->goal));
-	this->pathFinder->pathSearchTimeout = 3;
-	std::thread([&](){
-		auto ref = this->pathFinder; // so it won't get deleted when followpathmodule is disabled
-		auto tempPath = pathFinder->findPath();
-		if(tempPath.getNumSegments() == 0 || !this->isEnabled()){
+	this->startSearch(startNode, player->region, 3, [&](bool succeeded, JoePath tempPath){
+		if(!succeeded){
 			this->path.reset();
 			this->movementController.reset();
 			this->setEnabled(false);
-			if(g_Data.getGuiData() != nullptr)
-				g_Data.getGuiData()->displayClientMessageF("%sCould not find a path!", RED);
+			this->clientMessageF("%sCould not find a path!", RED);
+			this->engageDelay = -1;
 			return;
 		}
 
-		if(g_Data.getGuiData() != nullptr)
-			g_Data.getGuiData()->displayClientMessageF("%sFound %s path!", tempPath.isIncomplete1() ? YELLOW : GREEN, tempPath.isIncomplete1() ? "incomplete" : "complete");
+		this->clientMessageF("%sFound %s path!", tempPath.isIncomplete1() ? YELLOW : GREEN, tempPath.isIncomplete1() ? "incomplete" : "complete");
+
 		if(tempPath.isIncomplete1()){
 			tempPath.cutoff(0.9f);
 		}
+		this->engageDelay = 10;
 
 		this->path = std::make_shared<JoePath>(tempPath.getAllSegments(), tempPath.isIncomplete1());
 		this->movementController = std::make_unique<JoeMovementController>(path);
-	}).detach();
+	});
 }
 
 void FollowPathModule::onDisable() {
 	if(this->pathFinder)
 		this->pathFinder->terminateSearch = true;
+	this->engageDelay = -1;
 
 	this->pathFinder.reset();
 	this->path.reset();
+	this->nextPath.reset();
 	this->movementController.reset();
 	this->goal.reset();
 }
@@ -71,8 +88,66 @@ void FollowPathModule::onTick(C_GameMode *mode) {
 void FollowPathModule::onMove(C_MoveInputHandler *handler) {
 	if(this->movementController){
 		this->movementController->step(g_Data.getLocalPlayer(), g_Data.getClientInstance()->getMoveTurnInput());
+		if(this->engageDelay > 0)
+			this->engageDelay--;
+
 		if(this->movementController->isDone()){
-			this->setEnabled(false);
+			if(this->movementController->getCurrentPath()->isIncomplete1()){
+				// Replace with next path if it exists
+				if(this->nextPath && !pathFinder){
+					this->clientMessageF("%sContinuing on next path...", GREEN);
+
+					this->path = this->nextPath;
+					this->nextPath.reset();
+					this->movementController = std::make_unique<JoeMovementController>(path);
+				}else if(!pathFinder){
+					this->setEnabled(false);
+				}
+			}else{
+				this->setEnabled(false);
+				return;
+			}
+		}else if(!this->pathFinder && this->engageDelay == 0 && this->path && this->path->isIncomplete1() && !this->nextPath){
+			this->engageDelay = 10;
+
+			// Estimate time to completion
+			auto curPath = this->movementController->getCurrentPath();
+			float timeSpent = 0;
+			if(curPath->getNumSegments() == 0){
+				this->setEnabled(false);
+				return;
+			}
+			for(int i = curPath->getNumSegments() - 1; i > this->movementController->getCurrentPathSegment(); i--){
+				auto cur = curPath->getSegment(i);
+				timeSpent += cur.getCost();
+				if(timeSpent > 11)
+					break;
+			}
+
+			if(timeSpent > 11)
+				return;
+
+			this->clientMessageF("%sCalculating next path...", YELLOW);
+
+			float timeForSearch = std::clamp(timeSpent - 0.5f, 5.f, 10.f);
+			auto lastSeg = curPath->getSegment(curPath->getNumSegments() - 1);
+			this->nextPath.reset();
+			this->startSearch(lastSeg.getEnd(), g_Data.getLocalPlayer()->region, timeForSearch, [&](bool succeeded, JoePath tempPath){
+			  if(!succeeded){
+				  this->clientMessageF("%sCould not find subsequent path!", RED);
+
+				  this->engageDelay = -1;
+				  return;
+			  }
+
+			  this->clientMessageF("%sFound subsequent %s path!", tempPath.isIncomplete1() ? YELLOW : GREEN, tempPath.isIncomplete1() ? "incomplete" : "complete");
+
+			  if(tempPath.isIncomplete1()){
+				  tempPath.cutoff(0.9f);
+			  }
+
+			  this->nextPath = std::make_shared<JoePath>(tempPath.getAllSegments(), tempPath.isIncomplete1());
+			});
 		}
 	}
 }

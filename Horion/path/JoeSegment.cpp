@@ -2,29 +2,29 @@
 
 #include "../DrawUtils.h"
 
-JoeSegment::JoeSegment(JoeSegmentType type, vec3_ti& start, vec3_ti& stop) : segmentType(type), start(start), end(stop) {
+JoeSegment::JoeSegment(JoeSegmentType type, vec3_ti& start, vec3_ti& stop, float cost) : segmentType(type), start(start), end(stop), cost(cost) {
 }
 void JoeSegment::draw() {
 	switch (segmentType) {
 		case DROP: {
-			auto dropPoint = start.toVec3t().add(0.5f, 0, 0.5f);
+			auto dropPoint = start.toVec3t().add(0.5f, 0.05f, 0.5f);
 			dropPoint.x = end.x + 0.5f;
 			dropPoint.z = end.z + 0.5f;
-			DrawUtils::drawLine3d(start.toVec3t().add(0.5f, 0, 0.5f), dropPoint);
-			DrawUtils::drawLine3d(dropPoint, end.toVec3t().add(0.5f, 0, 0.5f));
+			DrawUtils::drawLine3d(start.toVec3t().add(0.5f, 0.05f, 0.5f), dropPoint);
+			DrawUtils::drawLine3d(dropPoint, end.toVec3t().add(0.5f, 0.05f, 0.5f));
 		} break;
 		case JUMP:
-			DrawUtils::drawLine3d(start.toVec3t().add(0.5f, 0, 0.5f), start.toVec3t().add(0.5f, 1, 0.5f));
-			DrawUtils::drawLine3d(start.toVec3t().add(0.5f, 1, 0.5f), end.toVec3t().add(0.5f, 0, 0.5f));
+			DrawUtils::drawLine3d(start.toVec3t().add(0.5f, 0.05f, 0.5f), start.toVec3t().add(0.5f, 1.05f, 0.5f));
+			DrawUtils::drawLine3d(start.toVec3t().add(0.5f, 1.05f, 0.5f), end.toVec3t().add(0.5f, 0.05f, 0.5f));
 			break;
 		case PARKOUR_JUMP_SINGLE:{
-			auto middle = start.toVec3t().add(0.5f, 0, 0.5f).add(end.sub(start).toVec3t().mul(0.5f).add(0, 1, 0));
-			DrawUtils::drawLine3d(start.toVec3t().add(0.5f, 0, 0.5f), middle);
-			DrawUtils::drawLine3d(middle, end.toVec3t().add(0.5f, 0, 0.5f));
+			auto middle = start.toVec3t().add(0.5f, 0.05f, 0.5f).add(end.sub(start).toVec3t().mul(0.5f).add(0, 1, 0));
+			DrawUtils::drawLine3d(start.toVec3t().add(0.5f, 0.05f, 0.5f), middle);
+			DrawUtils::drawLine3d(middle, end.toVec3t().add(0.5f, 0.05f, 0.5f));
 		} break;
 		case WALK:
 		default:
-			DrawUtils::drawLine3d(start.toVec3t().add(0.5f, 0, 0.5f), end.toVec3t().add(0.5f, 0, 0.5f));
+			DrawUtils::drawLine3d(start.toVec3t().add(0.5f, 0.05f, 0.5f), end.toVec3t().add(0.5f, 0.05f, 0.5f));
 			break;
 	}
 }
@@ -36,4 +36,7 @@ const vec3_ti& JoeSegment::getStart() const {
 }
 const vec3_ti& JoeSegment::getEnd() const {
 	return end;
+}
+float JoeSegment::getCost() const {
+	return cost;
 }

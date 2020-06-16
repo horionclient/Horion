@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <numeric>
 
-JoePathFinder::JoePathFinder(vec3_ti start, C_BlockSource* reg, std::unique_ptr<JoeGoal> goal) : startPos(start), region(reg), goal(std::move(goal)) {
+JoePathFinder::JoePathFinder(vec3_ti start, C_BlockSource* reg, std::shared_ptr<JoeGoal> goal) : startPos(start), region(reg), goal(goal) {
 }
 
 struct NodeRef {
@@ -433,7 +433,7 @@ JoePath JoePathFinder::findPath() {
 			while(node.pos != startPos){
 				auto prev = node.cameFrom;
 				auto prevNode = allNodes.at(prev.nodeBefore.hash);
-				segments.emplace_back(prev.edgeType, prevNode.pos, node.pos);
+				segments.emplace_back(prev.edgeType, prevNode.pos, node.pos, node.gScore - prevNode.gScore);
 				node = prevNode;
 			}
 			std::reverse(segments.begin(), segments.end());
@@ -491,7 +491,7 @@ JoePath JoePathFinder::findPath() {
 	if(this->terminateSearch)
 		return JoePath();
 
-	const float coefficients[] = { 1.1f, 1.5f, 2.f, 2.5f, 3.f, 3.5f, 4.f, 3.5f, 5.f, 10.f, 20.f, 100.f };
+	const float coefficients[] = { 1.1f, 1.5f, 2.f, 2.5f, 3.f, 3.5f, 4.f, 3.5f, 5.f, 10.f, 20.f, 30.f };
 	constexpr auto coefficientSize = 12;
 	constexpr float maxCost = 1000000;
 	float bestHeuristicSoFar[coefficientSize] = { };
@@ -553,7 +553,7 @@ JoePath JoePathFinder::findPath() {
 			while(node.pos != startPos){
 				auto prev = node.cameFrom;
 				auto prevNode = allNodes.at(prev.nodeBefore.hash);
-				segments.emplace_back(prev.edgeType, prevNode.pos, node.pos);
+				segments.emplace_back(prev.edgeType, prevNode.pos, node.pos, node.gScore - prevNode.gScore);
 				node = prevNode;
 			}
 			std::reverse(segments.begin(), segments.end());

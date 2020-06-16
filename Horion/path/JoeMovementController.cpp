@@ -214,3 +214,6 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 int JoeMovementController::getCurrentPathSegment() const {
 	return stateInfo.currentPathSegment;
 }
+const std::shared_ptr<JoePath> &JoeMovementController::getCurrentPath() const {
+	return currentPath;
+}

@@ -110,25 +110,44 @@ void GameData::updateGameData(C_GameMode* gameMode) {
 
 		if (g_Data.localPlayer != nullptr) {
 			C_GuiData* guiData = g_Data.clientInstance->getGuiData();
-			auto vecLock = Logger::GetTextToPrintLock();
+
 
 			if (guiData != nullptr) {
-				auto* stringPrintVector = Logger::GetTextToPrint();
+				{
+					auto vecLock = Logger::GetTextToPrintLock();
+					auto* stringPrintVector = Logger::GetTextToPrint();
 #ifdef _DEBUG
-				int numPrinted = 0;
-				std::vector<TextForPrint>::iterator it;
-				for (it = stringPrintVector->begin(); it != stringPrintVector->end(); ++it) {
-					numPrinted++;
-					if(numPrinted > 30){
-						break;
-					}
+					int numPrinted = 0;
+					std::vector<TextForPrint>::iterator it;
+					for (it = stringPrintVector->begin(); it != stringPrintVector->end(); ++it) {
+						numPrinted++;
+						if(numPrinted > 20){
+							break;
+						}
 
-					guiData->displayClientMessageNoSendF("%s%s%s%s", GOLD, it->time, RESET, it->text);
-				}
-				stringPrintVector->erase(stringPrintVector->begin(), it);
+						guiData->displayClientMessageNoSendF("%s%s%s%s", GOLD, it->time, RESET, it->text);
+					}
+					stringPrintVector->erase(stringPrintVector->begin(), it);
 #else
-				stringPrintVector->clear();
+					stringPrintVector->clear();
 #endif
+				}
+				{
+					auto lock = std::lock_guard<std::mutex>(g_Data.textPrintLock);
+
+					auto& stringPrintVector = g_Data.textPrintList;
+					int numPrinted = 0;
+					std::vector<std::string>::iterator it;
+					for (it = stringPrintVector.begin(); it != stringPrintVector.end(); ++it) {
+						numPrinted++;
+						if(numPrinted > 20){
+							break;
+						}
+
+						guiData->displayClientMessageNoSendF(it->c_str());
+					}
+					stringPrintVector.erase(stringPrintVector.begin(), it);
+				}
 			}
 		}
 	}
@@ -236,4 +255,14 @@ void GameData::callInjectorResponseCallback(int id, std::shared_ptr<HorionDataPa
 	}
 	this->injectorToHorionResponseCallbacks[id](packet);
 	this->injectorToHorionResponseCallbacks.erase(id);
+}
+void GameData::log(const char* fmt, ...) {
+	auto lock = std::lock_guard<std::mutex>(g_Data.textPrintLock);
+	va_list arg;
+	va_start(arg, fmt);
+	char message[300];
+	vsprintf_s(message, 300, fmt, arg);
+	std::string msg(message);
+	g_Data.textPrintList.push_back(msg);
+	va_end(arg);
 }

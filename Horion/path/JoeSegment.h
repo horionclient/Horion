@@ -15,10 +15,12 @@ class JoeSegment {
 private:
 	JoeSegmentType segmentType;
 	vec3_ti start, end;
+	float cost;
 public:
-	JoeSegment(JoeSegmentType type, vec3_ti& start, vec3_ti& stop);
+	JoeSegment(JoeSegmentType type, vec3_ti& start, vec3_ti& stop, float cost);
 	void draw();
 	JoeSegmentType getSegmentType() const;
 	const vec3_ti& getStart() const;
 	const vec3_ti& getEnd() const;
+	float getCost() const;
 };

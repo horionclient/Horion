@@ -24,9 +24,9 @@ protected:
 	inline float assertFloat(std::string string) { return std::stof(string); };
 	inline int assertInt(std::string string) { return std::stoi(string); };
 
-	void registerAlias(const char* str);;
+	void registerAlias(const char* str);
 
-	void clientMessageF(const char* fmt, ...);;
+	void clientMessageF(const char* fmt, ...);
 
 public:
 	IMCCommand(const char* command, const char* description, const char* usage);

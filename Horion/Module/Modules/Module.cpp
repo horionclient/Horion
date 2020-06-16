@@ -2,6 +2,7 @@
 
 #include "../../../Utils/Json.hpp"
 #include "../../../Utils/Logger.h"
+#include <cstdarg>
 
 using json = nlohmann::json;
 
@@ -266,6 +267,17 @@ bool IModule::callWhenDisabled() {
 void IModule::onMove(C_MoveInputHandler*) {
 }
 void IModule::onLevelRender() {
+}
+void IModule::clientMessageF(const char* fmt, ...) {
+	va_list arg;
+	va_start(arg, fmt);
+
+	char message[300];
+	vsprintf_s(message, 300, fmt, arg);
+
+	GameData::log("[%s]: %s", this->getModuleName(), message);
+
+	va_end(arg);
 }
 
 void SettingEntry::makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {

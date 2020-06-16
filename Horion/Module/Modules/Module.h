@@ -68,6 +68,8 @@ protected:
 	void registerIntSetting(std::string name, int* intpTr, int defaultValue, int minValue, int maxValue);
 	void registerBoolSetting(std::string name, bool* boolPtr, bool defaultValue);
 
+	void clientMessageF(const char* fmt, ...);
+
 public:
 	virtual ~IModule();
 
