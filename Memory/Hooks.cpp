@@ -2016,7 +2016,14 @@ void Hooks::LevelRendererPlayer__renderNameTags(__int64 a1, __int64 a2, TextHold
 	static auto nameTagsMod = moduleMgr->getModule<NameTags>();
 
 	if (nameTagsMod->isEnabled() && nameTagsMod->nameTags.size() > 0) {
-		if (nameTagsMod->nameTags.find(a3->getText()) != nameTagsMod->nameTags.end())
+
+		std::string text = Utils::sanitize(a3->getText());
+		std::size_t found = text.find('\n');
+
+		if (found != std::string::npos)
+			text = text.substr(0, found);
+		
+		if (nameTagsMod->nameTags.find(text) != nameTagsMod->nameTags.end())
 			return;
 	}
 
