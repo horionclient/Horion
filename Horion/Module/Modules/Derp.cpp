@@ -14,15 +14,15 @@ const char* Derp::getModuleName() {
 
 void Derp::onTick(C_GameMode* gm) {
 	if (packetMode) {
-		C_MovePlayerPacket* p = new C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
+		C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
 		if (epicStroke) {
-			p->pitch = (float)(rand() % 360);
-			p->yaw = (float)(rand() % 360);
+			p.pitch = (float)(rand() % 360);
+			p.yaw = (float)(rand() % 360);
 		} else {
-			p->pitch = (float)(counter % 360);
-			p->yaw = (float)(counter % 360);
+			p.pitch = (float)(counter % 360);
+			p.yaw = (float)(counter % 360);
 		}
-		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(p);
+		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
 	} else {
 		if (epicStroke) {
 			gm->player->pitch = (float)(rand() % 360);

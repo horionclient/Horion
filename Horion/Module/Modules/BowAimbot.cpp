@@ -44,39 +44,37 @@ void BowAimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	if (!(GameData::isRightClickDown() && GameData::canUseMoveKeys())) // is aiming?
 		return;
 
-	vec3_t origin = g_Data.getClientInstance()->levelRenderer->origin;
-
 	targetList.clear();
 
 	g_Data.forEachEntity(findTargets);
 
-	if (targetList.size() > 0) {
+	if (!targetList.empty()) {
 		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
-		vec3_t origin = g_Data.getClientInstance()->levelRenderer->origin;  // TODO: sort list
+		vec3_t origin = g_Data.getLocalPlayer()->eyePos0;  // TODO: sort list
 		C_Entity* entity = targetList[0];
-		vec3_t pos = *entity->getPos();
-
+		vec3_t pos = entity->eyePos0;
+		pos = {13.f, 8.5f, 21.5f};
 		pos = pos.sub(origin);
 		float yaw = (atan2f(pos.z, pos.x) * DEG_RAD) - 90;
 		float len = pos.magnitudexz();
-		constexpr float g = 0.006f;  // nukkit = 0.012, some servers need different values
+		constexpr float g = 0.002f;  // nukkit = 0.012, some servers need different values
 		float tmp = 1 - g * (g * (len * len) + 2 * pos.y);
 		float pitch = DEG_RAD * -atanf((1 - sqrtf(tmp)) / (g * len));
 
-		if (silent) {
-			angle = vec2_t(pitch, yaw);
-			C_MovePlayerPacket* p = new C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
-			p->pitch = angle.x;
-			p->yaw = angle.y;
-			p->headYaw = angle.y;
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(p);
+		if (this->silent) {
+			this->angle = vec2_t(pitch, yaw);
+			C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
+			p.pitch = angle.x;
+			p.yaw = angle.y;
+			p.headYaw = angle.y;
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
 		} else {
 			if (pitch < 89 && pitch > -89) {
 				vec2_t angles = vec2_t(pitch, yaw);
 
 				vec2_t appl = angles.sub(localPlayer->viewAngles).normAngles();
 				appl.x = -appl.x;
-				appl.div(7);  // Smooth dat boi
+				appl = appl.div(7);  // Smooth dat boi
 
 				localPlayer->applyTurnDelta(&appl);
 			}
@@ -86,12 +84,11 @@ void BowAimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 
 void BowAimbot::onSendPacket(C_Packet* packet) {
 	if (packet->isInstanceOf<C_MovePlayerPacket>() && silent) {
-		vec2_t angle = this->angle;
-		if (targetList.size() > 0) {
-			C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
-			movePacket->pitch = angle.x;
-			movePacket->headYaw = angle.y;
-			movePacket->yaw = angle.y;
+		if (!targetList.empty()) {
+			auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+			movePacket->pitch = this->angle.x;
+			movePacket->headYaw = this->angle.y;
+			movePacket->yaw = this->angle.y;
 		}
 	}
 }

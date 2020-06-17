@@ -65,8 +65,8 @@ bool Scaffold::findBlock() {
 		C_ItemStack* stack = inv->getItemStack(n);
 		if (stack->item != nullptr) {
 			if ((*stack->item)->isBlock() && (*stack->item)->itemId != 0) {
-				auto* a = new C_MobEquipmentPacket(id, *stack, n, n);
-				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
+				auto a = C_MobEquipmentPacket(id, *stack, n, n);
+				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
 				return true;
 			}
 		}

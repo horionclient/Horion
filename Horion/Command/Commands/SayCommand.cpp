@@ -40,12 +40,11 @@ bool SayCommand::execute(std::vector<std::string>* args) {
 			os << " ";
 		os << args->at(i);
 	}
-	C_TextPacket* textPacket = new C_TextPacket();
-	textPacket->message.setText(parse(os.str()));
-	textPacket->sourceName.setText(g_Data.getLocalPlayer()->getNameTag()->getText());
-	textPacket->xboxUserId = std::to_string(g_Data.getLocalPlayer()->getUserId());
-	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(textPacket);
-	delete textPacket;
+	C_TextPacket textPacket;
+	textPacket.message.setText(parse(os.str()));
+	textPacket.sourceName.setText(g_Data.getLocalPlayer()->getNameTag()->getText());
+	textPacket.xboxUserId = std::to_string(g_Data.getLocalPlayer()->getUserId());
+	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&textPacket);
 
 	clientMessageF("[%sHorion%s] %sSent Message", GOLD, WHITE, GREEN);
 	return true;

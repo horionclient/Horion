@@ -53,12 +53,11 @@ bool SpammerCommand::execute(std::vector<std::string>* args) {
 		}
 		std::string text = os.str().substr(1);
 		for (int i = 0; i < times; i++) {
-			C_TextPacket* textPacket = new C_TextPacket();
-			textPacket->message.setText(text + (spamMod->getBypass() ? (" | " + Utils::randomString(8)) : ""));
-			textPacket->sourceName = *g_Data.getLocalPlayer()->getNameTag();
-			textPacket->xboxUserId = TextHolder(std::to_string(g_Data.getLocalPlayer()->getUserId()));
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(textPacket);
-			delete textPacket;
+			C_TextPacket textPacket;
+			textPacket.message.setText(text + (spamMod->getBypass() ? (" | " + Utils::randomString(8)) : ""));
+			textPacket.sourceName = *g_Data.getLocalPlayer()->getNameTag();
+			textPacket.xboxUserId = TextHolder(std::to_string(g_Data.getLocalPlayer()->getUserId()));
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&textPacket);
 		}
 		return true;
 	}

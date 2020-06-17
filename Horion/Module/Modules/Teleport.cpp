@@ -40,19 +40,19 @@ void Teleport::onTick(C_GameMode* gm) {
 		tpPos.y += (gm->player->getPos()->y - gm->player->getAABB()->lower.y) + 1;  // eye height + 1
 		if (bypass) {
 			vec3_t posNew = tpPos;
-			C_MovePlayerPacket* a = new C_MovePlayerPacket(g_Data.getLocalPlayer(), posNew);
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
-			delete a;
+			C_MovePlayerPacket a(g_Data.getLocalPlayer(), posNew);
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
+
 			posNew.y += 1.5f;
 			gm->player->setPos(posNew);
-			C_MovePlayerPacket* a2 = new C_MovePlayerPacket(g_Data.getLocalPlayer(), posNew);
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a2);
-			delete a2;
+			C_MovePlayerPacket a2(g_Data.getLocalPlayer(), posNew);
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a2);
+
 			posNew.y -= 2.f;
 			gm->player->setPos(posNew);
-			C_MovePlayerPacket* a3 = new C_MovePlayerPacket(g_Data.getLocalPlayer(), posNew);
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a3);
-			delete a3;
+			C_MovePlayerPacket a3(g_Data.getLocalPlayer(), posNew);
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a3);
+
 		}
 		gm->player->setPos(tpPos);
 		shouldTP = false;
