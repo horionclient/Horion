@@ -305,37 +305,46 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 	std::string text = ent->getNameTag()->getText();
 	text = Utils::sanitize(text);
 
-	float textStr = getTextWidth(&text);
+	float textWidth = getTextWidth(&text, textSize);
+	float textHeight = DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() * textSize;
 
 	if (refdef->OWorldToScreen(origin, ent->eyePos0, textPos, fov, screenSize)) {
-		textPos.y -= 10.f;
-		textPos.x -= textStr / 2.f;
+		textPos.y -= textHeight;
+		textPos.x -= textWidth / 2.f;
 		rectPos.x = textPos.x - 1.f;
 		rectPos.y = textPos.y - 1.f;
-		rectPos.z = textPos.x + textStr;
-		rectPos.w = textPos.y + 10.f;
+		rectPos.z = textPos.x + textWidth + 1.f;
+		rectPos.w = textPos.y + textHeight + 2.f;
 		vec4_t subRectPos = rectPos;
 		subRectPos.y = subRectPos.w - 1.f;
-		fillRectangle(rectPos, MC_Color(13, 29, 48), 0.5f);
-		fillRectangle(subRectPos, MC_Color(28, 107, 201), 0.5f);
+		fillRectangle(rectPos, MC_Color(13, 29, 48), 0.8f);
+		fillRectangle(subRectPos, MC_Color(28, 107, 201), 0.8f);
 		drawText(textPos, &text, MC_Color(255, 255, 255), textSize);
 
 		static auto nameTagsMod = moduleMgr->getModule<NameTags>();
 
 		if (ent->getEntityTypeId() == 63 && nameTagsMod->displayArmor) {  // is player, show armor
 			auto* player = reinterpret_cast<C_Player*>(ent);
-			static float constexpr scale = 0.5f;
-			static float constexpr opacity = 0.25f;
-			static float constexpr spacing = scale + 15.f;
-			float x = (rectPos.z + rectPos.x ) / 2.f - 10.f;
-			float y = rectPos.w - 20.f;
+			float scale = textSize * 0.6f;
+			float spacing = scale + 15.f;
+			float x = rectPos.x + 1.f;
+			float y = rectPos.y - 20.f * scale;
+			// armor
 			for (int i = 0; i < 4; i++) {
 				C_ItemStack* stack = player->getArmor(i);
 				if (stack->item != nullptr) {
-					DrawUtils::drawItem(stack, vec2_t(x, y), opacity, scale, stack->isEnchanted());
+					DrawUtils::drawItem(stack, vec2_t(x, y), 1.f, scale, stack->isEnchanted());
 					x += scale * spacing;
 				}
 			}
+			// item
+			{
+				C_ItemStack* stack = player->getSelectedItem();
+				if (stack->item != nullptr) {
+					DrawUtils::drawItem(stack, vec2_t(rectPos.z - 1.f - 15.f * scale, y), 1.f, scale, stack->isEnchanted());
+				}
+			}
+			
 		}
 	}
 }
@@ -349,7 +358,7 @@ void DrawUtils::drawEntityBox(C_Entity* ent, float lineWidth) {
 	AABB render(lerped, ent->width, ent->height, end->y - ent->aabb.lower.y);
 	render.upper.y += 0.1f;
 
-	drawBox(render.lower, render.upper, lineWidth);
+	drawBox(render.lower, render.upper, lineWidth, true);
 }
 
 void DrawUtils::draw2D(C_Entity* ent, float lineWidth) {

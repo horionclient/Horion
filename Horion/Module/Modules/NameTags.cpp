@@ -25,7 +25,8 @@ void drawNameTags(C_Entity* ent, bool isRegularEntitie) {
 			return;
 		if (Target::isValidTarget(ent) && nameTagsMod != nullptr) {
 			nameTagsMod->nameTags.insert(ent->getNameTag()->getText());
-			DrawUtils::drawNameTags(ent, 0.95f);
+			float dist = ent->getPos()->dist(*g_Data.getLocalPlayer()->getPos());
+			DrawUtils::drawNameTags(ent, fmax(0.6f, 1.5f / dist));
 		}
 			
 	}
