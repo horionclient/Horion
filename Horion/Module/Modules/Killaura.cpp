@@ -21,7 +21,7 @@ static std::vector<C_Entity*> targetList;
 void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 	static auto killauraMod = moduleMgr->getModule<Killaura>();
 
-	if (currentEntity == NULL)
+	if (currentEntity == nullptr)
 		return;
 	
 	if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
@@ -62,7 +62,7 @@ void Killaura::findWeapon() {
 	int slot = supplies->selectedHotbarSlot;
 	for (int n = 0; n < 9; n++) {
 		C_ItemStack* stack = inv->getItemStack(n);
-		if (stack->item != NULL) {
+		if (stack->item != nullptr) {
 			float currentDamage = stack->getAttackingDamageWithEnchants();
 			if (currentDamage > damage) {
 				damage = currentDamage;
@@ -81,7 +81,7 @@ void Killaura::onTick(C_GameMode* gm) {
 	g_Data.forEachEntity(findEntity);
 
 	Odelay++;
-	if (!targetList.empty() &&Odelay >= delay) {
+	if (!targetList.empty() && Odelay >= delay) {
 		if (autoweapon) findWeapon();
 
 		if (!moduleMgr->getModule<NoSwing>()->isEnabled()) 
@@ -89,8 +89,8 @@ void Killaura::onTick(C_GameMode* gm) {
 
 		// Attack all entitys in targetList
 		if (isMulti) {
-			for (int i = 0; i < targetList.size(); i++) {
-				g_Data.getCGameMode()->attack(targetList[i]);
+			for (auto & i : targetList) {
+				g_Data.getCGameMode()->attack(i);
 			}
 		} else {
 			g_Data.getCGameMode()->attack(targetList[0]);
@@ -107,7 +107,7 @@ void Killaura::onEnable() {
 void Killaura::onSendPacket(C_Packet* packet) {
 	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && silent) {
 		if (!targetList.empty()) {
-			C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+			auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
 			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos());
 			movePacket->pitch = angle.x;
 			movePacket->headYaw = angle.y;
