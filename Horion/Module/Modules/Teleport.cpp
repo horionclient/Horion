@@ -2,7 +2,7 @@
 
 Teleport::Teleport() : IModule(0x0, Category::MISC, "Click a block to teleport to it") {
 	registerBoolSetting("Only Hand", &this->onlyHand, this->onlyHand);
-	registerBoolSetting("Bypass", &this->bypass, this->bypass);
+	registerBoolSetting("Push", &this->bypass, this->bypass);
 }
 
 Teleport::~Teleport() {
@@ -39,22 +39,10 @@ void Teleport::onTick(C_GameMode* gm) {
 	if (shouldTP && gm->player->isSneaking()) {
 		tpPos.y += (gm->player->getPos()->y - gm->player->getAABB()->lower.y) + 1;  // eye height + 1
 		if (bypass) {
-			vec3_t posNew = tpPos;
-			C_MovePlayerPacket a(g_Data.getLocalPlayer(), posNew);
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
-
-			posNew.y += 1.5f;
-			gm->player->setPos(posNew);
-			C_MovePlayerPacket a2(g_Data.getLocalPlayer(), posNew);
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a2);
-
-			posNew.y -= 2.f;
-			gm->player->setPos(posNew);
-			C_MovePlayerPacket a3(g_Data.getLocalPlayer(), posNew);
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a3);
-
+			float dist = gm->player->getPos()->dist(tpPos);
+			g_Data.getLocalPlayer()->lerpTo(tpPos, vec2_t(1, 1), fmax((int)dist * 0.1, 1));
 		}
-		gm->player->setPos(tpPos);
+		else gm->player->setPos(tpPos);
 		shouldTP = false;
 	}
 }
