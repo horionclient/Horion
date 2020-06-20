@@ -77,16 +77,16 @@ void CommandMgr::execute(char* message) {
 		std::string cmd = args[0];
 		std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
 
-		for (std::vector<IMCCommand*>::iterator it = this->commandList.begin(); it != this->commandList.end(); ++it) {
+		for (auto it = this->commandList.begin(); it != this->commandList.end(); ++it) {
 			IMCCommand* c = *it;
 			auto* aliases = c->getAliasList();
-			for (std::vector<std::string>::iterator it = aliases->begin(); it != aliases->end(); ++it) {
+			for (auto it = aliases->begin(); it != aliases->end(); ++it) {
 				if (*it == cmd) {
 					try {
 						if (!c->execute(&args))
-							g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s%c%s %s", RED, BOLD, RESET, cmdMgr->prefix, c->getCommand(), c->getUsage());
+							g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s%c%s %s", RED, BOLD, RESET, cmdMgr->prefix, c->getCommand(), c->getUsage(cmd.c_str()));
 					} catch (...) {
-						g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s%c%s %s", RED, BOLD, RESET, cmdMgr->prefix, c->getCommand(), c->getUsage());
+						g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s%sUsage: %s%c%s %s", RED, BOLD, RESET, cmdMgr->prefix, c->getCommand(), c->getUsage(cmd.c_str()));
 					}
 					return;
 				}

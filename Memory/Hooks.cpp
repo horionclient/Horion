@@ -976,10 +976,10 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 		std::set<LilPlump> searchResults;
 
 		std::vector<IMCCommand*>* commandList = cmdMgr->getCommandList();
-		for (std::vector<IMCCommand*>::iterator it = commandList->begin(); it != commandList->end(); ++it) {  // Loop through commands
+		for (auto it = commandList->begin(); it != commandList->end(); ++it) {  // Loop through commands
 			IMCCommand* c = *it;
 			auto* aliasList = c->getAliasList();
-			for (std::vector<std::string>::iterator it = aliasList->begin(); it != aliasList->end(); ++it) {  // Loop through aliases
+			for (auto it = aliasList->begin(); it != aliasList->end(); ++it) {  // Loop through aliases
 				std::string cmd = *it;
 				LilPlump plump;
 
@@ -1008,7 +1008,7 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 			}
 		}
 
-		if (searchResults.size() > 0) {
+		if (!searchResults.empty()) {
 			LilPlump firstResult = *searchResults.begin();
 
 			size_t maxReplaceLength = firstResult.cmdAlias.size();
@@ -1056,10 +1056,10 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 						return;
 					}
 				}
-				if (firstResult.command->getUsage()[0] == 0x0)
+				if (firstResult.command->getUsage(firstResult.cmdAlias.c_str() + 1)[0] == 0)
 					g_Data.getGuiData()->displayClientMessageF("%s%s %s- %s", WHITE, firstResult.cmdAlias.c_str(), GRAY, firstResult.command->getDescription());
 				else
-					g_Data.getGuiData()->displayClientMessageF("%s%s %s %s- %s", WHITE, firstResult.cmdAlias.c_str(), firstResult.command->getUsage(), GRAY, firstResult.command->getDescription());
+					g_Data.getGuiData()->displayClientMessageF("%s%s %s %s- %s", WHITE, firstResult.cmdAlias.c_str(), firstResult.command->getUsage(firstResult.cmdAlias.c_str() + 1 /*exclude prefix*/), GRAY, firstResult.command->getDescription());
 			}
 
 			if (firstResult.shouldReplace) {

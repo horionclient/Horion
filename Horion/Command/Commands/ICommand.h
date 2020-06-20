@@ -35,6 +35,6 @@ public:
 	virtual const char* getCommand() { return _command; };
 	virtual std::vector<std::string>* getAliasList() { return &aliasList; };
 	virtual const char* getDescription() { return _description; };
-	virtual const char* getUsage() { return _usage; };
+	virtual const char* getUsage(const char* alias) { return _usage; };
 	virtual bool execute(std::vector<std::string>* args) = 0;
 };
