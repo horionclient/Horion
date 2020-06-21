@@ -386,7 +386,7 @@ std::pair<float, float> getSlope(std::vector<float>& x, std::vector<float>& y){
 	const auto s_xx = std::inner_product(x.begin(), x.end(), x.begin(), 0.0);
 	const auto s_xy = std::inner_product(x.begin(), x.end(), y.begin(), 0.0);
 	const auto a    = (n * s_xy - s_x * s_y) / (n * s_xx - s_x * s_x);
-	return std::make_pair(a, (s_y / n) - (a * (s_x / n)));
+	return std::make_pair((float)a, (float)((s_y / n) - (a * (s_x / n))));
 }
 
 JoePath JoePathFinder::findPath() {
@@ -526,7 +526,7 @@ JoePath JoePathFinder::findPath() {
 		for(int i = 0; i < 150; i++){
 			if(numDist[coeff][i] == 0)
 				continue;
-			xAxis.push_back(i);
+			xAxis.push_back((float)i);
 			yAxis.push_back(heuristicByDist[coeff][i] / (float)numDist[coeff][i]);
 		}
 		auto slope = getSlope(xAxis, yAxis);

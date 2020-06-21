@@ -368,6 +368,7 @@
     <ClCompile Include="Horion\Scripting\Functions\GameFunctions.cpp" />
     <ClCompile Include="Horion\Scripting\Functions\GlobalFunctions.cpp" />
     <ClCompile Include="Horion\Scripting\Functions\HorionFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\LevelFunctions.cpp" />
     <ClCompile Include="Horion\Scripting\Functions\LocalPlayerFunctions.cpp" />
     <ClCompile Include="Horion\Scripting\Functions\ModuleManagerFunctions.cpp" />
     <ClCompile Include="Horion\Scripting\Functions\Vector3Functions.cpp" />
@@ -547,6 +548,7 @@
     <ClInclude Include="Horion\Scripting\Functions\GameFunctions.h" />
     <ClInclude Include="Horion\Scripting\Functions\GlobalFunctions.h" />
     <ClInclude Include="Horion\Scripting\Functions\HorionFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\LevelFunctions.h" />
     <ClInclude Include="Horion\Scripting\Functions\LocalPlayerFunctions.h" />
     <ClInclude Include="Horion\Scripting\Functions\ModuleManagerFunctions.h" />
     <ClInclude Include="Horion\Scripting\Functions\Vector3Functions.h" />

@@ -117,7 +117,7 @@ void FollowPathModule::onMove(C_MoveInputHandler *handler) {
 				this->setEnabled(false);
 				return;
 			}
-			for(int i = curPath->getNumSegments() - 1; i > this->movementController->getCurrentPathSegment(); i--){
+			for(size_t i = curPath->getNumSegments() - 1; i > this->movementController->getCurrentPathSegment(); i--){
 				auto cur = curPath->getSegment(i);
 				timeSpent += cur.getCost();
 				if(timeSpent > 11)

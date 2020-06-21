@@ -8,6 +8,9 @@ JsValueRef CALLBACK GameFunctions::getClient(JsValueRef callee, bool isConstruct
 }
 
 JsValueRef CALLBACK GameFunctions::getLocalPlayer(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
-	
 	return scriptMgr.getLocalPlayer(reinterpret_cast<ContextObjects*>(callbackState));
+}
+
+JsValueRef CALLBACK GameFunctions::getLevel(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	return reinterpret_cast<ContextObjects*>(callbackState)->levelObject;
 }

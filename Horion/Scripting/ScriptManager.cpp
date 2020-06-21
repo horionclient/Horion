@@ -7,6 +7,8 @@ ScriptManager scriptMgr;
 
 JsValueRef ScriptManager::prepareEntity(long long runtimeId, ContextObjects* objs) {
 	JsValueRef obj = JS_INVALID_REFERENCE;
+	if(g_Data.isInGame() && g_Data.getLocalPlayer()->entityRuntimeId == runtimeId)
+		runtimeId = -1;
 	EntityInfo* data = new EntityInfo(runtimeId);
 	auto err = chakra.JsCreateExternalObject_(
 		data, [](void* buf) {
@@ -82,6 +84,7 @@ void ScriptManager::prepareGameFunctions(JsValueRef global, ContextObjects* objs
 
 	chakra.defineFunction(gameObject, L"getClient", GameFunctions::getClient, objs);
 	chakra.defineFunction(gameObject, L"getLocalPlayer", GameFunctions::getLocalPlayer, objs);
+	chakra.defineFunction(gameObject, L"getLevel", GameFunctions::getLevel, objs);
 }
 
 void ScriptManager::prepareHorionFunctions(JsValueRef global, ContextObjects* obj) {
@@ -149,6 +152,7 @@ void ScriptManager::prepareContext(JsContextRef* ctx, ContextObjects* obj) {
 	prepareHorionFunctions(globalObject, obj);
 	prepareGameFunctions(globalObject, obj);
 	prepareVector3Prototype(globalObject, obj);
+	prepareLevelFunctions(globalObject, obj);
 
 	chakra.JsCreateObject_(&obj->entityPrototype);
 	chakra.JsAddRef_(obj->entityPrototype, 0);
@@ -234,6 +238,15 @@ JsValueRef ScriptManager::prepareJsModule(std::shared_ptr<JavascriptModule> mod,
 	}
 
 	return obj;
+}
+
+void ScriptManager::prepareLevelFunctions(JsValueRef global, ContextObjects* objs) {
+	chakra.JsCreateObject_(&objs->levelObject);
+	chakra.JsAddRef_(objs->levelObject, 0);
+
+	chakra.defineFunction(objs->levelObject, L"isValid", LevelFunctions::isValid, objs);
+	chakra.defineFunction(objs->levelObject, L"getAllEntities", LevelFunctions::getAllEntities, objs);
+	chakra.defineFunction(objs->levelObject, L"getAllTargetEntities", LevelFunctions::getAllTargetEntities, objs);
 }
 
 JsValueRef ScriptManager::getLocalPlayer(ContextObjects* obs) {

@@ -21,6 +21,12 @@ void C_GuiData::displayClientMessageF(const char *fmt, ...) {
 	va_end(arg);
 }
 void C_GuiData::displayClientMessageVA(const char *fmt, va_list lis, bool sendToInjector) {
+	auto lengthNeeded = _vscprintf(fmt, lis) + 1;
+	if(lengthNeeded >= 300) {
+		logF("A message that was %i characters long could not be fitted into the buffer", lengthNeeded);
+		return;
+	}
+
 	char message[300];
 	vsprintf_s(message, 300, fmt, lis);
 	std::string msg(message);

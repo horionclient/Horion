@@ -71,6 +71,7 @@ extern ScriptManager scriptMgr;
 #include "Functions/HorionFunctions.h"
 #include "Functions/CommandManagerFunctions.h"
 #include "Functions/ModuleManagerFunctions.h"
+#include "Functions/LevelFunctions.h"
 
 #include "ScriptInstance.h"
 
@@ -84,19 +85,10 @@ public:
 	JsValueRef localPlayerPrototype = JS_INVALID_REFERENCE;
 	JsValueRef moduleManager = JS_INVALID_REFERENCE;
 	JsValueRef commandManager = JS_INVALID_REFERENCE;
+	JsValueRef levelObject = JS_INVALID_REFERENCE;
 	JsValueRef modulePrototype = JS_INVALID_REFERENCE;
 	JsValueRef jsModulePrototype = JS_INVALID_REFERENCE;
 	ScriptInstance* scriptInstance = 0;
-
-	/*
-	~ContextObjects(){
-		if (vec3Prototype != JS_INVALID_REFERENCE)
-			chakra.JsRelease_(vec3Prototype, 0);
-		if (entityPrototype != JS_INVALID_REFERENCE)
-			chakra.JsRelease_(entityPrototype, 0);
-		if (localPlayerPrototype != JS_INVALID_REFERENCE)
-			chakra.JsRelease_(localPlayerPrototype, 0);
-	}*/
 };
 
 class ScriptManager {
@@ -116,7 +108,8 @@ private:
 	void prepareModuleManagerFunctions(JsValueRef global, ContextObjects* obj);
 	void prepareModuleFunctions(JsValueRef proto, ContextObjects* obj);
 	void prepareJsModuleFunctions(JsValueRef proto, ContextObjects* obj);
-	
+	void prepareLevelFunctions(JsValueRef global, ContextObjects* objs);
+
 public:
 	void prepareContext(JsContextRef* ctx, ContextObjects* obj);
 	JsValueRef prepareEntity(__int64 runtimeId, ContextObjects* obj);

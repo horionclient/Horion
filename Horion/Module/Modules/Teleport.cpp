@@ -40,7 +40,7 @@ void Teleport::onTick(C_GameMode* gm) {
 		tpPos.y += (gm->player->getPos()->y - gm->player->getAABB()->lower.y) + 1;  // eye height + 1
 		if (bypass) {
 			float dist = gm->player->getPos()->dist(tpPos);
-			g_Data.getLocalPlayer()->lerpTo(tpPos, vec2_t(1, 1), fmax((int)dist * 0.1, 1));
+			g_Data.getLocalPlayer()->lerpTo(tpPos, vec2_t(1, 1), (int)fmax((int)dist * 0.1, 1));
 		}
 		else gm->player->setPos(tpPos);
 		shouldTP = false;
