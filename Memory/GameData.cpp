@@ -5,21 +5,19 @@ GameData g_Data;
 void GameData::retrieveClientInstance() {
 	static uintptr_t clientInstanceOffset = 0x0;
 	if (clientInstanceOffset == 0x0) {
-		uintptr_t sigOffset = FindSignature("4C 89 35 ?? ?? ?? ?? 48 8B 5C 24 ?? 48 8B 6C 24 ?? 48 83 C4 ??");
+		uintptr_t sigOffset = FindSignature("48 8B 0D ?? ?? ?? ?? 48 8B 01 FF 90 ?? ?? ?? ?? 4C 8B E0");
 		if (sigOffset != 0x0) {
 			int offset = *reinterpret_cast<int*>((sigOffset + 3));                                                 // Get Offset from code
 			clientInstanceOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instruction*/ 7;  // Offset is relative
 			logF("clinet: %llX", clientInstanceOffset);
 		}
 	}
-	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + clientInstanceOffset, {0x0, 0x30}));
+
+	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + clientInstanceOffset, {0x0, 0x78, 0x160}));
 #ifdef _DEBUG
 	if (g_Data.clientInstance == 0)
 		throw std::exception("Client Instance is 0");
 #endif
-
-	// 4C 8B F8 48 8B 0D ?? ?? ?? ?? 48 8B 11
-	// 1.11.1 : 0x0250A2D0
 }
 
 TextHolder* GameData::getGameVersion() {

@@ -36,24 +36,21 @@ public:
 
 struct C_FontRepository {
 private:
-	uintptr_t* shared_ptr_vtable;       // 0x0000
-	int idk1;                           // 0x0008
-	int idk2;                           // 0x000C
-	uintptr_t* font_repository_vtable;  // 0x0010
-	void* appPlatform;                  // 0x0018
-	void* ptrToSelf;                    // 0x0020
-	void* ptrToSelfSharedPtr;           // 0x0028
-	__int64 unknown;                    // 0x0030
+	uintptr_t* font_repository_vtable;  // 0x0000
+	__int64 pad;                        // 0x0008
+	void* ptrToSelf;                    // 0x0010
+	void* ptrToSelfSharedPtr;           // 0x0018
+	__int64 pad2;                       // 0x0020
 public:
-	C_FontRepository_FontList* fontList;   //0x0038
+	C_FontRepository_FontList* fontList;   //0x0028
 	//C_FontRepository_FontList* fontList1;  //0x0040
 };
 
 class MinecraftGame {
 private:
-	char filler[0x130];  //0x0000
+	char filler[0x140];  //0x0000
 public:
-	C_FontRepository* fontRepository;  //0x130
+	C_FontRepository* fontRepository;  //0x140
 private:
 	char pad_0x128[0xF0];  //0x138
 public:
