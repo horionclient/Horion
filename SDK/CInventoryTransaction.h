@@ -1,5 +1,6 @@
 #pragma once
 #include "../Utils/HMath.h"
+#include "CItem.h"
 #include "CInventory.h"
 
 class C_InventoryAction {
@@ -17,8 +18,8 @@ public:
 	}
 
 public:
-	int type;        //0x0
-	int sourceType;  //0x4
+	int type;        //0x0  // named sourceType in nukkit
+	int sourceType;  //0x4 // sometimes windowId
 private:
 	int unknown;  //0x8
 public:
@@ -29,7 +30,11 @@ public:
 
 class C_InventoryTransaction {
 private:
-	char pad_0x0[0x58];  //0x0
+	char pad_0x0[8];
+public:
+	__int64 ptr; // 0x008
+private:
+	char pad_0x10[0x58 - 16];  //0x10
 };
 
 class C_InventoryTransactionManager {
@@ -40,10 +45,5 @@ private:
 	int unknown;  //0x60
 				  // Total size: 0x68
 public:
-	void addInventoryAction(C_InventoryAction const& action) {
-		using InventoryTransactionManager__addAction_t = void(__fastcall*)(C_InventoryTransactionManager*, C_InventoryAction const&);
-		static InventoryTransactionManager__addAction_t InventoryTransactionManager__addAction = reinterpret_cast<InventoryTransactionManager__addAction_t>(FindSignature("40 55 56 57 41 56 41 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 8B EA 4C 8B F1 4C 8B C2 48 8B 51 ?? 48 8B 49 ?? E8"));
-		if (InventoryTransactionManager__addAction != 0)
-			InventoryTransactionManager__addAction(this, action);
-	}
+	void addInventoryAction(C_InventoryAction const& action);
 };

@@ -7,7 +7,7 @@ BruhCommand::~BruhCommand() {
 }
 
 bool BruhCommand::execute(std::vector<std::string>* args) {
-	assertTrue(g_Data.getClientInstance()->getLocalPlayer() != nullptr);
+	assertTrue(g_Data.getLocalPlayer() != nullptr);
 
 	clientMessageF("bruh moment");
 	return true;

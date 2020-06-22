@@ -58,7 +58,7 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 				bool* oldKey = reinterpret_cast<bool*>(clickMap + key);
 				if (newKey != *oldKey) {
 					ClickGui::onMouseClickUpdate((int)key, newKey);
-					ImGui.onMouseClickUpdate((int)key, newKey);
+					HImGui.onMouseClickUpdate((int)key, newKey);
 					if (newKey == true) {
 						if ((int)key == 0)
 							g_Data.leftclickCount++;
@@ -76,7 +76,8 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 		Sleep(2);
 	}
 	logF("Stopping Threads...");
-	Sleep(150);  // Give the threads a bit of time to exit
+	g_Data.terminate();
+	Sleep(200);  // Give the threads a bit of time to exit
 
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1);  // Uninject
 }
@@ -123,8 +124,10 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	QueryPerformanceCounter(&timeSinceLastMessage);
 	QueryPerformanceCounter(&timeSinceLastPing);
 
+	bool loggedIn = false;
+
 	while (isRunning) {
-		Sleep(5);
+		Sleep(2);
 		LARGE_INTEGER endTime;
 		QueryPerformanceCounter(&endTime);
 		bool isConnected = horionToInjector->isPresent && injectorToHorion->isPresent && horionToInjector->protocolVersion >= injectorToHorion->protocolVersion;
@@ -160,6 +163,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 				switch (injectorToHorion->cmd) {
 				case CMD_INIT: {
 					logF("Got CMD_INIT from injector");
+					loggedIn = true;
 					int flags = injectorToHorion->params[0];
 					if (flags & (1 << 0) && injectorToHorion->dataSize > 0 && injectorToHorion->dataSize < sizeof(injectorToHorion->data)) {  // Has Json data
 						injectorToHorion->data[sizeof(injectorToHorion->data) - 1] = '\0';
@@ -169,23 +173,23 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 							auto serialNum = data.at("serial").get<unsigned int>();
 							if (serialNum == 0) {
 								logF("Serial is null!");
-								g_Data.terminate();
+								GameData::terminate();
 							}
 
 							auto roamingFolder = Logger::GetRoamingFolderPath();
 							if (roamingFolder.substr(0, 2) == L"C:") {  // Make sure we're getting a handle to the C volume
 
-								HANDLE file = CreateFileW(roamingFolder.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, 0);
+								HANDLE file = CreateFileW(roamingFolder.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, 0);
 								if (file != INVALID_HANDLE_VALUE) {
 									unsigned long serial = 0;
-									unsigned long maxNameLen = 0, flags = 0;
-									bool succ = GetVolumeInformationByHandleW(file, 0, 0, &serial, &maxNameLen, &flags, 0, 0);
+									unsigned long maxNameLen = 0, flags2 = 0;
+									bool succ = GetVolumeInformationByHandleW(file, 0, 0, &serial, &maxNameLen, &flags2, nullptr, 0);
 									if (succ) {
-										if (serial != serialNum) {
-											logF("Serial doesn't match!");
+										/*if (serial != serialNum) { // Dont print the raw values here, don't leak serials
+											logF("Serial doesn't match! (Diff: %lli)", (long long) serial - (long long)serialNum);
 											g_Data.terminate();
 										}
-										serialNum = serial;
+										serialNum = serial;*/
 									}
 									CloseHandle(file);
 								}
@@ -221,10 +225,23 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 						auto dataTemp = new unsigned char[injectorToHorion->dataSize + 2];
 						memset(dataTemp + injectorToHorion->dataSize, 0, 2);  // If we don't zero the last 2 bytes, printing as unicode string won't work
 						memcpy(dataTemp, injectorToHorion->data, injectorToHorion->dataSize);
-						pk->data.swap(std::shared_ptr<unsigned char[]>(dataTemp));
+						auto tmp = std::shared_ptr<unsigned char[]>(dataTemp);
+						pk->data.swap(tmp);
 					}
 
 					g_Data.callInjectorResponseCallback(id, pk);
+					break;
+				}
+				case CMD_LOG: {
+					if(injectorToHorion->dataSize > 4 && injectorToHorion->dataSize < 2999){
+						injectorToHorion->data[injectorToHorion->dataSize] = 0; // null terminator
+
+						char* command = reinterpret_cast<char*>(&injectorToHorion->data[3]);
+						if(command[1] == cmdMgr->prefix)
+							command++;
+
+						cmdMgr->execute(command);
+					}
 					break;
 				}
 				default:
@@ -232,6 +249,43 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 				}
 
 				injectorToHorion->isUnread = false;
+			}
+
+			// Send log messages
+			{
+				auto vecLock = Logger::GetTextToInjectorLock();;
+
+				if (loggedIn && g_Data.isPacketToInjectorQueueEmpty()) {
+					auto* stringPrintVector = Logger::GetTextToSend();
+#if defined(_DEBUG) or defined(_BETA)
+					if (stringPrintVector->size() > 0 && g_Data.isPacketToInjectorQueueEmpty()) {
+						auto str = *stringPrintVector->begin();
+						stringPrintVector->erase(stringPrintVector->begin());
+						
+						auto wstr = Utils::stringToWstring(str->text);
+						
+						const wchar_t* ident = L"log ";
+						size_t identLength = wcslen(ident);
+						size_t textLength = wcslen(wstr.c_str()) + identLength;
+
+						if(textLength < 2990){
+							HorionDataPacket packet;
+							packet.cmd = CMD_LOG;
+							auto tmp = std::shared_ptr<unsigned char[]>(new unsigned char[(textLength + 1) * sizeof(wchar_t)]);
+							packet.data.swap(tmp);
+							size_t leng = (textLength + 1) * sizeof(wchar_t);
+							wcscpy_s((wchar_t*)packet.data.get(), textLength, ident);
+							wcscpy_s((wchar_t*)(packet.data.get() + identLength * sizeof(wchar_t)), textLength - identLength + 1, wstr.c_str());
+							packet.dataArraySize = (int)wcslen((wchar_t*)packet.data.get()) * sizeof(wchar_t);
+
+							if(packet.dataArraySize < 2999)
+								g_Data.sendPacketToInjector(packet);
+						}
+					}
+#else
+					stringPrintVector->clear();
+#endif
+				}
 			}
 
 			if (!horionToInjector->isUnread && !g_Data.isPacketToInjectorQueueEmpty()) {
@@ -259,7 +313,7 @@ DWORD WINAPI injectorConnectionThread(LPVOID lpParam) {
 	horionToInjector->isPresent = false;
 	memset(magicValues, 0, sizeof(magicValues));
 	memset(magicArray, 0, sizeof(magicValues) + sizeof(uintptr_t) * 2);
-	Sleep(100);
+	Sleep(150);
 	delete *horionToInjectorPtr;
 	delete *injectorToHorionPtr;
 	delete[] magicArray;
@@ -343,10 +397,12 @@ BOOL __stdcall DllMain(HMODULE hModule,
 	case DLL_PROCESS_DETACH:
 		isRunning = false;
 
+		scriptMgr.unloadAllScripts();
 		configMgr->saveConfig();
 		moduleMgr->disable();
 		cmdMgr->disable();
 		Hooks::Restore();
+		//GameWnd.OnDeactivated();
 
 		logF("Removing logger");
 		Logger::Disable();
@@ -355,7 +411,7 @@ BOOL __stdcall DllMain(HMODULE hModule,
 		delete moduleMgr;
 		delete cmdMgr;
 		delete configMgr;
-		if (g_Data.getClientInstance()->getLocalPlayer() != nullptr) {
+		if (g_Data.getLocalPlayer() != nullptr) {
 			C_GuiData* guiData = g_Data.getClientInstance()->getGuiData();
 			if (guiData != nullptr && !GameData::shouldHide())
 				guiData->displayClientMessageF("%sUninjected!", RED);

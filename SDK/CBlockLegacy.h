@@ -1,14 +1,12 @@
 #pragma once
 
 #include "../Utils/HMath.h"
-#include "Tag.h"
-
+#include "TextHolder.h"
+//#include "Tag.h"
 
 class C_Material {
-private:
-	char pad[0x4];
-
 public:
+	int type; // 5 for water, 6 for lava
 	bool isFlammable;
 	bool isNeverBuildable;
 	bool isAlwaysDestroyable;
@@ -24,6 +22,10 @@ public:
 	bool isSuperHot;
 	float color[4];
 };
+
+class C_Entity;
+class C_Block;
+class C_BlockSource;
 
 class C_BlockLegacy {
 public:
@@ -42,6 +44,11 @@ private:
 	char pad_0x0106[0xA];  //0x0106
 public:
 	AABB aabb;  //0x00C8
+	// 0x00E4
+
+	int liquidGetDepth(C_BlockSource*, const vec3_ti* pos);
+	void liquidGetFlow(vec3_t* flowOut, C_BlockSource*, const vec3_ti* pos);
+	bool getCollisionShape(AABB* collShapeOut, C_Block* block, C_BlockSource* blockSource, const vec3_ti* pos, C_Entity* actor);
 };
 
 class C_Block {
@@ -49,16 +56,18 @@ private:
 	uintptr_t** vtable;
 
 public:
-	uint8_t data;
+	uint8_t data; // 0x8
 
 private:
 	char pad[0x7];
 
 public:
-	C_BlockLegacy** blockLegacy;
+	C_BlockLegacy** blockLegacy; // 0x10
 
 	inline C_BlockLegacy* toLegacy() { return *blockLegacy; }
 };
+
+class CompoundTag;
 
 class C_BlockActor {
 private:
@@ -71,15 +80,7 @@ public:
 
 class C_BlockSource {
 public:
-	C_Block* getBlock(const vec3_ti& block) {
-		using getBlock_t = C_Block*(__fastcall*)(C_BlockSource*, const vec3_ti&);
-		static getBlock_t getBlock = reinterpret_cast<getBlock_t>(FindSignature("40 53 48 83 EC ?? 48 8B DA 8B 52 ?? 85 D2"));
-		return getBlock(this, block);
-	};
+	C_Block* getBlock(const vec3_ti& block);;
 
-	C_BlockActor* getBlockEntity(const vec3_ti& block) {
-		using getBlockEntity_t = C_BlockActor*(__fastcall*)(C_BlockSource*, const vec3_ti&);
-		static getBlockEntity_t getBlockEntity = reinterpret_cast<getBlockEntity_t>(FindSignature("40 53 48 83 EC ?? 8B 02 48 8B DA C1 F8 ?? 89 44 24 ?? 8B 42 ?? 48 8D 54 24 ? C1 F8 04 89 44 24 ?? E8 ? ? ? ? 48 85 C0 74 31"));
-		return getBlockEntity(this, block);
-	}
+	C_BlockActor* getBlockEntity(const vec3_ti& block);
 };

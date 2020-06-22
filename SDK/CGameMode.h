@@ -2,7 +2,6 @@
 
 #include <stdint.h>
 
-#include "../Memory/MinHook.h"
 #include "../Utils/HMath.h"
 #include "CClientInstance.h"
 #include "CEntity.h"

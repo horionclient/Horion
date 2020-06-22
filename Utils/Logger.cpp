@@ -1,5 +1,12 @@
 #include "Logger.h"
 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <Windows.h>
+
+#include "Utils.h"
+
 #include <sstream>
 #include <windows.storage.h>
 #include <wrl.h>
@@ -12,8 +19,10 @@ char logPath[200];
 bool initializedLogger = false;
 bool loggerActive = true;
 CRITICAL_SECTION loggerLock;
-CRITICAL_SECTION vecLock;
+std::mutex vecMutex;
+std::mutex injMutex;
 std::vector<TextForPrint> stringPrintVector = std::vector<TextForPrint>();
+std::vector<std::shared_ptr<TextForPrintBig>> stringSendToInjector;
 
 std::wstring Logger::GetRoamingFolderPath() {
 	ComPtr<IApplicationDataStatics> appDataStatics;
@@ -41,7 +50,7 @@ std::wstring Logger::GetRoamingFolderPath() {
 	return std::wstring(roamingPathCStr, pathLength);
 }
 
-void Logger::WriteLogFileF(const char* fmt, ...) {
+void Logger::WriteLogFileF(volatile char* fmt, ...) {
 	if (!loggerActive)
 		return;
 	FILE* pFile;
@@ -50,7 +59,7 @@ void Logger::WriteLogFileF(const char* fmt, ...) {
 		initializedLogger = true;
 		InitializeCriticalSection(&loggerLock);
 		EnterCriticalSection(&loggerLock);
-		InitializeCriticalSection(&vecLock);
+
 
 		std::wstring roam = GetRoamingFolderPath();
 		sprintf_s(logPath, 200, "%S\\logs.txt", roam.c_str());
@@ -74,7 +83,7 @@ void Logger::WriteLogFileF(const char* fmt, ...) {
 
 		va_list arg;
 		va_start(arg, fmt);
-		int numCharacters = vsprintf_s(logMessage, 300, fmt, arg);
+		int numCharacters = vsprintf_s(logMessage, 300, const_cast<const char*>(fmt), arg);
 		va_end(arg);
 		fprintf(pFile, "%s%s", timeStamp, logMessage);
 		fprintf(pFile, "\n");
@@ -85,9 +94,15 @@ void Logger::WriteLogFileF(const char* fmt, ...) {
 			TextForPrint textForPrint;
 			strcpy_s(textForPrint.text, 100, logMessage);
 			strcpy_s(textForPrint.time, 20, timeStamp);
-			EnterCriticalSection(&vecLock);
+			auto lock = Logger::GetTextToPrintLock();
 			stringPrintVector.push_back(textForPrint);
-			LeaveCriticalSection(&vecLock);
+		}
+		if (numCharacters < 2900) {
+			auto textForPrint = std::make_shared<TextForPrintBig>();
+			strcpy_s(textForPrint->text, 2900, logMessage);
+			strcpy_s(textForPrint->time, 20, timeStamp);
+			auto lock = Logger::GetTextToInjectorLock();
+			stringSendToInjector.push_back(textForPrint);
 		}
 	}
 	LeaveCriticalSection(&loggerLock);
@@ -102,7 +117,6 @@ void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...) {
 		initializedLogger = true;
 		InitializeCriticalSection(&loggerLock);
 		EnterCriticalSection(&loggerLock);
-		InitializeCriticalSection(&vecLock);
 
 		std::wstring roam = GetRoamingFolderPath();
 		sprintf_s(logPath, 200, "%S\\logs.txt", roam.c_str());
@@ -137,9 +151,15 @@ void Logger::WriteBigLogFileF(size_t maxSize, const char* fmt, ...) {
 			TextForPrint textForPrint;
 			strcpy_s(textForPrint.text, 100, logMessage);
 			strcpy_s(textForPrint.time, 20, timeStamp);
-			EnterCriticalSection(&vecLock);
+			auto lock = Logger::GetTextToPrintLock();
 			stringPrintVector.push_back(textForPrint);
-			LeaveCriticalSection(&vecLock);
+		}
+		if (numCharacters < 2900) {
+			auto textForPrint = std::make_shared<TextForPrintBig>();
+			strcpy_s(textForPrint->text, 2900, logMessage);
+			strcpy_s(textForPrint->time, 20, timeStamp);
+			auto lock = Logger::GetTextToInjectorLock();
+			stringSendToInjector.push_back(textForPrint);
 		}
 		delete[] logMessage;
 	}
@@ -150,20 +170,49 @@ std::vector<TextForPrint>* Logger::GetTextToPrint() {
 	return &stringPrintVector;
 }
 
-CRITICAL_SECTION* Logger::GetTextToPrintSection() {
-	return &vecLock;
+std::vector<std::shared_ptr<TextForPrintBig>>* Logger::GetTextToSend() {
+	return &stringSendToInjector;
+}
+
+std::lock_guard<std::mutex> Logger::GetTextToPrintLock() {
+	return std::lock_guard<std::mutex>(vecMutex);
+}
+
+std::lock_guard<std::mutex> Logger::GetTextToInjectorLock() {
+	return std::lock_guard<std::mutex>(injMutex);
 }
 
 void Logger::Disable() {
 	loggerActive = false;
 #ifdef _DEBUG
 	EnterCriticalSection(&loggerLock);
-	EnterCriticalSection(&vecLock);
-	LeaveCriticalSection(&vecLock);
+	auto lock = Logger::GetTextToPrintLock();
 	LeaveCriticalSection(&loggerLock);
 	Sleep(50);
 
 	DeleteCriticalSection(&loggerLock);
-	DeleteCriticalSection(&vecLock);
 #endif
+}
+void Logger::SendToConsoleF(const char* msg) {
+	if (!loggerActive)
+		return;
+
+	if (!initializedLogger)
+		return;
+
+	std::stringstream ssTime;
+	Utils::ApplySystemTime(&ssTime);
+
+	char timeStamp[20];
+	sprintf_s(timeStamp, 20, "%s", ssTime.str().c_str());
+	auto numCharacters = strnlen_s(msg, 300);
+
+	if (numCharacters < 300) {
+		auto textForPrint = std::make_shared<TextForPrintBig>();
+		strcpy_s(textForPrint->text, 2900, msg);
+		strcpy_s(textForPrint->time, 20, timeStamp);
+		auto lock = Logger::GetTextToInjectorLock();
+		stringSendToInjector.push_back(textForPrint);
+	}
+
 }

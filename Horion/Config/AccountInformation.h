@@ -1,8 +1,7 @@
 #pragma once
 
-#include <string>
 
-#include "../../Utils/Logger.h"
+#include <string>
 
 class AccountInformation {
 private:

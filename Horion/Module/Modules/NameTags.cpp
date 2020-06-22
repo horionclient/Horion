@@ -23,15 +23,24 @@ void drawNameTags(C_Entity* ent, bool isRegularEntitie) {
 			return;
 		if (ent->getNameTag()->getTextLength() < 1)
 			return;
-		if (Target::isValidTarget(ent) && nameTagsMod != nullptr)
-			DrawUtils::drawNameTags(ent, 0.95f);
+		if (Target::isValidTarget(ent) && nameTagsMod != nullptr) {
+			nameTagsMod->nameTags.insert(Utils::sanitize(ent->getNameTag()->getText()));
+			float dist = ent->getPos()->dist(*g_Data.getLocalPlayer()->getPos());
+			DrawUtils::drawNameTags(ent, fmax(0.6f, 1.5f / dist));
+		}
+			
 	}
 }
 
 void NameTags::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
+	if (nameTags.size() > 100)
+		nameTags.clear();
+
 	if (localPlayer != nullptr && GameData::canUseMoveKeys()) {
 		g_Data.forEachEntity(drawNameTags);
+	} else {
+		nameTags.clear();
 	}
 }

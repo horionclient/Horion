@@ -1,7 +1,15 @@
 #pragma once
-#include "Tag.h"
-#include "CEntity.h"
+//#include "Tag.h"
+#include <memory>
+#include "TextHolder.h"
+#include "../Utils/HMath.h"
 
+class CompoundTag;
+class Tag;
+class C_BlockLegacy;
+class C_BlockSource;
+class C_Block;
+class C_Entity;
 class C_ItemStack;
 class C_ScreenContext;
 class C_ItemRenderer;
@@ -16,21 +24,12 @@ public:
 private:
 	char pad_0x50[0x280 - 0x58];  //0x58
 public:
-	C_BaseActorRenderContext(C_ScreenContext* ScreenCtx, C_ClientInstance* client, MinecraftGame* game) {
-		memset(this, 0, sizeof(C_BaseActorRenderContext));
-		using BaseActorRenderContext_t = __int64(__fastcall*)(C_BaseActorRenderContext*, C_ScreenContext*, C_ClientInstance*, MinecraftGame*);
-		static BaseActorRenderContext_t BaseActorRenderContext_constructor = reinterpret_cast<BaseActorRenderContext_t>(FindSignature("48 89 5C 24 08 57 48 83 EC 20 48 8D 05 ?? ?? ?? ?? 49 8B D8 48 89 01 48 8B F9 8B 42 ?? 89 41 ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 59 ?? 4C 89 49 ?? 48 89 51 ?? 49 8B C8"));
-		BaseActorRenderContext_constructor(this, ScreenCtx, client, game);
-	}
+	C_BaseActorRenderContext(C_ScreenContext* ScreenCtx, C_ClientInstance* client, MinecraftGame* game);
 };
 
 class C_ItemRenderer {
 public:
-	void renderGuiItemNew(C_BaseActorRenderContext* BaseActorRenderCtx, C_ItemStack* item, MinecraftGame* game, float x, float y, float opacity, float scale, bool isEnchanted) {
-		using renderGuiItemNew_t = void(__fastcall*)(C_ItemRenderer*, C_BaseActorRenderContext*, C_ItemStack*, MinecraftGame*, float, float, float, float, float, bool);
-		static renderGuiItemNew_t renderGuiItemNew = reinterpret_cast<renderGuiItemNew_t>(FindSignature("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 89 58 20 0F 29 70 B8 48 8B 05 ?? ?? ?? ??"));
-		renderGuiItemNew(this, BaseActorRenderCtx, item, game, x, y, 1, opacity, scale, isEnchanted);
-	}
+	void renderGuiItemNew(C_BaseActorRenderContext* BaseActorRenderCtx, C_ItemStack* item, MinecraftGame* game, float x, float y, float opacity, float scale, bool isEnchanted);
 };
 
 class C_Item {
@@ -89,7 +88,6 @@ public:
 	virtual bool isArmor(void) const;
 	virtual bool isDye(void) const;
 	virtual bool isFertilizer(int) const;
-	virtual bool isGlint(__int64 const&) const;
 	virtual bool isGlint(C_ItemStack const&) const;
 	virtual bool isThrowable(void) const;
 	virtual bool isPattern(void) const;
@@ -104,6 +102,7 @@ public:
 	virtual bool isLiquidClipItem(int) const;
 
 private:
+	virtual bool requiresInteract();
 	virtual __int64 appendFormattedHovertext(C_ItemStack const&, __int64&, std::string&, bool) const;
 
 public:
@@ -126,17 +125,17 @@ public:
 	virtual bool isMultiColorTinted(C_ItemStack const&) const;
 
 private:
-	virtual __int64 getColor(__int64 const&) const;
+	//virtual __int64 getColor(__int64 const&) const;
 	virtual __int64 getColor(C_ItemStack const&) const;
 	virtual __int64 getBaseColor(C_ItemStack const&) const;
 	virtual __int64 getSecondaryColor(C_ItemStack const&) const;
-	virtual __int64 saveAdditionalData(__int64 const&, __int64&) const;
 	virtual __int64 saveAdditionalData(C_ItemStack const&, __int64&) const;
-	/*	virtual __int64 readAdditionalData(C_ItemStack&, __int64 const&)const;
-		virtual __int64 readAdditionalData(__int64&, __int64 const&)const;
+	virtual __int64 readAdditionalData(C_ItemStack&, __int64 const&)const;
+	/*	virtual __int64 readAdditionalData(__int64&, __int64 const&)const;
 	public:
-		virtual bool isTintable(void)const;
+
 	private:*/
+	virtual bool isTintable(void)const;
 	virtual __int64 use(C_ItemStack&, C_Entity&) const;
 	virtual __int64 dispense(C_BlockSource&, __int64&, int, vec3_t const&, unsigned char) const;
 	virtual __int64 useTimeDepleted(__int64&, __int64*, C_Entity*) const;
@@ -154,13 +153,13 @@ private:
 	virtual __int64 buildEffectDescriptionName(C_ItemStack const&) const;
 	//virtual __int64 buildCategoryDescriptionName(__int64 const&)const;
 	virtual __int64 buildCategoryDescriptionName(C_ItemStack const&) const;
-	virtual __int64 readUserData(__int64&, __int64&, __int64&) const;
+	//virtual __int64 readUserData(__int64&, __int64&, __int64&) const;
 	virtual __int64 readUserData(C_ItemStack&, __int64&, __int64&) const;
 	//virtual __int64 writeUserData(__int64 const&, __int64&)const;
 	virtual __int64 writeUserData(C_ItemStack const&, __int64&) const;
 
 public:
-	virtual int getMaxStackSize(void) const;
+	virtual int getMaxStackSize(void* itemDescriptor) const;
 
 private:
 	virtual __int64 inventoryTick(C_ItemStack&, __int64&, C_Entity&, int, bool) const;
@@ -170,19 +169,19 @@ private:
 	virtual __int64 getCooldownTime(void) const;
 	virtual __int64 fixupOnLoad(__int64&) const;
 	virtual __int64 fixupOnLoad(C_ItemStack&) const;
-	virtual __int64 getDamageValue(C_ItemStack const&) const;
+	//virtual __int64 getDamageValue(C_ItemStack const&) const;
 	virtual __int64 getDamageValue(__int64 const&) const;
 
 public:
 	virtual void setDamageValue(C_ItemStack&, short) const;
-	virtual void setDamageValue(__int64&, short) const;
+	//virtual void setDamageValue(__int64&, short) const;
 
 private:
 	virtual __int64 getInHandUpdateType(C_Entity const&, __int64 const&, __int64 const&, bool, bool) const;
 	virtual __int64 getInHandUpdateType(C_Entity const&, C_ItemStack const&, C_ItemStack const&, bool, bool) const;
 
 public:
-	virtual bool isSameItem(__int64 const&, __int64 const&) const;
+	//virtual bool isSameItem(__int64 const&, __int64 const&) const;
 	virtual bool isSameItem(C_ItemStack const&, C_ItemStack const&) const;
 
 private:
@@ -199,11 +198,13 @@ private:
 public:
 	virtual void setIcon(std::string const&, int);
 	virtual void setIcon(__int64 const&);
+	virtual void setIconAtlas(__int64 const&);
 	virtual bool canBeCharged(void) const;
 
 private:
 	virtual __int64 playSoundIncrementally(__int64 const&, __int64&) const;
 	virtual __int64 playSoundIncrementally(C_ItemStack const&, __int64&) const;
+	virtual bool isCustomArmor();
 	virtual __int64 getAuxValuesDescription(void) const;
 	virtual __int64 _checkUseOnPermissions(C_Entity&, __int64&, unsigned char const&, vec3_ti const&) const;
 	virtual __int64 _checkUseOnPermissions(C_Entity&, C_ItemStack&, unsigned char const&, vec3_ti const&) const;
@@ -271,43 +272,29 @@ public:
 		reinit(item, count, itemData);
 	}
 
-	C_ItemStack(C_ItemStack const& src) {
-		memset(this, 0x0, sizeof(C_ItemStack));
-		using ItemStackCopyConstructor_t = void(__fastcall*)(C_ItemStack&, C_ItemStack const&);
-		static ItemStackCopyConstructor_t ItemStackCopyConstructor = reinterpret_cast<ItemStackCopyConstructor_t>(FindSignature("48 8B C4 56 57 41 54 41 56 41 57 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 68 ?? 48 8B FA 48 8B D9 48 89 48 ??"));
-		ItemStackCopyConstructor(*this, src);
-		this->setVtable();
-	}
+	C_ItemStack(C_ItemStack const& src);
 
-	void setUserData(std::unique_ptr<Tag> tag) {
-		using setUserData_t = void(__fastcall*)(C_ItemStack*, std::unique_ptr<Tag>);
-		setUserData_t setUserData = reinterpret_cast<setUserData_t>(FindSignature("40 53 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B DA 48 8D 51 10 48 3B D3 74 20 48 8B 03 48 ?? ?? ?? ?? ?? ?? 48 8B 0A 48 89 02 48 85 C9 74 0B 48 8B 01 BA ?? ?? ?? ?? FF 10"));
-		setUserData(this, std::move(tag));
-	}
+	C_ItemStack(Tag const& tag);
+
+	void fromTag(Tag const& tag);
+
+	void save(CompoundTag** tag);
+
+	void setUserData(std::unique_ptr<Tag> tag);
 
 	bool isValid() {
-		return this != nullptr && this->item != nullptr && *this->item != nullptr;
+		return this->item != nullptr && *this->item != nullptr;
 	}
 
 	inline C_Item* getItem() {
 		return *this->item;
 	}
 
-	void reinit(C_BlockLegacy& legacy, int count) {
-		this->setVtable();
-		Utils::CallVFunc<1, void>(this, &legacy, count);
-	}
+	void reinit(C_BlockLegacy& legacy, int count);
 
-	void reinit(C_Item& item, int count, int itemData) {
-		this->setVtable();
-		Utils::CallVFunc<2, void>(this, &item, count, itemData);
-	}
+	void reinit(C_Item& item, int count, int itemData);
 
-	int getEnchantValue(int enchantId) {
-		using getEnchantsLevel_t = int(__fastcall*)(int, C_ItemStack*);
-		static getEnchantsLevel_t getEnchantsLevel = reinterpret_cast<getEnchantsLevel_t>(FindSignature("48 8B C4 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B F2 8B ?? 33 ?? 48 8B"));
-		return getEnchantsLevel(enchantId, this);
-	}
+	int getEnchantValue(int enchantId);
 
 	bool isEnchanted() {
 		int enchantValue = 0;
@@ -340,11 +327,7 @@ public:
 	}
 
 private:
-	inline void setVtable(void) {
-		static uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? 83 7C 24 ?? 00 75 31");
-		int offset = *reinterpret_cast<int*>(sigOffset + 3);
-		this->vTable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
-	}
+	inline void setVtable(void);
 };
 
 class C_ArmorItem : public C_Item {

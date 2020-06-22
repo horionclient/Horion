@@ -1,18 +1,18 @@
 #pragma once
 
-#include <string>
-
 #include "../../../Memory/GameData.h"
 #include "../../FriendList/FriendList.h"
-#include "../../DrawUtils.h"
+//#include "../../DrawUtils.h"
+#include "../../../Utils/keys.h"
 
 enum class Category {
 	COMBAT = 0,
 	VISUAL = 1,
 	MOVEMENT = 2,
 	PLAYER = 3,
-	BUILD = 4,
-	EXPLOITS = 5
+	WORLD = 4,
+	MISC = 5,
+	CUSTOM = 6
 };
 
 enum class ValueType {
@@ -46,27 +46,7 @@ struct SettingEntry {
 	// ClickGui Data
 	bool isDragging = false;  // This is incredibly hacky and i wanted to avoid this as much as possible but i want to get this clickgui done
 
-	void makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
-		switch (valueType) {
-		case ValueType::TEXT_T:
-		case ValueType::BOOL_T:
-			break;
-		case ValueType::INT64_T:
-			value->int64 = max(minValue->int64, min(maxValue->int64, value->int64));
-			break;
-		case ValueType::DOUBLE_T:
-			value->_double = max(minValue->_double, min(maxValue->_double, value->_double));
-			break;
-		case ValueType::FLOAT_T:
-			value->_float = max(minValue->_float, min(maxValue->_float, value->_float));
-			break;
-		case ValueType::INT_T:
-			value->_int = max(minValue->_int, min(maxValue->_int, value->_int));
-			break;
-		default:
-			logF("unrecognized value %i", valueType);
-		}
-	}
+	void makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt();
 };
 
 class IModule {
@@ -88,6 +68,8 @@ protected:
 	void registerIntSetting(std::string name, int* intpTr, int defaultValue, int minValue, int maxValue);
 	void registerBoolSetting(std::string name, bool* boolPtr, bool defaultValue);
 
+	void clientMessageF(const char* fmt, ...);
+
 public:
 	virtual ~IModule();
 
@@ -107,8 +89,11 @@ public:
 	virtual void onKeyUpdate(int key, bool isDown);
 	virtual void onEnable();
 	virtual void onDisable();
+	virtual void onAttack(C_Entity*);
 	virtual void onPreRender(C_MinecraftUIRenderContext* renderCtx);
 	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx);
+	virtual void onLevelRender();
+	virtual void onMove(C_MoveInputHandler*);
 	virtual void onLoadConfig(void* conf);
 	virtual void onSaveConfig(void* conf);
 	virtual bool isFlashMode();
@@ -116,5 +101,6 @@ public:
 	virtual void toggle();
 	virtual bool isEnabled();
 	virtual void onSendPacket(C_Packet*);
+	virtual bool callWhenDisabled();
 	const char* getTooltip();
 };

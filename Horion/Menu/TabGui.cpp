@@ -1,5 +1,8 @@
 #include "TabGui.h"
 
+#include <Windows.h>
+#include "../Scripting/ScriptManager.h"
+
 struct SelectedItemInformation {
 	int selectedItemId = 0;
 	float currentSelectedItemInterpol = 0;
@@ -35,12 +38,12 @@ int renderedLevel;
 struct LabelContainer {
 	const char* text = 0;
 	bool enabled = false;
-	IModule* mod = 0;
+	std::shared_ptr<IModule> mod = 0;
 };
 
 std::vector<LabelContainer> labelList;
 
-void TabGui::renderLabel(const char* text, IModule* mod) {
+void TabGui::renderLabel(const char* text, std::shared_ptr<IModule> mod) {
 	//size_t strlength = strlen(text) + 1;
 	//char* alloc = new char[strlength];
 	//strcpy_s(alloc, strlength, text);
@@ -66,7 +69,7 @@ void TabGui::renderLevel() {
 	for (auto it = labelList.begin(); it != labelList.end(); ++it) {
 		labelListLength++;
 		std::string label = it->text;
-		maxLength = max(maxLength, DrawUtils::getTextWidth(&label, textSize));
+		maxLength = fmax(maxLength, DrawUtils::getTextWidth(&label, textSize));
 	}
 
 	if (selected[renderedLevel].selectedItemId < 0)
@@ -76,7 +79,7 @@ void TabGui::renderLevel() {
 
 	selected[renderedLevel].interp();  // Converge to selected item
 	if (renderedLevel < level)
-		selected[renderedLevel].rollbackVal = 1; // Speed up animation when we are in the next menu already
+		selected[renderedLevel].rollbackVal = 1;  // Speed up animation when we are in the next menu already
 
 	// Second loop: Render everything
 	int i = 0;
@@ -136,7 +139,7 @@ void TabGui::renderLevel() {
 
 		if (renderedLevel > level) {
 			selected[renderedLevel].rollback();
-		}else
+		} else
 			selected[renderedLevel].rollin();
 		DrawUtils::fillRectangle(selectedPos, MC_Color(28, 107, 201), alphaVal);
 	}
@@ -152,7 +155,7 @@ void TabGui::renderLevel() {
 void TabGui::render() {
 	if (!moduleMgr->isInitialized())
 		return;
-	if (!GameData::canUseMoveKeys()) 
+	if (!GameData::canUseMoveKeys())
 		level = -1;
 	renderedLevel = 0;
 	yOffset = 4;
@@ -163,20 +166,25 @@ void TabGui::render() {
 	renderLabel("Visual");
 	renderLabel("Movement");
 	renderLabel("Player");
-	renderLabel("Build");
-	renderLabel("Exploits");
+	renderLabel("World");
+	renderLabel("Misc");
+	if(scriptMgr.getNumEnabledScripts() > 0)
+		renderLabel("Scripts");
 	renderLevel();
 
 	// Render all modules
 	if (level >= 0) {
-		std::vector<IModule*>* modules = moduleMgr->getModuleList();
-		for (std::vector<IModule*>::iterator it = modules->begin(); it != modules->end(); ++it) {
-			IModule* mod = *it;
+		auto lock = moduleMgr->lockModuleList();
+		
+		std::vector<std::shared_ptr<IModule>>* modules = moduleMgr->getModuleList();
+		for (std::vector<std::shared_ptr<IModule>>::iterator it = modules->begin(); it != modules->end(); ++it) {
+			auto mod = *it;
 			if (selected[0].selectedItemId == static_cast<int>(mod->getCategory())) {
 				auto name = mod->getModuleName();
 				renderLabel(name, mod);
 			}
-		}
+		}	
+
 		renderLevel();
 	}
 }

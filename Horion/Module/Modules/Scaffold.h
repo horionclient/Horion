@@ -2,7 +2,7 @@
 #include "Module.h"
 class Scaffold : public IModule {
 private:
-	bool autoselect = false;
+	bool spoof = false;
 	bool tryScaffold(vec3_t blockBelow);
 	bool findBlock();
 
@@ -12,5 +12,5 @@ public:
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
-	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
+	virtual void onTick(C_GameMode* gm) override;
 };

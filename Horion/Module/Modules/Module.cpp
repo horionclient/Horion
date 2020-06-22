@@ -1,6 +1,8 @@
 #include "Module.h"
 
 #include "../../../Utils/Json.hpp"
+#include "../../../Utils/Logger.h"
+#include <cstdarg>
 
 using json = nlohmann::json;
 
@@ -199,8 +201,7 @@ void IModule::onSaveConfig(void* confVoid) {
 
 	json obj = {};
 	//auto obj = conf->at(modName);
-	for (auto it = this->settings.begin(); it != this->settings.end(); ++it) {
-		SettingEntry* sett = *it;
+	for (auto sett : this->settings) {
 		switch (sett->valueType) {
 		case ValueType::FLOAT_T:
 			obj.emplace(sett->name, sett->value->_float);
@@ -257,4 +258,46 @@ bool IModule::isEnabled() {
 
 const char* IModule::getTooltip() {
 	return this->tooltip;
+}
+void IModule::onAttack(C_Entity*) {
+}
+bool IModule::callWhenDisabled() {
+	return false;
+}
+void IModule::onMove(C_MoveInputHandler*) {
+}
+void IModule::onLevelRender() {
+}
+void IModule::clientMessageF(const char* fmt, ...) {
+	va_list arg;
+	va_start(arg, fmt);
+
+	char message[300];
+	vsprintf_s(message, 300, fmt, arg);
+
+	GameData::log("[%s]: %s", this->getModuleName(), message);
+
+	va_end(arg);
+}
+
+void SettingEntry::makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
+	switch (valueType) {
+		case ValueType::TEXT_T:
+		case ValueType::BOOL_T:
+			break;
+		case ValueType::INT64_T:
+			value->int64 = std::max(minValue->int64, std::min(maxValue->int64, value->int64));
+			break;
+		case ValueType::DOUBLE_T:
+			value->_double = std::max(minValue->_double, std::min(maxValue->_double, value->_double));
+			break;
+		case ValueType::FLOAT_T:
+			value->_float = std::max(minValue->_float, std::min(maxValue->_float, value->_float));
+			break;
+		case ValueType::INT_T:
+			value->_int = std::max(minValue->_int, std::min(maxValue->_int, value->_int));
+			break;
+		default:
+			logF("unrecognized value %i", valueType);
+	}
 }

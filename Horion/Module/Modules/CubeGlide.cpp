@@ -26,13 +26,11 @@ void CubeGlide::onTick(C_GameMode* gm) {
 
 	vec3_t pos = *g_Data.getLocalPlayer()->getPos();
 	pos.y += 1.3f;
-	C_MovePlayerPacket* a = new C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
-	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
-	delete a;
+	C_MovePlayerPacket a(g_Data.getLocalPlayer(), pos);
+	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
 	pos.y -= 1.3f;
-	C_MovePlayerPacket* a2 = new C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
-	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a2);
-	delete a2;
+	C_MovePlayerPacket a2(g_Data.getLocalPlayer(), pos);
+	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a2);
 
 	vec3_t moveVec;
 	moveVec.x = cos(calcYaw) * speed;

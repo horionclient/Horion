@@ -1,4 +1,5 @@
 #include "EnchantCommand.h"
+#include "../../../Utils/Utils.h"
 
 EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enchantment> [level] <mode: auto / manual : 1/0>") {
 	enchantMap["protection"] = 0;
@@ -59,7 +60,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 			else
 				enchantId = assertInt(args->at(1));
 		} catch (int) {
-			logF("exception while trying to get enchant string");
+			clientMessageF("exception while trying to get enchant string");
 			enchantId = assertInt(args->at(1));
 		}
 	}

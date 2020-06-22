@@ -1,4 +1,15 @@
 #include "SlimMem.h"
+#include <windows.h>
+#include <tlhelp32.h>
+#include <Psapi.h>
+
+inline bool IsProcessHandleValid(HANDLE h) { return h > (void*)0 && h != INVALID_HANDLE_VALUE; };
+inline bool IsHandleValid(HANDLE h) { return h != INVALID_HANDLE_VALUE; }
+inline BOOL ProperlyCloseHandle(HANDLE h) {
+	auto const b = CloseHandle(h);
+	assert(b);
+	return b;
+}
 
 static std::wstring ToLower(std::wstring string) {
 	transform(string.begin(), string.end(), string.begin(), tolower);
@@ -6,6 +17,9 @@ static std::wstring ToLower(std::wstring string) {
 }
 
 namespace SlimUtils {
+
+bool SlimMem::HasProcessHandle() const { return IsProcessHandleValid(m_hProc); }
+
 #pragma region Constructors/Destructors
 	SlimMem::SlimMem(const SlimMem & copy)
 	{
@@ -51,7 +65,7 @@ namespace SlimUtils {
 	bool SlimMem::Open(DWORD dwPID, DWORD dwFlags)
 	{
 		if (this->HasProcessHandle()) {
-			std::cout << "[!!!] Already have process handle" << std::endl;
+
 			return false;
 		}
 
@@ -60,8 +74,7 @@ namespace SlimUtils {
 		m_dwPID = dwPID;
 		if (this->HasProcessHandle())
 			this->ParseModules();
-		else
-			std::cout << "[!!!] OpenProcess failed" << std::endl;
+
 
 		return this->HasProcessHandle();
 	}
@@ -72,7 +85,7 @@ namespace SlimUtils {
 	Attempts to find a process with a given name and sets the given PID
 	Returns whether a matching process was found or not
 	*/
-	BOOL SlimMem::GetPID(const wchar_t * lpwstrProcessName, DWORD* pid)
+	bool SlimMem::GetPID(const wchar_t * lpwstrProcessName, DWORD* pid)
 	{
 		PROCESSENTRY32W proc;
 		proc.dwSize = sizeof(PROCESSENTRY32W);
@@ -119,12 +132,10 @@ namespace SlimUtils {
 			do {
 				try {
 					if (m_mModules.find(std::wstring(mod.szModule)) == m_mModules.end())
-						m_mModules[ToLower(mod.szModule)] = std::make_unique<SlimModule>(mod, *this);
+						m_mModules[ToLower(mod.szModule)] = std::make_unique<SlimModule>((std::uintptr_t) mod.modBaseAddr, mod.modBaseSize);
 				}
 				catch (...) {
-#ifdef REPORT_ERRORS
-					std::cout << "[SlimMem] Failed to parse module \"" << mod.szModule << "\"" << std::endl;
-#endif
+
 				}
 			} while (Module32NextW(hSnap, &mod));
 		}
@@ -150,7 +161,7 @@ namespace SlimUtils {
 			return SigScanResult(false);
 
 		if (mask[0] != 'x') {
-			std::cout << "ROOKIE MISTAKE!" << std::endl;
+
 			return SigScanResult(false);
 		}
 

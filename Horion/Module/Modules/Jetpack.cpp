@@ -32,13 +32,11 @@ void Jetpack::onTick(C_GameMode* gm) {
 
 		if (delay >= 5) {
 			vec3_t pos = *g_Data.getLocalPlayer()->getPos();
-			C_MovePlayerPacket* a = new C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
-			delete a;
+			C_MovePlayerPacket a(g_Data.getLocalPlayer(), pos);
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
 			pos.y += 0.35f;
-			a = new C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(a);
-			delete a;
+			a = C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
 
 			gm->player->velocity.y = 0.465f;
 			vec3_t moveVec;

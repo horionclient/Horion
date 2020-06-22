@@ -1,6 +1,6 @@
 #include "Blink.h"
 
-Blink::Blink() : IModule('L', Category::EXPLOITS, "Stops you from sending packets and then sends them in a bunch") {
+Blink::Blink() : IModule('L', Category::MISC, "Stops you from sending packets and then sends them in a bunch") {
 }
 
 Blink::~Blink() {
@@ -10,10 +10,6 @@ Blink::~Blink() {
 
 const char* Blink::getModuleName() {
 	return ("Blink");
-}
-
-const char* Blink::getRawModuleName() {
-	return ("Blink_");
 }
 
 void Blink::onTick(C_GameMode* gm) {

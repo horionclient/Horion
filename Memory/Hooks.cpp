@@ -1,7 +1,10 @@
 ﻿#include "Hooks.h"
+#include "../SDK/Tag.h"
 
 Hooks g_Hooks;
 bool isTicked = false;
+bool overrideStyledReturn = false;
+TextHolder styledReturnText;
 //#define TEST_DEBUG
 
 void Hooks::Init() {
@@ -17,11 +20,13 @@ void Hooks::Init() {
 			if (gameModeVtable == 0x0 || sigOffset == 0x0)
 				logF("C_GameMode signature not working!!!");
 			else {
-				g_Hooks.GameMode_tickHook = std::make_unique<FuncHook>(gameModeVtable[9], Hooks::GameMode_tick);
-
 				g_Hooks.GameMode_startDestroyBlockHook = std::make_unique<FuncHook>(gameModeVtable[1], Hooks::GameMode_startDestroyBlock);
 
+				g_Hooks.GameMode_tickHook = std::make_unique<FuncHook>(gameModeVtable[9], Hooks::GameMode_tick);
+
 				g_Hooks.GameMode_getPickRangeHook = std::make_unique<FuncHook>(gameModeVtable[10], Hooks::GameMode_getPickRange);
+
+				g_Hooks.GameMode_attackHook = std::make_unique<FuncHook>(gameModeVtable[14], Hooks::GameMode_attack);
 			}
 		}
 
@@ -47,9 +52,11 @@ void Hooks::Init() {
 			if (localPlayerVtable == 0x0 || sigOffset == 0x0)
 				logF("C_LocalPlayer signature not working!!!");
 			else {
-				g_Hooks.Actor_startSwimmingHook = std::make_unique<FuncHook>(localPlayerVtable[181], Hooks::Actor_startSwimming);
+				g_Hooks.Actor_isInWaterHook = std::make_unique<FuncHook>(localPlayerVtable[61], Hooks::Actor_isInWater);
 
-				g_Hooks.Actor_ladderUpHook = std::make_unique<FuncHook>(localPlayerVtable[321], Hooks::Actor_ladderUp);
+				g_Hooks.Actor_startSwimmingHook = std::make_unique<FuncHook>(localPlayerVtable[182], Hooks::Actor_startSwimming);
+
+				g_Hooks.Actor_ascendLadderHook = std::make_unique<FuncHook>(localPlayerVtable[322], Hooks::Actor_ascendLadder);
 			}
 		}
 
@@ -84,6 +91,85 @@ void Hooks::Init() {
 			}
 			//g_Hooks.SkinRepository___checkSignatureFileInPack = std::make_unique<FuncHook>(FindSignature("4C 8B DC 53 48 81 EC ?? ?? ?? ?? 49 C7 43 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B D9 33 C0"), Hooks::ReturnTrue);			
 		}
+	}
+
+	// d3d11
+	{
+		/*const auto hModDXGI = GetModuleHandle(L"DXGI.dll");
+		const auto hModD3D11 = GetModuleHandle(L"D3D11.dll");
+
+		const auto hD3D11CreateDeviceAndSwapChain = static_cast<LPVOID>(GetProcAddress(hModD3D11, "D3D11CreateDeviceAndSwapChain"));
+
+		const D3D_FEATURE_LEVEL featureLevelArray[3] = {
+			D3D_FEATURE_LEVEL_10_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_11_0
+		};
+
+
+		DXGI_SWAP_CHAIN_DESC sd;
+		{
+			ZeroMemory(&sd, sizeof(sd));
+			sd.BufferCount = 2;
+			sd.BufferDesc.Width = 0;
+			sd.BufferDesc.Height = 0;
+			sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			sd.BufferDesc.RefreshRate.Numerator = 60;
+			sd.BufferDesc.RefreshRate.Denominator = 1;
+			sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+			sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+			sd.OutputWindow = (HWND)0x780f84; // insert window found from process hacker here
+			sd.SampleDesc.Count = 1;
+			sd.SampleDesc.Quality = 0;
+			sd.Windowed = TRUE;
+			sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+		}
+	
+        IDXGISwapChain* pSwapChain;
+
+		const auto hr11 = static_cast<HRESULT(WINAPI *)(
+        IDXGIAdapter*,
+        D3D_DRIVER_TYPE,
+        HMODULE,
+        UINT,
+        const D3D_FEATURE_LEVEL*,
+        UINT,
+        UINT,
+        const DXGI_SWAP_CHAIN_DESC*,
+        IDXGISwapChain**,
+        ID3D11Device**,
+        D3D_FEATURE_LEVEL*,
+        ID3D11DeviceContext**)>(hD3D11CreateDeviceAndSwapChain)(
+			nullptr,
+			D3D_DRIVER_TYPE_HARDWARE,
+			nullptr,
+			0,
+			featureLevelArray,
+			1,
+			D3D11_SDK_VERSION,
+			&sd,
+			&pSwapChain,
+			0,
+			0,
+			0);
+
+		if (pSwapChain) {
+			logF("swap vtable: %llX", *pSwapChain);
+			pSwapChain->Release();
+		}*/
+		
+		uintptr_t sigOffset = FindSignature("48 8B 0D ?? ?? ?? ?? 48 8B 91 ?? ?? ?? ?? E8");
+		if (sigOffset != 0x0) {
+			int startOffsetOffset = *reinterpret_cast<int*>((sigOffset + 3));
+			uintptr_t startOffset = sigOffset + startOffsetOffset + /*length of instruction*/ 7;  
+			size_t secondOffset = (size_t) *reinterpret_cast<int*>((sigOffset + 10));
+			auto swapChain = g_Data.getSlimMem()->ReadPtr<__int64>(startOffset, {0, secondOffset, 0x170});
+			auto vtable = *reinterpret_cast<uintptr_t**>(swapChain);
+
+			logF(" %llX",vtable[8]);
+
+			g_Hooks.swapchain__presentHook = std::make_unique<FuncHook>(vtable[8], Hooks::swapChain__present);
+			g_Hooks.swapchain__resizeBuffersHook = std::make_unique<FuncHook>(vtable[13], Hooks::swapChain__ResizeBuffers);
+		}
+
 	}
 
 	// Signatures
@@ -170,15 +256,39 @@ void Hooks::Init() {
 		void* PaintingRenderer__renderAddr = reinterpret_cast<void*>(FindSignature("48 8B C4 57 41 54 41 55 41 56 41 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 68 ?? 48 89 70 ?? 4D 8B F0 4C 8B FA 48 8B F1 B9 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??"));
 		g_Hooks.PaintingRenderer__renderHook = std::make_unique<FuncHook>(PaintingRenderer__renderAddr, Hooks::PaintingRenderer__render);
 
-		//void* _getSkinPack = reinterpret_cast<void*>(FindSignature("40 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? B8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 2B E0 48 C7 85 ?? ?? ?? ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 8B F2"));
-		//g_Hooks.SkinRepository___loadSkinPackHook = std::make_unique<FuncHook>(_getSkinPack, Hooks::SkinRepository___loadSkinPack);
+		void* _getSkinPack = reinterpret_cast<void*>(FindSignature("40 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? B8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 2B E0 48 C7 85 ?? ?? ?? ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 8B F2"));
+		g_Hooks.SkinRepository___loadSkinPackHook = std::make_unique<FuncHook>(_getSkinPack, Hooks::SkinRepository___loadSkinPack);
+		
+		void* _toStyledString = reinterpret_cast<void*>(FindSignature("40 55 56 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B FA 48 8B D9 48 89 54 24 ?? 33 D2"));
+		g_Hooks.toStyledStringHook = std::make_unique<FuncHook>(_toStyledString, Hooks::toStyledString);
+		 
+		void* InGamePlayScreen___renderLevel = reinterpret_cast<void*>(FindSignature("48 8B C4 55 56 57 41 56 41 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 58 ?? 0F 29 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49"));
+		g_Hooks.InGamePlayScreen___renderLevelHook = std::make_unique<FuncHook>(InGamePlayScreen___renderLevel, Hooks::InGamePlayScreen___renderLevel);
 
 #ifdef TEST_DEBUG
 		void* addAction = reinterpret_cast<void*>(FindSignature("40 55 56 57 41 56 41 57 48 83 EC 30 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 8B EA 4C 8B F1 4C 8B C2 48 8B 51 ?? 48 8B 49 ?? E8"));
 		g_Hooks.InventoryTransactionManager__addActionHook = std::make_unique<FuncHook>(addAction, Hooks::InventoryTransactionManager__addAction);
 #endif
+		
+		void* prepFeaturedServers = reinterpret_cast<void*>(FindSignature("48 8B C4 55 57 41 56 48 8D ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 58 ?? 48 89 70 ?? 0F 29 70 ?? 48 8B 05"));
+		g_Hooks.prepFeaturedServersHook = std::make_unique<FuncHook>(prepFeaturedServers, Hooks::prepFeaturedServers);
+		
+		void* prepFeaturedServersFirstTime = reinterpret_cast<void*>(FindSignature("48 8B C4 57 41 54 41 55 41 56 41 57 48 83 EC ?? 48 C7 40 ?? FE FF FF FF 48 89 58 ?? 48 89 68 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B FA"));
+		g_Hooks.prepFeaturedServersFirstTimeHook = std::make_unique<FuncHook>(prepFeaturedServersFirstTime, Hooks::prepFeaturedServersFirstTime);
 	
-}
+		//void* cube__compile = reinterpret_cast<void*>(FindSignature("48 8B C4 53 41 56 41 57 48 81 EC ?? ?? ?? ?? 4C 8B 79 ??"));
+		//g_Hooks.cube__compileHook = std::make_unique<FuncHook>(cube__compile, Hooks::Cube__compile);
+
+		void* localPlayerUpdateFromCam = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 80 BA"));
+		g_Hooks.LocalPlayer__updateFromCameraHook = std::make_unique<FuncHook>(localPlayerUpdateFromCam, Hooks::LocalPlayer__updateFromCamera);
+
+		void* MobIsImmobile = reinterpret_cast<void*>(FindSignature("40 53 48 83 EC ?? 80 B9 ?? ?? ?? ?? 00 48 8B D9 75 ?? 48 8B 89"));
+		g_Hooks.Mob__isImmobileHook = std::make_unique<FuncHook>(MobIsImmobile, Hooks::Mob__isImmobile);
+
+		void* renderNameTags = reinterpret_cast<void*>(FindSignature("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 C7 45 ? ? ? ? ? 48 89 58 ? 0F 29 70 ? 0F 29 78 ? 44 0F 29 40 ? 44 0F 29 48 ? 48 8B 05 ? ? ? ? 48 33 C4"));
+		g_Hooks.LevelRendererPlayer__renderNameTagsHook = std::make_unique<FuncHook>(renderNameTags,Hooks::LevelRendererPlayer__renderNameTags);
+	}
+
 // clang-format on
 }
 
@@ -260,6 +370,8 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 
 	g_Hooks.shouldRender = uiscene->isPlayScreen();
 
+	bool alwaysRender = moduleMgr->isInitialized() && moduleMgr->getModule<HudModule>()->alwaysShow;
+
 	TextHolder alloc;
 	uiscene->getScreenName(&alloc);
 
@@ -267,8 +379,7 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 		strcpy_s(g_Hooks.currentScreenName, alloc.getText());
 
 	if (!g_Hooks.shouldRender) {
-		if (strcmp(alloc.getText(), "pause_screen") == 0 || strcmp(alloc.getText(), "hud_screen") == 0 || strcmp(alloc.getText(), "start_screen") == 0 || (alloc.getTextLength() >= 11 && strncmp(alloc.getText(), "play_screen", 11)) == 0)
-			g_Hooks.shouldRender = true;
+		g_Hooks.shouldRender = alwaysRender || (strcmp(alloc.getText(), "start_screen") == 0 || (alloc.getTextLength() >= 11 && strncmp(alloc.getText(), "play_screen", 11)) == 0);
 	}
 	alloc.resetWithoutDelete();
 
@@ -280,6 +391,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
 	
 	DrawUtils::setCtx(renderCtx, dat);
+
 
 	{
 		static bool wasConnectedBefore = false;
@@ -295,8 +407,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			LARGE_INTEGER end, elapsed;
 			QueryPerformanceCounter(&end);
 			elapsed.QuadPart = end.QuadPart - start.QuadPart;
-			elapsed.QuadPart /= frequency.QuadPart;
-			if (elapsed.QuadPart > 1) {
+			float elapsedFlot = (float)elapsed.QuadPart / frequency.QuadPart;
+			if (elapsedFlot > 1.5f) {
 				vec2_t windowSize = dat->windowSize;
 
 				DrawUtils::fillRectangle(vec4_t(0, 0, windowSize.x, windowSize.y), MC_Color(0.2f, 0.2f, 0.2f), 0.8f);
@@ -323,7 +435,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	static auto hudModule = moduleMgr->getModule<HudModule>();
 	static auto clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 
-	ImGui.startFrame();
+	HImGui.startFrame();
 
 	g_Data.frameCount++;
 
@@ -335,13 +447,14 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 	__int64 retval = oText(a1, renderCtx);
 
+	bool shouldPostRender = true;
 	bool shouldRenderArrayList = true;
 	bool shouldRenderTabGui = true;
 	bool shouldRenderWatermark = true;
 
 	static float rcolors[4];          // Rainbow color array RGBA
 	static float disabledRcolors[4];  // Rainbow Colors, but for disabled modules
-	static float currColor[4];        // ArrayList collors
+	static float currColor[4];        // ArrayList colors
 
 	// Rainbow color updates
 	{
@@ -352,10 +465,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		disabledRcolors[3] = 1;
 	}
 
-	// Call PostRender() functions
 	{
-		moduleMgr->onPostRender(renderCtx);
-
 		// Main Menu
 		std::string screenName(g_Hooks.currentScreenName);
 		if (strcmp(screenName.c_str(), "start_screen") == 0) {
@@ -372,11 +482,49 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 #if defined(_BETA) or defined(_DEBUG)
 			// Draw Custom Geo Button
 			if (g_Data.allowWIPFeatures()) {
-				if (ImGui.Button("Custom Geometry", vec2_t(wid.x * 0.765f, wid.y * 0.92f))) {
+				if (HImGui.Button("Load Script Folder", vec2_t(wid.x * (0.765f - 0.5f), wid.y * 0.92f), true)) {
+					HorionDataPacket packet;
+					packet.cmd = CMD_FOLDERCHOOSER;
+					auto tmp = std::shared_ptr<unsigned char[]>(new unsigned char[300]);
+					packet.data.swap(tmp);
+					memset(packet.data.get(), 0, 300);
+					strcpy_s((char*)packet.data.get(), 200, "{\"title\": \"Select a Script Folder\", \"filter\":\".js\"}");
+					packet.dataArraySize = (int)strlen((char*)packet.data.get());
+					packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
+						if (pk->params[0] != 1) {  // Dialog Canceled, reset geo
+							auto box = g_Data.addInfoBox("Scripting", "Invalid Folder");
+							box->closeTimer = 1;
+							return;
+						}
+
+						wchar_t* jsonData = reinterpret_cast<wchar_t*>(pk->data.get());
+						std::wstring jsonDataStr(jsonData);
+
+						json parsed = json::parse(jsonDataStr);
+						if (parsed["path"].is_string()) {
+							auto box = g_Data.addInfoBox("Importing Script", "Please wait...");
+							std::thread gamer([parsed, box]() {
+								auto result = scriptMgr.importScriptFolder(parsed["path"].get<std::string>());
+								if (result)
+									box->fadeTarget = 0;
+								else {
+									box->message = "Script import error, \ncheck the console";
+									box->closeTimer = 2;
+								}
+							});
+							gamer.detach();
+						}
+					});
+
+					g_Data.sendPacketToInjector(packet);
+				}
+				if (HImGui.Button("Custom Geometry", vec2_t(wid.x * 0.765f, wid.y * 0.92f), true)) {
 					HorionDataPacket packet;
 					packet.cmd = CMD_FILECHOOSER;
-					packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[200]));
-					strcpy_s((char*)packet.data.get(), 100, "{\"title\": \"Select a 3d object\", \"filter\":\"Object Files (*.obj)|*.obj\"}");
+					auto tmp = std::shared_ptr<unsigned char[]>(new unsigned char[300]);
+					packet.data.swap(tmp);
+					memset(packet.data.get(), 0, 300);
+					strcpy_s((char*)packet.data.get(), 200, "{\"title\": \"Select a 3d object\", \"filter\":\"Object Files (*.obj)|*.obj\"}");
 					packet.dataArraySize = (int)strlen((char*)packet.data.get());
 					packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
 						if (pk->params[0] != 1 && std::get<0>(g_Data.getCustomGeoOverride())) {  // Dialog Canceled, reset geo
@@ -401,11 +549,13 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 					g_Data.sendPacketToInjector(packet);
 				}
-				if (ImGui.Button("Custom Texture", vec2_t(wid.x * 0.5f, wid.y * 0.92f), true)) {
+				if (HImGui.Button("Custom Texture", vec2_t(wid.x * 0.5f, wid.y * 0.92f), true)) {
 					HorionDataPacket packet;
 					packet.cmd = CMD_FILECHOOSER;
-					packet.data.swap(std::shared_ptr<unsigned char[]>(new unsigned char[200]));
-					strcpy_s((char*)packet.data.get(), 100, "{\"title\": \"Select a raw image file\", \"filter\":\"Raw image files (*.data, *.raw)|*.data;*.raw\"}");
+					auto tmp = std::shared_ptr<unsigned char[]>(new unsigned char[500]);
+					packet.data.swap(tmp);
+					memset(packet.data.get(), 0, 500);
+					strcpy_s((char*)packet.data.get(), 400, "{\"title\": \"Select a raw image file\", \"filter\":\"Raw image files (*.data, *.raw)|*.data;*.raw\"}");
 					packet.dataArraySize = (int)strlen((char*)packet.data.get());
 					packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
 						if (pk->params[0] != 1 && std::get<0>(g_Data.getCustomTextureOverride())) {  // Dialog Canceled, reset texture
@@ -450,6 +600,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 			if (clickGuiModule->isEnabled()) {
 				ClickGui::render();
+				shouldPostRender = false;
 				shouldRenderArrayList = false;
 				shouldRenderTabGui = false;
 				shouldRenderWatermark = false;
@@ -504,7 +655,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				if (moduleMgr->isInitialized() && shouldRenderArrayList) {
 					struct IModuleContainer {
 						// Struct used to Sort IModules in a std::set
-						IModule* backingModule;
+						std::shared_ptr<IModule> backingModule;
 						std::string moduleName;
 						bool enabled;
 						int keybind;
@@ -512,7 +663,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						vec2_t* pos;
 						bool shouldRender = true;
 
-						IModuleContainer(IModule* mod) {
+						IModuleContainer(std::shared_ptr<IModule> mod) {
 							const char* moduleNameChr = mod->getModuleName();
 							this->enabled = mod->isEnabled();
 							this->keybind = mod->getKeybind();
@@ -561,9 +712,10 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					std::set<IModuleContainer> modContainerList;
 					// Fill modContainerList with Modules
 					{
-						std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
+						auto lock = moduleMgr->lockModuleList();
+						std::vector<std::shared_ptr<IModule>>* moduleList = moduleMgr->getModuleList();
 						for (auto it : *moduleList) {
-							if (it != hudModule)
+							if (it.get() != hudModule)
 								modContainerList.emplace(IModuleContainer(it));
 						}
 					}
@@ -648,12 +800,14 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	// Zoom calc
 	{
 		static auto zoomModule = moduleMgr->getModule<Zoom>();
+		if(zoomModule->isEnabled()) zoomModule->target = zoomModule->strength;
 		zoomModule->modifier = zoomModule->target - ((zoomModule->target - zoomModule->modifier) * 0.8f);
-		if (abs(zoomModule->modifier - zoomModule->target) < 0.1f && zoomModule->target != zoomModule->strength)
+		if (abs(zoomModule->modifier - zoomModule->target) < 0.1f && !zoomModule->isEnabled())
 			zoomModule->zooming = false;
 	}
 
-	ImGui.endFrame();
+	if (shouldPostRender) moduleMgr->onPostRender(renderCtx);
+	HImGui.endFrame();
 	DrawUtils::flush();
 
 	// Draw Info / Alert Boxes
@@ -777,13 +931,11 @@ void Hooks::Actor_lerpMotion(C_Entity* _this, vec3_t motVec) {
 	if (g_Data.getLocalPlayer() != _this)
 		return oLerp(_this, motVec);
 
-	static auto noKnockbackmod = moduleMgr->getModule<NoKnockBack>();
+	static auto noKnockbackmod = moduleMgr->getModule<Velocity>();
 	if (noKnockbackmod->isEnabled()) {
 		static void* networkSender = reinterpret_cast<void*>(FindSignature("41 80 BF ?? ?? ?? ?? 00 0F 85 ?? ?? ?? ?? FF"));
 		if (networkSender == _ReturnAddress()) {
-			motVec.x *= noKnockbackmod->xModifier;
-			motVec.y *= noKnockbackmod->yModifier;
-			motVec.z *= noKnockbackmod->xModifier;
+			motVec = _this->velocity.lerp(motVec, noKnockbackmod->xModifier, noKnockbackmod->yModifier, noKnockbackmod->xModifier);
 		}
 	}
 	oLerp(_this, motVec);
@@ -833,10 +985,10 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 		std::set<LilPlump> searchResults;
 
 		std::vector<IMCCommand*>* commandList = cmdMgr->getCommandList();
-		for (std::vector<IMCCommand*>::iterator it = commandList->begin(); it != commandList->end(); ++it) {  // Loop through commands
+		for (auto it = commandList->begin(); it != commandList->end(); ++it) {  // Loop through commands
 			IMCCommand* c = *it;
 			auto* aliasList = c->getAliasList();
-			for (std::vector<std::string>::iterator it = aliasList->begin(); it != aliasList->end(); ++it) {  // Loop through aliases
+			for (auto it = aliasList->begin(); it != aliasList->end(); ++it) {  // Loop through aliases
 				std::string cmd = *it;
 				LilPlump plump;
 
@@ -865,7 +1017,7 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 			}
 		}
 
-		if (searchResults.size() > 0) {
+		if (!searchResults.empty()) {
 			LilPlump firstResult = *searchResults.begin();
 
 			size_t maxReplaceLength = firstResult.cmdAlias.size();
@@ -913,10 +1065,10 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 						return;
 					}
 				}
-				if (firstResult.command->getUsage()[0] == 0x0)
+				if (firstResult.command->getUsage(firstResult.cmdAlias.c_str() + 1)[0] == 0)
 					g_Data.getGuiData()->displayClientMessageF("%s%s %s- %s", WHITE, firstResult.cmdAlias.c_str(), GRAY, firstResult.command->getDescription());
 				else
-					g_Data.getGuiData()->displayClientMessageF("%s%s %s %s- %s", WHITE, firstResult.cmdAlias.c_str(), firstResult.command->getUsage(), GRAY, firstResult.command->getDescription());
+					g_Data.getGuiData()->displayClientMessageF("%s%s %s %s- %s", WHITE, firstResult.cmdAlias.c_str(), firstResult.command->getUsage(firstResult.cmdAlias.c_str() + 1 /*exclude prefix*/), GRAY, firstResult.command->getDescription());
 			}
 
 			if (firstResult.shouldReplace) {
@@ -943,7 +1095,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	static auto blinkMod = moduleMgr->getModule<Blink>();
 	static auto noPacketMod = moduleMgr->getModule<NoPacket>();
 
-	if (noPacketMod->isEnabled())
+	if (noPacketMod->isEnabled() && g_Data.isInGame())
 		return;
 
 	if (freecamMod->isEnabled() || blinkMod->isEnabled()) {
@@ -997,11 +1149,14 @@ float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3) {
 	}
 	if (_ReturnAddress() == setupCamera) {
 		g_Data.fov = -oGetFov(_this, a2, a3) + 110.f;
-		if (!zoomModule->smooth) return -zoomModule->target + 110.f;
-		return (moduleMgr->isInitialized() && zoomModule->zooming) ? -zoomModule->modifier + 110.f : oGetFov(_this, a2, a3);
+		if (moduleMgr->isInitialized()) {
+			if (!zoomModule->smooth && zoomModule->isEnabled()) return -zoomModule->target + 110.f;
+			if (zoomModule->smooth && zoomModule->zooming) return -zoomModule->modifier + 110.f;
+		}
+		return oGetFov(_this, a2, a3);
 	}
 #ifdef _DEBUG
-	logF("LevelRendererPlayer_getFov Return Addres: %llX", _ReturnAddress());
+	logF("LevelRendererPlayer_getFov Return Address: %llX", _ReturnAddress());
 	__debugbreak();  // IF we reach here, a sig is broken
 #endif
 	return oGetFov(_this, a2, a3);
@@ -1075,7 +1230,8 @@ int Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1) {
 		if (strstr(text, "ore") == NULL)
 			if (strcmp(text, "lava") != NULL)
 				if (strcmp(text, "water") != NULL)
-					return 10;
+					if (strcmp(text, "portal") != NULL)
+						return 10;
 	}
 	return oFunc(a1);
 }
@@ -1111,23 +1267,31 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3) 
 			reloadChunk(i[3]);
 	}
 
-	return oFunc(_this, a2, a3);
+	auto ret = oFunc(_this, a2, a3);
+
+	DrawUtils::setGameRenderContext(a2);
+	moduleMgr->onLevelRender();
+	DrawUtils::setGameRenderContext(0);
+
+	return ret;
 }
 
-void Hooks::ClickFunc(__int64 a1, char mouseButton, bool isDown, __int16 mouseX, __int16 mouseY, __int16 a6, __int16 a7, char a8) {
-	static auto oFunc = g_Hooks.ClickFuncHook->GetFastcall<void, __int64, char, bool, __int16, __int16, __int16, __int16, char>();
+void Hooks::ClickFunc(__int64 a1, char mouseButton, char isDown, __int16 mouseX, __int16 mouseY, __int16 a6, __int16 a7, char a8) {
+	static auto oFunc = g_Hooks.ClickFuncHook->GetFastcall<void, __int64, char, char, __int16, __int16, __int16, __int16, char>();
 	static auto clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 
 	if (clickGuiModule->isEnabled()) {
 		if (mouseButton != 0)  // Mouse click event
 			return;
 	}
-	oFunc(a1, mouseButton, isDown, mouseX, mouseY, a6, a7, a8);
+	return oFunc(a1, mouseButton, isDown, mouseX, mouseY, a6, a7, a8);
 }
 
 __int64 Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity* a2) {
 	static auto oTick = g_Hooks.MoveInputHandler_tickHook->GetFastcall<__int64, C_MoveInputHandler*, C_Entity*>();
-	return oTick(a1, a2);
+	auto ret = oTick(a1, a2);
+	moduleMgr->onMove(a1);
+	return ret;
 }
 
 __int64 Hooks::ChestScreenController_tick(C_ChestScreenController* a1) {
@@ -1144,16 +1308,38 @@ __int64 Hooks::GetGamma(__int64 a1) {
 
 	static auto fullBrightModule = moduleMgr->getModule<FullBright>();
 
-	static __int64 v7 = 0;
-	if (v7 == 0) {
+	struct Option {
+		void* vtable;
+		char filler[0x20];        // 0x008
+		TextHolder internalName;  // 0x0028
+		TextHolder friendlyName;  // 0x0048 // only exists when the value is present in the options
+
+		char filler2[0x88];  // 0x068
+		union {
+			float _float;
+			bool _bool;
+		} value;
+	};
+
+	static Option* gfx_gamma = 0;
+	if (gfx_gamma == 0) {
 		__int64 v6 = oFunc(a1);  // Calls to ClientInstance, returns options ptr
-		if (*(bool*)(v6 + 0x1001))
-			v7 = *(__int64*)(v6 + 0x7D8);
-		else
-			v7 = *(__int64*)(v6 + 0x138);
-	} else {
-		fullBrightModule->gammaPtr = reinterpret_cast<float*>(v7 + 0xF0);
+
+		static int numOptions = *reinterpret_cast<int*>(FindSignature("48 81 FB ?? ?? ?? ?? 72 ?? 4C 8B 7D") + 3);
+
+		//logF("%llX", v6);
+		//logF("Num Options: %i", numOptions);
+
+		for (int i = 0; i < numOptions; i++) {
+			Option* ptr = *reinterpret_cast<Option**>(v6 + 0x10 + i * 8);
+			if (ptr && strcmp(ptr->internalName.getText(), "gfx_gamma") == 0) {
+				//logF("%llX %s %s", v6 + 0x10 + i * 8, ptr->internalName.getText(), ptr->friendlyName.getText());
+				gfx_gamma = ptr;
+			}
+		}
 	}
+	if (gfx_gamma)
+		fullBrightModule->gammaPtr = &gfx_gamma->value._float;
 
 	return oFunc(a1);
 }
@@ -1174,8 +1360,8 @@ __int64 Hooks::MinecraftGame_onAppSuspended(__int64 _this) {
 	return oFunc(_this);
 }
 
-void Hooks::Actor_ladderUp(C_Entity* _this) {
-	static auto oFunc = g_Hooks.Actor_ladderUpHook->GetFastcall<void, C_Entity*>();
+void Hooks::Actor_ascendLadder(C_Entity* _this) {
+	static auto oFunc = g_Hooks.Actor_ascendLadderHook->GetFastcall<void, C_Entity*>();
 
 	static auto fastLadderModule = moduleMgr->getModule<FastLadder>();
 	if (fastLadderModule->isEnabled() && g_Data.getLocalPlayer() == _this) {
@@ -1205,42 +1391,43 @@ float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3) {
 	static auto oFunc = g_Hooks.GameMode_getPickRangeHook->GetFastcall<float, C_GameMode*, __int64, char>();
 
 	if (g_Data.getLocalPlayer() != nullptr) {
+#ifdef _BETA
 		static auto forceOpenCmdBlock = moduleMgr->getModule<ForceOpenCommandBlock>();
 		if (forceOpenCmdBlock->isEnabled() && forceOpenCmdBlock->isInCommandBlock)
 			return forceOpenCmdBlock->distance;
+#endif
 
 		static auto infiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
 		if (infiniteBlockReachModule->isEnabled())
 			return infiniteBlockReachModule->getBlockReach();
 
-		static auto clickTP = moduleMgr->getModule<ClickTP>();
-		if (clickTP->isEnabled())
+		static auto teleportModule = moduleMgr->getModule<Teleport>();
+		if (teleportModule->isEnabled())
 			return 255;
 	}
 
 	return oFunc(_this, a2, a3);
 }
 
-__int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager, void* a3, TextHolder* selfSignedId, TextHolder* serverAddress, __int64 clientRandomId, TextHolder* skinId, SkinData* skinData, __int64 capeData, __int64 animatedImageDataArr, TextHolder* skinResourcePatch, TextHolder* skinGeometryData, TextHolder* skinAnimationData, bool isPremiumSkin, bool isPersonaSkin, TextHolder* deviceId, int inputMode, int uiProfile, int guiScale, TextHolder* languageCode, bool sendEduModeParams, TextHolder* tenantId, __int64 unused, TextHolder* platformUserId, TextHolder* thirdPartyName, bool thirdPartyNameOnly, TextHolder* platformOnlineId, TextHolder* platformOfflineId, bool isCapeOnClassicSkin, TextHolder* capeId) {
-	static auto oFunc = g_Hooks.ConnectionRequest_createHook->GetFastcall<__int64, __int64, __int64, void*, TextHolder*, TextHolder*, __int64, TextHolder*, SkinData*, __int64, __int64, TextHolder*, TextHolder*, TextHolder*, bool, bool, TextHolder*, int, int, int, TextHolder*, bool, TextHolder*, __int64, TextHolder*, TextHolder*, bool, TextHolder*, TextHolder*, bool, TextHolder*>();
+__int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager, void* a3, TextHolder* selfSignedId, TextHolder* serverAddress, __int64 clientRandomId, TextHolder* skinId, SkinData* skinData, __int64 capeData, CoolSkinData* coolSkinStuff, TextHolder* deviceId, int inputMode, int uiProfile, int guiScale, TextHolder* languageCode, bool sendEduModeParams, TextHolder* tenantId, __int64 unused, TextHolder* platformUserId, TextHolder* thirdPartyName, bool thirdPartyNameOnly, TextHolder* platformOnlineId, TextHolder* platformOfflineId, TextHolder* capeId) {
+	static auto oFunc = g_Hooks.ConnectionRequest_createHook->GetFastcall<__int64, __int64, __int64, void*, TextHolder*, TextHolder*, __int64, TextHolder*, SkinData*, __int64, CoolSkinData*, TextHolder*, int, int, int, TextHolder*, bool, TextHolder*, __int64, TextHolder*, TextHolder*, bool, TextHolder*, TextHolder*, TextHolder*>();
 
 	auto geoOverride = g_Data.getCustomGeoOverride();
 
 	if (g_Data.allowWIPFeatures()) {
 		logF("Connection Request: InputMode: %i UiProfile: %i GuiScale: %i", inputMode, uiProfile, guiScale);
-		logF("Geometry size: %d", skinGeometryData->getTextLength());
 
 		//Logger::WriteBigLogFileF(skinGeometryData->getTextLength() + 20, "Geometry: %s", skinGeometryData->getText());
-		auto hResourceGeometry = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_TEXT1), "TEXT");
-		auto hMemoryGeometry = LoadResource(g_Data.getDllModule(), hResourceGeometry);
+		auto hResourceGeometry = FindResourceA((HMODULE)g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_TEXT1), "TEXT");
+		auto hMemoryGeometry = LoadResource((HMODULE)g_Data.getDllModule(), hResourceGeometry);
 
-		auto sizeGeometry = SizeofResource(g_Data.getDllModule(), hResourceGeometry);
+		auto sizeGeometry = SizeofResource((HMODULE)g_Data.getDllModule(), hResourceGeometry);
 		auto ptrGeometry = LockResource(hMemoryGeometry);
 
-		auto hResourceSteve = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_STEVE), (char*)RT_RCDATA);
-		auto hMemorySteve = LoadResource(g_Data.getDllModule(), hResourceSteve);
+		auto hResourceSteve = FindResourceA((HMODULE)g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_STEVE), (char*)RT_RCDATA);
+		auto hMemorySteve = LoadResource((HMODULE)g_Data.getDllModule(), hResourceSteve);
 
-		auto sizeSteve = SizeofResource(g_Data.getDllModule(), hResourceSteve);
+		auto sizeSteve = SizeofResource((HMODULE)g_Data.getDllModule(), hResourceSteve);
 		auto ptrSteve = LockResource(hMemorySteve);
 
 		//std::unique_ptr<TextHolder> newGeometryData(new TextHolder(ptrGeometry, sizeGeometry));
@@ -1283,8 +1470,25 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 		TextHolder* newSkinResourcePatch = new TextHolder(Utils::base64_decode("ewogICAiZ2VvbWV0cnkiIDogewogICAgICAiYW5pbWF0ZWRfZmFjZSIgOiAiZ2VvbWV0cnkuYW5pbWF0ZWRfZmFjZV9wZXJzb25hXzRjZGJiZmFjYTI0YTk2OGVfMF8wIiwKICAgICAgImRlZmF1bHQiIDogImdlb21ldHJ5LnBlcnNvbmFfNGNkYmJmYWNhMjRhOTY4ZV8wXzAiCiAgIH0KfQo="));
 
 		TextHolder* fakeName = g_Data.getFakeName();
+		TextHolder resourcePatchBackup;
 
-		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, (newGeometryData == nullptr && !std::get<0>(texOverride)) ? skinData : newSkinData, capeData, animatedImageDataArr, newGeometryData == nullptr ? skinResourcePatch : newSkinResourcePatch, newGeometryData == nullptr ? skinGeometryData : newGeometryData, skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, fakeName != nullptr ? fakeName : thirdPartyName, fakeName != nullptr ? true : thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
+		if (newGeometryData != nullptr) {
+			memcpy(&resourcePatchBackup, &coolSkinStuff->skinResourcePatch, sizeof(TextHolder));
+			memcpy(&coolSkinStuff->skinResourcePatch, newSkinResourcePatch, sizeof(TextHolder));
+			styledReturnText = *newGeometryData;
+			overrideStyledReturn = true;
+		}
+
+		//  newGeometryData == nullptr ? skinResourcePatch : newSkinResourcePatch, newGeometryData == nullptr ? skinGeometryData : newGeometryData, skinAnimationData, isPremiumSkin, isPersonaSkin,
+		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, (newGeometryData == nullptr && !std::get<0>(texOverride)) ? skinData : newSkinData, capeData, coolSkinStuff, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, fakeName != nullptr ? fakeName : thirdPartyName, fakeName != nullptr ? true : thirdPartyNameOnly, platformOnlineId, platformOfflineId, capeId);
+
+		if (newGeometryData != nullptr) {
+			memcpy(&coolSkinStuff->skinResourcePatch, &resourcePatchBackup, sizeof(TextHolder));
+			resourcePatchBackup.resetWithoutDelete();
+		}
+		overrideStyledReturn = false;
+
+		styledReturnText = TextHolder();
 
 		if (hMemoryGeometry)
 			FreeResource(hMemoryGeometry);
@@ -1298,7 +1502,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 		return res;
 	} else {
 		TextHolder* fakeName = g_Data.getFakeName();
-		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, skinData, capeData, animatedImageDataArr, skinResourcePatch, skinGeometryData, skinAnimationData, isPremiumSkin, isPersonaSkin, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, fakeName != nullptr ? fakeName : thirdPartyName, fakeName != nullptr ? true : thirdPartyNameOnly, platformOnlineId, platformOfflineId, isCapeOnClassicSkin, capeId);
+		__int64 res = oFunc(_this, privateKeyManager, a3, selfSignedId, serverAddress, clientRandomId, skinId, skinData, capeData, coolSkinStuff, deviceId, inputMode, uiProfile, guiScale, languageCode, sendEduModeParams, tenantId, unused, platformUserId, fakeName != nullptr ? fakeName : thirdPartyName, fakeName != nullptr ? true : thirdPartyNameOnly, platformOnlineId, platformOfflineId, capeId);
 		return res;
 	}
 }
@@ -1333,4 +1537,495 @@ __int64 Hooks::SkinRepository___loadSkinPack(__int64 _this, __int64 pack, __int6
 	*(int*)((*(__int64*)pack) + 888i64) = 2;  // Set pack origin to "2"
 
 	return func(_this, pack, a3);
+}
+
+GamerTextHolder* Hooks::toStyledString(__int64 strIn, GamerTextHolder* strOut) {
+	static auto func = g_Hooks.toStyledStringHook->GetFastcall<GamerTextHolder*, __int64, GamerTextHolder*>();
+
+	static auto conRequest = reinterpret_cast<__int64>(g_Hooks.ConnectionRequest_createHook->funcPtr);
+	if (reinterpret_cast<__int64>(_ReturnAddress()) > conRequest && reinterpret_cast<__int64>(_ReturnAddress()) < conRequest + 10000 && overrideStyledReturn) {
+		// Return address is within boundaries of connection request function
+
+		strOut->copyFrom(&styledReturnText);
+
+		return strOut;
+	}
+
+	return func(strIn, strOut);
+}
+
+void prepCoolBean() {
+	if (g_Data.getClientInstance() && g_Data.getClientInstance()->minecraftGame->getServerEntries() && *reinterpret_cast<__int64*>(g_Data.getClientInstance()->minecraftGame->getServerEntries() + 0x50)) {
+		auto serverEntries = g_Data.getClientInstance()->minecraftGame->getServerEntries() + 0x48;
+
+		struct ThirdPartyServer {
+			TextHolder serverName;
+			TextHolder uuid;
+			TextHolder masterPlayerAccount;
+			TextHolder serverName2;
+			TextHolder lobbyDescription;
+			TextHolder domain;            // contains the last two parts of the domain .hivebedrock.network .mineplex.com
+			TextHolder pathToServerIcon;  // C:\Users\user\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalCache\minecraftpe\ContentCache\ThirdPartyServer\\<file hash>.jpg
+			TextHolder serverAddress;
+			int coolBoye;
+
+			ThirdPartyServer() {
+				memset(this, 0, sizeof(ThirdPartyServer));
+			}
+		};
+
+		struct BeansEntry {
+			BeansEntry* nextEntry;
+			BeansEntry* prevEntry;
+			TextHolder masterPlayer;
+			float unk;
+			char filler[0x3c];
+			TextHolder masterPlayer2;
+			TextHolder serverName;
+			char filler2[8];
+			std::shared_ptr<ThirdPartyServer>* start;  // array
+			std::shared_ptr<ThirdPartyServer>* end;    // end of array
+		};
+
+		auto listEnd = *reinterpret_cast<BeansEntry**>(serverEntries);
+
+		auto current = listEnd;
+		int count = 0;
+		while (listEnd != current->nextEntry) {
+			current = current->nextEntry;
+			count++;
+		}
+		if (count > 5)  // we already added a server
+			goto end;
+
+		// make new one
+		BeansEntry* epic = new BeansEntry();
+		epic->nextEntry = listEnd;
+		epic->prevEntry = current;
+		epic->masterPlayer.setText("");
+		epic->unk = current->unk;
+		memcpy(epic->filler, current->filler, sizeof(BeansEntry::filler));
+		epic->masterPlayer2.setText("");
+		epic->serverName.setText("Epic");
+		memcpy(epic->filler2, current->filler2, sizeof(BeansEntry::filler2));
+
+		auto cT = current->start[0].get();
+
+		std::shared_ptr<ThirdPartyServer>* start = new std::shared_ptr<ThirdPartyServer>[1];
+
+		{
+			ThirdPartyServer* t = new ThirdPartyServer();
+
+			t->coolBoye = cT->coolBoye;
+			t->uuid.setText("");
+			t->masterPlayerAccount = cT->masterPlayerAccount;
+			t->lobbyDescription = cT->lobbyDescription;
+			t->pathToServerIcon.setText("");
+			t->serverName.setText("Horion Server");
+			t->serverName2.setText("Horion Server");  // This is the one actually displayed
+			t->domain.setText(".horionbeta.club");
+			t->serverAddress.setText("mc.horionbeta.club");
+			start[0] = std::shared_ptr<ThirdPartyServer>(t);
+		}
+
+		epic->start = start;
+		epic->end = &start[1];
+
+		current->nextEntry = epic;
+
+		// increase count
+		*reinterpret_cast<__int64*>(g_Data.getClientInstance()->minecraftGame->getServerEntries() + 0x50) += 1;
+	end:;
+	}
+}
+
+__int64 Hooks::prepFeaturedServers(__int64 a1) {
+	static auto func = g_Hooks.prepFeaturedServersHook->GetFastcall<__int64, __int64>();
+	auto ret = func(a1);
+
+	if (g_Data.getClientInstance() == nullptr)
+		return ret;
+
+	if (g_Data.allowWIPFeatures())
+		prepCoolBean();
+
+	return ret;
+}
+
+__int64 Hooks::prepFeaturedServersFirstTime(__int64 a1, __int64 a2) {
+	static auto func = g_Hooks.prepFeaturedServersFirstTimeHook->GetFastcall<__int64, __int64, __int64>();
+
+	if (g_Data.allowWIPFeatures())
+		prepCoolBean();
+
+	auto ret = func(a1, a2);
+
+	return ret;
+}
+
+HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT flags) {
+	static auto func = g_Hooks.swapchain__presentHook->GetFastcall<HRESULT, IDXGISwapChain*, UINT, UINT>();
+
+#if 0
+
+#ifndef _D3DVECTOR
+	typedef struct _D3DVECTOR3 {
+		float x;
+		float y;
+		float z;
+
+		_D3DVECTOR3(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {}
+		_D3DVECTOR3() {}
+	} D3DVECTOR3;
+
+	typedef struct _D3DVECTOR4 {
+		float x;
+		float y;
+		float z;
+		float w;
+
+		_D3DVECTOR4(float x1, float y1, float z1, float w1) : x(x1), y(y1), z(z1), w(w1) {}
+		_D3DVECTOR4() {}
+	} D3DVECTOR4;
+#endif
+	struct VertexType {
+		_D3DVECTOR4 position;
+		_D3DVECTOR4 color;
+	};
+
+
+	static bool init = false;
+	static ID3D11Device* device;
+	static ID3D11DeviceContext* context;
+	static ID3D11Buffer *vertexBuffer, *indexBuffer;
+	static ID3D11InputLayout* m_pInputLayout;
+	static ID3D11VertexShader* m_vertexShader;
+	static VertexType *vertices;
+
+	if (!init) {
+		DXGI_SWAP_CHAIN_DESC desc;
+		chain->GetDesc(&desc);
+
+		chain->GetDevice(__uuidof(ID3D11Device), (void**)&device);
+
+		device->GetImmediateContext(&context);
+
+		D3D11_BUFFER_DESC bufferDesc;
+
+		D3D11_INPUT_ELEMENT_DESC lineRectLayout[] =
+			{
+				{"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0}
+			};
+			
+
+		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		bufferDesc.ByteWidth = 50 * sizeof(VertexType);
+		bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		bufferDesc.MiscFlags = 0;
+
+		char* shader =
+			"struct VS_INPUT \
+		{														 \
+			float4 vPosition : POSITION;										\
+			 float4 color : COLOR;									\
+		}; \
+ \
+		struct VS_OUTPUT { \
+			float4 vPosition : SV_POSITION; \
+			float4 vColor : COLOR;	\
+		}; \
+		VS_OUTPUT VSMain(VS_INPUT Input) { \
+			VS_OUTPUT Output; \
+ \
+			Output.vPosition = Input.vPosition;\
+			Output.vColor = Input.color; \
+			return Output; \
+		} \
+		";
+
+		UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
+		ID3DBlob* shaderBlob = nullptr;
+		ID3DBlob* errorBlob = nullptr;
+		auto res = D3DCompile(shader, strlen(shader), 0, 0, 0, "VSMain", "vs_4_0_level_9_1", flags, 0, &shaderBlob, &errorBlob);
+		logF("result: %llX", res);
+		if (!FAILED(res)) {
+			// Create the vertex shader from the buffer.
+			res = device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &m_vertexShader);
+			logF("vresult: %llX", res);
+			if (!FAILED(res)) {
+				res = device->CreateInputLayout(lineRectLayout, 2, shaderBlob->GetBufferPointer(),
+												shaderBlob->GetBufferSize(), &m_pInputLayout);
+				logF("vresult3 : %llX", res);
+			}
+		}
+
+		{
+			unsigned long* indices = new unsigned long[5];
+			D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
+			D3D11_SUBRESOURCE_DATA vertexData, indexData;
+
+			//create the vertex array
+			vertices = new VertexType[3];
+
+			float left = 10 / (float)600, right = 500 / (float)60, top = 50 / (float)60, bottom = 500 / (float)60;
+
+			//load the vertex array with data
+			vertices[0].position = D3DVECTOR4(left, top, 0, 1);
+			vertices[0].color = D3DVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+			vertices[1].position = D3DVECTOR4(right, top, 0, 1);
+			vertices[1].color = D3DVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+			vertices[2].position = D3DVECTOR4(right, bottom, 0, 1);
+			vertices[2].color = D3DVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+			//create the index array
+			indices = new unsigned long[3];
+			//load the index array with data
+			for (int i = 0; i < 3; i++)
+				indices[i] = i;
+
+			HRESULT result;
+
+			//set up the description of the dynamic vertex buffer
+			vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;  //enables recreation and movement of vertices
+			vertexBufferDesc.ByteWidth = sizeof(VertexType) * 3 ;
+			vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+			vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;  //couples with dynamic
+			vertexBufferDesc.MiscFlags = 0;
+			vertexBufferDesc.StructureByteStride = 0;
+			//give the subresource structure a pointer to the vertex data
+			vertexData.pSysMem = vertices;
+			vertexData.SysMemPitch = 0;
+			vertexData.SysMemSlicePitch = 0;
+
+			//now create the vertex buffer
+			result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
+			if (FAILED(result)) {
+				logF("CreateBuffer %llX", result);
+			}
+
+			//set up the description of the static index buffer
+			indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+			indexBufferDesc.ByteWidth = sizeof(unsigned long) * 3;
+			indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+			indexBufferDesc.CPUAccessFlags = 0;
+			indexBufferDesc.MiscFlags = 0;
+			indexBufferDesc.StructureByteStride = 0;
+			//give the subresource structure a pointer to the index data
+			indexData.pSysMem = indices;
+			indexData.SysMemPitch = 0;
+			indexData.SysMemSlicePitch = 0;
+
+			//create the index buffer
+			result = device->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
+			if (FAILED(result)) {
+				logF("CreateBuffer2 %llX", result);
+
+			}
+		}
+
+		init = true;
+	}
+
+	/*
+	
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+
+	ImGuiIO& io = ImGui::GetIO();
+	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
+	if (dat) {
+		io.DisplaySize = ImVec2(dat->windowSizeReal.x, dat->windowSizeReal.y);
+	}
+
+	ImGui::NewFrame();
+
+
+	ImGui::Begin("bean");
+
+	ImGui::Text("Hello");
+	ImGui::Button("World!");
+
+	ImGui::End();
+
+	ImGui::Begin("wat");
+
+	ImGui::Text("Hello");
+	ImGui::Button("World!");
+
+	ImGui::End();
+
+	ImGui::EndFrame();
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());*/
+
+	unsigned int stride = sizeof(VertexType);
+	unsigned int offset = 0;
+
+	//lock the vertex buffer so it can be written to
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	auto result = context->Map(vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result)) {
+		return false;
+	}
+
+	auto verticesPtr = (VertexType*)mappedResource.pData;
+
+	//copy the data into the vertex buffer
+	memcpy(verticesPtr, (void*)vertices, (sizeof(VertexType) * 3));
+
+	context->Unmap(vertexBuffer, 0);
+
+	context->VSSetShader(m_vertexShader, 0, 0);
+	context->PSSetShader(0, 0, 0);
+	context->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+	context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	context->IASetInputLayout(m_pInputLayout);
+	
+	context->DrawIndexed(3, 0, 0);
+#endif
+
+	//#define TEST_DIRECTX
+
+#ifdef TEST_DIRECTX
+	if (!GameWnd.isInitialized())
+		GameWnd.Init(chain, g_Data.getDllModule());
+	else
+		GameWnd.Render();
+
+#endif  // DEBUG
+	return func(chain, syncInterval, flags);
+}
+
+HRESULT Hooks::swapChain__ResizeBuffers(IDXGISwapChain* chain, UINT bufferCount, UINT Width, UINT Height, DXGI_FORMAT Newformat, UINT SwapChainFlags) {
+	auto func = g_Hooks.swapchain__resizeBuffersHook->GetFastcall<HRESULT, IDXGISwapChain*, UINT, UINT, UINT, DXGI_FORMAT, UINT>();
+
+#ifdef TEST_DIRECTX
+	GameWnd.OnWindowSizeChanged(static_cast<int>(Width), static_cast<int>(Height));
+#endif
+	HRESULT ret = func(chain, bufferCount, Width, Height, Newformat, SwapChainFlags);
+
+	return ret;
+}
+
+__int64 Hooks::Cube__compile(__int64 a1, __int64 a2) {
+	auto func = g_Hooks.cube__compileHook->GetFastcall<__int64, __int64, __int64>();
+
+	auto ret = func(a1, a2);
+
+	auto end = *reinterpret_cast<__int64*>(a1 + 0x38);
+	auto it = *reinterpret_cast<__int64*>(a1 + 0x30);
+	auto boi = it + 0x1C;
+	while (it != end) {  // loop through PolygonQuad
+
+		if (it != boi + 0x34) {
+			auto iter2 = boi - 0xC;
+			do {
+				// PolygonQuad::compile
+				float* floatyBoi = reinterpret_cast<float*>(iter2 - 16);
+				logF("%.1f %.1f %.1f", floatyBoi[0], floatyBoi[1], floatyBoi[2]);
+				iter2 += 0x14;
+
+			} while (iter2 - 0x10 != boi + 0x34);
+		}
+		boi += 0x50;
+		it += 0x50;
+	}
+
+	return ret;
+}
+
+__int64 Hooks::InGamePlayScreen___renderLevel(__int64 playScreen, __int64 a2, __int64 a3) {
+	auto func = g_Hooks.InGamePlayScreen___renderLevelHook->GetFastcall<__int64, __int64, __int64, __int64>();
+	return func(playScreen, a2, a3);
+}
+__int64 Hooks::GameMode_attack(C_GameMode* _this, C_Entity* ent) {
+	auto func = g_Hooks.GameMode_attackHook->GetFastcall<__int64, C_GameMode*, C_Entity*>();
+	return func(_this, ent);
+}
+void Hooks::LocalPlayer__updateFromCamera(__int64 a1, C_Camera* camera) {
+	auto func = g_Hooks.LocalPlayer__updateFromCameraHook->GetFastcall<__int64, __int64, C_Camera*>();
+	auto freelookMod = moduleMgr->getModule<Freelook>();
+	auto noHurtcamMod = moduleMgr->getModule<NoHurtcam>();
+
+	if(freelookMod->redirectMouse){
+		freelookMod->cameraFacesFront = camera->facesPlayerFront;
+		freelookMod->isThirdPerson = camera->renderPlayerModel;
+		if(freelookMod->resetViewTick >= 0){
+			camera->setOrientationDeg(freelookMod->lastCameraAngle.x, freelookMod->lastCameraAngle.y, 0);
+		}else{
+			camera->getPlayerRotation(&freelookMod->lastCameraAngle);
+		}
+
+		return;
+	}
+	if(noHurtcamMod->isEnabled() && g_Data.isInGame() && g_Data.getLocalPlayer()->isAlive()){
+		vec2_t rot;
+		camera->getPlayerRotation(&rot);
+		if(camera->facesPlayerFront){
+			rot.x *= -1; // rotate back
+			rot.y += 180;
+			rot = rot.normAngles();
+		}
+
+		camera->setOrientationDeg(rot.x, rot.y, 0);
+	}
+
+	func(a1, camera);
+}
+bool Hooks::Mob__isImmobile(C_Entity* ent) {
+	auto func = g_Hooks.Mob__isImmobileHook->GetFastcall<bool, C_Entity*>();
+
+	static auto antiImmobileMod = moduleMgr->getModule<AntiImmobile>();
+	if(antiImmobileMod->isEnabled() && ent == g_Data.getLocalPlayer())
+		return false;
+
+	return func(ent);
+}
+void Hooks::InventoryTransactionManager__addAction(C_InventoryTransactionManager* _this, C_InventoryAction& action) {
+	auto func = g_Hooks.InventoryTransactionManager__addActionHook->GetFastcall<void, C_InventoryTransactionManager*, C_InventoryAction&>();
+
+#ifdef TEST_DEBUG
+	char* srcName = "none";
+	if(action.sourceItem.item && *action.sourceItem.item)
+		srcName = (*action.sourceItem.item)->name.getText();
+	char* targetName = "none";
+	if(action.targetItem.item && *action.targetItem.item)
+		targetName = (*action.targetItem.item)->name.getText();
+	logF("%i %i %i %s %s", action.type, action.slot, action.sourceType, srcName, targetName, action.sourceType);
+
+
+
+	/*if(/*action.slot == 14 && action.sourceType == 124 && strcmp(targetName, "none") == 0 && *strcmp(srcName, "stone_shovel") == 0){
+		std::string tag = "{ench:[{id:9s,lvl:1s}]}";
+		action.sourceItem.setUserData(std::move(Mojangson::parseTag(tag)));
+	}
+	if(/*action.slot == 2 && action.sourceType == 256 && strcmp(srcName, "none") == 0 &&* strcmp(targetName, "stone_shovel") == 0){
+		std::string tag = "{ench:[{id:9s,lvl:1s}]}";
+		action.targetItem.setUserData(std::move(Mojangson::parseTag(tag)));
+	}*/
+#endif
+
+	func(_this, action);
+}
+
+void Hooks::LevelRendererPlayer__renderNameTags(__int64 a1, __int64 a2, TextHolder* a3, __int64 a4) {
+	static auto func = g_Hooks.LevelRendererPlayer__renderNameTagsHook->GetFastcall<void, __int64, __int64, TextHolder*, __int64>();
+	static auto nameTagsMod = moduleMgr->getModule<NameTags>();
+
+	if (nameTagsMod->isEnabled() && nameTagsMod->nameTags.size() > 0) {
+
+		std::string text = Utils::sanitize(a3->getText());
+		std::size_t found = text.find('\n');
+
+		if (found != std::string::npos)
+			text = text.substr(0, found);
+		
+		if (nameTagsMod->nameTags.find(text) != nameTagsMod->nameTags.end())
+			return;
+	}
+
+
+	return func(a1, a2, a3, a4);
 }

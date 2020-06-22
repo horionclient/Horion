@@ -1,12 +1,8 @@
 #pragma once
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#include <Windows.h>
-
+#include <mutex>
 #include <vector>
-#include "Utils.h"
+#include <memory>
 
 #ifdef _DEBUG
 #include <ios>
@@ -14,10 +10,14 @@
 #include <iostream>
 #endif
 
+#include "xorstr.h"
+#include <string>
+
 #pragma comment(lib, "runtimeobject")
 
 #ifndef logF
-#define logF Logger::WriteLogFileF
+//#define logF(x) Logger::WriteLogFileF(XorString(x))
+#define logF(x, ...) Logger::WriteLogFileF(XorString(x), __VA_ARGS__)
 #endif
 
 struct TextForPrint {
@@ -25,20 +25,22 @@ struct TextForPrint {
 	char text[100];
 };
 
+struct TextForPrintBig {
+	char time[20];
+	char text[2900];
+};
+
 class Logger {
 
 public:
 	static std::wstring GetRoamingFolderPath();
-	static void WriteLogFileF(const char* fmt, ...);
+	static void WriteLogFileF(volatile char* fmt, ...);
 	static void WriteBigLogFileF(size_t maxSize, const char* fmt, ...);
+	static void SendToConsoleF(const char* msg);
 	static std::vector<TextForPrint>* GetTextToPrint();
-	static CRITICAL_SECTION* GetTextToPrintSection();
+	static std::vector<std::shared_ptr<TextForPrintBig>>* GetTextToSend();
+	static std::lock_guard<std::mutex> GetTextToPrintLock();
+	static std::lock_guard<std::mutex> GetTextToInjectorLock();
 	//static std::vector<TextForPrint*> stringPrintVector;
 	static void Disable();
 };
-
-extern char logPath[200];
-extern bool initializedLogger;
-extern CRITICAL_SECTION loggerLock;
-extern CRITICAL_SECTION vecLock;
-extern std::vector<TextForPrint> stringPrintVector;

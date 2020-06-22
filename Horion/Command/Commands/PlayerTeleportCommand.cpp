@@ -1,4 +1,5 @@
 #include "PlayerTeleportCommand.h"
+#include "../../../Utils/Utils.h"
 
 PlayerTeleportCommand::PlayerTeleportCommand() : IMCCommand("playertp", "Teleports to players coordinates", "<NameOfThePlayer>") {
 }
@@ -7,19 +8,19 @@ PlayerTeleportCommand::~PlayerTeleportCommand() {
 }
 
 bool PlayerTeleportCommand::execute(std::vector<std::string>* args) {
-	assertTrue(g_Data.getClientInstance()->getLocalPlayer() != nullptr);
+	assertTrue(g_Data.getLocalPlayer() != nullptr);
 	assertTrue(args->size() > 1);  // .playertp <player>
 	std::string nameOfPlayer = args->at(1);
-	assertTrue(nameOfPlayer.size() > 0);
+	assertTrue(!nameOfPlayer.empty());
 	std::string nameOfPlayerLower = std::string(nameOfPlayer);
 	std::transform(nameOfPlayerLower.begin(), nameOfPlayerLower.end(), nameOfPlayerLower.begin(), ::tolower);
+	nameOfPlayerLower = Utils::sanitize(nameOfPlayerLower);
 
 	C_EntityList* entList = g_Data.getEntityList();
 	size_t listSize = entList->getListSize();
 	vec3_t pos;
 
 	if (listSize > 5000) {
-		logF("Big ent list wtf men %i", listSize);
 		return true;
 	}
 	std::string playerName;

@@ -1,4 +1,6 @@
 #include "HudModule.h"
+#include "../../DrawUtils.h"
+#include "../../Scripting/ScriptManager.h"
 
 HudModule::HudModule() : IModule(0x0, Category::VISUAL, "Displays ArrayList/TabGUI") {
 	registerBoolSetting("TabGui", &this->tabgui, this->tabgui);
@@ -11,6 +13,7 @@ HudModule::HudModule() : IModule(0x0, Category::VISUAL, "Displays ArrayList/TabG
 	registerBoolSetting("Keystrokes", &this->keystrokes, this->keystrokes);
 	registerBoolSetting("Show FPS", &this->fps, this->fps);
 	registerBoolSetting("Show CPS", &this->cps, this->cps);
+	registerBoolSetting("Always show", &this->alwaysShow, this->alwaysShow);
 }
 
 HudModule::~HudModule() {
@@ -21,40 +24,41 @@ const char* HudModule::getModuleName() {
 }
 
 void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
+
 	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+	float startY = tabgui ? 60.f : 0.f;
+	if(tabgui && scriptMgr.getNumEnabledScripts() > 0)
+		startY += 10;
 	{  // FPS
-		if (!(g_Data.getLocalPlayer() == nullptr || !this->fps || !GameData::canUseMoveKeys())) {
+		if (!(g_Data.getLocalPlayer() == nullptr || !this->fps)) {
 			std::string fpsText = "FPS: " + std::to_string(g_Data.getFPS());
-			float offset = tabgui ? 60.f : 0.f;
-			vec4_t rectPos = vec4_t(2.5f, offset + 5.f, 50.5f, offset + 15.f);
+			vec4_t rectPos = vec4_t(2.5f, startY + 5.f, 50.5f, startY + 15.f);
 			vec2_t textPos = vec2_t(rectPos.x + 1.5f, rectPos.y + 1.f);
 			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48), 1.f);
 			DrawUtils::drawText(textPos, &fpsText, MC_Color(200, 200, 200), 1.f);
+
+			startY += 10;
 		}
 	}
 	{  // CPS
-		if (!(g_Data.getLocalPlayer() == nullptr || !this->cps || !GameData::canUseMoveKeys())) {
+		if (!(g_Data.getLocalPlayer() == nullptr || !this->cps)) {
 			std::string cpsText = "CPS: " + std::to_string(g_Data.getLeftCPS()) + " - " + std::to_string(g_Data.getRightCPS());
-			float offset = 0.f;
-			if (tabgui) offset += 60.f;
-			if (fps) offset += 10.f;
-			vec4_t rectPos = vec4_t(2.5f, offset + 5.f, 50.5f, offset + 15.f);
+			vec4_t rectPos = vec4_t(2.5f, startY + 5.f, 50.5f, startY + 15.f);
 			vec2_t textPos = vec2_t(rectPos.x + 1.5f, rectPos.y + 1.f);
 			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48), 1.f);
 			DrawUtils::drawText(textPos, &cpsText, MC_Color(200, 200, 200), 1.f);
+
+			startY += 10;
 		}
 	}
 	{  // Coordinates
-		if (!(g_Data.getLocalPlayer() == nullptr || !this->coordinates || !GameData::canUseMoveKeys())) {
+		if (!(g_Data.getLocalPlayer() == nullptr || !this->coordinates)) {
 			vec3_t* pos = g_Data.getLocalPlayer()->getPos();
-			std::string coordsX = "X: " + std::to_string((int)pos->x);
-			std::string coordsY = "Y: " + std::to_string((int)pos->y);
-			std::string coordsZ = "Z: " + std::to_string((int)pos->z);
-			float offset = 0.f;
-			if (tabgui) offset += 60.f;
-			if (fps) offset += 10.f;
-			if (cps) offset += 10.f;
-			vec4_t rectPos = vec4_t(2.5f, offset + 5.f, 50.5f, offset + 35.f);
+
+			std::string coordsX = "X: " + std::to_string((int)floorf(pos->x));
+			std::string coordsY = "Y: " + std::to_string((int)floorf(pos->y));
+			std::string coordsZ = "Z: " + std::to_string((int)floorf(pos->z));
+			vec4_t rectPos = vec4_t(2.5f, startY + 5.f, 50.5f, startY + 35.f);
 			vec2_t textPos = vec2_t(rectPos.x + 1.5f, rectPos.y + 1.f);
 			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48), 1.f);
 			DrawUtils::drawText(textPos, &coordsX, MC_Color(200, 200, 200), 1.f);

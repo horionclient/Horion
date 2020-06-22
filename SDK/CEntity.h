@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../Utils/HMath.h"
-#include "../Utils/Utils.h"
 #include "CBlockLegacy.h"
 #include "CEntityList.h"
 #include "CInventory.h"
@@ -23,6 +22,7 @@ public:
 
 class C_Player;
 
+#pragma pack(push, 4)
 class C_Entity {
 public:
 	uintptr_t *ptrToPtrToEntList;  //0x0008
@@ -36,8 +36,14 @@ public:
 		};
 		vec2_t viewAngles;
 	};
-	float pitch2;  //0x00F8
-	float yaw2;    //0x00FC
+	union {
+		struct {
+			float pitch2;  //0x00F0
+			float yaw2;    //0x00F4
+		};
+		vec2_t viewAngles2;
+	};
+
 private:
 	char pad_0100[0x10];  //0x0100
 public:
@@ -71,15 +77,16 @@ public:
 private:
 	char pad_0x350[0xE0];  //0x340
 public:
-	AABB aabb;  //0x0420
+	AABB aabb;  //0x0458
+	float width;        //0x0474
+	float height;       //0x0478
+	vec3_t currentPos;  //0x047C
+	vec3_t oldPos;      //0x0488
+	vec3_t velocity;    //0x0494
 private:
-	char pad_0x448[0x4];  //0x0438
+	char pad_0x350[0xE0];  //0x350
 public:
-	float width;        //0x043C
-	float height;       //0x0440
-	vec3_t currentPos;  //0x0444
-	vec3_t oldPos;      //0x0450
-	vec3_t velocity;    //0x045C
+	AABB aabb;  //0x0430
 private:
 	char pad_0x0478[0x58];  //0x468
 public:
@@ -304,6 +311,7 @@ private:
 	virtual __int64 feed(int);
 	virtual __int64 handleEntityEvent(__int64, int);
 	virtual __int64 getPickRadius(void);
+	virtual const struct HashedString* getActorRendererId(void);
 	virtual __int64 spawnAtLocation(int, int);
 	virtual __int64 spawnAtLocation(int, int, float);
 	virtual __int64 spawnAtLocation(__int64 const &, int);
@@ -371,9 +379,9 @@ private:
 
 public:
 	virtual void causeFallDamage(float);
+	virtual void handleFallDistanceOnServer(float, bool);
 
 private:
-	virtual __int64 handleFallDistanceOnServer(float, bool);
 	virtual __int64 playSynchronizedSound(__int64, vec3_t const &, __int64 const &, bool);
 	virtual __int64 playSynchronizedSound(__int64, vec3_t const &, int, bool);
 	virtual __int64 onSynchedDataUpdate(int);
@@ -646,14 +654,7 @@ private:
 	virtual __int64 tickWorld(__int64 const &);
 
 public:
-	C_InventoryTransactionManager *getTransactionManager() {
-		static unsigned int offset = 0;
-		if (offset == 0) {
-			// EnchantCommand::execute
-			offset = *reinterpret_cast<int *>(FindSignature("48 8D 8B ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 48 8D 8D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8D 8D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B ?? ?? ?? 8B") + 3);
-		}
-		return reinterpret_cast<C_InventoryTransactionManager *>(reinterpret_cast<__int64>(this) + offset);
-	}
+	C_InventoryTransactionManager *getTransactionManager();
 
 	AABB *getAABB() {
 		return &this->aabb;
@@ -671,19 +672,20 @@ public:
 		}
 		return result;
 	}
+
+	int getTicksUsingItem(){
+		return *reinterpret_cast<int*>(reinterpret_cast<__int64>(this) + 0x1188);
+	}
+
 };
+
+#pragma pack(pop)
 
 class C_ServerPlayer;
 
 class C_Player : public C_Entity {
 public:
-	C_PlayerInventoryProxy *getSupplies() {
-		static unsigned int offset = 0;
-		if (offset == 0) {
-			offset = *reinterpret_cast<int *>(FindSignature("4C 8B 8A ? ? ? ? 41 80 B9 ? ? ? ? ? 75 18 49 8B 89 ? ? ? ? 41 8B 51") + 3);  // GameMode::startDestroyBlock -> GameMode::_canDestroy -> getSupplies
-		}
-		return *reinterpret_cast<C_PlayerInventoryProxy **>(reinterpret_cast<__int64>(this) + offset);
-	};
+	C_PlayerInventoryProxy *getSupplies();;
 
 	C_ItemStack *getSelectedItem() {
 		auto supplies = this->getSupplies();
@@ -851,12 +853,8 @@ class C_ServerPlayer : public C_Player {
 
 class C_LocalPlayer : public C_Player {
 public:
-	void unlockAchievments() {  // MinecraftEventing::fireEventAwardAchievement
-		using fireEventAward = void(__fastcall *)(void *, int);
-		static fireEventAward fireEventAwardFunc = reinterpret_cast<fireEventAward>(FindSignature("48 85 C9 0F 84 ?? ?? ?? ?? 55 56 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 8B"));
-		for (int i = 0; i < 100; i++)
-			fireEventAwardFunc(this, i);
-	}
+
+	void unlockAchievments();
 
 	void swingArm() {
 		//using SwingArm = void(__thiscall*)(void*);
@@ -869,15 +867,6 @@ public:
 		static Turn TurnFunc = reinterpret_cast<Turn>(FindSignature("4C 8B DC 55 57 ?? ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? 45 ?? ?? ?? ?? ?? ?? ?? 48 8B 05 D6 D4 A5 01 48 33 C4 48 89 45 ?? 49 89 5B ?? 48 8B F9 ?? ?? ?? ?? ?? ?? ?? 48 8B DA 4D 89 73 E8 41 0F 29 73 D8 41 0F 29 7B C8 48 8B 01 FF 90 ?? ?? ?? ?? F2 0F 10 03"));
 		TurnFunc(this, viewAngles);
 	}*/
-	void applyTurnDelta(vec2_t *viewAngleDelta) {
-		using applyTurnDelta = void(__thiscall *)(void *, vec2_t *);
-		static applyTurnDelta TurnDelta = reinterpret_cast<applyTurnDelta>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B D9 0F 29 74 24 ?? 48 8B 89 ?? ?? ?? ?? 48 8B ?? 0F 29 7C 24 ?? 44 0F"));
-		TurnDelta(this, viewAngleDelta);
-	}
-	void setGameModeType(int gma) {
-		// Player::setPlayerGameType
-		using setGameMode = void(__thiscall *)(void *, int);
-		static setGameMode Game_Mode = reinterpret_cast<setGameMode>(FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 89 ?? 24 ?? 48 89 ?? 24 ?? 8B FA 48 8B D9 8B B1"));
-		Game_Mode(this, gma);
-	}
+	void applyTurnDelta(vec2_t *viewAngleDelta);
+	void setGameModeType(int gma);
 };

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 enum class TagType{
 	END,
 	BYTE,
@@ -55,6 +57,7 @@ public:
 
 	
 	std::string toString() {
+		return "";
 		//return String.valueOf(symbol);
 	}
 };

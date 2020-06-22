@@ -19,18 +19,51 @@
 #include "../SDK/CRakNetInstance.h"
 #include "../SDK/CUIScene.h"
 #include "../SDK/TextHolder.h"
+#include "../SDK/CCamera.h"
 #include "../Utils/TextFormat.h"
 #include "../Utils/SkinUtil.h"
 #include "../resource.h"
 #include "GameData.h"
 #include "MinHook.h"
+//#include "../Horion/Game/Game.h"
 
 #include <intrin.h>
 #include <thread>
 #include <dxgi.h>
+#include <d3d11.h>
+#include <d3dcompiler.h>
+
+#include "../include/d3dx11async.h"
+
+#include "../include/imgui/imgui.h"
+#include "../include/imgui/examples/imgui_impl_dx11.h"
+#include "../include/imgui/examples/imgui_impl_win32.h"
 
 class VMTHook;
 class FuncHook;
+
+struct CoolSkinData {
+	TextHolder unknown;
+	TextHolder unknown2;
+	TextHolder skinResourcePatch;  // 0x040
+	TextHolder geometryName; // 0x060 "geometry.humanoid.custom"
+	unsigned char gap2[0x40];      // 0x080
+	void* startAnimatedFrames;     // 0x0C0
+	void* endAnimatedFrames;       // 0x0C8
+	unsigned char gap3[0x8];      // 0x0D0
+	TextHolder geometryData;		// 0x0D8
+	TextHolder skinAnimationData;  // 0x0F8
+	unsigned char gap4[0x20];      // 0x118
+	bool isPremiumSkin;            // 0x138
+	bool isPersonaSkin;
+	bool isCapeOnClassicSkin;
+	void* startPersonaPieces;
+	void* endPersonaPieces;
+	unsigned char gap5[0x8];  // 0x150
+	TextHolder armSize;       // 0x158
+	unsigned char gap6[0x8];  // 0x178
+	void* startPieces;
+};
 
 class Hooks {
 private:
@@ -64,23 +97,35 @@ private:
 	static int BlockLegacy_getRenderLayer(C_BlockLegacy* a1);
 	static __int8* BlockLegacy_getLightEmission(C_BlockLegacy* _this, __int8* a2);
 	static __int64 LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3);
-	static void ClickFunc(__int64 a1, char a2, bool a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
+	static void ClickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
 	static __int64 MoveInputHandler_tick(C_MoveInputHandler* _this, C_Entity* a2);
 	static __int64 ChestScreenController_tick(C_ChestScreenController* _this);
 	static __int64 GetGamma(__int64 a1);
 	static void JumpPower(C_Entity* _this, float a2);
 	static __int64 MinecraftGame_onAppSuspended(__int64 _this);
-	static void Actor_ladderUp(C_Entity* _this);
+	static void Actor_ascendLadder(C_Entity* _this);
 	static void Actor_startSwimming(C_Entity* _this);
 	static void RakNetInstance_tick(C_RakNetInstance* _this, __int64 a2, __int64 a3);
 	static float GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3);
-	static __int64 ConnectionRequest_create(__int64 _this, __int64 privateKeyManager, void* a3, TextHolder* selfSignedId, TextHolder* serverAddress, __int64 clientRandomId, TextHolder* skinId, SkinData* a8, __int64 capeData, __int64 animatedImageDataArr, TextHolder* skinResourcePatch, TextHolder* skinGeometryData, TextHolder* skinAnimationData, bool isPremiumSkin, bool isPersonaSkin, TextHolder* deviceId, int inputMode, int uiProfile, int guiScale, TextHolder* languageCode, bool sendEduModeParams, TextHolder* tenantId, __int64 unused, TextHolder* platformUserId, TextHolder* thirdPartyName, bool thirdPartyNameOnly, TextHolder* platformOnlineId, TextHolder* platformOfflineId, bool isCapeOnClassicSkin, TextHolder* capeId);
+	static __int64 GameMode_attack(C_GameMode* _this, C_Entity*);
+	static __int64 ConnectionRequest_create(__int64 _this, __int64 privateKeyManager, void* a3, TextHolder* selfSignedId, TextHolder* serverAddress, __int64 clientRandomId, TextHolder* skinId, SkinData* skinData, __int64 capeData, CoolSkinData* coolSkinStuff, TextHolder* deviceId, int inputMode, int uiProfile, int guiScale, TextHolder* languageCode, bool sendEduModeParams, TextHolder* tenantId, __int64 unused, TextHolder* platformUserId, TextHolder* thirdPartyName, bool thirdPartyNameOnly, TextHolder* platformOnlineId, TextHolder* platformOfflineId, TextHolder* capeId);
 	static void InventoryTransactionManager_addAction(C_InventoryTransactionManager* a1, C_InventoryAction* a2);
 	static void PaintingRenderer__render(__int64 _this, __int64 a2, __int64 a3);
 	static bool DirectoryPackAccessStrategy__isTrusted(__int64 _this);
 	static bool ReturnTrue(__int64 _this);
 	static __int64 SkinRepository___loadSkinPack(__int64 _this, __int64 pack, __int64 a3);
-	
+	static GamerTextHolder* toStyledString(__int64 strIn, GamerTextHolder* strOut);
+	static __int64 prepFeaturedServers(__int64 a1);
+	static __int64 prepFeaturedServersFirstTime(__int64 a1, __int64 a2);
+	static HRESULT swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT flags);
+	static __int64 InGamePlayScreen___renderLevel(__int64 playScreen, __int64 a2, __int64 a3);
+	static HRESULT swapChain__ResizeBuffers(IDXGISwapChain* chain, UINT bufferCount, UINT Width, UINT Height,DXGI_FORMAT Newformat,UINT SwapChainFlags);
+	static __int64 Cube__compile(__int64 a1, __int64 a2);
+	static void LocalPlayer__updateFromCamera(__int64 a1, C_Camera* a2);
+	static bool Mob__isImmobile(C_Entity*);
+	static void InventoryTransactionManager__addAction(C_InventoryTransactionManager*, C_InventoryAction &);
+	static void LevelRendererPlayer__renderNameTags(__int64 a1, __int64 a2,TextHolder* name, __int64 a4);
+
 	std::unique_ptr<FuncHook> GameMode_tickHook;
 	std::unique_ptr<FuncHook> SurvivalMode_tickHook;
 	std::unique_ptr<FuncHook> ChatScreenController_sendChatMessageHook;
@@ -108,10 +153,11 @@ private:
 	std::unique_ptr<FuncHook> GetGammaHook;
 	std::unique_ptr<FuncHook> JumpPowerHook;
 	std::unique_ptr<FuncHook> MinecraftGame_onAppSuspendedHook;
-	std::unique_ptr<FuncHook> Actor_ladderUpHook;
+	std::unique_ptr<FuncHook> Actor_ascendLadderHook;
 	std::unique_ptr<FuncHook> Actor_startSwimmingHook;
 	std::unique_ptr<FuncHook> RakNetInstance_tickHook;
 	std::unique_ptr<FuncHook> GameMode_getPickRangeHook;
+	std::unique_ptr<FuncHook> GameMode_attackHook;
 	std::unique_ptr<FuncHook> ConnectionRequest_createHook;
 	std::unique_ptr<FuncHook> InventoryTransactionManager_addActionHook;
 	std::unique_ptr<FuncHook> PaintingRenderer__renderHook;
@@ -119,6 +165,17 @@ private:
 	std::unique_ptr<FuncHook> ZipPackAccessStrategy__isTrustedHook;
 	std::unique_ptr<FuncHook> SkinRepository___checkSignatureFileInPack;
 	std::unique_ptr<FuncHook> SkinRepository___loadSkinPackHook;
+	std::unique_ptr<FuncHook> toStyledStringHook;
+	std::unique_ptr<FuncHook> prepFeaturedServersHook;
+	std::unique_ptr<FuncHook> prepFeaturedServersFirstTimeHook;
+	std::unique_ptr<FuncHook> swapchain__presentHook;
+	std::unique_ptr<FuncHook> InGamePlayScreen___renderLevelHook;
+	std::unique_ptr<FuncHook> swapchain__resizeBuffersHook;
+	std::unique_ptr<FuncHook> cube__compileHook;
+	std::unique_ptr<FuncHook> LocalPlayer__updateFromCameraHook;
+	std::unique_ptr<FuncHook> Mob__isImmobileHook;
+	std::unique_ptr<FuncHook> InventoryTransactionManager__addActionHook;
+	std::unique_ptr<FuncHook> LevelRendererPlayer__renderNameTagsHook;
 };
 
 extern Hooks g_Hooks;

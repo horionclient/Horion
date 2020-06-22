@@ -11,7 +11,7 @@ const char* AutoSneak::getModuleName() {
 }
 
 void AutoSneak::onTick(C_GameMode* gm) {
-	if (!gm->player->isSneaking()) {
-		gm->player->setSneaking(true);
-	}
+	auto loc = g_Data.getLocalPlayer(); // this is hella broke
+	loc->setSneaking(true);
+
 }

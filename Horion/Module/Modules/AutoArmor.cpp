@@ -1,4 +1,5 @@
 #include "AutoArmor.h"
+#include "../../../Utils/Utils.h"
 
 class ArmorStruct {
 public:
@@ -45,8 +46,10 @@ void AutoArmor::onTick(C_GameMode* gm) {
 		uintptr_t sigOffset = FindSignature("48 8D ?? ?? ?? ?? ?? 40 38 ?? ?? 0F 84 ?? ?? ?? ?? 48 8B 4A");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		emptyItemStack = reinterpret_cast<C_ItemStack*>(sigOffset + offset + /*length of instruction*/ 7);
+#ifdef _DEBUG
 		if (emptyItemStack == 0x0 || sigOffset == 0x0)
-			logF("emptyItemStack sig not working!!!");
+			__debugbreak();
+#endif
 	}
 
 	std::vector<ArmorStruct> armorList;

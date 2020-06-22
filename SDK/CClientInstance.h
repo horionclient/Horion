@@ -18,6 +18,10 @@ private:
 	char pad_0x0000[0x870];  //0x0000
 public:
 	vec3_t origin;  //0x0870
+
+	__int64 getLevelRendererPlayer(){
+		return reinterpret_cast<__int64>(this) + 0x310;
+	}
 };
 class HitDetectSystem;
 
@@ -67,6 +71,8 @@ public:
 	const bool canUseKeybinds() {
 		return canUseKeys;
 	};
+
+	__int64 getServerEntries();
 };
 
 class C_GuiData {
@@ -91,27 +97,11 @@ public:
 		vec2_t windowSize;  //0x0028
 	};
 
-	void displayClientMessageVA(const char* fmt, va_list lis) {
-		char message[300];
-		vsprintf_s(message, 300, fmt, lis);
-		std::string msg(message);
-		displayClientMessage(&msg);
-	}
+	void displayClientMessageVA(const char* fmt, va_list lis, bool sendToInjector = true);
 
-	void displayClientMessageF(const char* fmt, ...) {
-		va_list arg;
-		va_start(arg, fmt);
-		displayClientMessageVA(fmt, arg);
-		va_end(arg);
-	}
-	void displayClientMessage(std::string* a2) {
-		using displayClientMessage = void(__thiscall*)(void*, TextHolder);  // This signature actually exists 2 times but we got luck that our function is the first in memory
-		static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(FindSignature("4C 8B DC 48 81 EC ? ? ? ? 49 C7 43 ? ? ? ? ? 49 C7 43 ? ? ? ? ? 33 C0 49 89 43 ?? 41 88 43 ?? 49 C7 43"));
-
-		TextHolder text = TextHolder(*a2);
-
-		displayMessageFunc(this, text);
-	};
+	void displayClientMessageF(const char* fmt, ...);
+	void displayClientMessageNoSendF(const char* fmt, ...);
+	void displayClientMessage(std::string* a2);
 };
 
 struct PtrToGameSettings3 {
@@ -134,6 +124,9 @@ private:
 public:
 	PtrToGameSettings2* ptr;
 };
+
+class C_MoveInputHandler;
+class C_CameraManager;
 
 class C_ClientInstance {
 private:
@@ -167,7 +160,17 @@ public:
 private:
 	char pad_0x00B8[0x30];  //0x0110
 public:
-	C_LocalPlayer* localPlayer;  //0x0140
+	C_LocalPlayer* localPlayer;  //0x00F0
+private:
+	char pad[0x380]; // 0x00F8
+public:
+	struct {
+		char pad[0x228];
+		struct {
+			__int64 materialPtr;
+			size_t refCount;
+		} entityLineMaterial;
+	} *itemInHandRenderer; // 0x0478
 
 private:
 	virtual __int64 destructorClientInstance();
@@ -416,7 +419,9 @@ private:
 	virtual __int64 getHolosceneRenderer(void) const;
 	virtual __int64 getLevelRenderer(void) const;
 	virtual __int64 getLevelRendererCameraProxy(void) const;
-	virtual __int64 sub_1400CCC00(void) const;
+public:
+	virtual C_CameraManager* getCameraManager(void) const;
+private:
 	virtual __int64 sub_1400CCC08(void) const;
 	virtual __int64 getLightTexture(void);
 
@@ -550,9 +555,7 @@ private:
 
 public:
 	virtual void setMoveTurnInput(__int64);
-
-private:
-	virtual __int64 getMoveTurnInput(void);
+	virtual C_MoveInputHandler* getMoveTurnInput(void);
 
 public:
 	virtual void setupPersistentControls(__int64);
@@ -695,7 +698,7 @@ private:
 	virtual __int64 updateScreens(void);
 
 public:
-	C_LocalPlayer* getLocalPlayer() {
+	C_LocalPlayer* getLocalPlayerDONTUSEPLS() {
 		return localPlayer;
 	};
 

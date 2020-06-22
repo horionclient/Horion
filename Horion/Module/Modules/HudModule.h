@@ -16,6 +16,7 @@ public:
 	bool keystrokes = true;
 	bool fps = true;
 	bool cps = true;
+	bool alwaysShow = false;
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;

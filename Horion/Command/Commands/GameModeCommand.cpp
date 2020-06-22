@@ -8,7 +8,7 @@ GameModeCommand::~GameModeCommand() {
 }
 
 bool GameModeCommand::execute(std::vector<std::string>* args) {
-	assertTrue(g_Data.getClientInstance()->getLocalPlayer() != nullptr);
+	assertTrue(g_Data.getLocalPlayer() != nullptr);
 	assertTrue(args->size() > 1);
 	int gamemode = assertInt(args->at(1));
 	if (gamemode >= 0 && gamemode <= 2) {

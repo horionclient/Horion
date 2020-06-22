@@ -15,13 +15,13 @@ public:
 		return (lastEntity - firstEntity) / sizeof(uintptr_t);
 	}
 
-	inline C_Entity* get(std::size_t idx) {
+	inline C_Entity* get(size_t idx) {
 		if (idx >= getListSize())
 			return 0;
 		return *reinterpret_cast<C_Entity**>(firstEntity + (idx * sizeof(uintptr_t)));
 	}
 
-	C_Entity* operator[](std::size_t idx) {
+	C_Entity* operator[](size_t idx) {
 		return get(idx);
 	}
 };  //Size=0x0050
@@ -39,13 +39,13 @@ public:
 		return (lastEntity - firstEntity) / sizeof(uintptr_t);
 	}
 
-	inline C_Entity* get(std::size_t idx) {
+	inline C_Entity* get(size_t idx) {
 		if (idx >= getListSize())
 			return 0;
 		return *reinterpret_cast<C_Entity**>(firstEntity + (idx * sizeof(uintptr_t)));
 	}
 
-	C_Entity* operator[](std::size_t idx) {
+	C_Entity* operator[](size_t idx) {
 		return get(idx);
 	}
 };  //Size=0x0050

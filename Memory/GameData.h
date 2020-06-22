@@ -23,14 +23,25 @@ enum DATAPACKET_CMD : int {
 	CMD_PONG,
 	CMD_OPENBROWSER,
 	CMD_FILECHOOSER,
-	CMD_RESPONSE
+	CMD_RESPONSE,
+	CMD_FOLDERCHOOSER, // sets permissions for a whole folder and sends the path over
+	CMD_LOG
 };
 
 struct HorionDataPacket {
 	DATAPACKET_CMD cmd;
-	int params[5];
-	int dataArraySize;
+	int params[5] = {0};
+	int dataArraySize = 0;
 	std::shared_ptr<unsigned char[]> data;
+
+	HorionDataPacket() {
+	}
+};
+
+struct NetworkedData {
+	unsigned int xorKey = 0;
+	unsigned int localPlayerOffset = 0x94;  // Scrambled data
+	bool dataSet = false;
 };
 
 struct InfoBoxData {
@@ -54,14 +65,16 @@ struct SkinData;
 
 class GameData {
 private:
-	C_ClientInstance* clientInstance = 0;
-	C_LocalPlayer* localPlayer = 0;
-	C_GameMode* gameMode = 0;
-	C_EntityList* entityList = 0;
-	C_HIDController* hidController = 0;
-	C_RakNetInstance* raknetInstance = 0;
-	HMODULE hDllInst = 0;
-	std::set<std::shared_ptr<AABB>> chestList;
+	C_ClientInstance* clientInstance = nullptr;
+	C_LocalPlayer* localPlayer = nullptr;
+	C_GameMode* gameMode = nullptr;
+	C_EntityList* entityList = nullptr;
+	C_HIDController* hidController = nullptr;
+	C_RakNetInstance* raknetInstance = nullptr;
+	void* hDllInst = 0;
+	std::vector<std::shared_ptr<AABB>> chestList;
+	std::vector<std::string> textPrintList;
+	std::mutex textPrintLock;
 	std::mutex chestListMutex;
 	std::queue<HorionDataPacket> horionToInjectorQueue;
 	std::map<int, std::function<void(std::shared_ptr<HorionDataPacket>)>> injectorToHorionResponseCallbacks;
@@ -78,12 +91,13 @@ private:
 	bool shouldTerminateB = false;
 	bool shouldHideB = false;
 	bool isAllowingWIPFeatures = false;
-	LARGE_INTEGER lastUpdate;
+	__int64 lastUpdate;
 	AccountInformation accountInformation = AccountInformation::asGuest();
 	static void retrieveClientInstance();
 	TextHolder* fakeName;
 
 public:
+	NetworkedData networkedData;
 
 	static bool canUseMoveKeys();
 	static bool isKeyDown(int key);
@@ -96,12 +110,13 @@ public:
 	static void hide();
 	static void terminate();
 	static void updateGameData(C_GameMode* gameMode);
-	static void initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem, HMODULE hDllInst);
+	static void initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem, void* hDllInst);
 	static void addChestToList(C_ChestBlockActor* ChestBlock2);
 	static void EntityList_tick(C_EntityList* list);
 	static void setHIDController(C_HIDController* Hid);
 	static void setRakNetInstance(C_RakNetInstance* raknet);
 	static TextHolder* getGameVersion();
+	static void log(const char* fmt, ...);
 	float fov = 0.f;
 	int fps = 0;
 	int frameCount = 0;
@@ -161,26 +176,13 @@ public:
 			#endif
 		}
 	}
-	inline void sendPacketToInjector(HorionDataPacket horionDataPack) {
-		if (!isInjectorConnectionActive())
-			throw std::exception("Horion injector connection not active");
-		if (horionDataPack.dataArraySize >= 3000)
-			throw std::exception("Data packet data too big");
-		horionToInjectorQueue.push(horionDataPack);
-	}
+	void sendPacketToInjector(HorionDataPacket horionDataPack);
 	inline int addInjectorResponseCallback(std::function<void(std::shared_ptr<HorionDataPacket>)> callback) {
 		lastRequestId++;
 		this->injectorToHorionResponseCallbacks[lastRequestId] = callback;
 		return lastRequestId;
 	}
-	inline void callInjectorResponseCallback(int id, std::shared_ptr<HorionDataPacket> packet) {
-		if (this->injectorToHorionResponseCallbacks.find(id) == this->injectorToHorionResponseCallbacks.end()) {
-			logF("No response callback for request with id=%i!", id);
-			return;
-		}
-		this->injectorToHorionResponseCallbacks[id](packet);
-		this->injectorToHorionResponseCallbacks.erase(id);
-	}
+	void callInjectorResponseCallback(int id, std::shared_ptr<HorionDataPacket> packet);
 	inline bool allowWIPFeatures() {
 #ifdef _DEBUG
 		return true;
@@ -207,11 +209,23 @@ public:
 		horionToInjectorQueue.pop();
 		return pk;
 	};
-	inline HMODULE getDllModule() { return hDllInst; };
+	inline void* getDllModule() { return hDllInst; };
 	inline C_ClientInstance* getClientInstance() { return clientInstance; };
 	inline C_GuiData* getGuiData() { return clientInstance->getGuiData(); };
 	inline C_LocalPlayer* getLocalPlayer() {
-		localPlayer = clientInstance->getLocalPlayer();
+		#ifdef _BETA
+		unsigned int converted = networkedData.localPlayerOffset ^ networkedData.xorKey;
+		if (networkedData.localPlayerOffset < 0xA0 || converted < 0xA0 || converted > 0x132 || networkedData.dataSet == false)
+			localPlayer = nullptr;
+		else
+			localPlayer = *reinterpret_cast<C_LocalPlayer**>(reinterpret_cast<__int64>(clientInstance) + converted);
+		
+		#else
+		localPlayer = *reinterpret_cast<C_LocalPlayer**>(reinterpret_cast<__int64>(clientInstance) + 0xF0);
+		//localPlayer = clientInstance->getLocalPlayer();
+		
+		#endif
+		
 		if (localPlayer == nullptr)
 			gameMode = nullptr;
 		return localPlayer;
@@ -232,16 +246,12 @@ public:
 	C_EntityList* getEntityList() { return entityList; };
 	C_HIDController** getHIDController() { return &hidController; };
 	C_RakNetInstance* getRakNetInstance() { return raknetInstance; };
-	std::set<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
+	std::vector<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
 	auto lockChestList() { return std::lock_guard<std::mutex>(this->chestListMutex); }
-
 	void setFakeName(TextHolder* name) { fakeName = name; };
 	TextHolder* getFakeName() { return fakeName; };
-
-	inline LARGE_INTEGER getLastUpdateTime() { return lastUpdate; };
-
-	void forEachEntity(void (*callback)(C_Entity*, bool));
-
+	inline __int64 getLastUpdateTime() { return lastUpdate; };
+	void forEachEntity(std::function<void(C_Entity*, bool)>);
 	int getFPS() { return fps; };
 	int getLeftCPS() { return cpsLeft; };
 	int getRightCPS() { return cpsRight; };

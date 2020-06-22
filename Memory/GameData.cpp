@@ -1,5 +1,9 @@
 #include "GameData.h"
 
+#include <Windows.h>
+#include "../Utils/Logger.h"
+#include "../Utils/Utils.h"
+
 GameData g_Data;
 
 void GameData::retrieveClientInstance() {
@@ -44,9 +48,7 @@ bool GameData::isKeyDown(int key) {
 		if (sigOffset != 0x0) {
 			int offset = *reinterpret_cast<int*>((sigOffset + 3));                                         // Get Offset from code
 			keyMapOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instruction*/ 7;  // Offset is relative
-#ifdef _DEBUG
 			logF("KeyMap: %llX", keyMapOffset + g_Data.gameModule->ptrBase);
-#endif
 		}
 	}
 	// All keys are mapped as bools, though aligned as ints (4 byte)
@@ -100,24 +102,50 @@ void GameData::updateGameData(C_GameMode* gameMode) {
 	retrieveClientInstance();
 	g_Data.localPlayer = g_Data.getLocalPlayer();
 
-	if (gameMode->player == g_Data.localPlayer) {  // GameMode::tick might also be run on the local server
+	if (g_Data.localPlayer != nullptr && gameMode->player == g_Data.localPlayer) {  // GameMode::tick might also be run on the local server
 		g_Data.gameMode = gameMode;
-		QueryPerformanceCounter(&g_Data.lastUpdate);
+		QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&g_Data.lastUpdate));
 
 		if (g_Data.localPlayer != nullptr) {
 			C_GuiData* guiData = g_Data.clientInstance->getGuiData();
-			auto* vecLock = Logger::GetTextToPrintSection();
 
-			if (guiData != nullptr && (vecLock == nullptr || TryEnterCriticalSection(vecLock))) {
-				auto* stringPrintVector = Logger::GetTextToPrint();
+
+			if (guiData != nullptr) {
+				{
+					auto vecLock = Logger::GetTextToPrintLock();
+					auto* stringPrintVector = Logger::GetTextToPrint();
 #ifdef _DEBUG
-				for (std::vector<TextForPrint>::iterator it = stringPrintVector->begin(); it != stringPrintVector->end(); ++it) {
-					guiData->displayClientMessageF("%s%s%s%s", GOLD, it->time, RESET, it->text);
-				}
+					int numPrinted = 0;
+					std::vector<TextForPrint>::iterator it;
+					for (it = stringPrintVector->begin(); it != stringPrintVector->end(); ++it) {
+						numPrinted++;
+						if(numPrinted > 20){
+							break;
+						}
+
+						guiData->displayClientMessageNoSendF("%s%s%s%s", GOLD, it->time, RESET, it->text);
+					}
+					stringPrintVector->erase(stringPrintVector->begin(), it);
+#else
+					stringPrintVector->clear();
 #endif
-				stringPrintVector->clear();
-				if (vecLock != nullptr)
-					LeaveCriticalSection(vecLock);
+				}
+				{
+					auto lock = std::lock_guard<std::mutex>(g_Data.textPrintLock);
+
+					auto& stringPrintVector = g_Data.textPrintList;
+					int numPrinted = 0;
+					std::vector<std::string>::iterator it;
+					for (it = stringPrintVector.begin(); it != stringPrintVector.end(); ++it) {
+						numPrinted++;
+						if(numPrinted > 20){
+							break;
+						}
+
+						guiData->displayClientMessageNoSendF(it->c_str());
+					}
+					stringPrintVector.erase(stringPrintVector.begin(), it);
+				}
 			}
 		}
 	}
@@ -135,19 +163,22 @@ void GameData::setRakNetInstance(C_RakNetInstance* raknet) {
 	g_Data.raknetInstance = raknet;
 }
 
-void GameData::forEachEntity(void (*callback)(C_Entity*, bool)) {
-
+void GameData::forEachEntity(std::function<void(C_Entity*, bool)> callback) {
+	std::vector<C_Entity*> tickedEntities;
 	// New EntityList
 	{
 		// MultiplayerLevel::directTickEntities
-		// 48 89 5C 24 08 48 89 74  24 18 57 48 83 EC 20 48 8B 7A 20 48 8B F2 48 8B  BF F8 01 00 00 48 8B 1F
 		__int64 region = reinterpret_cast<__int64>(g_Data.getLocalPlayer()->region);
 		__int64* entityIdMap = *(__int64**)(*(__int64*)(region + 0x20) + 0x150i64);
 		for (__int64* i = (__int64*)*entityIdMap; i != entityIdMap; i = (__int64*)*i) {
 			__int64 actor = i[3];
-			if (actor && !*(char*)(actor + 0x361) && !*(char*)(actor + 0x362)) {
+			// !isRemoved() && !isGlobal()
+			if (actor && !*(char*)(actor + 0x389) && !*(char*)(actor + 0x38A)) {
 				C_Entity* ent = reinterpret_cast<C_Entity*>(actor);
-				callback(ent, false);
+				if (std::find(tickedEntities.begin(), tickedEntities.end(), ent) == tickedEntities.end()) {
+					callback(ent, false);
+					tickedEntities.push_back(ent);
+				}
 			}
 		}
 	}
@@ -162,10 +193,13 @@ void GameData::forEachEntity(void (*callback)(C_Entity*, bool)) {
 		} else {
 			size_t listSize = entList->getListSize();
 			//logF("listSize: %li", listSize);
-			if (listSize < 1000 && listSize > 1) {
+			if (listSize < 5000 && listSize > 1) {
 				for (size_t i = 0; i < listSize; i++) {
 					C_Entity* current = entList->get(i);
-					callback(current, true);
+					if (std::find(tickedEntities.begin(), tickedEntities.end(), current) == tickedEntities.end()) {
+						callback(current, true);
+						tickedEntities.push_back(current);
+					}
 				}
 			}
 		}
@@ -173,25 +207,60 @@ void GameData::forEachEntity(void (*callback)(C_Entity*, bool)) {
 }
 
 void GameData::addChestToList(C_ChestBlockActor* chest) {
+	if (chest == nullptr || !chest->isMainSubchest())
+		return;
+	AABB chestAabb = chest->getFullAABB();
 	std::lock_guard<std::mutex> listGuard(g_Data.chestListMutex);
 	for (auto it = g_Data.chestList.begin(); it != g_Data.chestList.end(); ++it)
-		if (**it == chest->aabb)
+		if (**it == chestAabb)
 			return;
 
-	auto toAdd = std::make_shared<AABB>(chest->aabb);
-	g_Data.chestList.insert(toAdd);
+	auto toAdd = std::make_shared<AABB>(chestAabb);
+	g_Data.chestList.push_back(toAdd);
 }
 
-void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem, HMODULE hDllInst) {
+void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem, void* hDllInst) {
 	g_Data.gameModule = gameModule;
 	g_Data.slimMem = slimMem;
 	g_Data.hDllInst = hDllInst;
+	g_Data.networkedData.xorKey = rand() % 0xFFFF | ((rand() % 0xFFFF) << 16);
 	retrieveClientInstance();
 #ifdef _DEBUG
 	logF("base: %llX", g_Data.getModule()->ptrBase);
 	logF("clientInstance %llX", g_Data.clientInstance);
 	logF("localPlayer %llX", g_Data.getLocalPlayer());
-	if (g_Data.clientInstance != nullptr)
+	if (g_Data.clientInstance != nullptr){
 		logF("minecraftGame: %llX", g_Data.clientInstance->minecraftGame);
+		logF("levelRenderer: %llX", g_Data.clientInstance->levelRenderer);
+	}
+
 #endif
+}
+void GameData::sendPacketToInjector(HorionDataPacket horionDataPack) {
+	if (!isInjectorConnectionActive())
+		throw std::exception("Horion injector connection not active");
+	if (horionDataPack.dataArraySize >= 3000) {
+		logF("Tried to send data packet with array size: %i %llX", horionDataPack.dataArraySize, horionDataPack.data.get());
+		throw std::exception("Data packet data too big");
+	}
+
+	horionToInjectorQueue.push(horionDataPack);
+}
+void GameData::callInjectorResponseCallback(int id, std::shared_ptr<HorionDataPacket> packet) {
+	if (this->injectorToHorionResponseCallbacks.find(id) == this->injectorToHorionResponseCallbacks.end()) {
+		logF("No response callback for request with id=%i!", id);
+		return;
+	}
+	this->injectorToHorionResponseCallbacks[id](packet);
+	this->injectorToHorionResponseCallbacks.erase(id);
+}
+void GameData::log(const char* fmt, ...) {
+	auto lock = std::lock_guard<std::mutex>(g_Data.textPrintLock);
+	va_list arg;
+	va_start(arg, fmt);
+	char message[300];
+	vsprintf_s(message, 300, fmt, arg);
+	std::string msg(message);
+	g_Data.textPrintList.push_back(msg);
+	va_end(arg);
 }

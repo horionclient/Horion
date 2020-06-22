@@ -2,9 +2,13 @@
 
 #include <typeinfo>
 #include <vector>
+#include <optional>
+#include <memory>
+#include <mutex>
+#include <shared_mutex>
 
 #include "../../Memory/GameData.h"
-#include "../../Utils/Json.hpp"
+
 #include "Modules/Aimbot.h"
 #include "Modules/AirJump.h"
 #include "Modules/AntiBot.h"
@@ -14,16 +18,16 @@
 #include "Modules/AutoSneak.h"
 #include "Modules/AutoSprint.h"
 #include "Modules/AutoTotem.h"
-#include "Modules/BedFucker.h"
+#include "Modules/Fucker.h"
 #include "Modules/Bhop.h"
 #include "Modules/Blink.h"
 #include "Modules/BowAimbot.h"
-#include "Modules/BugUp.h"
+#include "Modules/AntiVoid.h"
 #include "Modules/ChestAura.h"
 #include "Modules/ChestESP.h"
 #include "Modules/ChestStealer.h"
 #include "Modules/ClickGuiMod.h"
-#include "Modules/ClickTP.h"
+#include "Modules/Teleport.h"
 #include "Modules/Crasher.h"
 #include "Modules/Criticals.h"
 #include "Modules/CrystalAura.h"
@@ -52,12 +56,11 @@
 #include "Modules/NameTags.h"
 #include "Modules/NoFall.h"
 #include "Modules/NoFriends.h"
-#include "Modules/NoKnockBack.h"
+#include "Modules/Velocity.h"
 #include "Modules/NoPacket.h"
 #include "Modules/NoSlowDown.h"
 #include "Modules/NoWeb.h"
 #include "Modules/Nuker.h"
-#include "Modules/PacketLogger.h"
 #include "Modules/Phase.h"
 #include "Modules/RainbowSky.h"
 #include "Modules/Reach.h"
@@ -79,34 +82,49 @@
 #include "Modules/Zoom.h"
 #include "Modules/Teams.h"
 #include "Modules/Nbt.h"
+#include "Modules/Godmode.h"
+#include "Modules/Freelook.h"
+#include "Modules/NoHurtcam.h"
+#include "Modules/AntiImmobile.h"
+#include "Modules/FollowPathModule.h"
 
 #ifdef _DEBUG
+#include "Modules/PacketLogger.h"
 #include "Modules/TestModule.h"
 #endif
 
-using json = nlohmann::json;
 
 class ModuleManager {
 private:
 	GameData* gameData;
-	std::vector<IModule*> moduleList;
+	std::vector<std::shared_ptr<IModule>> moduleList;
 	bool initialized = false;
+	std::shared_mutex moduleListMutex;
 
 public:
 	~ModuleManager();
 	ModuleManager(GameData* gameData);
 	void initModules();
 	void disable();
-	void onLoadConfig(json* conf);
-	void onSaveConfig(json* conf);
+	void onLoadConfig(void* conf);
+	void onSaveConfig(void* conf);
 	void onTick(C_GameMode* gameMode);
+	void onAttack(C_Entity* attackedEnt);
+
 	void onKeyUpdate(int key, bool isDown);
 	void onPreRender(C_MinecraftUIRenderContext* renderCtx);
 	void onPostRender(C_MinecraftUIRenderContext* renderCtx);
+	void onLevelRender();
+	void onMove(C_MoveInputHandler* handler);
 	void onSendPacket(C_Packet*);
 
+	std::shared_lock<std::shared_mutex> lockModuleList() { return std::shared_lock(this->moduleListMutex); }
+	std::unique_lock<std::shared_mutex> lockModuleListExclusive() { return std::unique_lock(this->moduleListMutex); }
+	
+	std::shared_mutex* getModuleListLock() { return &this->moduleListMutex; }
+
 	bool isInitialized() { return initialized; };
-	std::vector<IModule*>* getModuleList();
+	std::vector<std::shared_ptr<IModule>>* getModuleList();
 
 	int getModuleCount();
 	int getEnabledModuleCount();
@@ -120,28 +138,32 @@ public:
 	TRet* getModule() {
 		if (!isInitialized())
 			return nullptr;
+		auto lock = this->lockModuleList();
 		for (auto pMod : moduleList) {
-			if (auto pRet = dynamic_cast<typename std::remove_pointer<TRet>::type*>(pMod))
+			if (auto pRet = dynamic_cast<typename std::remove_pointer<TRet>::type*>(pMod.get())){
+				
 				return pRet;
+			}
 		}
 		return nullptr;
 	};
 
 	// Dont Use this functions unless you absolutely need to. The function above this one works in 99% of cases
-	IModule* getModuleByName(const std::string name) {
+	std::optional<std::shared_ptr<IModule>> getModuleByName(const std::string name) {
 		if (!isInitialized())
 			return nullptr;
 		std::string nameCopy = name;
 		std::transform(nameCopy.begin(), nameCopy.end(), nameCopy.begin(), ::tolower);
-
-		for (std::vector<IModule*>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
-			IModule* mod = *it;
-			std::string modNameCopy = mod->getModuleName();
+		
+		auto lock = this->lockModuleList();
+		for (std::vector<std::shared_ptr<IModule>>::iterator it = this->moduleList.begin(); it != this->moduleList.end(); ++it) {
+			std::shared_ptr<IModule> mod = *it;
+			std::string modNameCopy = mod->getRawModuleName();
 			std::transform(modNameCopy.begin(), modNameCopy.end(), modNameCopy.begin(), ::tolower);
 			if (modNameCopy == nameCopy)
-				return mod;
+				return std::optional<std::shared_ptr<IModule>>(mod);
 		}
-		return nullptr;
+		return std::optional<std::shared_ptr<IModule>>();
 	}
 };
 

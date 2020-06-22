@@ -14,11 +14,12 @@ bool BindCommand::execute(std::vector<std::string>* args) {
 	std::string moduleName = args->at(1);
 	assertTrue(moduleName.size() > 0);
 
-	auto mod = moduleMgr->getModuleByName(moduleName);
-	if (mod == nullptr) {
+	auto modOpt = moduleMgr->getModuleByName(moduleName);
+	if (!modOpt.has_value()) {
 		clientMessageF("%sCould not find module with name: %s", RED, moduleName.c_str());
 		return true;
 	}
+	auto mod = modOpt.value();
 
 	if (args->size() >= 3) {
 		std::string key = args->at(2);
@@ -59,11 +60,11 @@ bool BindCommand::execute(std::vector<std::string>* args) {
 			keyCode -= 0x20;
 
 		if (keyCode >= 0x30 && keyCode <= 0x5A) {
-			auto mod = moduleMgr->getModuleByName(moduleName);
-			if (mod == nullptr) {
+			auto modOpt = moduleMgr->getModuleByName(moduleName);
+			if (!modOpt.has_value()) {
 				clientMessageF("%sCould not find module with name: %s", RED, moduleName.c_str());
 			} else {
-				mod->setKeybind(keyCode);
+				modOpt.value()->setKeybind(keyCode);
 				clientMessageF("%sThe Keybind of %s is now '%c'", GREEN, mod->getModuleName(), keyCode);
 			}
 		} else {

@@ -1,5 +1,9 @@
 #include "Reach.h"
 
+#include <Windows.h>
+#include "../../../Utils/Logger.h"
+#include "../../../Utils/Utils.h"
+
 Reach::Reach() : IModule(0x0, Category::COMBAT, "Increases your reach") {
 	this->registerFloatSetting("Reach Value", &this->reachValue, this->reachValue, 3.f, 7.f);
 }
@@ -24,6 +28,7 @@ void Reach::onEnable() {
 		if (sigOffset != 0x0) {
 			int offset = *reinterpret_cast<int*>((sigOffset + 6));  // Get Offset from code
 			reachPtr = reinterpret_cast<float*>(sigOffset + offset + 10);
+			originalReach = *reachPtr;
 		}
 	}
 	if (!VirtualProtect(reachPtr, sizeof(float), PAGE_EXECUTE_READWRITE, &oldProtect)) {
@@ -35,6 +40,7 @@ void Reach::onEnable() {
 }
 
 void Reach::onDisable() {
+	*reachPtr = originalReach;
 	if (reachPtr != 0)
 		VirtualProtect(reachPtr, sizeof(float), oldProtect, &oldProtect);
 }

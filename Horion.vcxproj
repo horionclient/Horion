@@ -107,8 +107,8 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>$(ProjectDir)minhook;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;D:\ProgrammeX\Dxx\Lib\x64;$(ProjectDir)minhook;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\ProgrammeX\Dxx\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\lib\x64;$(ProjectDir)minhook;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
@@ -171,10 +171,13 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
     </ClCompile>
     <Link />
     <Link>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -183,6 +186,8 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>None</DebugInformationFormat>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -195,12 +200,34 @@
       <DebugInformationFormat>None</DebugInformationFormat>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_BETA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include=".clang-format" />
+    <None Include="packages.config" />
+    <None Include="resources\coolroblox.json" />
+    <None Include="resources\Steve.dat" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\block.3dobj">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="bitmap1.bmp" />
+    <Image Include="icon1.ico" />
+    <Image Include="resources\cat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Horion.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Horion\Command\CommandMgr.cpp" />
     <ClCompile Include="Horion\Command\Commands\BindCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\BruhCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\CommandBlockExploitCommand.cpp" />
@@ -210,6 +237,7 @@
     <ClCompile Include="Horion\Command\Commands\DupeCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\EjectCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\EnchantCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\ExecuteCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\FriendListCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\GameModeCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\GiveCommand.cpp" />
@@ -220,9 +248,11 @@
     <ClCompile Include="Horion\Command\Commands\NameSpoofCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\NbtCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\PanicCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\PathCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\PlayerTeleportCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\RelativeTeleportCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\SayCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\ScriptCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ServerCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\setoffhandCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\SetprefixCommand.cpp" />
@@ -233,7 +263,6 @@
     <ClCompile Include="Horion\Command\Commands\UnbindCommand.cpp" />
     <ClCompile Include="Horion\Config\AccountInformation.cpp" />
     <ClCompile Include="Horion\Config\ConfigManager.cpp" />
-    <ClCompile Include="Horion\Command\CommandMgr.cpp" />
     <ClCompile Include="Horion\DrawUtils.cpp" />
     <ClCompile Include="Horion\FriendList\FriendList.cpp" />
     <ClCompile Include="Horion\GuiUtils.cpp" />
@@ -245,23 +274,23 @@
     <ClCompile Include="Horion\Module\Modules\Aimbot.cpp" />
     <ClCompile Include="Horion\Module\Modules\AirJump.cpp" />
     <ClCompile Include="Horion\Module\Modules\AirStuck.cpp" />
+    <ClCompile Include="Horion\Module\Modules\AirSwim.cpp" />
     <ClCompile Include="Horion\Module\Modules\AntiBot.cpp" />
+    <ClCompile Include="Horion\Module\Modules\AntiImmobile.cpp" />
+    <ClCompile Include="Horion\Module\Modules\AntiVoid.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoArmor.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoClicker.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoGapple.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSneak.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSprint.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoTotem.cpp" />
-    <ClCompile Include="Horion\Module\Modules\BedFucker.cpp" />
     <ClCompile Include="Horion\Module\Modules\Bhop.cpp" />
     <ClCompile Include="Horion\Module\Modules\Blink.cpp" />
     <ClCompile Include="Horion\Module\Modules\BowAimbot.cpp" />
-    <ClCompile Include="Horion\Module\Modules\BugUp.cpp" />
     <ClCompile Include="Horion\Module\Modules\ChestAura.cpp" />
     <ClCompile Include="Horion\Module\Modules\ChestESP.cpp" />
     <ClCompile Include="Horion\Module\Modules\ChestStealer.cpp" />
     <ClCompile Include="Horion\Module\Modules\ClickGuiMod.cpp" />
-    <ClCompile Include="Horion\Module\Modules\ClickTP.cpp" />
     <ClCompile Include="Horion\Module\Modules\Crasher.cpp" />
     <ClCompile Include="Horion\Module\Modules\Criticals.cpp" />
     <ClCompile Include="Horion\Module\Modules\CrystalAura.cpp" />
@@ -272,10 +301,14 @@
     <ClCompile Include="Horion\Module\Modules\FastEast.cpp" />
     <ClCompile Include="Horion\Module\Modules\FastLadder.cpp" />
     <ClCompile Include="Horion\Module\Modules\Fly.cpp" />
+    <ClCompile Include="Horion\Module\Modules\FollowPathModule.cpp" />
     <ClCompile Include="Horion\Module\Modules\ForceOpenCommandBlock.cpp" />
     <ClCompile Include="Horion\Module\Modules\Freecam.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Freelook.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Fucker.cpp" />
     <ClCompile Include="Horion\Module\Modules\FullBright.cpp" />
     <ClCompile Include="Horion\Module\Modules\Glide.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Godmode.cpp" />
     <ClCompile Include="Horion\Module\Modules\HighJump.cpp" />
     <ClCompile Include="Horion\Module\Modules\Hitbox.cpp" />
     <ClCompile Include="Horion\Module\Modules\HudModule.cpp" />
@@ -284,6 +317,7 @@
     <ClCompile Include="Horion\Module\Modules\InstaBreak.cpp" />
     <ClCompile Include="Horion\Module\Modules\InventoryCleaner.cpp" />
     <ClCompile Include="Horion\Module\Modules\InventoryMove.cpp" />
+    <ClCompile Include="Horion\Module\Modules\JavascriptModule.cpp" />
     <ClCompile Include="Horion\Module\Modules\Jesus.cpp" />
     <ClCompile Include="Horion\Module\Modules\Jetpack.cpp" />
     <ClCompile Include="Horion\Module\Modules\Killaura.cpp" />
@@ -294,7 +328,7 @@
     <ClCompile Include="Horion\Module\Modules\NightMode.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoFall.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoFriends.cpp" />
-    <ClCompile Include="Horion\Module\Modules\NoKnockBack.cpp" />
+    <ClCompile Include="Horion\Module\Modules\NoHurtcam.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoPacket.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoSlowDown.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoSwing.cpp" />
@@ -310,16 +344,62 @@
     <ClCompile Include="Horion\Module\Modules\StackableItem.cpp" />
     <ClCompile Include="Horion\Module\Modules\Step.cpp" />
     <ClCompile Include="Horion\Module\Modules\Teams.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Teleport.cpp" />
     <ClCompile Include="Horion\Module\Modules\TestModule.cpp" />
     <ClCompile Include="Horion\Module\Modules\Timer.cpp" />
     <ClCompile Include="Horion\Module\Modules\Tower.cpp" />
     <ClCompile Include="Horion\Module\Modules\Tracer.cpp" />
     <ClCompile Include="Horion\Module\Modules\TriggerBot.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Velocity.cpp" />
     <ClCompile Include="Horion\Module\Modules\Xray.cpp" />
     <ClCompile Include="Horion\Module\Modules\Zoom.cpp" />
+    <ClCompile Include="Horion\path\goals\JoeGoal.cpp" />
+    <ClCompile Include="Horion\path\goals\JoeGoalXYZ.cpp" />
+    <ClCompile Include="Horion\path\goals\JoeGoalXZ.cpp" />
+    <ClCompile Include="Horion\path\goals\JoeGoalY.cpp" />
+    <ClCompile Include="Horion\path\JoeConstants.cpp" />
+    <ClCompile Include="Horion\path\JoeIncompletePath.cpp" />
+    <ClCompile Include="Horion\path\JoeMovementController.cpp" />
+    <ClCompile Include="Horion\path\JoePath.cpp" />
+    <ClCompile Include="Horion\path\JoePathFinder.cpp" />
+    <ClCompile Include="Horion\path\JoeSegment.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\CommandManagerFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\EntityFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\GameFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\GlobalFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\HorionFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\LevelFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\LocalPlayerFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\ModuleManagerFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\Vector3Functions.cpp" />
+    <ClCompile Include="Horion\Scripting\JsScriptModule.cpp" />
+    <ClCompile Include="Horion\Scripting\ScriptInstance.cpp" />
+    <ClCompile Include="Horion\Scripting\ScriptManager.cpp" />
+    <ClCompile Include="include\imgui\examples\imgui_impl_dx11.cpp" />
+    <ClCompile Include="include\imgui\examples\imgui_impl_win32.cpp" />
+    <ClCompile Include="include\imgui\imgui.cpp" />
+    <ClCompile Include="include\imgui\imgui_demo.cpp" />
+    <ClCompile Include="include\imgui\imgui_draw.cpp" />
+    <ClCompile Include="include\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="include\imgui\misc\cpp\imgui_stdlib.cpp" />
+    <ClCompile Include="include\imgui\misc\fonts\binary_to_compressed_c.cpp" />
     <ClCompile Include="Memory\GameData.cpp" />
     <ClCompile Include="Memory\Hooks.cpp" />
     <ClCompile Include="Memory\SlimMem.cpp" />
+    <ClCompile Include="SDK\CBlockLegacy.cpp" />
+    <ClCompile Include="SDK\CCamera.cpp" />
+    <ClCompile Include="SDK\CChestBlockActor.cpp" />
+    <ClCompile Include="SDK\CClientInstance.cpp" />
+    <ClCompile Include="SDK\CComplexInventoryTransaction.cpp" />
+    <ClCompile Include="SDK\CEntity.cpp" />
+    <ClCompile Include="SDK\CInventory.cpp" />
+    <ClCompile Include="SDK\CInventoryTransaction.cpp" />
+    <ClCompile Include="SDK\CItem.cpp" />
+    <ClCompile Include="SDK\CMinecraftUIRenderContext.cpp" />
+    <ClCompile Include="SDK\CMoveInputHandler.cpp" />
+    <ClCompile Include="SDK\CPacket.cpp" />
+    <ClCompile Include="SDK\Tag.cpp" />
+    <ClCompile Include="SDK\TextHolder.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />
     <ClCompile Include="Utils\SkinUtil.cpp" />
     <ClCompile Include="Utils\Target.cpp" />
@@ -327,6 +407,7 @@
     <ClCompile Include="Utils\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Horion\Command\CommandMgr.h" />
     <ClInclude Include="Horion\Command\Commands\BindCommand.h" />
     <ClInclude Include="Horion\Command\Commands\BruhCommand.h" />
     <ClInclude Include="Horion\Command\Commands\CommandBlockExploitCommand.h" />
@@ -336,6 +417,7 @@
     <ClInclude Include="Horion\Command\Commands\DupeCommand.h" />
     <ClInclude Include="Horion\Command\Commands\EjectCommand.h" />
     <ClInclude Include="Horion\Command\Commands\EnchantCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\ExecuteCommand.h" />
     <ClInclude Include="Horion\Command\Commands\FriendListCommand.h" />
     <ClInclude Include="Horion\Command\Commands\GameModeCommand.h" />
     <ClInclude Include="Horion\Command\Commands\GiveCommand.h" />
@@ -346,9 +428,11 @@
     <ClInclude Include="Horion\Command\Commands\NameSpoofCommand.h" />
     <ClInclude Include="Horion\Command\Commands\NbtCommand.h" />
     <ClInclude Include="Horion\Command\Commands\PanicCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\PathCommand.h" />
     <ClInclude Include="Horion\Command\Commands\PlayerTeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\RelativeTeleportCommand.h" />
     <ClInclude Include="Horion\Command\Commands\SayCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\ScriptCommand.h" />
     <ClInclude Include="Horion\Command\Commands\ServerCommand.h" />
     <ClInclude Include="Horion\Command\Commands\setoffhandCommand.h" />
     <ClInclude Include="Horion\Command\Commands\SetprefixCommand.h" />
@@ -359,7 +443,6 @@
     <ClInclude Include="Horion\Command\Commands\UnbindCommand.h" />
     <ClInclude Include="Horion\Config\AccountInformation.h" />
     <ClInclude Include="Horion\Config\ConfigManager.h" />
-    <ClInclude Include="Horion\Command\CommandMgr.h" />
     <ClInclude Include="Horion\DrawUtils.h" />
     <ClInclude Include="Horion\FriendList\FriendList.h" />
     <ClInclude Include="Horion\GuiUtils.h" />
@@ -371,23 +454,23 @@
     <ClInclude Include="Horion\Module\Modules\Aimbot.h" />
     <ClInclude Include="Horion\Module\Modules\AirJump.h" />
     <ClInclude Include="Horion\Module\Modules\AirStuck.h" />
+    <ClInclude Include="Horion\Module\Modules\AirSwim.h" />
     <ClInclude Include="Horion\Module\Modules\AntiBot.h" />
+    <ClInclude Include="Horion\Module\Modules\AntiImmobile.h" />
+    <ClInclude Include="Horion\Module\Modules\AntiVoid.h" />
     <ClInclude Include="Horion\Module\Modules\AutoArmor.h" />
     <ClInclude Include="Horion\Module\Modules\AutoClicker.h" />
     <ClInclude Include="Horion\Module\Modules\AutoGapple.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSneak.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSprint.h" />
     <ClInclude Include="Horion\Module\Modules\AutoTotem.h" />
-    <ClInclude Include="Horion\Module\Modules\BedFucker.h" />
     <ClInclude Include="Horion\Module\Modules\Bhop.h" />
     <ClInclude Include="Horion\Module\Modules\Blink.h" />
     <ClInclude Include="Horion\Module\Modules\BowAimbot.h" />
-    <ClInclude Include="Horion\Module\Modules\BugUp.h" />
     <ClInclude Include="Horion\Module\Modules\ChestAura.h" />
     <ClInclude Include="Horion\Module\Modules\ChestESP.h" />
     <ClInclude Include="Horion\Module\Modules\ChestStealer.h" />
     <ClInclude Include="Horion\Module\Modules\ClickGuiMod.h" />
-    <ClInclude Include="Horion\Module\Modules\ClickTP.h" />
     <ClInclude Include="Horion\Module\Modules\Crasher.h" />
     <ClInclude Include="Horion\Module\Modules\Criticals.h" />
     <ClInclude Include="Horion\Module\Modules\CrystalAura.h" />
@@ -398,10 +481,14 @@
     <ClInclude Include="Horion\Module\Modules\FastEat.h" />
     <ClInclude Include="Horion\Module\Modules\FastLadder.h" />
     <ClInclude Include="Horion\Module\Modules\Fly.h" />
+    <ClInclude Include="Horion\Module\Modules\FollowPathModule.h" />
     <ClInclude Include="Horion\Module\Modules\ForceOpenCommandBlock.h" />
     <ClInclude Include="Horion\Module\Modules\Freecam.h" />
+    <ClInclude Include="Horion\Module\Modules\Freelook.h" />
+    <ClInclude Include="Horion\Module\Modules\Fucker.h" />
     <ClInclude Include="Horion\Module\Modules\FullBright.h" />
     <ClInclude Include="Horion\Module\Modules\Glide.h" />
+    <ClInclude Include="Horion\Module\Modules\Godmode.h" />
     <ClInclude Include="Horion\Module\Modules\HighJump.h" />
     <ClInclude Include="Horion\Module\Modules\Hitbox.h" />
     <ClInclude Include="Horion\Module\Modules\HudModule.h" />
@@ -410,6 +497,7 @@
     <ClInclude Include="Horion\Module\Modules\InstaBreak.h" />
     <ClInclude Include="Horion\Module\Modules\InventoryCleaner.h" />
     <ClInclude Include="Horion\Module\Modules\InventoryMove.h" />
+    <ClInclude Include="Horion\Module\Modules\JavascriptModule.h" />
     <ClInclude Include="Horion\Module\Modules\Jesus.h" />
     <ClInclude Include="Horion\Module\Modules\Jetpack.h" />
     <ClInclude Include="Horion\Module\Modules\Killaura.h" />
@@ -420,7 +508,7 @@
     <ClInclude Include="Horion\Module\Modules\NightMode.h" />
     <ClInclude Include="Horion\Module\Modules\NoFall.h" />
     <ClInclude Include="Horion\Module\Modules\NoFriends.h" />
-    <ClInclude Include="Horion\Module\Modules\NoKnockBack.h" />
+    <ClInclude Include="Horion\Module\Modules\NoHurtcam.h" />
     <ClInclude Include="Horion\Module\Modules\NoPacket.h" />
     <ClInclude Include="Horion\Module\Modules\NoSlowDown.h" />
     <ClInclude Include="Horion\Module\Modules\NoSwing.h" />
@@ -436,25 +524,70 @@
     <ClInclude Include="Horion\Module\Modules\StackableItem.h" />
     <ClInclude Include="Horion\Module\Modules\Step.h" />
     <ClInclude Include="Horion\Module\Modules\Teams.h" />
+    <ClInclude Include="Horion\Module\Modules\Teleport.h" />
     <ClInclude Include="Horion\Module\Modules\TestModule.h" />
     <ClInclude Include="Horion\Module\Modules\Timer.h" />
     <ClInclude Include="Horion\Module\Modules\Tower.h" />
     <ClInclude Include="Horion\Module\Modules\Tracer.h" />
     <ClInclude Include="Horion\Module\Modules\TriggerBot.h" />
+    <ClInclude Include="Horion\Module\Modules\Velocity.h" />
     <ClInclude Include="Horion\Module\Modules\Xray.h" />
     <ClInclude Include="Horion\Module\Modules\Zoom.h" />
+    <ClInclude Include="Horion\path\goals\JoeGoal.h" />
+    <ClInclude Include="Horion\path\goals\JoeGoalXYZ.h" />
+    <ClInclude Include="Horion\path\goals\JoeGoalXZ.h" />
+    <ClInclude Include="Horion\path\goals\JoeGoalY.h" />
+    <ClInclude Include="Horion\path\JoeConstants.h" />
+    <ClInclude Include="Horion\path\JoeIncompletePath.h" />
+    <ClInclude Include="Horion\path\JoeMovementController.h" />
+    <ClInclude Include="Horion\path\JoePath.h" />
+    <ClInclude Include="Horion\path\JoePathFinder.h" />
+    <ClInclude Include="Horion\path\JoeSegment.h" />
+    <ClInclude Include="Horion\Scripting\Functions\CommandManagerFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\EntityFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\GameFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\GlobalFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\HorionFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\LevelFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\LocalPlayerFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\ModuleManagerFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\Vector3Functions.h" />
+    <ClInclude Include="Horion\Scripting\JsScriptModule.h" />
+    <ClInclude Include="Horion\Scripting\ScriptInstance.h" />
+    <ClInclude Include="Horion\Scripting\ScriptManager.h" />
     <ClInclude Include="include\atlrx.h" />
+    <ClInclude Include="include\chakra\ChakraCommon.h" />
+    <ClInclude Include="include\chakra\ChakraCommonWindows.h" />
+    <ClInclude Include="include\chakra\ChakraCore.h" />
+    <ClInclude Include="include\chakra\ChakraCoreWindows.h" />
+    <ClInclude Include="include\chakra\ChakraDebug.h" />
+    <ClInclude Include="include\d3dx11.h" />
+    <ClInclude Include="include\d3dx11async.h" />
+    <ClInclude Include="include\d3dx11core.h" />
+    <ClInclude Include="include\d3dx11effect.h" />
+    <ClInclude Include="include\imgui\examples\imgui_impl_dx11.h" />
+    <ClInclude Include="include\imgui\examples\imgui_impl_win32.h" />
+    <ClInclude Include="include\imgui\imconfig.h" />
+    <ClInclude Include="include\imgui\imgui.h" />
+    <ClInclude Include="include\imgui\imgui_internal.h" />
+    <ClInclude Include="include\imgui\imstb_rectpack.h" />
+    <ClInclude Include="include\imgui\imstb_textedit.h" />
+    <ClInclude Include="include\imgui\imstb_truetype.h" />
+    <ClInclude Include="include\imgui\misc\cpp\imgui_stdlib.h" />
+    <ClInclude Include="include\imgui\misc\single_file\imgui_single_file.h" />
     <ClInclude Include="include\RegExp.h" />
     <ClInclude Include="include\StringProcess.h" />
     <ClInclude Include="include\WinHttpClient.h" />
     <ClInclude Include="Memory\GameData.h" />
     <ClInclude Include="Memory\Hooks.h" />
     <ClInclude Include="Memory\MinHook.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="Memory\SlimMem.h" />
     <ClInclude Include="SDK\CBlockLegacy.h" />
+    <ClInclude Include="SDK\CCamera.h" />
     <ClInclude Include="SDK\CChestBlockActor.h" />
     <ClInclude Include="SDK\CClientInstance.h" />
     <ClInclude Include="SDK\CClientInstanceScreenModel.h" />
+    <ClInclude Include="SDK\CComplexInventoryTransaction.h" />
     <ClInclude Include="SDK\CEntity.h" />
     <ClInclude Include="SDK\CEntityList.h" />
     <ClInclude Include="SDK\CGameMode.h" />
@@ -463,44 +596,37 @@
     <ClInclude Include="SDK\CInventory.h" />
     <ClInclude Include="SDK\CInventoryTransaction.h" />
     <ClInclude Include="SDK\CItem.h" />
+    <ClInclude Include="SDK\CLoopbackPacketSender.h" />
     <ClInclude Include="SDK\CMinecraftUIRenderContext.h" />
     <ClInclude Include="SDK\CMoveInputHandler.h" />
     <ClInclude Include="SDK\CPacket.h" />
-    <ClInclude Include="SDK\CLoopbackPacketSender.h" />
     <ClInclude Include="SDK\CRakNetInstance.h" />
     <ClInclude Include="SDK\CUIScene.h" />
-    <ClInclude Include="SDK\CComplexInventoryTransaction.h" />
     <ClInclude Include="SDK\MojangsonToken.h" />
-    <ClInclude Include="SDK\nbt\CompoundTag.h" />
-    <ClInclude Include="SDK\nbt\IntArrayTag.h" />
-    <ClInclude Include="SDK\nbt\IntTag.h" />
-    <ClInclude Include="SDK\nbt\LongTag.h" />
     <ClInclude Include="SDK\Tag.h" />
+    <ClInclude Include="SDK\TextHolder.h" />
+    <ClInclude Include="Utils\ChakraHelper.h" />
+    <ClInclude Include="Utils\DllHelper.h" />
+    <ClInclude Include="Utils\HMath.h" />
     <ClInclude Include="Utils\Json.hpp" />
+    <ClInclude Include="Utils\keys.h" />
+    <ClInclude Include="Utils\Logger.h" />
     <ClInclude Include="Utils\SkinUtil.h" />
     <ClInclude Include="Utils\Target.h" />
     <ClInclude Include="Utils\TextFormat.h" />
-    <ClInclude Include="SDK\TextHolder.h" />
-    <ClInclude Include="Utils\HMath.h" />
-    <ClInclude Include="Utils\Logger.h" />
-    <ClInclude Include="Memory\SlimMem.h" />
     <ClInclude Include="Utils\Utils.h" />
     <ClInclude Include="Utils\xorstr.h" />
   </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Horion.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include=".clang-format" />
-    <None Include="resources\coolroblox.json" />
-    <None Include="resources\Steve.dat" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="resources\block.3dobj">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\Microsoft.XAudio2.Redist.1.2.0\build\native\Microsoft.XAudio2.Redist.targets" Condition="Exists('packages\Microsoft.XAudio2.Redist.1.2.0\build\native\Microsoft.XAudio2.Redist.targets')" />
+    <Import Project="packages\directxtk_desktop_2017.2020.2.24.4\build\native\directxtk_desktop_2017.targets" Condition="Exists('packages\directxtk_desktop_2017.2020.2.24.4\build\native\directxtk_desktop_2017.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Ce projet fait référence à des packages NuGet qui sont manquants sur cet ordinateur. Utilisez l'option de restauration des packages NuGet pour les télécharger. Pour plus d'informations, consultez http://go.microsoft.com/fwlink/?LinkID=322105. Le fichier manquant est : {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.XAudio2.Redist.1.2.0\build\native\Microsoft.XAudio2.Redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.XAudio2.Redist.1.2.0\build\native\Microsoft.XAudio2.Redist.targets'))" />
+    <Error Condition="!Exists('packages\directxtk_desktop_2017.2020.2.24.4\build\native\directxtk_desktop_2017.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk_desktop_2017.2020.2.24.4\build\native\directxtk_desktop_2017.targets'))" />
+  </Target>
 </Project>

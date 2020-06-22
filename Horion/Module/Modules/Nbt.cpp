@@ -1,4 +1,6 @@
 #include "Nbt.h"
+#include "../../../SDK/Tag.h"
+#include "../../../Utils/Utils.h"
 
 Nbt::Nbt() : IModule(0x0, Category::PLAYER, "Print NBT tags, right click on mobs (Only works on local worlds!)") {
 }
@@ -25,12 +27,13 @@ void Nbt::onTick(C_GameMode* gm) {
 			pointingStruct->entityPtr->save(tag.get());
 			std::stringstream build;
 			tag->write(build);
-			if (this->lastCopy == build.str())
+			auto str = build.str();
+			if (this->lastCopy == str)
 				return;
-			this->lastCopy = build.str();
+			this->lastCopy = str;
 			Utils::setClipboardText(this->lastCopy);
 			g_Data.getGuiData()->displayClientMessageF("%s%s", GREEN, "CompoundTag copied:");
-			g_Data.getClientInstance()->getGuiData()->displayClientMessage(&build.str());
+			g_Data.getClientInstance()->getGuiData()->displayClientMessage(&str);
 		}
 	}
 }

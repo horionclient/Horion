@@ -1,5 +1,10 @@
 #include "ClickGui.h"
 
+#include "../../Utils/Logger.h"
+#include <Windows.h>
+
+#include "../../Utils/Json.hpp"
+
 bool isLeftClickDown = false;
 bool isRightClickDown = false;
 bool shouldToggleLeftClick = false;  // If true, toggle the focused module
@@ -7,7 +12,14 @@ bool shouldToggleRightClick = false;
 bool resetStartPos = true;
 bool initialised = false;
 
+struct SavedWindowSettings {
+	vec2_t pos = {-1, -1};
+	bool isExtended = true;
+	const char* name = "";
+};
+
 std::map<unsigned int, std::shared_ptr<ClickWindow>> windowMap;
+std::map<unsigned int, SavedWindowSettings> savedWindowSettings;
 
 bool isDragging = false;
 unsigned int draggedWindow = -1;
@@ -32,12 +44,13 @@ float currentXOffset = 0;
 
 int timesRendered = 0;
 
-void ClickGui::getModuleListByCategory(Category category, std::vector<IModule*>* modList) {
-	std::vector<IModule*>* moduleList = moduleMgr->getModuleList();
+void ClickGui::getModuleListByCategory(Category category, std::vector<std::shared_ptr<IModule>>* modList) {
+	auto lock = moduleMgr->lockModuleList();
+	std::vector<std::shared_ptr<IModule>>* moduleList = moduleMgr->getModuleList();
 
-	for (std::vector<IModule*>::iterator it = moduleList->begin(); it != moduleList->end(); ++it) {
-		if ((*it)->getCategory() == category)
-			modList->push_back(*it);
+	for (auto& it : *moduleList) {
+		if (it->getCategory() == category)
+			modList->push_back(it);
 	}
 }
 
@@ -50,6 +63,14 @@ std::shared_ptr<ClickWindow> ClickGui::getWindow(const char* name) {
 	} else {  // Create window
 		// TODO: restore settings for position etc
 		std::shared_ptr<ClickWindow> newWindow = std::make_shared<ClickWindow>();
+		newWindow->name = name;
+
+		auto savedSearch = savedWindowSettings.find(id);
+		if(savedSearch != savedWindowSettings.end()){ // Use values from config
+			newWindow->isExtended = savedSearch->second.isExtended;
+			if(savedSearch->second.pos.x > 0)
+				newWindow->pos = savedSearch->second.pos;
+		}
 
 		windowMap.insert(std::make_pair(id, newWindow));
 		return newWindow;
@@ -92,36 +113,12 @@ void ClickGui::renderTooltip(std::string* text) {
 }
 
 void ClickGui::renderCategory(Category category) {
-	const char* categoryName;
-
-	// Get Category Name
-	{
-		switch (category) {
-		case Category::COMBAT:
-			categoryName = "Combat";
-			break;
-		case Category::VISUAL:
-			categoryName = "Visual";
-			break;
-		case Category::MOVEMENT:
-			categoryName = "Movement";
-			break;
-		case Category::PLAYER:
-			categoryName = "Player";
-			break;
-		case Category::BUILD:
-			categoryName = "Build";
-			break;
-		case Category::EXPLOITS:
-			categoryName = "Exploits";
-			break;
-		}
-	}
+	const char* categoryName = ClickGui::catToName(category);
 
 	const std::shared_ptr<ClickWindow> ourWindow = getWindow(categoryName);
 
 	// Reset Windows to pre-set positions to avoid confusion
-	if (resetStartPos) {
+	if (resetStartPos && ourWindow->pos.x <= 0) {
 		ourWindow->pos.y = 4;
 		switch (category) {
 		case Category::COMBAT:
@@ -136,11 +133,14 @@ void ClickGui::renderCategory(Category category) {
 		case Category::PLAYER:
 			ourWindow->pos.x = 315;
 			break;
-		case Category::BUILD:
+		case Category::WORLD:
 			ourWindow->pos.x = 415;
 			break;
-		case Category::EXPLOITS:
+		case Category::MISC:
 			ourWindow->pos.x = 490;
+			break;
+		case Category::CUSTOM:
+			ourWindow->pos.x = 100;
 			break;
 		}
 	}
@@ -152,14 +152,14 @@ void ClickGui::renderCategory(Category category) {
 	currentYOffset = yOffset;
 
 	// Get All Modules in our category
-	std::vector<IModule*> moduleList;
+	std::vector<std::shared_ptr<IModule>> moduleList;
 	getModuleListByCategory(category, &moduleList);
 
 	// Get max width of all text
 	{
-		for (auto it = moduleList.begin(); it != moduleList.end(); ++it) {
-			std::string label = (*it)->getModuleName();
-			windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&label, textSize, Fonts::SMOOTH));
+		for (auto& it : moduleList) {
+			std::string label = it->getModuleName();
+			windowSize->x = fmax(windowSize->x, DrawUtils::getTextWidth(&label, textSize, Fonts::SMOOTH));
 		}
 	}
 
@@ -171,9 +171,9 @@ void ClickGui::renderCategory(Category category) {
 	{
 		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
 		vec2_t windowSizeReal = g_Data.getClientInstance()->getGuiData()->windowSizeReal;
-		
-		mousePos.div(windowSizeReal);
-		mousePos.mul(windowSize);
+
+		mousePos = mousePos.div(windowSizeReal);
+		mousePos = mousePos.mul(windowSize);
 	}
 
 	float categoryHeaderYOffset = currentYOffset;
@@ -197,9 +197,8 @@ void ClickGui::renderCategory(Category category) {
 			currentYOffset -= ourWindow->animation * moduleList.size() * (textHeight + (textPadding * 2));
 		}
 
-		for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it) {
-			IModule* mod = *it;
-			std::string textStr = mod->getModuleName();
+		for (auto& mod : moduleList) {
+				std::string textStr = mod->getModuleName();
 
 			vec2_t textPos = vec2_t(
 				currentXOffset + textPadding,
@@ -218,7 +217,7 @@ void ClickGui::renderCategory(Category category) {
 					DrawUtils::fillRectangle(rectPos, selectedModuleColor, backgroundAlpha);
 					std::string tooltip = mod->getTooltip();
 					static auto clickGuiMod = moduleMgr->getModule<ClickGuiMod>();
-					if (clickGuiMod->showTooltips && tooltip.size() > 0)
+					if (clickGuiMod->showTooltips && !tooltip.empty())
 						renderTooltip(&tooltip);
 					if (shouldToggleLeftClick && !ourWindow->isInAnimation) {  // Are we being clicked?
 						mod->toggle();
@@ -252,9 +251,8 @@ void ClickGui::renderCategory(Category category) {
 
 					if (clickMod->isExtended) {
 						float startYOffset = currentYOffset;
-						for (auto it = settings->begin(); it != settings->end(); ++it) {
-							SettingEntry* setting = *it;
-							if (strcmp(setting->name, "enabled") == 0 || strcmp(setting->name, "keybind") == 0)
+						for (auto setting : *settings) {
+								if (strcmp(setting->name, "enabled") == 0 || strcmp(setting->name, "keybind") == 0)
 								continue;
 
 							vec2_t textPos = vec2_t(
@@ -316,7 +314,7 @@ void ClickGui::renderCategory(Category category) {
 										name[0] = toupper(name[0]);
 
 									std::string elTexto = name;
-									windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 10 /* because we add 10 to text padding + checkbox*/);
+									windowSize->x = fmax(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 10 /* because we add 10 to text padding + checkbox*/);
 									DrawUtils::drawText(textPos, &elTexto, isFocused ? MC_Color(1.0f, 1.0f, 1.0f) : MC_Color(0.8f, 0.8f, 0.8f), textSize);
 									currentYOffset += textHeight + (textPadding * 2);
 								}
@@ -331,7 +329,7 @@ void ClickGui::renderCategory(Category category) {
 										name[0] = toupper(name[0]);
 
 									std::string elTexto = name;
-									windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
+									windowSize->x = fmax(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
 									DrawUtils::drawText(textPos, &elTexto, MC_Color(1.0f, 1.0f, 1.0f), textSize);
 									currentYOffset += textPadding + textHeight;
 									rectPos.w = currentYOffset;
@@ -357,7 +355,7 @@ void ClickGui::renderCategory(Category category) {
 
 										const float minValue = setting->minValue->_float;
 										const float maxValue = setting->maxValue->_float - minValue;
-										float value = max(0, setting->value->_float - minValue);  // Value is now always > 0 && < maxValue
+										float value = (float) fmax(0, setting->value->_float - minValue);  // Value is now always > 0 && < maxValue
 										if (value > maxValue)
 											value = maxValue;
 										value /= maxValue;  // Value is now in range 0 - 1
@@ -422,7 +420,7 @@ void ClickGui::renderCategory(Category category) {
 										name[0] = toupper(name[0]);
 
 									std::string elTexto = name;
-									windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
+									windowSize->x = fmax(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
 									DrawUtils::drawText(textPos, &elTexto, MC_Color(1.0f, 1.0f, 1.0f), textSize);
 									currentYOffset += textPadding + textHeight;
 									rectPos.w = currentYOffset;
@@ -448,7 +446,7 @@ void ClickGui::renderCategory(Category category) {
 
 										const float minValue = (float)setting->minValue->_int;
 										const float maxValue = (float)setting->maxValue->_int - minValue;
-										float value = (float)max(0, setting->value->_int - minValue);  // Value is now always > 0 && < maxValue
+										float value = (float)fmax(0, setting->value->_int - minValue);  // Value is now always > 0 && < maxValue
 										if (value > maxValue)
 											value = maxValue;
 										value /= maxValue;  // Value is now in range 0 - 1
@@ -506,7 +504,7 @@ void ClickGui::renderCategory(Category category) {
 								sprintf_s(alc, 100, "Not implemented (%s)", setting->name);
 								std::string elTexto = alc;
 								// Adjust window size if our text is too  t h i c c
-								windowSize->x = max(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
+								windowSize->x = fmax(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/);
 
 								DrawUtils::drawText(textPos, &elTexto, MC_Color(1.0f, 1.0f, 1.0f), textSize);
 								currentYOffset += textHeight + (textPadding * 2);
@@ -549,8 +547,7 @@ void ClickGui::renderCategory(Category category) {
 					ourWindow->animation = 0;
 				ourWindow->isInAnimation = true;
 
-				for (std::vector<IModule*>::iterator it = moduleList.begin(); it != moduleList.end(); ++it) {
-					IModule* mod = *it;
+				for (auto& mod : moduleList) {
 					std::shared_ptr<ClickModule> clickMod = getClickModule(ourWindow, mod->getRawModuleName());
 					clickMod->isExtended = false;
 				}
@@ -562,7 +559,7 @@ void ClickGui::renderCategory(Category category) {
 			if (isDragging && Utils::getCrcHash(categoryName) == draggedWindow) {  // WE are being dragged
 				if (isLeftClickDown) {                                      // Still dragging
 					vec2_t diff = vec2_t(mousePos).sub(dragStart);
-					ourWindow->pos.add(diff);
+					ourWindow->pos = ourWindow->pos.add(diff);
 					dragStart = mousePos;
 				} else {  // Stopped dragging
 					isDragging = false;
@@ -603,8 +600,8 @@ void ClickGui::renderCategory(Category category) {
 			ourWindow->pos.y = windowSize.y - ourWindow->size.y;
 		}
 
-		ourWindow->pos.x = max(0, ourWindow->pos.x);
-		ourWindow->pos.y = max(0, ourWindow->pos.y);
+		ourWindow->pos.x = (float)fmax(0, ourWindow->pos.x);
+		ourWindow->pos.y = (float)fmax(0, ourWindow->pos.y);
 	}
 
 	moduleList.clear();
@@ -633,8 +630,8 @@ void ClickGui::render() {
 	renderCategory(Category::VISUAL);
 	renderCategory(Category::MOVEMENT);
 	renderCategory(Category::PLAYER);
-	renderCategory(Category::BUILD);
-	renderCategory(Category::EXPLOITS);
+	renderCategory(Category::WORLD);
+	renderCategory(Category::MISC);
 
 	shouldToggleLeftClick = false;
 	shouldToggleRightClick = false;
@@ -684,4 +681,69 @@ void ClickGui::onKeyUpdate(int key, bool isDown) {
 			clickGuiMod->setEnabled(false);
 	}
 	
+}
+using json = nlohmann::json;
+void ClickGui::onLoadConfig(void* confVoid) {
+	savedWindowSettings.clear();
+	windowMap.clear();
+	json* conf = reinterpret_cast<json*>(confVoid);
+	if (conf->contains("ClickGui")) {
+		auto obj = conf->at("ClickGui");
+		if (obj.is_null())
+			return;
+		for (int i = 0; i <= (int)Category::CUSTOM /*last category*/; i++) {
+			auto catName = ClickGui::catToName((Category)i);
+			if (obj.contains(catName)) {
+				auto value = obj.at(catName);
+				if (value.is_null())
+					continue;
+				try {
+					SavedWindowSettings windowSettings = {};
+					windowSettings.name = catName;
+					if(value.contains("pos")){
+						auto posVal = value.at("pos");
+						if(!posVal.is_null() && posVal.contains("x") && posVal["x"].is_number_float() && posVal.contains("y") && posVal["y"].is_number_float()){
+							try{
+								windowSettings.pos = {posVal["x"].get<float>(), posVal["y"].get<float>()};
+							} catch (std::exception e) {}
+						}
+					}
+					if(value.contains("isExtended")){
+						auto isExtVal = value.at("isExtended");
+						if(!isExtVal.is_null() && isExtVal.is_boolean()){
+							try{
+								windowSettings.isExtended = isExtVal.get<bool>();
+							} catch (std::exception e) {}
+						}
+					}
+					savedWindowSettings[Utils::getCrcHash(catName)] = windowSettings;
+				} catch (std::exception e) {
+					logF("Config Load Error (ClickGuiMenu): %s", e.what());
+				}
+			}
+		}
+	}
+}
+void ClickGui::onSaveConfig(void* confVoid) {
+	json* conf = reinterpret_cast<json*>(confVoid);
+	// First update our map
+	for(const auto& wind : windowMap){
+		savedWindowSettings[wind.first] = {wind.second->pos, wind.second->isExtended, wind.second->name};
+	}
+
+	// Save to json
+	if (conf->contains("ClickGui"))
+		conf->erase("ClickGui");
+
+	json obj = {};
+
+	for(const auto& wind : savedWindowSettings){
+		json subObj = {};
+		subObj["pos"]["x"] = wind.second.pos.x;
+		subObj["pos"]["y"] = wind.second.pos.y;
+		subObj["isExtended"] = wind.second.isExtended;
+		obj[wind.second.name] = subObj;
+	}
+
+	conf->emplace("ClickGui", obj);
 }
