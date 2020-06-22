@@ -23,11 +23,6 @@ vec2_t screenSize;
 vec3_t origin;
 float lerpT;
 C_TexturePtr* texturePtr = nullptr;
-struct BaseActorRenderContext {
-	char pad[0x280]{};
-} ourActorContext;
-
-using baseActorRenderContext_constructor = BaseActorRenderContext*(__fastcall*)(BaseActorRenderContext* _this, __int64 screenContext, C_ClientInstance*, MinecraftGame*);
 
 static MaterialPtr* uiMaterial = nullptr;
 static MaterialPtr* entityFlatStaticMaterial = nullptr;
@@ -76,11 +71,6 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* gui) {
 	if(entityFlatStaticMaterial == nullptr && g_Data.isInGame()){
 		entityFlatStaticMaterial = reinterpret_cast<MaterialPtr*>(g_Data.getClientInstance()->itemInHandRenderer->entityLineMaterial.materialPtr);
 	}
-	static auto actorCtxConstructor = reinterpret_cast<baseActorRenderContext_constructor>(FindSignature("48 89 5C 24 08 57 48 83 EC ?? 48 8D 05 ?? ?? ?? ?? 49 8B D8 48 89 01 48 8B F9 8B"));
-
-	memset(&ourActorContext, 0, sizeof(BaseActorRenderContext));
-	actorCtxConstructor(&ourActorContext, reinterpret_cast<__int64>(renderCtx), g_Data.getClientInstance(), g_Data.getClientInstance()->minecraftGame);
-
 }
 
 void DrawUtils::setColor(float r, float g, float b, float a) {
@@ -92,7 +82,13 @@ void DrawUtils::setColor(float r, float g, float b, float a) {
 }
 
 C_Font* DrawUtils::getFont(Fonts font) {
-	switch (font) {
+	 {
+		//auto coolPtr = g_Data.getClientInstance()->_getFont();
+		
+		return reinterpret_cast<C_Font*>(0x0000026F8422F060);
+	}
+		
+	/*switch (font) {
 	case Fonts::SMOOTH:
 		return g_Data.getClientInstance()->N0000080D->getTheGoodFontThankYou();
 		break;
@@ -105,14 +101,14 @@ C_Font* DrawUtils::getFont(Fonts font) {
 	default:
 		return g_Data.getClientInstance()->_getFont();
 		break;
-	}
+	}*/
 }
 
 float DrawUtils::getTextWidth(std::string* textStr, float textSize, Fonts font) {
 	TextHolder text(*textStr);
 
 	C_Font* fontPtr = getFont(font);
-
+	
 	float ret = renderCtx->getLineLength(fontPtr, &text, textSize, false);
 
 	return ret;

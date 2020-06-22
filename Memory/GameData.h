@@ -221,8 +221,8 @@ public:
 			localPlayer = *reinterpret_cast<C_LocalPlayer**>(reinterpret_cast<__int64>(clientInstance) + converted);
 		
 		#else
-		localPlayer = *reinterpret_cast<C_LocalPlayer**>(reinterpret_cast<__int64>(clientInstance) + 0xF0);
-		//localPlayer = clientInstance->getLocalPlayer();
+		//localPlayer = *reinterpret_cast<C_LocalPlayer**>(reinterpret_cast<__int64>(clientInstance) + 0xF0);
+		localPlayer = clientInstance->localPlayer;
 		
 		#endif
 		
