@@ -101,6 +101,7 @@ private:
 	static __int64 MoveInputHandler_tick(C_MoveInputHandler* _this, C_Entity* a2);
 	static __int64 ChestScreenController_tick(C_ChestScreenController* _this);
 	static __int64 GetGamma(__int64 a1);
+	static bool Actor_isInWater(C_Entity* _this);
 	static void JumpPower(C_Entity* _this, float a2);
 	static __int64 MinecraftGame_onAppSuspended(__int64 _this);
 	static void Actor_ascendLadder(C_Entity* _this);
@@ -151,6 +152,7 @@ private:
 	std::unique_ptr<FuncHook> MoveInputHandler_tickHook;
 	std::unique_ptr<FuncHook> ChestScreenController_tickHook;
 	std::unique_ptr<FuncHook> GetGammaHook;
+	std::unique_ptr<FuncHook> Actor_isInWaterHook;
 	std::unique_ptr<FuncHook> JumpPowerHook;
 	std::unique_ptr<FuncHook> MinecraftGame_onAppSuspendedHook;
 	std::unique_ptr<FuncHook> Actor_ascendLadderHook;

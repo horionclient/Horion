@@ -75,7 +75,7 @@ private:
 public:
 	C_BlockSource *region;  //0x338
 private:
-	char pad_0x350[0xE0];  //0x340
+	char pad_0x340[0xE0];  //0x340
 public:
 	AABB aabb;  //0x0458
 	float width;        //0x0474
@@ -83,10 +83,6 @@ public:
 	vec3_t currentPos;  //0x047C
 	vec3_t oldPos;      //0x0488
 	vec3_t velocity;    //0x0494
-private:
-	char pad_0x350[0xE0];  //0x350
-public:
-	AABB aabb;  //0x0430
 private:
 	char pad_0x0478[0x58];  //0x468
 public:
