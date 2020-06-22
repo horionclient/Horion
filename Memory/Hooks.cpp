@@ -1517,9 +1517,8 @@ __int64 Hooks::PaintingRenderer__render(__int64 _this, __int64 a2, __int64 a3) {
 	static auto Func = g_Hooks.PaintingRenderer__renderHook->GetFastcall<__int64, __int64, __int64, __int64>();
 
 	static auto NoPaintingCrashMod = moduleMgr->getModule<NoPaintingCrash>();
-	if (NoPaintingCrashMod->isEnabled()) {
+	if (NoPaintingCrashMod->isEnabled())
 		return 0;
-	}
 
 	return Func(_this,a2,a3);
 }
