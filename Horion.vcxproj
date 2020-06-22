@@ -330,6 +330,7 @@
     <ClCompile Include="Horion\Module\Modules\NoFriends.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoHurtcam.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoPacket.cpp" />
+    <ClCompile Include="Horion\Module\Modules\NoPaintingCrash.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoSlowDown.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoSwing.cpp" />
     <ClCompile Include="Horion\Module\Modules\NoWeb.cpp" />
@@ -510,6 +511,7 @@
     <ClInclude Include="Horion\Module\Modules\NoFriends.h" />
     <ClInclude Include="Horion\Module\Modules\NoHurtcam.h" />
     <ClInclude Include="Horion\Module\Modules\NoPacket.h" />
+    <ClInclude Include="Horion\Module\Modules\NoPaintingCrash.h" />
     <ClInclude Include="Horion\Module\Modules\NoSlowDown.h" />
     <ClInclude Include="Horion\Module\Modules\NoSwing.h" />
     <ClInclude Include="Horion\Module\Modules\NoWeb.h" />

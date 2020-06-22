@@ -1513,8 +1513,15 @@ void Hooks::InventoryTransactionManager_addAction(C_InventoryTransactionManager*
 	Func(a1, a2);
 }
 
-void Hooks::PaintingRenderer__render(__int64 _this, __int64 a2, __int64 a3) {
-	return;
+__int64 Hooks::PaintingRenderer__render(__int64 _this, __int64 a2, __int64 a3) {
+	static auto Func = g_Hooks.PaintingRenderer__renderHook->GetFastcall<__int64, __int64, __int64, __int64>();
+
+	static auto NoPaintingCrashMod = moduleMgr->getModule<NoPaintingCrash>();
+	if (NoPaintingCrashMod->isEnabled()) {
+		return 0;
+	}
+
+	return Func(_this,a2,a3);
 }
 
 bool Hooks::DirectoryPackAccessStrategy__isTrusted(__int64 _this) {
