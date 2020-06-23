@@ -27,53 +27,52 @@ class C_Entity {
 public:
 	uintptr_t *ptrToPtrToEntList;  //0x0008
 private:
-	char pad_0010[0xE0];  //0x0010
+	char pad_0010[0xF0];  //0x0010
 public:
 	union {
 		struct {
-			float pitch;  //0x00F0
-			float yaw;    //0x00F4
+			float pitch;  //0x0100
+			float yaw;    //0x0104
 		};
 		vec2_t viewAngles;
 	};
 	union {
 		struct {
-			float pitch2;  //0x00F0
-			float yaw2;    //0x00F4
+			float pitch2;  
+			float yaw2;    
 		};
 		vec2_t viewAngles2;
 	};
 
 private:
-	char pad_0100[0x10];  //0x0100
+	char pad_0100[0x10];  //0x0110
 public:
-	vec3_t eyePos0;  //0x0110
+	vec3_t eyePos0;  //0x0120
 private:
-	char pad_0x11C[0x70];  //0x11C
+	char pad_0x11C[0x70];  //0x12C
 public:
-	float fallDistance; //0x18C
-	bool onGround;  //0x0190
+	float fallDistance; //0x19C
+	bool onGround;  //0x01A0
 private:
-	char pad_0x179[0x83];  //0x191
+	char pad_0x179[0x5F];  //0x1A1
 public:
-	float spectatorMode;  //0x0214
-	float stepHeight; //0x218
+	float stepHeight; //0x200
 private:
-	char pad_0x228[0x10];  //0x21C
+	char pad_0x228[0x10];  //0x204
 public:
-	float web;  //0x022C
+	float web;  //0x0214
 private:
-	char pad_0x23C[0x5];  //0x0230
+	char pad_0x23C[0x5];  //0x0218
 public:
-	bool didEnterWaterBool;  //0x0235
+	bool didEnterWaterBool;  //0x021D
 private:
-	char pad_023E[0x4E];  //0x0236
+	char pad_023E[0x4E];  //0x021E
 public:
-	int ticksAlive;  //0x0284
+	int ticksAlive;  //0x026C
 private:
-	char pad_0290[0xB0];  //0x0288
+	char pad_0290[0xB0];  //0x0270
 public:
-	C_BlockSource *region;  //0x338
+	C_BlockSource *region;  //0x320
 private:
 	char pad_0x340[0xE0];  //0x340
 public:
