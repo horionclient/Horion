@@ -326,7 +326,7 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 		if (*message == cmdMgr->prefix) {
 			cmdMgr->execute(message);
 
-			__int64 a1 = (*(__int64 (__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x970i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
+			__int64 a1 = (*(__int64 (__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x960i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
 			addCommandToChatHistory(a1, (char*)(_this + 0xA70));  // This will put the command in the chat history (Arrow up/down)
 
 			__int64 v17 = 0;
@@ -334,9 +334,9 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 			__int64 v16 = *v15;
 
 			if (*(BYTE*)(_this + 0xA9A))
-				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x978))(v15);
+				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x968))(v15);
 			else
-				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x970))(v15);
+				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x960))(v15);
 			*(DWORD*)(_this + 0xA94) = *(DWORD*)(v17 + 0x20);
 
 			*reinterpret_cast<__int64*>(_this + 0xA80) = 0i64;
