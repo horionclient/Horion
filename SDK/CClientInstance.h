@@ -56,9 +56,9 @@ private:
 public:
 	C_FontRepository* fontRepository;  //0x140
 private:
-	char pad_0x128[0xF0];  //0x138
+	char pad_0x128[0x108];  //0x148
 public:
-	bool canUseKeys;  //0x228
+	bool canUseKeys;  //0x250
 
 	C_Font* getTheGoodFontThankYou() {
 		return fontRepository->fontList->fontEntries[7].font;

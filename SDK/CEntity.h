@@ -74,7 +74,7 @@ private:
 public:
 	C_BlockSource *region;  //0x320
 private:
-	char pad_0x340[0xE0];  //0x340
+	char pad_0x340[0x130];  //0x328
 public:
 	AABB aabb;  //0x0458
 	float width;        //0x0474
@@ -83,19 +83,19 @@ public:
 	vec3_t oldPos;      //0x0488
 	vec3_t velocity;    //0x0494
 private:
-	char pad_0x0478[0x58];  //0x468
+	char pad_0x0478[0x50];  //0x4A0
 public:
-	__int64 entityRuntimeId;  //0x4C0 //4B8
+	__int64 entityRuntimeId;  //0x4F0
 private:
-	char pad_0478[0x120];  //0x04C8
+	char pad_0478[0x128];  //0x04F8
 public:
-	float bodyYaw;     //0x05E8
-	float oldBodyYaw;  //0x05EC
-	float yawUnused1;  //0x05F0
-	float yawUnused2;  //0x05F4
-	int damageTime;    //0x05F8
+	float bodyYaw;     //0x0620
+	float oldBodyYaw;  //0x0624
+	float yawUnused1;  //0x0628
+	float yawUnused2;  //0x062C
+	int damageTime;    //0x0630
 private:
-	char pad_0824[0x88];  //0x05FC
+	char pad_0824[0x88];  //0x0634
 public:
 	int timeSinceDeath;  //0x0684
 private:
@@ -128,6 +128,8 @@ private:
 	virtual __int64 reloadHardcodedClient(__int64, __int64 const &);
 	virtual __int64 initializeComponents(__int64, __int64 const &);
 	virtual __int64 reloadComponents(__int64, __int64 const &);
+	virtual __int64 _serverInitItemStackIds();
+	virtual __int64 _doInitialMove();
 
 private:
 	virtual void destructor();
@@ -156,9 +158,10 @@ public:
 	virtual __int64 getInterpolatedBodyYaw(float) const;
 	virtual __int64 getYawSpeedInDegreesPerSecond(void) const;
 	virtual __int64 getInterpolatedWalkAnimSpeed(float) const;
-	virtual __int64 getInterpolatedRidingOffset(float) const;
+	virtual __int64 getWorldPosition();
 	virtual void checkBlockCollisions(AABB const &);
 	virtual void checkBlockCollisions(void);
+	virtual bool isFireImmune();
 	virtual bool breaksFallingBlocks(void) const;
 	virtual bool blockedByShield(__int64 const &, C_Entity &);
 	virtual void moveRelative(float, float, float, float);
@@ -228,8 +231,8 @@ private:
 
 public:
 	virtual bool canSeeInvisible(void) const;
-	virtual bool canSee(C_Entity const &) const;
 	virtual bool canSee(vec3_t const &) const;
+	virtual bool canSee(C_Entity const &) const;
 	virtual bool isSkyLit(float);
 
 private:
@@ -244,8 +247,8 @@ public:
 	virtual bool isSilent(void);
 	virtual bool isPickable(void);
 	virtual bool isFishable(void) const;
+	virtual bool isSleeping();
 	virtual bool isPushable(void) const;
-	virtual bool isPushableByPiston(void) const;
 	virtual bool isSneaking(void) const;
 	virtual void setSneaking(bool);
 	virtual bool isBlocking(void) const;
@@ -298,6 +301,7 @@ public:
 	virtual bool isInvulnerableTo(__int64 const &) const;
 
 private:
+	virtual __int64 getBlockDamageCause();
 	virtual void actuallyHurt(int, __int64 const *, bool);
 	virtual __int64 animateHurt(void);
 	virtual __int64 doFireHurt(int);
@@ -481,9 +485,11 @@ private:
 	virtual __int64 updateEntitySpecificMolangVariables(__int64 &);
 
 public:
-	virtual bool canMakeStepSound(void) const;
-
+	virtual bool shouldTryMakeStepSound(void) const;
+	
 private:
+	virtual __int64 getNextStep(float) const;
+	virtual __int64 idk();
 	virtual __int64 outOfWorld(void);
 	virtual __int64 _hurt(__int64 const &, int, bool, bool);
 	virtual __int64 markHurt(void);
@@ -520,6 +526,7 @@ private:
 	virtual __int64 playAmbientSound(void);
 	virtual __int64 getAmbientSound(void);
 	virtual __int64 getAmbientSoundPostponeTicks(void);
+	virtual __int64 getAmbientSoundPostponeTicksRange(void);
 	virtual __int64 getItemInHandIcon(__int64 const &, int);
 
 public:
@@ -544,7 +551,6 @@ public:
 private:
 	virtual __int64 checkSpawnRules(bool);
 	virtual __int64 checkSpawnObstruction(void) const;
-	virtual __int64 shouldDespawn(void) const;
 	virtual __int64 getAttackAnim(float);
 	virtual __int64 getItemUseDuration(void);
 	virtual __int64 getItemUseStartupProgress(void);
@@ -589,6 +595,9 @@ private:
 	virtual __int64 getArmorValue(void);
 	virtual __int64 getArmorCoverPercentage(void) const;
 	virtual __int64 hurtArmor(int);
+	virtual __int64 setDamagedArmor();
+	virtual __int64 idk3();
+	virtual __int64 sendArmor(void);
 	virtual __int64 containerChanged(int);
 	virtual __int64 updateEquipment(void);
 	virtual __int64 clearEquipment(void);
@@ -597,13 +606,14 @@ private:
 	virtual __int64 getAllHand(void) const;
 	virtual __int64 getAllEquipment(void) const;
 	virtual __int64 getArmorTypeHash(void);
+	virtual __int64 dropEquipment(void);
+	virtual __int64 dropEquipment(__int64 const &, int);
+	virtual __int64 clearVanishEnchantedItems(void);
 	virtual __int64 sendInventory(bool);
-	virtual __int64 sendArmor(void);
 	virtual __int64 getDamageAfterMagicAbsorb(__int64 const &, int);
 	virtual __int64 createAIGoals(void);
 	virtual __int64 onBorn(C_Entity &, C_Entity &);
 	virtual void setItemSlot(__int64, __int64 const &);
-	virtual __int64 goDownInWater(void);
 
 public:
 	virtual void setTransitioningSitting(bool);
@@ -632,21 +642,12 @@ private:
 	virtual __int64 _serverAiMobStep(void);
 	virtual __int64 getDamageAfterEnchantReduction(__int64 const &, int);
 	virtual __int64 getDamageAfterArmorAbsorb(__int64 const &, int);
-	virtual __int64 dropEquipment(__int64 const &, int);
-	virtual __int64 dropEquipment(void);
 	virtual __int64 dropBags(void);
 	virtual __int64 dropContainer(void);
 	virtual __int64 tickDeath(void);
 	virtual __int64 _endJump(void);
 	virtual __int64 updateGliding(void);
 	virtual __int64 _allowAscendingScaffolding(void) const;
-	virtual __int64 prepareRegion(__int64 &);
-	virtual __int64 destroyRegion(void);
-	virtual __int64 suspendRegion(void);
-	virtual __int64 _fireWillChangeDimension(void);
-	virtual __int64 _fireDimensionChanged(void);
-	virtual __int64 changeDimensionWithCredits(__int64);
-	virtual __int64 tickWorld(__int64 const &);
 
 public:
 	C_InventoryTransactionManager *getTransactionManager();
@@ -660,16 +661,16 @@ public:
 		__int64 *result;  // rax
 		__int64 v2;       // rcx
 
-		result = (__int64 *)(_this + 0xD8);
+		result = (__int64 *)(_this + 0xE8);
 		if (*result == -1i64) {
-			v2 = *(__int64 *)(_this + 0x358);
-			*result = ++*(__int64 *)(v2 + 0x198);
+			v2 = *(__int64 *)(_this + 0x330);
+			*result = ++*(__int64 *)(v2 + 0x1A0);
 		}
 		return result;
 	}
 
 	int getTicksUsingItem(){
-		return *reinterpret_cast<int*>(reinterpret_cast<__int64>(this) + 0x1188);
+		return *reinterpret_cast<int*>(reinterpret_cast<__int64>(this) + 0xF60);
 	}
 
 };
