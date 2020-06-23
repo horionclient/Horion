@@ -109,8 +109,8 @@ void GameData::updateGameData(C_GameMode* gameMode) {
 		if (g_Data.localPlayer != nullptr) {
 			C_GuiData* guiData = g_Data.clientInstance->getGuiData();
 
-			logF("%llX", guiData);
-			if (guiData != nullptr && false) {
+			
+			if (guiData != nullptr) {
 				{
 					auto vecLock = Logger::GetTextToPrintLock();
 					auto* stringPrintVector = Logger::GetTextToPrint();

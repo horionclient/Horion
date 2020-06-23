@@ -409,7 +409,6 @@ public:
 	virtual bool isInMultiplayerGame(void) const;
 	virtual bool isMultiC_PlayerClient(void) const;
 
-private:
 	virtual __int64 getOptions(void);
 	virtual __int64 getOptions(void) const;
 	virtual __int64 getOptionsPtr(void);
@@ -453,11 +452,10 @@ private:
 public:
 	virtual void setUICursorTexture(__int64);
 
-private:
 	virtual __int64 getUICursorTexture(void) const;
 	virtual __int64 getCamera(void);
 	virtual __int64 getShaderColor(void);
-	virtual __int64 getDarkShaderColor(void);
+	//virtual __int64 getDarkShaderColor(void);
 	virtual __int64 clearGraphicsCache(void);
 	virtual __int64 getNormalizedUICursorTransform(__int64&, float);
 	virtual __int64 shouldRenderUICursor(void) const;
