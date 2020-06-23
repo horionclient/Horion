@@ -90,7 +90,7 @@ C_MobEquipmentPacket::C_MobEquipmentPacket(__int64 entityRuntimeId, C_ItemStack&
 C_InventoryTransactionPacket::C_InventoryTransactionPacket() {
 	static uintptr_t** InventoryTransactionPacketVtable = 0x0;
 	if (InventoryTransactionPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 15 ?? ?? ?? ?? 49 89 53 C0 49 89 43");
+		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? 48 89 4C 24 ? 44 89 44 24 ? 0F 57 C0 66 0F 7F 44 24 ? 4C 89 84 24");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		InventoryTransactionPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
