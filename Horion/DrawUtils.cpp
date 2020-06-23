@@ -50,7 +50,8 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* gui) {
 	guiData = gui;
 	renderCtx = ctx;
 	screenContext2d = reinterpret_cast<__int64*>(renderCtx)[2];
-	tesselator = *reinterpret_cast<__int64*>(screenContext2d + 0xA8);
+
+	tesselator = *reinterpret_cast<__int64*>(screenContext2d + 0xB0);
 	colorHolder = *reinterpret_cast<float**>(screenContext2d + 0x30);
 
 	glmatrixf* badrefdef = g_Data.getClientInstance()->getRefDef();
