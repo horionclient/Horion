@@ -455,7 +455,7 @@ public:
 	virtual __int64 getUICursorTexture(void) const;
 	virtual __int64 getCamera(void);
 	virtual __int64 getShaderColor(void);
-	//virtual __int64 getDarkShaderColor(void);
+	virtual __int64 getDarkShaderColor(void);
 	virtual __int64 clearGraphicsCache(void);
 	virtual __int64 getNormalizedUICursorTransform(__int64&, float);
 	virtual __int64 shouldRenderUICursor(void) const;
@@ -494,6 +494,7 @@ private:
 	virtual __int64 getCurrentSceneStack(void);
 	virtual __int64 getCurrentUIRouter(void);
 	virtual __int64 getCurrentUIRouter(void) const;
+	virtual __int64 sub_14012BAB0(void) const;
 	virtual __int64 prepareSceneFor(__int64);
 	virtual __int64 getCachedScenes(void);
 
