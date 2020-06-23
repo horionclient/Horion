@@ -97,28 +97,28 @@ public:
 private:
 	char pad_0824[0x88];  //0x0634
 public:
-	int timeSinceDeath;  //0x0684
+	int timeSinceDeath;  //0x06BC
 private:
-	char pad_08B0[0x1E0];  //0x0688
+	char pad_08B0[0x204];  //0x06C0
 public:
-	bool canFly;  //0x0868
+	bool canFly;  //0x08C4
 private:
-	char pad_0x0A95[0x61F];  //0x0869
+	char pad_0x0A95[0x6B3];  //0x08C5
 public:
-	int16_t itemData;        //0x0E88
-	int16_t itemId;          //0x0E8A
+	int16_t itemData;        //0x0F78
+	int16_t itemId;          //0x0F7A
 private:
-	char pad_10CC[0x1FC];  //0x0E8C
+	char pad_10CC[0x1FC];  //0x0F7C
 public:
-	C_InventoryTransactionManager transac;  //0x1088
+	C_InventoryTransactionManager transac;  //0x1178
 private:
-	char pad_0x1324[0xA80];  //0x10EC
+	char pad_0x1324[0xAA4];  //0x11E0
 public:
-	int gamemode;  //0x1B6C
+	int gamemode;  //0x1C84
 private:
-	char pad_1DA4[0x198];  //0x1B70
+	char pad_1DA4[0x238];  //0x1C88
 public:
-	TextHolder uuid;  //0x1D08
+	TextHolder uuid;  //0x1EC0
 
 public:
 	virtual bool hasComponent(__int64 const &) const;
