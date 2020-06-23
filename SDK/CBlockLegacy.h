@@ -33,18 +33,17 @@ public:
 	TextHolder tileName;  // 0x0008
 	TextHolder name;      //0x0028
 private:
-	char pad_0x0048[0x70];  //0x0048
+	char pad_0x0048[0x78];  //0x0048
 public:
-	C_Material* material;  //0x00B8
+	C_Material* material;  //0x00C0
 private:
-	char pad_0x00C0[0x44];  //0x00C0
+	char pad_0x00C0[0x44];  //0x00C8
 public:
-	short blockId;  // 0x00C4
+	short blockId;  // 0x010C
 private:
-	char pad_0x0106[0xA];  //0x0106
+	char pad_0x0106[0xA];  //0x010E
 public:
-	AABB aabb;  //0x00C8
-	// 0x00E4
+	AABB aabb;  //0x0110
 
 	int liquidGetDepth(C_BlockSource*, const vec3_ti* pos);
 	void liquidGetFlow(vec3_t* flowOut, C_BlockSource*, const vec3_ti* pos);
