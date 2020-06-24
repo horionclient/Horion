@@ -68,7 +68,7 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			DrawUtils::drawText(textPos, &coordsZ, MC_Color(200, 200, 200), 1.f);
 		}
 	}
-	/*{  // ArmorHUD
+	{  // ArmorHUD
 		if (!(g_Data.getLocalPlayer() == nullptr || !this->displayArmor || !GameData::canUseMoveKeys())) {
 			static float constexpr scale = 1.f;
 			static float constexpr opacity = 0.25f;
@@ -99,5 +99,5 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			DrawUtils::drawKeystroke(*input->rightKey, vec2_t(54, windowSize.y - 52));
 			DrawUtils::drawKeystroke(*input->spaceBarKey, vec2_t(10, windowSize.y - 30));
 		}
-	}*/
+	}
 }

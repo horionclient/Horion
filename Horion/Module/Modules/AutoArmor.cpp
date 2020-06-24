@@ -43,7 +43,7 @@ void AutoArmor::onTick(C_GameMode* gm) {
 	static C_ItemStack* emptyItemStack = nullptr;
 
 	if (emptyItemStack == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D ?? ?? ?? ?? ?? 40 38 ?? ?? 0F 84 ?? ?? ?? ?? 48 8B 4A");
+		uintptr_t sigOffset = FindSignature("48 8D 3D ? ? ? ? 80 B8 ? ? ? ? ? 75 19 48 8B 88 ? ? ? ? 48 8B 11 4C 8B 42 28 8B 50 10");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		emptyItemStack = reinterpret_cast<C_ItemStack*>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG

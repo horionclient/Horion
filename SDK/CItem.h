@@ -18,11 +18,11 @@ class MinecraftGame;
 
 class C_BaseActorRenderContext {
 private:
-	char pad_0x0[0x50];  //0x0000
+	char pad_0x0[0x58];  //0x0000
 public:
-	C_ItemRenderer* renderer;  //0x0050
+	C_ItemRenderer* renderer;  //0x0058
 private:
-	char pad_0x50[0x280 - 0x58];  //0x58
+	char pad_0x50[0x228];  //0x60
 public:
 	C_BaseActorRenderContext(C_ScreenContext* ScreenCtx, C_ClientInstance* client, MinecraftGame* game);
 };
