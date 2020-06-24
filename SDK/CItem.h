@@ -256,7 +256,7 @@ private:
 public:
 	char count;  //0x22
 private:
-	char pad_0x1B[0x65];  //0x23
+	char pad_0x1B[0x6D];  //0x23
 public:
 	C_ItemStack() {
 		memset(this, 0x0, sizeof(C_ItemStack));
@@ -348,4 +348,11 @@ public:
 	bool isBoots() {
 		return ArmorSlot == 3;
 	}
+};
+
+
+class ItemRegistry {
+public:
+	static C_Item*** getItemFromId(void* ptr, int itemId);
+	static C_Item*** lookUpByName(void*, void*, TextHolder&);
 };

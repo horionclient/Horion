@@ -85,9 +85,8 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 			firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, item, nullptr);
 			if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0)
 				secondAction = new C_InventoryAction(0, nullptr, item, 32766, 100);
-			else {
+			else 
 				secondAction = new C_InventoryAction(0, nullptr, item, 507, 99999);
-			}
 			manager->addInventoryAction(*firstAction);
 			manager->addInventoryAction(*secondAction);
 			delete firstAction;

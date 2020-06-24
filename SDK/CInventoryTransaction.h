@@ -45,5 +45,5 @@ private:
 	int unknown;  //0x60
 				  // Total size: 0x68
 public:
-	void addInventoryAction(C_InventoryAction const& action);
+	void addInventoryAction(C_InventoryAction const& action , bool idk = false);
 };

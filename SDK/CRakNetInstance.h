@@ -2,9 +2,9 @@
 
 class C_RakNetInstance {
 private:
-	char pad_0x0008[0x358];  //0x0008
+	char pad_0x0008[0x368];  //0x0000
 public:
-	TextHolder serverIp;
+	TextHolder serverIp; //0x370
 
 private:
 	virtual ~C_RakNetInstance();
