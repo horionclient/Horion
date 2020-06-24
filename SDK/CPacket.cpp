@@ -120,7 +120,7 @@ C_TextPacket::C_TextPacket() {
 C_MovePlayerPacket::C_MovePlayerPacket() {
 	static uintptr_t** movePlayerPacketVtable = 0x0;
 	if (movePlayerPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 82 ?? ?? ?? ?? 48 89 41 ?? 48 8B 02 48 8B CA FF 50");
+		uintptr_t sigOffset = FindSignature("48 8D 15 ? ? ? ? 48 89 11 48 89 79 ? 48 89 79 ? 48 89 79 ? 48 89 79 ? 66 89 79 ? 48 89 79");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		movePlayerPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -134,7 +134,7 @@ C_MovePlayerPacket::C_MovePlayerPacket() {
 C_MovePlayerPacket::C_MovePlayerPacket(C_LocalPlayer* player, vec3_t pos) {
 	static uintptr_t** movePlayerPacketVtable = 0x0;
 	if (movePlayerPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 82 ?? ?? ?? ?? 48 89 41 ?? 48 8B 02 48 8B CA FF 50");
+		uintptr_t sigOffset = FindSignature("48 8D 15 ? ? ? ? 48 89 11 48 89 79 ? 48 89 79 ? 48 89 79 ? 48 89 79 ? 66 89 79 ? 48 89 79");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		movePlayerPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
