@@ -709,7 +709,6 @@ private:
 	virtual __int64 frameUpdate(__int64 &);
 	virtual __int64 getTickingOffsets(void) const;
 	virtual __int64 moveView(void);
-	//virtual __int64 moveSpawnView(vec3_t const &);
 
 public:
 	virtual void setName(std::string const &);
@@ -733,30 +732,10 @@ public:
 	virtual void setPermissions(int);
 
 private:
-	//virtual __int64 startCrafting(vec3_ti const &, bool);
-	//virtual __int64 startStonecutting(vec3_ti const &);
 	virtual __int64 startDestroying(void);
 	virtual __int64 stopDestroying(void);
 
 public:
-	/*virtual __int64 openContainer(vec3_ti const &);
-	virtual __int64 openContainer(__int64 const &);
-	virtual __int64 openFurnace(vec3_ti const &);
-	virtual __int64 openBlastFurnace(vec3_ti const &);
-	virtual __int64 openSmoker(vec3_ti const &);
-	virtual __int64 openEnchanter(vec3_ti const &);
-	virtual __int64 openAnvil(vec3_ti const &);
-	virtual __int64 openGrindstone(vec3_ti const &);
-	virtual __int64 openBrewingStand(vec3_ti const &);
-	virtual __int64 openHopper(vec3_ti const &);
-	virtual __int64 openHopper(__int64 const &);
-	virtual __int64 openDispenser(vec3_ti const &, bool);
-	virtual __int64 openBeacon(vec3_ti const &);
-	virtual __int64 openPortfolio(void);
-	virtual __int64 openBook(int, bool, int, __int64 *);
-	virtual __int64 openCommandBlock(vec3_ti const &);
-	virtual __int64 openCommandBlockMinecart(__int64 const &);
-	virtual __int64 openHorseInventory(__int64 const &);*/
 	virtual bool returnFalse0() const;
 	virtual bool returnFalse1() const;
 	
@@ -771,17 +750,8 @@ private:
 
 public:
 	virtual __int64 openInventory(void);
-	//virtual __int64 openStructureEditor(vec3_ti const &);
 
 private:
-	/*virtual __int64 openLabTable(vec3_ti const &);
-	virtual __int64 openElementConstructor(vec3_ti const &);
-	virtual __int64 openCompoundCreator(vec3_ti const &);
-	virtual __int64 openMaterialReducer(vec3_ti const &);
-	virtual __int64 openLoom(vec3_ti const &);
-	virtual __int64 openStonecutter(vec3_ti const &);
-	virtual __int64 openCartographyTable(vec3_ti const &);
-	virtual __int64 displayChatMessage(std::string const &, std::string const &);*/
 	virtual bool returnFalse_2() const;
 	virtual bool returnFalse_3() const;
 	virtual __int64 displayTextObjectMessage(__int64 const &, std::string const &, std::string const &);
