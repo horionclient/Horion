@@ -233,14 +233,14 @@ void Hooks::Init() {
 		void* chestScreenControllerTick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 08 57 48 83 EC 20 48 8B F9 E8 ?? ?? ?? ?? 48 8B 17 48 8B CF 8B D8 FF 92 ?? ?? ?? ?? 84 C0 74 31"));
 		g_Hooks.ChestScreenController_tickHook = std::make_unique<FuncHook>(chestScreenControllerTick, Hooks::ChestScreenController_tick);
 
-		//void* fullbright = reinterpret_cast<void*>(FindSignature("40 57 48 83 EC 40 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 89 74 24 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 33 C0 48 89 44 24 ?? 48 89 44 24 ?? 48 8B 01 48 8D 54 24 ??"));
-		//g_Hooks.GetGammaHook = std::make_unique<FuncHook>(fullbright, Hooks::GetGamma);
+		void* fullbright = reinterpret_cast<void*>(FindSignature("4C 8B DC 57 48 83 EC ?? 49 C7 43 ?? FE FF FF FF 49 89 5B ?? 49 89 73 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 33 C0 49 89 43 ?? 49 89 43 ?? 48 8B 01 49"));
+		g_Hooks.GetGammaHook = std::make_unique<FuncHook>(fullbright, Hooks::GetGamma);
 
 		void* jump = reinterpret_cast<void*>(FindSignature("40 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B 01 48 8B F9 0F 29 74 24"));
 		g_Hooks.JumpPowerHook = std::make_unique<FuncHook>(jump, Hooks::JumpPower);
 
-		//void* onAppSuspended = reinterpret_cast<void*>(FindSignature("48 8B C4 55 48 8B EC 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 89 78 ?? 48 8B F1 ?? ?? ?? ?? ?? E8"));
-		//g_Hooks.MinecraftGame_onAppSuspendedHook = std::make_unique<FuncHook>(onAppSuspended, Hooks::MinecraftGame_onAppSuspended);
+		void* onAppSuspended = reinterpret_cast<void*>(FindSignature("48 8B C4 55 48 8D 68 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 ?? 48 89 70 ?? 48 89 78 ?? 48 8B F1 E8 ?? ?? ?? ?? 48"));
+		g_Hooks.MinecraftGame_onAppSuspendedHook = std::make_unique<FuncHook>(onAppSuspended, Hooks::MinecraftGame_onAppSuspended);
 
 		void* RakNetInstance__tick = reinterpret_cast<void*>(FindSignature("48 8B C4 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 48 C7 45 ? ? ? ? ? 48 89 58 ? 48 89 70 ? 48 89 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 48 8B F1 48 C7 85 ? ? ? ? ? ? ? ? 48 8D 95 ? ? ? ? 48 8B 89 ? ? ? ?"));
 		g_Hooks.RakNetInstance_tickHook = std::make_unique<FuncHook>(RakNetInstance__tick, Hooks::RakNetInstance_tick);
@@ -274,8 +274,8 @@ void Hooks::Init() {
 		void* localPlayerUpdateFromCam = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 80 BA"));
 		g_Hooks.LocalPlayer__updateFromCameraHook = std::make_unique<FuncHook>(localPlayerUpdateFromCam, Hooks::LocalPlayer__updateFromCamera);
 
-		//void* MobIsImmobile = reinterpret_cast<void*>(FindSignature("40 53 48 83 EC ?? 80 B9 ?? ?? ?? ?? 00 48 8B D9 75 ?? 48 8B 89"));
-		//g_Hooks.Mob__isImmobileHook = std::make_unique<FuncHook>(MobIsImmobile, Hooks::Mob__isImmobile);
+		void* MobIsImmobile = reinterpret_cast<void*>(FindSignature("40 53 48 83 EC ?? 80 B9 ?? ?? ?? ?? 00 48 8B D9 75 ?? 33"));
+		g_Hooks.Mob__isImmobileHook = std::make_unique<FuncHook>(MobIsImmobile, Hooks::Mob__isImmobile);
 
 		void* renderNameTags = reinterpret_cast<void*>(FindSignature("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 C7 45 ? ? ? ? ? 48 89 58 ? 0F 29 70 ? 0F 29 78 ? 44 0F 29 40 ? 44 0F 29 48 ? 48 8B 05 ? ? ? ? 48 33 C4"));
 		g_Hooks.LevelRendererPlayer__renderNameTagsHook = std::make_unique<FuncHook>(renderNameTags,Hooks::LevelRendererPlayer__renderNameTags);
@@ -1284,10 +1284,17 @@ __int64 Hooks::GetGamma(__int64 a1) {
 		char filler[0x20];        // 0x008
 		TextHolder internalName;  // 0x0028
 		TextHolder friendlyName;  // 0x0048 // only exists when the value is present in the options
-
-		char filler2[0x88];  // 0x068
+		int optionId; // 0x68
+		char filler2[0xC]; // 0x6C
+		TextHolder nameInConfigFile; // 0x78
+		char filler3[0x50];  // 0x098
 		union {
-			float _float;
+			struct {
+				float min;
+				float max;
+				float value;
+				float defaultValue;
+			} _float;
 			bool _bool;
 		} value;
 	};
@@ -1296,21 +1303,23 @@ __int64 Hooks::GetGamma(__int64 a1) {
 	if (gfx_gamma == 0) {
 		__int64 v6 = oFunc(a1);  // Calls to ClientInstance, returns options ptr
 
-		static int numOptions = *reinterpret_cast<int*>(FindSignature("48 81 FB ?? ?? ?? ?? 72 ?? 4C 8B 7D") + 3);
+		static int numOptions = (*reinterpret_cast<int*>(FindSignature("49 8D B6 ?? ?? ?? ?? 48 3B FE") + 3) - 16) / 8;
 
 		//logF("%llX", v6);
 		//logF("Num Options: %i", numOptions);
 
 		for (int i = 0; i < numOptions; i++) {
 			Option* ptr = *reinterpret_cast<Option**>(v6 + 0x10 + i * 8);
+			//if (ptr)
+			//	logF("%llX %s %s", v6 + 0x10 + i * 8, ptr->internalName.getText(), ptr->friendlyName.getText());
 			if (ptr && strcmp(ptr->internalName.getText(), "gfx_gamma") == 0) {
-				//logF("%llX %s %s", v6 + 0x10 + i * 8, ptr->internalName.getText(), ptr->friendlyName.getText());
 				gfx_gamma = ptr;
+				//logF("%llX %s %s %llX", v6 + 0x10 + i * 8, ptr->internalName.getText(), ptr->friendlyName.getText(), &ptr->value);
 			}
 		}
 	}
 	if (gfx_gamma)
-		fullBrightModule->gammaPtr = &gfx_gamma->value._float;
+		fullBrightModule->gammaPtr = &gfx_gamma->value._float.value;
 
 	return oFunc(a1);
 }
