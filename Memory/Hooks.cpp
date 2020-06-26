@@ -1,4 +1,5 @@
 ﻿#include "Hooks.h"
+
 #include "../SDK/Tag.h"
 
 Hooks g_Hooks;
@@ -326,7 +327,7 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 		if (*message == cmdMgr->prefix) {
 			cmdMgr->execute(message);
 
-			__int64 a1 = (*(__int64 (__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x960i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
+			__int64 a1 = (*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x960i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
 			addCommandToChatHistory(a1, (char*)(_this + 0xA70));  // This will put the command in the chat history (Arrow up/down)
 
 			__int64 v17 = 0;
@@ -380,9 +381,8 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	static auto oText = g_Hooks.RenderTextHook->GetFastcall<__int64, __int64, C_MinecraftUIRenderContext*>();
 	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
-	
-	DrawUtils::setCtx(renderCtx, dat);
 
+	DrawUtils::setCtx(renderCtx, dat);
 
 	{
 		static bool wasConnectedBefore = false;
@@ -473,7 +473,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 #if defined(_BETA) or defined(_DEBUG)
 			// Draw Custom Geo Button
 			if (g_Data.allowWIPFeatures()) {
-
 				if (HImGui.Button("Load Script Folder", vec2_t(wid.x * (0.765f - 0.5f), wid.y * 0.92f), true)) {
 					HorionDataPacket packet;
 					packet.cmd = CMD_FOLDERCHOOSER;
@@ -792,7 +791,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	// Zoom calc
 	{
 		static auto zoomModule = moduleMgr->getModule<Zoom>();
-		if(zoomModule->isEnabled()) zoomModule->target = zoomModule->strength;
+		if (zoomModule->isEnabled()) zoomModule->target = zoomModule->strength;
 		zoomModule->modifier = zoomModule->target - ((zoomModule->target - zoomModule->modifier) * 0.8f);
 		if (abs(zoomModule->modifier - zoomModule->target) < 0.1f && !zoomModule->isEnabled())
 			zoomModule->zooming = false;
@@ -924,12 +923,12 @@ void Hooks::Actor_lerpMotion(C_Entity* _this, vec3_t motVec) {
 		return oLerp(_this, motVec);
 
 	static auto noKnockbackmod = moduleMgr->getModule<Velocity>();
-	if (noKnockbackmod->isEnabled()) {
+	/*if (noKnockbackmod->isEnabled()) {
 		static void* networkSender = reinterpret_cast<void*>(FindSignature("41 80 BF ?? ?? ?? ?? 00 0F 85 ?? ?? ?? ?? FF"));
 		if (networkSender == _ReturnAddress()) {
 			motVec = _this->velocity.lerp(motVec, noKnockbackmod->xModifier, noKnockbackmod->yModifier, noKnockbackmod->xModifier);
 		}
-	}
+	}*/
 	oLerp(_this, motVec);
 }
 
@@ -1034,34 +1033,11 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 					LilPlump plump = *it;
 					g_Data.getGuiData()->displayClientMessageF("%s%s - %s%s", plump.cmdAlias.c_str(), GRAY, ITALIC, plump.command->getDescription());
 				}
-			} else {
-				g_Data.getGuiData()->displayClientMessageF("==========");
-				if (strcmp(text->getText(), ".give ") == 0) {
-					std::string tag = Utils::getClipboardText();
-					if (tag.size() > 1 && tag.front() == MojangsonToken::COMPOUND_START.getSymbol() && tag.back() == MojangsonToken::COMPOUND_END.getSymbol()) {
-						std::string nbt = ".give beehive 64 0 ";
-						nbt += "COMPOUND_TAG";
-						text->setText(nbt);
-						syncShit(winrt_ptr, text);
-						g_Data.getGuiData()->displayClientMessage(&tag);
-						return;
-					}
-				} else if (strcmp(text->getText(), ".nbt load") == 0) {
-					std::string tag = Utils::getClipboardText();
-					if (tag.size() > 1 && tag.front() == MojangsonToken::COMPOUND_START.getSymbol() && tag.back() == MojangsonToken::COMPOUND_END.getSymbol()) {
-						std::string nbt = ".nbt load ";
-						nbt += "COMPOUND_TAG";
-						text->setText(nbt);
-						syncShit(winrt_ptr, text);
-						g_Data.getGuiData()->displayClientMessage(&tag);
-						return;
-					}
-				}
-				if (firstResult.command->getUsage(firstResult.cmdAlias.c_str() + 1)[0] == 0)
-					g_Data.getGuiData()->displayClientMessageF("%s%s %s- %s", WHITE, firstResult.cmdAlias.c_str(), GRAY, firstResult.command->getDescription());
-				else
-					g_Data.getGuiData()->displayClientMessageF("%s%s %s %s- %s", WHITE, firstResult.cmdAlias.c_str(), firstResult.command->getUsage(firstResult.cmdAlias.c_str() + 1 /*exclude prefix*/), GRAY, firstResult.command->getDescription());
 			}
+			if (firstResult.command->getUsage(firstResult.cmdAlias.c_str() + 1)[0] == 0)
+				g_Data.getGuiData()->displayClientMessageF("%s%s %s- %s", WHITE, firstResult.cmdAlias.c_str(), GRAY, firstResult.command->getDescription());
+			else
+				g_Data.getGuiData()->displayClientMessageF("%s%s %s %s- %s", WHITE, firstResult.cmdAlias.c_str(), firstResult.command->getUsage(firstResult.cmdAlias.c_str() + 1 /*exclude prefix*/), GRAY, firstResult.command->getDescription());
 
 			if (firstResult.shouldReplace) {
 				if (search.size() == firstResult.cmdAlias.size() - 1 && searchResults.size() == 1) {
@@ -1226,7 +1202,6 @@ int Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1) {
 
 	static auto xrayMod = moduleMgr->getModule<Xray>();
 	if (xrayMod->isEnabled()) {
-
 		char* text = a1->name.getText();
 		if (strstr(text, "ore") == NULL)
 			if (strcmp(text, "lava") != NULL)
@@ -1450,7 +1425,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 			auto overrideGeo = std::get<1>(geoOverride);
 			newGeometryData = new TextHolder(*overrideGeo.get());
 		} else {  // Default Skin
-			/*char* str;  // Obj text
+				  /*char* str;  // Obj text
 			{
 				auto hResourceObj = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_OBJ), "TEXT");
 				auto hMemoryObj = LoadResource(g_Data.getDllModule(), hResourceObj);
@@ -1962,22 +1937,22 @@ void Hooks::LocalPlayer__updateFromCamera(__int64 a1, C_Camera* camera) {
 	auto freelookMod = moduleMgr->getModule<Freelook>();
 	auto noHurtcamMod = moduleMgr->getModule<NoHurtcam>();
 
-	if(freelookMod->redirectMouse){
+	if (freelookMod->redirectMouse) {
 		freelookMod->cameraFacesFront = camera->facesPlayerFront;
 		freelookMod->isThirdPerson = camera->renderPlayerModel;
-		if(freelookMod->resetViewTick >= 0){
+		if (freelookMod->resetViewTick >= 0) {
 			camera->setOrientationDeg(freelookMod->lastCameraAngle.x, freelookMod->lastCameraAngle.y, 0);
-		}else{
+		} else {
 			camera->getPlayerRotation(&freelookMod->lastCameraAngle);
 		}
 
 		return;
 	}
-	if(noHurtcamMod->isEnabled() && g_Data.isInGame() && g_Data.getLocalPlayer()->isAlive()){
+	if (noHurtcamMod->isEnabled() && g_Data.isInGame() && g_Data.getLocalPlayer()->isAlive()) {
 		vec2_t rot;
 		camera->getPlayerRotation(&rot);
-		if(camera->facesPlayerFront){
-			rot.x *= -1; // rotate back
+		if (camera->facesPlayerFront) {
+			rot.x *= -1;  // rotate back
 			rot.y += 180;
 			rot = rot.normAngles();
 		}
@@ -1991,7 +1966,7 @@ bool Hooks::Mob__isImmobile(C_Entity* ent) {
 	auto func = g_Hooks.Mob__isImmobileHook->GetFastcall<bool, C_Entity*>();
 
 	static auto antiImmobileMod = moduleMgr->getModule<AntiImmobile>();
-	if(antiImmobileMod->isEnabled() && ent == g_Data.getLocalPlayer())
+	if (antiImmobileMod->isEnabled() && ent == g_Data.getLocalPlayer())
 		return false;
 
 	return func(ent);
@@ -2001,14 +1976,12 @@ void Hooks::InventoryTransactionManager__addAction(C_InventoryTransactionManager
 
 #ifdef TEST_DEBUG
 	char* srcName = "none";
-	if(action.sourceItem.item && *action.sourceItem.item)
+	if (action.sourceItem.item && *action.sourceItem.item)
 		srcName = (*action.sourceItem.item)->name.getText();
 	char* targetName = "none";
-	if(action.targetItem.item && *action.targetItem.item)
+	if (action.targetItem.item && *action.targetItem.item)
 		targetName = (*action.targetItem.item)->name.getText();
 	logF("%i %i %i %s %s", action.type, action.slot, action.sourceType, srcName, targetName, action.sourceType);
-
-
 
 	/*if(/*action.slot == 14 && action.sourceType == 124 && strcmp(targetName, "none") == 0 && *strcmp(srcName, "stone_shovel") == 0){
 		std::string tag = "{ench:[{id:9s,lvl:1s}]}";
@@ -2028,17 +2001,15 @@ void Hooks::LevelRendererPlayer__renderNameTags(__int64 a1, __int64 a2, TextHold
 	static auto nameTagsMod = moduleMgr->getModule<NameTags>();
 
 	if (nameTagsMod->isEnabled() && nameTagsMod->nameTags.size() > 0) {
-
 		std::string text = Utils::sanitize(a3->getText());
 		std::size_t found = text.find('\n');
 
 		if (found != std::string::npos)
 			text = text.substr(0, found);
-		
+
 		if (nameTagsMod->nameTags.find(text) != nameTagsMod->nameTags.end())
 			return;
 	}
-
 
 	return func(a1, a2, a3, a4);
 }
