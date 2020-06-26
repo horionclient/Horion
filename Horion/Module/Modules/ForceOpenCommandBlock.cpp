@@ -25,11 +25,11 @@ void ForceOpenCommandBlock::onTick(C_GameMode* gm) {
 			distance = g_Data.getLocalPlayer()->getPos()->dist(*pointingStruct->entityPtr->getPos());
 			isInCommandBlock = true;
 			__int64* id = pointingStruct->entityPtr->getUniqueId();
-			g_Data.getLocalPlayer()->openCommandBlockMinecart(*id);
+			//g_Data.getLocalPlayer()->openCommandBlockMinecart(*id);
 		} else if (block != nullptr && (blockId == 137 || blockId == 188 || blockId == 189)) {
 			distance = g_Data.getLocalPlayer()->getPos()->dist(pointingStruct->block.toFloatVector());
 			isInCommandBlock = true;
-			g_Data.getLocalPlayer()->openCommandBlock(pointingStruct->block);
+			//g_Data.getLocalPlayer()->openCommandBlock(pointingStruct->block);
 		}
 	} else if (!GameData::isRightClickDown()) {
 		clicked = false;

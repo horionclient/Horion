@@ -390,6 +390,7 @@ public:
 	virtual bool canBePulledIntoVehicle(void) const;
 
 private:
+	virtual bool returnTrue(void) const;
 	virtual __int64 inCaravan(void) const;
 
 public:
@@ -648,6 +649,13 @@ private:
 	virtual __int64 _endJump(void);
 	virtual __int64 updateGliding(void);
 	virtual __int64 _allowAscendingScaffolding(void) const;
+	virtual __int64 prepareRegion(__int64 &);
+	virtual __int64 destroyRegion(void);
+	virtual __int64 suspendRegion(void);
+	virtual __int64 _fireWillChangeDimension(void);
+	virtual __int64 _fireDimensionChanged(void);
+	virtual __int64 changeDimensionWithCredits(__int64);
+	virtual __int64 tickWorld(__int64 const &);
 
 public:
 	C_InventoryTransactionManager *getTransactionManager();
@@ -701,7 +709,7 @@ private:
 	virtual __int64 frameUpdate(__int64 &);
 	virtual __int64 getTickingOffsets(void) const;
 	virtual __int64 moveView(void);
-	virtual __int64 moveSpawnView(vec3_t const &);
+	//virtual __int64 moveSpawnView(vec3_t const &);
 
 public:
 	virtual void setName(std::string const &);
@@ -725,13 +733,13 @@ public:
 	virtual void setPermissions(int);
 
 private:
-	virtual __int64 startCrafting(vec3_ti const &, bool);
-	virtual __int64 startStonecutting(vec3_ti const &);
+	//virtual __int64 startCrafting(vec3_ti const &, bool);
+	//virtual __int64 startStonecutting(vec3_ti const &);
 	virtual __int64 startDestroying(void);
 	virtual __int64 stopDestroying(void);
 
 public:
-	virtual __int64 openContainer(vec3_ti const &);
+	/*virtual __int64 openContainer(vec3_ti const &);
 	virtual __int64 openContainer(__int64 const &);
 	virtual __int64 openFurnace(vec3_ti const &);
 	virtual __int64 openBlastFurnace(vec3_ti const &);
@@ -748,32 +756,36 @@ public:
 	virtual __int64 openBook(int, bool, int, __int64 *);
 	virtual __int64 openCommandBlock(vec3_ti const &);
 	virtual __int64 openCommandBlockMinecart(__int64 const &);
-	virtual __int64 openHorseInventory(__int64 const &);
+	virtual __int64 openHorseInventory(__int64 const &);*/
+	virtual bool returnFalse0() const;
+	virtual bool returnFalse1() const;
+	
 	virtual __int64 openTrading(__int64 const &, bool);
 
 public:
 	virtual bool canOpenContainerScreen(void);
 
 private:
-	virtual __int64 openChalkboard(__int64 &, bool);
-	virtual __int64 openNpcInteractScreen(C_Entity &);
+	virtual bool returnFalse_0() const;
+	virtual bool returnFalse_1() const;
 
 public:
 	virtual __int64 openInventory(void);
-	virtual __int64 openStructureEditor(vec3_ti const &);
+	//virtual __int64 openStructureEditor(vec3_ti const &);
 
 private:
-	virtual __int64 openLabTable(vec3_ti const &);
+	/*virtual __int64 openLabTable(vec3_ti const &);
 	virtual __int64 openElementConstructor(vec3_ti const &);
 	virtual __int64 openCompoundCreator(vec3_ti const &);
 	virtual __int64 openMaterialReducer(vec3_ti const &);
 	virtual __int64 openLoom(vec3_ti const &);
 	virtual __int64 openStonecutter(vec3_ti const &);
 	virtual __int64 openCartographyTable(vec3_ti const &);
-	virtual __int64 displayChatMessage(std::string const &, std::string const &);
-	virtual __int64 displayClientMessage(std::string const &);
-	virtual __int64 displayLocalizableMessage(std::string const &, __int64 const &);
+	virtual __int64 displayChatMessage(std::string const &, std::string const &);*/
+	virtual bool returnFalse_2() const;
+	virtual bool returnFalse_3() const;
 	virtual __int64 displayTextObjectMessage(__int64 const &, std::string const &, std::string const &);
+	virtual __int64 displayTextObjectMessageWhisperMessage(__int64 const &, std::string const &, std::string const &);
 	virtual __int64 displayWhisperMessage(std::string const &, std::string const &, std::string const &, std::string const &);
 	virtual __int64 startSleepInBed(vec3_ti const &);
 	virtual __int64 stopSleepInBed(bool, bool);
@@ -784,16 +796,17 @@ public:
 private:
 	virtual __int64 getSleepTimer(void) const;
 	virtual __int64 getPreviousTickSleepTimer(void) const;
-	virtual __int64 openSign(vec3_ti const &);
+	virtual bool returnFalse_4() const;
+	virtual bool returnFalse_5() const;
 
 public:
-	virtual bool isLocalC_Player(void) const;
+	virtual bool returnFalse_6() const;
 	virtual bool isHostingC_Player(void) const;
 	virtual bool isLoading(void) const;
 	virtual bool isC_PlayerInitialized(void) const;
 
 private:
-	virtual __int64 stopLoading(void);
+	virtual bool returnFalse_7() const;
 	virtual __int64 registerTrackedBoss(__int64);
 	virtual __int64 unRegisterTrackedBoss(__int64);
 
@@ -841,6 +854,10 @@ public:
 private:
 	virtual __int64 sendNetworkPacket(__int64 &) const;
 	virtual __int64 getC_PlayerEventCoordinator(void);
+	virtual __int64 getMoveInputHandler(void);
+	virtual __int64 getInputMode(void);
+	virtual __int64 getPlayMode(void);
+	virtual void **reportMovementTelemetry(__int64 *);
 	virtual __int64 onMoveC_PlayerPacketNormal(vec3_t const &, vec2_t const &, float);
 };
 
