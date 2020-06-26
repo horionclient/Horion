@@ -361,7 +361,7 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 
 	bool alwaysRender = moduleMgr->isInitialized() && moduleMgr->getModule<HudModule>()->alwaysShow;
 
-	TextHolder alloc;
+	TextHolder alloc = {};
 	uiscene->getScreenName(&alloc);
 
 	if (alloc.getTextLength() < 100)
