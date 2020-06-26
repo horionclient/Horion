@@ -19,7 +19,6 @@ bool Scaffold::tryScaffold(vec3_t blockBelow) {
 	C_Block* block = g_Data.getLocalPlayer()->region->getBlock(vec3_ti(blockBelow));
 	C_BlockLegacy* blockLegacy = *(block->blockLegacy);
 	if (blockLegacy->material->isReplaceable) {
-
 		vec3_ti blok(blockBelow);
 
 		// Find neighbour
@@ -79,6 +78,7 @@ void Scaffold::onTick(C_GameMode* gm) {
 		return;
 	if (!g_Data.canUseMoveKeys())
 		return;
+	
 	auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
 	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()) && !spoof)  // Block in hand?
 		return;
@@ -90,7 +90,7 @@ void Scaffold::onTick(C_GameMode* gm) {
 	// Adjustment by velocity
 	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
 	vec3_t vel = g_Data.getLocalPlayer()->velocity;
-	vel.normalize();  // Only use values from 0 - 1
+	vel = vel.normalize();  // Only use values from 0 - 1
 
 	if (!tryScaffold(blockBelow)) {
 		if (speed > 0.05f) {  // Are we actually walking?

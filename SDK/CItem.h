@@ -240,8 +240,8 @@ public:
 		return false;
 	}
 	bool isBlock(void) {
-		if (itemId != 0 && itemId < 255) return true;
-		return false;
+		auto val = *reinterpret_cast<__int64***>(reinterpret_cast<__int64>(this) + 0x170);
+		return val != nullptr && *val != nullptr;
 	}
 };
 
