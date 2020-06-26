@@ -54,6 +54,7 @@ private:
 
 public:
 	virtual bool isExperimental(__int64 const*) const;
+	virtual bool returnFalse();
 	virtual void setMaxStackSize(unsigned char);
 	virtual void setCategory(int);
 	virtual void setStackedByData(bool);
@@ -63,6 +64,7 @@ public:
 	virtual void setMaxUseDuration(int);
 	virtual void setRequiresWorldBuilder(bool);
 	virtual void setExplodable(bool);
+	virtual void setFireResistant(bool);
 	virtual void setIsGlint(bool);
 	virtual void setShouldDespawn(bool);
 
@@ -125,37 +127,28 @@ public:
 	virtual bool isMultiColorTinted(C_ItemStack const&) const;
 
 private:
-	//virtual __int64 getColor(__int64 const&) const;
 	virtual __int64 getColor(C_ItemStack const&) const;
 	virtual __int64 getBaseColor(C_ItemStack const&) const;
 	virtual __int64 getSecondaryColor(C_ItemStack const&) const;
 	virtual __int64 saveAdditionalData(C_ItemStack const&, __int64&) const;
 	virtual __int64 readAdditionalData(C_ItemStack&, __int64 const&)const;
-	/*	virtual __int64 readAdditionalData(__int64&, __int64 const&)const;
-	public:
 
-	private:*/
 	virtual bool isTintable(void)const;
+	virtual __int64 buildIdAux(short, const CompoundTag*);
+	virtual __int64 buildDescriptor(short, const CompoundTag*);
 	virtual __int64 use(C_ItemStack&, C_Entity&) const;
 	virtual __int64 dispense(C_BlockSource&, __int64&, int, vec3_t const&, unsigned char) const;
-	virtual __int64 useTimeDepleted(__int64&, __int64*, C_Entity*) const;
 	virtual __int64 useTimeDepleted(C_ItemStack&, __int64*, C_Entity*) const;
-	virtual __int64 releaseUsing(__int64&, C_Entity*, int) const;
 	virtual __int64 releaseUsing(C_ItemStack&, C_Entity*, int) const;
 	virtual __int64 getDestroySpeed(C_ItemStack const&, C_Block const&) const;
 	virtual __int64 hurtEnemy(__int64&, __int64*, __int64*) const;
 	virtual __int64 hurtEnemy(C_ItemStack&, __int64*, __int64*) const;
 	virtual __int64 mineC_Block(__int64&, C_Block const&, int, int, int, C_Entity*) const;
 	virtual __int64 mineC_Block(C_ItemStack&, C_Block const&, int, int, int, C_Entity*) const;
-	//virtual __int64 buildDescriptionId(__int64 const&)const;
 	virtual __int64 buildDescriptionId(C_ItemStack const&) const;
-	//virtual __int64 buildEffectDescriptionName(__int64 const&)const;
 	virtual __int64 buildEffectDescriptionName(C_ItemStack const&) const;
-	//virtual __int64 buildCategoryDescriptionName(__int64 const&)const;
 	virtual __int64 buildCategoryDescriptionName(C_ItemStack const&) const;
-	//virtual __int64 readUserData(__int64&, __int64&, __int64&) const;
 	virtual __int64 readUserData(C_ItemStack&, __int64&, __int64&) const;
-	//virtual __int64 writeUserData(__int64 const&, __int64&)const;
 	virtual __int64 writeUserData(C_ItemStack const&, __int64&) const;
 
 public:
@@ -204,7 +197,6 @@ public:
 private:
 	virtual __int64 playSoundIncrementally(__int64 const&, __int64&) const;
 	virtual __int64 playSoundIncrementally(C_ItemStack const&, __int64&) const;
-	virtual bool isCustomArmor();
 	virtual __int64 getAuxValuesDescription(void) const;
 	virtual __int64 _checkUseOnPermissions(C_Entity&, __int64&, unsigned char const&, vec3_ti const&) const;
 	virtual __int64 _checkUseOnPermissions(C_Entity&, C_ItemStack&, unsigned char const&, vec3_ti const&) const;
