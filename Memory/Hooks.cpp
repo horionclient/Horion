@@ -949,14 +949,9 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 
 	using syncShit_t = void(__fastcall*)(__int64*, TextHolder*);
 	static syncShit_t syncShit = nullptr;
-	static __int64* winrt_ptr;
 	if (syncShit == nullptr) {
-		//uintptr_t sigOffset = FindSignature("48 8B 0D ?? ?? ?? ?? 48 8B 01 49 8B D6 FF 90 ?? 04");  // The 04 at the end might get invalid in the future
-		uintptr_t sigOffset = FindSignature("48 89 0D ?? ?? ?? ?? E8 ? ? ? ? B0 ? 48 8B 5C 24 ? 48 8B 6C 24 ? 48 83 C4");
-		int offset = *reinterpret_cast<int*>(sigOffset + 3);
-		winrt_ptr = *reinterpret_cast<__int64**>(sigOffset + offset + 7);
-		int vtOffset = *reinterpret_cast<int*>(sigOffset + 15);
-		syncShit = reinterpret_cast<syncShit_t>(*reinterpret_cast<__int64*>(*winrt_ptr + vtOffset));
+		uintptr_t sigOffset = FindSignature("40 53 48 83 EC ?? 48 C7 44 24 20 FE FF FF FF 48 8B DA 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 90 48 8B C8 E8 ?? ?? ?? ?? 48 8B 08 4C 8B 81 ?? 04");
+		syncShit = reinterpret_cast<syncShit_t>(sigOffset);
 	}
 
 	if (tx != nullptr && text->getTextLength() >= 1 && tx[0] == '.') {
@@ -1027,8 +1022,8 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 			} else
 				maxReplaceLength = firstResult.cmdAlias.size();
 
+			g_Data.getGuiData()->displayClientMessageF("==========");
 			if (searchResults.size() > 1) {
-				g_Data.getGuiData()->displayClientMessageF("==========");
 				for (auto it = searchResults.begin(); it != searchResults.end(); ++it) {
 					LilPlump plump = *it;
 					g_Data.getGuiData()->displayClientMessageF("%s%s - %s%s", plump.cmdAlias.c_str(), GRAY, ITALIC, plump.command->getDescription());
@@ -1047,7 +1042,7 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 
 				text->setText(firstResult.cmdAlias.substr(0, maxReplaceLength));  // Set text
 				// now sync with the UI thread
-				syncShit(winrt_ptr, text);
+				syncShit(0, text);
 			}
 		}
 
