@@ -923,12 +923,13 @@ void Hooks::Actor_lerpMotion(C_Entity* _this, vec3_t motVec) {
 		return oLerp(_this, motVec);
 
 	static auto noKnockbackmod = moduleMgr->getModule<Velocity>();
-	/*if (noKnockbackmod->isEnabled()) {
-		static void* networkSender = reinterpret_cast<void*>(FindSignature("41 80 BF ?? ?? ?? ?? 00 0F 85 ?? ?? ?? ?? FF"));
+	if (noKnockbackmod->isEnabled()) {
+		static void* networkSender = reinterpret_cast<void*>(6 + FindSignature("FF 90 ?? ?? ?? ?? 4C 8D 9C 24 ?? ?? ?? ?? 49 8B 5B 18 49 8B 73 28 49 8B E3 5F C3"));
 		if (networkSender == _ReturnAddress()) {
 			motVec = _this->velocity.lerp(motVec, noKnockbackmod->xModifier, noKnockbackmod->yModifier, noKnockbackmod->xModifier);
 		}
-	}*/
+	}
+	
 	oLerp(_this, motVec);
 }
 
