@@ -82,7 +82,7 @@ private:
 	static __int64 UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext);
 	static __int64 UIScene_render(C_UIScene* uiscene, __int64 screencontext);
 	static __int64 RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx);
-	static float* Dimension_getFogColor(__int64, float* color, float brightness, float a4);
+	static float* Dimension_getFogColor(__int64, float* color, __int64 brightness, float a4);
 	static float Dimension_getTimeOfDay(__int64, int a2, float a3);
 	static float Dimension_getSunIntensity(__int64, float a2, vec3_t* a3, float a4);
 	static void ChestBlockActor_tick(C_ChestBlockActor*, void* a);

@@ -848,8 +848,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	return retval;
 }
 
-float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightness, float a4) {
-	static auto oGetFogColor = g_Hooks.Dimension_getFogColorHook->GetFastcall<float*, __int64, float*, float, float>();
+float* Hooks::Dimension_getFogColor(__int64 _this, float* color, __int64 a3, float a4) {
+	static auto oGetFogColor = g_Hooks.Dimension_getFogColorHook->GetFastcall<float*, __int64, float*, __int64, float>();
 
 	static float rcolors[4];
 
@@ -881,7 +881,7 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightnes
 
 		return rcolors;
 	}
-	return oGetFogColor(_this, color, brightness, a4);
+	return oGetFogColor(_this, color, a3, a4);
 }
 
 float Hooks::Dimension_getTimeOfDay(__int64 _this, int a2, float a3) {
