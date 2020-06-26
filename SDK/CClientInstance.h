@@ -160,17 +160,17 @@ public:
 private:
 	char pad_0x00B8[0x30];  //0x0110
 public:
-	C_LocalPlayer* localPlayer;  //0x00F0
+	C_LocalPlayer* localPlayer;  //0x0140
 private:
-	char pad[0x380]; // 0x00F8
+	char pad[0x380]; // 0x0148
 public:
 	struct {
-		char pad[0x228];
+		char pad[0x238];
 		struct {
 			__int64 materialPtr;
 			size_t refCount;
 		} entityLineMaterial;
-	} *itemInHandRenderer; // 0x0478
+	} *itemInHandRenderer; // 0x04C8
 
 private:
 	virtual __int64 destructorClientInstance();

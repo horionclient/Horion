@@ -13,6 +13,7 @@ const char* Tracer::getModuleName() {
 	return "Tracer";
 }
 void Tracer::onLevelRender() {
+
 	auto cameraMgr = g_Data.getClientInstance()->getCameraManager();
 	if(cameraMgr == nullptr)
 		return;

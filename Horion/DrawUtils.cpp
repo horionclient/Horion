@@ -422,7 +422,7 @@ void DrawUtils::drawLine3d(const vec3_t& start, const vec3_t& end) {
 	if(game3dContext == 0 || entityFlatStaticMaterial == 0)
 		return;
 
-	auto myTess = *reinterpret_cast<__int64*>(game3dContext + 0xA8);
+	auto myTess = *reinterpret_cast<__int64*>(game3dContext + 0xB0);
 
 	DrawUtils::tess__begin(myTess, 4);
 
