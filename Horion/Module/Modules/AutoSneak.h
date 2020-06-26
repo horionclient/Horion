@@ -7,4 +7,5 @@ public:
 
 	virtual void onTick(C_GameMode* gm) override;
 	virtual const char* getModuleName() override;
+	virtual void onMove(C_MoveInputHandler* handler) override;
 };
