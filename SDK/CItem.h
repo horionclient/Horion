@@ -18,11 +18,11 @@ class MinecraftGame;
 
 class C_BaseActorRenderContext {
 private:
-	char pad_0x0[0x50];  //0x0000
+	char pad_0x0[0x58];  //0x0000
 public:
-	C_ItemRenderer* renderer;  //0x0050
+	C_ItemRenderer* renderer;  //0x0058
 private:
-	char pad_0x50[0x280 - 0x58];  //0x58
+	char pad_0x50[0x228];  //0x60
 public:
 	C_BaseActorRenderContext(C_ScreenContext* ScreenCtx, C_ClientInstance* client, MinecraftGame* game);
 };
@@ -54,6 +54,7 @@ private:
 
 public:
 	virtual bool isExperimental(__int64 const*) const;
+	virtual bool returnFalse();
 	virtual void setMaxStackSize(unsigned char);
 	virtual void setCategory(int);
 	virtual void setStackedByData(bool);
@@ -63,6 +64,7 @@ public:
 	virtual void setMaxUseDuration(int);
 	virtual void setRequiresWorldBuilder(bool);
 	virtual void setExplodable(bool);
+	virtual void setFireResistant(bool);
 	virtual void setIsGlint(bool);
 	virtual void setShouldDespawn(bool);
 
@@ -125,37 +127,28 @@ public:
 	virtual bool isMultiColorTinted(C_ItemStack const&) const;
 
 private:
-	//virtual __int64 getColor(__int64 const&) const;
 	virtual __int64 getColor(C_ItemStack const&) const;
 	virtual __int64 getBaseColor(C_ItemStack const&) const;
 	virtual __int64 getSecondaryColor(C_ItemStack const&) const;
 	virtual __int64 saveAdditionalData(C_ItemStack const&, __int64&) const;
 	virtual __int64 readAdditionalData(C_ItemStack&, __int64 const&)const;
-	/*	virtual __int64 readAdditionalData(__int64&, __int64 const&)const;
-	public:
 
-	private:*/
 	virtual bool isTintable(void)const;
+	virtual __int64 buildIdAux(short, const CompoundTag*);
+	virtual __int64 buildDescriptor(short, const CompoundTag*);
 	virtual __int64 use(C_ItemStack&, C_Entity&) const;
 	virtual __int64 dispense(C_BlockSource&, __int64&, int, vec3_t const&, unsigned char) const;
-	virtual __int64 useTimeDepleted(__int64&, __int64*, C_Entity*) const;
 	virtual __int64 useTimeDepleted(C_ItemStack&, __int64*, C_Entity*) const;
-	virtual __int64 releaseUsing(__int64&, C_Entity*, int) const;
 	virtual __int64 releaseUsing(C_ItemStack&, C_Entity*, int) const;
 	virtual __int64 getDestroySpeed(C_ItemStack const&, C_Block const&) const;
 	virtual __int64 hurtEnemy(__int64&, __int64*, __int64*) const;
 	virtual __int64 hurtEnemy(C_ItemStack&, __int64*, __int64*) const;
 	virtual __int64 mineC_Block(__int64&, C_Block const&, int, int, int, C_Entity*) const;
 	virtual __int64 mineC_Block(C_ItemStack&, C_Block const&, int, int, int, C_Entity*) const;
-	//virtual __int64 buildDescriptionId(__int64 const&)const;
 	virtual __int64 buildDescriptionId(C_ItemStack const&) const;
-	//virtual __int64 buildEffectDescriptionName(__int64 const&)const;
 	virtual __int64 buildEffectDescriptionName(C_ItemStack const&) const;
-	//virtual __int64 buildCategoryDescriptionName(__int64 const&)const;
 	virtual __int64 buildCategoryDescriptionName(C_ItemStack const&) const;
-	//virtual __int64 readUserData(__int64&, __int64&, __int64&) const;
 	virtual __int64 readUserData(C_ItemStack&, __int64&, __int64&) const;
-	//virtual __int64 writeUserData(__int64 const&, __int64&)const;
 	virtual __int64 writeUserData(C_ItemStack const&, __int64&) const;
 
 public:
@@ -204,7 +197,6 @@ public:
 private:
 	virtual __int64 playSoundIncrementally(__int64 const&, __int64&) const;
 	virtual __int64 playSoundIncrementally(C_ItemStack const&, __int64&) const;
-	virtual bool isCustomArmor();
 	virtual __int64 getAuxValuesDescription(void) const;
 	virtual __int64 _checkUseOnPermissions(C_Entity&, __int64&, unsigned char const&, vec3_ti const&) const;
 	virtual __int64 _checkUseOnPermissions(C_Entity&, C_ItemStack&, unsigned char const&, vec3_ti const&) const;
@@ -240,8 +232,8 @@ public:
 		return false;
 	}
 	bool isBlock(void) {
-		if (itemId != 0 && itemId < 255) return true;
-		return false;
+		auto val = *reinterpret_cast<__int64***>(reinterpret_cast<__int64>(this) + 0x170);
+		return val != nullptr && *val != nullptr;
 	}
 };
 
@@ -256,7 +248,7 @@ private:
 public:
 	char count;  //0x22
 private:
-	char pad_0x1B[0x65];  //0x23
+	char pad_0x1B[0x6D];  //0x23
 public:
 	C_ItemStack() {
 		memset(this, 0x0, sizeof(C_ItemStack));
@@ -348,4 +340,11 @@ public:
 	bool isBoots() {
 		return ArmorSlot == 3;
 	}
+};
+
+
+class ItemRegistry {
+public:
+	static C_Item*** getItemFromId(void* ptr, int itemId);
+	static C_Item*** lookUpByName(void*, void*, TextHolder&);
 };

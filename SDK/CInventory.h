@@ -16,6 +16,7 @@ public:
 	void dropAll(int slot);
 
 	virtual __int64 init();
+	virtual bool serverInitItemStackIds(signed int a2, int a3, __int64 a4);
 	virtual __int64 addContentChangeListener(__int64 a2);
 	virtual __int64 removeContentChangeListener(__int64 a2);
 	virtual C_ItemStack* getItemStack(int slot);
@@ -30,13 +31,9 @@ private:
 public:
 	int selectedHotbarSlot;  //0x0010
 private:
-	char pad_0x0014[0x8C];  //0x0014
+	char pad_0x0014[0x9C];  //0x0014
 public:
-	uint8_t holdingItem;  //0x00A0
-private:
-	char pad_0x00A1[0x7];  //0x00A1
-public:
-	C_Inventory* inventory;  //0x00A8
+	C_Inventory* inventory;  //0x00B0
 };
 
 class C_ContainerScreenController {

@@ -85,7 +85,7 @@ __forceinline bool isDangerous(const vec3_ti& pos, C_BlockSource* reg, bool allo
 		}
 		static uintptr_t** witherRoseVtable = nullptr;
 		if (witherRoseVtable == nullptr) {
-			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 06 48 B9");
+			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 49 89 06 48 B9");
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
 			witherRoseVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 		}

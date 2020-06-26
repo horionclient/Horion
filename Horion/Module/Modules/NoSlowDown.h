@@ -3,6 +3,7 @@
 class NoSlowDown : public IModule {
 private:
 	uint8_t* opcode = 0;
+	uint8_t* opcode1 = 0;
 
 public:
 	NoSlowDown();

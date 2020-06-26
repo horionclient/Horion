@@ -9,21 +9,19 @@ GameData g_Data;
 void GameData::retrieveClientInstance() {
 	static uintptr_t clientInstanceOffset = 0x0;
 	if (clientInstanceOffset == 0x0) {
-		uintptr_t sigOffset = FindSignature("4C 8B 2D ?? ?? ?? ?? 49 8D 43 ?? 48 89 44 24 ??");
+		uintptr_t sigOffset = FindSignature("48 8B 0D ?? ?? ?? ?? 48 8B 01 FF 90 ?? ?? ?? ?? 4C 8B E0");
 		if (sigOffset != 0x0) {
 			int offset = *reinterpret_cast<int*>((sigOffset + 3));                                                 // Get Offset from code
 			clientInstanceOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instruction*/ 7;  // Offset is relative
 			logF("clinet: %llX", clientInstanceOffset);
 		}
 	}
-	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + clientInstanceOffset, {0x0, 0x30}));
+
+	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + clientInstanceOffset, {0x0, 0x78, 0x160}));
 #ifdef _DEBUG
 	if (g_Data.clientInstance == 0)
 		throw std::exception("Client Instance is 0");
 #endif
-
-	// 4C 8B F8 48 8B 0D ?? ?? ?? ?? 48 8B 11
-	// 1.11.1 : 0x0250A2D0
 }
 
 TextHolder* GameData::getGameVersion() {
@@ -111,7 +109,7 @@ void GameData::updateGameData(C_GameMode* gameMode) {
 		if (g_Data.localPlayer != nullptr) {
 			C_GuiData* guiData = g_Data.clientInstance->getGuiData();
 
-
+			
 			if (guiData != nullptr) {
 				{
 					auto vecLock = Logger::GetTextToPrintLock();
@@ -171,7 +169,7 @@ void GameData::forEachEntity(std::function<void(C_Entity*, bool)> callback) {
 	{
 		// MultiplayerLevel::directTickEntities
 		__int64 region = reinterpret_cast<__int64>(g_Data.getLocalPlayer()->region);
-		__int64* entityIdMap = *(__int64**)(*(__int64*)(region + 0x20) + 0x150i64);
+		__int64* entityIdMap = *(__int64**)(*(__int64*)(region + 0x20) + 0x120i64);
 		for (__int64* i = (__int64*)*entityIdMap; i != entityIdMap; i = (__int64*)*i) {
 			__int64 actor = i[3];
 			// !isRemoved() && !isGlobal()

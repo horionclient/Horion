@@ -1,5 +1,6 @@
 #pragma once
 #include "Module.h"
+
 class AirSwim : public IModule {
 public:
 	AirSwim();

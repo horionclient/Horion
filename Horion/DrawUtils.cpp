@@ -23,11 +23,6 @@ vec2_t screenSize;
 vec3_t origin;
 float lerpT;
 C_TexturePtr* texturePtr = nullptr;
-struct BaseActorRenderContext {
-	char pad[0x280]{};
-} ourActorContext;
-
-using baseActorRenderContext_constructor = BaseActorRenderContext*(__fastcall*)(BaseActorRenderContext* _this, __int64 screenContext, C_ClientInstance*, MinecraftGame*);
 
 static MaterialPtr* uiMaterial = nullptr;
 static MaterialPtr* entityFlatStaticMaterial = nullptr;
@@ -55,7 +50,8 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* gui) {
 	guiData = gui;
 	renderCtx = ctx;
 	screenContext2d = reinterpret_cast<__int64*>(renderCtx)[2];
-	tesselator = *reinterpret_cast<__int64*>(screenContext2d + 0xA8);
+
+	tesselator = *reinterpret_cast<__int64*>(screenContext2d + 0xB0);
 	colorHolder = *reinterpret_cast<float**>(screenContext2d + 0x30);
 
 	glmatrixf* badrefdef = g_Data.getClientInstance()->getRefDef();
@@ -76,11 +72,6 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* gui) {
 	if(entityFlatStaticMaterial == nullptr && g_Data.isInGame()){
 		entityFlatStaticMaterial = reinterpret_cast<MaterialPtr*>(g_Data.getClientInstance()->itemInHandRenderer->entityLineMaterial.materialPtr);
 	}
-	static auto actorCtxConstructor = reinterpret_cast<baseActorRenderContext_constructor>(FindSignature("48 89 5C 24 08 57 48 83 EC ?? 48 8D 05 ?? ?? ?? ?? 49 8B D8 48 89 01 48 8B F9 8B"));
-
-	memset(&ourActorContext, 0, sizeof(BaseActorRenderContext));
-	actorCtxConstructor(&ourActorContext, reinterpret_cast<__int64>(renderCtx), g_Data.getClientInstance(), g_Data.getClientInstance()->minecraftGame);
-
 }
 
 void DrawUtils::setColor(float r, float g, float b, float a) {
@@ -431,7 +422,7 @@ void DrawUtils::drawLine3d(const vec3_t& start, const vec3_t& end) {
 	if(game3dContext == 0 || entityFlatStaticMaterial == 0)
 		return;
 
-	auto myTess = *reinterpret_cast<__int64*>(game3dContext + 0xA8);
+	auto myTess = *reinterpret_cast<__int64*>(game3dContext + 0xB0);
 
 	DrawUtils::tess__begin(myTess, 4);
 

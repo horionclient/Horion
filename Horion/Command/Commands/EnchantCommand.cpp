@@ -85,9 +85,8 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 			firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, item, nullptr);
 			if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0)
 				secondAction = new C_InventoryAction(0, nullptr, item, 32766, 100);
-			else {
+			else 
 				secondAction = new C_InventoryAction(0, nullptr, item, 507, 99999);
-			}
 			manager->addInventoryAction(*firstAction);
 			manager->addInventoryAction(*secondAction);
 			delete firstAction;
@@ -116,9 +115,9 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 			if (addEnchant(EnchantData, enchantPair)) {  // Upper 4 bytes = level, lower 4 bytes = enchant type
 				saveEnchantsToUserData(item, EnchantData);
 				__int64 proxy = reinterpret_cast<__int64>(g_Data.getLocalPlayer()->getSupplies());
-				if (!*(uint8_t*)(proxy + 160))
-					(*(void(__fastcall**)(unsigned long long, unsigned long long, C_ItemStack*))(**(unsigned long long**)(proxy + 168) + 64i64))(
-						*(unsigned long long*)(proxy + 168),
+				if (!*(uint8_t*)(proxy + 168))
+					(*(void(__fastcall**)(unsigned long long, unsigned long long, C_ItemStack*))(**(unsigned long long**)(proxy + 176) + 72i64))(
+						*(unsigned long long*)(proxy + 176),
 						*(unsigned int*)(proxy + 16),
 						item);  // Player::selectItem
 
@@ -139,9 +138,9 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 		if (addEnchant(EnchantData, enchantPair)) {  // Upper 4 bytes = level, lower 4 bytes = enchant type
 			saveEnchantsToUserData(item, EnchantData);
 			__int64 proxy = reinterpret_cast<__int64>(g_Data.getLocalPlayer()->getSupplies());
-			if (!*(uint8_t*)(proxy + 160))
-				(*(void(__fastcall**)(unsigned long long, unsigned long long, C_ItemStack*))(**(unsigned long long**)(proxy + 168) + 64i64))(
-					*(unsigned long long*)(proxy + 168),
+			if (!*(uint8_t*)(proxy + 168))
+				(*(void(__fastcall**)(unsigned long long, unsigned long long, C_ItemStack*))(**(unsigned long long**)(proxy + 176) + 72i64))(
+					*(unsigned long long*)(proxy + 176),
 					*(unsigned int*)(proxy + 16),
 					item);  // Player::selectItem
 

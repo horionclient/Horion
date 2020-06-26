@@ -268,7 +268,7 @@ CompoundTag::CompoundTag() {
 }
 void CompoundTag::put(TextHolder& tag, std::unique_ptr<Tag> value) {
 	using CompoundTag__putF = void(__fastcall*)(CompoundTag*, TextHolder&, std::unique_ptr<Tag>);
-	static CompoundTag__putF func = reinterpret_cast<CompoundTag__putF>(FindSignature("4C 8B DC 53 56 57 48 ?? ?? ?? ?? ?? ?? 49 ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 49 8B F8 48 8B DA 49 89 53 ?? 4D 89 43 ?? 49 8B 30 48 85 F6"));
+	static CompoundTag__putF func = reinterpret_cast<CompoundTag__putF>(FindSignature("4C 8B DC 55 56 57 48 81 EC ? ? ? ? 49 C7 43 ? ? ? ? ? 49 89 5B ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 49 8B D8 48 8B FA 48 8B E9"));
 	func(this, tag, std::move(value));
 }
 void Handler::handleWrite(Tag* value, std::stringstream& builder) {
