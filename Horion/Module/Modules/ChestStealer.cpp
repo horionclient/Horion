@@ -19,7 +19,7 @@ void ChestStealer::onTick(C_GameMode* gm) {
 		delay++;
 	}
 	if (g_Data.getLocalPlayer()->canOpenContainerScreen() == 0 && chestScreenController != nullptr && delay > setDelay) {
-		chestScreenController->leaveScreen();
+		//chestScreenController->leaveScreen();
 		delay = 0;
 	}
 

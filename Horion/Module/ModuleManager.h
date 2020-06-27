@@ -76,7 +76,6 @@
 #include "Modules/TriggerBot.h"
 #include "Modules/Xray.h"
 #include "Modules/NightMode.h"
-#include "Modules/ForceOpenCommandBlock.h"
 #include "Modules/NoSwing.h"
 #include "Modules/CubeGlide.h"
 #include "Modules/AirStuck.h"
