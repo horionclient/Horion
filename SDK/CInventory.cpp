@@ -1,5 +1,6 @@
 #include "CInventory.h"
 #include "../Utils/Utils.h"
+#include "../Memory/GameData.h"
 void C_Inventory::dropSlot(int slot) {
 	// FillingContainer::dropSlot
 	using drop_t = void(__fastcall*)(C_Inventory*, int, char);
@@ -38,4 +39,36 @@ void C_ContainerScreenController::handleAutoPlace(uintptr_t a1, std::string name
 
 	if (autoPlaceFunc != 0x0)
 		autoPlaceFunc(this, a1, txt, slot);
+}
+
+void C_Inventory::moveItem(int from, int to = -1) {
+	C_InventoryTransactionManager* manager = g_Data.getLocalPlayer()->getTransactionManager();
+
+	uintptr_t sigOffset = FindSignature("48 8D 3D ? ? ? ? 80 B8 ? ? ? ? ? 75 19 48 8B 88 ? ? ? ? 48 8B 11 4C 8B 42 28 8B 50 10");
+	int offset = *reinterpret_cast<int*>(sigOffset + 3);
+	C_ItemStack* emptyItemStack = reinterpret_cast<C_ItemStack*>(sigOffset + offset + /*length of instruction*/ 7);
+
+	if (to < 0) to = getFirstEmptySlot();
+	C_ItemStack* item1 = getItemStack(from);
+	C_ItemStack* item2 = getItemStack(to);
+
+	if (item1->item == NULL) return;
+	if (item2->item == NULL) {
+		C_InventoryAction first(from, item1, nullptr);
+		C_InventoryAction second(to, nullptr, item1);
+		manager->addInventoryAction(first);
+		manager->addInventoryAction(second);
+		*item2 = *item1;
+		*item1 = *emptyItemStack;
+	} else {
+		C_InventoryAction first(from, item1, nullptr);
+		C_InventoryAction second(to, item2, item1);
+		C_InventoryAction third(from, nullptr, item2);
+		manager->addInventoryAction(first);
+		manager->addInventoryAction(second);
+		manager->addInventoryAction(third);
+		C_ItemStack a = *item2;
+		*item2 = *item1;
+		*item1 = a;
+	}
 }

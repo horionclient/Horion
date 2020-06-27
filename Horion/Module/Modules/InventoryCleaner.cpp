@@ -8,7 +8,7 @@ InventoryCleaner::InventoryCleaner() : IModule(0x0, Category::PLAYER, "Automatic
 	registerBoolSetting("Food", &this->keepFood, this->keepFood);
 	registerBoolSetting("Blocks", &this->keepBlocks, this->keepBlocks);
 	registerBoolSetting("OpenInv", &this->openInv, this->openInv);
-	//registerBoolSetting("AutoSort", &this->autoSort, this->autoSort);
+	registerBoolSetting("AutoSort", &this->autoSort, this->autoSort);
 }
 
 InventoryCleaner::~InventoryCleaner() {
@@ -19,7 +19,7 @@ const char* InventoryCleaner::getModuleName() {
 }
 
 void InventoryCleaner::onTick(C_GameMode* gm) {
-	if ((g_Data.getLocalPlayer()->canOpenContainerScreen() || moduleMgr->getModule<ChestStealer>()->chestScreenController != nullptr) && openInv) 
+	if (g_Data.getLocalPlayer()->canOpenContainerScreen() && openInv) 
 		return;
 
 	// Drop useless items
@@ -31,20 +31,7 @@ void InventoryCleaner::onTick(C_GameMode* gm) {
 	}
 
 	if (autoSort) {
-		// Stack all items
-		{
-			std::vector stackableSlots = findStackableItems();
-			if (!stackableSlots.empty()) {
-				C_InventoryTransactionManager* manager = g_Data.getLocalPlayer()->getTransactionManager();
-				int slot = stackableSlots.at(0);
-				C_ItemStack* item = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(stackableSlots.at(1));
-				C_InventoryAction* firstAction = new C_InventoryAction(0, item, nullptr, 507, 99999);
-				C_InventoryAction* secondAction = new C_InventoryAction(slot, nullptr, item);
-				manager->addInventoryAction(*firstAction);
-				manager->addInventoryAction(*secondAction);
-			}
-		}
-		// Put sword in first empty slot
+		// Put sword in first slot
 		{
 			C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 			C_Inventory* inv = supplies->inventory;
@@ -60,12 +47,7 @@ void InventoryCleaner::onTick(C_GameMode* gm) {
 					}
 				}
 			}
-			C_InventoryTransactionManager* manager = g_Data.getLocalPlayer()->getTransactionManager();
-			int slot = inv->getFirstEmptySlot();
-			C_InventoryAction* firstAction = new C_InventoryAction(0, inv->getItemStack(item), nullptr, 507, 99999);
-			C_InventoryAction* secondAction = new C_InventoryAction(slot, nullptr, inv->getItemStack(item));
-			manager->addInventoryAction(*firstAction);
-			manager->addInventoryAction(*secondAction);
+			if (item != supplies->selectedHotbarSlot && item != 0) inv->moveItem(item, 0);
 		}
 	}
 }
