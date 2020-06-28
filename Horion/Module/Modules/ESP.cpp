@@ -51,7 +51,7 @@ void doRenderStuff(C_Entity* ent, bool isRegularEntitie) {
 	
 }
 
-void ESP::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
+void ESP::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
 	if (localPlayer != nullptr && GameData::canUseMoveKeys()) {

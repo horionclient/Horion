@@ -11,7 +11,7 @@ const char* ChestESP::getModuleName() {
 	return ("ChestESP");
 }
 
-void ChestESP::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
+void ChestESP::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	if (!g_Data.isInGame() || !GameData::canUseMoveKeys() || g_Data.getLocalPlayer() == nullptr)
 		return;
 	//if (listSize < 1000 && listSize > 1) {

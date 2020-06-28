@@ -32,7 +32,7 @@ void drawNameTags(C_Entity* ent, bool isRegularEntitie) {
 	}
 }
 
-void NameTags::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
+void NameTags::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
 	if (nameTags.size() > 100)

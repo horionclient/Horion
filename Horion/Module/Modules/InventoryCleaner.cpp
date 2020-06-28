@@ -47,7 +47,7 @@ void InventoryCleaner::onTick(C_GameMode* gm) {
 					}
 				}
 			}
-			if (item != supplies->selectedHotbarSlot && item != 0) inv->moveItem(item, 0);
+			if (item != 0) inv->moveItem(item, 0);
 		}
 	}
 }
