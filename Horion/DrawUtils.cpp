@@ -299,7 +299,7 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 	float textWidth = getTextWidth(&text, textSize);
 	float textHeight = DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() * textSize;
 
-	if (refdef->OWorldToScreen(origin, ent->eyePos0, textPos, fov, screenSize)) {
+	if (refdef->OWorldToScreen(origin, ent->eyePos0.add(0, 0.5f, 0), textPos, fov, screenSize)) {
 		textPos.y -= textHeight;
 		textPos.x -= textWidth / 2.f;
 		rectPos.x = textPos.x - 1.f;
