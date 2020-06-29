@@ -74,7 +74,7 @@ bool TestCommand::execute(std::vector<std::string>* args) {
 	coolBean.next = reinterpret_cast<__int64>(&ptrBean);
 
 	pk.complexTransaction->transac.ptr = reinterpret_cast<__int64>(&ptrBean);
-
+	pk.numTransactions = 2;
 	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&pk);
 	clientMessageF("%sSuccessfully given item! %i", GREEN, numActions);
 	return true;

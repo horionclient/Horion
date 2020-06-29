@@ -215,7 +215,7 @@ public:
 	inline C_LocalPlayer* getLocalPlayer() {
 		#ifdef _BETA
 		unsigned int converted = networkedData.localPlayerOffset ^ networkedData.xorKey;
-		if (networkedData.localPlayerOffset < 0xA0 || converted < 0xA0 || converted > 0x132 || networkedData.dataSet == false)
+		if (networkedData.localPlayerOffset < 0x110 || converted < 0x125 || converted > 0x191 || networkedData.dataSet == false)
 			localPlayer = nullptr;
 		else
 			localPlayer = *reinterpret_cast<C_LocalPlayer**>(reinterpret_cast<__int64>(clientInstance) + converted);

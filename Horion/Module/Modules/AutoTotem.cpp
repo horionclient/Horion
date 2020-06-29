@@ -1,6 +1,6 @@
 #include "AutoTotem.h"
 
-AutoTotem::AutoTotem() : IModule(0x0, Category::PLAYER, "Automatically puts Totems into your offhand") {
+AutoTotem::AutoTotem() : IModule(0x0, Category::PLAYER, "Automatically puts totems into your offhand") {
 }
 
 AutoTotem::~AutoTotem() {
@@ -11,27 +11,20 @@ const char* AutoTotem::getModuleName() {
 }
 
 void AutoTotem::onTick(C_GameMode* gm) {
-	C_ItemStack* i = g_Data.getLocalPlayer()->getEquippedTotem();
-
-	if (i->item == NULL && delay > 3) {
-		C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
-		C_Inventory* a = supplies->inventory;
+	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
+	C_Inventory* inv = supplies->inventory;
+	C_InventoryTransactionManager* manager = g_Data.getLocalPlayer()->getTransactionManager();
+	C_ItemStack* current = g_Data.getLocalPlayer()->getEquippedTotem();
+	if (current->item == NULL) {
 		for (int i = 0; i < 36; i++) {
-			C_ItemStack* test = a->getItemStack(i);
-			if (test->item != NULL) {
-				C_Item* yikes = *test->item;
-				if (yikes->itemId == 450) {
-					g_Data.getLocalPlayer()->consumeTotem();
-					g_Data.getLocalPlayer()->setOffhandSlot(test);
-				}
+			C_ItemStack* totem = inv->getItemStack(i);
+			if (totem->item != NULL && (*totem->item)->itemId == 450) {
+				C_InventoryAction first(i, totem, nullptr);
+				C_InventoryAction second(37, nullptr, totem);
+				g_Data.getLocalPlayer()->setOffhandSlot(totem);
+				manager->addInventoryAction(first);
+				manager->addInventoryAction(second);
 			}
 		}
-		delay = 0;
-	}
-
-	delay++;
-	
-}
-
-void AutoTotem::onEnable() {
+	}	
 }

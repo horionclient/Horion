@@ -324,9 +324,9 @@ private:
 
 class C_ArmorItem : public C_Item {
 private:
-	char pad_0x108[0x48 + 0x70];  //0x108
+	char pad_0x108[0xB0];  //0x108
 public:
-	int ArmorSlot;  //0x150
+	int ArmorSlot;  //0x1B8
 
 	bool isHelmet() {
 		return ArmorSlot == 0;

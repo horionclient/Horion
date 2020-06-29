@@ -104,6 +104,7 @@ void FollowPathModule::onMove(C_MoveInputHandler *handler) {
 					this->setEnabled(false);
 				}
 			}else{
+				this->clientMessageF("%sDone!", GREEN);
 				this->setEnabled(false);
 				return;
 			}

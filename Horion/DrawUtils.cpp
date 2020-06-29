@@ -299,17 +299,17 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 	float textWidth = getTextWidth(&text, textSize);
 	float textHeight = DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() * textSize;
 
-	if (refdef->OWorldToScreen(origin, ent->eyePos0, textPos, fov, screenSize)) {
+	if (refdef->OWorldToScreen(origin, ent->eyePos0.add(0, 0.5f, 0), textPos, fov, screenSize)) {
 		textPos.y -= textHeight;
 		textPos.x -= textWidth / 2.f;
-		rectPos.x = textPos.x - 1.f;
-		rectPos.y = textPos.y - 1.f;
-		rectPos.z = textPos.x + textWidth + 1.f;
-		rectPos.w = textPos.y + textHeight + 2.f;
+		rectPos.x = textPos.x - 1.f * textSize;
+		rectPos.y = textPos.y - 1.f * textSize;
+		rectPos.z = textPos.x + textWidth + 1.f * textSize;
+		rectPos.w = textPos.y + textHeight + 2.f * textSize;
 		vec4_t subRectPos = rectPos;
-		subRectPos.y = subRectPos.w - 1.f;
+		subRectPos.y = subRectPos.w - 1.f * textSize;
 		fillRectangle(rectPos, MC_Color(13, 29, 48), 0.8f);
-		fillRectangle(subRectPos, MC_Color(28, 107, 201), 0.8f);
+		fillRectangle(subRectPos, MC_Color(28, 107, 201), 0.9f);
 		drawText(textPos, &text, MC_Color(255, 255, 255), textSize);
 
 		static auto nameTagsMod = moduleMgr->getModule<NameTags>();
@@ -318,7 +318,7 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 			auto* player = reinterpret_cast<C_Player*>(ent);
 			float scale = textSize * 0.6f;
 			float spacing = scale + 15.f;
-			float x = rectPos.x + 1.f;
+			float x = rectPos.x + 1.f * textSize;
 			float y = rectPos.y - 20.f * scale;
 			// armor
 			for (int i = 0; i < 4; i++) {

@@ -76,7 +76,6 @@
 #include "Modules/TriggerBot.h"
 #include "Modules/Xray.h"
 #include "Modules/NightMode.h"
-#include "Modules/ForceOpenCommandBlock.h"
 #include "Modules/NoSwing.h"
 #include "Modules/CubeGlide.h"
 #include "Modules/AirStuck.h"
@@ -88,6 +87,7 @@
 #include "Modules/NoHurtcam.h"
 #include "Modules/AntiImmobile.h"
 #include "Modules/FollowPathModule.h"
+#include "Modules/NoPaintingCrash.h"
 
 #ifdef _DEBUG
 #include "Modules/PacketLogger.h"

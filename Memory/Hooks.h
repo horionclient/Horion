@@ -82,7 +82,7 @@ private:
 	static __int64 UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext);
 	static __int64 UIScene_render(C_UIScene* uiscene, __int64 screencontext);
 	static __int64 RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx);
-	static float* Dimension_getFogColor(__int64, float* color, float brightness);
+	static float* Dimension_getFogColor(__int64, float* color, __int64 brightness, float a4);
 	static float Dimension_getTimeOfDay(__int64, int a2, float a3);
 	static float Dimension_getSunIntensity(__int64, float a2, vec3_t* a3, float a4);
 	static void ChestBlockActor_tick(C_ChestBlockActor*, void* a);
@@ -111,7 +111,7 @@ private:
 	static __int64 GameMode_attack(C_GameMode* _this, C_Entity*);
 	static __int64 ConnectionRequest_create(__int64 _this, __int64 privateKeyManager, void* a3, TextHolder* selfSignedId, TextHolder* serverAddress, __int64 clientRandomId, TextHolder* skinId, SkinData* skinData, __int64 capeData, CoolSkinData* coolSkinStuff, TextHolder* deviceId, int inputMode, int uiProfile, int guiScale, TextHolder* languageCode, bool sendEduModeParams, TextHolder* tenantId, __int64 unused, TextHolder* platformUserId, TextHolder* thirdPartyName, bool thirdPartyNameOnly, TextHolder* platformOnlineId, TextHolder* platformOfflineId, TextHolder* capeId);
 	static void InventoryTransactionManager_addAction(C_InventoryTransactionManager* a1, C_InventoryAction* a2);
-	static void PaintingRenderer__render(__int64 _this, __int64 a2, __int64 a3);
+	static __int64 PaintingRenderer__render(__int64 _this, __int64 a2, __int64 a3);
 	static bool DirectoryPackAccessStrategy__isTrusted(__int64 _this);
 	static bool ReturnTrue(__int64 _this);
 	static __int64 SkinRepository___loadSkinPack(__int64 _this, __int64 pack, __int64 a3);

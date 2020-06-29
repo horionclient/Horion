@@ -102,7 +102,12 @@ public:
 private:
 	char pad_0x8[0x20];  //0x8
 public:
-	C_ComplexInventoryTransaction* complexTransaction;  //0x28
+	int unknown = 0;//0x28
+	__int64* unknownStart = 0;  //0x30
+	__int64* unknownEnd = 0; //0x38
+	__int64 filler = 0;         // 0x40
+	C_ComplexInventoryTransaction* complexTransaction; // 0x48
+	unsigned char numTransactions; // 0x50
 };
 
 class C_TextPacket : public C_Packet {

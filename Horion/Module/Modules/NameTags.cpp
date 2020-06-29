@@ -26,20 +26,28 @@ void drawNameTags(C_Entity* ent, bool isRegularEntitie) {
 		if (Target::isValidTarget(ent) && nameTagsMod != nullptr) {
 			nameTagsMod->nameTags.insert(Utils::sanitize(ent->getNameTag()->getText()));
 			float dist = ent->getPos()->dist(*g_Data.getLocalPlayer()->getPos());
-			DrawUtils::drawNameTags(ent, fmax(0.6f, 1.5f / dist));
+			DrawUtils::drawNameTags(ent, fmax(0.6f, 3.f / dist));
+			DrawUtils::flush();
 		}
 			
 	}
 }
 
-void NameTags::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
+void NameTags::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
 	if (nameTags.size() > 100)
 		nameTags.clear();
 
 	if (localPlayer != nullptr && GameData::canUseMoveKeys()) {
-		g_Data.forEachEntity(drawNameTags);
+		std::vector<C_Entity*> temp;
+		for (int i = 0; i < g_Data.getEntityList()->getListSize(); i++)
+			temp.push_back(g_Data.getEntityList()->get(i));
+		std::sort(temp.begin(), temp.end(), [localPlayer](const C_Entity* lhs, const C_Entity* rhs) {
+			return localPlayer->getPos()->dist(*lhs->getPos()) > localPlayer->getPos()->dist(*rhs->getPos());
+		});
+		for (C_Entity* ent : temp)
+			drawNameTags(ent, true);
 	} else {
 		nameTags.clear();
 	}

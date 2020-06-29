@@ -91,12 +91,12 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Nbt()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Godmode()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Freelook()));
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new AutoSneak())); broken
+		this->moduleList.push_back(std::shared_ptr<IModule>(new AutoSneak()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new NoHurtcam()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new AntiImmobile()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new	NoPaintingCrash()));
 
 #if defined(_BETA) or defined(_DEBUG)
-		this->moduleList.push_back(std::shared_ptr<IModule>(new ForceOpenCommandBlock()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new FollowPathModule()));
 #endif
 

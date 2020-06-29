@@ -11,7 +11,10 @@ const char* AutoSneak::getModuleName() {
 }
 
 void AutoSneak::onTick(C_GameMode* gm) {
-	auto loc = g_Data.getLocalPlayer(); // this is hella broke
-	loc->setSneaking(true);
+	g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = true;
+}
 
+void AutoSneak::onDisable() {
+	if (g_Data.getLocalPlayer() != nullptr)
+		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
 }

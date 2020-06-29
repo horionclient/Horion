@@ -23,6 +23,8 @@ public:
 	virtual bool hasRoomForItem(C_ItemStack*);
 	virtual __int64 addItem(C_ItemStack*);
 	virtual __int64 addItemToFirstEmptySlot(C_ItemStack*);
+
+	void moveItem(int from, int to);
 };
 
 class C_PlayerInventoryProxy {
@@ -44,6 +46,7 @@ private:
 	virtual __int64 destructor();
 	virtual __int64 tick(void);
 	virtual __int64 handleEvent(__int64&);
+	virtual __int64 sub_140321330(void) const;
 	virtual __int64 onOpen(void);
 	virtual __int64 onTerminate(void);
 	virtual __int64 onInit(void);

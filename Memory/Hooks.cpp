@@ -90,7 +90,7 @@ void Hooks::Init() {
 			{
 				g_Hooks.ZipPackAccessStrategy__isTrustedHook = std::make_unique<FuncHook>(directoryPackVtable2[6], Hooks::ReturnTrue);
 			}
-			//g_Hooks.SkinRepository___checkSignatureFileInPack = std::make_unique<FuncHook>(FindSignature("4C 8B DC 53 48 81 EC ?? ?? ?? ?? 49 C7 43 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B D9 33 C0"), Hooks::ReturnTrue);			
+			g_Hooks.SkinRepository___checkSignatureFileInPack = std::make_unique<FuncHook>(FindSignature("40 57 48 81 EC ? ? ? ? 48 C7 44 24 ? ? ? ? ? 48 89 9C 24 ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B 39 48 8B 59 ? 48 85 DB"), Hooks::ReturnTrue);			
 		}
 	}
 
@@ -248,7 +248,7 @@ void Hooks::Init() {
 		void* PaintingRenderer__renderAddr = reinterpret_cast<void*>(FindSignature("48 8B C4 57 41 54 41 55 41 56 41 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 68 ?? 48 89 70 ?? 4D 8B F0 4C 8B FA 48 8B F1 B9 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??"));
 		g_Hooks.PaintingRenderer__renderHook = std::make_unique<FuncHook>(PaintingRenderer__renderAddr, Hooks::PaintingRenderer__render);
 
-		void* _getSkinPack = reinterpret_cast<void*>(FindSignature("40 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? B8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 2B E0 48 C7 85 ?? ?? ?? ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 8B F2"));
+		void* _getSkinPack = reinterpret_cast<void*>(FindSignature("40 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 48 C7 45 ? ? ? ? ? 48 89 9C 24 ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 48 8B F2"));
 		g_Hooks.SkinRepository___loadSkinPackHook = std::make_unique<FuncHook>(_getSkinPack, Hooks::SkinRepository___loadSkinPack);
 		
 		void* _toStyledString = reinterpret_cast<void*>(FindSignature("40 55 56 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B FA 48 8B D9 48 89 54 24 ?? 33 D2"));
@@ -361,7 +361,7 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 
 	bool alwaysRender = moduleMgr->isInitialized() && moduleMgr->getModule<HudModule>()->alwaysShow;
 
-	TextHolder alloc;
+	TextHolder alloc = {};
 	uiscene->getScreenName(&alloc);
 
 	if (alloc.getTextLength() < 100)
@@ -848,8 +848,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	return retval;
 }
 
-float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightness) {
-	static auto oGetFogColor = g_Hooks.Dimension_getFogColorHook->GetFastcall<float*, __int64, float*, float>();
+float* Hooks::Dimension_getFogColor(__int64 _this, float* color, __int64 a3, float a4) {
+	static auto oGetFogColor = g_Hooks.Dimension_getFogColorHook->GetFastcall<float*, __int64, float*, __int64, float>();
 
 	static float rcolors[4];
 
@@ -881,7 +881,7 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, float brightnes
 
 		return rcolors;
 	}
-	return oGetFogColor(_this, color, brightness);
+	return oGetFogColor(_this, color, a3, a4);
 }
 
 float Hooks::Dimension_getTimeOfDay(__int64 _this, int a2, float a3) {
@@ -1200,7 +1200,9 @@ int Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1) {
 			if (strcmp(text, "lava") != NULL)
 				if (strcmp(text, "water") != NULL)
 					if (strcmp(text, "portal") != NULL)
-						return 10;
+						if (strcmp(text, "ancient_debris") != NULL)
+							if (strcmp(text, "command_block") != NULL)
+								return 10;
 	}
 	return oFunc(a1);
 }
@@ -1381,12 +1383,6 @@ float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3) {
 	static auto oFunc = g_Hooks.GameMode_getPickRangeHook->GetFastcall<float, C_GameMode*, __int64, char>();
 
 	if (g_Data.getLocalPlayer() != nullptr) {
-#ifdef _BETA
-		static auto forceOpenCmdBlock = moduleMgr->getModule<ForceOpenCommandBlock>();
-		if (forceOpenCmdBlock->isEnabled() && forceOpenCmdBlock->isInCommandBlock)
-			return forceOpenCmdBlock->distance;
-#endif
-
 		static auto infiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
 		if (infiniteBlockReachModule->isEnabled())
 			return infiniteBlockReachModule->getBlockReach();
@@ -1502,8 +1498,14 @@ void Hooks::InventoryTransactionManager_addAction(C_InventoryTransactionManager*
 	Func(a1, a2);
 }
 
-void Hooks::PaintingRenderer__render(__int64 _this, __int64 a2, __int64 a3) {
-	return;
+__int64 Hooks::PaintingRenderer__render(__int64 _this, __int64 a2, __int64 a3) {
+	static auto Func = g_Hooks.PaintingRenderer__renderHook->GetFastcall<__int64, __int64, __int64, __int64>();
+
+	static auto NoPaintingCrashMod = moduleMgr->getModule<NoPaintingCrash>();
+	if (NoPaintingCrashMod->isEnabled())
+		return 0;
+
+	return Func(_this,a2,a3);
 }
 
 bool Hooks::DirectoryPackAccessStrategy__isTrusted(__int64 _this) {
