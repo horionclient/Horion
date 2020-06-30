@@ -1,5 +1,6 @@
 #include "ClickGui.h"
 
+#include "../Scripting/ScriptManager.h"
 #include "../../Utils/Logger.h"
 #include <Windows.h>
 
@@ -119,28 +120,29 @@ void ClickGui::renderCategory(Category category) {
 
 	// Reset Windows to pre-set positions to avoid confusion
 	if (resetStartPos && ourWindow->pos.x <= 0) {
+		float yot = g_Data.getGuiData()->windowSize.x;
 		ourWindow->pos.y = 4;
 		switch (category) {
 		case Category::COMBAT:
-			ourWindow->pos.x = 75;
+			ourWindow->pos.x = 10.f;
 			break;
 		case Category::VISUAL:
-			ourWindow->pos.x = 150;
+			ourWindow->pos.x = yot / 7.f;
 			break;
 		case Category::MOVEMENT:
-			ourWindow->pos.x = 225;
+			ourWindow->pos.x = yot / 7.f * 2.f;
 			break;
 		case Category::PLAYER:
-			ourWindow->pos.x = 315;
+			ourWindow->pos.x = yot / 7.f * 3.f;
 			break;
 		case Category::WORLD:
-			ourWindow->pos.x = 415;
+			ourWindow->pos.x = yot / 7.f * 4.f;
 			break;
 		case Category::MISC:
-			ourWindow->pos.x = 490;
+			ourWindow->pos.x = yot / 7.f * 5.f;
 			break;
 		case Category::CUSTOM:
-			ourWindow->pos.x = 100;
+			ourWindow->pos.x = yot / 7.f * 6.f;
 			break;
 		}
 	}
@@ -632,6 +634,9 @@ void ClickGui::render() {
 	renderCategory(Category::PLAYER);
 	renderCategory(Category::WORLD);
 	renderCategory(Category::MISC);
+
+	if (scriptMgr.getNumEnabledScripts() > 0)
+		renderCategory(Category::CUSTOM);
 
 	shouldToggleLeftClick = false;
 	shouldToggleRightClick = false;
