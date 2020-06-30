@@ -38,10 +38,9 @@ bool TestCommand::execute(std::vector<std::string>* args) {
 
 	C_ItemStack* selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
 
-	logF(" item : %d", selectedItem->getItem()->itemId);
 	auto slot = supplies->selectedHotbarSlot;
 
-	/*C_InventoryAction actions[36 * 2];
+	C_InventoryAction actions[36 * 2];
 	int numActions = 0;
 	for(int i = slot + 1; i < 9; i++){
 		auto itemInSlot = supplies->inventory->getItemStack(slot);
@@ -78,6 +77,6 @@ bool TestCommand::execute(std::vector<std::string>* args) {
 	pk.complexTransaction->transac.ptr = reinterpret_cast<__int64>(&ptrBean);
 	pk.numTransactions = 2;
 	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&pk);
-	clientMessageF("%sSuccessfully given item! %i", GREEN, numActions);*/
+	clientMessageF("%sSuccessfully given item! %i", GREEN, numActions);
 	return true;
 }
