@@ -24,12 +24,14 @@ void GameData::retrieveClientInstance() {
 #endif
 }
 
-TextHolder* GameData::getGameVersion() {
+void GameData::checkGameVersion() {
 	static uintptr_t sigOffset = 0x0;
 	if (sigOffset == 0x0)
 		sigOffset = FindSignature("48 8D 1D ?? ?? ?? ?? 8B 04 0A 39 05 ?? ?? ?? ?? 0F 8F ?? ?? ?? ?? 4C 8B CB 48 83 3D ?? ?? ?? ?? 10 4C 0F 43 0D ?? ?? ?? ??");
 	int offset = *reinterpret_cast<int*>((sigOffset + 3));
-	return reinterpret_cast<TextHolder*>(sigOffset + offset + 7);
+	std::string ver = reinterpret_cast<TextHolder*>(sigOffset + offset + 7)->getText();
+	int num = ver.back() - '0';
+	this->version = static_cast<GAMEVERSION>(num);
 }
 
 bool GameData::canUseMoveKeys() {

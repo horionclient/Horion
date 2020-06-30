@@ -55,7 +55,7 @@ PlayerAuthInputPacket::PlayerAuthInputPacket(__int64 entityRuntimeId, vec3_t pos
 C_ActorFallPacket::C_ActorFallPacket() {
 	static uintptr_t** ActorFallPacketVtable = 0x0;
 	if (ActorFallPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? 48 89 4D ? 48 89 45 ? F3 44 0F 11 45 ? 88 5D F3");
+		uintptr_t sigOffset = FindSignature("48 8D ? ? ? ? ? 48 89 ? E7 48 89 45 0F F3 0F 11 75 ?");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		ActorFallPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG

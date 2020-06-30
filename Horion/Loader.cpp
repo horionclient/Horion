@@ -341,6 +341,7 @@ DWORD WINAPI start(LPVOID lpParam) {
 
 	MH_Initialize();
 	GameData::initGameData(gameModule, &mem, (HMODULE)lpParam);
+	g_Data.checkGameVersion();
 	Target::init(g_Data.getPtrLocalPlayer());
 
 	Hooks::Init();
