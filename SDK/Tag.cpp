@@ -2,6 +2,7 @@
 
 #include "../Utils/Utils.h"
 #include "../Utils/Logger.h"
+#include "../Memory/GameData.h"
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -268,7 +269,15 @@ CompoundTag::CompoundTag() {
 }
 void CompoundTag::put(TextHolder& tag, std::unique_ptr<Tag> value) {
 	using CompoundTag__putF = void(__fastcall*)(CompoundTag*, TextHolder&, std::unique_ptr<Tag>);
-	static CompoundTag__putF func = reinterpret_cast<CompoundTag__putF>(FindSignature("4C 8B DC 55 56 57 48 81 EC ? ? ? ? 49 C7 43 ? ? ? ? ? 49 89 5B ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 49 8B D8 48 8B FA 48 8B E9"));
+	static CompoundTag__putF func = nullptr;
+
+	if (!func) {
+		if (g_Data.getVersion() == GAMEVERSION::g_1_16_0)
+			func = reinterpret_cast<CompoundTag__putF>(FindSignature("4C 8B DC 55 56 57 48 81 EC ? ? ? ? 49 C7 43 ? ? ? ? ? 49 89 5B ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 49 8B D8 48 8B FA 48 8B E9"));
+		else
+			func = reinterpret_cast<CompoundTag__putF>(FindSignature("4C 8B DC 53 56 57 48 81 EC ? ? ? ? 49 C7 43 ? ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 49 8B F8 48 8B DA"));
+	}
+	
 	func(this, tag, std::move(value));
 }
 void Handler::handleWrite(Tag* value, std::stringstream& builder) {
