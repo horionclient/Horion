@@ -5,6 +5,7 @@ Killaura::Killaura() : IModule('P', Category::COMBAT, "Attacks entities around y
 	this->registerBoolSetting("MobAura", &this->isMobAura, this->isMobAura);
 	this->registerFloatSetting("range", &this->range, this->range, 2.f, 20.f);
 	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
+	this->registerBoolSetting("hurttime", &this->hurttime, this->hurttime);
 	this->registerBoolSetting("AutoWeapon", &this->autoweapon, this->autoweapon);
 	this->registerBoolSetting("Silent Rotations", &this->silent, this->silent);
 }
@@ -34,6 +35,9 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 		return;
 
 	if(!currentEntity->isAlive())
+		return;
+
+	if (currentEntity->damageTime > 0 && killauraMod->hurttime)
 		return;
 
 	if (killauraMod->isMobAura) {
