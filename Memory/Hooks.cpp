@@ -1321,7 +1321,7 @@ __int64 Hooks::ChestScreenController_tick(C_ChestScreenController* a1) {
 	static auto oFunc = g_Hooks.ChestScreenController_tickHook->GetFastcall<__int64, C_ChestScreenController*>();
 
 	static auto chestStealerMod = moduleMgr->getModule<ChestStealer>();
-	chestStealerMod->chestScreenController = a1;
+	chestStealerMod->chestScreenController_tick(a1);
 
 	return oFunc(a1);
 }
@@ -1987,6 +1987,7 @@ __int64 Hooks::InGamePlayScreen___renderLevel(__int64 playScreen, __int64 a2, __
 }
 __int64 Hooks::GameMode_attack(C_GameMode* _this, C_Entity* ent) {
 	auto func = g_Hooks.GameMode_attackHook->GetFastcall<__int64, C_GameMode*, C_Entity*>();
+	moduleMgr->onAttack(ent);
 	return func(_this, ent);
 }
 void Hooks::LocalPlayer__updateFromCamera(__int64 a1, C_Camera* camera) {

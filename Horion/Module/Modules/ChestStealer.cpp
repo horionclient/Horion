@@ -11,25 +11,24 @@ const char* ChestStealer::getModuleName() {
 	return ("ChestStealer");
 }
 
-void ChestStealer::onTick(C_GameMode* gm) {
-	if (g_Data.getLocalPlayer()->canOpenContainerScreen() == 0 && chestScreenController != nullptr) {
+void ChestStealer::chestScreenController_tick(C_ChestScreenController* c) {
+	if (c != nullptr && !g_Data.getLocalPlayer()->canOpenContainerScreen()) {
 		std::vector<int> items = {};
 		for (int i = 0; i < 54; i++) {
-			C_ItemStack* stack = chestScreenController->_getItemStack(TextHolder("container_items"), i);
+			C_ItemStack* stack = c->_getItemStack(TextHolder("container_items"), i);
 			if (stack != nullptr && stack->item != NULL)
 				items.push_back(i);
 		}
 		if (!items.empty()) {
 			for (int i : items) {
-				chestScreenController->handleAutoPlace(0x7FFFFFFF, "container_items", i);
+				c->handleAutoPlace(0x7FFFFFFF, "container_items", i);
 			}
 		} else  {
 			delay++;
 			if (delay > setDelay) {
-				chestScreenController->leaveScreen();
+				c->leaveScreen();
 				delay = 0;
 			}
 		}
 	}
-	chestScreenController = nullptr;
 }

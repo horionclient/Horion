@@ -6,11 +6,10 @@ private:
 	int setDelay = 7;
 
 public:
-	C_ChestScreenController* chestScreenController = nullptr;
 	ChestStealer();
 	~ChestStealer();
 
 	// Inherited via IModule
-	virtual void onTick(C_GameMode* gm) override;
+	virtual void chestScreenController_tick(C_ChestScreenController* c);
 	virtual const char* getModuleName() override;
 };
