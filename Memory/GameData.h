@@ -28,6 +28,11 @@ enum DATAPACKET_CMD : int {
 	CMD_LOG
 };
 
+enum GAMEVERSION : int {
+	g_1_16_0 = 0,
+	g_1_16_1
+};
+
 struct HorionDataPacket {
 	DATAPACKET_CMD cmd;
 	int params[5] = {0};
@@ -95,6 +100,7 @@ private:
 	AccountInformation accountInformation = AccountInformation::asGuest();
 	static void retrieveClientInstance();
 	TextHolder* fakeName;
+	GAMEVERSION version;
 
 public:
 	NetworkedData networkedData;
@@ -115,8 +121,8 @@ public:
 	static void EntityList_tick(C_EntityList* list);
 	static void setHIDController(C_HIDController* Hid);
 	static void setRakNetInstance(C_RakNetInstance* raknet);
-	static TextHolder* getGameVersion();
 	static void log(const char* fmt, ...);
+	void checkGameVersion();
 	float fov = 0.f;
 	int fps = 0;
 	int frameCount = 0;
@@ -254,6 +260,7 @@ public:
 	int getFPS() { return fps; };
 	int getLeftCPS() { return cpsLeft; };
 	int getRightCPS() { return cpsRight; };
+	GAMEVERSION getVersion() { return version; };
 };
 
 extern GameData g_Data;
