@@ -1321,7 +1321,7 @@ __int64 Hooks::ChestScreenController_tick(C_ChestScreenController* a1) {
 	static auto oFunc = g_Hooks.ChestScreenController_tickHook->GetFastcall<__int64, C_ChestScreenController*>();
 
 	static auto chestStealerMod = moduleMgr->getModule<ChestStealer>();
-	chestStealerMod->chestScreenController_tick(a1);
+	if(chestStealerMod->isEnabled()) chestStealerMod->chestScreenController_tick(a1);
 
 	return oFunc(a1);
 }
