@@ -324,7 +324,7 @@ private:
 
 class C_ArmorItem : public C_Item {
 private:
-	char pad_0x108[0xB0];  //0x108
+	char pad_0x108[0xB8];  //0x100
 public:
 	int ArmorSlot;  //0x1B8
 
