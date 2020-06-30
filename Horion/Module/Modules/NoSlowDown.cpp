@@ -90,8 +90,12 @@ void NoSlowDown::onDisable() {
 		opcode1[0] = 0xF3;
 		opcode1[1] = 0x0F;
 		opcode1[2] = 0x11;
-		//opcode1[3] = 0x47;
-		opcode1[3] = 0x46;
+
+		if (g_Data.getVersion() == GAMEVERSION::g_1_16_0)
+			opcode1[3] = 0x47;
+		else
+			opcode1[3] = 0x46;
+
 		opcode1[4] = 0x0C;
 		//opcode[5] = {0xF3; 0x0F, 0x11, 0x46, 0x0C};
 		VirtualProtect(opcode1, 5, oldProtect, &oldProtect);
