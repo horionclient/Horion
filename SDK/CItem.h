@@ -34,18 +34,18 @@ public:
 
 class C_Item {
 private:
-	char pad_0x0008[0x68];  //0x8
+	char pad_0x0008[0x62];  //0x8
 public:
-	uint16_t itemId;  //0x70
+	uint16_t itemId;  //0x6A
 private:
-	char pad_0x00072[0x6];  //0x72
+	char pad_0x00072[0x4];  //0x6C
 public:
-	TextHolder tileName;  //0x78
-	TextHolder name;      //0x98
+	TextHolder tileName;  //0x70
+	TextHolder name;      //0x90
 private:
-	char pad_0x0B8[0x4C];  //0xB8
+	char pad_0x0B8[0x4C];  //0xB0
 public:
-	int duration;  //0x104
+	int duration;  //0xFC
 private:
 	virtual __int64 destructor();
 	virtual __int64 tearDown(void);
