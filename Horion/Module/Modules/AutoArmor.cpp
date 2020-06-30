@@ -39,8 +39,6 @@ void AutoArmor::onTick(C_GameMode* gm) {
 	C_Inventory* inv = supplies->inventory;
 	C_InventoryTransactionManager* manager = g_Data.getLocalPlayer()->getTransactionManager();
 
-	C_InventoryAction* first = nullptr;
-	C_InventoryAction* second = nullptr;
 	static C_ItemStack* emptyItemStack = nullptr;
 
 	if (emptyItemStack == 0x0) {
@@ -75,43 +73,25 @@ void AutoArmor::onTick(C_GameMode* gm) {
 			if (armorItem->item != nullptr && (ArmorStruct(armorItem, reinterpret_cast<C_ArmorItem*>(*armorItem->item), 0).isEqual(armorList[0])) == false) {
 				int slot = inv->getFirstEmptySlot();
 
-				first = new C_InventoryAction(i, armorItem, nullptr, 632);
-				second = new C_InventoryAction(slot, nullptr, armorItem);
-
 				*g_Data.getLocalPlayer()->getArmor(i) = *emptyItemStack;
 				*inv->getItemStack(slot) = *armorItem;
 
-				manager->addInventoryAction(*first);
-				manager->addInventoryAction(*second);
-
-				delete first;
-				delete second;
-
-				first = new C_InventoryAction(armorList[0].m_slot, armorList[0].m_item, nullptr);
-				second = new C_InventoryAction(i, nullptr, armorList[0].m_item, 632);
+				manager->addInventoryAction(C_InventoryAction(i, armorItem, nullptr, 632));
+				manager->addInventoryAction(C_InventoryAction(slot, nullptr, armorItem));
 
 				*g_Data.getLocalPlayer()->getArmor(i) = *inv->getItemStack(armorList[0].m_slot);
 				*inv->getItemStack(armorList[0].m_slot) = *emptyItemStack;
 
-				manager->addInventoryAction(*first);
-				manager->addInventoryAction(*second);
-
-				delete first;
-				delete second;
+				manager->addInventoryAction(C_InventoryAction(armorList[0].m_slot, armorList[0].m_item, nullptr));
+				manager->addInventoryAction(C_InventoryAction(i, nullptr, armorList[0].m_item, 632));
 			}
 			if (armorItem->item == nullptr) {
-				first = new C_InventoryAction(armorList[0].m_slot, armorList[0].m_item, nullptr);
-				second = new C_InventoryAction(i, nullptr, armorList[0].m_item, 632);
-
 				*g_Data.getLocalPlayer()->getArmor(i) = *inv->getItemStack(armorList[0].m_slot);
 
 				*inv->getItemStack(armorList[0].m_slot) = *emptyItemStack;
 
-				manager->addInventoryAction(*first);
-				manager->addInventoryAction(*second);
-
-				delete first;
-				delete second;
+				manager->addInventoryAction(C_InventoryAction(armorList[0].m_slot, armorList[0].m_item, nullptr));
+				manager->addInventoryAction(C_InventoryAction(i, nullptr, armorList[0].m_item, 632));
 			}
 		}
 		armorList.clear();

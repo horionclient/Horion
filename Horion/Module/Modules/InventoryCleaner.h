@@ -6,7 +6,6 @@ private:
 
 	std::vector<int> findStackableItems();
 	std::vector<int> findUselessItems();
-	bool stackIsUseful(C_ItemStack* itemStack);
 	bool isLastItem(C_Item* item);
 
 	bool keepTools = true;
@@ -18,7 +17,7 @@ private:
 	bool autoSort = false;
 
 public:
-	C_MoveInputHandler* inputHandler = nullptr;
+	bool stackIsUseful(C_ItemStack* itemStack);
 	InventoryCleaner();
 	~InventoryCleaner();
 
