@@ -65,9 +65,9 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			vec2_t textPos = vec2_t(rectPos.x + 1.5f, rectPos.y + 1.f);
 			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48), 1.f);
 			DrawUtils::drawText(textPos, &coordsX, MC_Color(200, 200, 200), scale);
-			textPos.y += 10.f * f;
+			textPos.y += f;
 			DrawUtils::drawText(textPos, &coordsY, MC_Color(200, 200, 200), scale);
-			textPos.y += 10.f * f;
+			textPos.y += f;
 			DrawUtils::drawText(textPos, &coordsZ, MC_Color(200, 200, 200), scale);
 		}
 	}
