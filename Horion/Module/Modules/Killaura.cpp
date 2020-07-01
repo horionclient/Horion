@@ -37,7 +37,7 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 	if(!currentEntity->isAlive())
 		return;
 
-	if (currentEntity->damageTime > 0 && killauraMod->hurttime)
+	if (currentEntity->damageTime > 1 && killauraMod->hurttime)
 		return;
 
 	if (killauraMod->isMobAura) {

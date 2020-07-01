@@ -666,6 +666,13 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 				// Draw ArrayList
 				if (moduleMgr->isInitialized() && shouldRenderArrayList) {
+
+					// Parameters
+					float textSize = hudModule->scale;
+					float textPadding = 1.0f * textSize;
+					float textHeight = 10.0f * textSize;
+					float smoothness = 2;
+
 					struct IModuleContainer {
 						// Struct used to Sort IModules in a std::set
 						std::shared_ptr<IModule> backingModule;
@@ -693,7 +700,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 							if (!this->enabled && *this->pos == vec2_t(0.f, 0.f))
 								this->shouldRender = false;
-							this->textWidth = DrawUtils::getTextWidth(&moduleName);
+							this->textWidth = DrawUtils::getTextWidth(&moduleName, hudModule->scale);
 						}
 
 						bool operator<(const IModuleContainer& other) const {
@@ -708,12 +715,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 							return this->textWidth > other.textWidth;
 						}
 					};
-
-					// Parameters
-					static constexpr float textPadding = 1.0f;
-					static constexpr float textSize = 1.0f;
-					static constexpr float textHeight = textSize * 10.0f;
-					static constexpr float smoothness = 2;
 
 					// Mouse click detector
 					static bool wasLeftMouseDown = GameData::isLeftClickDown();  // Last isDown value

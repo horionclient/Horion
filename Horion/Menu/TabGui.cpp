@@ -58,13 +58,15 @@ void TabGui::renderLabel(const char* text, std::shared_ptr<IModule> mod) {
 }
 
 void TabGui::renderLevel() {
+	auto hudModule = moduleMgr->getModule<HudModule>();
+
 	// Parameters
-	static constexpr float textSize = 1.f;
-	static const float textHeight = 10.f * textSize;
-	static constexpr float alphaVal = 1.0f;
+	float textSize = hudModule->scale;
+	float textHeight = 10.f * textSize;
+	float alphaVal = 1.0f;
 
 	// First loop: Get the maximum text length
-	float maxLength = 43.f;
+	float maxLength = 0.f;
 	int labelListLength = 0;
 	for (auto it = labelList.begin(); it != labelList.end(); ++it) {
 		labelListLength++;
