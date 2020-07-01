@@ -37,9 +37,6 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 	if(!currentEntity->isAlive())
 		return;
 
-	if (currentEntity->damageTime > 1 && killauraMod->hurttime)
-		return;
-
 	if (killauraMod->isMobAura) {
 		if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)
 			return;
@@ -86,18 +83,22 @@ void Killaura::onTick(C_GameMode* gm) {
 
 	Odelay++;
 	if (!targetList.empty() && Odelay >= delay) {
-		if (autoweapon) findWeapon();
 
-		if (!moduleMgr->getModule<NoSwing>()->isEnabled()) 
-			g_Data.getLocalPlayer()->swing();
+		if (autoweapon) findWeapon();
 
 		// Attack all entitys in targetList
 		if (isMulti) {
-			for (auto & i : targetList) {
-				g_Data.getCGameMode()->attack(i);
+			for (auto& i : targetList) {
+				if (!(i->damageTime > 1 && hurttime)) {
+					g_Data.getLocalPlayer()->swing();
+					g_Data.getCGameMode()->attack(i);
+				}
 			}
 		} else {
-			g_Data.getCGameMode()->attack(targetList[0]);
+			if (!(targetList[0]->damageTime > 1 && hurttime)) {
+				g_Data.getLocalPlayer()->swing();
+				g_Data.getCGameMode()->attack(targetList[0]);
+			}
 		}
 		Odelay = 0;
 	}
