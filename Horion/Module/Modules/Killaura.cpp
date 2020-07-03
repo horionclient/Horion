@@ -86,6 +86,9 @@ void Killaura::onTick(C_GameMode* gm) {
 
 		if (autoweapon) findWeapon();
 
+		C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
+		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p); // make sure to update rotation
+
 		// Attack all entitys in targetList
 		if (isMulti) {
 			for (auto& i : targetList) {

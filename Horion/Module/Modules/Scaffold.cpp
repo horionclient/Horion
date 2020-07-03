@@ -3,7 +3,7 @@
 #include "../../../Utils/Logger.h"
 
 Scaffold::Scaffold() : IModule(VK_NUMPAD1, Category::WORLD, "Automatically build blocks beneath you") {
-	//registerBoolSetting("Spoof", &this->spoof, this->spoof);
+	registerBoolSetting("Spoof", &this->spoof, this->spoof);
 }
 
 Scaffold::~Scaffold() {
@@ -64,12 +64,14 @@ bool Scaffold::findBlock() {
 		C_ItemStack* stack = inv->getItemStack(n);
 		if (stack->item != nullptr) {
 			if ((*stack->item)->isBlock() && (*stack->item)->itemId != 0) {
-				auto a = C_MobEquipmentPacket(id, *stack, n, n);
+				C_MobEquipmentPacket a(id, *stack, n, n);
 				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
 				return true;
 			}
 		}
 	}
+	C_MobEquipmentPacket a(id, *g_Data.getLocalPlayer()->getSelectedItem(), supplies->selectedHotbarSlot, supplies->selectedHotbarSlot);
+	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
 	return false;
 }
 
@@ -105,4 +107,13 @@ void Scaffold::onTick(C_GameMode* gm) {
 			}
 		}
 	}
+}
+
+void Scaffold::onDisable() {
+	if (g_Data.getLocalPlayer() == nullptr)
+		return;
+	__int64 id = *g_Data.getLocalPlayer()->getUniqueId();
+	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
+	C_MobEquipmentPacket a(id, *g_Data.getLocalPlayer()->getSelectedItem(), supplies->selectedHotbarSlot, supplies->selectedHotbarSlot);
+	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
 }
