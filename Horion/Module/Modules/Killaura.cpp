@@ -86,8 +86,10 @@ void Killaura::onTick(C_GameMode* gm) {
 
 		if (autoweapon) findWeapon();
 
-		C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
-		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p); // make sure to update rotation
+		if (g_Data.getLocalPlayer()->velocity.squaredxzlen() < 0.01) {
+			C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);  // make sure to update rotation if player is standing still
+		}
 
 		// Attack all entitys in targetList
 		if (isMulti) {

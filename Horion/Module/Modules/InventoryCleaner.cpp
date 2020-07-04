@@ -36,7 +36,7 @@ void InventoryCleaner::onTick(C_GameMode* gm) {
 			C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 			C_Inventory* inv = supplies->inventory;
 			float damage = 0;
-			int item = supplies->selectedHotbarSlot;
+			int item = 0;
 			for (int n = 0; n < 36; n++) {
 				C_ItemStack* stack = inv->getItemStack(n);
 				if (stack->item != NULL) {
