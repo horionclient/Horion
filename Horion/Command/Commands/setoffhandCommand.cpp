@@ -31,7 +31,8 @@ bool setoffhandCommand::execute(std::vector<std::string>* args) {
 	if (itemId == 0) {
 		void* ItemPtr = malloc(0x8);
 		void* idk = malloc(0x0);
-		C_Item*** cStack = ItemRegistry::lookUpByName(ItemPtr, idk, TextHolder(args->at(1)));
+		TextHolder tempText(args->at(1));
+		C_Item*** cStack = ItemRegistry::lookUpByName(ItemPtr, idk, tempText);
 		if (*cStack == nullptr) {
 			clientMessageF("%sInvalid item name!", RED);
 			return true;

@@ -28,7 +28,8 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 
 	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
 	float f = 10.f * this->scale;
-	float len = DrawUtils::getTextWidth(&std::string("Movement"), scale) + 7.f;
+	std::string tempStr("Movement");
+	float len = DrawUtils::getTextWidth(&tempStr, scale) + 7.f;
 	float startY = tabgui ? 6 * f : 0.f;
 	if(tabgui && scriptMgr.getNumEnabledScripts() > 0)
 		startY += f;

@@ -156,8 +156,6 @@ add_library(Horion SHARED
         Horion/Module/Modules/FastLadder.h
         Horion/Module/Modules/Fly.cpp
         Horion/Module/Modules/Fly.h
-        Horion/Module/Modules/ForceOpenCommandBlock.cpp
-        Horion/Module/Modules/ForceOpenCommandBlock.h
         Horion/Module/Modules/Freecam.cpp
         Horion/Module/Modules/Freecam.h
         Horion/Module/Modules/Fucker.cpp
@@ -208,6 +206,8 @@ add_library(Horion SHARED
         Horion/Module/Modules/NoFriends.h
         Horion/Module/Modules/NoPacket.cpp
         Horion/Module/Modules/NoPacket.h
+        Horion/Module/Modules/NoPaintingCrash.cpp
+        Horion/Module/Modules/NoPaintingCrash.h
         Horion/Module/Modules/NoSlowDown.cpp
         Horion/Module/Modules/NoSlowDown.h
         Horion/Module/Modules/NoSwing.cpp

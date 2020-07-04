@@ -53,8 +53,6 @@ bool TestCommand::execute(std::vector<std::string>* args) {
 		}
 	}
 
-	//transactionManager->addInventoryAction(firstAction);
-
 	C_InventoryTransactionPacket pk;
 	pk.complexTransaction = new C_ComplexInventoryTransaction();
 	pk.complexTransaction->actionType = 0;
@@ -75,7 +73,7 @@ bool TestCommand::execute(std::vector<std::string>* args) {
 	coolBean.next = reinterpret_cast<__int64>(&ptrBean);
 
 	pk.complexTransaction->transac.ptr = reinterpret_cast<__int64>(&ptrBean);
-	pk.numTransactions = 2;
+	pk.numTransactions = 1;
 	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&pk);
 	clientMessageF("%sSuccessfully given item! %i", GREEN, numActions);
 	return true;
