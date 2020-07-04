@@ -167,7 +167,7 @@ uintptr_t Utils::FindSignatureModule(const char* szModule, const char* szSignatu
 			if (!firstMatch)
 				firstMatch = pCur;
 
-			if (!pattern[2])
+			if (!pattern[2] || !pattern[1])
 				return firstMatch;
 
 			//if (*(PWORD)pattern == '\?\?' || *(PBYTE)pattern != '\?')
