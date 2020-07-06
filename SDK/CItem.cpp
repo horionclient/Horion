@@ -63,7 +63,7 @@ void C_ItemStack::reinit(C_Item &item, int count, int itemData) {
 }
 int C_ItemStack::getEnchantValue(int enchantId) {
 	using getEnchantsLevel_t = int(__fastcall *)(int, C_ItemStack *);
-	static getEnchantsLevel_t getEnchantsLevel = reinterpret_cast<getEnchantsLevel_t>(FindSignature("48 8B C4 57 48 81 EC ? ? ? ? 48 C7 40 ? ? ? ? ? 48 89 58 ? 48 89 70 ? 48 8B F2 0F B6 D9 33 FF 48 8B CA E8 ? ? ? ?"));
+	static getEnchantsLevel_t getEnchantsLevel = reinterpret_cast<getEnchantsLevel_t>(FindSignature("48 8B C4 57 48 81 EC ? ? ? ? 48 C7 40 ? ? ? ? ? 48 89 58 ? 48 89 70 ? 48 8B F2 0F B6 D9 33 FF 48 8B CA E8"));
 	return getEnchantsLevel(enchantId, this);
 }
 void C_ItemStack::setVtable(void) {
