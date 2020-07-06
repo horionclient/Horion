@@ -20,7 +20,7 @@ void ChestStealer::chestScreenController_tick(C_ChestScreenController* c) {
 		for (int i = 0; i < 54; i++) {
 			C_ItemStack* stack = c->_getItemStack(TextHolder("container_items"), i);
 			if (stack != nullptr && stack->item != NULL)
-				if (this->enhanced && invcleanerMod->stackIsUseful(stack))
+				if (!this->enhanced || invcleanerMod->stackIsUseful(stack))
 					items.push_back(i);
 		}
 		if (!items.empty()) {
