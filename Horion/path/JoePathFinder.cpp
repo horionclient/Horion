@@ -66,7 +66,7 @@ __forceinline bool isDangerous(const vec3_ti& pos, C_BlockSource* reg, bool allo
 	auto obs1 = reg->getBlock(pos)->toLegacy();
 	if(obs1->material->isSuperHot)
 		return true;
-	if(obs1->material->isLiquid && !allowWater)
+	if((obs1->material->isLiquid || obs1->hasWater(reg, pos)) && !allowWater)
 		return true;
 
 	// contact damage based
@@ -122,11 +122,12 @@ __forceinline bool isDangerousPlayer(vec3_ti pos, C_BlockSource* reg, bool allow
 __forceinline bool canStandOn(const vec3_ti& pos, C_BlockSource* reg, bool inWater = false){
 	auto block = reg->getBlock(pos);
 	auto standOn = block->toLegacy();
-	bool validWater = inWater && standOn->material->isLiquid && !standOn->material->isSuperHot;
+	bool validWater = inWater && standOn->hasWater(reg, pos);
 	if(validWater){
 		// block above has to be water as well
-		auto swimIn = reg->getBlock(pos.add(0, 1, 0))->toLegacy();
-		validWater = swimIn->material->isLiquid && !swimIn->material->isSuperHot;
+		auto swimPos = pos.add(0, 1, 0);
+		auto swimIn = reg->getBlock(swimPos)->toLegacy();
+		validWater = swimIn->hasWater(reg, swimPos);
 	}
 	if(!standOn->material->isSolid && !validWater)
 		return false;
@@ -185,7 +186,8 @@ __forceinline bool isObstructedPlayer(vec3_ti pos, C_BlockSource* reg, bool allo
 std::vector<Edge> findEdges(std::unordered_map<unsigned __int64, Node>& allNodes, Node startNode, C_BlockSource* reg, NodeRef startNodeRef){
 	std::vector<Edge> edges;
 	auto startBlock = reg->getBlock(startNode.pos)->toLegacy();
-	bool isInWater = startBlock->material->isLiquid && !startBlock->material->isSuperHot;
+	bool isInWater = startBlock->hasWater(reg, startNode.pos);
+
 	float maxWalkSpeed = isInWater ? WATER_SPEED : SPRINT_SPEED;
 
 	static const float SQRT2 = sqrtf(2);
@@ -262,7 +264,7 @@ std::vector<Edge> findEdges(std::unordered_map<unsigned __int64, Node>& allNodes
 								break;
 
 							auto block = reg->getBlock(dropPos)->toLegacy();
-							auto isWaterBlock = block->material->isLiquid && !block->material->isSuperHot;
+							auto isWaterBlock = block->hasWater(reg, dropPos);
 							if(isWaterBlock)
 								numWaterBlocks++;
 							else{
@@ -276,8 +278,9 @@ std::vector<Edge> findEdges(std::unordered_map<unsigned __int64, Node>& allNodes
 							// find out how deep the water is
 							int waterDepth = 1;
 							while(waterDepth < 19){ // make sure we don't drop too deep
-								auto blockTest = reg->getBlock(dropPos.add(0, waterDepth, 0))->toLegacy();
-								if(!blockTest->material->isLiquid || blockTest->material->isSuperHot)
+								auto testPos = dropPos.add(0, waterDepth, 0);
+								auto blockTest = reg->getBlock(testPos)->toLegacy();
+								if(!blockTest->hasWater(reg, testPos))
 									break;
 
 								waterDepth++;
@@ -435,13 +438,16 @@ JoePath JoePathFinder::findPath() {
 		if(this->goal->isInGoal(cur.pos) || numNodes % 1200 == 0){
 			std::vector<JoeSegment> segments;
 			auto node = cur;
+
 			while(node.pos != startPos){
 				auto prev = node.cameFrom;
 				auto prevNode = allNodes.at(prev.nodeBefore.hash);
+
 				segments.emplace_back(prev.edgeType, prevNode.pos, node.pos, node.gScore - prevNode.gScore);
 				node = prevNode;
 			}
 			std::reverse(segments.begin(), segments.end());
+
 			if(this->goal->isInGoal(cur.pos)){
 				auto now = std::chrono::high_resolution_clock::now();
 				std::chrono::duration<float> diff = now - pathSearchStart;

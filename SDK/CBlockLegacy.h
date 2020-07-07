@@ -48,6 +48,7 @@ public:
 	int liquidGetDepth(C_BlockSource*, const vec3_ti* pos);
 	void liquidGetFlow(vec3_t* flowOut, C_BlockSource*, const vec3_ti* pos);
 	bool getCollisionShape(AABB* collShapeOut, C_Block* block, C_BlockSource* blockSource, const vec3_ti* pos, C_Entity* actor);
+	bool hasWater(C_BlockSource*, const vec3_ti& pos);
 };
 
 class C_Block {
@@ -82,4 +83,6 @@ public:
 	C_Block* getBlock(const vec3_ti& block);;
 
 	C_BlockActor* getBlockEntity(const vec3_ti& block);
+
+	C_Block* getLiquidBlock(const vec3_ti& block);
 };

@@ -1,6 +1,9 @@
 #include "JoePath.h"
 #include "../DrawUtils.h"
-JoePath::JoePath(const std::vector<JoeSegment>& segments, bool isIncomplete) : segments(segments), isIncomplete(isIncomplete) {}
+#include "../../Utils/Logger.h"
+JoePath::JoePath(const std::vector<JoeSegment>& segments, bool isIncomplete) : segments(segments), isIncomplete(isIncomplete) {
+
+}
 JoePath::JoePath() : segments() {
 }
 void JoePath::draw(int highlight) const {
@@ -25,4 +28,28 @@ void JoePath::cutoff(float percentageKeep) {
 		return;
 	int numKeep = (int)ceilf(this->getNumSegments() * percentageKeep);
 	this->segments.erase(this->segments.begin() + numKeep, this->segments.end());
+}
+void JoePath::initPathSegments() {
+	// Check whether we can sprint or not
+	if(segments.size() > 1){
+		for(int i = 0; i < segments.size() - 2; i++){
+			auto& curSeg = segments.at(i);
+			auto& nextSeg = segments.at(i + 1);
+			if(curSeg.getSegmentType() != JoeSegmentType::WALK || nextSeg.getSegmentType() != JoeSegmentType::WALK){
+				curSeg.setAllowSprint(false);
+				continue;
+			}
+
+			auto currentTangent = curSeg.getEnd().sub(curSeg.getStart()).toFloatVector().normalize();
+			auto nextTangent = nextSeg.getEnd().sub(nextSeg.getStart()).toFloatVector().normalize();
+			if(currentTangent.dot(nextTangent) > 0.3f){ // make sure we're running in a similar direction
+				curSeg.setAllowSprint(true);
+			}
+		}
+	}
+
+	this->isInitialized = true;
+}
+bool JoePath::isInitialized1() const {
+	return isInitialized;
 }

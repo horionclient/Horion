@@ -16,9 +16,12 @@ private:
 	JoeSegmentType segmentType;
 	vec3_ti start, end;
 	float cost;
+	bool allowSprint;
 public:
-	JoeSegment(JoeSegmentType type, vec3_ti& start, vec3_ti& stop, float cost);
+	JoeSegment(JoeSegmentType type, vec3_ti& start, vec3_ti& stop, float cost, bool allowSprint = false);
 	void draw();
+	bool isAllowingSprint() const;
+	void setAllowSprint(bool allowSprint);
 	JoeSegmentType getSegmentType() const;
 	const vec3_ti& getStart() const;
 	const vec3_ti& getEnd() const;

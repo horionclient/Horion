@@ -12,6 +12,10 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 		return;
 	}
 
+	if(!this->currentPath->isInitialized1()){
+		this->currentPath->initPathSegments();
+	}
+
 	auto pPos = player->eyePos0;
 	pPos.y -= 1.62f;
 	vec3_ti playerNode((int)floorf(pPos.x), (int)roundf(pPos.y), (int)floorf(pPos.z));
@@ -33,7 +37,6 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 	bool enableNextSegmentSmoothing = true;
 	float dComp = 4;
 	vec3_t addedDiff{0, 0, 0};
-
 
 	// we should probably make seperate classes for each segment type at some point, but im just doing it here for now for faster prototyping
 	switch(curSeg.getSegmentType()){
@@ -159,6 +162,8 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 	} break;
 	WALK:;
 	case WALK: {
+		player->setSprinting(curSeg.isAllowingSprint());
+
 		auto pPosD = pPos; // p
 
 		if(!player->onGround && dComp < 8){
@@ -171,7 +176,6 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 			// drop with a gap
 			walkTarget = start;
 		}
-
 
 		vec3_t diff3d = walkTarget.sub(pPosD);
 		vec2_t diff2d = {diff3d.x, diff3d.z};

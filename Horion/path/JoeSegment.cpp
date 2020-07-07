@@ -2,7 +2,7 @@
 
 #include "../DrawUtils.h"
 
-JoeSegment::JoeSegment(JoeSegmentType type, vec3_ti& start, vec3_ti& stop, float cost) : segmentType(type), start(start), end(stop), cost(cost) {
+JoeSegment::JoeSegment(JoeSegmentType type, vec3_ti& start, vec3_ti& stop, float cost, bool allowSprint) : segmentType(type), start(start), end(stop), cost(cost), allowSprint(allowSprint) {
 }
 void JoeSegment::draw() {
 	switch (segmentType) {
@@ -39,4 +39,10 @@ const vec3_ti& JoeSegment::getEnd() const {
 }
 float JoeSegment::getCost() const {
 	return cost;
+}
+bool JoeSegment::isAllowingSprint() const {
+	return allowSprint;
+}
+void JoeSegment::setAllowSprint(bool allowSprint) {
+	JoeSegment::allowSprint = allowSprint;
 }
