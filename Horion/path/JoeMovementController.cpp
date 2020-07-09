@@ -79,7 +79,7 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 				this->stateInfo.nextSegment();
 				break;
 			}else if(inWater && (pPos.y < end.y || player->velocity.y < 0.12f))
-				movementHandler->isJumping = 1;
+				movementHandler->autoJumpInWater = 1;
 		}else{
 			dComp = 10;
 			enableNextSegmentSmoothing = false;
