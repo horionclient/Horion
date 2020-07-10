@@ -66,7 +66,7 @@ __forceinline bool isDangerous(const vec3_ti& pos, C_BlockSource* reg, bool allo
 	auto obs1 = reg->getBlock(pos)->toLegacy();
 	if(obs1->material->isSuperHot)
 		return true;
-	if((obs1->material->isLiquid || obs1->hasWater(reg, pos)) && !allowWater)
+	if(!allowWater && (obs1->material->isLiquid || obs1->hasWater(reg, pos)))
 		return true;
 
 	// contact damage based
@@ -115,7 +115,7 @@ __forceinline bool isDangerous(const vec3_ti& pos, C_BlockSource* reg, bool allo
 	}
 	return false;
 }
-__forceinline bool isDangerousPlayer(vec3_ti pos, C_BlockSource* reg, bool allowWater = false){
+__forceinline bool isDangerousPlayer(const vec3_ti& pos, C_BlockSource* reg, bool allowWater = false){
 	return isDangerous(pos, reg, allowWater) || isDangerous(pos.add(0, 1, 0), reg, allowWater);
 }
 
@@ -160,30 +160,17 @@ __forceinline bool isObstructed(const vec3_ti& pos, C_BlockSource* reg, bool all
 
 	AABB aabb{};
 	bool hasBox = obs1->getCollisionShape(&aabb, block, reg, &pos, nullptr);
-	/*
-	// Snow blocks
-	{
-		static uintptr_t** snowBlockVtable = nullptr; // TopSnowBlock
-		if (snowBlockVtable == nullptr) {
-			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 03 C6 83 ?? ?? ?? ?? 01 F3");
-			int offset = *reinterpret_cast<int*>(sigOffset + 3);
-			snowBlockVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + *length of instruction* 7);
-		}
 
-
-		if(obs1->Vtable == snowBlockVtable hasBox
-			return true;
-	}*/
 	if(hasBox)
 		return true;
 
 	return isDangerous(pos, reg, allowWater);
 }
-__forceinline bool isObstructedPlayer(vec3_ti pos, C_BlockSource* reg, bool allowWater = false){
+__forceinline bool isObstructedPlayer(const vec3_ti& pos, C_BlockSource* reg, bool allowWater = false){
 	return isObstructed(pos, reg, allowWater) || isObstructed(pos.add(0, 1, 0), reg);
 }
 
-std::vector<Edge> findEdges(std::unordered_map<unsigned __int64, Node>& allNodes, Node startNode, C_BlockSource* reg, NodeRef startNodeRef){
+std::vector<Edge> findEdges(std::unordered_map<unsigned __int64, Node>& allNodes, const Node& startNode, C_BlockSource* reg, NodeRef startNodeRef){
 	std::vector<Edge> edges;
 	auto startBlock = reg->getBlock(startNode.pos)->toLegacy();
 	bool isInWater = startBlock->hasWater(reg, startNode.pos);
@@ -196,6 +183,21 @@ std::vector<Edge> findEdges(std::unordered_map<unsigned __int64, Node>& allNodes
 	const float straightSpeed = 1 / maxWalkSpeed;
 	const float diagonalSlowSpeed = SQRT2 / fminf(maxWalkSpeed, WALKING_SPEED);
 	const float walkOffBlockTime = 0.8f / maxWalkSpeed;
+
+	if(isInWater){
+		{
+			auto mod = startNode.pos.add(0, 1, 0);
+			auto block = reg->getBlock(mod);
+			if (block->toLegacy()->material->isLiquid && !block->toLegacy()->material->isSuperHot) {
+				if (!isObstructed(startNode.pos.add(0, 1, 0), reg, true) && !isObstructed(startNode.pos.add(0, 2, 0), reg, true))
+					edges.emplace_back(startNodeRef, findNode(allNodes, mod), 1 / WATER_UP_SPEED, JoeSegmentType::WATER_WALK);
+			}
+		}
+		if(!isObstructed(startNode.pos.add(0, -1, 0), reg, true) && canStandOn(startNode.pos.add(0, -2, 0), reg, true)){
+			auto mod = startNode.pos.add(0, -1, 0);
+			edges.emplace_back(startNodeRef, findNode(allNodes, mod), 1 / WATER_SINK_SPEED, JoeSegmentType::WATER_WALK);
+		}
+	}
 
 	for(int x = -1; x <= 1; x++){
 		for(int z = -1; z <= 1; z++){
@@ -235,6 +237,7 @@ std::vector<Edge> findEdges(std::unordered_map<unsigned __int64, Node>& allNodes
 
 				// Drop down
 				{
+					int numWaterBlocks = 0;
 					int dropLength = 0;
 					while(dropLength < 3){
 						dropLength++;
@@ -245,8 +248,21 @@ std::vector<Edge> findEdges(std::unordered_map<unsigned __int64, Node>& allNodes
 							break;
 						}
 
-						if(!canStandOn(dropPos.add(0, -1, 0), reg, isInWater)) // block to stand on after drop
+						if(!canStandOn(dropPos.add(0, -1, 0), reg, false)) // block to stand on after drop
 							continue;
+
+						int waterDepth = 0;
+						while(waterDepth < dropLength){
+							auto testPos = dropPos.add(0, waterDepth, 0);
+							auto blockTest = reg->getBlock(testPos)->toLegacy();
+							if(!blockTest->hasWater(reg, testPos))
+								break;
+
+							waterDepth++;
+						}
+						if(waterDepth > 0){
+							dropPos = dropPos.add(0, waterDepth - 1, 0);
+						}
 
 						const float dropTime = FALL_N_BLOCKS_COST[dropLength] + walkOffBlockTime;
 						edges.emplace_back(startNodeRef, findNode(allNodes, dropPos), dropTime, JoeSegmentType::DROP);
@@ -255,7 +271,7 @@ std::vector<Edge> findEdges(std::unordered_map<unsigned __int64, Node>& allNodes
 					}
 					if(dropLength == 3){ // no drop found, lets try water drops
 						auto dropPos = newPos.add(0, -1 * dropLength, 0);
-						int numWaterBlocks = 0;
+
 						while(dropPos.y > 1){
 							dropPos.y--;
 							dropLength++;
@@ -418,7 +434,7 @@ JoePath JoePathFinder::findPath() {
 	int numNodes = 0;
 	int numEdges = 0;
 
-	if(this->pathSearchTimeout < 0 || this->pathSearchTimeout > 1000)
+	if(this->pathSearchTimeout < 0 || this->pathSearchTimeout > 50)
 		this->pathSearchTimeout = 10;
 
 	auto pathSearchStart = std::chrono::high_resolution_clock::now();
@@ -471,6 +487,7 @@ JoePath JoePathFinder::findPath() {
 		numEdges += (int)edges.size();
 		for(auto edge : edges){
 			auto& edgeEndNode = allNodes.at(edge.endNode.hash);
+			//logF("(%i %i %i) %i -> (%i %i %i)", cur.pos.x, cur.pos.y, cur.pos.z, edge.type, edgeEndNode.pos.x, edgeEndNode.pos.y, edgeEndNode.pos.z);
 			if(edgeEndNode.isClosed)
 				continue;
 			float tentativeScore = cur.gScore + edge.cost;
@@ -488,16 +505,12 @@ JoePath JoePathFinder::findPath() {
 				openSet.push(edge.endNode);
 			}else{
 				// remove from openset
-
 				openSet.push(edge.endNode);
 			}
 		}
-		//Sleep(100);
 	}
 	auto now = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float> diff = now - pathSearchStart;
-	//logF("Could not find path! Time: %.2fs Total Nodes: %i NodesVisited: %i Edges: %i term: %i", diff.count(), allNodes.size(), numNodes, numEdges, terminateSearch);
-	// Did not find path, return incomplete one
 
 	if(this->terminateSearch)
 		return JoePath();

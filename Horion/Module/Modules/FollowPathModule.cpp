@@ -5,11 +5,7 @@
 FollowPathModule::FollowPathModule() : IModule(0, Category::MOVEMENT, "Follows joe paths") {}
 
 const char *FollowPathModule::getModuleName() {
-#ifdef _DEBUG
 	return "FollowPath";
-#else
-	return "Joe";
-#endif
 }
 
 void FollowPathModule::startSearch(vec3_ti startNode, C_BlockSource* region, float searchTimeout, std::function<void(bool, JoePath)> callback){
@@ -102,6 +98,8 @@ void FollowPathModule::onMove(C_MoveInputHandler *handler) {
 					this->movementController = std::make_unique<JoeMovementController>(path);
 				}else if(!pathFinder){
 					this->setEnabled(false);
+				}else if(g_Data.getLocalPlayer()->isInWater()){
+					handler->autoJumpInWater = true;
 				}
 			}else{
 				this->clientMessageF("%sDone!", GREEN);
