@@ -59,3 +59,15 @@ void JavascriptModule::onDisable() {
 
 	p->getScriptInstance()->callCallback(callback);
 }
+void JavascriptModule::onLevelRender() {
+	auto p = this->backingScriptModule.lock();
+	if (!p)
+		return;
+
+	auto lock = p->lockCallbacks();
+	auto callback = p->getCallback(L"onRender");
+	if (callback == JS_INVALID_REFERENCE)
+		return;
+
+	p->getScriptInstance()->callCallbackImmediate(callback);
+}

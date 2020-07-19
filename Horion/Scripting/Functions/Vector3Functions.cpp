@@ -18,14 +18,17 @@ std::optional<vec3_t> Vector3Functions::getVecFromValue(JsValueRef ref) {
 	return std::optional<vec3_t>(vecInfo->vec);
 }
 
-std::optional<vec3_t> Vector3Functions::getVecFromArguments(JsValueRef* args, int argCount) {
+std::optional<vec3_t> Vector3Functions::getVecFromArguments(JsValueRef* args, int argCount, int* nextArg) {
 	if (argCount <= 0)
 		return std::optional<vec3_t>();
 
 	auto vec = Vector3Functions::getVecFromValue(args[0]);
 
-	if (vec.has_value())
+	if (vec.has_value()){
+		if(nextArg)
+			*nextArg += 1;
 		return vec.value();
+	}
 
 	if (argCount < 3)
 		return std::optional<vec3_t>();
@@ -50,6 +53,9 @@ std::optional<vec3_t> Vector3Functions::getVecFromArguments(JsValueRef* args, in
 	err |= (int)chakra.JsNumberToDouble_(args[2], &z);
 	if ((JsErrorCode)err != JsNoError)
 		return std::optional<vec3_t>();
+
+	if(nextArg)
+		*nextArg += 3;
 
 	return std::optional<vec3_t>(vec3_t(x, y, z));
 }

@@ -40,7 +40,12 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* gui) {
 	ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - g_Data.getLastUpdateTime();
 
 	ElapsedMicroseconds.QuadPart *= 1000000;
-	ElapsedMicroseconds.QuadPart /= Frequency.QuadPart / 20;
+	int ticksPerSecond = 20;
+	if(g_Data.getClientInstance()->minecraft)
+		ticksPerSecond = *g_Data.getClientInstance()->minecraft->timer;
+	if(ticksPerSecond < 1)
+		ticksPerSecond = 1;
+	ElapsedMicroseconds.QuadPart /= Frequency.QuadPart / ticksPerSecond;
 	lerpT = (ElapsedMicroseconds.QuadPart / 1000000.f);
 	if (lerpT > 1)
 		lerpT = 1;
@@ -451,4 +456,51 @@ void DrawUtils::setGameRenderContext(__int64 ctx) {
 	game3dContext = ctx;
 	if (g_Data.getClientInstance()->levelRenderer != nullptr)
 		origin = g_Data.getClientInstance()->levelRenderer->origin;
+
+	if(ctx){
+		LARGE_INTEGER EndingTime, ElapsedMicroseconds;
+		LARGE_INTEGER Frequency;
+		QueryPerformanceFrequency(&Frequency);
+		QueryPerformanceCounter(&EndingTime);
+		ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - g_Data.getLastUpdateTime();
+
+		ElapsedMicroseconds.QuadPart *= 1000000;
+		int ticksPerSecond = 20;
+		if(g_Data.getClientInstance()->minecraft)
+			ticksPerSecond = *g_Data.getClientInstance()->minecraft->timer;
+		if(ticksPerSecond < 1)
+			ticksPerSecond = 1;
+		ElapsedMicroseconds.QuadPart /= Frequency.QuadPart / ticksPerSecond;
+		lerpT = (ElapsedMicroseconds.QuadPart / 1000000.f);
+		if (lerpT > 1)
+			lerpT = 1;
+		else if (lerpT < 0)
+			lerpT = 0;
+	}
+}
+float DrawUtils::getLerpTime() {
+	return lerpT;
+}
+void DrawUtils::drawLinestrip3d(const std::vector<vec3_t>& points) {
+	if(game3dContext == 0 || entityFlatStaticMaterial == 0)
+		return;
+
+	auto myTess = *reinterpret_cast<__int64*>(game3dContext + 0xB0);
+
+	DrawUtils::tess__begin(myTess, 5);
+
+	/*
+	 * 1: quads
+	 * 2: triangle list
+	 * 3: trianglestrip (6)
+	 * 4: line list
+	 * 5: line strip (7)
+	 */
+
+	for(const auto& p : points){
+		auto pD = p.sub(origin);
+		tess_vertex(myTess, pD.x, pD.y, pD.z);
+	}
+
+	tess_end(game3dContext, myTess, entityFlatStaticMaterial);
 }

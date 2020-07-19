@@ -9,16 +9,14 @@ ScriptInstance::~ScriptInstance() {
 		if (this->runtimeHandle != JS_INVALID_RUNTIME_HANDLE)
 			chakra.JsDisableRuntimeExecution_(this->runtimeHandle);
 		this->isRunning = false;
-		if (this->scriptThread.joinable()) 
-			this->scriptThread.join();
-		
 	}
+	if (this->scriptThread.joinable())
+		this->scriptThread.join();
 
 	{
 		auto lock = moduleMgr->lockModuleListExclusive();
 		auto list = moduleMgr->getModuleList();
-		for (auto it = this->registeredModules.begin(); it != this->registeredModules.end(); it++) {
-			auto p = *it;
+		for (const auto& p : this->registeredModules) {
 			auto pos = std::find(list->begin(), list->end(), p->getModule());
 			if (pos == list->end()) {
 				logF("couldn't find module???");
@@ -52,13 +50,13 @@ void ScriptInstance::runPromises() {
 
 void ScriptInstance::runSync() {
 	std::wstring contents = Utils::wreadFileContents(this->startScriptPath);
-	if (contents.size() == 0) {
+	if (contents.empty()) {
 		isRunning = false;
 		return;
 	}
 
 	JsContextRef context;
-	JsValueRef result = 0;
+	JsValueRef result = nullptr;
 
 	chakra.JsCreateRuntime_((_JsRuntimeAttributes)((int)JsRuntimeAttributeDisableFatalOnOOM | (int)JsRuntimeAttributeAllowScriptInterrupt | (int)JsRuntimeAttributeDisableBackgroundWork), nullptr, &this->runtimeHandle);
 	if (!isRunning) {
@@ -98,20 +96,26 @@ void ScriptInstance::runSync() {
 	logF("Initial Script return: %S", returnString.c_str());
 	this->runPromises();
 
-	while (this->isRunning && !g_Data.shouldTerminate()) {
-		Sleep(1);
+	while (this->isRunning && !GameData::shouldTerminate()) {
+		{
+			std::unique_lock<std::mutex> lk(callbackMutex);
+			this->callbackWaiter.wait_for(lk, std::chrono::milliseconds(1));
 
-		while (!this->callbackQueue.empty()) {
-			auto callb = this->callbackQueue.front();
-			this->callbackQueue.pop();
-			chakra.JsCallFunction_(callb, &global, 1, &result);
+			while (!this->callbackQueue.empty()) {
+				auto callb = this->callbackQueue.front();
+				this->callbackQueue.pop();
+				chakra.JsCallFunction_(callb, &global, 1, &result);
+			}
 		}
+		this->callbacksExecuted.notify_all();
+
 		this->runPromises();
 	}
 
 	chakra.JsSetCurrentContext_(JS_INVALID_REFERENCE);
 	chakra.JsDisposeRuntime_(this->runtimeHandle);
 	this->runtimeHandle = JS_INVALID_RUNTIME_HANDLE;
+	this->isRunning = false;
 }
 
 void ScriptInstance::run() {

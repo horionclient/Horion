@@ -194,8 +194,7 @@ void GameData::forEachEntity(std::function<void(C_Entity*, bool)> callback) {
 #endif
 		} else {
 			size_t listSize = entList->getListSize();
-			//logF("listSize: %li", listSize);
-			if (listSize < 5000 && listSize > 1) {
+			if (listSize < 5000 && listSize > 0) {
 				for (size_t i = 0; i < listSize; i++) {
 					C_Entity* current = entList->get(i);
 					if (std::find(tickedEntities.begin(), tickedEntities.end(), current) == tickedEntities.end()) {

@@ -72,6 +72,7 @@ extern ScriptManager scriptMgr;
 #include "Functions/CommandManagerFunctions.h"
 #include "Functions/ModuleManagerFunctions.h"
 #include "Functions/LevelFunctions.h"
+#include "Functions/DrawFunctions.h"
 
 #include "ScriptInstance.h"
 
@@ -85,6 +86,7 @@ public:
 	JsValueRef localPlayerPrototype = JS_INVALID_REFERENCE;
 	JsValueRef moduleManager = JS_INVALID_REFERENCE;
 	JsValueRef commandManager = JS_INVALID_REFERENCE;
+	JsValueRef drawUtils = JS_INVALID_REFERENCE;
 	JsValueRef levelObject = JS_INVALID_REFERENCE;
 	JsValueRef modulePrototype = JS_INVALID_REFERENCE;
 	JsValueRef jsModulePrototype = JS_INVALID_REFERENCE;
@@ -104,6 +106,7 @@ private:
 	
 	void prepareGameFunctions(JsValueRef global, ContextObjects* objs);
 	void prepareHorionFunctions(JsValueRef global, ContextObjects* obj);
+	void prepareDrawFunctions(JsValueRef global, ContextObjects* obj);
 	void prepareCommandManagerFunctions(JsValueRef global, ContextObjects* obj);
 	void prepareModuleManagerFunctions(JsValueRef global, ContextObjects* obj);
 	void prepareModuleFunctions(JsValueRef proto, ContextObjects* obj);
