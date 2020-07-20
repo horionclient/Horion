@@ -166,12 +166,11 @@ void Hooks::Init() {
 			auto swapChain = g_Data.getSlimMem()->ReadPtr<__int64>(startOffset, {0, secondOffset, 0x170});
 			auto vtable = *reinterpret_cast<uintptr_t**>(swapChain);
 
-			logF(" %llX",vtable[8]);
+			//logF(" %llX",vtable[8]);
 
 			g_Hooks.swapchain__presentHook = std::make_unique<FuncHook>(vtable[8], Hooks::swapChain__present);
 			g_Hooks.swapchain__resizeBuffersHook = std::make_unique<FuncHook>(vtable[13], Hooks::swapChain__ResizeBuffers);
 		}
-
 	}
 
 	// Signatures

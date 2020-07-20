@@ -58,6 +58,8 @@ public:
 	DECL_API(JsCreateArray);
 	DECL_API(JsIntToNumber);
 	DECL_API(JsSetIndexedProperty);
+	DECL_API(JsNumberToInt);
+	DECL_API(JsGetIndexedProperty);
 
 	std::wstring exceptionToString(JsValueRef ref) {
 		JsValueRef stack;
@@ -248,6 +250,13 @@ public:
 				return std::wstring(L"error1#") + std::to_wstring(err);
 		} else
 			return std::wstring(L"error2#") + std::to_wstring(err);
+	}
+
+	JsValueRef arrayGet(JsValueRef arr, int index) {
+		JsValueRef indexNum, result;
+		this->JsIntToNumber_(index, &indexNum);
+		this->JsGetIndexedProperty_(arr, indexNum, &result);
+		return result;
 	}
 
 	void arraySet(JsValueRef arr, int index, JsValueRef value) {

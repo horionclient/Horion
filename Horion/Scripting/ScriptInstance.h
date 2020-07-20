@@ -24,6 +24,7 @@ private:
 	std::condition_variable callbackWaiter;
 	JsRuntimeHandle runtimeHandle = JS_INVALID_RUNTIME_HANDLE;
 	void runPromises();
+	bool checkPrintError();
 
 public:
 	ScriptInstance(std::wstring startScript);

@@ -50,6 +50,9 @@ void ScriptManager::prepareVector3Prototype(JsValueRef global, ContextObjects* o
 
 	chakra.defineFunction(obj->vec3Prototype, L"toString", Vector3Functions::toString, obj);
 
+	chakra.defineFunction(obj->vec3Prototype, L"add", Vector3Functions::add, obj);
+	chakra.defineFunction(obj->vec3Prototype, L"sub", Vector3Functions::sub, obj);
+
 	auto con = chakra.defineFunction(global, L"Vec3", Vector3Functions::constructor, obj);
 	chakra.addPropertyToObj(con, L"prototype", obj->vec3Prototype);
 }
@@ -108,6 +111,7 @@ void ScriptManager::prepareDrawFunctions(JsValueRef global, ContextObjects* objs
 	chakra.JsAddRef_(objs->drawUtils, 0);
 
 	chakra.defineFunction(objs->drawUtils, L"drawLine3d", DrawFunctions::drawLine3d, objs);
+	chakra.defineFunction(objs->drawUtils, L"drawLinestrip3d", DrawFunctions::drawLinestrip3d, objs);
 	chakra.defineFunction(objs->drawUtils, L"setColor", DrawFunctions::setColor, objs);
 }
 

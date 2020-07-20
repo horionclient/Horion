@@ -17,6 +17,47 @@ JsValueRef CALLBACK DrawFunctions::drawLine3d(JsValueRef callee, bool isConstruc
 	return chakra.trueValue();
 }
 
+JsValueRef CALLBACK DrawFunctions::drawLinestrip3d(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	if (argumentCount < 2){
+		THROW(L"Not enough arguments supplied");
+	}
+
+	auto arr = arguments[1];
+	JsValueType type = JsUndefined;
+	chakra.JsGetValueType_(arr, &type);
+	if(type != JsArray){
+		THROW(L"Array required as first argument");
+	}
+
+	JsValueRef lengthProp;
+	chakra.getProperty(arr, L"length", &lengthProp);
+	int arrayLength = -1;
+	chakra.JsNumberToInt_(lengthProp, &arrayLength);
+
+	if(arrayLength < 2){
+		THROW(L"Array needs at least 2 points");
+	}
+	if(arrayLength > 100000){
+		THROW(L"Array too big");
+	}
+
+	std::vector<vec3_t> pointList;
+	pointList.reserve(arrayLength);
+	for(int i = 0; i < arrayLength; i++){
+		auto val = chakra.arrayGet(arr, i);
+		auto valueOpt = Vector3Functions::getVecFromValue(val);
+		if(!valueOpt.has_value()){
+			THROW(L"Points in array need to be of type \"Vec3\"");
+		}
+
+		pointList.push_back(*valueOpt);
+	}
+
+	DrawUtils::drawLinestrip3d(pointList);
+
+	return chakra.trueValue();
+}
+
 JsValueRef CALLBACK DrawFunctions::setColor(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
 	if (argumentCount < 4){
 		THROW(L"Invalid arguments (3 floats needed, 4th optional)!");

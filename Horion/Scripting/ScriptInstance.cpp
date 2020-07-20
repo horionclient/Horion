@@ -45,6 +45,7 @@ void ScriptInstance::runPromises() {
 		taskQueue.pop();
 		chakra.JsCallFunction_(task, &global, 1, &result);
 		chakra.JsRelease_(task, nullptr);
+		this->checkPrintError();
 	}
 }
 
@@ -77,19 +78,11 @@ void ScriptInstance::runSync() {
 	auto err = chakra.JsRunScript_(contents.c_str(), JS_SOURCE_CONTEXT_NONE, L"", &result);
 
 	std::wstring returnString = L"No result";
-	bool hasException;
-	chakra.JsHasException_(&hasException);
 
-	if (err != JsNoError || hasException) {
+	if (err != JsNoError || this->checkPrintError()) {
 		logF("Script run failed: %X", err);
 
 		returnString = L"Error! " + std::to_wstring(err) + L", you can find a stack trace in the console";
-
-		if (hasException) {
-			JsValueRef exception;
-			chakra.JsGetAndClearException_(&exception);
-			logF("Exception: %S", chakra.exceptionToString(exception).c_str());
-		}
 	}
 
 	returnString = chakra.valueToString(result);
@@ -105,6 +98,7 @@ void ScriptInstance::runSync() {
 				auto callb = this->callbackQueue.front();
 				this->callbackQueue.pop();
 				chakra.JsCallFunction_(callb, &global, 1, &result);
+				this->checkPrintError();
 			}
 		}
 		this->callbacksExecuted.notify_all();
@@ -129,4 +123,20 @@ void ScriptInstance::run() {
 		thisPtr->runSync();
 		logF("Script Execution finished");
 	});
+}
+bool ScriptInstance::checkPrintError() {
+	bool hasException;
+	chakra.JsHasException_(&hasException);
+
+	if (hasException) {
+		JsValueRef exception;
+		chakra.JsGetAndClearException_(&exception);
+		auto exceptionStr = chakra.exceptionToString(exception);
+		logF("Exception: %S", exceptionStr.c_str());
+		if(exceptionStr.size() > 70){
+			logF("check the logfile for exceptions");
+		}
+	}
+
+	return hasException;
 }
