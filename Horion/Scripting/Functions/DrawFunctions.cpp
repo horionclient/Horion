@@ -90,7 +90,7 @@ JsValueRef CALLBACK DrawFunctions::setColor(JsValueRef callee, bool isConstructC
 		THROW(L"Invalid arguments (can't convert to double)");
 	}
 
-	DrawUtils::setColor(r, g, b, a);
+	DrawUtils::setColor((float)r, (float)g, (float)b, (float)a);
 
 	return chakra.trueValue();
 }
