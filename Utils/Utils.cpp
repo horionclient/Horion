@@ -189,15 +189,13 @@ uintptr_t Utils::FindSignatureModule(const char* szModule, const char* szSignatu
 	// This will not get optimized away because we are in debug
 	// Leave this in here to quickly find bad signatures in case of updates
 	logF("Signature dead: %s", szSignature);
-#ifndef SIG_DEBUG
+	if (true) {
+		const char* msgToTheOverwhelmedDebugger = "SIGNATURE NOT FOUND";
+		__debugbreak();
+	}
 
-	const char* msgToTheOverwhelmedDebugger = "SIGNATURE NOT FOUND";
-	__debugbreak();
-
-	//throw std::exception("Signature not found");
 #ifdef __clang__
 #pragma clang diagnostic pop
-#endif
 #endif
 #endif
 	return 0u;

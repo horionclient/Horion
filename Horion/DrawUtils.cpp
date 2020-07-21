@@ -42,7 +42,7 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* gui) {
 	ElapsedMicroseconds.QuadPart *= 1000000;
 	int ticksPerSecond = 20;
 	if(g_Data.getClientInstance()->minecraft)
-		ticksPerSecond = *g_Data.getClientInstance()->minecraft->timer;
+		ticksPerSecond = (int)*g_Data.getClientInstance()->minecraft->timer;
 	if(ticksPerSecond < 1)
 		ticksPerSecond = 1;
 	ElapsedMicroseconds.QuadPart /= Frequency.QuadPart / ticksPerSecond;
@@ -467,7 +467,7 @@ void DrawUtils::setGameRenderContext(__int64 ctx) {
 		ElapsedMicroseconds.QuadPart *= 1000000;
 		int ticksPerSecond = 20;
 		if(g_Data.getClientInstance()->minecraft)
-			ticksPerSecond = *g_Data.getClientInstance()->minecraft->timer;
+			ticksPerSecond = (int)*g_Data.getClientInstance()->minecraft->timer;
 		if(ticksPerSecond < 1)
 			ticksPerSecond = 1;
 		ElapsedMicroseconds.QuadPart /= Frequency.QuadPart / ticksPerSecond;

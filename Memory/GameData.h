@@ -30,7 +30,8 @@ enum DATAPACKET_CMD : int {
 
 enum GAMEVERSION : int {
 	g_1_16_0 = 0,
-	g_1_16_1
+	g_1_16_1 = 1,
+	g_1_16_10 = 10
 };
 
 struct HorionDataPacket {

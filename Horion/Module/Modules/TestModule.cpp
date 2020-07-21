@@ -59,8 +59,8 @@ void TestModule::onLevelRender() {
 	  vec3_t pos = start->lerp(end, te);
 
 	  auto yPos = pos.y;
-	  yPos -= 1.62;
-	  yPos += 0.9 + 0.9 * sin(((t + pos.x * 6 + pos.z * 5) / 60) * PI * 2);
+	  yPos -= 1.62f;
+	  yPos += 0.9f + 0.9f * sin(((t + pos.x * 6 + pos.z * 5) / 60) * PI * 2);
 
 	  std::vector<vec3_t> posList;
 	  vec3_t lastPos(pos.x + sinf(0), yPos, pos.z + cosf(0));
