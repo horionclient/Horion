@@ -50,6 +50,9 @@ void ScriptManager::prepareVector3Prototype(JsValueRef global, ContextObjects* o
 
 	chakra.defineFunction(obj->vec3Prototype, L"toString", Vector3Functions::toString, obj);
 
+	chakra.defineFunction(obj->vec3Prototype, L"add", Vector3Functions::add, obj);
+	chakra.defineFunction(obj->vec3Prototype, L"sub", Vector3Functions::sub, obj);
+
 	auto con = chakra.defineFunction(global, L"Vec3", Vector3Functions::constructor, obj);
 	chakra.addPropertyToObj(con, L"prototype", obj->vec3Prototype);
 }
@@ -57,6 +60,7 @@ void ScriptManager::prepareVector3Prototype(JsValueRef global, ContextObjects* o
 void ScriptManager::prepareEntityPrototype(JsValueRef proto, ContextObjects* objs) {
 	chakra.defineFunction(proto, L"isValid", EntityFunctions::isValid, objs);
 	chakra.defineFunction(proto, L"getPosition", EntityFunctions::getPosition, objs);
+	chakra.defineFunction(proto, L"getInterpolatedPosition", EntityFunctions::getInterpolatedPosition, objs);
 	chakra.defineFunction(proto, L"getVelocity", EntityFunctions::getVelocity, objs);
 	chakra.defineFunction(proto, L"isOnGround", EntityFunctions::isOnGround, objs);
 	chakra.defineFunction(proto, L"getSize", EntityFunctions::getSize, objs);
@@ -88,6 +92,7 @@ void ScriptManager::prepareGameFunctions(JsValueRef global, ContextObjects* objs
 }
 
 void ScriptManager::prepareHorionFunctions(JsValueRef global, ContextObjects* obj) {
+	this->prepareDrawFunctions(global, obj);
 	this->prepareCommandManagerFunctions(global, obj);
 	this->prepareModuleManagerFunctions(global, obj);
 
@@ -98,6 +103,16 @@ void ScriptManager::prepareHorionFunctions(JsValueRef global, ContextObjects* ob
 
 	chakra.defineFunction(horionObject, L"getCommandManager", HorionFunctions::getCommandManager, obj);
 	chakra.defineFunction(horionObject, L"getModuleManager", HorionFunctions::getModuleManager, obj);
+	chakra.defineFunction(horionObject, L"getDrawUtils", HorionFunctions::getDrawUtils, obj);
+}
+
+void ScriptManager::prepareDrawFunctions(JsValueRef global, ContextObjects* objs) {
+	chakra.JsCreateObject_(&objs->drawUtils);
+	chakra.JsAddRef_(objs->drawUtils, 0);
+
+	chakra.defineFunction(objs->drawUtils, L"drawLine3d", DrawFunctions::drawLine3d, objs);
+	chakra.defineFunction(objs->drawUtils, L"drawLinestrip3d", DrawFunctions::drawLinestrip3d, objs);
+	chakra.defineFunction(objs->drawUtils, L"setColor", DrawFunctions::setColor, objs);
 }
 
 void ScriptManager::prepareCommandManagerFunctions(JsValueRef global, ContextObjects* objs) {

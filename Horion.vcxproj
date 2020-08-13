@@ -358,12 +358,12 @@
     <ClCompile Include="Horion\path\goals\JoeGoalXZ.cpp" />
     <ClCompile Include="Horion\path\goals\JoeGoalY.cpp" />
     <ClCompile Include="Horion\path\JoeConstants.cpp" />
-    <ClCompile Include="Horion\path\JoeIncompletePath.cpp" />
     <ClCompile Include="Horion\path\JoeMovementController.cpp" />
     <ClCompile Include="Horion\path\JoePath.cpp" />
     <ClCompile Include="Horion\path\JoePathFinder.cpp" />
     <ClCompile Include="Horion\path\JoeSegment.cpp" />
     <ClCompile Include="Horion\Scripting\Functions\CommandManagerFunctions.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\DrawFunctions.cpp" />
     <ClCompile Include="Horion\Scripting\Functions\EntityFunctions.cpp" />
     <ClCompile Include="Horion\Scripting\Functions\GameFunctions.cpp" />
     <ClCompile Include="Horion\Scripting\Functions\GlobalFunctions.cpp" />
@@ -538,12 +538,12 @@
     <ClInclude Include="Horion\path\goals\JoeGoalXZ.h" />
     <ClInclude Include="Horion\path\goals\JoeGoalY.h" />
     <ClInclude Include="Horion\path\JoeConstants.h" />
-    <ClInclude Include="Horion\path\JoeIncompletePath.h" />
     <ClInclude Include="Horion\path\JoeMovementController.h" />
     <ClInclude Include="Horion\path\JoePath.h" />
     <ClInclude Include="Horion\path\JoePathFinder.h" />
     <ClInclude Include="Horion\path\JoeSegment.h" />
     <ClInclude Include="Horion\Scripting\Functions\CommandManagerFunctions.h" />
+    <ClInclude Include="Horion\Scripting\Functions\DrawFunctions.h" />
     <ClInclude Include="Horion\Scripting\Functions\EntityFunctions.h" />
     <ClInclude Include="Horion\Scripting\Functions\GameFunctions.h" />
     <ClInclude Include="Horion\Scripting\Functions\GlobalFunctions.h" />

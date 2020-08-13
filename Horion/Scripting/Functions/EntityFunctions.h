@@ -38,6 +38,7 @@ public:
 
 	DECL_FUN(isValid);
 	DECL_FUN(getPosition);
+	DECL_FUN(getInterpolatedPosition);
 	DECL_FUN(getVelocity);
 	DECL_FUN(isOnGround);
 	DECL_FUN(getSize);

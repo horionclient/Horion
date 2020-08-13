@@ -12,11 +12,22 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 		return;
 	}
 
+	if(!this->currentPath->isInitialized1()){
+		this->currentPath->initPathSegments();
+	}
+
 	auto pPos = player->eyePos0;
 	pPos.y -= 1.62f;
 	vec3_ti playerNode((int)floorf(pPos.x), (int)roundf(pPos.y), (int)floorf(pPos.z));
 
 	auto curSeg = this->currentPath->getSegment(this->stateInfo.currentPathSegment);
+
+	if(!curSeg.isInValidPosition(playerNode)){
+		logF("invalid position %i %i %i, %i %i %i", curSeg.getSegmentType(), this->stateInfo.currentPathSegment, this->stateInfo.currentPathSegment > 0 ? this->currentPath->getSegment(this->stateInfo.currentPathSegment - 1).getSegmentType() : 0, playerNode.x, playerNode.y, playerNode.z);
+		this->stateInfo.currentPathSegment = (int)this->currentPath->getNumSegments();
+		this->stateInfo.recoverToStartPos = false;
+		return;
+	}
 
 	auto startBpos = curSeg.getStart();
 	auto start = startBpos.toVec3t().add(0.5f, 0, 0.5f);
@@ -34,25 +45,26 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 	float dComp = 4;
 	vec3_t addedDiff{0, 0, 0};
 
-
 	// we should probably make seperate classes for each segment type at some point, but im just doing it here for now for faster prototyping
 	switch(curSeg.getSegmentType()){
 	case JUMP: {
 		if(player->onGround){
-			if(fabsf(pPos.y - end.y) < 0.1f && pPos.dist(end) < 0.5f){// Check for end condition
+			if(fabsf(pPos.y - end.y) < 0.1f && pPos.dist(end) < 0.5f) {  // Check for end condition
 				this->stateInfo.nextSegment();
 				break;
 			}
-			if(player->getTicksUsingItem() > 0 && fabsf(pPos.y - end.y) > 0.1f){
+			auto tangent = end.sub(start);
+			tangent.y = 0;
+			tangent = tangent.normalize();
+			auto crossTangent = tangent.cross({0, 1, 0});
+
+			if((player->getTicksUsingItem() > 0 || fabsf(player->velocity.dot(crossTangent)) > 0.1f) && fabsf(pPos.y - end.y) > 0.1f){
 				walkTarget = start;
 				goto WALK;
 			}
 
 			if(pPos.y - end.y > -0.01f)
 				goto WALK;
-			auto tangent = end.sub(start);
-			tangent.y = 0;
-			tangent = tangent.normalize();
 
 			auto lastPossibleJumpTarget = start.add(tangent.mul(0.25f));
 			walkTarget = start.add(tangent); // This is not actually on a block anymore, but if we make this smaller the movement controller will stop moving at the jump target
@@ -75,8 +87,10 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 			if(fabsf(pPos.y - end.y) < (inWater ? 0.2f : 0.1f) && pPos.sub(end).magnitudexz() < 0.5f && player->velocity.y > -0.1f){// Check for end condition
 				this->stateInfo.nextSegment();
 				break;
-			}else if(inWater && (pPos.y < end.y || player->velocity.y < 0.12f))
-				movementHandler->isJumping = 1;
+			}else if(inWater){
+				if(pPos.y < end.y || player->velocity.y < 0.12f)
+					movementHandler->autoJumpInWater = 1;
+			}
 		}else{
 			dComp = 10;
 			enableNextSegmentSmoothing = false;
@@ -132,26 +146,50 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 	} break;
 	case WATER_WALK: {
 		{
-			if(player->isInWater())
-				movementHandler->isJumping = 1;
-
 			auto tangent = end.sub(start);
-			tangent.y = 0;
-			tangent = tangent.normalize();
-			auto crossTangent = tangent.cross({0, 1, 0});
-			float sideError = fabsf(pPos.sub(end).dot(crossTangent));
-			if(sideError < 0.2f /*make sure we're not drifting to the side to much*/ && fabsf(pPos.sub(end).dot(tangent)) < 0.4f){
-				this->stateInfo.nextSegment();
-				break;
+			bool isVertical = tangent.magnitudexz() < 0.1f && fabsf(tangent.y) > 0.5f;
+
+			if(isVertical){
+				if(pPos.sub(end).magnitudexz() < 0.3f && fabsf(pPos.y - end.y) < 0.35f){
+					this->stateInfo.nextSegment();
+					break;
+				}
+
+				if(pPos.y + 0.1f < end.y)
+					movementHandler->autoJumpInWater = 1;
+				else if(pPos.y > end.y)
+					movementHandler->isSneakDown = 1;
+
+			}else{
+
+				if(player->isInWater())
+					movementHandler->autoJumpInWater = 1;
+
+				tangent.y = 0;
+				tangent = tangent.normalize();
+				auto crossTangent = tangent.cross({0, 1, 0});
+				float sideError = fabsf(pPos.sub(end).dot(crossTangent));
+				if(sideError < 0.2f /*make sure we're not drifting to the side to much*/ && fabsf(pPos.sub(end).dot(tangent)) < 0.4f){
+					this->stateInfo.nextSegment();
+					break;
+				}
+				if(end.y > start.y && sideError > 0.15f && pPos.y - end.y < -0.1f)
+					walkTarget = start.add(tangent.mul(0.2f)); // center if we need to get up a block
 			}
-			if(end.y > start.y && sideError > 0.15f && pPos.y - end.y < -0.1f)
-				walkTarget = start.add(tangent.mul(0.2f)); // center if we need to get up a block
+
 			vec3_t flow{};
 
 			auto block = player->region->getBlock(playerNode);
-			if(!block->toLegacy()->material->isLiquid)
-				block = player->region->getBlock(playerNode.add(0, -1, 0));
-			block->toLegacy()->liquidGetFlow(&flow, player->region, &playerNode);
+			if(!block->toLegacy()->material->isLiquid){
+				auto mod = playerNode.add(0, -1, 0);
+				block = player->region->getBlock(mod);
+
+				if(block->toLegacy()->material->isLiquid)
+					block->toLegacy()->liquidGetFlow(&flow, player->region, &mod);
+			}else{
+				block->toLegacy()->liquidGetFlow(&flow, player->region, &playerNode);
+			}
+
 			flow = flow.mul(-1 * 0.07f * 10);
 			addedDiff = flow;
 		}
@@ -159,6 +197,8 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 	} break;
 	WALK:;
 	case WALK: {
+		player->setSprinting(curSeg.isAllowingSprint());
+
 		auto pPosD = pPos; // p
 
 		if(!player->onGround && dComp < 8){
@@ -171,7 +211,6 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 			// drop with a gap
 			walkTarget = start;
 		}
-
 
 		vec3_t diff3d = walkTarget.sub(pPosD);
 		vec2_t diff2d = {diff3d.x, diff3d.z};

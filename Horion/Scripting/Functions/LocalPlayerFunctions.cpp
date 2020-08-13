@@ -25,6 +25,7 @@ JsValueRef CALLBACK LocalPlayerFunctions::setVelocity(JsValueRef callee, bool is
 	if (ent == nullptr) {
 		ENTITY_INVALID;
 	}
+
 	auto vecOpt = Vector3Functions::getVecFromArguments(&arguments[1], argumentCount - 1);
 	if (!vecOpt.has_value()) {
 		THROW(L"Invalid vector!");
@@ -54,6 +55,7 @@ JsValueRef CALLBACK LocalPlayerFunctions::setViewAngles(JsValueRef callee, bool 
 	if (ent == nullptr) {
 		ENTITY_INVALID;
 	}
+
 	auto vecOpt = Vector3Functions::getVecFromArguments(&arguments[1], argumentCount - 1);
 	if (!vecOpt.has_value()) {
 		THROW(L"Invalid vector!");

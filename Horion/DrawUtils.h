@@ -88,6 +88,7 @@ public:
 	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = Fonts::SMOOTH);
 
 	static void drawLine(vec2_t start, vec2_t end, float lineWidth);  // rgba
+	static void drawLinestrip3d(const std::vector<vec3_t>& points);
 	static void drawLine3d(const vec3_t& start, const vec3_t& end);
 	static inline void fillRectangle(vec4_t pos, const MC_Color col, float alpha) {
 		float posF[4];  // vec4_t(startX, startY, endX, endY);
@@ -113,6 +114,7 @@ public:
 	static void drawNameTags(C_Entity* ent, float textSize, bool drawHealth = false, bool useUnicodeFont = false);
 	static void drawItem(C_ItemStack* item, vec2_t ItemPos, float opacity, float scale, bool isEnchanted);
 	static void drawKeystroke(char key, vec2_t pos);
+	static float getLerpTime();
 
 	static vec2_t worldToScreen(const vec3_t& world);
 };

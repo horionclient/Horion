@@ -5,6 +5,7 @@ Killaura::Killaura() : IModule('P', Category::COMBAT, "Attacks entities around y
 	this->registerBoolSetting("MobAura", &this->isMobAura, this->isMobAura);
 	this->registerFloatSetting("range", &this->range, this->range, 2.f, 20.f);
 	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
+	this->registerBoolSetting("hurttime", &this->hurttime, this->hurttime);
 	this->registerBoolSetting("AutoWeapon", &this->autoweapon, this->autoweapon);
 	this->registerBoolSetting("Silent Rotations", &this->silent, this->silent);
 }
@@ -82,18 +83,27 @@ void Killaura::onTick(C_GameMode* gm) {
 
 	Odelay++;
 	if (!targetList.empty() && Odelay >= delay) {
+
 		if (autoweapon) findWeapon();
 
-		if (!moduleMgr->getModule<NoSwing>()->isEnabled()) 
-			g_Data.getLocalPlayer()->swing();
+		if (g_Data.getLocalPlayer()->velocity.squaredxzlen() < 0.01) {
+			C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);  // make sure to update rotation if player is standing still
+		}
 
 		// Attack all entitys in targetList
 		if (isMulti) {
-			for (auto & i : targetList) {
-				g_Data.getCGameMode()->attack(i);
+			for (auto& i : targetList) {
+				if (!(i->damageTime > 1 && hurttime)) {
+					g_Data.getLocalPlayer()->swing();
+					g_Data.getCGameMode()->attack(i);
+				}
 			}
 		} else {
-			g_Data.getCGameMode()->attack(targetList[0]);
+			if (!(targetList[0]->damageTime > 1 && hurttime)) {
+				g_Data.getLocalPlayer()->swing();
+				g_Data.getCGameMode()->attack(targetList[0]);
+			}
 		}
 		Odelay = 0;
 	}

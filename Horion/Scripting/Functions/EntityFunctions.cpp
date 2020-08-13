@@ -1,4 +1,5 @@
 #include "EntityFunctions.h"
+#include "../../DrawUtils.h"
 
 // this fixes intellisense somehow
 #ifndef ENTITY_INVALID
@@ -21,6 +22,21 @@ JsValueRef CALLBACK EntityFunctions::getPosition(JsValueRef callee, bool isConst
 	}
 	
 	return scriptMgr.prepareVector3(*ent->getPos(), reinterpret_cast<ContextObjects*>(callbackState));
+}
+
+JsValueRef CALLBACK EntityFunctions::getInterpolatedPosition(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
+	if (ent == nullptr) {
+		ENTITY_INVALID;
+	}
+
+	vec3_t* start = ent->getPosOld();
+	vec3_t* end = ent->getPos();
+
+	auto t = DrawUtils::getLerpTime();
+	vec3_t lerped = start->lerp(end, t);
+
+	return scriptMgr.prepareVector3(lerped, reinterpret_cast<ContextObjects*>(callbackState));
 }
 
 JsValueRef CALLBACK EntityFunctions::getVelocity(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {

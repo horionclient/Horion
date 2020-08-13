@@ -89,7 +89,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Zoom()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Teams()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Nbt()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Godmode()));
+		//this->moduleList.push_back(std::shared_ptr<IModule>(new Godmode()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Freelook()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new AutoSneak()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new NoHurtcam()));
@@ -105,7 +105,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
 #endif
 
-		// Sort module alphabetically
+		// Sort modules alphabetically
 		std::sort(moduleList.begin(), moduleList.end(), [](auto lhs, auto rhs) {
 			auto current = lhs;
 			auto other = rhs;

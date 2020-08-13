@@ -156,8 +156,6 @@ add_library(Horion SHARED
         Horion/Module/Modules/FastLadder.h
         Horion/Module/Modules/Fly.cpp
         Horion/Module/Modules/Fly.h
-        Horion/Module/Modules/ForceOpenCommandBlock.cpp
-        Horion/Module/Modules/ForceOpenCommandBlock.h
         Horion/Module/Modules/Freecam.cpp
         Horion/Module/Modules/Freecam.h
         Horion/Module/Modules/Fucker.cpp
@@ -208,6 +206,8 @@ add_library(Horion SHARED
         Horion/Module/Modules/NoFriends.h
         Horion/Module/Modules/NoPacket.cpp
         Horion/Module/Modules/NoPacket.h
+        Horion/Module/Modules/NoPaintingCrash.cpp
+        Horion/Module/Modules/NoPaintingCrash.h
         Horion/Module/Modules/NoSlowDown.cpp
         Horion/Module/Modules/NoSlowDown.h
         Horion/Module/Modules/NoSwing.cpp
@@ -361,4 +361,4 @@ add_library(Horion SHARED
         Utils/Utils.cpp
         Utils/Utils.h
         Utils/xorstr.h
-        resource.h SDK/TextHolder.cpp SDK/CChestBlockActor.cpp SDK/Tag.cpp Utils/keys.h SDK/CBlockLegacy.cpp SDK/CItem.cpp SDK/CInventory.cpp SDK/CInventoryTransaction.cpp SDK/CEntity.cpp SDK/CComplexInventoryTransaction.cpp SDK/CPacket.cpp SDK/CMinecraftUIRenderContext.cpp SDK/CClientInstance.cpp SDK/CMoveInputHandler.cpp SDK/CImageBuffer.h Horion/Module/Modules/Freelook.cpp Horion/Module/Modules/Freelook.h SDK/CCamera.h SDK/CCamera.cpp Horion/Module/Modules/NoHurtcam.cpp Horion/Module/Modules/NoHurtcam.h Horion/Module/Modules/AntiImmobile.cpp Horion/Module/Modules/AntiImmobile.h Horion/path/JoePathFinder.cpp Horion/path/JoePathFinder.h Horion/path/JoePath.cpp Horion/path/JoePath.h Horion/path/JoeSegment.cpp Horion/path/JoeSegment.h Horion/path/JoeMovementController.cpp Horion/path/JoeMovementController.h Horion/path/goals/JoeGoal.cpp Horion/path/goals/JoeGoal.h Horion/path/goals/JoeGoalXYZ.cpp Horion/path/goals/JoeGoalXYZ.h Horion/path/goals/JoeGoalXZ.cpp Horion/path/goals/JoeGoalXZ.h Horion/path/JoeConstants.h Horion/path/goals/JoeGoalY.cpp Horion/path/goals/JoeGoalY.h Horion/Module/Modules/FollowPathModule.cpp Horion/Module/Modules/FollowPathModule.h Horion/Command/Commands/PathCommand.cpp Horion/Command/Commands/PathCommand.h Horion/path/JoeIncompletePath.cpp Horion/path/JoeIncompletePath.h Horion/path/JoeConstants.cpp Horion/Scripting/Functions/LevelFunctions.cpp Horion/Scripting/Functions/LevelFunctions.h)
+        resource.h SDK/TextHolder.cpp SDK/CChestBlockActor.cpp SDK/Tag.cpp Utils/keys.h SDK/CBlockLegacy.cpp SDK/CItem.cpp SDK/CInventory.cpp SDK/CInventoryTransaction.cpp SDK/CEntity.cpp SDK/CComplexInventoryTransaction.cpp SDK/CPacket.cpp SDK/CMinecraftUIRenderContext.cpp SDK/CClientInstance.cpp SDK/CMoveInputHandler.cpp SDK/CImageBuffer.h Horion/Module/Modules/Freelook.cpp Horion/Module/Modules/Freelook.h SDK/CCamera.h SDK/CCamera.cpp Horion/Module/Modules/NoHurtcam.cpp Horion/Module/Modules/NoHurtcam.h Horion/Module/Modules/AntiImmobile.cpp Horion/Module/Modules/AntiImmobile.h Horion/path/JoePathFinder.cpp Horion/path/JoePathFinder.h Horion/path/JoePath.cpp Horion/path/JoePath.h Horion/path/JoeSegment.cpp Horion/path/JoeSegment.h Horion/path/JoeMovementController.cpp Horion/path/JoeMovementController.h Horion/path/goals/JoeGoal.cpp Horion/path/goals/JoeGoal.h Horion/path/goals/JoeGoalXYZ.cpp Horion/path/goals/JoeGoalXYZ.h Horion/path/goals/JoeGoalXZ.cpp Horion/path/goals/JoeGoalXZ.h Horion/path/JoeConstants.h Horion/path/goals/JoeGoalY.cpp Horion/path/goals/JoeGoalY.h Horion/Module/Modules/FollowPathModule.cpp Horion/Module/Modules/FollowPathModule.h Horion/Command/Commands/PathCommand.cpp Horion/Command/Commands/PathCommand.h Horion/path/JoeConstants.cpp Horion/Scripting/Functions/LevelFunctions.cpp Horion/Scripting/Functions/LevelFunctions.h Horion/Scripting/Functions/DrawFunctions.cpp Horion/Scripting/Functions/DrawFunctions.h)

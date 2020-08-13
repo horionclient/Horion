@@ -7,6 +7,7 @@ class JoePath {
 private:
 	std::vector<JoeSegment> segments;
 	bool isIncomplete;
+	bool isInitialized = 0;
 public:
 	JoePath(const std::vector<JoeSegment>& segments, bool isIncomplete);
 	JoePath();
@@ -23,6 +24,8 @@ public:
 		return this->segments[seg];
 	}
 
+	bool isInitialized1() const;
+	void initPathSegments();
 	bool isIncomplete1() const;
 	void draw(int) const;
 };

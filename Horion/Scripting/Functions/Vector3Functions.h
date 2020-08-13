@@ -5,11 +5,9 @@
 #include <optional>
 
 class Vector3Functions {
-private:
-	static std::optional<vec3_t> getVecFromValue(JsValueRef);
-
 public:
-	static std::optional<vec3_t> getVecFromArguments(JsValueRef*, int argCount);
+	static std::optional<vec3_t> getVecFromValue(JsValueRef);
+	static std::optional<vec3_t> getVecFromArguments(JsValueRef*, int argCount, int* nextArg = nullptr);
 
 	DECL_FUN(isValid);
 	DECL_FUN(getX);
@@ -17,4 +15,7 @@ public:
 	DECL_FUN(getZ);
 	DECL_FUN(toString);
 	DECL_FUN(constructor);
+
+	DECL_FUN(add);
+	DECL_FUN(sub);
 };

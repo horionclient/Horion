@@ -4,7 +4,6 @@
 
 class Bhop : public IModule {
 private:
-	bool keyPressed = false;
 	float speed = 0.325f;
 
 public:
@@ -13,5 +12,5 @@ public:
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
-	virtual void onTick(C_GameMode* gm) override;
+	virtual void onMove(C_MoveInputHandler* input) override;
 };

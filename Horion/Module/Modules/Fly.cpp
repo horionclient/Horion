@@ -12,6 +12,7 @@ const char* Fly::getModuleName() {
 
 void Fly::onTick(C_GameMode* gm) {
 	gm->player->canFly = true;
+
 }
 
 void Fly::onDisable() {

@@ -21,4 +21,5 @@ public:
 	virtual void onTick(C_GameMode* gm) override;
 	void onEnable() override;
 	void onDisable() override;
+	void onLevelRender() override;
 };

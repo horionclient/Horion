@@ -16,10 +16,10 @@ const char* Spammer::getModuleName() {
 void Spammer::onTick(C_GameMode* gm) {
 	Odelay++;
 	if (Odelay > delay * 20) {
-		C_TextPacket textPacket = C_TextPacket();
+		C_TextPacket textPacket;
 		textPacket.message.setText(bypass ? (message + " | " + Utils::randomString(8)) : message);
-		textPacket.sourceName = *g_Data.getLocalPlayer()->getNameTag();
-		textPacket.xboxUserId = TextHolder(std::to_string(g_Data.getLocalPlayer()->getUserId()));
+		textPacket.sourceName.setText(g_Data.getLocalPlayer()->getNameTag()->getText());
+		textPacket.xboxUserId = std::to_string(g_Data.getLocalPlayer()->getUserId());
 		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&textPacket);
 		Odelay = 0;
 	}

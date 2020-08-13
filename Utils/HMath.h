@@ -262,6 +262,10 @@ struct vec3_ti {
 	bool operator==(const vec3_ti &o) const { return x == o.x && y == o.y && z == o.z; }
 	bool operator!=(const vec3_ti &o) const { return x != o.x || y != o.y || z != o.z; }
 
+	vec3_ti add(vec3_ti o) const {
+		return vec3_ti(x + o.x, y + o.y, z + o.z);
+	}
+
 	vec3_ti add(int f) const {
 		return vec3_ti(x + f, y + f, z + f);
 	}

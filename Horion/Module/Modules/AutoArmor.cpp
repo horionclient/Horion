@@ -100,10 +100,10 @@ void AutoArmor::onTick(C_GameMode* gm) {
 				delete second;
 			}
 			if (armorItem->item == nullptr) {
+				*g_Data.getLocalPlayer()->getArmor(i) = *inv->getItemStack(armorList[0].m_slot);
+
 				first = new C_InventoryAction(armorList[0].m_slot, armorList[0].m_item, nullptr);
 				second = new C_InventoryAction(i, nullptr, armorList[0].m_item, 632);
-
-				*g_Data.getLocalPlayer()->getArmor(i) = *inv->getItemStack(armorList[0].m_slot);
 
 				*inv->getItemStack(armorList[0].m_slot) = *emptyItemStack;
 

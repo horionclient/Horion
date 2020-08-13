@@ -17,5 +17,5 @@ public:
 	virtual void onSendPacket(C_Packet* p) override;
 	virtual void onMove(C_MoveInputHandler* hand) override;
 	virtual void onDisable() override;
-	
+	void onLevelRender() override;
 };
