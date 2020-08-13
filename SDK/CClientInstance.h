@@ -52,7 +52,8 @@ public:
 
 class MinecraftGame {
 private:
-	char filler[0x140];  //0x0000
+	//char filler[0x140];  //0x0000
+	char filler[0x150];  //0x0000
 public:
 	C_FontRepository* fontRepository;  //0x140
 private:

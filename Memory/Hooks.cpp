@@ -197,8 +197,8 @@ void Hooks::Init() {
 		void* timeOfDay = reinterpret_cast<void*>(FindSignature("44 8B C2 B8 F1 19 76 05"));
 		g_Hooks.Dimension_getTimeOfDayHook = std::make_unique<FuncHook>(timeOfDay, Hooks::Dimension_getTimeOfDay);
 
-		void* ChestTick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 83 79 ?? 00 48 8B FA 48 89"));
-		g_Hooks.ChestBlockActor_tickHook = std::make_unique<FuncHook>(ChestTick, Hooks::ChestBlockActor_tick);
+		//void* ChestTick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 83 79 ?? 00 48 8B FA 48 89"));
+		//g_Hooks.ChestBlockActor_tickHook = std::make_unique<FuncHook>(ChestTick, Hooks::ChestBlockActor_tick);
 
 		void* lerpFunc = reinterpret_cast<void*>(FindSignature("8B 02 89 81 ?? 04 ?? ?? 8B 42 04 89 81 ?? ?? ?? ?? 8B 42 08 89 81 ?? ?? ?? ?? C3"));
 		g_Hooks.Actor_lerpMotionHook = std::make_unique<FuncHook>(lerpFunc, Hooks::Actor_lerpMotion);
@@ -283,10 +283,10 @@ void Hooks::Init() {
 			void* prepFeaturedServers = reinterpret_cast<void*>(FindSignature("48 8B C4 55 57 41 56 48 8D ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 58 ?? 48 89 70 ?? 0F 29 70 ?? 48 8B 05"));
 		else
 			void* prepFeaturedServers = reinterpret_cast<void*>(FindSignature("48 8B C4 55 48 8D 68 98 48 81 EC ? ? ? ? 48 C7 44 24 ? ? ? ? ? 48 89 58 10 48 89 78 18 0F 29 70 E8 48 8B 05 ? ? ? ? 48 33 C4"));
-		g_Hooks.prepFeaturedServersHook = std::make_unique<FuncHook>(prepFeaturedServers, Hooks::prepFeaturedServers);
+		//g_Hooks.prepFeaturedServersHook = std::make_unique<FuncHook>(prepFeaturedServers, Hooks::prepFeaturedServers);
 		
 		void* prepFeaturedServersFirstTime = reinterpret_cast<void*>(FindSignature("48 8B C4 57 41 54 41 55 41 56 41 57 48 83 EC ?? 48 C7 40 ?? FE FF FF FF 48 89 58 ?? 48 89 68 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B FA"));
-		g_Hooks.prepFeaturedServersFirstTimeHook = std::make_unique<FuncHook>(prepFeaturedServersFirstTime, Hooks::prepFeaturedServersFirstTime);
+		//g_Hooks.prepFeaturedServersFirstTimeHook = std::make_unique<FuncHook>(prepFeaturedServersFirstTime, Hooks::prepFeaturedServersFirstTime);
 
 		void* localPlayerUpdateFromCam = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 80 BA"));
 		g_Hooks.LocalPlayer__updateFromCameraHook = std::make_unique<FuncHook>(localPlayerUpdateFromCam, Hooks::LocalPlayer__updateFromCamera);
