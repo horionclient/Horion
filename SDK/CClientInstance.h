@@ -54,7 +54,11 @@ class MinecraftGame {
 private:
 	char filler[0x140];  //0x0000
 public:
-	C_FontRepository* fontRepository;  //0x140
+	C_FontRepository* fontRepository; //0x140
+private:
+	char pad_0x148[0x8]; //0x148
+public:
+	C_FontRepository* fontRepository1;  //0x150
 private:
 	char pad_0x128[0x108];  //0x148
 public:
@@ -62,6 +66,10 @@ public:
 
 	C_Font* getTheGoodFontThankYou() {
 		return fontRepository->fontList->fontEntries[7].font;
+	};
+
+	C_Font* getOldFont() {
+		return fontRepository1->fontList->fontEntries[7].font;
 	};
 
 	C_Font* getTheBetterFontYes() {

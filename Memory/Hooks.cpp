@@ -197,7 +197,12 @@ void Hooks::Init() {
 		void* timeOfDay = reinterpret_cast<void*>(FindSignature("44 8B C2 B8 F1 19 76 05"));
 		g_Hooks.Dimension_getTimeOfDayHook = std::make_unique<FuncHook>(timeOfDay, Hooks::Dimension_getTimeOfDay);
 
-		void* ChestTick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 83 79 ?? 00 48 8B FA 48 89"));
+		void* ChestTick = nullptr;
+		if(g_Data.getVersion() == GAMEVERSION::g_1_16_20)
+			ChestTick = reinterpret_cast<void*>(FindSignature("40 53 57 48 83 EC ?? 48 8B 41 ?? 48 8B FA 48 89 6C 24 ?? 48 8B D9 4C 89 74 24 ?? 48 85 C0"));
+		else
+			ChestTick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 83 79 ?? 00 48 8B FA 48 89"));
+
 		g_Hooks.ChestBlockActor_tickHook = std::make_unique<FuncHook>(ChestTick, Hooks::ChestBlockActor_tick);
 
 		void* lerpFunc = reinterpret_cast<void*>(FindSignature("8B 02 89 81 ?? 04 ?? ?? 8B 42 04 89 81 ?? ?? ?? ?? 8B 42 08 89 81 ?? ?? ?? ?? C3"));
@@ -283,10 +288,10 @@ void Hooks::Init() {
 			void* prepFeaturedServers = reinterpret_cast<void*>(FindSignature("48 8B C4 55 57 41 56 48 8D ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 58 ?? 48 89 70 ?? 0F 29 70 ?? 48 8B 05"));
 		else
 			void* prepFeaturedServers = reinterpret_cast<void*>(FindSignature("48 8B C4 55 48 8D 68 98 48 81 EC ? ? ? ? 48 C7 44 24 ? ? ? ? ? 48 89 58 10 48 89 78 18 0F 29 70 E8 48 8B 05 ? ? ? ? 48 33 C4"));
-		g_Hooks.prepFeaturedServersHook = std::make_unique<FuncHook>(prepFeaturedServers, Hooks::prepFeaturedServers);
+		//g_Hooks.prepFeaturedServersHook = std::make_unique<FuncHook>(prepFeaturedServers, Hooks::prepFeaturedServers);
 		
 		void* prepFeaturedServersFirstTime = reinterpret_cast<void*>(FindSignature("48 8B C4 57 41 54 41 55 41 56 41 57 48 83 EC ?? 48 C7 40 ?? FE FF FF FF 48 89 58 ?? 48 89 68 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B FA"));
-		g_Hooks.prepFeaturedServersFirstTimeHook = std::make_unique<FuncHook>(prepFeaturedServersFirstTime, Hooks::prepFeaturedServersFirstTime);
+		//g_Hooks.prepFeaturedServersFirstTimeHook = std::make_unique<FuncHook>(prepFeaturedServersFirstTime, Hooks::prepFeaturedServersFirstTime);
 
 		void* localPlayerUpdateFromCam = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 80 BA"));
 		g_Hooks.LocalPlayer__updateFromCameraHook = std::make_unique<FuncHook>(localPlayerUpdateFromCam, Hooks::LocalPlayer__updateFromCamera);
@@ -348,7 +353,12 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 		if (*message == cmdMgr->prefix) {
 			cmdMgr->execute(message);
 
-			__int64 a1 = (*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x960i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
+			__int64 a1 = 0;
+			if (g_Data.getVersion() == GAMEVERSION::g_1_16_20)
+				a1 = (*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x968i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
+			else
+				a1 = (*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x960i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
+
 			addCommandToChatHistory(a1, (char*)(_this + 0xA70));  // This will put the command in the chat history (Arrow up/down)
 
 			__int64 v17 = 0;
