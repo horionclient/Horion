@@ -33,7 +33,8 @@ void showAimedBlockInfo() {
 bool TestCommand::execute(std::vector<std::string>* args) {
 	C_LocalPlayer* player = g_Data.getLocalPlayer();
 
-	auto supplies = g_Data.getLocalPlayer()->getSupplies();
+	g_Data.getClientInstance()->getLevel();
+	/*auto supplies = g_Data.getLocalPlayer()->getSupplies();
 	auto transactionManager = g_Data.getLocalPlayer()->getTransactionManager();
 
 	C_ItemStack* selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
@@ -75,6 +76,6 @@ bool TestCommand::execute(std::vector<std::string>* args) {
 	pk.complexTransaction->transac.ptr = reinterpret_cast<__int64>(&ptrBean);
 	pk.numTransactions = 1;
 	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&pk);
-	clientMessageF("%sSuccessfully given item! %i", GREEN, numActions);
+	clientMessageF("%sSuccessfully given item! %i", GREEN, numActions);*/
 	return true;
 }

@@ -416,10 +416,11 @@ public:
 	virtual bool isPreGame(void) const;
 	virtual bool isInMultiplayerGame(void) const;
 	virtual bool isMultiC_PlayerClient(void) const;
-
+	virtual __int64 sub_14012F590() const;
+	virtual __int64 sub_14012F4D0() const;
 	virtual __int64 getOptions(void);
 	virtual __int64 getOptions(void) const;
-	virtual __int64 getOptionsPtr(void);
+	//virtual __int64 getOptionsPtr(void);
 	virtual __int64 getUser(void);
 	virtual __int64 getUser(void) const;
 	virtual __int64 getGameRenderer(void) const;
