@@ -1,4 +1,7 @@
-# Horion 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/horionclient/Horion/master/.github/horion-banner.png"/>
+</p>
+<br/>
 
 **Horion** is a minecraft bedrock edition utility mod designed to enhance a users gameplay.
 If you want to contribute to this project, feel free to fork this repository and submit a pull request.
