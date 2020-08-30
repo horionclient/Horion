@@ -61,16 +61,7 @@ IDR_TEXT1               TEXT                    "resources\\coolroblox.json"
 IDR_STEVE               RCDATA                  "resources\\Steve.dat"
 
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// PNG
-//
-
-IDB_CAT1                PNG                     "resources\\cat.png"
-
-#endif    // Français (France) resources
-/////////////////////////////////////////////////////////////////////////////
-
+#endif
 
 
 #ifndef APSTUDIO_INVOKED
