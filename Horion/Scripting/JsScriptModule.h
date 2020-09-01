@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../Module/Modules/JavascriptModule.h"
 #include <string>
+
+#include "Horion/Module/Modules/Custom/JavascriptModule.h"
 
 class JavascriptModule;
 class ScriptInstance;
