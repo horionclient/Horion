@@ -32,10 +32,8 @@
 #include "Commands/NbtCommand.h"
 #include "Commands/ExecuteCommand.h"
 
-#if defined(_DEBUG) or defined(_BETA)
 #include "Commands/ScriptCommand.h"
 #include "Commands/PathCommand.h"
-#endif
 
 #ifdef _DEBUG
 #include "Commands/TestCommand.h"

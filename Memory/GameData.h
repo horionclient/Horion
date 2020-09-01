@@ -194,10 +194,8 @@ public:
 	inline bool allowWIPFeatures() {
 #ifdef _DEBUG
 		return true;
-#elif defined _BETA
-		return isAllowingWIPFeatures;
 #else
-		return false;
+		return isAllowingWIPFeatures;
 #endif
 	}
 	inline void setAllowWIPFeatures(bool enable = false) { isAllowingWIPFeatures = enable; };
@@ -221,17 +219,17 @@ public:
 	inline C_ClientInstance* getClientInstance() { return clientInstance; };
 	inline C_GuiData* getGuiData() { return clientInstance->getGuiData(); };
 	inline C_LocalPlayer* getLocalPlayer() {
-		#ifdef _BETA
+		/*#ifdef _BETA
 		unsigned int converted = networkedData.localPlayerOffset ^ networkedData.xorKey;
 		if (networkedData.localPlayerOffset < 0x110 || converted < 0x125 || converted > 0x191 || networkedData.dataSet == false)
 			localPlayer = nullptr;
 		else
 			localPlayer = *reinterpret_cast<C_LocalPlayer**>(reinterpret_cast<__int64>(clientInstance) + converted);
 		
-		#else
+		#else*/
 		localPlayer = clientInstance->localPlayer;
 		
-		#endif
+		//#endif
 		
 		if (localPlayer == nullptr)
 			gameMode = nullptr;

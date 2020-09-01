@@ -41,13 +41,11 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new SetprefixCommand());
 	commandList.push_back(new NbtCommand());
 
-#if defined(_BETA) or defined(_DEBUG)
 	commandList.push_back(new CommandBlockExploitCommand());
 	commandList.push_back(new NameSpoofCommand());
 	commandList.push_back(new ExecuteCommand());
 	commandList.push_back(new ScriptCommand());
 	commandList.push_back(new PathCommand());
-#endif
 
 #ifdef _DEBUG
 	commandList.push_back(new TestCommand());
