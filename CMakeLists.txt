@@ -246,8 +246,8 @@ add_library(Horion SHARED
         Horion/Module/Modules/World/Tower.h
         Horion/Module/Modules/Visual/Tracer.cpp
         Horion/Module/Modules/Visual/Tracer.h
-        Horion/Module/Modules/Movement/TriggerBot.cpp
-        Horion/Module/Modules/Movement/TriggerBot.h
+        Horion/Module/Modules/Combat/TriggerBot.cpp
+        Horion/Module/Modules/Combat/TriggerBot.h
         Horion/Module/Modules/Movement/Velocity.cpp
         Horion/Module/Modules/Movement/Velocity.h
         Horion/Module/Modules/Visual/Xray.cpp
