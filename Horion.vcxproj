@@ -375,14 +375,6 @@
     <ClCompile Include="Horion\Scripting\JsScriptModule.cpp" />
     <ClCompile Include="Horion\Scripting\ScriptInstance.cpp" />
     <ClCompile Include="Horion\Scripting\ScriptManager.cpp" />
-    <ClCompile Include="include\imgui\examples\imgui_impl_dx11.cpp" />
-    <ClCompile Include="include\imgui\examples\imgui_impl_win32.cpp" />
-    <ClCompile Include="include\imgui\imgui.cpp" />
-    <ClCompile Include="include\imgui\imgui_demo.cpp" />
-    <ClCompile Include="include\imgui\imgui_draw.cpp" />
-    <ClCompile Include="include\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="include\imgui\misc\cpp\imgui_stdlib.cpp" />
-    <ClCompile Include="include\imgui\misc\fonts\binary_to_compressed_c.cpp" />
     <ClCompile Include="Memory\GameData.cpp" />
     <ClCompile Include="Memory\Hooks.cpp" />
     <ClCompile Include="Memory\SlimMem.cpp" />
