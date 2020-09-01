@@ -291,24 +291,6 @@ add_library(Horion SHARED
         include/chakra/ChakraCore.h
         include/chakra/ChakraCoreWindows.h
         include/chakra/ChakraDebug.h
-        include/imgui/examples/imgui_impl_dx11.cpp
-        include/imgui/examples/imgui_impl_dx11.h
-        include/imgui/examples/imgui_impl_win32.cpp
-        include/imgui/examples/imgui_impl_win32.h
-        include/imgui/misc/cpp/imgui_stdlib.cpp
-        include/imgui/misc/cpp/imgui_stdlib.h
-        include/imgui/misc/fonts/binary_to_compressed_c.cpp
-        include/imgui/misc/single_file/imgui_single_file.h
-        include/imgui/imconfig.h
-        include/imgui/imgui.cpp
-        include/imgui/imgui.h
-        include/imgui/imgui_demo.cpp
-        include/imgui/imgui_draw.cpp
-        include/imgui/imgui_internal.h
-        include/imgui/imgui_widgets.cpp
-        include/imgui/imstb_rectpack.h
-        include/imgui/imstb_textedit.h
-        include/imgui/imstb_truetype.h
         include/atlrx.h
         include/d3dx11.h
         include/d3dx11async.h

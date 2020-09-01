@@ -35,10 +35,6 @@
 
 #include "../include/d3dx11async.h"
 
-#include "../include/imgui/imgui.h"
-#include "../include/imgui/examples/imgui_impl_dx11.h"
-#include "../include/imgui/examples/imgui_impl_win32.h"
-
 class VMTHook;
 class FuncHook;
 
