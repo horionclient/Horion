@@ -12,7 +12,7 @@ JsValueRef JsScriptModule::getCallback(std::wstring callbackName) {
 }
 
 bool JsScriptModule::registerCallback(std::wstring callbackName, JsValueRef jsFunc) {
-	if (callbackName != L"onTick" && callbackName != L"onEnable" && callbackName != L"onDisable" && callbackName != L"onAttack" && callbackName != L"onRender")
+	if (callbackName != L"onTick" && callbackName != L"onEnable" && callbackName != L"onDisable" && callbackName != L"onAttack" && callbackName != L"onRender" && callbackName != L"onRender2d")
 		return false;
 
 	chakra.JsAddRef_(jsFunc, 0);

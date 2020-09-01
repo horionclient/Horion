@@ -329,7 +329,9 @@ DWORD WINAPI start(LPVOID lpParam) {
 	logF("Starting up...");
 	logF("MSC v%i at %s", _MSC_VER, __TIMESTAMP__);
 
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)injectorConnectionThread, lpParam, NULL, NULL);
+	DWORD conThread;
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)injectorConnectionThread, lpParam, NULL, &conThread);
+	logF("InjCon: %i", conThread);
 	init();
 
 	DWORD procId = GetCurrentProcessId();
@@ -346,7 +348,9 @@ DWORD WINAPI start(LPVOID lpParam) {
 
 	Hooks::Init();
 
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, NULL);  // Checking Keypresses
+	DWORD keyThreadId;
+	CreateThread(nullptr, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, &keyThreadId);  // Checking Keypresses
+	logF("KeyT: %i", keyThreadId);
 
 	logF("Waiting for injector");
 	while (!g_Data.isInjectorConnectionActive()) {

@@ -57,6 +57,42 @@ JsValueRef CALLBACK EntityFunctions::isOnGround(JsValueRef callee, bool isConstr
 	return chakra.toBoolean(ent->onGround);
 }
 
+JsValueRef CALLBACK EntityFunctions::isInvisible(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
+	if (ent == nullptr) {
+		ENTITY_INVALID;
+	}
+
+	return chakra.toBoolean(ent->isInvisible());
+}
+
+JsValueRef CALLBACK EntityFunctions::isInWater(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
+	if (ent == nullptr) {
+		ENTITY_INVALID;
+	}
+
+	return chakra.toBoolean(ent->isInWater());
+}
+
+JsValueRef CALLBACK EntityFunctions::isInLava(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
+	if (ent == nullptr) {
+		ENTITY_INVALID;
+	}
+
+	return chakra.toBoolean(ent->isInLava());
+}
+
+JsValueRef CALLBACK EntityFunctions::isSneaking(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
+	if (ent == nullptr) {
+		ENTITY_INVALID;
+	}
+
+	return chakra.toBoolean(ent->isSneaking());
+}
+
 JsValueRef CALLBACK EntityFunctions::getSize(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
 	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
 	if (ent == nullptr) {

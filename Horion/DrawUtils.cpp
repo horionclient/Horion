@@ -235,15 +235,14 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth, bool outlin
 		float smallestAngle = PI * 2;
 		vec2_t smallestDir;
 		std::tuple<int, vec2_t> smallestE;
+		auto lastDirAtan2 = atan2(lastDir.y, lastDir.x);
 		for (auto cur : screenCords) {
 			if (std::get<0>(current) == std::get<0>(cur))
 				continue;
-			//if (std::find(indices.begin(), indices.end(), std::get<0>(cur)) != indices.end())
-			//	continue;
 
 			// angle between vecs
 			vec2_t dir = vec2_t(std::get<1>(cur)).sub(std::get<1>(current));
-			float angle = atan2(dir.y, dir.x) - atan2(lastDir.y, lastDir.x);
+			float angle = atan2(dir.y, dir.x) - lastDirAtan2;
 			if (angle > PI) {
 				angle -= 2 * PI;
 			} else if (angle <= -PI) {

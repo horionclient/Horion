@@ -51,7 +51,15 @@ float t = 0;
 void TestModule::onLevelRender() {
 	t++;
 	DrawUtils::setColor(1, 0.2f, 0.2f, 1);
-	g_Data.forEachEntity([](auto c, auto _){
+
+	vec3_t permutations[36];
+	for(int i = 0; i < 36; i++){
+		permutations[i] = {sinf((i * 10.f) / (180 / PI)), 0.f, cosf((i * 10.f) / (180 / PI))};
+	}
+
+	const float coolAnim = 0.9f + 0.9f * sin((t / 60) * PI * 2);
+
+	g_Data.forEachEntity([&](auto c, auto _){
 	  vec3_t* start = c->getPosOld();
 	  vec3_t* end = c->getPos();
 
@@ -60,18 +68,13 @@ void TestModule::onLevelRender() {
 
 	  auto yPos = pos.y;
 	  yPos -= 1.62f;
-	  yPos += 0.9f + 0.9f * sin(((t + pos.x * 6 + pos.z * 5) / 60) * PI * 2);
+	  yPos += coolAnim;
 
 	  std::vector<vec3_t> posList;
-	  vec3_t lastPos(pos.x + sinf(0), yPos, pos.z + cosf(0));
-	  posList.push_back(lastPos);
-	  for(auto angle = 0; angle <= 360; angle += 10){
-		  if(angle == 0)
-			  continue;
-		  vec3_t curPos(pos.x + sinf(angle / (180 / PI)), yPos, pos.z + cosf(angle / (180 / PI)));
-		  posList.push_back(curPos);
-		  //DrawUtils::drawLine3d(lastPos, curPos);
-		  //lastPos = curPos;
+	  posList.reserve(36);
+	  for(auto& perm : permutations){
+		  vec3_t curPos(pos.x, yPos, pos.z);
+		  posList.push_back(curPos.add(perm));
 	  }
 
 	  DrawUtils::drawLinestrip3d(posList);

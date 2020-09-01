@@ -63,6 +63,10 @@ void ScriptManager::prepareEntityPrototype(JsValueRef proto, ContextObjects* obj
 	chakra.defineFunction(proto, L"getInterpolatedPosition", EntityFunctions::getInterpolatedPosition, objs);
 	chakra.defineFunction(proto, L"getVelocity", EntityFunctions::getVelocity, objs);
 	chakra.defineFunction(proto, L"isOnGround", EntityFunctions::isOnGround, objs);
+	chakra.defineFunction(proto, L"isInvisible", EntityFunctions::isInvisible, objs);
+	chakra.defineFunction(proto, L"isInWater", EntityFunctions::isInWater, objs);
+	chakra.defineFunction(proto, L"isInLava", EntityFunctions::isInLava, objs);
+	chakra.defineFunction(proto, L"isSneaking", EntityFunctions::isSneaking, objs);
 	chakra.defineFunction(proto, L"getSize", EntityFunctions::getSize, objs);
 	chakra.defineFunction(proto, L"toString", EntityFunctions::toString, objs);
 	chakra.defineFunction(proto, L"getViewAngles", EntityFunctions::getViewAngles, objs);

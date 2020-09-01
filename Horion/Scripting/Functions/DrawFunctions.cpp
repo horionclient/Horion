@@ -94,3 +94,22 @@ JsValueRef CALLBACK DrawFunctions::setColor(JsValueRef callee, bool isConstructC
 
 	return chakra.trueValue();
 }
+
+JsValueRef CALLBACK DrawFunctions::drawLine2d(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	int argIndex = 1;
+	auto startOpt = Vector3Functions::getVecFromArguments(&arguments[argIndex], argumentCount - argIndex, &argIndex);
+	if (!startOpt.has_value()) {
+		THROW(L"Invalid start vector!");
+	}
+	if(startOpt->z != 0){
+		THROW(L"Z component must be 0");
+	}
+	// Note that &arguments[argIndex] might point to invalid memory here, but the function should abort because argumentCount - argIndex equals 0
+	auto endOpt = Vector3Functions::getVecFromArguments(&arguments[argIndex], argumentCount - argIndex, &argIndex);
+	if (!endOpt.has_value()) {
+		THROW(L"Invalid end vector!");
+	}
+	DrawUtils::drawLine3d(*startOpt, *endOpt);
+
+	return chakra.trueValue();
+}
