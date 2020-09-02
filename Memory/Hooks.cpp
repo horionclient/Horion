@@ -887,14 +887,14 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, __int64 a3, flo
 
 	static float rcolors[4];
 
-	static auto nightMod = moduleMgr->getModule<NightMode>();
+	/*static auto nightMod = moduleMgr->getModule<TimeChanger>();
 	if (nightMod->isEnabled()) {
 		color[0] = 0.f;
 		color[1] = 0.f;
 		color[2] = 0.2f;
 		color[3] = 1;
 		return color;
-	}
+	}*/
 
 	static auto rainbowSkyMod = moduleMgr->getModule<RainbowSky>();
 	if (rainbowSkyMod->isEnabled()) {
@@ -921,7 +921,7 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, __int64 a3, flo
 float Hooks::Dimension_getTimeOfDay(__int64 _this, int a2, float a3) {
 	static auto oGetTimeOfDay = g_Hooks.Dimension_getTimeOfDayHook->GetFastcall<float, __int64, int, float>();
 
-	static auto nightMod = moduleMgr->getModule<NightMode>();
+	static auto nightMod = moduleMgr->getModule<TimeChanger>();
 	if (nightMod->isEnabled()) {
 		return nightMod->modifier;
 	}
@@ -932,7 +932,7 @@ float Hooks::Dimension_getTimeOfDay(__int64 _this, int a2, float a3) {
 float Hooks::Dimension_getSunIntensity(__int64 a1, float a2, vec3_t* a3, float a4) {
 	static auto oGetSunIntensity = g_Hooks.Dimension_getSunIntensityHook->GetFastcall<float, __int64, float, vec3_t*, float>();
 
-	static auto nightMod = moduleMgr->getModule<NightMode>();
+	static auto nightMod = moduleMgr->getModule<TimeChanger>();
 	if (nightMod->isEnabled()) {
 		return -0.5f;
 	}
