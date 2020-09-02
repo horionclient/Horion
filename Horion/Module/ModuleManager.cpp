@@ -82,7 +82,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Crasher()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new CrystalAura()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Timer()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new NightMode()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new TimeChanger()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new NoSwing()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new CubeGlide()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new AirStuck()));
