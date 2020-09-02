@@ -2,10 +2,10 @@
 #include "../ModuleManager.h"
 #include "Module.h"
 
-class NightMode : public IModule {
+class TimeChanger : public IModule {
 public:
-	NightMode();
-	~NightMode();
+	TimeChanger();
+	~TimeChanger();
 
 	float modifier = 0.5f;
 
