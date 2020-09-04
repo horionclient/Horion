@@ -89,7 +89,7 @@ void DrawUtils::setColor(float r, float g, float b, float a) {
 
 C_Font* DrawUtils::getFont(Fonts font) {
 
-	if (g_Data.getVersion() == GAMEVERSION::g_1_16_20)
+	if (true)
 		return g_Data.getClientInstance()->N0000080D->getOldFont();
 	switch (font) {
 	case Fonts::SMOOTH:
