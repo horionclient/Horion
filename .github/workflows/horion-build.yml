@@ -1,0 +1,21 @@
+name: Horion-Build
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: vcexpress project.sln /build
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v2
+      if: success()
+      with:
+          name: Horion
+          path: x64\Debug\Horion.dll
