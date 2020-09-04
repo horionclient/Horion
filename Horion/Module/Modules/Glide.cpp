@@ -18,10 +18,14 @@ const char* Glide::getModuleName() {
 
 void Glide::onTick(C_GameMode* gm) {
 	glideModEffective = glideMod;
-	if (GameData::isKeyDown(VK_SPACE))
-		glideModEffective += 0.2f;
-	if (GameData::isKeyDown(*g_Data.getClientInstance()->getGameSettingsInput()->sneakKey))
-		glideModEffective -= 0.2f;
+	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
+
+	if (g_Data.canUseMoveKeys()) {
+		if (GameData::isKeyDown(*input->spaceBarKey))
+			glideModEffective += 0.2f;
+		if (GameData::isKeyDown(*input->sneakKey))
+			glideModEffective -= 0.2f;
+	}
 	gm->player->velocity.y = glideModEffective;
 }
 
