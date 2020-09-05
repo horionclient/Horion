@@ -328,10 +328,7 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 			cmdMgr->execute(message);
 
 			__int64 a1 = 0;
-			if (g_Data.getVersion() == GAMEVERSION::g_1_16_0)
-				a1 = (*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x960i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
-			else
-				a1 = (*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x968i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
+			a1 = (*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x968i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
 
 			addCommandToChatHistory(a1, (char*)(_this + 0xA70));  // This will put the command in the chat history (Arrow up/down)
 
