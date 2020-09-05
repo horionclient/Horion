@@ -1,22 +1,29 @@
 name: Horion-Build
 
 on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Build'
+        required: true
+        default: 'Build'
+      home:
+        description: 'location'
+        required: false
   release:
     types: [created]
 
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-lastest
 
     steps:
     - uses: actions/checkout@v2
     - name: setup
-      run: call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
+      run: docker run -it mono:latest bash
     - name: Build
-      run: vcexpress Horion.sln /build
-    - name: Build 2
-      run: devenv Horion.sln /Build
+      run: msbuild Horion.sln
     - name: Archive artifacts
       uses: actions/upload-artifact@v2
       if: success()
