@@ -1,6 +1,6 @@
 #include "Xray.h"
 
-Xray::Xray() : IModule(VK_NUMPAD6, Category::VISUAL, "X-Ray view!") {
+Xray::Xray() : IModule(VK_NUMPAD6, Category::VISUAL, "See ores through walls") {
 }
 
 Xray::~Xray() {
