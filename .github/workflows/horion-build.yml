@@ -33,6 +33,10 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake .
+    - name: Compile
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: make
     - name: Test
       working-directory: ${{runner.workspace}}/build
       shell: bash
@@ -42,4 +46,5 @@ jobs:
       if: success()
       with:
           name: Horion
+          working-directory: ${{runner.workspace}}/build
           path: x64\Debug\Horion.dll
