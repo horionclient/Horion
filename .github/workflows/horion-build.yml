@@ -11,8 +11,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: setup
+      run: call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
     - name: Build
-      run: vcexpress project.sln /build
+      run: vcexpress Horion.sln /build
+    - name: Build 2
+      run: devenv Horion.sln /Build
     - name: Archive artifacts
       uses: actions/upload-artifact@v2
       if: success()
