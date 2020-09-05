@@ -23,7 +23,7 @@ jobs:
     - name: setup
       run: docker run mono:latest bash
     - name: Build
-      run: msbuild Horion.sln
+      run: xbuild Horion.sln
     - name: Archive artifacts
       uses: actions/upload-artifact@v2
       if: success()
