@@ -21,9 +21,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: setup
-      run: docker run mono:latest bash
+      run: docker run -i mono:latest bash
     - name: Build
-      run: xbuild Horion.sln
+      run: msbuild Horion.sln
     - name: Archive artifacts
       uses: actions/upload-artifact@v2
       if: success()
