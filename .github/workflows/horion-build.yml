@@ -13,6 +13,9 @@ on:
   release:
     types: [created]
 
+env:
+  BUILD_TYPE: Release
+
 jobs:
   build:
 
@@ -21,9 +24,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: setup
-      run: docker run -i mono:latest bash
+      run: cmake .
     - name: Build
-      run: msbuild Horion.sln
+      run: make
     - name: Archive artifacts
       uses: actions/upload-artifact@v2
       if: success()
