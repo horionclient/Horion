@@ -23,6 +23,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Setup Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build
     - name: setup
       run: cmake .
     - name: Build
