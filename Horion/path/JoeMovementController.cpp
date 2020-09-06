@@ -18,12 +18,11 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 
 	auto pPos = player->eyePos0;
 	pPos.y -= 1.62f;
-	vec3_ti playerNode((int)floorf(pPos.x), (int)roundf(pPos.y), (int)floorf(pPos.z));
 
 	auto curSeg = this->currentPath->getSegment(this->stateInfo.currentPathSegment);
 
-	if(!curSeg.isInValidPosition(playerNode)){
-		logF("invalid position %i %i %i, %i %i %i", curSeg.getSegmentType(), this->stateInfo.currentPathSegment, this->stateInfo.currentPathSegment > 0 ? this->currentPath->getSegment(this->stateInfo.currentPathSegment - 1).getSegmentType() : 0, playerNode.x, playerNode.y, playerNode.z);
+	if (!curSeg.isInValidPosition(pPos)) {
+		logF("invalid position %i %i %i, %f %f %f", curSeg.getSegmentType(), this->stateInfo.currentPathSegment, this->stateInfo.currentPathSegment > 0 ? this->currentPath->getSegment(this->stateInfo.currentPathSegment - 1).getSegmentType() : 0, pPos.x, pPos.y, pPos.z);
 		this->stateInfo.currentPathSegment = (int)this->currentPath->getNumSegments();
 		this->stateInfo.recoverToStartPos = false;
 		return;
@@ -179,15 +178,16 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 
 			vec3_t flow{};
 
-			auto block = player->region->getBlock(playerNode);
+			vec3_ti floored = vec3_ti((int)floor(pPos.x), (int)floor(pPos.y), (int)floor(pPos.z));
+			auto block = player->region->getBlock(floored);
 			if(!block->toLegacy()->material->isLiquid){
-				auto mod = playerNode.add(0, -1, 0);
+				auto mod = floored.add(0, -1, 0);
 				block = player->region->getBlock(mod);
 
 				if(block->toLegacy()->material->isLiquid)
 					block->toLegacy()->liquidGetFlow(&flow, player->region, &mod);
 			}else{
-				block->toLegacy()->liquidGetFlow(&flow, player->region, &playerNode);
+				block->toLegacy()->liquidGetFlow(&flow, player->region, &floored);
 			}
 
 			flow = flow.mul(-1 * 0.07f * 10);

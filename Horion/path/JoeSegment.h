@@ -27,7 +27,7 @@ public:
 	JoeSegmentType getSegmentType() const;
 	const vec3_ti& getStart() const;
 	const vec3_ti& getEnd() const;
-	bool isInValidPosition(const vec3_ti& pos) const;
+	bool isInValidPosition(const vec3_t& pos) const;
 	void setValidPositions(const std::vector<vec3_ti>& validPositions);
 	float getCost() const;
 	void init();

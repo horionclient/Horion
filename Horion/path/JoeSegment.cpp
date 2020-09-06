@@ -1,6 +1,7 @@
 #include "JoeSegment.h"
 
 #include "../DrawUtils.h"
+#include "../../Utils/Logger.h"
 
 JoeSegment::JoeSegment(JoeSegmentType type, vec3_ti& start, vec3_ti& stop, float cost, bool allowSprint) : segmentType(type), start(start), end(stop), cost(cost), allowSprint(allowSprint) {
 
@@ -51,9 +52,11 @@ bool JoeSegment::isAllowingSprint() const {
 void JoeSegment::setAllowSprint(bool allowSprint) {
 	JoeSegment::allowSprint = allowSprint;
 }
-bool JoeSegment::isInValidPosition(const vec3_ti& pos) const {
+bool JoeSegment::isInValidPosition(const vec3_t& pos) const {
 	for(const auto& validPos : this->validPositions){
-		if(pos == validPos)
+		vec3_t cPos = validPos.toFloatVector();
+		double dist = sqrt(pow(2, pos.x - cPos.x) + pow(2, pos.y - cPos.y) + pow(2, pos.z - cPos.z));
+		if (dist <= 2.5)
 			return true;
 	}
 	return false;
