@@ -53,9 +53,7 @@ void JoeSegment::setAllowSprint(bool allowSprint) {
 }
 bool JoeSegment::isInValidPosition(const vec3_t& pos) const {
 	for(const auto& validPos : this->validPositions){
-		vec3_t cPos = validPos.toFloatVector();
-		double dist = sqrt(pow(2, pos.x - cPos.x) + pow(2, pos.y - cPos.y) + pow(2, pos.z - cPos.z));
-		if (dist <= 2.5)
+		if (pos.dist(validPos.toFloatVector()) <= 2.5)
 			return true;
 	}
 	return false;
