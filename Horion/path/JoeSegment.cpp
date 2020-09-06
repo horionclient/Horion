@@ -1,7 +1,6 @@
 #include "JoeSegment.h"
 
 #include "../DrawUtils.h"
-#include "../../Utils/Logger.h"
 
 JoeSegment::JoeSegment(JoeSegmentType type, vec3_ti& start, vec3_ti& stop, float cost, bool allowSprint) : segmentType(type), start(start), end(stop), cost(cost), allowSprint(allowSprint) {
 
