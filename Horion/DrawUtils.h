@@ -115,6 +115,7 @@ public:
 	static void drawItem(C_ItemStack* item, vec2_t ItemPos, float opacity, float scale, bool isEnchanted);
 	static void drawKeystroke(char key, vec2_t pos);
 	static float getLerpTime();
+	static void drawHologram(vec3_t pos, std::string textStr, float textSize);
 
 	static vec2_t worldToScreen(const vec3_t& world);
 };
