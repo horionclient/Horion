@@ -18,7 +18,6 @@ bool WaypointCommand::execute(std::vector<std::string>* args) {
 
 	auto opt = args->at(1);
 	std::string name = args->at(2);
-	assertTrue(name.length() > 0);
 
 	if (opt == "add") {
 		if (mod->add(name, player->currentPos.floor().add(0.5, 0, 0.5))) {
