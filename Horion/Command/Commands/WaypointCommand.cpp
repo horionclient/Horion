@@ -1,6 +1,6 @@
 #include "WaypointCommand.h"
 
-WaypointCommand::WaypointCommand() : IMCCommand("waypoint", "Manage Waypoints", "<add|remove> <name>") {
+WaypointCommand::WaypointCommand() : IMCCommand("waypoint", "Manage Waypoints", "<add|remove|tp|teleport> <name>") {
 	registerAlias("wp");
 }
 
@@ -21,7 +21,7 @@ bool WaypointCommand::execute(std::vector<std::string>* args) {
 	assertTrue(name.length() > 0);
 
 	if (opt == "add") {
-		if (mod->add(name, player->currentPos.floor().add(0.5, player->eyePos0.y - player->currentPos.y, 0.5))) {
+		if (mod->add(name, player->currentPos.floor().add(0.5, 0, 0.5))) {
 			clientMessageF("%sSuccessfully added waypoint \"%s\"", GREEN, name.c_str());
 		} else {
 			clientMessageF("%sWaypoint \"%s\" already exists", YELLOW, name.c_str());
@@ -29,6 +29,14 @@ bool WaypointCommand::execute(std::vector<std::string>* args) {
 	} else if (opt == "remove") {
 		if (mod->remove(name)) {
 			clientMessageF("%sRemoved waypoint \"%s\"", RED, name.c_str());
+		} else {
+			clientMessageF("%sUnknown waypoint \"%s\"", YELLOW, name.c_str());
+		}
+	} else if (opt == "tp" || opt == "teleport") {
+		vec3_t* pos = mod->getWaypoint(name);
+		if (pos != nullptr) {
+			player->setPos(*pos);
+			clientMessageF("%sTeleported to waypoint \"%s\" (%.02f, %.02f, %.02f)", GREEN, name.c_str(), pos->x, pos->y, pos->z);
 		} else {
 			clientMessageF("%sUnknown waypoint \"%s\"", YELLOW, name.c_str());
 		}
