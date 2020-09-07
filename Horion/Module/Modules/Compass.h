@@ -1,5 +1,6 @@
 #pragma once
 #include "Module.h"
+#include "../../DrawUtils.h"
 class Compass : public IModule {
 private:
 	float opacity = 0.5;

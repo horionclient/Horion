@@ -1,6 +1,4 @@
 #include "Compass.h"
-#include "../../../Utils/Logger.h"
-#include "../../DrawUtils.h"
 
 Compass::Compass() : IModule(0x0, Category::VISUAL, "Compass") {
 	registerFloatSetting("Opacity", &opacity, opacity, 0.1, 1);
@@ -16,7 +14,7 @@ const char* Compass::getModuleName() {
 void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	C_LocalPlayer* player = g_Data.getLocalPlayer();
 
-	if (player == nullptr) return;
+	if (player == nullptr || !GameData::canUseMoveKeys()) return;
 
 	int deg = player->yaw + 180;
 	float sCenter = g_Data.getGuiData()->widthGame / 2;
@@ -67,8 +65,6 @@ void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	}
 	DrawUtils::fillRectangle(vec4_t(sCenter - 0.5, 15, sCenter + 0.5, 25), MC_Color(255, 255, 255), opacity);
 	drawCenteredText(vec2_t(sCenter, 25), std::to_string(deg), 0.75);
-
-	//drawCenteredText(vec2_t(g_Data.getGuiData()->widthGame / 2, 10), std::to_string(deg), 1);
 	DrawUtils::flush();
 }
 
