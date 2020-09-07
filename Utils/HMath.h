@@ -514,6 +514,16 @@ struct AABB {
 		auto diff = lower.sub(upper);
 		return fabsf(diff.y) == 1 && fabsf(diff.x) == 1 && fabsf(diff.z) == 1;
 	}
+
+	AABB expanded(float amount) {
+		return AABB(lower.sub(amount), upper.add(amount));
+	}
+
+	bool intersects(AABB aabb) {
+		return aabb.upper.x - lower.x > 0.00001 && upper.x - aabb.lower.x > 0.00001 &&
+			   aabb.upper.y - lower.y > 0.00001 && upper.y - aabb.lower.y > 0.00001 &&
+			   aabb.upper.z - lower.z > 0.00001 && upper.z - aabb.lower.z > 0.00001;
+	}
 };
 
 /*
