@@ -2,6 +2,7 @@
 
 Compass::Compass() : IModule(0x0, Category::VISUAL, "Compass") {
 	registerFloatSetting("Opacity", &opacity, opacity, 0.1, 1);
+	registerIntSetting("Range", &range, range, 45, 180);
 }
 
 Compass::~Compass() {
@@ -19,7 +20,7 @@ void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	int deg = player->yaw + 180;
 	float sCenter = g_Data.getGuiData()->widthGame / 2;
 
-	for (int off = -90; off <= 90; off++) {
+	for (int off = -range; off <= range; off++) {
 		int oDeg = (deg + off) % 360;
 		if (oDeg < 0) oDeg += 360;
 		switch (oDeg) {
