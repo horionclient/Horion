@@ -520,9 +520,9 @@ struct AABB {
 	}
 
 	bool intersects(AABB aabb) {
-		return aabb.upper.x - lower.x > 0.00001 && upper.x - aabb.lower.x > 0.00001 &&
-			   aabb.upper.y - lower.y > 0.00001 && upper.y - aabb.lower.y > 0.00001 &&
-			   aabb.upper.z - lower.z > 0.00001 && upper.z - aabb.lower.z > 0.00001;
+		return aabb.upper.x > lower.x && upper.x > aabb.lower.x &&
+			   aabb.upper.y > lower.y && upper.y > aabb.lower.y &&
+			   aabb.upper.z > lower.z && upper.z > aabb.lower.z;
 	}
 };
 

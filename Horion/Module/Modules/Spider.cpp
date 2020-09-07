@@ -1,7 +1,5 @@
 #include "Spider.h"
 
-#include "../../../Utils/Logger.h"
-
 Spider::Spider() : IModule('Z', Category::MOVEMENT, "Climb walls") {
 	registerFloatSetting("Speed", &speed, speed, 0.1, 1);
 }
