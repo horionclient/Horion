@@ -28,10 +28,6 @@ void Waypoints::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	}
 }
 
-void Waypoints::onEnable() {
-	waypoints["Spawn"] = vec3_t(0.5, (double)69, 0.5);
-}
-
 using json = nlohmann::json;
 void Waypoints::onLoadConfig(void* confVoid) {
 	IModule::onLoadConfig(confVoid);  // retain keybinds & enabled state
