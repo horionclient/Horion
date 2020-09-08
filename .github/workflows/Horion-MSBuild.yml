@@ -27,7 +27,7 @@ jobs:
 
     - name: MSBuild
       working-directory: ${{runner.workspace}}/build
-      run: msbuild horion.sln
+      run: msbuild Horion.vcxproj
       
     - name: Archive artifacts
       uses: actions/upload-artifact@v2
