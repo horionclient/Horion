@@ -3,7 +3,7 @@
 
 class ExtendedBlockReach : public IModule {
 private:
-	float blockReach = 50.f;
+	float blockReach = 3.f;
 
 public:
 	ExtendedBlockReach();
