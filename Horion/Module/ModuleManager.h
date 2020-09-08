@@ -70,6 +70,7 @@
 #include "Modules/Speed.h"
 #include "Modules/StackableItem.h"
 #include "Modules/Step.h"
+#include "Modules/TimeChanger.h"
 #include "Modules/Timer.h"
 #include "Modules/Tower.h"
 #include "Modules/Tracer.h"
