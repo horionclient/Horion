@@ -19,8 +19,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2.3.2
 
-    - name: Setup MSBuild.exe
-      uses: warrenbuckley/Setup-MSBuild@v1
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.1
 
     - name: MSBuild
       working-directory: ${{runner.workspace}}
