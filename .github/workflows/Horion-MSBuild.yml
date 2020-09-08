@@ -1,0 +1,38 @@
+name: Horion-MSBuild
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Build'
+        required: true
+        default: 'Build'
+      home:
+        description: 'location'
+        required: false
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v2.3.2
+
+    - name: Setup MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+    
+    - name: Setup Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build
+
+    - name: MSBuild
+      working-directory: ${{runner.workspace}}/build
+      run: msbuild horion.sln
+      
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v2
+      if: success()
+      with:
+          name: Horion
+          working-directory: ${{runner.workspace}}/build
+          path: x64\Debug\Horion.dll
