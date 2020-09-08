@@ -172,8 +172,8 @@ add_library(Horion SHARED
         Horion/Module/Modules/Hitbox.h
         Horion/Module/Modules/HudModule.cpp
         Horion/Module/Modules/HudModule.h
-        Horion/Module/Modules/InfiniteBlockReach.cpp
-        Horion/Module/Modules/InfiniteBlockReach.h
+        Horion/Module/Modules/ExtendedBlockReach.cpp
+        Horion/Module/Modules/ExtendedBlockReach.h
         Horion/Module/Modules/InfiniteReach.cpp
         Horion/Module/Modules/InfiniteReach.h
         Horion/Module/Modules/InstaBreak.cpp

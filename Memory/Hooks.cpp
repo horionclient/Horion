@@ -328,10 +328,7 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 			cmdMgr->execute(message);
 
 			__int64 a1 = 0;
-			if (g_Data.getVersion() == GAMEVERSION::g_1_16_20)
-				a1 = (*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x968i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
-			else
-				a1 = (*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x960i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
+			a1 = (*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x968i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
 
 			addCommandToChatHistory(a1, (char*)(_this + 0xA70));  // This will put the command in the chat history (Arrow up/down)
 
@@ -1421,9 +1418,9 @@ float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3) {
 	static auto oFunc = g_Hooks.GameMode_getPickRangeHook->GetFastcall<float, C_GameMode*, __int64, char>();
 
 	if (g_Data.getLocalPlayer() != nullptr) {
-		static auto infiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
-		if (infiniteBlockReachModule->isEnabled())
-			return infiniteBlockReachModule->getBlockReach();
+		static auto extendedBlockReachModule = moduleMgr->getModule<ExtendedBlockReach>();
+		if (extendedBlockReachModule->isEnabled())
+			return extendedBlockReachModule->getBlockReach();
 
 		static auto teleportModule = moduleMgr->getModule<Teleport>();
 		if (teleportModule->isEnabled())

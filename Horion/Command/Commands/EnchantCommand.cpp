@@ -103,10 +103,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 
 	static saveEnchantsToUserData_t saveEnchantsToUserData = 0x0;
 	if (!saveEnchantsToUserData) {
-		if (g_Data.getVersion() == GAMEVERSION::g_1_16_20)
-			saveEnchantsToUserData = reinterpret_cast<saveEnchantsToUserData_t>(FindSignature("40 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? ?? ?? ?? ?? 48 89 9C 24 ?? ?? ?? ?? 48 8B FA 4C 8B C1 48 8B 41 ?? 48 85 C0 74 29 48 83 38 ?? 74 23 48 8D 42 ?? 48 83 C2 50"));
-		else
-			saveEnchantsToUserData = reinterpret_cast<saveEnchantsToUserData_t>(FindSignature("48 8B C4 55 57 41 56 48 8D 68 ?? 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 70 ?? 48 8B FA 4C 8B C1 48 8B 41 ?? 48 85 C0 74 25"));
+		saveEnchantsToUserData = reinterpret_cast<saveEnchantsToUserData_t>(FindSignature("40 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? ?? ?? ?? ?? 48 89 9C 24 ?? ?? ?? ?? 48 8B FA 4C 8B C1 48 8B 41 ?? 48 85 C0 74 29 48 83 38 ?? 74 23 48 8D 42 ?? 48 83 C2 50"));
 	}
 
 	if (strcmp(args->at(1).c_str(), "all") == 0) {
