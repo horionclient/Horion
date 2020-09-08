@@ -291,6 +291,7 @@
     <ClCompile Include="Horion\Module\Modules\ChestESP.cpp" />
     <ClCompile Include="Horion\Module\Modules\ChestStealer.cpp" />
     <ClCompile Include="Horion\Module\Modules\ClickGuiMod.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Compass.cpp" />
     <ClCompile Include="Horion\Module\Modules\Crasher.cpp" />
     <ClCompile Include="Horion\Module\Modules\Criticals.cpp" />
     <ClCompile Include="Horion\Module\Modules\CrystalAura.cpp" />
@@ -463,6 +464,7 @@
     <ClInclude Include="Horion\Module\Modules\ChestESP.h" />
     <ClInclude Include="Horion\Module\Modules\ChestStealer.h" />
     <ClInclude Include="Horion\Module\Modules\ClickGuiMod.h" />
+    <ClInclude Include="Horion\Module\Modules\Compass.h" />
     <ClInclude Include="Horion\Module\Modules\Crasher.h" />
     <ClInclude Include="Horion\Module\Modules\Criticals.h" />
     <ClInclude Include="Horion\Module\Modules\CrystalAura.h" />
