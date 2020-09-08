@@ -347,6 +347,7 @@
     <ClCompile Include="Horion\Module\Modules\Teleport.cpp" />
     <ClCompile Include="Horion\Module\Modules\TestModule.cpp" />
     <ClCompile Include="Horion\Module\Modules\Timer.cpp" />
+	<ClCompile Include="Horion\Module\Modules\TimeChanger.cpp" />
     <ClCompile Include="Horion\Module\Modules\Tower.cpp" />
     <ClCompile Include="Horion\Module\Modules\Tracer.cpp" />
     <ClCompile Include="Horion\Module\Modules\TriggerBot.cpp" />
@@ -519,6 +520,7 @@
     <ClInclude Include="Horion\Module\Modules\Teleport.h" />
     <ClInclude Include="Horion\Module\Modules\TestModule.h" />
     <ClInclude Include="Horion\Module\Modules\Timer.h" />
+	<ClInclude Include="Horion\Module\Modules\TimeChanger.h" />
     <ClInclude Include="Horion\Module\Modules\Tower.h" />
     <ClInclude Include="Horion\Module\Modules\Tracer.h" />
     <ClInclude Include="Horion\Module\Modules\TriggerBot.h" />
