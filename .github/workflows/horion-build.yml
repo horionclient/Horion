@@ -10,8 +10,6 @@ on:
       home:
         description: 'location'
         required: false
-  release:
-    types: [created]
 
 env:
   BUILD_TYPE: Release
