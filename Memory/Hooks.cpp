@@ -1418,9 +1418,9 @@ float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3) {
 	static auto oFunc = g_Hooks.GameMode_getPickRangeHook->GetFastcall<float, C_GameMode*, __int64, char>();
 
 	if (g_Data.getLocalPlayer() != nullptr) {
-		static auto infiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
-		if (infiniteBlockReachModule->isEnabled())
-			return infiniteBlockReachModule->getBlockReach();
+		static auto extendedBlockReachModule = moduleMgr->getModule<ExtendedBlockReach>();
+		if (extendedBlockReachModule->isEnabled())
+			return extendedBlockReachModule->getBlockReach();
 
 		static auto teleportModule = moduleMgr->getModule<Teleport>();
 		if (teleportModule->isEnabled())
