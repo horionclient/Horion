@@ -21,12 +21,9 @@ jobs:
 
     - name: Setup MSBuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
-    
-    - name: Setup Environment
-      run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: MSBuild
-      working-directory: ${{runner.workspace}}/build
+      working-directory: ${{runner.workspace}}
       run: msbuild Horion.vcxproj
       
     - name: Archive artifacts
@@ -34,5 +31,5 @@ jobs:
       if: success()
       with:
           name: Horion
-          working-directory: ${{runner.workspace}}/build
+          working-directory: ${{runner.workspace}}
           path: x64\Debug\Horion.dll
