@@ -23,7 +23,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.1
 
     - name: MSBuild
-      run: msbuild Horion.vcxproj
+      run: msbuild Horion.sln
       
     - name: Archive artifacts
       uses: actions/upload-artifact@v2
