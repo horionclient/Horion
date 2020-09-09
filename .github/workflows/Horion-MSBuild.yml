@@ -23,7 +23,6 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.1
 
     - name: MSBuild
-      working-directory: ${{runner.workspace}}
       run: msbuild Horion.vcxproj
       
     - name: Archive artifacts
@@ -31,5 +30,4 @@ jobs:
       if: success()
       with:
           name: Horion
-          working-directory: ${{runner.workspace}}
           path: x64\Debug\Horion.dll
