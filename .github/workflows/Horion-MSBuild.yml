@@ -21,6 +21,15 @@ jobs:
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.1
+      
+    - name: Setup Nuget
+      uses: nuget/setup-nuget@v1
+      with:
+          nuget-api-key: ${{ secrets.NuGetAPIKey }}
+          nuget-version: '5.x'
+      
+    - name: Run Nuget
+      run: nuget restore Horion.sln
 
     - name: MSBuild
       run: msbuild Horion.sln -m
