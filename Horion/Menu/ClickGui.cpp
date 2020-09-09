@@ -203,11 +203,12 @@ void ClickGui::renderCategory(Category category) {
 
 		bool overflowing = false;
 		int cYoff = 0;
+		float cutoffHeight = g_Data.getGuiData()->heightGame * 0.75;
 		for (auto& mod : moduleList) {
 			cYoff += 1;
 			if (cYoff < ourWindow->yOffset) continue;
 
-			if ((currentYOffset - ourWindow->pos.y) > (g_Data.getGuiData()->heightGame * 0.75)) {
+			if ((currentYOffset - ourWindow->pos.y) > cutoffHeight) {
 				overflowing = true;
 				break;
 			}
@@ -280,7 +281,7 @@ void ClickGui::renderCategory(Category category) {
 								xEnd,
 								0);
 
-							if ((currentYOffset - ourWindow->pos.y) > (g_Data.getGuiData()->heightGame * 0.75)) {
+							if ((currentYOffset - ourWindow->pos.y) > cutoffHeight) {
 								overflowing = true;
 								break;
 							}
@@ -355,7 +356,7 @@ void ClickGui::renderCategory(Category category) {
 									DrawUtils::fillRectangle(rectPos, moduleColor, backgroundAlpha);
 								}
 
-								if ((currentYOffset - ourWindow->pos.y) > (g_Data.getGuiData()->heightGame * 0.75)) {
+								if ((currentYOffset - ourWindow->pos.y) > cutoffHeight) {
 									overflowing = true;
 									break;
 								}
