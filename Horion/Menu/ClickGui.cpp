@@ -12,6 +12,8 @@ bool shouldToggleLeftClick = false;  // If true, toggle the focused module
 bool shouldToggleRightClick = false;
 bool resetStartPos = true;
 bool initialised = false;
+bool shouldScrollUp = false;
+bool shouldScrollDown = false;
 
 struct SavedWindowSettings {
 	vec2_t pos = {-1, -1};
@@ -199,7 +201,17 @@ void ClickGui::renderCategory(Category category) {
 			currentYOffset -= ourWindow->animation * moduleList.size() * (textHeight + (textPadding * 2));
 		}
 
+		bool overflowing = false;
+		int cYoff = 0;
 		for (auto& mod : moduleList) {
+			cYoff += 1;
+			if (cYoff < ourWindow->yOffset) continue;
+
+			if ((currentYOffset - ourWindow->pos.y) > (g_Data.getGuiData()->heightGame * 0.75)) {
+				overflowing = true;
+				break;
+			}
+
 				std::string textStr = mod->getModuleName();
 
 			vec2_t textPos = vec2_t(
@@ -267,6 +279,11 @@ void ClickGui::renderCategory(Category category) {
 								currentYOffset,
 								xEnd,
 								0);
+
+							if ((currentYOffset - ourWindow->pos.y) > (g_Data.getGuiData()->heightGame * 0.75)) {
+								overflowing = true;
+								break;
+							}
 
 							switch (setting->valueType) {
 							case ValueType::BOOL_T: {
@@ -336,6 +353,11 @@ void ClickGui::renderCategory(Category category) {
 									currentYOffset += textPadding + textHeight;
 									rectPos.w = currentYOffset;
 									DrawUtils::fillRectangle(rectPos, moduleColor, backgroundAlpha);
+								}
+
+								if ((currentYOffset - ourWindow->pos.y) > (g_Data.getGuiData()->heightGame * 0.75)) {
+									overflowing = true;
+									break;
 								}
 								// Slider
 								{
@@ -428,6 +450,10 @@ void ClickGui::renderCategory(Category category) {
 									rectPos.w = currentYOffset;
 									DrawUtils::fillRectangle(rectPos, moduleColor, backgroundAlpha);
 								}
+								if ((currentYOffset - ourWindow->pos.y) > (g_Data.getGuiData()->heightGame * 0.75)) {
+									overflowing = true;
+									break;
+								}
 								// Slider
 								{
 									vec4_t rect = vec4_t(
@@ -514,7 +540,7 @@ void ClickGui::renderCategory(Category category) {
 							}
 						}
 						float endYOffset = currentYOffset;
-						if (endYOffset - startYOffset > textHeight + 5) {
+						if (endYOffset - startYOffset > textHeight + 5 || overflowing) {
 							startYOffset += textPadding;
 							endYOffset -= textPadding;
 							DrawUtils::setColor(1, 1, 1, 1);
@@ -523,6 +549,25 @@ void ClickGui::renderCategory(Category category) {
 					}
 				} else
 					currentYOffset += textHeight + (textPadding * 2);
+			}
+		}
+
+		vec4_t winRectPos = vec4_t(
+			xOffset,
+			yOffset,
+			xEnd,
+			currentYOffset);
+
+		if (winRectPos.contains(&mousePos)) {
+			if (shouldScrollUp && overflowing) {
+				ourWindow->yOffset += 1;
+			} else if (shouldScrollDown) {
+				ourWindow->yOffset -= 1;
+			}
+			shouldScrollUp = false;
+			shouldScrollDown = false;
+			if (ourWindow->yOffset < 0) {
+				ourWindow->yOffset = 0;
 			}
 		}
 	}
@@ -657,6 +702,14 @@ void ClickGui::onMouseClickUpdate(int key, bool isDown) {
 		isRightClickDown = isDown;
 		shouldToggleRightClick = isDown;
 		break;
+	}
+}
+
+void ClickGui::onWheelScroll(bool direction) {
+	if (!direction) {
+		shouldScrollUp = true;
+	} else {
+		shouldScrollDown = true;
 	}
 }
 
