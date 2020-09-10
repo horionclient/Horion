@@ -44,7 +44,7 @@
 #include "Modules/HighJump.h"
 #include "Modules/Hitbox.h"
 #include "Modules/HudModule.h"
-#include "Modules/InfiniteBlockReach.h"
+#include "Modules/ExtendedBlockReach.h"
 #include "Modules/InfiniteReach.h"
 #include "Modules/InstaBreak.h"
 #include "Modules/InventoryCleaner.h"
@@ -89,6 +89,7 @@
 #include "Modules/FollowPathModule.h"
 #include "Modules/NoPaintingCrash.h"
 #include "Modules/Spider.h"
+#include "Modules/Compass.h"
 
 #ifdef _DEBUG
 #include "Modules/PacketLogger.h"
