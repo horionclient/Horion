@@ -88,6 +88,7 @@
 #include "Modules/AntiImmobile.h"
 #include "Modules/FollowPathModule.h"
 #include "Modules/NoPaintingCrash.h"
+#include "Modules/Spider.h"
 #include "Modules/Compass.h"
 
 #ifdef _DEBUG
