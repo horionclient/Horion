@@ -506,3 +506,25 @@ void DrawUtils::drawLinestrip3d(const std::vector<vec3_t>& points) {
 
 	tess_end(game3dContext, myTess, entityFlatStaticMaterial);
 }
+
+void DrawUtils::drawHologram(vec3_t pos, std::string text, float size) {
+	vec2_t textPos;
+	vec4_t rectPos;
+
+	text = Utils::sanitize(text);
+
+	float textWidth = getTextWidth(&text, size);
+	float textHeight = DrawUtils::getFont(Fonts::RUNE)->getLineHeight() * size;
+
+	if (refdef->OWorldToScreen(origin, pos, textPos, fov, screenSize)) {
+		textPos.y -= textHeight;
+		textPos.x -= textWidth / 2.f;
+		rectPos.x = textPos.x - 1.f * size;
+		rectPos.y = textPos.y - 1.f * size;
+		rectPos.z = textPos.x + textWidth + 1.f * size;
+		rectPos.w = textPos.y + textHeight + 2.f * size;
+
+		fillRectangle(rectPos, MC_Color(0, 0, 0), 0.5f);
+		drawText(textPos, &text, MC_Color(255, 255, 255), size);
+	}
+}

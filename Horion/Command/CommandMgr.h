@@ -31,6 +31,7 @@
 #include "Commands/SetprefixCommand.h"
 #include "Commands/NbtCommand.h"
 #include "Commands/ExecuteCommand.h"
+#include "Commands/WaypointCommand.h"
 
 #include "Commands/ScriptCommand.h"
 #include "Commands/PathCommand.h"
