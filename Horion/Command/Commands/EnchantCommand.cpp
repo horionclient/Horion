@@ -3,38 +3,110 @@
 
 EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enchantment> [level] <mode: auto / manual : 1/0>") {
 	enchantMap["protection"] = 0;
+	enchantMap["prot"] = 0;
+	enchantMap["p"] = 0;
+	
 	enchantMap["fire_protection"] = 1;
+	enchantMap["fire_prot"] = 1;
+	enchantMap["fireprot"] = 1;
+	enchantMap["fprot"] = 1;
+	enchantMap["fp"] = 1;
+	
 	enchantMap["feather_falling"] = 2;
+	
 	enchantMap["blast_protection"] = 3;
+	enchantMap["blast_prot"] = 3;
+	enchantMap["blastprot"] = 3;
+	enchantMap["bprot"] = 3;
+	enchantMap["bp"] = 3;
+	
 	enchantMap["projectile_protection"] = 4;
+	enchantMap["projectile_prot"] = 4;
+	enchantMap["proj_prot"] = 4;
+	enchantMap["projprot"] = 4;
+	enchantMap["pprot"] = 4;
+	enchantMap["pp"] = 4;
+	
 	enchantMap["thorns"] = 5;
+	
 	enchantMap["respiration"] = 6;
+	enchantMap["resp"] = 6;
+	
 	enchantMap["depth_strider"] = 7;
+	enchantMap["depthstrider"] = 7;
+	
 	enchantMap["aqua_affinity"] = 8;
+	enchantMap["aquaaffinity"] = 8;
+	enchantMap["aquaaff"] = 8;
+	
 	enchantMap["frost_walker"] = 25;
+	enchantMap["frostwalker"] = 25;
+	
 	enchantMap["sharpness"] = 9;
+	enchantMap["sharp"] = 9;
+	enchantMap["s"] = 9;
+	
 	enchantMap["smite"] = 10;
+	
 	enchantMap["bane_of_arthropods"] = 11;
+	enchantMap["baneofartropods"] = 11;
+	enchantMap["boa"] = 11;
+	
 	enchantMap["knockback"] = 12;
+	enchantMap["kb"] = 12;
+	
 	enchantMap["fire_aspect"] = 13;
+	enchantMap["fireaspect"] = 13;
+	enchantMap["fireasp"] = 13;
+	
 	enchantMap["looting"] = 14;
+	enchantMap["loot"] = 14;
+	
 	enchantMap["channeling"] = 32;
+	
 	enchantMap["impaling"] = 29;
+	
 	enchantMap["loyalty"] = 31;
+	
 	enchantMap["riptide"] = 30;
+	
 	enchantMap["silktouch"] = 16;
+	enchantMap["silk_touch"] = 16;
+	
 	enchantMap["fortune"] = 18;
+	
 	enchantMap["unbreaking"] = 17;
+	enchantMap["unbr"] = 17;
+	enchantMap["u"] = 17;
+	
 	enchantMap["efficiency"] = 15;
+	enchantMap["eff"] = 15;
+	enchantMap["e"] = 15;
+	
 	enchantMap["mending"] = 26;
+	enchantMap["m"] = 26;
+	
 	enchantMap["power"] = 19;
+	
 	enchantMap["punch"] = 20;
+	
 	enchantMap["flame"] = 21;
+	
 	enchantMap["infinity"] = 22;
+	enchantMap["inf"] = 22;
+	enchantMap["i"] = 22;
+	
 	enchantMap["multishot"] = 33;
+	
 	enchantMap["quick_charge"] = 35;
+	enchantMap["quickcharge"] = 35;
+	
 	enchantMap["piercing"] = 34;
+	
 	enchantMap["luck_of_sea"] = 23;
+	enchantMap["luck_of_the_sea"] = 23;
+	enchantMap["luckofthesea"] = 23;
+	
 	enchantMap["lure"] = 24;
 }
 
@@ -45,7 +117,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 	assertTrue(args->size() > 1);
 
 	int enchantId = 0;
-	int enchantLevel = 32767;
+	int enchantLevel = 1;
 	bool isAuto = true;
 
 	if (args->at(1) != "all") {
@@ -60,13 +132,21 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 			else
 				enchantId = assertInt(args->at(1));
 		} catch (int) {
-			clientMessageF("exception while trying to get enchant string");
+			clientMessageF("%sException while trying to get enchant string", RED);
 			enchantId = assertInt(args->at(1));
 		}
 	}
 
-	if (args->size() > 2)
-		enchantLevel = assertInt(args->at(2));
+	if (args->size() > 2) {
+		if (args->at(2) == "max")
+			enchantLevel = 32767;
+		else
+			if (assertInt(args->at(2)) > 32767) {
+				clientMessageF("%sEnchant failed, try using a lower enchant-level", RED);
+				return true;
+			} else
+				enchantLevel = assertInt(args->at(2));
+	}
 	if (args->size() > 3)
 		isAuto = static_cast<bool>(assertInt(args->at(3)));
 
@@ -151,7 +231,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 			//g_Data.getLocalPlayer()->sendInventory();
 			clientMessageF("%sEnchant successful!", GREEN);
 		} else
-			clientMessageF("%sEnchant failed, try using a lower enchant-level", RED);
+			clientMessageF("%sEnchant failed, does your item already have that enchantment?", RED);
 
 		free(EnchantData);
 	}
