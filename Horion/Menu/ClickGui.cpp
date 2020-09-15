@@ -12,8 +12,7 @@ bool shouldToggleLeftClick = false;  // If true, toggle the focused module
 bool shouldToggleRightClick = false;
 bool resetStartPos = true;
 bool initialised = false;
-bool shouldScrollUp = false;
-bool shouldScrollDown = false;
+int scrollingDirection = 0;
 
 struct SavedWindowSettings {
 	vec2_t pos = {-1, -1};
@@ -185,8 +184,11 @@ void ClickGui::renderCategory(Category category) {
 	if (ourWindow->isInAnimation) {
 		if (ourWindow->isExtended) {
 			ourWindow->animation *= 0.85f;
-			if (ourWindow->animation < 0.001f)
+			if (ourWindow->animation < 0.001f) {
+				ourWindow->yOffset = 0; // reset scroll
 				ourWindow->isInAnimation = false;
+			}
+				
 		} else {
 			ourWindow->animation = 1 - ((1 - ourWindow->animation) * 0.85f);
 			if (1 - ourWindow->animation < 0.001f)
@@ -202,18 +204,25 @@ void ClickGui::renderCategory(Category category) {
 		}
 
 		bool overflowing = false;
-		int cYoff = 0;
-		float cutoffHeight = g_Data.getGuiData()->heightGame * 0.75;
+		const float cutoffHeight = roundf(g_Data.getGuiData()->heightGame * 0.75f) + 0.5f /*fix flickering related to rounding errors*/;
+		int moduleIndex = 0;
 		for (auto& mod : moduleList) {
-			cYoff += 1;
-			if (cYoff < ourWindow->yOffset) continue;
-
-			if ((currentYOffset - ourWindow->pos.y) > cutoffHeight) {
+			moduleIndex++;
+			if (moduleIndex < ourWindow->yOffset)
+				continue;
+			float probableYOffset = (moduleIndex - ourWindow->yOffset) * (textHeight + (textPadding * 2));
+			
+			if (ourWindow->isInAnimation) { // Estimate, we don't know about module settings yet
+				if (probableYOffset > cutoffHeight) {
+					overflowing = true;
+					break;
+				}
+			}else if ((currentYOffset - ourWindow->pos.y) > cutoffHeight || currentYOffset > g_Data.getGuiData()->heightGame - 5) {
 				overflowing = true;
 				break;
 			}
 
-				std::string textStr = mod->getModuleName();
+			std::string textStr = mod->getModuleName();
 
 			vec2_t textPos = vec2_t(
 				currentXOffset + textPadding,
@@ -541,7 +550,7 @@ void ClickGui::renderCategory(Category category) {
 							}
 						}
 						float endYOffset = currentYOffset;
-						if (endYOffset - startYOffset > textHeight + 5 || overflowing) {
+						if (endYOffset - startYOffset > textHeight + 1 || overflowing) {
 							startYOffset += textPadding;
 							endYOffset -= textPadding;
 							DrawUtils::setColor(1, 1, 1, 1);
@@ -560,13 +569,12 @@ void ClickGui::renderCategory(Category category) {
 			currentYOffset);
 
 		if (winRectPos.contains(&mousePos)) {
-			if (shouldScrollUp && overflowing) {
-				ourWindow->yOffset += 1;
-			} else if (shouldScrollDown) {
-				ourWindow->yOffset -= 1;
+			if (scrollingDirection > 0 && overflowing) {
+				ourWindow->yOffset += scrollingDirection;
+			} else if (scrollingDirection < 0) {
+				ourWindow->yOffset += scrollingDirection;
 			}
-			shouldScrollUp = false;
-			shouldScrollDown = false;
+			scrollingDirection = 0;
 			if (ourWindow->yOffset < 0) {
 				ourWindow->yOffset = 0;
 			}
@@ -708,9 +716,9 @@ void ClickGui::onMouseClickUpdate(int key, bool isDown) {
 
 void ClickGui::onWheelScroll(bool direction) {
 	if (!direction) {
-		shouldScrollUp = true;
+		scrollingDirection++;
 	} else {
-		shouldScrollDown = true;
+		scrollingDirection--;
 	}
 }
 
