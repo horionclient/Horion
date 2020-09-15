@@ -10,9 +10,3 @@ TimeChanger::~TimeChanger() {
 const char* TimeChanger::getModuleName() {
 	return "TimeChanger";
 }
-
-/*void TimeChanger::onEnable() {
-	static auto rainbowSkyMod = moduleMgr->getModule<RainbowSky>();
-	if (rainbowSkyMod->isEnabled())
-		rainbowSkyMod->setEnabled(false);
-}*/
