@@ -7,6 +7,10 @@ static constexpr float DEG_RAD2 = PI / 360.0f;
 static constexpr float DEG_RAD = 180.0f / PI;
 static constexpr float RAD_DEG = PI / 180.f;
 
+inline float lerp(float a, float b, float t) {
+	return a + t * (b - a);
+}
+
 struct vec2_t {
 
 	float x, y;
