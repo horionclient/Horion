@@ -337,6 +337,7 @@
     <ClCompile Include="Horion\Module\Modules\Nuker.cpp" />
     <ClCompile Include="Horion\Module\Modules\PacketLogger.cpp" />
     <ClCompile Include="Horion\Module\Modules\Phase.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Radar.cpp" />
     <ClCompile Include="Horion\Module\Modules\RainbowSky.cpp" />
     <ClCompile Include="Horion\Module\Modules\Reach.cpp" />
     <ClCompile Include="Horion\Module\Modules\Scaffold.cpp" />
@@ -349,7 +350,7 @@
     <ClCompile Include="Horion\Module\Modules\Teleport.cpp" />
     <ClCompile Include="Horion\Module\Modules\TestModule.cpp" />
     <ClCompile Include="Horion\Module\Modules\Timer.cpp" />
-	<ClCompile Include="Horion\Module\Modules\TimeChanger.cpp" />
+    <ClCompile Include="Horion\Module\Modules\TimeChanger.cpp" />
     <ClCompile Include="Horion\Module\Modules\Tower.cpp" />
     <ClCompile Include="Horion\Module\Modules\Tracer.cpp" />
     <ClCompile Include="Horion\Module\Modules\TriggerBot.cpp" />
@@ -512,6 +513,7 @@
     <ClInclude Include="Horion\Module\Modules\Nuker.h" />
     <ClInclude Include="Horion\Module\Modules\PacketLogger.h" />
     <ClInclude Include="Horion\Module\Modules\Phase.h" />
+    <ClInclude Include="Horion\Module\Modules\Radar.h" />
     <ClInclude Include="Horion\Module\Modules\RainbowSky.h" />
     <ClInclude Include="Horion\Module\Modules\Reach.h" />
     <ClInclude Include="Horion\Module\Modules\Scaffold.h" />
@@ -524,7 +526,7 @@
     <ClInclude Include="Horion\Module\Modules\Teleport.h" />
     <ClInclude Include="Horion\Module\Modules\TestModule.h" />
     <ClInclude Include="Horion\Module\Modules\Timer.h" />
-	<ClInclude Include="Horion\Module\Modules\TimeChanger.h" />
+    <ClInclude Include="Horion\Module\Modules\TimeChanger.h" />
     <ClInclude Include="Horion\Module\Modules\Tower.h" />
     <ClInclude Include="Horion\Module\Modules\Tracer.h" />
     <ClInclude Include="Horion\Module\Modules\TriggerBot.h" />
