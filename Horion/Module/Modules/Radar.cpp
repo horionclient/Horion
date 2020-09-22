@@ -41,7 +41,7 @@ void renderEntity(C_Entity* currentEntity, bool isRegularEntity) {
 	if (currentEntity == player)  // Skip Local player
 		return;
 
-	if (!g_Data.getLocalPlayer()->canAttack(currentEntity, false))
+	if (!player->canAttack(currentEntity, false))
 		return;
 
 	if (!currentEntity->isAlive())
