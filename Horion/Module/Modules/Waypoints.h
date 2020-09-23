@@ -47,4 +47,8 @@ public:
 
 		return &waypoints[name];
 	};
+
+	std::map<std::string, vec3_t>* getWaypoints() {
+		return &waypoints;
+	}
 };
