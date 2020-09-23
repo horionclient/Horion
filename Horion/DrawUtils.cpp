@@ -366,10 +366,10 @@ void DrawUtils::draw2D(C_Entity* ent, float lineWidth) {
 	vec3_t corners[4];
 	vec2_t corners2d[4];
 
-	corners[0] = vec3_t(base.x - ent->width / 1.5f * -sin(ofs), base.y, base.z - ent->width / 1.5f * cos(ofs));
-	corners[1] = vec3_t(base.x + ent->width / 1.5f * -sin(ofs), base.y, base.z + ent->width / 1.5f * cos(ofs));
-	corners[2] = vec3_t(base.x - ent->width / 1.5f * -sin(ofs), base.y - ent->height, base.z - ent->width / 1.5f * cos(ofs));
-	corners[3] = vec3_t(base.x + ent->width / 1.5f * -sin(ofs), base.y - ent->height, base.z + ent->width / 1.5f * cos(ofs));
+	corners[0] = vec3_t(base.x - ent->width / 1.5f * -sin(ofs), ent->aabb.upper.y + (float)0.1, base.z - ent->width / 1.5f * cos(ofs));
+	corners[1] = vec3_t(base.x + ent->width / 1.5f * -sin(ofs), ent->aabb.upper.y + (float)0.1, base.z + ent->width / 1.5f * cos(ofs));
+	corners[2] = vec3_t(base.x - ent->width / 1.5f * -sin(ofs), ent->aabb.lower.y, base.z - ent->width / 1.5f * cos(ofs));
+	corners[3] = vec3_t(base.x + ent->width / 1.5f * -sin(ofs), ent->aabb.lower.y, base.z + ent->width / 1.5f * cos(ofs));
 
 	if (refdef->OWorldToScreen(origin, corners[0], corners2d[0], fov, screenSize) &&
 		refdef->OWorldToScreen(origin, corners[1], corners2d[1], fov, screenSize) &&

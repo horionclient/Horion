@@ -7,6 +7,10 @@ static constexpr float DEG_RAD2 = PI / 360.0f;
 static constexpr float DEG_RAD = 180.0f / PI;
 static constexpr float RAD_DEG = PI / 180.f;
 
+inline float lerp(float a, float b, float t) {
+	return a + t * (b - a);
+}
+
 struct vec2_t {
 
 	float x, y;
@@ -513,6 +517,16 @@ struct AABB {
 	bool isFullBlock(){
 		auto diff = lower.sub(upper);
 		return fabsf(diff.y) == 1 && fabsf(diff.x) == 1 && fabsf(diff.z) == 1;
+	}
+
+	AABB expanded(float amount) {
+		return AABB(lower.sub(amount), upper.add(amount));
+	}
+
+	bool intersects(AABB aabb) {
+		return aabb.upper.x > lower.x && upper.x > aabb.lower.x &&
+			   aabb.upper.y > lower.y && upper.y > aabb.lower.y &&
+			   aabb.upper.z > lower.z && upper.z > aabb.lower.z;
 	}
 };
 

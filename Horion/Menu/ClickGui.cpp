@@ -12,6 +12,7 @@ bool shouldToggleLeftClick = false;  // If true, toggle the focused module
 bool shouldToggleRightClick = false;
 bool resetStartPos = true;
 bool initialised = false;
+int scrollingDirection = 0;
 
 struct SavedWindowSettings {
 	vec2_t pos = {-1, -1};
@@ -183,8 +184,11 @@ void ClickGui::renderCategory(Category category) {
 	if (ourWindow->isInAnimation) {
 		if (ourWindow->isExtended) {
 			ourWindow->animation *= 0.85f;
-			if (ourWindow->animation < 0.001f)
+			if (ourWindow->animation < 0.001f) {
+				ourWindow->yOffset = 0; // reset scroll
 				ourWindow->isInAnimation = false;
+			}
+				
 		} else {
 			ourWindow->animation = 1 - ((1 - ourWindow->animation) * 0.85f);
 			if (1 - ourWindow->animation < 0.001f)
@@ -199,8 +203,26 @@ void ClickGui::renderCategory(Category category) {
 			currentYOffset -= ourWindow->animation * moduleList.size() * (textHeight + (textPadding * 2));
 		}
 
+		bool overflowing = false;
+		const float cutoffHeight = roundf(g_Data.getGuiData()->heightGame * 0.75f) + 0.5f /*fix flickering related to rounding errors*/;
+		int moduleIndex = 0;
 		for (auto& mod : moduleList) {
-				std::string textStr = mod->getModuleName();
+			moduleIndex++;
+			if (moduleIndex < ourWindow->yOffset)
+				continue;
+			float probableYOffset = (moduleIndex - ourWindow->yOffset) * (textHeight + (textPadding * 2));
+			
+			if (ourWindow->isInAnimation) { // Estimate, we don't know about module settings yet
+				if (probableYOffset > cutoffHeight) {
+					overflowing = true;
+					break;
+				}
+			}else if ((currentYOffset - ourWindow->pos.y) > cutoffHeight || currentYOffset > g_Data.getGuiData()->heightGame - 5) {
+				overflowing = true;
+				break;
+			}
+
+			std::string textStr = mod->getModuleName();
 
 			vec2_t textPos = vec2_t(
 				currentXOffset + textPadding,
@@ -267,6 +289,11 @@ void ClickGui::renderCategory(Category category) {
 								currentYOffset,
 								xEnd,
 								0);
+
+							if ((currentYOffset - ourWindow->pos.y) > cutoffHeight) {
+								overflowing = true;
+								break;
+							}
 
 							switch (setting->valueType) {
 							case ValueType::BOOL_T: {
@@ -336,6 +363,11 @@ void ClickGui::renderCategory(Category category) {
 									currentYOffset += textPadding + textHeight;
 									rectPos.w = currentYOffset;
 									DrawUtils::fillRectangle(rectPos, moduleColor, backgroundAlpha);
+								}
+
+								if ((currentYOffset - ourWindow->pos.y) > cutoffHeight) {
+									overflowing = true;
+									break;
 								}
 								// Slider
 								{
@@ -428,6 +460,10 @@ void ClickGui::renderCategory(Category category) {
 									rectPos.w = currentYOffset;
 									DrawUtils::fillRectangle(rectPos, moduleColor, backgroundAlpha);
 								}
+								if ((currentYOffset - ourWindow->pos.y) > (g_Data.getGuiData()->heightGame * 0.75)) {
+									overflowing = true;
+									break;
+								}
 								// Slider
 								{
 									vec4_t rect = vec4_t(
@@ -514,7 +550,7 @@ void ClickGui::renderCategory(Category category) {
 							}
 						}
 						float endYOffset = currentYOffset;
-						if (endYOffset - startYOffset > textHeight + 5) {
+						if (endYOffset - startYOffset > textHeight + 1 || overflowing) {
 							startYOffset += textPadding;
 							endYOffset -= textPadding;
 							DrawUtils::setColor(1, 1, 1, 1);
@@ -523,6 +559,24 @@ void ClickGui::renderCategory(Category category) {
 					}
 				} else
 					currentYOffset += textHeight + (textPadding * 2);
+			}
+		}
+
+		vec4_t winRectPos = vec4_t(
+			xOffset,
+			yOffset,
+			xEnd,
+			currentYOffset);
+
+		if (winRectPos.contains(&mousePos)) {
+			if (scrollingDirection > 0 && overflowing) {
+				ourWindow->yOffset += scrollingDirection;
+			} else if (scrollingDirection < 0) {
+				ourWindow->yOffset += scrollingDirection;
+			}
+			scrollingDirection = 0;
+			if (ourWindow->yOffset < 0) {
+				ourWindow->yOffset = 0;
 			}
 		}
 	}
@@ -657,6 +711,14 @@ void ClickGui::onMouseClickUpdate(int key, bool isDown) {
 		isRightClickDown = isDown;
 		shouldToggleRightClick = isDown;
 		break;
+	}
+}
+
+void ClickGui::onWheelScroll(bool direction) {
+	if (!direction) {
+		scrollingDirection++;
+	} else {
+		scrollingDirection--;
 	}
 }
 

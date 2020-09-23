@@ -892,9 +892,9 @@ float* Hooks::Dimension_getFogColor(__int64 _this, float* color, __int64 a3, flo
 float Hooks::Dimension_getTimeOfDay(__int64 _this, int a2, float a3) {
 	static auto oGetTimeOfDay = g_Hooks.Dimension_getTimeOfDayHook->GetFastcall<float, __int64, int, float>();
 
-	static auto nightMod = moduleMgr->getModule<NightMode>();
-	if (nightMod->isEnabled()) {
-		return nightMod->modifier;
+	static auto timeChange = moduleMgr->getModule<TimeChanger>();
+	if (timeChange->isEnabled()) {
+		return timeChange->modifier;
 	}
 
 	return oGetTimeOfDay(_this, a2, a3);
@@ -1279,15 +1279,21 @@ __int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3) 
 	return ret;
 }
 
-void Hooks::ClickFunc(__int64 a1, char mouseButton, char isDown, __int16 mouseX, __int16 mouseY, __int16 a6, __int16 a7, char a8) {
+void Hooks::ClickFunc(__int64 a1, char mouseButton, char isDown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY, char a8) {
 	static auto oFunc = g_Hooks.ClickFuncHook->GetFastcall<void, __int64, char, char, __int16, __int16, __int16, __int16, char>();
 	static auto clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 
 	if (clickGuiModule->isEnabled()) {
+		if (mouseButton == 4) {
+			// mouseButton = 4 (WHEEL)
+			// isDown = -120 (SCROLL DOWN)
+			// isDown = 120 (SCROLL UP)
+			ClickGui::onWheelScroll(isDown > 0);
+		}
 		if (mouseButton != 0)  // Mouse click event
 			return;
 	}
-	return oFunc(a1, mouseButton, isDown, mouseX, mouseY, a6, a7, a8);
+	return oFunc(a1, mouseButton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY, a8);
 }
 
 __int64 Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity* a2) {
@@ -1418,9 +1424,9 @@ float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3) {
 	static auto oFunc = g_Hooks.GameMode_getPickRangeHook->GetFastcall<float, C_GameMode*, __int64, char>();
 
 	if (g_Data.getLocalPlayer() != nullptr) {
-		static auto infiniteBlockReachModule = moduleMgr->getModule<InfiniteBlockReach>();
-		if (infiniteBlockReachModule->isEnabled())
-			return infiniteBlockReachModule->getBlockReach();
+		static auto extendedBlockReachModule = moduleMgr->getModule<ExtendedBlockReach>();
+		if (extendedBlockReachModule->isEnabled())
+			return extendedBlockReachModule->getBlockReach();
 
 		static auto teleportModule = moduleMgr->getModule<Teleport>();
 		if (teleportModule->isEnabled())
