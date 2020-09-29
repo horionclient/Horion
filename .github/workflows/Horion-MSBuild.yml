@@ -1,0 +1,64 @@
+name: Horion-MSBuild
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Build'
+        required: true
+        default: 'Build'
+      home:
+        description: 'location'
+        required: false
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v2.3.2
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.1
+      
+    - name: Setup Nuget
+      uses: nuget/setup-nuget@v1
+      with:
+          nuget-api-key: ${{ secrets.NuGetAPIKey }}
+          nuget-version: '5.x'
+      
+    - name: Run Nuget
+      run: nuget restore Horion.sln
+
+    - name: MSBuild
+      run: msbuild Horion.sln -m
+    
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: v${{ github.run_number }}
+        draft: false
+        prerelease: false
+    
+    - name: Upload Release Asset 1
+      id: upload-release-asset-1
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: x64\Debug\Horion.dll
+        asset_name: Horion.dll
+        asset_content_type: application/vnd.microsoft.portable-executable
+      
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v2
+      if: success()
+      with:
+          name: Horion
+          path: x64\Debug\Horion.dll
