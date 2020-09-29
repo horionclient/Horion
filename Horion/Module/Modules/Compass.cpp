@@ -1,8 +1,11 @@
 #include "Compass.h"
 
+#include "../ModuleManager.h"
+
 Compass::Compass() : IModule(0x0, Category::VISUAL, "Compass") {
 	registerFloatSetting("Opacity", &opacity, opacity, 0.1f, 1);
 	registerIntSetting("Range", &range, range, 45, 180);
+	registerBoolSetting("Show Waypoints", &showWaypoints, showWaypoints);
 }
 
 Compass::~Compass() {
@@ -17,8 +20,24 @@ void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 
 	if (player == nullptr || !GameData::canUseMoveKeys()) return;
 
+	static auto wpMod = moduleMgr->getModule<Waypoints>();
+
+	auto extraPoints = std::multimap<int, std::string>{};
+
+	if (wpMod != nullptr && showWaypoints) {
+		std::map<std::string, vec3_t>* waypoints = wpMod->getWaypoints();
+		for (std::map<std::string, vec3_t>::iterator it = waypoints->begin(); it != waypoints->end(); it++) {
+			int angle = (int)(player->getPos()->CalcAngle(it->second).y + 180.0f) % 360;
+			if (angle < 0) angle += 360;
+
+			extraPoints.insert(std::make_pair(angle, it->first));
+		}
+	}
+
+	auto stacking = std::vector<vec2_t>{};
+
 	const int deg = (int)(player->yaw + 180);
-	const float degSubOffset = 0; // -fmodf(player->yaw, 1)
+	const float degSubOffset = 0;  // -fmodf(player->yaw, 1)
 	const float sCenter = g_Data.getGuiData()->widthGame / 2;
 
 	for (int off = -range; off <= range; off++) {
@@ -30,10 +49,10 @@ void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 		constexpr float centerCutoff = 5, centerFadeout = 10;
 		float majorOpacity = this->opacity;  // big compass text
 		float minorOpacity = majorOpacity;   // minor features, degree numbers
-		
+
 		// Fading logic
 		{
-			if((range - abs(off)) < range * fadeOutPos) // Far from center 
+			if ((range - abs(off)) < range * fadeOutPos)  // Far from center
 				minorOpacity = majorOpacity = lerp(0, opacity, (range - abs(off)) / (range * fadeOutPos));
 			else if (abs(off) < centerFadeout)  // Close to center
 				minorOpacity = lerp(0, opacity, (abs(off) - centerCutoff) / (centerFadeout - centerCutoff));
@@ -65,6 +84,29 @@ void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 			drawCenteredText(vec2_t(xOff, 30), "NW", 1, majorOpacity);
 			break;
 		}
+		typedef std::multimap<int, std::string>::iterator multimap_iter;
+		std::pair<multimap_iter, multimap_iter> result = extraPoints.equal_range(oDeg);
+		for (multimap_iter it = result.first; it != result.second; it++) {
+			std::string pName = it->second;
+			std::transform(pName.begin(), pName.end(), pName.begin(), ::toupper);
+
+			vec2_t pos = vec2_t(xOff, 31);
+
+			int overlapping = 0;
+			const float tSize = 0.75f;
+			const float tWidth = DrawUtils::getTextWidth(&pName, tSize);
+			pos.x -= tWidth / 2;
+			const vec2_t mySpace = vec2_t(pos.x, pos.x + tWidth);  // anyone remember this site?
+			for (const vec2_t vect : stacking) {
+				if (mySpace.x < vect.y && vect.x < mySpace.y) {
+					overlapping++;
+				}
+			}
+			stacking.push_back(mySpace);
+			pos.y += 5 * (overlapping + 1);
+			DrawUtils::drawText(pos, &pName, MC_Color(255, 255, 255), tSize, majorOpacity);
+		}
+
 		if (off != 0 && minorOpacity > 0) {
 			if ((oDeg % 15) != 0) {
 				if ((oDeg % 5) == 0) {
