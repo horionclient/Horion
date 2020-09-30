@@ -13,21 +13,20 @@ bool WaypointCommand::execute(std::vector<std::string>* args) {
 	assertTrue(args->size() > 2);
 
 	static auto mod = moduleMgr->getModule<Waypoints>();
-	if (mod == nullptr)
-		return true;
+
 	std::string opt = args->at(1);
 	std::string name = args->at(2);
 
 	if (opt == "add") {
-		vec3_t pos = player->currentPos;
+		vec3_t pos = player->currentPos.floor().add(0.5, 0, 0.5);
 		if (args->size() == 6) {
-			pos.x = assertInt(args->at(3));
-			pos.y = assertInt(args->at(4));
-			pos.z = assertInt(args->at(5));
+			pos.x = assertFloat(args->at(3));
+			pos.y = assertFloat(args->at(4));
+			pos.z = assertFloat(args->at(5));
 		} else if (args->size() != 3) {
 			return false;
 		}
-		if (mod->add(name, pos.floor().add(0.5, 0, 0.5))) {
+		if (mod->add(name, pos)) {
 			clientMessageF("%sSuccessfully added waypoint \"%s\"", GREEN, name.c_str());
 		} else {
 			clientMessageF("%sWaypoint \"%s\" already exists", YELLOW, name.c_str());
@@ -39,10 +38,10 @@ bool WaypointCommand::execute(std::vector<std::string>* args) {
 			clientMessageF("%sUnknown waypoint \"%s\"", YELLOW, name.c_str());
 		}
 	} else if (opt == "tp" || opt == "teleport") {
-		vec3_t* pos = mod->getWaypoint(name);
+		vec3_t pos = mod->getWaypoint(name);
 		if (pos != nullptr) {
-			player->setPos(*pos);
-			clientMessageF("%sTeleported to waypoint \"%s\" (%.02f, %.02f, %.02f)", GREEN, name.c_str(), pos->x, pos->y, pos->z);
+			player->setPos(pos);
+			clientMessageF("%sTeleported to waypoint \"%s\" (%.02f, %.02f, %.02f)", GREEN, name.c_str(), pos.x, pos.y, pos.z);
 		} else {
 			clientMessageF("%sUnknown waypoint \"%s\"", YELLOW, name.c_str());
 		}

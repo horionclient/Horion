@@ -24,8 +24,8 @@ void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 
 	auto extraPoints = std::multimap<int, std::string>{};
 
-	if (wpMod != nullptr && showWaypoints) {
-		std::map<std::string, vec3_t>* waypoints = wpMod->getWaypoints();
+	if (showWaypoints) {
+		auto waypoints = wpMod->getWaypoints();
 		for (std::map<std::string, vec3_t>::iterator it = waypoints->begin(); it != waypoints->end(); it++) {
 			int angle = (int)(player->getPos()->CalcAngle(it->second).y + 180.0f) % 360;
 			if (angle < 0) angle += 360;
@@ -84,9 +84,8 @@ void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 			drawCenteredText(vec2_t(xOff, 30), "NW", 1, majorOpacity);
 			break;
 		}
-		typedef std::multimap<int, std::string>::iterator multimap_iter;
-		std::pair<multimap_iter, multimap_iter> result = extraPoints.equal_range(oDeg);
-		for (multimap_iter it = result.first; it != result.second; it++) {
+		auto result = extraPoints.equal_range(oDeg);
+		for (auto it = result.first; it != result.second; it++) {
 			std::string pName = it->second;
 			std::transform(pName.begin(), pName.end(), pName.begin(), ::toupper);
 

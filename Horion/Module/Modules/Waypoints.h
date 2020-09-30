@@ -7,7 +7,7 @@
 
 class Waypoints : public IModule {
 private:
-	std::map<std::string, vec3_t> waypoints;
+	std::shared_ptr <std::map<std::string, vec3_t>> waypoints;
 
 public:
 	Waypoints();
@@ -22,33 +22,33 @@ public:
 	virtual void onSaveConfig(void* confVoid) override;
 
 	bool add(std::string text, vec3_t pos) {
-		for (const auto& _wp : waypoints) {
-			if (text == _wp.first) {
+		for (auto it = waypoints->begin(); it != waypoints->end(); it++) {
+			if (text == it->first) {
 				return false;
 			}
 		}
-		waypoints[text] = pos;
+		waypoints->emplace(text, pos);
 		return true;
 	}
 
 	bool remove(std::string name) {
-		for (const auto& _wp : waypoints) {
-			if (name == _wp.first) {
-				waypoints.erase(name);
+		for (auto it = waypoints->begin(); it != waypoints->end(); it++) {
+			if (name == it->first) {
+				waypoints->erase(name);
 				return true;
 			}
 		}
 		return false;
 	}
 
-	vec3_t* getWaypoint(std::string name) {
-		if (waypoints.find(name) == waypoints.end())
+	vec3_t getWaypoint(std::string name) {
+		if (waypoints->find(name) == waypoints->end())
 			return nullptr;
 
-		return &waypoints[name];
+		return waypoints->at(name);
 	};
 
-	std::map<std::string, vec3_t>* getWaypoints() {
-		return &waypoints;
+	std::shared_ptr<std::map<std::string, vec3_t>> getWaypoints() {
+		return waypoints;
 	}
 };

@@ -15,13 +15,13 @@ void Waypoints::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
 	if (localPlayer != nullptr && GameData::canUseMoveKeys()) {
-		for (const auto& wp : waypoints) {
-			vec3_t pos = wp.second;
+		for (auto it = waypoints->begin(); it != waypoints->end(); it++) {
+			vec3_t pos = it->second;
 			float dist = pos.dist(*g_Data.getLocalPlayer()->getPos());
 
 			std::ostringstream out;
 			out.precision(2);
-			out << wp.first << " (" << std::fixed << dist << " m)";
+			out << it->first << " (" << std::fixed << dist << " m)";
 
 			DrawUtils::drawHologram(pos.add(0, 1.68, 0), out.str(), fmax(size, 3.f / dist));
 			DrawUtils::flush();
@@ -32,7 +32,7 @@ void Waypoints::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 using json = nlohmann::json;
 void Waypoints::onLoadConfig(void* confVoid) {
 	IModule::onLoadConfig(confVoid);  // retain keybinds & enabled state
-	waypoints.clear();
+	waypoints->clear();
 	json* conf = reinterpret_cast<json*>(confVoid);
 	std::string modName = getRawModuleName();
 	if (conf->contains(modName.c_str())) {
@@ -58,7 +58,7 @@ void Waypoints::onLoadConfig(void* confVoid) {
 				} else {
 					continue;
 				}
-				waypoints[it.key().c_str()] = _pos;
+				waypoints->emplace(it.key().c_str(), _pos);
 			}
 		}
 	}
@@ -81,15 +81,15 @@ void Waypoints::onSaveConfig(void* confVoid) {
 
 	json myList = {};
 
-	for (const auto& wp : waypoints) {
+	for (auto it = waypoints->begin(); it != waypoints->end(); it++) {
 		json subObj = {};
-		subObj["pos"]["x"] = (float)wp.second.x;
-		subObj["pos"]["y"] = (float)wp.second.y;
-		subObj["pos"]["z"] = (float)wp.second.z;
-		myList.emplace(wp.first.c_str(), subObj);
+		subObj["pos"]["x"] = (float)it->second.x;
+		subObj["pos"]["y"] = (float)it->second.y;
+		subObj["pos"]["z"] = (float)it->second.z;
+		myList.emplace(it->first.c_str(), subObj);
 	}
 
-	if (waypoints.size() > 0) {
+	if (waypoints->size() > 0) {
 		obj.emplace("list", myList);
 	}
 
