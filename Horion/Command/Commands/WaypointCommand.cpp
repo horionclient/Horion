@@ -38,8 +38,8 @@ bool WaypointCommand::execute(std::vector<std::string>* args) {
 			clientMessageF("%sUnknown waypoint \"%s\"", YELLOW, name.c_str());
 		}
 	} else if (opt == "tp" || opt == "teleport") {
-		vec3_t pos = mod->getWaypoint(name);
-		if (pos != nullptr) {
+		if (auto wp = mod->getWaypoint(name)) {
+			vec3_t pos = wp.value();
 			player->setPos(pos);
 			clientMessageF("%sTeleported to waypoint \"%s\" (%.02f, %.02f, %.02f)", GREEN, name.c_str(), pos.x, pos.y, pos.z);
 		} else {

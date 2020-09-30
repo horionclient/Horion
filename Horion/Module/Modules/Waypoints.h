@@ -4,10 +4,11 @@
 #include "../../DrawUtils.h"
 #include "Module.h"
 #include "../../../Utils/Json.hpp"
+#include <optional>
 
 class Waypoints : public IModule {
 private:
-	std::shared_ptr <std::map<std::string, vec3_t>> waypoints;
+	std::shared_ptr<std::map<std::string, vec3_t>> waypoints = std::make_shared<std::map<std::string, vec3_t>>();
 
 public:
 	Waypoints();
@@ -41,9 +42,9 @@ public:
 		return false;
 	}
 
-	vec3_t getWaypoint(std::string name) {
+	std::optional<vec3_t> getWaypoint(std::string name) {
 		if (waypoints->find(name) == waypoints->end())
-			return nullptr;
+			return {};
 
 		return waypoints->at(name);
 	};
