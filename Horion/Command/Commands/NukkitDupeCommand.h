@@ -1,10 +1,10 @@
 #pragma once
 #include "ICommand.h"
 
-class DupeCommand : public IMCCommand {
+class NukkitDupeCommand : public IMCCommand {
 public:
-	DupeCommand();
-	~DupeCommand();
+	NukkitDupeCommand();
+	~NukkitDupeCommand();
 
 	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
