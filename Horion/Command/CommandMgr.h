@@ -6,6 +6,7 @@
 #include "Commands/CoordsCommand.h"
 #include "Commands/DamageCommand.h"
 #include "Commands/DupeCommand.h"
+#include "Commands/NukkitDupeCommand.h"
 #include "Commands/EjectCommand.h"
 #include "Commands/EnchantCommand.h"
 #include "Commands/FriendListCommand.h"

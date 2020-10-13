@@ -36,11 +36,11 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new SayCommand());
 	commandList.push_back(new SpammerCommand());
 	commandList.push_back(new DupeCommand());
+	commandList.push_back(new NukkitDupeCommand());
 	commandList.push_back(new DamageCommand());
 	commandList.push_back(new ConfigCommand());
 	commandList.push_back(new SetprefixCommand());
 	commandList.push_back(new NbtCommand());
-
 	commandList.push_back(new CommandBlockExploitCommand());
 	commandList.push_back(new NameSpoofCommand());
 	commandList.push_back(new ExecuteCommand());
