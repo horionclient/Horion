@@ -54,11 +54,11 @@ void InventoryMove::onTick(C_GameMode* gm) {
 		yaw -= 360.f;
 
 	float calcYaw = (yaw + 90) * (PI / 180);
-	float calcPitch = (gm->player->pitch) * -(PI / 180);
+	//float calcPitch = (gm->player->pitch) * -(PI / 180);
 	vec3_t moveVec;
-	moveVec.x = cos(calcYaw) * cos(calcPitch) * speed;
+	moveVec.x = cos(calcYaw) * speed;
 	moveVec.y = gm->player->velocity.y;
-	moveVec.z = sin(calcYaw) * cos(calcPitch) * speed;
+	moveVec.z = sin(calcYaw) * speed;
 	if (keyPressed) {
 		gm->player->lerpMotion(moveVec);
 		keyPressed = false;
