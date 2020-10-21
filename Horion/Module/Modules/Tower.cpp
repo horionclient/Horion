@@ -56,7 +56,7 @@ bool Tower::tryTower(vec3_t blockBelow) {
 		if (foundCandidate && GameData::isKeyDown(*input->spaceBarKey)) {
 			vec3_t moveVec;
 			moveVec.x = 0;
-			moveVec.y = g_Data.getLocalPlayer()->onGround == true ? 0.44f : -0.45f;
+			moveVec.y = g_Data.getLocalPlayer()->onGround == true ? 0.45f : -0.45f;
 			moveVec.z = 0;
 			*g_Data.getClientInstance()->minecraft->timer = this->timer;
 			g_Data.getLocalPlayer()->lerpMotion(moveVec);
