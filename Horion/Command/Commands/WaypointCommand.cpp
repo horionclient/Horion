@@ -1,6 +1,6 @@
 #include "WaypointCommand.h"
 
-WaypointCommand::WaypointCommand() : IMCCommand("waypoint", "Manage Waypoints", "<add|remove|tp|teleport> <name> [x y z]") {
+WaypointCommand::WaypointCommand() : IMCCommand("waypoint", "Manage Waypoints", "<add|remove|teleport> <name> [x y z]") {
 	registerAlias("wp");
 }
 
@@ -16,18 +16,26 @@ bool WaypointCommand::execute(std::vector<std::string>* args) {
 
 	std::string opt = args->at(1);
 	std::string name = args->at(2);
+	name = Utils::sanitize(name);
+	if (name.size() <= 1 || name.size() > 30) {
+		clientMessageF("%sInvalid name! Must be less than 30 characters!", RED);
+		return true;
+	}
 
 	if (opt == "add") {
 		vec3_t pos = player->currentPos.floor().add(0.5, 0, 0.5);
 		if (args->size() == 6) {
 			pos.x = assertFloat(args->at(3));
 			pos.y = assertFloat(args->at(4));
+			assertTrue(pos.y >= 0);
 			pos.z = assertFloat(args->at(5));
 		} else if (args->size() != 3) {
 			return false;
 		}
 		if (mod->add(name, pos)) {
 			clientMessageF("%sSuccessfully added waypoint \"%s\"", GREEN, name.c_str());
+			if (!mod->isEnabled())
+				clientMessageF("%sEnable the waypoints module to see it ingame!", YELLOW);
 		} else {
 			clientMessageF("%sWaypoint \"%s\" already exists", YELLOW, name.c_str());
 		}

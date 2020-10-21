@@ -1,7 +1,9 @@
 #include "Waypoints.h"
 
+#include <algorithm>
+
 Waypoints::Waypoints() : IModule(0x0, Category::VISUAL, "Shows holograms for user-defined coordinates") {
-	registerFloatSetting("Size", &size, size, 0.3, 1.6);
+	registerFloatSetting("Size", &size, size, 0.3f, 1.6f);
 }
 
 Waypoints::~Waypoints() {
@@ -19,11 +21,59 @@ void Waypoints::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 			vec3_t pos = it->second;
 			float dist = pos.dist(*g_Data.getLocalPlayer()->getPos());
 
-			std::ostringstream out;
-			out.precision(2);
-			out << it->first << " (" << std::fixed << dist << " m)";
+			constexpr bool useFloatingPoint = false;
+			constexpr bool fadeOutAtDistance = true;
+			
+			std::string txt;
+			if (useFloatingPoint) {
+				std::ostringstream out;
+				out.precision(2);
+				out << it->first << " (" << std::fixed << dist << " m)";
+				txt = out.str();
+			} else {
+				txt = it->first + " (" + std::to_string(int(dist)) + "m)";
+			}
 
-			DrawUtils::drawHologram(pos.add(0, 1.68, 0), out.str(), fmax(size, 3.f / dist));
+			float alpha = 1;
+
+			if (fadeOutAtDistance && dist > 15) {
+				
+				vec2_t angle = localPlayer->currentPos.CalcAngle(pos);
+				float diff = angle.sub(localPlayer->viewAngles).normAngles().magnitude();
+				if (dist > 30) {
+					float neededDiff = lerp(40, 15, std::min((dist - 30) / 300, 1.f));
+					float minAlpha = lerp(0.6f, 0.3f, std::min((dist - 30) / 50, 1.f));
+					if (diff < neededDiff)
+						alpha = 1.f;
+					else if (diff > neededDiff + 10)
+						alpha = minAlpha;
+					else
+						alpha = lerp(1.f, minAlpha, (diff - neededDiff) / 10);
+				}
+			}
+
+			if (alpha < 0.01f)
+				continue;
+
+			vec4_t rectPos;
+
+			txt = Utils::sanitize(txt);
+
+			float textWidth = DrawUtils::getTextWidth(&txt, size);
+			float textHeight = DrawUtils::getFont(Fonts::RUNE)->getLineHeight() * size;
+
+			vec2_t textPos = DrawUtils::worldToScreen(pos);
+			if (textPos.x != -1) {
+				textPos.y -= textHeight;
+				textPos.x -= textWidth / 2.f;
+				rectPos.x = textPos.x - 1.f * size;
+				rectPos.y = textPos.y - 1.f * size;
+				rectPos.z = textPos.x + textWidth + 1.f * size;
+				rectPos.w = textPos.y + textHeight + 2.f * size;
+
+				DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), alpha * 0.5f);
+				DrawUtils::drawText(textPos, &txt, MC_Color(255, 255, 255), size, alpha);
+			}
 			DrawUtils::flush();
 		}
 	}

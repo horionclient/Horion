@@ -34,7 +34,7 @@ void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 		}
 	}
 
-	auto stacking = std::vector<vec2_t>{};
+	std::vector<vec2_t> stacking{};
 
 	const int deg = (int)(player->yaw + 180);
 	const float degSubOffset = 0;  // -fmodf(player->yaw, 1)
@@ -95,13 +95,14 @@ void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 			const float tSize = 0.75f;
 			const float tWidth = DrawUtils::getTextWidth(&pName, tSize);
 			pos.x -= tWidth / 2;
-			const vec2_t mySpace = vec2_t(pos.x, pos.x + tWidth);  // anyone remember this site?
-			for (const vec2_t vect : stacking) {
-				if (mySpace.x < vect.y && vect.x < mySpace.y) {
+			const vec2_t myTextRange = vec2_t(pos.x, pos.x + tWidth); 
+			for (const vec2_t otherTextRange : stacking) {
+				// Check if other text overlaps us
+				if (myTextRange.x < otherTextRange.y && otherTextRange.x < myTextRange.y) {
 					overlapping++;
 				}
 			}
-			stacking.push_back(mySpace);
+			stacking.push_back(myTextRange);
 			pos.y += 5 * (overlapping + 1);
 			DrawUtils::drawText(pos, &pName, MC_Color(255, 255, 255), tSize, majorOpacity);
 		}
