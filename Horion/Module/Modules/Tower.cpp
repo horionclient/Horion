@@ -3,7 +3,8 @@
 #include "../../DrawUtils.h"
 
 Tower::Tower() : IModule(0x0, Category::WORLD, "Like scaffold, but vertically and a lot faster") {
-	registerFloatSetting("motion", &this->motion, this->motion, 0.3f, 1.f);
+	//registerFloatSetting("motion", &this->motion, this->motion, 0.3f, 1.f);
+	registerFloatSetting("timer", &this->timer, 20.0f, 20.0f, 100.0f);
 }
 
 Tower::~Tower() {
@@ -54,9 +55,10 @@ bool Tower::tryTower(vec3_t blockBelow) {
 		}
 		if (foundCandidate && GameData::isKeyDown(*input->spaceBarKey)) {
 			vec3_t moveVec;
-			moveVec.x = g_Data.getLocalPlayer()->velocity.x;
-			moveVec.y = motion;
-			moveVec.z = g_Data.getLocalPlayer()->velocity.z;
+			moveVec.x = 0;
+			moveVec.y = g_Data.getLocalPlayer()->onGround == true ? 0.45f : -0.45f;
+			moveVec.z = 0;
+			*g_Data.getClientInstance()->minecraft->timer = this->timer;
 			g_Data.getLocalPlayer()->lerpMotion(moveVec);
 			g_Data.getCGameMode()->buildBlock(&blok, i);
 
@@ -97,4 +99,8 @@ void Tower::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			}
 		}
 	}
+}
+
+void Tower::onDisable() {
+	*g_Data.getClientInstance()->minecraft->timer = 20.0f;
 }
