@@ -8,7 +8,7 @@ AutoGapple::~AutoGapple() {
 }
 
 const char* AutoGapple::getModuleName() {
-	return ("AutoGapple");
+	return ("AutoGaple");
 }
 
 void AutoGapple::onTick(C_GameMode* gm) {
