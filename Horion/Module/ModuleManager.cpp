@@ -95,6 +95,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new NoHurtcam()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new AntiImmobile()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new	NoPaintingCrash()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new Waypoints()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new TimeChanger()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new	Spider()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new	Compass()));
