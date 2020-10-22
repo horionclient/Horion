@@ -26,9 +26,9 @@ JsValueRef CALLBACK GlobalFunctions::log(JsValueRef callee, bool isConstructCall
 	
 	auto obj = reinterpret_cast<ContextObjects*>(callbackState);
 	if (obj->scriptInstance == nullptr) {
-		GameData::log("[invalid]: %s", strstream.str().c_str());
+		GameData::log("[inline]: %S", strstream.str().c_str());
 	} else {
-		GameData::log("[script]: %s", strstream.str().c_str());
+		GameData::log("[script]: %S", strstream.str().c_str());
 	}
 	
 
