@@ -337,9 +337,9 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 			__int64 v16 = *v15;
 
 			if (*(BYTE*)(_this + 0xA9A))
-				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x968))(v15);
+				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x970))(v15);
 			else
-				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x960))(v15);
+				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x968))(v15);
 			*(DWORD*)(_this + 0xA94) = *(DWORD*)(v17 + 0x20);
 
 			*reinterpret_cast<__int64*>(_this + 0xA80) = 0i64;
@@ -962,11 +962,11 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 	static syncShit_t syncShit = nullptr;
 	if (syncShit == nullptr) {
 		uintptr_t sigOffset = 0;
-
-		if (g_Data.getVersion() == GAMEVERSION::g_1_16_0)
-			sigOffset = FindSignature("40 53 48 83 EC ?? 48 C7 44 24 20 FE FF FF FF 48 8B DA 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 90 48 8B C8 E8 ?? ?? ?? ?? 48 8B 08 4C 8B 81 ?? 04");
-		else
-			sigOffset = FindSignature("40 57 48 83 EC 40 48 C7 44 24 ? ? ? ? ? 48 89 5C 24 ? 48 89 74 24 ? 48 8B F2 48 8D 3D ? ? ? ? 48 8B CF");
+		// sig of function: (present 3 times in the exe)
+		//sigOffset = FindSignature("40 57 48 83 EC 40 48 C7 44 24 ? ? ? ? ? 48 89 5C 24 ? 48 89 74 24 ? 48 8B F2 48 8D 3D ? ? ? ? 48 8B CF");
+		sigOffset = FindSignature("49 8B D6 E8 ?? ?? ?? ?? 48 8B 5D ?? 48 85") + 4;
+		auto funcOffset = *reinterpret_cast<int*>(sigOffset);
+		sigOffset += 4 + funcOffset;
 
 		syncShit = reinterpret_cast<syncShit_t>(sigOffset);
 	}
