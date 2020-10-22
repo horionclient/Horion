@@ -5,6 +5,8 @@ private:
 	int delay = 0;
 
 public:
+	float float1 = 0;
+
 	TestModule();
 	~TestModule();
 

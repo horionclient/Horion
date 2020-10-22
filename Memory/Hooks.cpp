@@ -2,6 +2,16 @@
 
 #include "../SDK/Tag.h"
 
+#include <algorithm>
+
+#include <glm/mat4x4.hpp>         // mat4
+#include <glm/trigonometric.hpp>  //radians
+
+#include <glm/ext/matrix_transform.hpp> // perspective, translate, rotate
+#include <glm/ext/matrix_relational.hpp>
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/gtc/constants.hpp>
+
 Hooks g_Hooks;
 bool isTicked = false;
 bool overrideStyledReturn = false;
@@ -278,7 +288,34 @@ void Hooks::Init() {
 		g_Hooks.Mob__isImmobileHook = std::make_unique<FuncHook>(MobIsImmobile, Hooks::Mob__isImmobile);
 
 		void* renderNameTags = reinterpret_cast<void*>(FindSignature("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 C7 45 ? ? ? ? ? 48 89 58 ? 0F 29 70 ? 0F 29 78 ? 44 0F 29 40 ? 44 0F 29 48 ? 48 8B 05 ? ? ? ? 48 33 C4"));
-		g_Hooks.LevelRendererPlayer__renderNameTagsHook = std::make_unique<FuncHook>(renderNameTags,Hooks::LevelRendererPlayer__renderNameTags);
+		g_Hooks.LevelRendererPlayer__renderNameTagsHook = std::make_unique<FuncHook>(renderNameTags, Hooks::LevelRendererPlayer__renderNameTags);
+	
+		static constexpr auto counterStart = __COUNTER__ + 1;
+		#define lambda_counter (__COUNTER__ - counterStart)
+		
+		void* levelRendererBobView = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 57 48 81 EC ?? ?? ?? ?? 48 8B D9 0F 29 B4 24 ?? ?? ?? ?? 48 8B 89"));
+
+		static auto bobViewHookF = [](__int64 _this, glm::mat4& matrix, float lerpT){
+			static auto origFunc = g_Hooks.lambdaHooks.at(lambda_counter)->GetFastcall<void, __int64, glm::mat4&, float>();
+			
+			/*auto p = g_Data.getLocalPlayer();
+			float degrees = fmodf(p->getPosOld()->lerp(p->getPos(), lerpT).x, 5) - 2.5f;
+			degrees *= 180 / 2.5f;
+
+			auto pos = g_Data.getClientInstance()->levelRenderer->origin;
+			
+			glm::mat4 View = matrix;
+			
+			matrix = View;
+			//matrix = glm::rotate<float>(matrix, glm::radians<float>(degrees), glm::vec3(0, 0, 1));*/
+			return origFunc(_this, matrix, lerpT);
+		};
+		
+		std::shared_ptr<FuncHook> bobViewHook = std::make_shared<FuncHook>(levelRendererBobView, (decltype(&bobViewHookF.operator()))bobViewHookF);
+
+		g_Hooks.lambdaHooks.push_back(bobViewHook);
+
+		#undef lambda_counter
 	}
 
 // clang-format on
@@ -452,9 +489,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	// Rainbow color updates
 	{
 		Utils::ApplyRainbow(rcolors);  // Increase Hue of rainbow color array
-		disabledRcolors[0] = min(1, rcolors[0] * 0.4f + 0.2f);
-		disabledRcolors[1] = min(1, rcolors[1] * 0.4f + 0.2f);
-		disabledRcolors[2] = min(1, rcolors[2] * 0.4f + 0.2f);
+		disabledRcolors[0] = std::min(1.f, rcolors[0] * 0.4f + 0.2f);
+		disabledRcolors[1] = std::min(1.f, rcolors[1] * 0.4f + 0.2f);
+		disabledRcolors[2] = std::min(1.f, rcolors[2] * 0.4f + 0.2f);
 		disabledRcolors[3] = 1;
 	}
 
@@ -838,9 +875,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			vec2_t textPos = vec2_t(wid.x / 2.f - titleWidth / 2.f, wid.y / 9.f);
 			vec2_t msgPos = vec2_t(wid.x / 2.f - msgWidth / 2.f, textPos.y + titleTextHeight + paddingVert);
 			vec4_t rectPos = vec4_t(
-				centerPos.x - paddingHoriz - max(titleWidth, msgWidth) / 2,
+				centerPos.x - paddingHoriz - std::max(titleWidth, msgWidth) / 2,
 				centerPos.y - paddingVert,
-				centerPos.x + paddingHoriz + max(titleWidth, msgWidth) / 2,
+				centerPos.x + paddingHoriz + std::max(titleWidth, msgWidth) / 2,
 				centerPos.y + paddingVert * 2 + titleTextHeight + messageHeight * lines);
 			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48), box->fadeVal);
 			DrawUtils::drawRectangle(rectPos, rcolors, box->fadeVal, 2.f);
@@ -1027,7 +1064,7 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 			if (searchResults.size() > 1) {
 				for (auto it = searchResults.begin()++; it != searchResults.end(); it++) {
 					auto alias = it->cmdAlias;
-					maxReplaceLength = min(maxReplaceLength, alias.size());
+					maxReplaceLength = std::min(maxReplaceLength, alias.size());
 
 					for (int i = 0; i < maxReplaceLength; i++) {
 						if (alias[i] != firstResult.cmdAlias[i]) {

@@ -3,6 +3,7 @@
 #include "../../DrawUtils.h"
 
 TestModule::TestModule() : IModule(0, Category::MISC, "For testing purposes") {
+	registerFloatSetting("float1", &this->float1, 0, -10, 10);
 }
 
 TestModule::~TestModule() {
