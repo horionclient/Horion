@@ -123,7 +123,7 @@ void DrawUtils::flush() {
 
 void DrawUtils::drawTriangle(vec2_t p1, vec2_t p2, vec2_t p3) {
 	
-	DrawUtils::tess__begin(tesselator, 3);
+	DrawUtils::tess__begin(tesselator, 3, 3);
 
 	tess_vertex(tesselator, p1.x, p1.y, 0);
 	tess_vertex(tesselator, p2.x, p2.y, 0);
@@ -143,7 +143,7 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth) {
 	modX *= lineWidth;
 	modY *= lineWidth;
 
-	DrawUtils::tess__begin(tesselator, 3);
+	DrawUtils::tess__begin(tesselator, 3, 6);
 
 	tess_vertex(tesselator, start.x + modX, start.y + modY, 0);
 	tess_vertex(tesselator, start.x - modX, start.y - modY, 0);
@@ -413,6 +413,8 @@ void DrawUtils::drawItem(C_ItemStack* item, vec2_t itemPos, float opacity, float
 	C_BaseActorRenderContext baseActorRenderCtx(screenCtx, g_Data.getClientInstance(), g_Data.getClientInstance()->minecraftGame);
 	C_ItemRenderer* renderer = baseActorRenderCtx.renderer;
 	renderer->renderGuiItemNew(&baseActorRenderCtx, item, g_Data.getClientInstance()->minecraftGame, itemPos.x, itemPos.y, opacity, scale, isEnchanted);
+	
+	
 }
 
 void DrawUtils::drawKeystroke(char key, vec2_t pos) {
@@ -442,7 +444,7 @@ void DrawUtils::drawLine3d(const vec3_t& start, const vec3_t& end) {
 
 	auto myTess = *reinterpret_cast<__int64*>(game3dContext + 0xB0);
 
-	DrawUtils::tess__begin(myTess, 4);
+	DrawUtils::tess__begin(myTess, 4, 2);
 
 	auto start1 = start.sub(origin);
 	auto end1 = end.sub(origin);
@@ -452,7 +454,7 @@ void DrawUtils::drawLine3d(const vec3_t& start, const vec3_t& end) {
 
 	tess_end(game3dContext, myTess, entityFlatStaticMaterial);
 }
-void DrawUtils::tess__begin(__int64 tesselator, int vertexFormat) {
+void DrawUtils::tess__begin(__int64 tesselator, int vertexFormat, int numVerticesReserved) {
 	if (!*(unsigned char*)(tesselator + 0x1FC) && !*(unsigned char*)(tesselator + 0x1B5)) {
 		mce__VertexFormat__disableHalfFloats(tesselator, 0, 0);
 		*(unsigned char*)(tesselator + 8) = vertexFormat;
@@ -462,7 +464,8 @@ void DrawUtils::tess__begin(__int64 tesselator, int vertexFormat) {
 		*(__int64*)(tesselator + 0x150) = *(__int64*)(tesselator + 0x148);
 		if (!*(unsigned char*)tesselator)
 			*(unsigned char*)(tesselator + 0xD0) = 1;
-		//Tessellator__initializeFormat(tesselator + 8, 0x66i64);
+		if (numVerticesReserved != 0)
+			Tessellator__initializeFormat(tesselator + 8, numVerticesReserved);
 	}
 }
 void DrawUtils::setGameRenderContext(__int64 ctx) {
@@ -500,7 +503,7 @@ void DrawUtils::drawLinestrip3d(const std::vector<vec3_t>& points) {
 
 	auto myTess = *reinterpret_cast<__int64*>(game3dContext + 0xB0);
 
-	DrawUtils::tess__begin(myTess, 5);
+	DrawUtils::tess__begin(myTess, 5, (int)points.size());
 
 	/*
 	 * 1: quads
