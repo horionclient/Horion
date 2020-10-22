@@ -41,28 +41,28 @@ void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 
 		switch (oDeg) {
 		case 0:
-			drawCenteredText(vec2_t(xOff, 30), "N", 1, majorOpacity);
+			drawCenteredText(vec2_t(xOff, 30.f), "N", 1, majorOpacity);
 			break;
 		case 45:
-			drawCenteredText(vec2_t(xOff, 30), "NE", 1, majorOpacity);
+			drawCenteredText(vec2_t(xOff, 30.f), "NE", 1, majorOpacity);
 			break;
 		case 90:
-			drawCenteredText(vec2_t(xOff, 30), "E", 1, majorOpacity);
+			drawCenteredText(vec2_t(xOff, 30.f), "E", 1, majorOpacity);
 			break;
 		case 135:
-			drawCenteredText(vec2_t(xOff, 30), "SE", 1, majorOpacity);
+			drawCenteredText(vec2_t(xOff, 30.f), "SE", 1, majorOpacity);
 			break;
 		case 180:
-			drawCenteredText(vec2_t(xOff, 30), "S", 1, majorOpacity);
+			drawCenteredText(vec2_t(xOff, 30.f), "S", 1, majorOpacity);
 			break;
 		case 225:
-			drawCenteredText(vec2_t(xOff, 30), "SW", 1, majorOpacity);
+			drawCenteredText(vec2_t(xOff, 30.f), "SW", 1, majorOpacity);
 			break;
 		case 270:
-			drawCenteredText(vec2_t(xOff, 30), "W", 1, majorOpacity);
+			drawCenteredText(vec2_t(xOff, 30.f), "W", 1, majorOpacity);
 			break;
 		case 315:
-			drawCenteredText(vec2_t(xOff, 30), "NW", 1, majorOpacity);
+			drawCenteredText(vec2_t(xOff, 30.f), "NW", 1, majorOpacity);
 			break;
 		}
 		if (off != 0 && minorOpacity > 0) {
@@ -75,13 +75,13 @@ void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 
 			// Bigger line with degree displayed
 			DrawUtils::fillRectangle(vec4_t(xOff - 0.5f, 15, xOff + 0.5f, 20), MC_Color(255, 255, 255), minorOpacity);
-			drawCenteredText(vec2_t(xOff, 20), std::to_string(oDeg), 0.75f, minorOpacity);
+			drawCenteredText(vec2_t(xOff, 20.f), std::to_string(oDeg), 0.75f, minorOpacity);
 		}
 	}
 
 	// Center line
 	DrawUtils::fillRectangle(vec4_t(sCenter - 0.5f, 15, sCenter + 0.5f, 25), MC_Color(255, 255, 255), opacity);
-	drawCenteredText(vec2_t(sCenter, 25), std::to_string(deg), 0.75f, opacity);
+	drawCenteredText(vec2_t(sCenter, 25.f), std::to_string(deg), 0.75f, opacity);
 	DrawUtils::flush();
 }
 

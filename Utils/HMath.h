@@ -16,6 +16,7 @@ struct vec2_t {
 	float x, y;
 	vec2_t() { x = y = 0; }
 	vec2_t(float a, float b) : x(a), y(b) {}
+	vec2_t(int a, int b) : x((float)a), y((float)b) {}
 	vec2_t &operator=(const vec2_t &copy) {
 		x = copy.x;
 		y = copy.y;
@@ -31,6 +32,9 @@ struct vec2_t {
 
 	vec2_t sub(float f) {
 		return vec2_t(x - f, y - f);
+	}
+	vec2_t sub(float ox, float oy) {
+		return vec2_t(x - ox, y - oy);
 	}
 	vec2_t div(float f) {
 		return vec2_t(x / f, y / f);

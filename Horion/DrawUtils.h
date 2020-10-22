@@ -87,6 +87,7 @@ public:
 	static C_Font* getFont(Fonts font);
 	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = Fonts::SMOOTH);
 
+	static void drawTriangle(vec2_t p1, vec2_t p2, vec2_t p3);
 	static void drawLine(vec2_t start, vec2_t end, float lineWidth);  // rgba
 	static void drawLinestrip3d(const std::vector<vec3_t>& points);
 	static void drawLine3d(const vec3_t& start, const vec3_t& end);

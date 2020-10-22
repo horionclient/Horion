@@ -121,6 +121,17 @@ void DrawUtils::flush() {
 	renderCtx->flushText(0);
 }
 
+void DrawUtils::drawTriangle(vec2_t p1, vec2_t p2, vec2_t p3) {
+	
+	DrawUtils::tess__begin(tesselator, 3);
+
+	tess_vertex(tesselator, p1.x, p1.y, 0);
+	tess_vertex(tesselator, p2.x, p2.y, 0);
+	tess_vertex(tesselator, p3.x, p3.y, 0);
+
+	tess_end(screenContext2d, tesselator, uiMaterial);
+}
+
 void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth) {
 	float modX = 0 - (start.y - end.y);
 	float modY = start.x - end.x;
