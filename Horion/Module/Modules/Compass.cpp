@@ -89,7 +89,7 @@ void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 			std::string pName = it->second;
 			std::transform(pName.begin(), pName.end(), pName.begin(), ::toupper);
 
-			vec2_t pos = vec2_t(xOff, 31);
+			vec2_t pos = vec2_t(xOff, 31.f);
 
 			int overlapping = 0;
 			const float tSize = 0.75f;
