@@ -98,7 +98,7 @@ private:
 
 	std::vector<std::unique_ptr<ScriptInstance>> scriptInstances;
 
-	void prepareGlobals(JsValueRef global);
+	void prepareGlobals(JsValueRef global, ContextObjects*);
 
 	void prepareVector3Prototype(JsValueRef global, ContextObjects*);
 	void prepareEntityPrototype(JsValueRef proto, ContextObjects* objs);

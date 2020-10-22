@@ -20,7 +20,19 @@ JsValueRef CALLBACK GlobalFunctions::log(JsValueRef callee, bool isConstructCall
 		strstream << string;
 	}
 
+	#ifdef _DEBUG
 	logF("Script: %S", strstream.str().c_str());
+	#else
+	
+	auto obj = reinterpret_cast<ContextObjects*>(callbackState);
+	if (obj->scriptInstance == nullptr) {
+		GameData::log("[invalid]: %s", strstream.str().c_str());
+	} else {
+		GameData::log("[script]: %s", strstream.str().c_str());
+	}
+	
+
+	#endif
 
 	return JS_INVALID_REFERENCE;
 }

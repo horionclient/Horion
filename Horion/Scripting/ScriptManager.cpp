@@ -31,8 +31,8 @@ JsValueRef ScriptManager::prepareEntity(long long runtimeId, ContextObjects* obj
 	return obj;
 }
 
-void ScriptManager::prepareGlobals(JsValueRef global) {
-	chakra.defineFunction(global, L"log", GlobalFunctions::log);
+void ScriptManager::prepareGlobals(JsValueRef global, ContextObjects* obj) {
+	chakra.defineFunction(global, L"log", GlobalFunctions::log, obj);
 }
 
 void ScriptManager::prepareVector3Prototype(JsValueRef global, ContextObjects* obj) {
@@ -167,7 +167,7 @@ void ScriptManager::prepareContext(JsContextRef* ctx, ContextObjects* obj) {
 	JsValueRef globalObject;
 	chakra.JsGetGlobalObject_(&globalObject);
 
-	prepareGlobals(globalObject);
+	prepareGlobals(globalObject, obj);
 	prepareHorionFunctions(globalObject, obj);
 	prepareGameFunctions(globalObject, obj);
 	prepareVector3Prototype(globalObject, obj);
