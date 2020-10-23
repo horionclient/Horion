@@ -117,6 +117,52 @@ JsValueRef CALLBACK DrawFunctions::drawLine2d(JsValueRef callee, bool isConstruc
 	return chakra.trueValue();
 }
 
+JsValueRef CALLBACK DrawFunctions::drawRectangle2d(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	int argIndex = 1;
+	auto startOpt = Vector2Functions::getVec2FromArguments(&arguments[argIndex], argumentCount - argIndex, &argIndex);
+	if (!startOpt.has_value()) {
+		THROW(L"Invalid start vector!");
+	}
+
+	auto endOpt = Vector2Functions::getVec2FromArguments(&arguments[argIndex], argumentCount - argIndex, &argIndex);
+	if (!endOpt.has_value()) {
+		THROW(L"Invalid end vector!");
+	}
+
+
+	double lineWidth = 1;
+	if (argumentCount - argIndex >= 1) {
+		auto status = chakra.JsNumberToDouble_(arguments[argIndex], &lineWidth);
+		THROW_IF_ERROR(status, L"invalid line width");
+		argIndex++;
+	}
+
+	vec2_t lower = {std::min(startOpt->x, endOpt->x), std::min(startOpt->y, endOpt->y)};
+	vec2_t upper = {std::max(startOpt->x, endOpt->x), std::max(startOpt->y, endOpt->y)};
+	DrawUtils::drawRectangle(lower, upper, (float)lineWidth);
+
+	return chakra.trueValue();
+}
+
+JsValueRef CALLBACK DrawFunctions::fillRectangle2d(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	int argIndex = 1;
+	auto startOpt = Vector2Functions::getVec2FromArguments(&arguments[argIndex], argumentCount - argIndex, &argIndex);
+	if (!startOpt.has_value()) {
+		THROW(L"Invalid start vector!");
+	}
+
+	auto endOpt = Vector2Functions::getVec2FromArguments(&arguments[argIndex], argumentCount - argIndex, &argIndex);
+	if (!endOpt.has_value()) {
+		THROW(L"Invalid end vector!");
+	}
+
+	vec2_t lower = {std::min(startOpt->x, endOpt->x), std::min(startOpt->y, endOpt->y)};
+	vec2_t upper = {std::max(startOpt->x, endOpt->x), std::max(startOpt->y, endOpt->y)};
+	DrawUtils::fillRectangle(lower, upper);
+
+	return chakra.trueValue();
+}
+
 JsValueRef CALLBACK DrawFunctions::getOrigin(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
 	auto origin = DrawUtils::getOrigin();
 	return scriptMgr.prepareVector3(origin, reinterpret_cast<ContextObjects*>(callbackState));

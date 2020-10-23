@@ -71,8 +71,8 @@ void CommandMgr::execute(char* message) {
 
 			pos = msgStr.find(" ", initialPos);
 		}
-		args.push_back(msgStr.substr(initialPos, min(pos, msgStr.size()) - initialPos + 1));
-
+		args.push_back(msgStr.substr(initialPos, std::min(pos, msgStr.size()) - initialPos + 1));
+		
 		std::string cmd = args[0];
 		std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
 

@@ -132,6 +132,18 @@ void DrawUtils::drawTriangle(vec2_t p1, vec2_t p2, vec2_t p3) {
 	tess_end(screenContext2d, tesselator, uiMaterial);
 }
 
+
+void DrawUtils::drawQuad(vec2_t p1, vec2_t p2, vec2_t p3, vec2_t p4) {
+	DrawUtils::tess__begin(tesselator, 1, 4);
+
+	tess_vertex(tesselator, p1.x, p1.y, 0);
+	tess_vertex(tesselator, p2.x, p2.y, 0);
+	tess_vertex(tesselator, p3.x, p3.y, 0);
+	tess_vertex(tesselator, p4.x, p4.y, 0);
+
+	tess_end(screenContext2d, tesselator, uiMaterial);
+}
+
 void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth) {
 	float modX = 0 - (start.y - end.y);
 	float modY = start.x - end.x;
@@ -413,8 +425,7 @@ void DrawUtils::drawItem(C_ItemStack* item, vec2_t itemPos, float opacity, float
 	C_BaseActorRenderContext baseActorRenderCtx(screenCtx, g_Data.getClientInstance(), g_Data.getClientInstance()->minecraftGame);
 	C_ItemRenderer* renderer = baseActorRenderCtx.renderer;
 	renderer->renderGuiItemNew(&baseActorRenderCtx, item, g_Data.getClientInstance()->minecraftGame, itemPos.x, itemPos.y, opacity, scale, isEnchanted);
-	
-	
+
 }
 
 void DrawUtils::drawKeystroke(char key, vec2_t pos) {
@@ -453,6 +464,10 @@ void DrawUtils::drawLine3d(const vec3_t& start, const vec3_t& end) {
 	tess_vertex(myTess, end1.x, end1.y, end1.z);
 
 	tess_end(game3dContext, myTess, entityFlatStaticMaterial);
+}
+void DrawUtils::fillRectangle(vec4_t pos, const MC_Color col, float alpha) {
+	DrawUtils::setColor(col.r, col.g, col.b, alpha);
+	DrawUtils::drawQuad({pos.x, pos.w}, {pos.z, pos.w}, {pos.z, pos.y}, {pos.x, pos.y});
 }
 void DrawUtils::tess__begin(__int64 tesselator, int vertexFormat, int numVerticesReserved) {
 	if (!*(unsigned char*)(tesselator + 0x1FC) && !*(unsigned char*)(tesselator + 0x1B5)) {

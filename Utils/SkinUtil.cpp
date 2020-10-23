@@ -117,7 +117,7 @@ MeshStructs::meshData SkinUtil::objToMesh(const char* str) {
 
 			pos = line.find(" ", initialPos);
 		}
-		args.push_back(line.substr(initialPos, min(pos, line.size()) - initialPos + 1));
+		args.push_back(line.substr(initialPos, std::min(pos, line.size()) - initialPos + 1));
 
 		auto cmd = args[0].c_str();
 

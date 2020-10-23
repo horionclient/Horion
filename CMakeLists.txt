@@ -10,6 +10,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 add_compile_definitions(WIN32_LEAN_AND_MEAN)
+add_compile_definitions(NOMINMAX)
 if(CMAKE_BUILD_TYPE MATCHES Release)
 
 elseif(CMAKE_BUILD_TYPE MATCHES BetaConf)

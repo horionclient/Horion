@@ -88,16 +88,20 @@ public:
 	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = Fonts::SMOOTH);
 
 	static void drawTriangle(vec2_t p1, vec2_t p2, vec2_t p3);
+	static void drawQuad(vec2_t p1, vec2_t p2, vec2_t p3, vec2_t p4);
 	static void drawLine(vec2_t start, vec2_t end, float lineWidth);  // rgba
 	static void drawLinestrip3d(const std::vector<vec3_t>& points);
 	static void drawLine3d(const vec3_t& start, const vec3_t& end);
-	static inline void fillRectangle(vec4_t pos, const MC_Color col, float alpha) {
-		float posF[4];  // vec4_t(startX, startY, endX, endY);
-		posF[0] = pos.x;
-		posF[1] = pos.z;
-		posF[2] = pos.y;
-		posF[3] = pos.w;
-		renderCtx->fillRectangle(posF, reinterpret_cast<const float*>(&col), alpha);
+	static void fillRectangle(vec4_t pos, const MC_Color col, float alpha);
+	static inline void fillRectangle(vec2_t start, vec2_t end) {
+		DrawUtils::drawQuad({start.x, end.y}, {end.x, end.y}, {end.x, start.y}, {start.x, start.y});
+	}
+	static inline void drawRectangle(vec2_t start, vec2_t end, float lineWidth = 1.0f) {
+		lineWidth /= 2;
+		fillRectangle({start.x - lineWidth, start.y - lineWidth}, {end.x + lineWidth, start.y + lineWidth});  // TOP
+		fillRectangle({start.x - lineWidth, start.y}, {start.x + lineWidth, end.y});                          // LEFT
+		fillRectangle({end.x - lineWidth, start.y}, {end.x + lineWidth, end.y});                              //
+		fillRectangle({start.x - lineWidth, end.y - lineWidth}, {end.x + lineWidth, end.y + lineWidth});
 	}
 	static inline void drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineWidth = 1.0f) {
 		lineWidth /= 2;
