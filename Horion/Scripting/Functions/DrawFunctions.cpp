@@ -163,6 +163,97 @@ JsValueRef CALLBACK DrawFunctions::fillRectangle2d(JsValueRef callee, bool isCon
 	return chakra.trueValue();
 }
 
+JsValueRef CALLBACK DrawFunctions::drawText2d(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	int argIndex = 1;
+
+	auto textOpt = chakra.tryGetStringFromArgs(arguments[argIndex], argumentCount - argIndex);
+	if (!textOpt.has_value()) {
+		THROW(L"Invalid text specified");
+	}
+	argIndex++;
+
+	auto posOpt = Vector2Functions::getVec2FromArguments(&arguments[argIndex], argumentCount - argIndex, &argIndex);
+	if (!posOpt.has_value()) {
+		THROW(L"Invalid pos vector!");
+	}
+
+	MC_Color color(1,1,1,1);
+	double textSize = 1, alpha = 1;
+
+	if (argumentCount - argIndex >= 1) {
+		auto status = chakra.JsNumberToDouble_(arguments[argIndex], &textSize);
+		THROW_IF_ERROR(status, L"invalid text size");
+		argIndex++;
+	}
+
+	auto colorOpt = Vector3Functions::getVec3FromArguments(&arguments[argIndex], argumentCount - argIndex, &argIndex);
+	if (colorOpt.has_value()) {
+		color.r = std::clamp(colorOpt->x, 0.f, 1.f);
+		color.g = std::clamp(colorOpt->y, 0.f, 1.f);
+		color.b = std::clamp(colorOpt->z, 0.f, 1.f);
+
+		if (argumentCount - argIndex >= 1) {
+			auto status = chakra.JsNumberToDouble_(arguments[argIndex], &alpha);
+			THROW_IF_ERROR(status, L"invalid alpha value");
+			argIndex++;
+		}
+	}
+
+	char* coolBeanBuffer = new char[textOpt.value().size() + 1];
+	sprintf_s(coolBeanBuffer, textOpt.value().size() + 1, "%S", textOpt.value().c_str());
+	std::string textStr(coolBeanBuffer);
+
+	DrawUtils::drawText(*posOpt, &textStr, color, (float)textSize, (float)alpha);
+
+	delete[] coolBeanBuffer;
+
+	return chakra.trueValue();
+}
+
+JsValueRef CALLBACK DrawFunctions::getTextWidth(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	int argIndex = 1;
+
+	auto textOpt = chakra.tryGetStringFromArgs(arguments[argIndex], argumentCount - argIndex);
+	if (!textOpt.has_value()) {
+		THROW(L"Invalid text specified");
+	}
+	argIndex++;
+
+	double textSize = 1;
+
+	if (argumentCount - argIndex >= 1) {
+		auto status = chakra.JsNumberToDouble_(arguments[argIndex], &textSize);
+		THROW_IF_ERROR(status, L"invalid text size");
+		argIndex++;
+	}
+
+	char* coolBeanBuffer = new char[textOpt.value().size() + 1];
+	sprintf_s(coolBeanBuffer, textOpt.value().size() + 1, "%S", textOpt.value().c_str());
+	std::string textStr(coolBeanBuffer);
+
+	auto width = (double)DrawUtils::getTextWidth(&textStr, (float)textSize);
+
+	delete[] coolBeanBuffer;
+
+	return chakra.toNumber(width);
+}
+
+JsValueRef CALLBACK DrawFunctions::getTextLineHeight(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	int argIndex = 1;
+
+	double textSize = 1;
+
+	if (argumentCount - argIndex >= 1) {
+		auto status = chakra.JsNumberToDouble_(arguments[argIndex], &textSize);
+		THROW_IF_ERROR(status, L"invalid text size");
+		argIndex++;
+	}
+
+	auto height = (double)DrawUtils::getFontHeight((float)textSize);
+
+	return chakra.toNumber(height);
+}
+
 JsValueRef CALLBACK DrawFunctions::getOrigin(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
 	auto origin = DrawUtils::getOrigin();
 	return scriptMgr.prepareVector3(origin, reinterpret_cast<ContextObjects*>(callbackState));

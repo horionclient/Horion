@@ -86,6 +86,7 @@ public:
 	static inline void tess__begin(__int64 tesselator, int vertexFormat = 3, int numVerticesReserved = 0);
 	static C_Font* getFont(Fonts font);
 	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = Fonts::SMOOTH);
+	static float getFontHeight(float textSize = 1, Fonts font = Fonts::SMOOTH);
 
 	static void drawTriangle(vec2_t p1, vec2_t p2, vec2_t p3);
 	static void drawQuad(vec2_t p1, vec2_t p2, vec2_t p3, vec2_t p4);

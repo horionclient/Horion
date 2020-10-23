@@ -11,6 +11,10 @@ public:
 	DECL_FUN(drawRectangle2d);
 	DECL_FUN(fillRectangle2d);
 
+	DECL_FUN(drawText2d);
+	DECL_FUN(getTextWidth);
+	DECL_FUN(getTextLineHeight);
+
 	DECL_FUN(getWindowSize);
 	DECL_FUN(getOrigin);
 };

@@ -143,6 +143,9 @@ void ScriptManager::prepareDrawFunctions(JsValueRef global, ContextObjects* objs
 	chakra.defineFunction(objs->drawUtils, L"drawLine2d", DrawFunctions::drawLine2d, objs);
 	chakra.defineFunction(objs->drawUtils, L"drawRectangle2d", DrawFunctions::drawRectangle2d, objs);
 	chakra.defineFunction(objs->drawUtils, L"fillRectangle2d", DrawFunctions::fillRectangle2d, objs);
+	chakra.defineFunction(objs->drawUtils, L"drawText2d", DrawFunctions::drawText2d, objs);
+	chakra.defineFunction(objs->drawUtils, L"getTextWidth", DrawFunctions::getTextWidth, objs);
+	chakra.defineFunction(objs->drawUtils, L"getTextLineHeight", DrawFunctions::getTextLineHeight, objs);
 
 	chakra.defineFunction(objs->drawUtils, L"drawLine3d", DrawFunctions::drawLine3d, objs);
 	chakra.defineFunction(objs->drawUtils, L"drawLinestrip3d", DrawFunctions::drawLinestrip3d, objs);

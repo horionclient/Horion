@@ -117,6 +117,14 @@ float DrawUtils::getTextWidth(std::string* textStr, float textSize, Fonts font) 
 	return ret;
 }
 
+float DrawUtils::getFontHeight(float textSize, Fonts font) {
+	C_Font* fontPtr = getFont(font);
+
+	float ret = fontPtr->getLineHeight() * textSize;
+
+	return ret;
+}
+
 void DrawUtils::flush() {
 	renderCtx->flushText(0);
 }

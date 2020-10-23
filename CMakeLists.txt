@@ -19,6 +19,7 @@ endif()
 
 include_directories(.)
 include_directories(include)
+include_directories(include/glm/)
 
 link_directories(minhook)
 
