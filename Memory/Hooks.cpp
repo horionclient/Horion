@@ -1148,6 +1148,19 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 			return;
 		}
 	}
+
+	if (autosneakMod->isEnabled() && autosneakMod->doSilent && packet->isInstanceOf<C_PlayerActionPacket>()) {
+		auto* pp = reinterpret_cast<C_PlayerActionPacket*>(packet);
+		if (g_Data.getLocalPlayer() != nullptr)
+		if (pp->action == 12) //dont let it uncrouch
+			return;
+	}
+	
+	
+	
+	
+	
+	
 	moduleMgr->onSendPacket(packet);
 
 	if (strcmp(packet->getName()->getText(), "EmotePacket") == 0) {
