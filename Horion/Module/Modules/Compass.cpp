@@ -26,8 +26,13 @@ void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 
 	if (showWaypoints) {
 		auto waypoints = wpMod->getWaypoints();
-		for (std::map<std::string, vec3_t>::iterator it = waypoints->begin(); it != waypoints->end(); it++) {
-			int angle = (int)(player->getPos()->CalcAngle(it->second).y + 180.0f) % 360;
+		int curDim = 0;
+		player->getDimensionId(&curDim);
+		auto playerInterpPos = player->getPosOld()->lerp(player->getPos(), DrawUtils::getLerpTime());
+		for (auto it = waypoints->begin(); it != waypoints->end(); it++) {
+			if (it->second.dimension != curDim)
+				continue;
+			int angle = (int)round(playerInterpPos.CalcAngle(it->second.pos).y + 180.0f) % 360;
 			if (angle < 0) angle += 360;
 
 			extraPoints.insert(std::make_pair(angle, it->first));

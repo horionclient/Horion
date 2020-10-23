@@ -20,6 +20,7 @@ bool TestModule::isFlashMode() {
 std::vector<vec3_ti> lastPos;
 void TestModule::onEnable() {
 	lastPos.clear();
+	
 }
 
 void TestModule::onTick(C_GameMode* gm) {
@@ -32,7 +33,9 @@ void TestModule::onTick(C_GameMode* gm) {
 	//if (gm->player->velocity.y > 0)
 		
 	//logF("%.4f %.4f", gm->player->velocity.y, gm->player->aabb.lower.y);
-	
+	int dim = -5;
+	gm->player->getDimensionId(&dim);
+	logF("%i", dim);
 }
 
 void TestModule::onMove(C_MoveInputHandler* hand){

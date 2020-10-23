@@ -365,9 +365,11 @@ private:
 	virtual __int64 handleInsidePortal(vec3_ti const &);
 	virtual __int64 getPortalCooldown(void) const;
 	virtual __int64 getPortalWaitTime(void) const;
-	virtual __int64 getDimensionId(void) const;
 
 public:
+	virtual int* getDimensionId(int* dimOut) const;
+
+
 	virtual bool canChangeDimensions(void) const;
 
 private:

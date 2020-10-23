@@ -32,7 +32,9 @@ bool WaypointCommand::execute(std::vector<std::string>* args) {
 		} else if (args->size() != 3) {
 			return false;
 		}
-		if (mod->add(name, pos)) {
+		int dimension;
+		player->getDimensionId(&dimension);
+		if (mod->add(name, pos, dimension)) {
 			clientMessageF("%sSuccessfully added waypoint \"%s\"", GREEN, name.c_str());
 			if (!mod->isEnabled())
 				clientMessageF("%sEnable the waypoints module to see it ingame!", YELLOW);
@@ -47,7 +49,8 @@ bool WaypointCommand::execute(std::vector<std::string>* args) {
 		}
 	} else if (opt == "tp" || opt == "teleport") {
 		if (auto wp = mod->getWaypoint(name)) {
-			vec3_t pos = wp.value();
+			auto wpV = wp.value();
+			auto pos = wpV.pos;
 			player->setPos(pos);
 			clientMessageF("%sTeleported to waypoint \"%s\" (%.02f, %.02f, %.02f)", GREEN, name.c_str(), pos.x, pos.y, pos.z);
 		} else {
