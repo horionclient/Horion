@@ -29,7 +29,10 @@ void TestModule::onTick(C_GameMode* gm) {
 	if(std::find(lastPos.begin(), lastPos.end(), startNode) == lastPos.end()){
 		lastPos.push_back(startNode);
 	}*/
-	//logF("%.2f", gm->player->velocity.z);
+	//if (gm->player->velocity.y > 0)
+		
+	//logF("%.4f %.4f", gm->player->velocity.y, gm->player->aabb.lower.y);
+	
 }
 
 void TestModule::onMove(C_MoveInputHandler* hand){

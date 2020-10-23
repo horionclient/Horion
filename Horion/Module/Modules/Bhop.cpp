@@ -21,38 +21,19 @@ void Bhop::onMove(C_MoveInputHandler* input) {
 	if (player->isSneaking()) 
 		return;
 
-	float yaw = player->yaw;
-
-	bool pressed = input->forward || input->backward || input->right || input->left;
-
-	if (input->forward && input->backward)
-		return;
+	vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
+	bool pressed = moveVec2d.magnitude() > 0.01f;
 
 	if (player->onGround && pressed)
 		player->jumpFromGround();
 	
-	if (input->right) {
-		yaw += 90.f;
-		if (input->forward)
-			yaw -= 45.f;
-		else if (input->backward)
-			yaw += 45.f;
-	}
-	if (input->left) {
-		yaw -= 90.f;
-		if (input->forward)
-			yaw += 45.f;
-		else if (input->backward)
-			yaw -= 45.f;
-	}
-
-	if (input->backward && !input->left && !input->right)
-		yaw += 180.f;
-
-	float calcYaw = (yaw + 90) * (PI / 180);
+	float calcYaw = (player->yaw + 90) * (PI / 180);
 	vec3_t moveVec;
-	moveVec.x = cos(calcYaw) * speed;
+	float c = cos(calcYaw);
+	float s = sin(calcYaw);
+	moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
+	moveVec.x = moveVec2d.x * speed;
 	moveVec.y = player->velocity.y;
-	moveVec.z = sin(calcYaw) * speed;
+	moveVec.z = moveVec2d.y * speed;
 	if(pressed) player->lerpMotion(moveVec);
 }

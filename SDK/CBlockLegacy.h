@@ -43,7 +43,7 @@ public:
 private:
 	char pad_0x0106[0xA];  //0x010E
 public:
-	AABB aabb;  //0x0110
+	AABB aabb;  //0x0118
 
 	int liquidGetDepth(C_BlockSource*, const vec3_ti* pos);
 	void liquidGetFlow(vec3_t* flowOut, C_BlockSource*, const vec3_ti* pos);

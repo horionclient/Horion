@@ -67,6 +67,9 @@ struct vec2_t {
 		return vec2_t(-y, x);
 	}
 
+	float dot(float ox, float oy) const { return x * ox + y * oy; }
+
+
 	float dot(const vec2_t &o) const { return x * o.x + y * o.y; }
 
 	vec2_t normAngles() {
@@ -147,6 +150,10 @@ struct vec3_t {
 		return vec3_t(x - f, y - f, z - f);
 	};
 
+	vec3_t sub(float x1, float y1, float z1) {
+		return vec3_t(x - x1, y - y1, z - z1);
+	};
+
 	vec3_t floor() {
 		return vec3_t(floorf(x), floorf(y), floorf(z));
 	};
@@ -157,6 +164,7 @@ struct vec3_t {
 	vec3_t sub(const vec3_t &o) const {
 		return vec3_t(x - o.x, y - o.y, z - o.z);
 	}
+
 
 	float squaredlen() const { return x * x + y * y + z * z; }
 	float squaredxzlen() const { return x * x + z * z; }
@@ -527,9 +535,18 @@ struct AABB {
 		return AABB(lower.sub(amount), upper.add(amount));
 	}
 
+	AABB expandedXZ(float amount) {
+		return AABB(lower.sub(amount, 0.f, amount), upper.add(amount, 0.f, amount));
+	}
+
 	bool intersects(AABB aabb) {
 		return aabb.upper.x > lower.x && upper.x > aabb.lower.x &&
 			   aabb.upper.y > lower.y && upper.y > aabb.lower.y &&
+			   aabb.upper.z > lower.z && upper.z > aabb.lower.z;
+	}
+
+	bool intersectsXZ(AABB aabb) {
+		return aabb.upper.x > lower.x && upper.x > aabb.lower.x &&
 			   aabb.upper.z > lower.z && upper.z > aabb.lower.z;
 	}
 };
