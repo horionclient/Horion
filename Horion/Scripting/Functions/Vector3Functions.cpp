@@ -1,6 +1,6 @@
 #include "Vector3Functions.h"
 
-std::optional<vec3_t> Vector3Functions::getVecFromValue(JsValueRef ref) {
+std::optional<vec3_t> Vector3Functions::getVec3FromValue(JsValueRef ref) {
 	JsValueType type;
 	auto err = chakra.JsGetValueType_(ref, &type);
 	if (type != JsObject || err != JsNoError)
@@ -18,11 +18,11 @@ std::optional<vec3_t> Vector3Functions::getVecFromValue(JsValueRef ref) {
 	return std::optional<vec3_t>(vecInfo->vec);
 }
 
-std::optional<vec3_t> Vector3Functions::getVecFromArguments(JsValueRef* args, int argCount, int* nextArg) {
+std::optional<vec3_t> Vector3Functions::getVec3FromArguments(JsValueRef* args, int argCount, int* nextArg) {
 	if (argCount <= 0)
 		return std::optional<vec3_t>();
 
-	auto vec = Vector3Functions::getVecFromValue(args[0]);
+	auto vec = Vector3Functions::getVec3FromValue(args[0]);
 
 	if (vec.has_value()){
 		if(nextArg)
@@ -61,7 +61,7 @@ std::optional<vec3_t> Vector3Functions::getVecFromArguments(JsValueRef* args, in
 }
 
 JsValueRef CALLBACK Vector3Functions::isValid(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
-	auto vecOpt = Vector3Functions::getVecFromValue(arguments[0]);
+	auto vecOpt = Vector3Functions::getVec3FromValue(arguments[0]);
 	JsValueRef isValidBoolean;
 	chakra.JsBoolToBoolean_(vecOpt.has_value(), &isValidBoolean);
 
@@ -69,7 +69,7 @@ JsValueRef CALLBACK Vector3Functions::isValid(JsValueRef callee, bool isConstruc
 }
 
 JsValueRef CALLBACK Vector3Functions::getX(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
-	auto vecOpt = Vector3Functions::getVecFromValue(arguments[0]);
+	auto vecOpt = Vector3Functions::getVec3FromValue(arguments[0]);
 	if (!vecOpt.has_value()) {
 		chakra.throwTypeException(L"Vector is invalid!");
 		return JS_INVALID_REFERENCE;
@@ -79,7 +79,7 @@ JsValueRef CALLBACK Vector3Functions::getX(JsValueRef callee, bool isConstructCa
 }
 
 JsValueRef CALLBACK Vector3Functions::getY(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
-	auto vecOpt = Vector3Functions::getVecFromValue(arguments[0]);
+	auto vecOpt = Vector3Functions::getVec3FromValue(arguments[0]);
 	if (!vecOpt.has_value()) {
 		chakra.throwTypeException(L"Vector is invalid!");
 		return JS_INVALID_REFERENCE;
@@ -89,7 +89,7 @@ JsValueRef CALLBACK Vector3Functions::getY(JsValueRef callee, bool isConstructCa
 }
 
 JsValueRef CALLBACK Vector3Functions::getZ(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
-	auto vecOpt = Vector3Functions::getVecFromValue(arguments[0]);
+	auto vecOpt = Vector3Functions::getVec3FromValue(arguments[0]);
 	if (!vecOpt.has_value()) {
 		chakra.throwTypeException(L"Vector is invalid!");
 		return JS_INVALID_REFERENCE;
@@ -99,7 +99,7 @@ JsValueRef CALLBACK Vector3Functions::getZ(JsValueRef callee, bool isConstructCa
 }
 
 JsValueRef CALLBACK Vector3Functions::toString(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
-	auto vecOpt = Vector3Functions::getVecFromValue(arguments[0]);
+	auto vecOpt = Vector3Functions::getVec3FromValue(arguments[0]);
 	if (!vecOpt.has_value()) {
 		chakra.throwTypeException(L"Vector is invalid!");
 		return JS_INVALID_REFERENCE;
@@ -128,7 +128,7 @@ JsValueRef CALLBACK Vector3Functions::constructor(JsValueRef callee, bool isCons
 }
 
 JsValueRef CALLBACK Vector3Functions::add(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
-	auto vecOpt = Vector3Functions::getVecFromValue(arguments[0]);
+	auto vecOpt = Vector3Functions::getVec3FromValue(arguments[0]);
 	if (!vecOpt.has_value()) {
 		THROW(L"Vector is invalid!");
 	}
@@ -151,7 +151,7 @@ JsValueRef CALLBACK Vector3Functions::add(JsValueRef callee, bool isConstructCal
 
 				return scriptMgr.prepareVector3(vecOpt->add((float)val), reinterpret_cast<ContextObjects*>(callbackState));
 			}else if(type == JsObject){
-				auto oVec = Vector3Functions::getVecFromValue(arguments[1]);
+				auto oVec = Vector3Functions::getVec3FromValue(arguments[1]);
 				if (!oVec.has_value()) {
 					THROW(L"Supplied Vector is invalid!");
 				}
@@ -184,7 +184,7 @@ JsValueRef CALLBACK Vector3Functions::add(JsValueRef callee, bool isConstructCal
 }
 
 JsValueRef CALLBACK Vector3Functions::sub(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
-	auto vecOpt = Vector3Functions::getVecFromValue(arguments[0]);
+	auto vecOpt = Vector3Functions::getVec3FromValue(arguments[0]);
 	if (!vecOpt.has_value()) {
 		THROW(L"Vector is invalid!");
 	}
@@ -207,7 +207,7 @@ JsValueRef CALLBACK Vector3Functions::sub(JsValueRef callee, bool isConstructCal
 
 			return scriptMgr.prepareVector3(vecOpt->sub((float)val), reinterpret_cast<ContextObjects*>(callbackState));
 		}else if(type == JsObject){
-			auto oVec = Vector3Functions::getVecFromValue(arguments[1]);
+			auto oVec = Vector3Functions::getVec3FromValue(arguments[1]);
 			if (!oVec.has_value()) {
 				THROW(L"Supplied Vector is invalid!");
 			}
@@ -233,6 +233,118 @@ JsValueRef CALLBACK Vector3Functions::sub(JsValueRef callee, bool isConstructCal
 		}
 
 		return scriptMgr.prepareVector3(vecOpt->sub(oVec), reinterpret_cast<ContextObjects*>(callbackState));
+	} break;
+	}
+
+	THROW(L"Invalid arguments");
+}
+
+JsValueRef CALLBACK Vector3Functions::div(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	auto vecOpt = Vector3Functions::getVec3FromValue(arguments[0]);
+	if (!vecOpt.has_value()) {
+		THROW(L"Vector is invalid!");
+	}
+
+	if (argumentCount < 2) {
+		THROW(L"At least 1 argument needed");
+	}
+
+	switch (argumentCount - 1) {
+	case 1: {
+		// either adding a Vec3 or a float to all 3 components
+		JsValueType type;
+		chakra.JsGetValueType_(arguments[1], &type);
+
+		if (type == JsNumber) {
+			double val = 0;
+			if (chakra.JsNumberToDouble_(arguments[1], &val) != JsNoError) {
+				THROW(L"Argument 1 not a valid number");
+			}
+
+			return scriptMgr.prepareVector3(vecOpt->div((float)val), reinterpret_cast<ContextObjects*>(callbackState));
+		} else if (type == JsObject) {
+			auto oVec = Vector3Functions::getVec3FromValue(arguments[1]);
+			if (!oVec.has_value()) {
+				THROW(L"Supplied Vector is invalid!");
+			}
+
+			return scriptMgr.prepareVector3(vecOpt->div(*oVec), reinterpret_cast<ContextObjects*>(callbackState));
+		}
+	} break;
+	case 3: {
+		// adding with 3 individual floats
+		vec3_t oVec;
+		for (int i = 0; i < 3; i++) {
+			JsValueType type;
+			chakra.JsGetValueType_(arguments[1 + i], &type);
+			if (type != JsNumber) {
+				THROW(L"Invalid argument supplied");
+			}
+			double val = 0;
+			if (chakra.JsNumberToDouble_(arguments[1 + i], &val) != JsNoError) {
+				THROW(L"Argument not a valid number");
+			}
+
+			oVec.floatArr[i] = (float)val;
+		}
+
+		return scriptMgr.prepareVector3(vecOpt->div(oVec), reinterpret_cast<ContextObjects*>(callbackState));
+	} break;
+	}
+
+	THROW(L"Invalid arguments");
+}
+
+JsValueRef CALLBACK Vector3Functions::mul(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	auto vecOpt = Vector3Functions::getVec3FromValue(arguments[0]);
+	if (!vecOpt.has_value()) {
+		THROW(L"Vector is invalid!");
+	}
+
+	if (argumentCount < 2) {
+		THROW(L"At least 1 argument needed");
+	}
+
+	switch (argumentCount - 1) {
+	case 1: {
+		// either adding a Vec3 or a float to all 3 components
+		JsValueType type;
+		chakra.JsGetValueType_(arguments[1], &type);
+
+		if (type == JsNumber) {
+			double val = 0;
+			if (chakra.JsNumberToDouble_(arguments[1], &val) != JsNoError) {
+				THROW(L"Argument 1 not a valid number");
+			}
+
+			return scriptMgr.prepareVector3(vecOpt->mul((float)val), reinterpret_cast<ContextObjects*>(callbackState));
+		} else if (type == JsObject) {
+			auto oVec = Vector3Functions::getVec3FromValue(arguments[1]);
+			if (!oVec.has_value()) {
+				THROW(L"Supplied Vector is invalid!");
+			}
+
+			return scriptMgr.prepareVector3(vecOpt->mul(*oVec), reinterpret_cast<ContextObjects*>(callbackState));
+		}
+	} break;
+	case 3: {
+		// adding with 3 individual floats
+		vec3_t oVec;
+		for (int i = 0; i < 3; i++) {
+			JsValueType type;
+			chakra.JsGetValueType_(arguments[1 + i], &type);
+			if (type != JsNumber) {
+				THROW(L"Invalid argument supplied");
+			}
+			double val = 0;
+			if (chakra.JsNumberToDouble_(arguments[1 + i], &val) != JsNoError) {
+				THROW(L"Argument not a valid number");
+			}
+
+			oVec.floatArr[i] = (float)val;
+		}
+
+		return scriptMgr.prepareVector3(vecOpt->mul(oVec), reinterpret_cast<ContextObjects*>(callbackState));
 	} break;
 	}
 

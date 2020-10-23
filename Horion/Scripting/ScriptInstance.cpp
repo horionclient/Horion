@@ -80,9 +80,22 @@ void ScriptInstance::runSync() {
 	std::wstring returnString = L"No result";
 
 	if (err != JsNoError || this->checkPrintError()) {
-		logF("Script run failed: %X", err);
+		
+#define errLog(x, ...) (Logger::isActive() ? logF(x, __VA_ARGS__) : GameData::log(x, __VA_ARGS__))
+		
+		switch (err) {
+		case JsErrorScriptCompile:
+			errLog("Script failed to compile (code: %X)", err);
+			break;
+		default:
+			errLog("Script run failed: %X", err);
+			break;
+		}
 
-		returnString = L"Error! " + std::to_wstring(err) + L", you can find a stack trace in the console";
+#undef errLog
+		returnString = L"Error! " + std::to_wstring(err) + L", you may find a stack trace in the console";
+
+		goto stopExecution;
 	}
 
 	returnString = chakra.valueToString(result);
@@ -106,6 +119,7 @@ void ScriptInstance::runSync() {
 		this->runPromises();
 	}
 
+stopExecution:
 	chakra.JsSetCurrentContext_(JS_INVALID_REFERENCE);
 	chakra.JsDisposeRuntime_(this->runtimeHandle);
 	this->runtimeHandle = JS_INVALID_RUNTIME_HANDLE;

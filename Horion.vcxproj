@@ -383,6 +383,7 @@
     <ClCompile Include="Horion\Scripting\JsScriptModule.cpp" />
     <ClCompile Include="Horion\Scripting\ScriptInstance.cpp" />
     <ClCompile Include="Horion\Scripting\ScriptManager.cpp" />
+    <ClCompile Include="Horion\Scripting\Functions\Vector2Functions.cpp" />
     <ClCompile Include="Memory\GameData.cpp" />
     <ClCompile Include="Memory\Hooks.cpp" />
     <ClCompile Include="Memory\SlimMem.cpp" />
@@ -561,6 +562,7 @@
     <ClInclude Include="Horion\Scripting\JsScriptModule.h" />
     <ClInclude Include="Horion\Scripting\ScriptInstance.h" />
     <ClInclude Include="Horion\Scripting\ScriptManager.h" />
+    <ClInclude Include="Horion\Scripting\Functions\Vector2Functions.h" />
     <ClInclude Include="include\atlrx.h" />
     <ClInclude Include="include\chakra\ChakraCommon.h" />
     <ClInclude Include="include\chakra\ChakraCommonWindows.h" />

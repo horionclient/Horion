@@ -116,6 +116,7 @@ public:
 	static void drawItem(C_ItemStack* item, vec2_t ItemPos, float opacity, float scale, bool isEnchanted);
 	static void drawKeystroke(char key, vec2_t pos);
 	static float getLerpTime();
+	static vec3_t getOrigin();
 
 	static vec2_t worldToScreen(const vec3_t& world);
 };

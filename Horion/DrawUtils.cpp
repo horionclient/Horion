@@ -497,6 +497,9 @@ void DrawUtils::setGameRenderContext(__int64 ctx) {
 float DrawUtils::getLerpTime() {
 	return lerpT;
 }
+vec3_t DrawUtils::getOrigin() {
+	return origin;
+}
 void DrawUtils::drawLinestrip3d(const std::vector<vec3_t>& points) {
 	if(game3dContext == 0 || entityFlatStaticMaterial == 0)
 		return;
