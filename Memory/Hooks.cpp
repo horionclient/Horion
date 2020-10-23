@@ -383,6 +383,14 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 			*message = 0x0;     // Remove command in textbox
 			*textLength = 0x0;  // text length
 			return;
+		} else if (*message == '.') {
+			// maybe the user forgot his prefix, give him some helpful advice
+			static bool helpedUser = false;
+			if (!helpedUser) {
+				helpedUser = true;
+				g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%sYour Horion prefix is: \"%s%c%s\"", RED, YELLOW, cmdMgr->prefix, RED);
+				g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%sEnter \"%s%cprefix .%s\" to reset your prefix", RED, YELLOW, cmdMgr->prefix, RED);
+			}
 		}
 	}
 	oSendMessage(_this);
