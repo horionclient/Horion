@@ -18,33 +18,25 @@ void AutoSneak::onTick(C_GameMode* gm) {
 }
 
 void AutoSneak::onDisable() {
+	if (g_Data.getLocalPlayer() == nullptr)
+		return;
+
+	if (!doSilent) {
+		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
+		return;
+	}
+
 	C_PlayerActionPacket p;
 	p.action = 12;  //stop crouch packet
-
-
-	
-
-	if (g_Data.getLocalPlayer() != nullptr) {
-
-		if (doSilent)
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
-
-		if (!doSilent)
-			g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
-	}
-}
-
-
-void AutoSneak::onSendPacket(C_Packet* packet) {
-	//wait i dont actually need this bit lol
-
+	p.entityRuntimeId = g_Data.getLocalPlayer()->entityRuntimeId;
+	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
 }
 
 void AutoSneak::onEnable() {
-	C_PlayerActionPacket p;
-	p.action = 11;  //start crouch packet
-
-	if (doSilent)
+	if (doSilent) {
+		C_PlayerActionPacket p;
+		p.action = 11;  //start crouch packet
+		p.entityRuntimeId = g_Data.getLocalPlayer()->entityRuntimeId;
 		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
-
+	}
 }

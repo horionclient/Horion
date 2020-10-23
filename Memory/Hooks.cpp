@@ -1108,6 +1108,7 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packet* packet) {
 	static auto oFunc = g_Hooks.LoopbackPacketSender_sendToServerHook->GetFastcall<void, C_LoopbackPacketSender*, C_Packet*>();
 
+	static auto autoSneakMod = moduleMgr->getModule<AutoSneak>();
 	static auto freecamMod = moduleMgr->getModule<Freecam>();
 	static auto blinkMod = moduleMgr->getModule<Blink>();
 	static auto noPacketMod = moduleMgr->getModule<NoPacket>();
@@ -1149,17 +1150,12 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 		}
 	}
 
-	if (autosneakMod->isEnabled() && autosneakMod->doSilent && packet->isInstanceOf<C_PlayerActionPacket>()) {
+	if (autoSneakMod->isEnabled() && g_Data.getLocalPlayer() != nullptr && autoSneakMod->doSilent && packet->isInstanceOf<C_PlayerActionPacket>()) {
 		auto* pp = reinterpret_cast<C_PlayerActionPacket*>(packet);
-		if (g_Data.getLocalPlayer() != nullptr)
-		if (pp->action == 12) //dont let it uncrouch
-			return;
+		
+		if (pp->action == 12 && pp->entityRuntimeId == g_Data.getLocalPlayer()->entityRuntimeId) 
+			return; //dont send uncrouch
 	}
-	
-	
-	
-	
-	
 	
 	moduleMgr->onSendPacket(packet);
 
