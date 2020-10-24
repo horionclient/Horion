@@ -1,6 +1,6 @@
 #include "WaypointCommand.h"
 
-WaypointCommand::WaypointCommand() : IMCCommand("waypoint", "Manage Waypoints", "<add|remove|teleport> <name> [x y z]") {
+WaypointCommand::WaypointCommand() : IMCCommand("waypoint", "Manage Waypoints", "<add|remove|teleport|removeall> <name> [x y z]") {
 	registerAlias("wp");
 }
 
@@ -10,11 +10,21 @@ WaypointCommand::~WaypointCommand() {
 bool WaypointCommand::execute(std::vector<std::string>* args) {
 	C_LocalPlayer* player = g_Data.getLocalPlayer();
 	assertTrue(player != nullptr);
-	assertTrue(args->size() > 2);
+	assertTrue(args->size() >= 2);
 
 	static auto mod = moduleMgr->getModule<Waypoints>();
 
 	std::string opt = args->at(1);
+
+	if (opt == "removeall") {
+		auto num = mod->getWaypoints()->size();
+		mod->getWaypoints()->clear();
+		clientMessageF("%sRemoved %i waypoints!", YELLOW, num);
+		return true;
+	}
+
+	assertTrue(args->size() > 2);
+
 	std::string name = args->at(2);
 	name = Utils::sanitize(name);
 	if (name.size() <= 1 || name.size() > 30) {
@@ -39,22 +49,22 @@ bool WaypointCommand::execute(std::vector<std::string>* args) {
 			if (!mod->isEnabled())
 				clientMessageF("%sEnable the waypoints module to see it ingame!", YELLOW);
 		} else {
-			clientMessageF("%sWaypoint \"%s\" already exists", YELLOW, name.c_str());
+			clientMessageF("%sWaypoint \"%s\" already exists", RED, name.c_str());
 		}
 	} else if (opt == "remove") {
 		if (mod->remove(name)) {
-			clientMessageF("%sRemoved waypoint \"%s\"", RED, name.c_str());
+			clientMessageF("%sRemoved waypoint \"%s\"", YELLOW, name.c_str());
 		} else {
-			clientMessageF("%sUnknown waypoint \"%s\"", YELLOW, name.c_str());
+			clientMessageF("%sUnknown waypoint \"%s\"", RED, name.c_str());
 		}
-	} else if (opt == "tp" || opt == "teleport") {
+	}else if (opt == "tp" || opt == "teleport") {
 		if (auto wp = mod->getWaypoint(name)) {
 			auto wpV = wp.value();
 			auto pos = wpV.pos;
 			player->setPos(pos);
 			clientMessageF("%sTeleported to waypoint \"%s\" (%.02f, %.02f, %.02f)", GREEN, name.c_str(), pos.x, pos.y, pos.z);
 		} else {
-			clientMessageF("%sUnknown waypoint \"%s\"", YELLOW, name.c_str());
+			clientMessageF("%sUnknown waypoint \"%s\"", RED, name.c_str());
 		}
 	} else {
 		return false;

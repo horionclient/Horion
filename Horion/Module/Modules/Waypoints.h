@@ -22,6 +22,7 @@ public:
 	~Waypoints();
 
 	bool interdimensional = true;
+	bool showCoordinates = false;
 	float size = 0.6f;
 
 	// Inherited via IModule

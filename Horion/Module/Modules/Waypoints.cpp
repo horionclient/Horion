@@ -5,6 +5,7 @@
 Waypoints::Waypoints() : IModule(0x0, Category::VISUAL, "Shows holograms for user-defined coordinates") {
 	registerFloatSetting("Size", &size, size, 0.3f, 1.6f);
 	registerBoolSetting("Interdimensional", &interdimensional, interdimensional);
+	registerBoolSetting("Show coordinates", &showCoordinates, showCoordinates);
 }
 
 Waypoints::~Waypoints() {
@@ -89,23 +90,40 @@ void Waypoints::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 
 		vec2_t textPos = DrawUtils::worldToScreen(pos);
 		if (textPos.x != -1) {
+			std::string coordText;
 			textPos.y -= textHeight;
 			textPos.x -= textWidth / 2.f;
+
+			if (this->showCoordinates) {
+				std::ostringstream out;
+				out.precision(1);
+				out << "(" << std::fixed << pos.x << ", " << pos.y << ", " << pos.z << ")";
+				coordText = out.str();
+				textWidth = std::max(textWidth, DrawUtils::getTextWidth(&coordText, size * 0.75f) + 0.5f);
+			}
+
 			rectPos.x = textPos.x - 1.f * size;
 			rectPos.y = textPos.y - 1.05f * size;
 			rectPos.z = textPos.x + textWidth + 1.f * size;
 			rectPos.w = textPos.y + textHeight + 2.f * size;
 
+			if (this->showCoordinates) 
+				rectPos.w += textHeight * 0.75f + 1.f * size;
+
 			MC_Color color(0, 0, 0);
-			if (currentDimension == 0 && wpDimension == 1) {
+			if (currentDimension == 0 && wpDimension == 1) 
 				color.r = 0.2f;
-			}
-			if (currentDimension == 1 && wpDimension == 0) {
+			
+			if (currentDimension == 1 && wpDimension == 0) 
 				color.b = 0.2f;
-			}
 
 			DrawUtils::fillRectangle(rectPos, color, alpha * 0.5f);
 			DrawUtils::drawText(textPos, &txt, MC_Color(255, 255, 255), size, alpha);
+			if (this->showCoordinates) {
+				textPos.y += textHeight + 1.f * size;
+				
+				DrawUtils::drawText(textPos, &coordText, MC_Color(255, 255, 255), size * 0.75f, alpha);
+			}
 		}
 		DrawUtils::flush();
 	}
