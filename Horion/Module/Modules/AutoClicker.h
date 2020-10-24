@@ -6,7 +6,7 @@ class AutoClicker : public IModule {
 private:
 	int delay = 0;
 	int Odelay = 0;
-	bool sword = true;
+	bool weapons = true;
 	bool rightclick = false;
 	bool hold = false;
 
