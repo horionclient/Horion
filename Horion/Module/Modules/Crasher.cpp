@@ -10,6 +10,16 @@ const char* Crasher::getModuleName() {
 	return ("Crasher");
 }
 
+void Crasher::onEnable() {
+	if (g_Data.getLocalPlayer() == nullptr)
+		this->setEnabled(false);
+}
+
+void Crasher::onTick(C_GameMode* gm) {
+	if (g_Data.getLocalPlayer() == nullptr)
+		this->setEnabled(false);
+}
+
 void Crasher::onSendPacket(C_Packet* packet) {
 	if (packet->isInstanceOf<PlayerAuthInputPacket>()) {
 		PlayerAuthInputPacket* InputPacket = reinterpret_cast<PlayerAuthInputPacket*>(packet);
