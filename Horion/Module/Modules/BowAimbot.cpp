@@ -34,6 +34,8 @@ void findTargets(C_Entity* currentEntity, bool isRegularEntitie) {
 }
 
 void BowAimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
+	targetList.clear();
+
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 	if (localPlayer == nullptr)
 		return;
@@ -43,8 +45,6 @@ void BowAimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 
 	if (!(GameData::isRightClickDown() && GameData::canUseMoveKeys())) // is aiming?
 		return;
-
-	targetList.clear();
 
 	g_Data.forEachEntity(findTargets);
 
