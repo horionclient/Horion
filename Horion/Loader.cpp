@@ -1,5 +1,11 @@
 #include "Loader.h"
 
+std::cout << " horion/Loader.cpp> /give @s horionclient:horion:free_horion_premium";
+sleep(3)
+std::cout << "Successfully activated Horion Premium for NaN years NaN days NaN hours NaN minutes NaN seconds NaN milliseconds.";
+
+
+
 SlimUtils::SlimMem mem;
 const SlimUtils::SlimModule* gameModule;
 bool isRunning = true;
