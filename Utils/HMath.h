@@ -560,6 +560,11 @@ struct AABB {
 		return AABB(lower.sub(amount, 0.f, amount), upper.add(amount, 0.f, amount));
 	}
 
+	vec3_t centerPoint() {
+		vec3_t diff = upper.sub(lower);
+		return lower.add(diff.mul(0.5f));
+	}
+
 	bool intersects(AABB aabb) {
 		return aabb.upper.x > lower.x && upper.x > aabb.lower.x &&
 			   aabb.upper.y > lower.y && upper.y > aabb.lower.y &&

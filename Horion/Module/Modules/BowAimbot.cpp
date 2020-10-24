@@ -52,8 +52,7 @@ void BowAimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
 		vec3_t origin = g_Data.getLocalPlayer()->eyePos0;  // TODO: sort list
 		C_Entity* entity = targetList[0];
-		vec3_t pos = entity->eyePos0;
-		pos = {13.f, 8.5f, 21.5f};
+		vec3_t pos = entity->aabb.centerPoint();
 		pos = pos.sub(origin);
 		float yaw = (atan2f(pos.z, pos.x) * DEG_RAD) - 90;
 		float len = pos.magnitudexz();
