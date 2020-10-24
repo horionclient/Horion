@@ -24,7 +24,7 @@ public:
 	int m_slot = 0;
 };
 
-AutoArmor::AutoArmor() : IModule(0x0, Category::PLAYER, "Automatically equips the best armor") {
+AutoArmor::AutoArmor() : IModule(0, Category::PLAYER, "Automatically equips the best armor") {
 }
 
 AutoArmor::~AutoArmor() {

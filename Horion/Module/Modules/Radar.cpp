@@ -14,7 +14,7 @@ bool grid = true;
 // it's the only one that could be. since everything else is accessed at renderEntity()
 float bgOpacity = 0.2f;
 
-Radar::Radar() : IModule(0x0, Category::VISUAL, "Radar") {
+Radar::Radar() : IModule(0, Category::VISUAL, "Radar") {
 	registerBoolSetting("Show Grid", &grid, true);
 	registerIntSetting("Size", &size, size, 50, 200);
 	registerFloatSetting("Pixel Size", &pixelSize, pixelSize, 2, 4);

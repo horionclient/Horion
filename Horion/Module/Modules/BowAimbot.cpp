@@ -4,7 +4,7 @@
 
 std::vector<C_Entity*> targetList;
 
-BowAimbot::BowAimbot() : IModule(0x0, Category::COMBAT, "Aimbot, but for bows") {
+BowAimbot::BowAimbot() : IModule(0, Category::COMBAT, "Aimbot, but for bows") {
 	registerBoolSetting("silent", &this->silent, this->silent);
 }
 

@@ -1,6 +1,6 @@
 #include "PacketLogger.h"
 
-PacketLogger::PacketLogger() : IModule(0x0, Category::MISC, "Logging Packets !") {
+PacketLogger::PacketLogger() : IModule(0, Category::MISC, "Logging Packets !") {
 }
 
 PacketLogger::~PacketLogger() {

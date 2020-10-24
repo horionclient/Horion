@@ -1,6 +1,6 @@
 #include "Timer.h"
 
-Timer::Timer() : IModule(0x0, Category::MISC, "Increase the ticks per second") {
+Timer::Timer() : IModule(0, Category::MISC, "Increase the ticks per second") {
 	this->registerIntSetting("ticks per second", &this->timer, this->timer, 0, 500);
 }
 

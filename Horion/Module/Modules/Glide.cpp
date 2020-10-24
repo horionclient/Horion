@@ -1,6 +1,6 @@
 #include "Glide.h"
 
-Glide::Glide() : IModule('U', Category::MOVEMENT, "Float down") {
+Glide::Glide() : IModule(0, Category::MOVEMENT, "Float down") {
 	this->registerFloatSetting("value", &this->glideMod, this->glideMod, -2, 1);
 }
 
