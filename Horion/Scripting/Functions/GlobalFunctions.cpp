@@ -21,7 +21,8 @@ JsValueRef CALLBACK GlobalFunctions::log(JsValueRef callee, bool isConstructCall
 	}
 
 	#ifdef _DEBUG
-	logF("Script: %S", strstream.str().c_str());
+	auto string = strstream.str();
+	Logger::WriteBigLogFileF(string.size() + 11, "Script: %S", string.c_str());
 	#else
 	
 	auto obj = reinterpret_cast<ContextObjects*>(callbackState);
