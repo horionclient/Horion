@@ -1,11 +1,14 @@
 #include "BowAimbot.h"
 
 #include "../../../Utils/Target.h"
+#include "../../DrawUtils.h"
 
 std::vector<C_Entity*> targetList;
 
 BowAimbot::BowAimbot() : IModule(0, Category::COMBAT, "Aimbot, but for bows") {
 	registerBoolSetting("silent", &this->silent, this->silent);
+	registerBoolSetting("predict", &this->predict, this->predict);
+	registerBoolSetting("visualize", &this->visualize, this->visualize);
 }
 
 BowAimbot::~BowAimbot() {
@@ -53,6 +56,14 @@ void BowAimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		vec3_t origin = g_Data.getLocalPlayer()->eyePos0;  // TODO: sort list
 		C_Entity* entity = targetList[0];
 		vec3_t pos = entity->aabb.centerPoint();
+		if (predict) {
+			vec3_t velocity = entity->getPos()->sub(*entity->getPosOld());
+			velocity.x *= origin.dist(pos) / 2.f;
+			velocity.z *= origin.dist(pos) / 2.f;
+			pos = pos.add(velocity);
+		}
+		if(visualize)
+			DrawUtils::drawBox(pos.sub(0.5), pos.add(0.5), 0.3f, true);
 		pos = pos.sub(origin);
 		float yaw = (atan2f(pos.z, pos.x) * DEG_RAD) - 90;
 		float len = pos.magnitudexz();
