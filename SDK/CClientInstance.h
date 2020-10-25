@@ -56,6 +56,16 @@ public:
 
 namespace mce {
 	class TextureGroup;
+	class MaterialPtr;
+	class Mesh {
+	public:
+		void renderMesh(__int64 screenContext, mce::MaterialPtr* material, size_t numTextures, __int64** textureArray);
+
+		template <size_t numTextures>
+		void renderMesh(__int64 screenContext, mce::MaterialPtr* material, std::array<__int64*, numTextures> textures) {
+			this->renderMesh(screenContext, material, numTextures, &textures[0]);
+		}
+	};
 	class TexturePtr {
 	private:
 		__int64* clientTexture;

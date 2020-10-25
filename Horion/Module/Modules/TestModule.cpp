@@ -2,6 +2,7 @@
 #include "../../../Utils/Logger.h"
 #include "../../DrawUtils.h"
 #include <deque>
+#include <array>
 #include <glm/mat4x4.hpp>
 #include <glm/trigonometric.hpp>  //radians
 #include <glm/ext/matrix_transform.hpp> // perspective, translate, rotate
@@ -71,16 +72,7 @@ void TestModule::onLevelRender() {
 	vec3_ti pos(3, 3, 3);
 	auto block = g_Data.getLocalPlayer()->region->getBlock(pos);
 
-	struct tex_t{
-		__int64* atlas, *light;
-	} textures;
-	struct data_t {
-		__int64 one;
-		tex_t* two;
-	} data;
-	using renderMesh_t = __int64 (*)(__int64, __int64, mce::MaterialPtr*, data_t*);
-	static renderMesh_t renderMesh = reinterpret_cast<renderMesh_t>(FindSignature("40 53 55 56 57 41 54 41 55 41 56 41 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F1 4D 8B E0 4C"));
-
+	
 	struct matStack {
 		std::deque<glm::mat4x4> stack;
 		bool isDirty;
@@ -115,16 +107,22 @@ void TestModule::onLevelRender() {
 
 	vec3_ti zer = {0, 0, 0};
 	auto mesh = blockTess->getMeshForBlockInWorld(tess, block, zer);
+	
+	static std::array<mce::MaterialPtr, 8> mats = {{mce::MaterialPtr("moving_block_double_side"),
+													mce::MaterialPtr("moving_block_blend"),
+													mce::MaterialPtr("moving_block"),
+													mce::MaterialPtr("moving_block_alpha"),
+													mce::MaterialPtr("moving_block_alpha"),
+													mce::MaterialPtr("moving_block_seasons"),
+													mce::MaterialPtr("moving_block_alpha_seasons"),
+													mce::MaterialPtr("moving_block_alpha_single_side")}};
 
-	textures.atlas = g_Data.getClientInstance()->levelRenderer->atlasTexture.getClientTexture();
-	textures.light = *reinterpret_cast<__int64**>(g_Data.getClientInstance()->getLightTexture() + 0x18);
+	std::array<__int64*, 2> textures;
+	textures[0] = g_Data.getClientInstance()->levelRenderer->atlasTexture.getClientTexture();
+	textures[1] = *reinterpret_cast<__int64**>(g_Data.getClientInstance()->getLightTexture() + 0x18);
 
-	data.one = 2;
-	data.two = &textures;
-
-	static mce::MaterialPtr defaultMat("moving_block");
-	renderMesh(mesh, DrawUtils::get3dScreenContext() + 0x10, &defaultMat, &data);
-
+	mesh->renderMesh(DrawUtils::get3dScreenContext(), &mats[block->getRenderLayer()], textures);
+	
 	matStackPtr->isDirty = 1;
 	matStackPtr->pop();
 }

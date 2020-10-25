@@ -57,3 +57,17 @@ mce::MaterialPtr::MaterialPtr(const std::string &materialName) {
 	HashedString hashedStr(materialName);
 	materialPtrConst(this, renderGroupBase, hashedStr);
 }
+
+void mce::Mesh::renderMesh(__int64 screenContext, mce::MaterialPtr *material, size_t numTextures, __int64 **textureArray) {
+	struct TextureData {
+		size_t numTextures;
+		__int64 **texturePtr;
+	} data;
+	using renderMesh_t = __int64 (*)(mce::Mesh*, __int64, mce::MaterialPtr *, TextureData *);
+	static renderMesh_t renderMesh = reinterpret_cast<renderMesh_t>(FindSignature("40 53 55 56 57 41 54 41 55 41 56 41 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F1 4D 8B E0 4C"));
+
+	data.numTextures = numTextures;
+	data.texturePtr = textureArray;
+
+	renderMesh(this, screenContext + 0x10, material, &data);
+}
