@@ -41,3 +41,19 @@ void C_GuiData::displayClientMessageNoSendF(const char *fmt, ...) {
 	displayClientMessageVA(fmt, arg, false);
 	va_end(arg);
 }
+
+mce::MaterialPtr::MaterialPtr(const std::string &materialName) {
+
+	using materialPtrConst_t = void(__fastcall*)(mce::MaterialPtr *, __int64, const HashedString&); 
+	static materialPtrConst_t materialPtrConst = reinterpret_cast<materialPtrConst_t>(FindSignature("48 89 4C 24 ?? 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 89 74 24 ?? 4C 8B CA"));
+
+	static __int64 renderGroupBase = 0;
+	if (renderGroupBase == 0){
+		auto sig = FindSignature("48 8D 15 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 54 24 ?? 49 8D 8F") + 3;
+		auto off = *reinterpret_cast<int *>(sig);
+		renderGroupBase = sig + 4 + off;
+	}
+
+	HashedString hashedStr(materialName);
+	materialPtrConst(this, renderGroupBase, hashedStr);
+}

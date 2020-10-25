@@ -310,7 +310,7 @@ private:
 	virtual __int64 feed(int);
 	virtual __int64 handleEntityEvent(__int64, int);
 	virtual __int64 getPickRadius(void);
-	virtual const struct HashedString* getActorRendererId(void);
+	virtual const class HashedString* getActorRendererId(void);
 	virtual __int64 spawnAtLocation(int, int);
 	virtual __int64 spawnAtLocation(int, int, float);
 	virtual __int64 spawnAtLocation(__int64 const &, int);

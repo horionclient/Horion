@@ -52,9 +52,6 @@ public:
 };
 
 class C_Block {
-private:
-	uintptr_t** vtable;
-
 public:
 	uint8_t data; // 0x8
 
@@ -65,6 +62,9 @@ public:
 	C_BlockLegacy** blockLegacy; // 0x10
 
 	inline C_BlockLegacy* toLegacy() { return *blockLegacy; }
+
+	virtual ~C_Block();
+	virtual int getRenderLayer();
 };
 
 class CompoundTag;

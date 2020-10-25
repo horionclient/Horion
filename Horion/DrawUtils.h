@@ -3,6 +3,7 @@
 #include "../Memory/GameData.h"
 #include "../SDK/CClientInstance.h"
 #include "../SDK/CMinecraftUIRenderContext.h"
+#include "../SDK/Tessellator.h"
 #include "../Utils/HMath.h"
 #include "../Utils/Target.h"
 #include "../Utils/Utils.h"
@@ -83,8 +84,10 @@ public:
 	static void setGameRenderContext(__int64 ctx);
 	static void flush();
 	static void setColor(float r, float g, float b, float a);  // rgba, values from 0 to 1
-	static inline void tess__begin(__int64 tesselator, int vertexFormat = 3, int numVerticesReserved = 0);
+	static inline void tess__begin(Tessellator* tesselator, int vertexFormat = 3, int numVerticesReserved = 0);
 	static C_Font* getFont(Fonts font);
+	static Tessellator* get3dTessellator();
+	static __int64 get3dScreenContext();
 	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = Fonts::SMOOTH);
 	static float getFontHeight(float textSize = 1, Fonts font = Fonts::SMOOTH);
 

@@ -1,6 +1,15 @@
 #include "TestModule.h"
 #include "../../../Utils/Logger.h"
 #include "../../DrawUtils.h"
+#include <deque>
+#include <glm/mat4x4.hpp>
+#include <glm/trigonometric.hpp>  //radians
+#include <glm/ext/matrix_transform.hpp> // perspective, translate, rotate
+#include <glm/ext/matrix_relational.hpp>
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/gtc/constants.hpp>
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 TestModule::TestModule() : IModule(0, Category::MISC, "For testing purposes") {
 	registerFloatSetting("float1", &this->float1, 0, -10, 10);
@@ -33,9 +42,7 @@ void TestModule::onTick(C_GameMode* gm) {
 	//if (gm->player->velocity.y > 0)
 		
 	//logF("%.4f %.4f", gm->player->velocity.y, gm->player->aabb.lower.y);
-	int dim = -5;
-	gm->player->getDimensionId(&dim);
-	logF("%i", dim);
+	
 }
 
 void TestModule::onMove(C_MoveInputHandler* hand){
@@ -56,34 +63,68 @@ void TestModule::onDisable() {
 }
 float t = 0;
 void TestModule::onLevelRender() {
-	t++;
-	DrawUtils::setColor(1, 0.2f, 0.2f, 1);
+	DrawUtils::setColor(0.5f, 0.5f, 0.5f, 1);
 
-	vec3_t permutations[36];
-	for(int i = 0; i < 36; i++){
-		permutations[i] = {sinf((i * 10.f) / (180 / PI)), 0.f, cosf((i * 10.f) / (180 / PI))};
-	}
+	auto blockTess = g_Data.getClientInstance()->levelRenderer->blockTessellator;
+	auto tess = DrawUtils::get3dTessellator();
 
-	const float coolAnim = 0.9f + 0.9f * sin((t / 60) * PI * 2);
+	vec3_ti pos(3, 3, 3);
+	auto block = g_Data.getLocalPlayer()->region->getBlock(pos);
 
-	g_Data.forEachEntity([&](auto c, auto _){
-	  vec3_t* start = c->getPosOld();
-	  vec3_t* end = c->getPos();
+	struct tex_t{
+		__int64* atlas, *light;
+	} textures;
+	struct data_t {
+		__int64 one;
+		tex_t* two;
+	} data;
+	using renderMesh_t = __int64 (*)(__int64, __int64, mce::MaterialPtr*, data_t*);
+	static renderMesh_t renderMesh = reinterpret_cast<renderMesh_t>(FindSignature("40 53 55 56 57 41 54 41 55 41 56 41 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F1 4D 8B E0 4C"));
 
-	  auto te = DrawUtils::getLerpTime();
-	  vec3_t pos = start->lerp(end, te);
+	struct matStack {
+		std::deque<glm::mat4x4> stack;
+		bool isDirty;
 
-	  auto yPos = pos.y;
-	  yPos -= 1.62f;
-	  yPos += coolAnim;
+		glm::mat4x4& push() {
+			const auto latestAndGreatest = this->stack.back();
+			this->stack.push_back(latestAndGreatest);
+			return this->stack.back();
+		}
 
-	  std::vector<vec3_t> posList;
-	  posList.reserve(36);
-	  for(auto& perm : permutations){
-		  vec3_t curPos(pos.x, yPos, pos.z);
-		  posList.push_back(curPos.add(perm));
-	  }
+		void pop() {
+			this->stack.pop_back();
+		}
+	};
 
-	  DrawUtils::drawLinestrip3d(posList);
-	});
+	matStack* matStackPtr = reinterpret_cast<matStack*>(*reinterpret_cast<__int64*>(DrawUtils::get3dScreenContext() + 0x18i64) + 0x30i64);
+
+	matStackPtr->isDirty = 1;
+	auto& newMat = matStackPtr->push();
+
+	auto origin = DrawUtils::getOrigin();
+	auto temp = DrawUtils::getOrigin().add(pos.toFloatVector()).mul(-1);
+
+	static float t = 0;
+	t+=3;
+	auto preRotTranslation = glm::translate(glm::mat4(1.f), glm::vec3(-0.5f, -0.5f, -0.5f));
+	auto afterRotTranslation = glm::translate(glm::mat4(1.f), glm::vec3(0.5f, 0.5f, 0.5f));
+	auto rotation = afterRotTranslation * glm::rotate(glm::mat4(1.f), glm::radians(t), glm::vec3(0, 1, 0)) * preRotTranslation;
+
+	auto translation = glm::translate(glm::mat4(1.f), glm::vec3(-origin.x, -origin.y, -origin.z));
+	newMat = translation * rotation;
+
+	vec3_ti zer = {0, 0, 0};
+	auto mesh = blockTess->getMeshForBlockInWorld(tess, block, zer);
+
+	textures.atlas = g_Data.getClientInstance()->levelRenderer->atlasTexture.getClientTexture();
+	textures.light = *reinterpret_cast<__int64**>(g_Data.getClientInstance()->getLightTexture() + 0x18);
+
+	data.one = 2;
+	data.two = &textures;
+
+	static mce::MaterialPtr defaultMat("moving_block");
+	renderMesh(mesh, DrawUtils::get3dScreenContext() + 0x10, &defaultMat, &data);
+
+	matStackPtr->isDirty = 1;
+	matStackPtr->pop();
 }
