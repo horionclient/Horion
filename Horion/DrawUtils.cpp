@@ -112,8 +112,12 @@ Tessellator* DrawUtils::get3dTessellator() {
 	return myTess;
 }
 
-__int64 DrawUtils::get3dScreenContext() {
-	return game3dContext;
+__int64 DrawUtils::getScreenContext() {
+	return game3dContext == 0 ? screenContext2d : game3dContext;
+}
+
+MatrixStack* DrawUtils::getMatrixStack() {
+	return reinterpret_cast<MatrixStack*>(*reinterpret_cast<__int64*>(DrawUtils::getScreenContext() + 0x18i64) + 0x30i64);
 }
 
 float DrawUtils::getTextWidth(std::string* textStr, float textSize, Fonts font) {

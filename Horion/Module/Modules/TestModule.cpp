@@ -1,6 +1,7 @@
 #include "TestModule.h"
 #include "../../../Utils/Logger.h"
 #include "../../DrawUtils.h"
+#include "../../../SDK/MatrixStack.h"
 #include <deque>
 #include <array>
 #include <glm/mat4x4.hpp>
@@ -72,25 +73,8 @@ void TestModule::onLevelRender() {
 	vec3_ti pos(3, 3, 3);
 	auto block = g_Data.getLocalPlayer()->region->getBlock(pos);
 
-	
-	struct matStack {
-		std::deque<glm::mat4x4> stack;
-		bool isDirty;
+	MatrixStack* matStackPtr = DrawUtils::getMatrixStack();
 
-		glm::mat4x4& push() {
-			const auto latestAndGreatest = this->stack.back();
-			this->stack.push_back(latestAndGreatest);
-			return this->stack.back();
-		}
-
-		void pop() {
-			this->stack.pop_back();
-		}
-	};
-
-	matStack* matStackPtr = reinterpret_cast<matStack*>(*reinterpret_cast<__int64*>(DrawUtils::get3dScreenContext() + 0x18i64) + 0x30i64);
-
-	matStackPtr->isDirty = 1;
 	auto& newMat = matStackPtr->push();
 
 	auto origin = DrawUtils::getOrigin();
@@ -103,7 +87,7 @@ void TestModule::onLevelRender() {
 	auto rotation = afterRotTranslation * glm::rotate(glm::mat4(1.f), glm::radians(t), glm::vec3(0, 1, 0)) * preRotTranslation;
 
 	auto translation = glm::translate(glm::mat4(1.f), glm::vec3(-origin.x, -origin.y, -origin.z));
-	newMat = translation * rotation;
+	*newMat = translation * rotation;
 
 	vec3_ti zer = {0, 0, 0};
 	auto mesh = blockTess->getMeshForBlockInWorld(tess, block, zer);
@@ -121,8 +105,5 @@ void TestModule::onLevelRender() {
 	textures[0] = g_Data.getClientInstance()->levelRenderer->atlasTexture.getClientTexture();
 	textures[1] = *reinterpret_cast<__int64**>(g_Data.getClientInstance()->getLightTexture() + 0x18);
 
-	mesh->renderMesh(DrawUtils::get3dScreenContext(), &mats[block->getRenderLayer()], textures);
-	
-	matStackPtr->isDirty = 1;
-	matStackPtr->pop();
+	mesh->renderMesh(DrawUtils::getScreenContext(), &mats[block->getRenderLayer()], textures);
 }

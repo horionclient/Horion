@@ -13,7 +13,7 @@ C_BaseActorRenderContext::C_BaseActorRenderContext(C_ScreenContext *ScreenCtx, C
 void C_ItemRenderer::renderGuiItemNew(C_BaseActorRenderContext *BaseActorRenderCtx, C_ItemStack *item, MinecraftGame *game, float x, float y, float opacity, float scale, bool isEnchanted) {
 	using renderGuiItemNew_t = void(__fastcall *)(C_ItemRenderer *, C_BaseActorRenderContext *, C_ItemStack *, MinecraftGame *, float, float, float, float, float, bool);
 	static renderGuiItemNew_t renderGuiItemNew = reinterpret_cast<renderGuiItemNew_t>(FindSignature("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 89 58 20 0F 29 70 B8 48 8B 05 ?? ?? ?? ??"));
-	item->setShowPickUp(true);
+	item->setShowPickUp(false);
 	renderGuiItemNew(this, BaseActorRenderCtx, item, game, x, y, 1, opacity, scale, isEnchanted);
 }
 

@@ -78,6 +78,8 @@ enum VertexFormat {
 
 };
 
+class MatrixStack;
+
 class DrawUtils {
 public:
 	static void setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* guiData);
@@ -87,7 +89,8 @@ public:
 	static inline void tess__begin(Tessellator* tesselator, int vertexFormat = 3, int numVerticesReserved = 0);
 	static C_Font* getFont(Fonts font);
 	static Tessellator* get3dTessellator();
-	static __int64 get3dScreenContext();
+	static __int64 getScreenContext();
+	static MatrixStack* getMatrixStack();
 	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = Fonts::SMOOTH);
 	static float getFontHeight(float textSize = 1, Fonts font = Fonts::SMOOTH);
 

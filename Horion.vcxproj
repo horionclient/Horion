@@ -400,6 +400,7 @@
     <ClCompile Include="SDK\CMinecraftUIRenderContext.cpp" />
     <ClCompile Include="SDK\CMoveInputHandler.cpp" />
     <ClCompile Include="SDK\CPacket.cpp" />
+    <ClCompile Include="SDK\MatrixStack.cpp" />
     <ClCompile Include="SDK\Tag.cpp" />
     <ClCompile Include="SDK\Tessellator.cpp" />
     <ClCompile Include="SDK\TextHolder.cpp" />
@@ -612,6 +613,7 @@
     <ClInclude Include="SDK\CPacket.h" />
     <ClInclude Include="SDK\CRakNetInstance.h" />
     <ClInclude Include="SDK\CUIScene.h" />
+    <ClInclude Include="SDK\MatrixStack.h" />
     <ClInclude Include="SDK\MojangsonToken.h" />
     <ClInclude Include="SDK\Tag.h" />
     <ClInclude Include="SDK\Tessellator.h" />
