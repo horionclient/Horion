@@ -1,6 +1,6 @@
 #include "TopCommand.h"
 
-TopCommand::TopCommand() : IMCCommand("top", "Teleports to the nearest pocket of air above you - highly recommended against using this inside the Nether.", "") {
+TopCommand::TopCommand() : IMCCommand("top", "Teleports to the nearest pocket of air above you - highly recommend against using this inside the Nether.", "") {
 }
 
 TopCommand::~TopCommand() {
