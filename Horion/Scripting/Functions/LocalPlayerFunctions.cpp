@@ -90,8 +90,6 @@ JsValueRef CALLBACK LocalPlayerFunctions::getInventorySlot(JsValueRef callee, bo
 	int slot;
 	const auto plr = reinterpret_cast<C_LocalPlayer*>(ent);
 
-	Logger::SendToConsoleF("Start");
-
 	if (argumentCount < 2) {
 		THROW(L"Argument 1 missing");
 	}
