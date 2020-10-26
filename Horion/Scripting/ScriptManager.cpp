@@ -106,6 +106,8 @@ void ScriptManager::prepareLocalPlayerPrototype(JsValueRef proto, ContextObjects
 	chakra.defineFunction(proto, L"toString", LocalPlayerFunctions::toString, objs);
 	chakra.defineFunction(proto, L"setViewAngles", LocalPlayerFunctions::setViewAngles, objs);
 	chakra.defineFunction(proto, L"setIsOnGround", LocalPlayerFunctions::setIsOnGround, objs);
+	chakra.defineFunction(proto, L"getInventory", LocalPlayerFunctions::getInventory, objs);
+	chakra.defineFunction(proto, L"getInventorySlot", LocalPlayerFunctions::getInventorySlot, objs);
 }
 
 void ScriptManager::prepareGameFunctions(JsValueRef global, ContextObjects* objs) {
