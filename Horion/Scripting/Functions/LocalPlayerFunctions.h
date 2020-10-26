@@ -12,4 +12,6 @@ public:
 	DECL_FUN(toString);
 	DECL_FUN(setViewAngles);
 	DECL_FUN(setIsOnGround);
+	DECL_FUN(getInventory);
+	DECL_FUN(getInventorySlot);
 };
