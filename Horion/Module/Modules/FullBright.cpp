@@ -16,11 +16,15 @@ void FullBright::onTick(C_GameMode* gm) {
 }
 
 void FullBright::onEnable() {
-	if (gammaPtr != nullptr)
+	if (gammaPtr != nullptr) {
+		*prevGamma = *gammaPtr;
 		*gammaPtr = 10;
+	}
 }
 
 void FullBright::onDisable() {
-	if (gammaPtr != nullptr)
+	if (gammaPtr != nullptr && prevGamma != gammaPtr)
+		*gammaPtr = *prevGamma;
+	else if (gammaPtr != nullptr)
 		*gammaPtr = 0.5f;
 }
