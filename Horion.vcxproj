@@ -313,7 +313,6 @@
     <ClCompile Include="Horion\Module\Modules\FullBright.cpp" />
     <ClCompile Include="Horion\Module\Modules\Glide.cpp" />
     <ClCompile Include="Horion\Module\Modules\Godmode.cpp" />
-    <ClCompile Include="Horion\Module\Modules\HighJump.cpp" />
     <ClCompile Include="Horion\Module\Modules\Hitbox.cpp" />
     <ClCompile Include="Horion\Module\Modules\HudModule.cpp" />
     <ClCompile Include="Horion\Module\Modules\ExtendedBlockReach.cpp" />
@@ -324,6 +323,7 @@
     <ClCompile Include="Horion\Module\Modules\JavascriptModule.cpp" />
     <ClCompile Include="Horion\Module\Modules\Jesus.cpp" />
     <ClCompile Include="Horion\Module\Modules\Jetpack.cpp" />
+    <ClCompile Include="Horion\Module\Modules\JumpHeight.cpp" />
     <ClCompile Include="Horion\Module\Modules\Killaura.cpp" />
     <ClCompile Include="Horion\Module\Modules\MidClick.cpp" />
     <ClCompile Include="Horion\Module\Modules\Module.cpp" />
@@ -494,7 +494,6 @@
     <ClInclude Include="Horion\Module\Modules\FullBright.h" />
     <ClInclude Include="Horion\Module\Modules\Glide.h" />
     <ClInclude Include="Horion\Module\Modules\Godmode.h" />
-    <ClInclude Include="Horion\Module\Modules\HighJump.h" />
     <ClInclude Include="Horion\Module\Modules\Hitbox.h" />
     <ClInclude Include="Horion\Module\Modules\HudModule.h" />
     <ClInclude Include="Horion\Module\Modules\ExtendedBlockReach.h" />
@@ -505,6 +504,7 @@
     <ClInclude Include="Horion\Module\Modules\JavascriptModule.h" />
     <ClInclude Include="Horion\Module\Modules\Jesus.h" />
     <ClInclude Include="Horion\Module\Modules\Jetpack.h" />
+    <ClInclude Include="Horion\Module\Modules\JumpHeight.h" />
     <ClInclude Include="Horion\Module\Modules\Killaura.h" />
     <ClInclude Include="Horion\Module\Modules\MidClick.h" />
     <ClInclude Include="Horion\Module\Modules\Module.h" />
