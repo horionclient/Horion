@@ -1433,9 +1433,9 @@ bool Hooks::Actor_isInWater(C_Entity* _this) {
 
 void Hooks::JumpPower(C_Entity* a1, float a2) {
 	static auto oFunc = g_Hooks.JumpPowerHook->GetFastcall<void, C_Entity*, float>();
-	static auto highJumpMod = moduleMgr->getModule<HighJump>();
-	if (highJumpMod->isEnabled() && g_Data.getLocalPlayer() == a1) {
-		a1->velocity.y = highJumpMod->jumpPower;
+	static auto JumpMod = moduleMgr->getModule<JumpHeight>();
+	if (JumpMod->isEnabled() && g_Data.getLocalPlayer() == a1) {
+		a1->velocity.y = JumpMod->jumpPower;
 		return;
 	}
 	oFunc(a1, a2);
