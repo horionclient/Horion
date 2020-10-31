@@ -41,7 +41,7 @@
 #include "Modules/Freecam.h"
 #include "Modules/FullBright.h"
 #include "Modules/Glide.h"
-#include "Modules/HighJump.h"
+#include "Modules/JumpHeight.h"
 #include "Modules/Hitbox.h"
 #include "Modules/HudModule.h"
 #include "Modules/ExtendedBlockReach.h"
