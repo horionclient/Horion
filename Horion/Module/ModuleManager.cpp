@@ -57,7 +57,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new FullBright()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new AirSwim()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new InventoryMove()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new HighJump()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new JumpHeight()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new NoWeb()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new FastLadder()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new StackableItem()));
