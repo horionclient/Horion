@@ -395,6 +395,7 @@
     <ClCompile Include="SDK\CClientInstance.cpp" />
     <ClCompile Include="SDK\CComplexInventoryTransaction.cpp" />
     <ClCompile Include="SDK\CEntity.cpp" />
+    <ClCompile Include="SDK\CGameMode.cpp" />
     <ClCompile Include="SDK\CInventory.cpp" />
     <ClCompile Include="SDK\CInventoryTransaction.cpp" />
     <ClCompile Include="SDK\CItem.cpp" />
