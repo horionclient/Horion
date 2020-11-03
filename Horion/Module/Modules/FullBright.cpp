@@ -11,7 +11,7 @@ const char* FullBright::getModuleName() {
 }
 
 void FullBright::onTick(C_GameMode* gm) {
-	if (gammaPtr != nullptr && *gammaPtr != 10)
+	if (gammaPtr != nullptr && *gammaPtr != 10) 
 		*gammaPtr = 10;
 }
 
@@ -23,8 +23,8 @@ void FullBright::onEnable() {
 }
 
 void FullBright::onDisable() {
-	if (gammaPtr != nullptr && prevGamma != gammaPtr)
+	if (gammaPtr != nullptr || prevGamma != nullptr)
 		*gammaPtr = *prevGamma;
 	else if (gammaPtr != nullptr)
-		*gammaPtr = 0.5f;
+		*gammaPtr = .5;
 }
