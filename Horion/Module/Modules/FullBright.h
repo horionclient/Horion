@@ -3,7 +3,7 @@
 class FullBright : public IModule {
 public:
 	float* gammaPtr = nullptr;
-	float* prevGamma = nullptr;
+	float prevGamma = -1.0f;
 	FullBright();
 	~FullBright();
 
