@@ -43,7 +43,19 @@ void TestModule::onTick(C_GameMode* gm) {
 	}*/
 	//if (gm->player->velocity.y > 0)
 		
-	//logF("%.4f %.4f", gm->player->velocity.y, gm->player->aabb.lower.y);
+	auto ptr = g_Data.getClientInstance()->getPointerStruct();
+	static int lastStat = 0;
+	if (ptr->entityPtr == nullptr && ptr->rayHitType == 0 && ptr->block.y > 0) {
+		bool isDestroyed = false;
+		gm->survivalDestroyBlockHack(ptr->block, ptr->blockSide, isDestroyed, lastStat == 0);
+			
+
+		//logF("%i %i %i %i %i", ptr->block.x, ptr->block.y, ptr->block.z, isDestroyed, lastStat);
+
+		lastStat++;
+	} else
+		lastStat = 0;
+	
 	
 }
 
@@ -58,6 +70,7 @@ void TestModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 }
 
 void TestModule::onSendPacket(C_Packet* p) {
+
 }
 
 void TestModule::onDisable() {
@@ -65,6 +78,8 @@ void TestModule::onDisable() {
 }
 float t = 0;
 void TestModule::onLevelRender() {
+	if (true)
+		return;
 	DrawUtils::setColor(0.5f, 0.5f, 0.5f, 1);
 
 	auto blockTess = g_Data.getClientInstance()->levelRenderer->blockTessellator;

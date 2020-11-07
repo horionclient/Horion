@@ -733,7 +733,6 @@ private:
 public:
 	virtual void setPermissions(int);
 
-private:
 	virtual __int64 startDestroying(void);
 	virtual __int64 stopDestroying(void);
 

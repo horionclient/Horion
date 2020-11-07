@@ -1226,7 +1226,7 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* _this, vec3_ti* a2, uint8_t f
 	if (nukerModule->isEnabled()) {
 		vec3_ti tempPos;
 
-		const int range = nukerModule->getNukerRadius();
+		int range = nukerModule->getNukerRadius();
 		const bool isVeinMiner = nukerModule->isVeinMiner();
 		const bool isAutoMode = nukerModule->isAutoMode();
 
