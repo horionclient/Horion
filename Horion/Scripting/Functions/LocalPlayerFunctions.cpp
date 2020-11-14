@@ -81,7 +81,7 @@ JsValueRef CALLBACK LocalPlayerFunctions::setIsOnGround(JsValueRef callee, bool 
 	return chakra.trueValue();
 }
 
-JsValueRef CALLBACK LocalPlayerFunctions::getInventorySlot(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+/*JsValueRef CALLBACK LocalPlayerFunctions::getInventorySlot(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
 	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
 	if (ent == nullptr) {
 		ENTITY_INVALID;
@@ -139,54 +139,12 @@ JsValueRef CALLBACK LocalPlayerFunctions::getInventorySlot(JsValueRef callee, bo
 	}
 
 	return item;
-}
+}*/
 
 JsValueRef CALLBACK LocalPlayerFunctions::getInventory(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
 	auto ent = EntityFunctions::getEntityFromValue(arguments[0]);
 	if (ent == nullptr) {
 		ENTITY_INVALID;
 	}
-
-	const auto plr = reinterpret_cast<C_LocalPlayer*>(ent);
-
-	JsValueRef inventoryArr;
-	chakra.JsCreateArray_(35, &inventoryArr);
-
-	const wchar_t* airName = L"air";
-
-	for (int i = 0; i < 36; i++) {
-		auto stack = plr->getSupplies()->inventory->getItemStack(i);
-
-		if (stack == nullptr || !stack->isValid()) {
-			JsValueRef jsItem;
-			chakra.JsCreateObject_(&jsItem);
-
-			JsValueRef itemName;
-			chakra.JsPointerToString_(airName, wcslen(airName), &itemName);
-
-			chakra.addPropertyToObj(jsItem, L"name", itemName);
-			chakra.addPropertyToObj(jsItem, L"id", chakra.toNumber(0));
-			chakra.addPropertyToObj(jsItem, L"amount", chakra.toNumber(0));
-
-			chakra.arraySet(inventoryArr, i, jsItem);
-		} else {
-			JsValueRef jsItem;
-			chakra.JsCreateObject_(&jsItem);
-
-			auto name = stack->getItem()->name.getText();
-			JsValueRef itemName;
-
-			std::wstring charName = Utils::stringToWstring(name);
-
-			chakra.JsPointerToString_(charName.c_str(), wcslen(charName.c_str()), &itemName);
-
-			chakra.addPropertyToObj(jsItem, L"name", itemName);
-			chakra.addPropertyToObj(jsItem, L"id", chakra.toNumber(stack->getItem()->itemId));
-			chakra.addPropertyToObj(jsItem, L"amount", chakra.toNumber(stack->count));
-
-			chakra.arraySet(inventoryArr, i, jsItem);
-		}
-	};
-
-	return inventoryArr;
+	return reinterpret_cast<ContextObjects*>(callbackState)->inventoryObject;
 }
