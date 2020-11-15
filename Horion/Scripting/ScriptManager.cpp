@@ -113,6 +113,9 @@ void ScriptManager::prepareInventoryFunctions(JsValueRef proto, ContextObjects* 
 	chakra.defineFunction(proto, L"getItems", InventoryFunctions::getItems, objs);
 	chakra.defineFunction(proto, L"getArmor", InventoryFunctions::getArmor, objs);
 	chakra.defineFunction(proto, L"getHeld", InventoryFunctions::getHeld, objs);
+	chakra.defineFunction(proto, L"getSlot", InventoryFunctions::getSlot, objs);
+	chakra.defineFunction(proto, L"setSelected", InventoryFunctions::setSelected, objs);
+	chakra.defineFunction(proto, L"moveItem", InventoryFunctions::moveItem, objs);
 
 	chakra.defineProp(proto, L"isFull", InventoryFunctions::isFull, 0);
 }
