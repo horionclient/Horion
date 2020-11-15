@@ -182,7 +182,6 @@ struct vec3_t {
 		return vec3_t(x - o.x, y - o.y, z - o.z);
 	}
 
-
 	float squaredlen() const { return x * x + y * y + z * z; }
 	float squaredxzlen() const { return x * x + z * z; }
 

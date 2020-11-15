@@ -33,5 +33,10 @@ void showAimedBlockInfo() {
 bool TestCommand::execute(std::vector<std::string>* args) {
 	C_LocalPlayer* player = g_Data.getLocalPlayer();
 
+	auto inv = player->getSupplies()->inventory;
+	logF("%i %i", inv->getFirstEmptySlot(), inv->getEmptySlotsCount());
+	
+	inv->swapSlots(1, 2);
+
 	return true;
 }

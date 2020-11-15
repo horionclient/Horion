@@ -486,6 +486,57 @@ void DrawUtils::drawLine3d(const vec3_t& start, const vec3_t& end) {
 
 	tess_end(game3dContext, myTess, entityFlatStaticMaterial);
 }
+void DrawUtils::drawBox3d(vec3_t lower, vec3_t upper) {
+	if (game3dContext == 0 || entityFlatStaticMaterial == 0)
+		return;
+
+	auto myTess = DrawUtils::get3dTessellator();
+
+	DrawUtils::tess__begin(myTess, 4, 12);
+
+	vec3_t diff;
+	diff.x = upper.x - lower.x;
+	diff.y = upper.y - lower.y;
+	diff.z = upper.z - lower.z;
+
+	lower = lower.sub(origin);
+
+	vec3_t vertices[8];
+	vertices[0] = vec3_t(lower.x, lower.y, lower.z);
+	vertices[1] = vec3_t(lower.x + diff.x, lower.y, lower.z);
+	vertices[2] = vec3_t(lower.x, lower.y, lower.z + diff.z);
+	vertices[3] = vec3_t(lower.x + diff.x, lower.y, lower.z + diff.z);
+
+	vertices[4] = vec3_t(lower.x, lower.y + diff.y, lower.z);
+	vertices[5] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z);
+	vertices[6] = vec3_t(lower.x, lower.y + diff.y, lower.z + diff.z);
+	vertices[7] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z + diff.z);
+
+	#define line(m, n) tess_vertex(myTess, m.x, m.y, m.z); \
+		tess_vertex(myTess, n.x, n.y, n.z);
+	
+	#define li(m, n) line(vertices[m], vertices[n]);
+
+	li(0, 1);
+	li(1, 3);
+	li(3, 2);
+	li(2, 0);
+
+	li(4, 5);
+	li(5, 7);
+	li(7, 6);
+	li(6, 4);
+
+	li(0, 4);
+	li(1, 5);
+	li(2, 6);
+	li(3, 7);
+
+	#undef li
+	#undef line
+	
+	tess_end(game3dContext, myTess, entityFlatStaticMaterial);
+}
 void DrawUtils::fillRectangle(vec4_t pos, const MC_Color col, float alpha) {
 	DrawUtils::setColor(col.r, col.g, col.b, alpha);
 	DrawUtils::drawQuad({pos.x, pos.w}, {pos.z, pos.w}, {pos.z, pos.y}, {pos.x, pos.y});

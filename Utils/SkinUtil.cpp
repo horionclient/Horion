@@ -80,7 +80,7 @@ std::string SkinUtil::modGeometry(const char* oldGeoStr, MeshStructs::meshData m
 	}
 	return geoMod.dump();
 }
-MeshStructs::meshData SkinUtil::objToMesh(const char* str) {
+MeshStructs::meshData SkinUtil::objToMesh(const char* str, bool convertTrisToQuads) {
 	std::istringstream f(str);
 	std::string line;
 
@@ -181,7 +181,7 @@ MeshStructs::meshData SkinUtil::objToMesh(const char* str) {
 
 				face.indices[i - 1] = part;
 			}
-			if (args.size() == 4) { // Convert triangles to quads
+			if (args.size() == 4 && convertTrisToQuads) { // Convert triangles to quads
 				face.facesPresent++;
 				face.indices[face.facesPresent - 1] = face.indices[face.facesPresent - 2];
 			}
