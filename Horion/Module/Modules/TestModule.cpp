@@ -65,8 +65,11 @@ void loadFile(std::wstring filePath) {
 	int num = 0;
 	for (const auto& face : mesh.faces) {
 		
-		if (face.facesPresent != 3)
+		if (face.facesPresent != 3) {
+			//logF("wierd face %i", face.facesPresent);
 			continue;
+		}
+			
 		
 		const auto& v1 = mesh.vertices[face.indices[0].vertIndex];
 		const auto& v2 = mesh.vertices[face.indices[1].vertIndex];

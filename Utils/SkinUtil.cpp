@@ -80,7 +80,7 @@ std::string SkinUtil::modGeometry(const char* oldGeoStr, MeshStructs::meshData m
 	}
 	return geoMod.dump();
 }
-MeshStructs::meshData SkinUtil::objToMesh(const char* str, bool convertTrisToQuads) {
+MeshStructs::meshData SkinUtil::objToMesh(const char* str, bool doWierdMogangStuff) {
 	std::istringstream f(str);
 	std::string line;
 
@@ -132,7 +132,10 @@ MeshStructs::meshData SkinUtil::objToMesh(const char* str, bool convertTrisToQua
 				logF("Faulty vertex, 3 args expected: %s", line.c_str());
 				continue;
 			}
-			vertices.push_back({-std::stof(args[1]), std::stof(args[2]), std::stof(args[3])});
+			if (doWierdMogangStuff) // flip x axis
+				vertices.push_back({-std::stof(args[1]), std::stof(args[2]), std::stof(args[3])});
+			else
+				vertices.push_back({std::stof(args[1]), std::stof(args[2]), std::stof(args[3])});
 		} else if (strcmp(cmd, "f") == 0) {  // face
 			if (args.size() != 5 && args.size() != 4) {
 				logF("Faulty face, only quads or tris allowed: %i", args.size() - 1);
@@ -181,7 +184,7 @@ MeshStructs::meshData SkinUtil::objToMesh(const char* str, bool convertTrisToQua
 
 				face.indices[i - 1] = part;
 			}
-			if (args.size() == 4 && convertTrisToQuads) { // Convert triangles to quads
+			if (args.size() == 4 && doWierdMogangStuff) {  // Convert triangles to quads
 				face.facesPresent++;
 				face.indices[face.facesPresent - 1] = face.indices[face.facesPresent - 2];
 			}
