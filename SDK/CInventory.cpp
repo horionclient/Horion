@@ -24,13 +24,7 @@ bool C_Inventory::isFull() {
 	if (fullslots == 36) return true;
 	return false;
 }
-int C_Inventory::getFirstEmptySlot() {
-	for (int i = 0; i < 36; i++) {
-		if (this->getItemStack(i)->item == nullptr)
-			return i;
-	}
-	return -1;
-}
+
 void C_ContainerScreenController::handleAutoPlace(uintptr_t a1, std::string name, int slot) {
 	using ContainerScreenController__autoPlace = __int64(__fastcall*)(C_ContainerScreenController*, uintptr_t, TextHolder, int);
 	static ContainerScreenController__autoPlace autoPlaceFunc = reinterpret_cast<ContainerScreenController__autoPlace>(FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 C7 44 24 ? ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 45 8B E1 49 8B F8"));
