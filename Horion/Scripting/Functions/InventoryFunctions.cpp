@@ -74,6 +74,55 @@ JsValueRef CALLBACK InventoryFunctions::getHeld(JsValueRef callee, bool isConstr
 	}
 
 	const auto plr = reinterpret_cast<C_LocalPlayer*>(ent);
+
+	int slot;
+
+	JsValueType type;
+	chakra.JsGetValueType_(arguments[1], &type);
+	if (type != JsNumber) {
+		THROW(L"Argument 1 not a valid integer");
+	}
+	if (chakra.JsNumberToInt_(arguments[1], &slot) != JsNoError) {
+		THROW(L"Argument 1 not a valid integer");
+	}
+
+	auto stack = plr->getSupplies()->inventory->getItemStack(slot);
+	return createItem(stack);
+}
+
+JsValueRef CALLBACK InventoryFunctions::setSelected(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	auto ent = g_Data.getLocalPlayer();
+	if (ent == nullptr) {
+		THROW(L"Player not valid");
+	}
+
+	const auto plr = reinterpret_cast<C_LocalPlayer*>(ent);
+
+	int slot;
+
+	JsValueType type;
+	chakra.JsGetValueType_(arguments[1], &type);
+	if (type != JsNumber) {
+		THROW(L"Argument 1 not a valid integer");
+	}
+	if (chakra.JsNumberToInt_(arguments[1], &slot) != JsNoError) {
+		THROW(L"Argument 1 not a valid integer");
+	}
+
+	slot = std::clamp(slot, 0, 8);
+
+	plr->getSupplies()->selectedHotbarSlot = slot;
+
+	return chakra.trueValue();
+}
+
+JsValueRef CALLBACK InventoryFunctions::getSlot(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	auto ent = g_Data.getLocalPlayer();
+	if (ent == nullptr) {
+		THROW(L"Player not valid");
+	}
+
+	const auto plr = reinterpret_cast<C_LocalPlayer*>(ent);
 	const int currSlot = plr->getSupplies()->selectedHotbarSlot;
 
 	auto stack = plr->getSupplies()->inventory->getItemStack(currSlot);
@@ -89,4 +138,33 @@ JsValueRef CALLBACK InventoryFunctions::isFull(JsValueRef callee, bool isConstru
 	const auto plr = reinterpret_cast<C_LocalPlayer*>(ent);
 
 	return chakra.toBoolean(plr->getSupplies()->inventory->isFull());
+}
+
+JsValueRef CALLBACK InventoryFunctions::moveItem(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	auto ent = g_Data.getLocalPlayer();
+	if (ent == nullptr) {
+		THROW(L"Player not valid");
+	}
+
+	const auto plr = reinterpret_cast<C_LocalPlayer*>(ent);
+
+	int slot[2];
+
+	for (int i = 0; i < 2; i++) {
+		JsValueType type;
+		chakra.JsGetValueType_(arguments[i + 1], &type);
+		if (type != JsNumber) {
+			THROW(L"Argument 1 or 2 not valid integers");
+		}
+		if (chakra.JsNumberToInt_(arguments[i + 1], &slot[i]) != JsNoError) {
+			THROW(L"Argument 1 or 2 not valid integers");
+		}
+	}
+
+	if (slot[0] < 0) slot[0] = 0;
+	if (slot[1] < 0) slot[1] = 0;
+
+	plr->getSupplies()->inventory->swapSlots(slot[0], slot[1]);
+
+	return chakra.trueValue();
 }
