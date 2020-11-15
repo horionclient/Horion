@@ -59,6 +59,7 @@ public:
 	virtual __int64 setContainerSize();
 
 	void moveItem(int from, int to);
+	void swapSlots(int from, int to);
 };
 
 class C_PlayerInventoryProxy {

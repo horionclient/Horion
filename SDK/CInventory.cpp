@@ -66,3 +66,20 @@ void C_Inventory::moveItem(int from, int to = -1) {
 		*item1 = a;
 	}
 }
+
+void C_Inventory::swapSlots(int from, int to) {
+	C_InventoryTransactionManager* manager = g_Data.getLocalPlayer()->getTransactionManager();
+
+	C_ItemStack* i1 = getItemStack(from);
+	C_ItemStack* i2 = getItemStack(to);
+
+	C_InventoryAction first(from, i1, nullptr);
+	C_InventoryAction second(to, i2, i1);
+	C_InventoryAction third(from, nullptr, i2);
+	manager->addInventoryAction(first);
+	manager->addInventoryAction(second);
+	manager->addInventoryAction(third);
+	C_ItemStack a = *i2;
+	*i2 = *i1;
+	*i1 = a;
+}

@@ -36,7 +36,7 @@ bool TestCommand::execute(std::vector<std::string>* args) {
 	auto inv = player->getSupplies()->inventory;
 	logF("%i %i", inv->getFirstEmptySlot(), inv->getEmptySlotsCount());
 	
-	//inv->moveItem(1, 2);
+	inv->swapSlots(1, 2);
 
 	return true;
 }
