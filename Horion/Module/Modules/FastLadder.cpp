@@ -1,6 +1,6 @@
 #include "FastLadder.h"
 
-FastLadder::FastLadder() : IModule(0x0, Category::MOVEMENT, "Climb up ladders faster") {
+FastLadder::FastLadder() : IModule(0, Category::MOVEMENT, "Climb up ladders faster") {
 }
 
 FastLadder::~FastLadder() {

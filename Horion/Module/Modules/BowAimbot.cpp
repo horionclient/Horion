@@ -1,11 +1,14 @@
 #include "BowAimbot.h"
 
 #include "../../../Utils/Target.h"
+#include "../../DrawUtils.h"
 
 std::vector<C_Entity*> targetList;
 
-BowAimbot::BowAimbot() : IModule(0x0, Category::COMBAT, "Aimbot, but for bows") {
+BowAimbot::BowAimbot() : IModule(0, Category::COMBAT, "Aimbot, but for bows") {
 	registerBoolSetting("silent", &this->silent, this->silent);
+	registerBoolSetting("predict", &this->predict, this->predict);
+	registerBoolSetting("visualize", &this->visualize, this->visualize);
 }
 
 BowAimbot::~BowAimbot() {
@@ -34,6 +37,8 @@ void findTargets(C_Entity* currentEntity, bool isRegularEntitie) {
 }
 
 void BowAimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
+	targetList.clear();
+
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 	if (localPlayer == nullptr)
 		return;
@@ -44,16 +49,21 @@ void BowAimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	if (!(GameData::isRightClickDown() && GameData::canUseMoveKeys())) // is aiming?
 		return;
 
-	targetList.clear();
-
 	g_Data.forEachEntity(findTargets);
 
 	if (!targetList.empty()) {
 		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
 		vec3_t origin = g_Data.getLocalPlayer()->eyePos0;  // TODO: sort list
 		C_Entity* entity = targetList[0];
-		vec3_t pos = entity->eyePos0;
-		pos = {13.f, 8.5f, 21.5f};
+		vec3_t pos = entity->aabb.centerPoint();
+		if (predict) {
+			vec3_t velocity = entity->getPos()->sub(*entity->getPosOld());
+			velocity.x *= origin.dist(pos) / 2.f;
+			velocity.z *= origin.dist(pos) / 2.f;
+			pos = pos.add(velocity);
+		}
+		if(visualize)
+			DrawUtils::drawBox(pos.sub(0.5), pos.add(0.5), 0.3f, true);
 		pos = pos.sub(origin);
 		float yaw = (atan2f(pos.z, pos.x) * DEG_RAD) - 90;
 		float len = pos.magnitudexz();

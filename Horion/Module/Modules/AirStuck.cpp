@@ -1,6 +1,6 @@
 #include "AirStuck.h"
 
-AirStuck::AirStuck() : IModule(0x0, Category::MOVEMENT, "Become stuck.") {
+AirStuck::AirStuck() : IModule(0, Category::MOVEMENT, "Become stuck.") {
 }
 
 AirStuck::~AirStuck() {

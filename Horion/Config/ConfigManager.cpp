@@ -75,8 +75,14 @@ void ConfigManager::loadConfig(std::string name, bool create) {
 		if (create) 
 			saveConfig();
 
-		if (g_Data.getLocalPlayer() != nullptr) 
+		if (g_Data.getLocalPlayer() != nullptr) {
+			static bool helpedUser = false;
 			g_Data.getGuiData()->displayClientMessageF("[%sHorion%s] %sSuccessfully %s config %s%s%s!", GOLD, WHITE, GREEN, !configExists ? "created" : "loaded", GRAY, name.c_str(), GREEN);
+			if (!helpedUser && name != "default") {
+				helpedUser = true;
+				g_Data.getGuiData()->displayClientMessageF("[%sHorion%s] %sEnter \"%s%cconfig load default%s\" to load your old config!", GOLD, WHITE, YELLOW, WHITE, cmdMgr->prefix, YELLOW);
+			}
+		}
 	} else {
 		if (g_Data.getLocalPlayer() != nullptr) 
 			g_Data.getGuiData()->displayClientMessageF("[%sHorion%s] %sCould not load config %s%s%s!", GOLD, WHITE, RED, GRAY, name.c_str(), RED);

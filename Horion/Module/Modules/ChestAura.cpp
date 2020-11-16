@@ -1,6 +1,6 @@
 #include "ChestAura.h"
 
-ChestAura::ChestAura() : IModule(0x0, Category::PLAYER, "Aura for opening chests") {
+ChestAura::ChestAura() : IModule(0, Category::PLAYER, "Aura for opening chests") {
 	registerIntSetting("Range", &this->range, this->range, 1, 10);
 }
 

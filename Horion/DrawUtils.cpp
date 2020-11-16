@@ -8,14 +8,14 @@ struct MaterialPtr {
 	char padding[0x138];
 };
 
-using tess_vertex_t = void(__fastcall*)(__int64 _this, float v1, float v2, float v3);
-using tess_end_t = void(__fastcall*)(__int64, __int64 tesselator, MaterialPtr*);
+using tess_vertex_t = void(__fastcall*)(Tessellator* _this, float v1, float v2, float v3);
+using tess_end_t = void(__fastcall*)(__int64, Tessellator* tesselator, MaterialPtr*);
 
 C_MinecraftUIRenderContext* renderCtx;
 C_GuiData* guiData;
 __int64 screenContext2d;
 __int64 game3dContext;
-__int64 tesselator;
+Tessellator* tesselator;
 float* colorHolder;
 std::shared_ptr<glmatrixf> refdef;
 vec2_t fov;
@@ -56,7 +56,7 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* gui) {
 	renderCtx = ctx;
 	screenContext2d = reinterpret_cast<__int64*>(renderCtx)[2];
 
-	tesselator = *reinterpret_cast<__int64*>(screenContext2d + 0xB0);
+	tesselator = *reinterpret_cast<Tessellator**>(screenContext2d + 0xB0);
 	colorHolder = *reinterpret_cast<float**>(screenContext2d + 0x30);
 
 	glmatrixf* badrefdef = g_Data.getClientInstance()->getRefDef();
@@ -107,6 +107,19 @@ C_Font* DrawUtils::getFont(Fonts font) {
 	}
 }
 
+Tessellator* DrawUtils::get3dTessellator() {
+	auto myTess = *reinterpret_cast<Tessellator**>(game3dContext + 0xB0);
+	return myTess;
+}
+
+__int64 DrawUtils::getScreenContext() {
+	return game3dContext == 0 ? screenContext2d : game3dContext;
+}
+
+MatrixStack* DrawUtils::getMatrixStack() {
+	return reinterpret_cast<MatrixStack*>(*reinterpret_cast<__int64*>(DrawUtils::getScreenContext() + 0x18i64) + 0x30i64);
+}
+
 float DrawUtils::getTextWidth(std::string* textStr, float textSize, Fonts font) {
 	TextHolder text(*textStr);
 
@@ -117,8 +130,39 @@ float DrawUtils::getTextWidth(std::string* textStr, float textSize, Fonts font) 
 	return ret;
 }
 
+float DrawUtils::getFontHeight(float textSize, Fonts font) {
+	C_Font* fontPtr = getFont(font);
+
+	float ret = fontPtr->getLineHeight() * textSize;
+
+	return ret;
+}
+
 void DrawUtils::flush() {
 	renderCtx->flushText(0);
+}
+
+void DrawUtils::drawTriangle(vec2_t p1, vec2_t p2, vec2_t p3) {
+	
+	DrawUtils::tess__begin(tesselator, 3, 3);
+
+	tess_vertex(tesselator, p1.x, p1.y, 0);
+	tess_vertex(tesselator, p2.x, p2.y, 0);
+	tess_vertex(tesselator, p3.x, p3.y, 0);
+
+	tess_end(screenContext2d, tesselator, uiMaterial);
+}
+
+
+void DrawUtils::drawQuad(vec2_t p1, vec2_t p2, vec2_t p3, vec2_t p4) {
+	DrawUtils::tess__begin(tesselator, 1, 4);
+
+	tess_vertex(tesselator, p1.x, p1.y, 0);
+	tess_vertex(tesselator, p2.x, p2.y, 0);
+	tess_vertex(tesselator, p3.x, p3.y, 0);
+	tess_vertex(tesselator, p4.x, p4.y, 0);
+
+	tess_end(screenContext2d, tesselator, uiMaterial);
 }
 
 void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth) {
@@ -132,7 +176,7 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth) {
 	modX *= lineWidth;
 	modY *= lineWidth;
 
-	DrawUtils::tess__begin(tesselator, 3);
+	DrawUtils::tess__begin(tesselator, 3, 6);
 
 	tess_vertex(tesselator, start.x + modX, start.y + modY, 0);
 	tess_vertex(tesselator, start.x - modX, start.y - modY, 0);
@@ -402,6 +446,7 @@ void DrawUtils::drawItem(C_ItemStack* item, vec2_t itemPos, float opacity, float
 	C_BaseActorRenderContext baseActorRenderCtx(screenCtx, g_Data.getClientInstance(), g_Data.getClientInstance()->minecraftGame);
 	C_ItemRenderer* renderer = baseActorRenderCtx.renderer;
 	renderer->renderGuiItemNew(&baseActorRenderCtx, item, g_Data.getClientInstance()->minecraftGame, itemPos.x, itemPos.y, opacity, scale, isEnchanted);
+
 }
 
 void DrawUtils::drawKeystroke(char key, vec2_t pos) {
@@ -429,9 +474,9 @@ void DrawUtils::drawLine3d(const vec3_t& start, const vec3_t& end) {
 	if(game3dContext == 0 || entityFlatStaticMaterial == 0)
 		return;
 
-	auto myTess = *reinterpret_cast<__int64*>(game3dContext + 0xB0);
+	auto myTess = DrawUtils::get3dTessellator();
 
-	DrawUtils::tess__begin(myTess, 4);
+	DrawUtils::tess__begin(myTess, 4, 2);
 
 	auto start1 = start.sub(origin);
 	auto end1 = end.sub(origin);
@@ -441,7 +486,63 @@ void DrawUtils::drawLine3d(const vec3_t& start, const vec3_t& end) {
 
 	tess_end(game3dContext, myTess, entityFlatStaticMaterial);
 }
-void DrawUtils::tess__begin(__int64 tesselator, int vertexFormat) {
+void DrawUtils::drawBox3d(vec3_t lower, vec3_t upper) {
+	if (game3dContext == 0 || entityFlatStaticMaterial == 0)
+		return;
+
+	auto myTess = DrawUtils::get3dTessellator();
+
+	DrawUtils::tess__begin(myTess, 4, 12);
+
+	vec3_t diff;
+	diff.x = upper.x - lower.x;
+	diff.y = upper.y - lower.y;
+	diff.z = upper.z - lower.z;
+
+	lower = lower.sub(origin);
+
+	vec3_t vertices[8];
+	vertices[0] = vec3_t(lower.x, lower.y, lower.z);
+	vertices[1] = vec3_t(lower.x + diff.x, lower.y, lower.z);
+	vertices[2] = vec3_t(lower.x, lower.y, lower.z + diff.z);
+	vertices[3] = vec3_t(lower.x + diff.x, lower.y, lower.z + diff.z);
+
+	vertices[4] = vec3_t(lower.x, lower.y + diff.y, lower.z);
+	vertices[5] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z);
+	vertices[6] = vec3_t(lower.x, lower.y + diff.y, lower.z + diff.z);
+	vertices[7] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z + diff.z);
+
+	#define line(m, n) tess_vertex(myTess, m.x, m.y, m.z); \
+		tess_vertex(myTess, n.x, n.y, n.z);
+	
+	#define li(m, n) line(vertices[m], vertices[n]);
+
+	li(0, 1);
+	li(1, 3);
+	li(3, 2);
+	li(2, 0);
+
+	li(4, 5);
+	li(5, 7);
+	li(7, 6);
+	li(6, 4);
+
+	li(0, 4);
+	li(1, 5);
+	li(2, 6);
+	li(3, 7);
+
+	#undef li
+	#undef line
+	
+	tess_end(game3dContext, myTess, entityFlatStaticMaterial);
+}
+void DrawUtils::fillRectangle(vec4_t pos, const MC_Color col, float alpha) {
+	DrawUtils::setColor(col.r, col.g, col.b, alpha);
+	DrawUtils::drawQuad({pos.x, pos.w}, {pos.z, pos.w}, {pos.z, pos.y}, {pos.x, pos.y});
+}
+void DrawUtils::tess__begin(Tessellator* tess, int vertexFormat, int numVerticesReserved) {
+	__int64 tesselator = reinterpret_cast<__int64>(tess);
 	if (!*(unsigned char*)(tesselator + 0x1FC) && !*(unsigned char*)(tesselator + 0x1B5)) {
 		mce__VertexFormat__disableHalfFloats(tesselator, 0, 0);
 		*(unsigned char*)(tesselator + 8) = vertexFormat;
@@ -451,7 +552,8 @@ void DrawUtils::tess__begin(__int64 tesselator, int vertexFormat) {
 		*(__int64*)(tesselator + 0x150) = *(__int64*)(tesselator + 0x148);
 		if (!*(unsigned char*)tesselator)
 			*(unsigned char*)(tesselator + 0xD0) = 1;
-		//Tessellator__initializeFormat(tesselator + 8, 0x66i64);
+		if (numVerticesReserved != 0)
+			Tessellator__initializeFormat(tesselator + 8, numVerticesReserved);
 	}
 }
 void DrawUtils::setGameRenderContext(__int64 ctx) {
@@ -483,13 +585,16 @@ void DrawUtils::setGameRenderContext(__int64 ctx) {
 float DrawUtils::getLerpTime() {
 	return lerpT;
 }
+vec3_t DrawUtils::getOrigin() {
+	return origin;
+}
 void DrawUtils::drawLinestrip3d(const std::vector<vec3_t>& points) {
 	if(game3dContext == 0 || entityFlatStaticMaterial == 0)
 		return;
 
-	auto myTess = *reinterpret_cast<__int64*>(game3dContext + 0xB0);
+	auto myTess = DrawUtils::get3dTessellator();
 
-	DrawUtils::tess__begin(myTess, 5);
+	DrawUtils::tess__begin(myTess, 5, (int)points.size());
 
 	/*
 	 * 1: quads
@@ -505,26 +610,4 @@ void DrawUtils::drawLinestrip3d(const std::vector<vec3_t>& points) {
 	}
 
 	tess_end(game3dContext, myTess, entityFlatStaticMaterial);
-}
-
-void DrawUtils::drawHologram(vec3_t pos, std::string text, float size) {
-	vec2_t textPos;
-	vec4_t rectPos;
-
-	text = Utils::sanitize(text);
-
-	float textWidth = getTextWidth(&text, size);
-	float textHeight = DrawUtils::getFont(Fonts::RUNE)->getLineHeight() * size;
-
-	if (refdef->OWorldToScreen(origin, pos, textPos, fov, screenSize)) {
-		textPos.y -= textHeight;
-		textPos.x -= textWidth / 2.f;
-		rectPos.x = textPos.x - 1.f * size;
-		rectPos.y = textPos.y - 1.f * size;
-		rectPos.z = textPos.x + textWidth + 1.f * size;
-		rectPos.w = textPos.y + textHeight + 2.f * size;
-
-		fillRectangle(rectPos, MC_Color(0, 0, 0), 0.5f);
-		drawText(textPos, &text, MC_Color(255, 255, 255), size);
-	}
 }

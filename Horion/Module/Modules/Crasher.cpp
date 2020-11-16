@@ -1,6 +1,6 @@
 #include "Crasher.h"
 
-Crasher::Crasher() : IModule(0x0, Category::MISC, "Crash Realms Servers") {
+Crasher::Crasher() : IModule(0, Category::MISC, "Crash Realms Servers") {
 }
 
 Crasher::~Crasher() {
@@ -8,6 +8,16 @@ Crasher::~Crasher() {
 
 const char* Crasher::getModuleName() {
 	return ("Crasher");
+}
+
+void Crasher::onEnable() {
+	if (g_Data.getLocalPlayer() == nullptr)
+		this->setEnabled(false);
+}
+
+void Crasher::onTick(C_GameMode* gm) {
+	if (g_Data.getLocalPlayer() == nullptr)
+		this->setEnabled(false);
 }
 
 void Crasher::onSendPacket(C_Packet* packet) {

@@ -4,15 +4,25 @@
 #include "../../DrawUtils.h"
 #include "Module.h"
 #include "../../../Utils/Json.hpp"
+#include <optional>
+
+struct WaypointInstance {
+	vec3_t pos;
+	int dimension;
+
+	WaypointInstance(vec3_t pos, int dim) : pos(pos), dimension(dim){};
+};
 
 class Waypoints : public IModule {
 private:
-	std::map<std::string, vec3_t> waypoints;
+	std::shared_ptr<std::map<std::string, WaypointInstance>> waypoints = std::make_shared<std::map<std::string, WaypointInstance>>();
 
 public:
 	Waypoints();
 	~Waypoints();
 
+	bool interdimensional = true;
+	bool showCoordinates = false;
 	float size = 0.6f;
 
 	// Inherited via IModule
@@ -21,34 +31,34 @@ public:
 	virtual void onLoadConfig(void* confVoid) override;
 	virtual void onSaveConfig(void* confVoid) override;
 
-	bool add(std::string text, vec3_t pos) {
-		for (const auto& _wp : waypoints) {
-			if (text == _wp.first) {
+	bool add(std::string text, vec3_t pos, int dimension) {
+		for (auto it = waypoints->begin(); it != waypoints->end(); it++) {
+			if (text == it->first) {
 				return false;
 			}
 		}
-		waypoints[text] = pos;
+		waypoints->emplace(text, WaypointInstance(pos, dimension));
 		return true;
 	}
 
 	bool remove(std::string name) {
-		for (const auto& _wp : waypoints) {
-			if (name == _wp.first) {
-				waypoints.erase(name);
+		for (auto it = waypoints->begin(); it != waypoints->end(); it++) {
+			if (name == it->first) {
+				waypoints->erase(name);
 				return true;
 			}
 		}
 		return false;
 	}
 
-	vec3_t* getWaypoint(std::string name) {
-		if (waypoints.find(name) == waypoints.end())
-			return nullptr;
+	std::optional<WaypointInstance> getWaypoint(std::string name) {
+		if (waypoints->find(name) == waypoints->end())
+			return {};
 
-		return &waypoints[name];
+		return waypoints->at(name);
 	};
 
-	std::map<std::string, vec3_t>* getWaypoints() {
-		return &waypoints;
+	std::shared_ptr<std::map<std::string, WaypointInstance>> getWaypoints() {
+		return waypoints;
 	}
 };

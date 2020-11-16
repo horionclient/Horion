@@ -2,7 +2,7 @@
 
 #include "../ModuleManager.h"
 
-Compass::Compass() : IModule(0x0, Category::VISUAL, "Compass") {
+Compass::Compass() : IModule(0, Category::VISUAL, "Compass") {
 	registerFloatSetting("Opacity", &opacity, opacity, 0.1f, 1);
 	registerIntSetting("Range", &range, range, 45, 180);
 	registerBoolSetting("Show Waypoints", &showWaypoints, showWaypoints);
@@ -24,17 +24,22 @@ void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 
 	auto extraPoints = std::multimap<int, std::string>{};
 
-	if (wpMod != nullptr && showWaypoints) {
-		std::map<std::string, vec3_t>* waypoints = wpMod->getWaypoints();
-		for (std::map<std::string, vec3_t>::iterator it = waypoints->begin(); it != waypoints->end(); it++) {
-			int angle = (int)(player->getPos()->CalcAngle(it->second).y + 180.0f) % 360;
+	if (showWaypoints) {
+		auto waypoints = wpMod->getWaypoints();
+		int curDim = 0;
+		player->getDimensionId(&curDim);
+		auto playerInterpPos = player->getPosOld()->lerp(player->getPos(), DrawUtils::getLerpTime());
+		for (auto it = waypoints->begin(); it != waypoints->end(); it++) {
+			if (it->second.dimension != curDim)
+				continue;
+			int angle = (int)round(playerInterpPos.CalcAngle(it->second.pos).y + 180.0f) % 360;
 			if (angle < 0) angle += 360;
 
 			extraPoints.insert(std::make_pair(angle, it->first));
 		}
 	}
 
-	auto stacking = std::vector<vec2_t>{};
+	std::vector<vec2_t> stacking{};
 
 	const int deg = (int)(player->yaw + 180);
 	const float degSubOffset = 0;  // -fmodf(player->yaw, 1)
@@ -60,49 +65,49 @@ void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 
 		switch (oDeg) {
 		case 0:
-			drawCenteredText(vec2_t(xOff, 30), "N", 1, majorOpacity);
+			drawCenteredText(vec2_t(xOff, 30.f), "N", 1, majorOpacity);
 			break;
 		case 45:
-			drawCenteredText(vec2_t(xOff, 30), "NE", 1, majorOpacity);
+			drawCenteredText(vec2_t(xOff, 30.f), "NE", 1, majorOpacity);
 			break;
 		case 90:
-			drawCenteredText(vec2_t(xOff, 30), "E", 1, majorOpacity);
+			drawCenteredText(vec2_t(xOff, 30.f), "E", 1, majorOpacity);
 			break;
 		case 135:
-			drawCenteredText(vec2_t(xOff, 30), "SE", 1, majorOpacity);
+			drawCenteredText(vec2_t(xOff, 30.f), "SE", 1, majorOpacity);
 			break;
 		case 180:
-			drawCenteredText(vec2_t(xOff, 30), "S", 1, majorOpacity);
+			drawCenteredText(vec2_t(xOff, 30.f), "S", 1, majorOpacity);
 			break;
 		case 225:
-			drawCenteredText(vec2_t(xOff, 30), "SW", 1, majorOpacity);
+			drawCenteredText(vec2_t(xOff, 30.f), "SW", 1, majorOpacity);
 			break;
 		case 270:
-			drawCenteredText(vec2_t(xOff, 30), "W", 1, majorOpacity);
+			drawCenteredText(vec2_t(xOff, 30.f), "W", 1, majorOpacity);
 			break;
 		case 315:
-			drawCenteredText(vec2_t(xOff, 30), "NW", 1, majorOpacity);
+			drawCenteredText(vec2_t(xOff, 30.f), "NW", 1, majorOpacity);
 			break;
 		}
-		typedef std::multimap<int, std::string>::iterator multimap_iter;
-		std::pair<multimap_iter, multimap_iter> result = extraPoints.equal_range(oDeg);
-		for (multimap_iter it = result.first; it != result.second; it++) {
+		auto result = extraPoints.equal_range(oDeg);
+		for (auto it = result.first; it != result.second; it++) {
 			std::string pName = it->second;
 			std::transform(pName.begin(), pName.end(), pName.begin(), ::toupper);
 
-			vec2_t pos = vec2_t(xOff, 31);
+			vec2_t pos = vec2_t(xOff, 31.f);
 
 			int overlapping = 0;
 			const float tSize = 0.75f;
 			const float tWidth = DrawUtils::getTextWidth(&pName, tSize);
 			pos.x -= tWidth / 2;
-			const vec2_t mySpace = vec2_t(pos.x, pos.x + tWidth);  // anyone remember this site?
-			for (const vec2_t vect : stacking) {
-				if (mySpace.x < vect.y && vect.x < mySpace.y) {
+			const vec2_t myTextRange = vec2_t(pos.x, pos.x + tWidth); 
+			for (const vec2_t otherTextRange : stacking) {
+				// Check if other text overlaps us
+				if (myTextRange.x < otherTextRange.y && otherTextRange.x < myTextRange.y) {
 					overlapping++;
 				}
 			}
-			stacking.push_back(mySpace);
+			stacking.push_back(myTextRange);
 			pos.y += 5 * (overlapping + 1);
 			DrawUtils::drawText(pos, &pName, MC_Color(255, 255, 255), tSize, majorOpacity);
 		}
@@ -117,13 +122,13 @@ void Compass::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 
 			// Bigger line with degree displayed
 			DrawUtils::fillRectangle(vec4_t(xOff - 0.5f, 15, xOff + 0.5f, 20), MC_Color(255, 255, 255), minorOpacity);
-			drawCenteredText(vec2_t(xOff, 20), std::to_string(oDeg), 0.75f, minorOpacity);
+			drawCenteredText(vec2_t(xOff, 20.f), std::to_string(oDeg), 0.75f, minorOpacity);
 		}
 	}
 
 	// Center line
 	DrawUtils::fillRectangle(vec4_t(sCenter - 0.5f, 15, sCenter + 0.5f, 25), MC_Color(255, 255, 255), opacity);
-	drawCenteredText(vec2_t(sCenter, 25), std::to_string(deg), 0.75f, opacity);
+	drawCenteredText(vec2_t(sCenter, 25.f), std::to_string(deg), 0.75f, opacity);
 	DrawUtils::flush();
 }
 

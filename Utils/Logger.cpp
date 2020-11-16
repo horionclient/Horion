@@ -24,6 +24,10 @@ std::mutex injMutex;
 std::vector<TextForPrint> stringPrintVector = std::vector<TextForPrint>();
 std::vector<std::shared_ptr<TextForPrintBig>> stringSendToInjector;
 
+bool Logger::isActive() {
+	return loggerActive && initializedLogger;
+}
+
 std::wstring Logger::GetRoamingFolderPath() {
 	ComPtr<IApplicationDataStatics> appDataStatics;
 	auto hr = RoGetActivationFactory(HStringReference(L"Windows.Storage.ApplicationData").Get(), __uuidof(appDataStatics), &appDataStatics);

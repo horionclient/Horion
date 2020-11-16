@@ -3,7 +3,7 @@
 #include "../../../Utils/Target.h"
 #include "../ModuleManager.h"
 
-NameTags::NameTags() : IModule(0x0, Category::VISUAL, "Shows better nametags above players that can be seen from a lot more far aways") {
+NameTags::NameTags() : IModule(0, Category::VISUAL, "Shows better nametags above players that can be seen from a lot more far aways") {
 	this->registerBoolSetting("Display Armor", &this->displayArmor, this->displayArmor);
 }
 

@@ -1,6 +1,6 @@
 #include "EditionFaker.h"
 
-EditionFaker::EditionFaker() : IModule('X', Category::MISC, "Fakes your device to android") {
+EditionFaker::EditionFaker() : IModule(0, Category::MISC, "Fakes your device to android") {
 }
 
 EditionFaker::~EditionFaker() {

@@ -31,8 +31,8 @@ JsValueRef ScriptManager::prepareEntity(long long runtimeId, ContextObjects* obj
 	return obj;
 }
 
-void ScriptManager::prepareGlobals(JsValueRef global) {
-	chakra.defineFunction(global, L"log", GlobalFunctions::log);
+void ScriptManager::prepareGlobals(JsValueRef global, ContextObjects* obj) {
+	chakra.defineFunction(global, L"log", GlobalFunctions::log, obj);
 }
 
 void ScriptManager::prepareVector3Prototype(JsValueRef global, ContextObjects* obj) {
@@ -52,9 +52,33 @@ void ScriptManager::prepareVector3Prototype(JsValueRef global, ContextObjects* o
 
 	chakra.defineFunction(obj->vec3Prototype, L"add", Vector3Functions::add, obj);
 	chakra.defineFunction(obj->vec3Prototype, L"sub", Vector3Functions::sub, obj);
+	chakra.defineFunction(obj->vec3Prototype, L"div", Vector3Functions::div, obj);
+	chakra.defineFunction(obj->vec3Prototype, L"mul", Vector3Functions::mul, obj);
 
 	auto con = chakra.defineFunction(global, L"Vec3", Vector3Functions::constructor, obj);
 	chakra.addPropertyToObj(con, L"prototype", obj->vec3Prototype);
+}
+
+void ScriptManager::prepareVector2Prototype(JsValueRef global, ContextObjects* obj) {
+	chakra.JsCreateObject_(&obj->vec2Prototype);
+	chakra.JsAddRef_(obj->vec2Prototype, 0);
+
+	chakra.defineFunction(obj->vec2Prototype, L"isValid", Vector2Functions::isValid, obj);
+
+	chakra.defineProp(obj->vec2Prototype, L"x", Vector2Functions::getX, 0);
+	chakra.defineProp(obj->vec2Prototype, L"y", Vector2Functions::getY, 0);
+	chakra.defineFunction(obj->vec2Prototype, L"getX", Vector2Functions::getX, obj);
+	chakra.defineFunction(obj->vec2Prototype, L"getY", Vector2Functions::getY, obj);
+
+	chakra.defineFunction(obj->vec2Prototype, L"toString", Vector2Functions::toString, obj);
+
+	chakra.defineFunction(obj->vec2Prototype, L"add", Vector2Functions::add, obj);
+	chakra.defineFunction(obj->vec2Prototype, L"sub", Vector2Functions::sub, obj);
+	chakra.defineFunction(obj->vec2Prototype, L"div", Vector2Functions::div, obj);
+	chakra.defineFunction(obj->vec2Prototype, L"mul", Vector2Functions::mul, obj);
+
+	auto con = chakra.defineFunction(global, L"Vec2", Vector2Functions::constructor, obj);
+	chakra.addPropertyToObj(con, L"prototype", obj->vec2Prototype);
 }
 
 void ScriptManager::prepareEntityPrototype(JsValueRef proto, ContextObjects* objs) {
@@ -82,6 +106,8 @@ void ScriptManager::prepareLocalPlayerPrototype(JsValueRef proto, ContextObjects
 	chakra.defineFunction(proto, L"toString", LocalPlayerFunctions::toString, objs);
 	chakra.defineFunction(proto, L"setViewAngles", LocalPlayerFunctions::setViewAngles, objs);
 	chakra.defineFunction(proto, L"setIsOnGround", LocalPlayerFunctions::setIsOnGround, objs);
+	chakra.defineFunction(proto, L"getInventory", LocalPlayerFunctions::getInventory, objs);
+	chakra.defineFunction(proto, L"getInventorySlot", LocalPlayerFunctions::getInventorySlot, objs);
 }
 
 void ScriptManager::prepareGameFunctions(JsValueRef global, ContextObjects* objs) {
@@ -114,9 +140,20 @@ void ScriptManager::prepareDrawFunctions(JsValueRef global, ContextObjects* objs
 	chakra.JsCreateObject_(&objs->drawUtils);
 	chakra.JsAddRef_(objs->drawUtils, 0);
 
+	chakra.defineFunction(objs->drawUtils, L"setColor", DrawFunctions::setColor, objs);
+
+	chakra.defineFunction(objs->drawUtils, L"drawLine2d", DrawFunctions::drawLine2d, objs);
+	chakra.defineFunction(objs->drawUtils, L"drawRectangle2d", DrawFunctions::drawRectangle2d, objs);
+	chakra.defineFunction(objs->drawUtils, L"fillRectangle2d", DrawFunctions::fillRectangle2d, objs);
+	chakra.defineFunction(objs->drawUtils, L"drawText2d", DrawFunctions::drawText2d, objs);
+	chakra.defineFunction(objs->drawUtils, L"getTextWidth", DrawFunctions::getTextWidth, objs);
+	chakra.defineFunction(objs->drawUtils, L"getTextLineHeight", DrawFunctions::getTextLineHeight, objs);
+
 	chakra.defineFunction(objs->drawUtils, L"drawLine3d", DrawFunctions::drawLine3d, objs);
 	chakra.defineFunction(objs->drawUtils, L"drawLinestrip3d", DrawFunctions::drawLinestrip3d, objs);
-	chakra.defineFunction(objs->drawUtils, L"setColor", DrawFunctions::setColor, objs);
+	
+	chakra.defineFunction(objs->drawUtils, L"getOrigin", DrawFunctions::getOrigin, objs);
+	chakra.defineFunction(objs->drawUtils, L"getWindowSize", DrawFunctions::getWindowSize, objs);
 }
 
 void ScriptManager::prepareCommandManagerFunctions(JsValueRef global, ContextObjects* objs) {
@@ -167,9 +204,10 @@ void ScriptManager::prepareContext(JsContextRef* ctx, ContextObjects* obj) {
 	JsValueRef globalObject;
 	chakra.JsGetGlobalObject_(&globalObject);
 
-	prepareGlobals(globalObject);
+	prepareGlobals(globalObject, obj);
 	prepareHorionFunctions(globalObject, obj);
 	prepareGameFunctions(globalObject, obj);
+	prepareVector2Prototype(globalObject, obj);
 	prepareVector3Prototype(globalObject, obj);
 	prepareLevelFunctions(globalObject, obj);
 
@@ -199,6 +237,27 @@ JsValueRef ScriptManager::prepareVector3(vec3_t vec, ContextObjects* objs) {
 	}
 
 	chakra.JsSetPrototype_(obj, objs->vec3Prototype);
+
+	return obj;
+}
+
+JsValueRef ScriptManager::prepareVector2(vec2_t vec, ContextObjects* objs) {
+	JsValueRef obj;
+	JVector2* data = new JVector2(vec);
+	auto err = chakra.JsCreateExternalObject_(
+		data, [](void* buf) {
+			delete buf;
+		},
+		&obj);
+
+	if (err != JsNoError) {
+		logF("prepareVector2 error: %X", err);
+		JsValueRef null;
+		chakra.JsGetNullValue_(&null);
+		return null;
+	}
+
+	chakra.JsSetPrototype_(obj, objs->vec2Prototype);
 
 	return obj;
 }
@@ -292,8 +351,18 @@ std::wstring ScriptManager::runScript(std::wstring script) {
 	chakra.JsHasException_(&hasException);
 
 	if (err != JsNoError || hasException) {
-		logF("Script run failed: %X", err);
+#define errLog(x, ...) (Logger::isActive() ? logF(x, __VA_ARGS__) : GameData::log(x, __VA_ARGS__))
 
+		switch (err) {
+		case JsErrorScriptCompile:
+			errLog("Script failed to compile (code: %X)", err);
+			break;
+		default:
+			errLog("Script run failed: %X", err);
+			break;
+		}
+
+#undef errLog
 		returnString = L"Error! " + std::to_wstring(err) + L", you can find a stack trace in the console";
 
 		if (hasException) {

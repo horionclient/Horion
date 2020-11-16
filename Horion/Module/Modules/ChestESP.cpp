@@ -1,7 +1,7 @@
 #include "ChestESP.h"
 #include "../../DrawUtils.h"
 
-ChestESP::ChestESP() : IModule('H', Category::VISUAL, "ESP for chests") {
+ChestESP::ChestESP() : IModule(0, Category::VISUAL, "ESP for chests") {
 }
 
 ChestESP::~ChestESP() {

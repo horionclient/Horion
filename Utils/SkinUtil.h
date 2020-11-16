@@ -40,5 +40,5 @@ class SkinUtil {
 public:
 	static void importGeo(std::wstring filePath);
 	static std::string modGeometry(const char* oldGeoStr, MeshStructs::meshData mesh);
-	static MeshStructs::meshData objToMesh(const char* str);
+	static MeshStructs::meshData objToMesh(const char* str, bool convertTrisToQuads = true);
 };

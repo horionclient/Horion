@@ -33,6 +33,7 @@ struct TextForPrintBig {
 class Logger {
 
 public:
+	static bool isActive();
 	static std::wstring GetRoamingFolderPath();
 	static void WriteLogFileF(volatile char* fmt, ...);
 	static void WriteBigLogFileF(size_t maxSize, const char* fmt, ...);

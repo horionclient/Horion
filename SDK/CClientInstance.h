@@ -13,9 +13,95 @@ public:
 	float* timer;  //0x00B0
 };
 
+class Tessellator;
+class C_Block;
+
+class BlockTessellator;
+class ResourceLocation {
+private:
+	char pad[0x28];
+	__int64 hashCode; // 0x28
+	char pad2[8];
+};
+
+class HashedString {
+private:
+	unsigned __int64 hash;
+	TextHolder text; // 0x0008
+
+public:
+	HashedString(const std::string& text) {
+		this->text.setText(text);
+		
+		this->computeHash();
+	}
+
+	void computeHash() {
+		hash = 0xCBF29CE484222325i64;
+		if (this->text.getTextLength() <= 0)
+			return;
+		char* textP = this->text.getText();
+		auto c = *textP;
+
+		do {
+			hash = c ^ 0x100000001B3i64 * hash;
+			c = *++textP;
+		} while (*textP);
+	}
+
+	unsigned __int64 getHash() {
+		return this->hash;
+	}
+};
+
+namespace mce {
+	class TextureGroup;
+	class MaterialPtr;
+	class Mesh {
+	public:
+		void renderMesh(__int64 screenContext, mce::MaterialPtr* material, size_t numTextures, __int64** textureArray);
+
+		template <size_t numTextures>
+		void renderMesh(__int64 screenContext, mce::MaterialPtr* material, std::array<__int64*, numTextures> textures) {
+			this->renderMesh(screenContext, material, numTextures, &textures[0]);
+		}
+	};
+	class TexturePtr {
+	private:
+		__int64* clientTexture;
+		char pad[0x8];
+		ResourceLocation resourceLocation; // 0x10
+
+	public:
+		__int64* getClientTexture() {
+			return this->clientTexture;
+		}
+	};
+	class MaterialPtr {
+	private:
+		std::shared_ptr<void> materialPtr;
+
+	public:
+		MaterialPtr(const std::string& materialName);
+	};
+	}
+
+
 class LevelRenderer {
 private:
-	char pad_0x0000[0x870];  //0x0000
+	char pad_0x0000[0x58];  //0x0000
+public:
+	mce::TextureGroup* textureGroup; // 0x0058
+private:
+	char pad_0x0060[0xE0];  //0x0060
+public:
+	mce::TexturePtr atlasTexture; // 0x140
+private:
+	char pad_0x0188[0x150];  //0x0188
+public:
+	BlockTessellator* blockTessellator; // 0x02D8
+private:
+	char pad_0x02F0[0x590];  //0x02E0
 public:
 	vec3_t origin;  //0x0870
 
@@ -431,6 +517,8 @@ public:
 	virtual C_CameraManager* getCameraManager(void) const;
 private:
 	virtual __int64 sub_1400CCC08(void) const;
+
+public:
 	virtual __int64 getLightTexture(void);
 
 public:

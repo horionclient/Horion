@@ -1,6 +1,6 @@
 #include "Derp.h"
 
-Derp::Derp() : IModule(0x0, Category::MISC, "lol you stupid") {
+Derp::Derp() : IModule(0, Category::MISC, "lol you stupid") {
 	this->registerBoolSetting("ihaveastroke", &this->epicStroke, this->epicStroke);
 	this->registerBoolSetting("packet mode", &this->packetMode, this->packetMode);
 }

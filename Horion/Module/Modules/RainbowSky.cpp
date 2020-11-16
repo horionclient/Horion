@@ -1,6 +1,6 @@
 #include "RainbowSky.h"
 
-RainbowSky::RainbowSky() : IModule('N', Category::VISUAL, "Makes your sky look rainbow!") {
+RainbowSky::RainbowSky() : IModule(0, Category::VISUAL, "Makes your sky look rainbow!") {
 }
 
 RainbowSky::~RainbowSky() {

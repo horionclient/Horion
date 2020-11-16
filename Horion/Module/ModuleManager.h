@@ -93,6 +93,7 @@
 #include "Modules/Spider.h"
 #include "Modules/Compass.h"
 #include "Modules/Radar.h"
+#include "Modules/VanillaPlus.h"
 
 #ifdef _DEBUG
 #include "Modules/PacketLogger.h"

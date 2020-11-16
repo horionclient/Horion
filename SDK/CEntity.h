@@ -310,7 +310,7 @@ private:
 	virtual __int64 feed(int);
 	virtual __int64 handleEntityEvent(__int64, int);
 	virtual __int64 getPickRadius(void);
-	virtual const struct HashedString* getActorRendererId(void);
+	virtual const class HashedString* getActorRendererId(void);
 	virtual __int64 spawnAtLocation(int, int);
 	virtual __int64 spawnAtLocation(int, int, float);
 	virtual __int64 spawnAtLocation(__int64 const &, int);
@@ -365,9 +365,11 @@ private:
 	virtual __int64 handleInsidePortal(vec3_ti const &);
 	virtual __int64 getPortalCooldown(void) const;
 	virtual __int64 getPortalWaitTime(void) const;
-	virtual __int64 getDimensionId(void) const;
 
 public:
+	virtual int* getDimensionId(int* dimOut) const;
+
+
 	virtual bool canChangeDimensions(void) const;
 
 private:
@@ -731,7 +733,6 @@ private:
 public:
 	virtual void setPermissions(int);
 
-private:
 	virtual __int64 startDestroying(void);
 	virtual __int64 stopDestroying(void);
 

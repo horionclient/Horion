@@ -1,6 +1,6 @@
 #include "StackableItem.h"
 
-StackableItem::StackableItem() : IModule(0x0, Category::PLAYER, "Stack items you normally wouldn't be able to stack (e. g. swords)") {
+StackableItem::StackableItem() : IModule(0, Category::PLAYER, "Stack items you normally wouldn't be able to stack (e. g. swords)") {
 }
 
 StackableItem::~StackableItem() {

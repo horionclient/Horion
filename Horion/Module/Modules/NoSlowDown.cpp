@@ -5,7 +5,7 @@
 #include "../../../Utils/Logger.h"
 #include "../../../Utils/Utils.h"
 
-NoSlowDown::NoSlowDown() : IModule(0x0, Category::MOVEMENT, "Don't get slowed down when blocking or eating") {
+NoSlowDown::NoSlowDown() : IModule(0, Category::MOVEMENT, "Don't get slowed down when blocking or eating") {
 }
 
 NoSlowDown::~NoSlowDown() {

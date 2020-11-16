@@ -1,8 +1,8 @@
 #include "AutoClicker.h"
 
-AutoClicker::AutoClicker() : IModule(0x0, Category::COMBAT, "A simple autoclicker, automatically clicks for you.") {
+AutoClicker::AutoClicker() : IModule(0, Category::COMBAT, "A simple autoclicker, automatically clicks for you.") {
 	this->registerBoolSetting("rightclick", &this->rightclick, rightclick);
-	this->registerBoolSetting("only swords/axes", &this->sword, this->sword);
+	this->registerBoolSetting("only weapons", &this->weapons, this->weapons);
 	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
 	this->registerBoolSetting("hold", &this->hold, this->hold);
 }
@@ -21,9 +21,8 @@ void AutoClicker::onTick(C_GameMode* gm) {
 		Odelay++;
 
 		if (Odelay >= delay) {
-			auto selectedItemId = localPlayer->getSelectedItemId();
-			if (sword && !(selectedItemId == 268 || selectedItemId == 267 || selectedItemId == 272 || selectedItemId == 276 || selectedItemId == 283 /*swords*/
-						   || selectedItemId == 271 || selectedItemId == 275 || selectedItemId == 279 || selectedItemId == 286 || selectedItemId == 258 /*axes*/))
+			auto selectedItem = localPlayer->getSelectedItem();
+			if (weapons && selectedItem->getAttackingDamageWithEnchants() < 1)
 				return;
 
 			g_Data.leftclickCount++;

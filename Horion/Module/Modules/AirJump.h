@@ -4,6 +4,7 @@
 class AirJump : public IModule {
 private:
 	int hasJumped = 0;
+	bool legacyMode = false;
 
 public:
 	AirJump();

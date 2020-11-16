@@ -3,6 +3,8 @@
 class BowAimbot : public IModule {
 private:
 	bool silent = true;
+	bool predict = false;
+	bool visualize = false;
 	vec2_t angle;
 
 public:

@@ -2,6 +2,8 @@
 #include "CItem.h"
 
 class C_ItemStack;
+class C_Inventory;
+class C_Player;
 
 class C_Inventory {
 private:
@@ -9,7 +11,6 @@ private:
 
 public:
 	bool isFull();
-	int getFirstEmptySlot();
 	void dropSlot(int slot);
 
 	// DROPS WHOLE INVENTORY doesnt work tho
@@ -23,8 +24,42 @@ public:
 	virtual bool hasRoomForItem(C_ItemStack*);
 	virtual __int64 addItem(C_ItemStack*);
 	virtual __int64 addItemToFirstEmptySlot(C_ItemStack*);
+	virtual __int64 setItem(int slot, const C_ItemStack&);
+	virtual __int64 setItemWithForceBalance(int, const C_ItemStack&, bool);
+	virtual __int64 removeItem(int, int);
+	virtual __int64 removeAllItems();
+	virtual __int64 dropContents(C_BlockSource&, const vec3_t&, bool);
+	virtual __int64 getContainerSize();
+	virtual __int64 getMaxStackSize();
+	virtual __int64 startOpen(C_Player&);
+	virtual __int64 stopOpen(C_Player&);
+	virtual __int64 getSlotCopies();
+	virtual __int64 getSlots();
+	virtual __int64 getItemCount(const C_ItemStack&);
+	virtual __int64 findFirstSlotForItem(const C_ItemStack&);
+	virtual __int64 canPushInItem(); // BlockSource &,int,int,ItemInstance const&
+	virtual __int64 canPullOutItem();  // BlockSource &,int,int,ItemInstance const&
+	virtual __int64 setContainerChanged(int); 
+	virtual __int64 setContainerMoved();
+	virtual __int64 setCustomName(const TextHolder&); 
+	virtual __int64 hasCustomName();
+	virtual __int64 readAdditionalSaveData(); //  CompoundTag const&
+	virtual __int64 addAdditionalSaveData();   //  CompoundTag &
+	virtual __int64 createTransactionContext();  // std::function<void(C_Inventory&, int, const C_ItemStack&, const C_ItemStack&)>, std::function<void(void)>
+	virtual __int64 initializeContainerContents(C_BlockSource&);
+	virtual __int64 add(C_ItemStack&);
+	virtual __int64 canAdd(const C_ItemStack&);
+	virtual void unknown();
+	virtual __int64 clearSlot(int);
+	virtual __int64 clearInventory(int);
+	virtual __int64 load(); // ListTag const&,SemVersion const&,Level &
+	virtual void unknown2();
+	virtual __int64 getEmptySlotsCount();
+	virtual int getFirstEmptySlot();
+	virtual __int64 setContainerSize();
 
 	void moveItem(int from, int to);
+	void swapSlots(int from, int to);
 };
 
 class C_PlayerInventoryProxy {

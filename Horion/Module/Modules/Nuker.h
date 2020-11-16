@@ -13,7 +13,7 @@ public:
 	~Nuker();
 
 	inline bool isAutoMode() { return autodestroy; };
-	inline int getNukerRadius() { return nukerRadius; };
+	int getNukerRadius() { return nukerRadius; };
 
 	inline bool isVeinMiner() { return veinMiner; };
 	// Inherited via IModule

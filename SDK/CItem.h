@@ -30,6 +30,7 @@ public:
 class C_ItemRenderer {
 public:
 	void renderGuiItemNew(C_BaseActorRenderContext* BaseActorRenderCtx, C_ItemStack* item, MinecraftGame* game, float x, float y, float opacity, float scale, bool isEnchanted);
+	void renderGuiItemInChunk(C_BaseActorRenderContext* BaseActorRenderCtx, C_ItemStack* item, float x, float y, float opacity, float scale, bool isEnchanted, int mode);
 };
 
 class C_Item {
@@ -316,6 +317,10 @@ public:
 			return 0;
 		int sharpnessValue = this->getEnchantValue(9);
 		return (*this->item)->getAttackDamage() + 1.25f * sharpnessValue;
+	}
+
+	void setShowPickUp(bool b) {
+		*(bool*)(reinterpret_cast<__int64>(this)+ 0x30) = b;
 	}
 
 private:
