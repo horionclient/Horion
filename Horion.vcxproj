@@ -351,6 +351,7 @@
     <ClCompile Include="Horion\Module\Modules\Spider.cpp" />
     <ClCompile Include="Horion\Module\Modules\StackableItem.cpp" />
     <ClCompile Include="Horion\Module\Modules\Step.cpp" />
+    <ClInclude Include="Horion\Module\Modules\Strafe.cpp" />
     <ClCompile Include="Horion\Module\Modules\Teams.cpp" />
     <ClCompile Include="Horion\Module\Modules\Teleport.cpp" />
     <ClCompile Include="Horion\Module\Modules\TestModule.cpp" />
@@ -535,6 +536,7 @@
     <ClInclude Include="Horion\Module\Modules\Spider.h" />
     <ClInclude Include="Horion\Module\Modules\StackableItem.h" />
     <ClInclude Include="Horion\Module\Modules\Step.h" />
+    <ClInclude Include="Horion\Module\Modules\Strafe.h" />
     <ClInclude Include="Horion\Module\Modules\Teams.h" />
     <ClInclude Include="Horion\Module\Modules\Teleport.h" />
     <ClInclude Include="Horion\Module\Modules\TestModule.h" />
