@@ -189,7 +189,7 @@ uintptr_t Utils::FindSignatureModule(const char* szModule, const char* szSignatu
 	// This will not get optimized away because we are in debug
 	// Leave this in here to quickly find bad signatures in case of updates
 	logF("Signature dead: %s", szSignature);
-	if (true) {
+	if (false) {
 		const char* msgToTheOverwhelmedDebugger = "SIGNATURE NOT FOUND";
 		__debugbreak();
 	}

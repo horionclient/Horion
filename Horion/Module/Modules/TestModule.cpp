@@ -65,8 +65,11 @@ void loadFile(std::wstring filePath) {
 	int num = 0;
 	for (const auto& face : mesh.faces) {
 		
-		if (face.facesPresent != 3)
+		if (face.facesPresent != 3) {
+			//logF("wierd face %i", face.facesPresent);
 			continue;
+		}
+			
 		
 		const auto& v1 = mesh.vertices[face.indices[0].vertIndex];
 		const auto& v2 = mesh.vertices[face.indices[1].vertIndex];
@@ -180,8 +183,8 @@ void TestModule::onTick(C_GameMode* gm) {
 	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()))  // Block in hand?
 		return;
 
-	int radius = 6;
-	int numBlocksPerTick = 6;
+	int radius = 4;
+	int numBlocksPerTick = 1;
 	for (int x = -radius; x < radius; x++) {
 		for (int y = -radius; y < radius; y++) {
 			for (int z = -radius; z < radius; z++) {

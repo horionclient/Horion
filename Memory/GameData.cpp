@@ -28,7 +28,7 @@ void GameData::retrieveClientInstance() {
 void GameData::checkGameVersion() {
 	static uintptr_t sigOffset = 0;
 	if (sigOffset == 0)
-		sigOffset = FindSignature("48 8D 1D ?? ?? ?? ?? 8B 04 0A 39 05 ?? ?? ?? ?? 0F 8F ?? ?? ?? ?? 4C 8B CB 48 83 3D ?? ?? ?? ?? 10 4C 0F 43 0D ?? ?? ?? ??");
+		sigOffset = FindSignature("48 8D 15 ?? ?? ?? ?? 4C 8B CA 48 83 3D");
 	int offset = *reinterpret_cast<int*>((sigOffset + 3));
 	std::string ver = reinterpret_cast<TextHolder*>(sigOffset + offset + 7)->getText();
 	auto lastDot = ver.find_last_of(".");
