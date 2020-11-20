@@ -8,7 +8,6 @@ public:
 private:
 	bool isSneaking = false;
 	int Odelay = 0;
-	bool bypass = true;
 	float delay = 1;
 	inline float& getDelay() { return delay; };
 	virtual const char* getModuleName() override;
