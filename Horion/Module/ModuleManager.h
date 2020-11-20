@@ -94,6 +94,7 @@
 #include "Modules/Compass.h"
 #include "Modules/Radar.h"
 #include "Modules/Twerk.h"
+#include "Modules/Strafe.h"
 
 #ifdef _DEBUG
 #include "Modules/PacketLogger.h"
