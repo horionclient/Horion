@@ -138,17 +138,17 @@ public:
 
 class MinecraftGame {
 private:
-	char filler[0x140];  //0x0000
+	char filler[0x128];  //0x0000
 public:
-	C_FontRepository* fontRepository; //0x140
+	C_FontRepository* fontRepository; //0x128
 private:
-	char pad_0x148[0x8]; //0x148
+	char pad_0x148[0x28]; //0x130
 public:
-	C_FontRepository* fontRepository1;  //0x150
+	C_FontRepository* fontRepository1;  //0x158
 private:
-	char pad_0x128[0x108];  //0x148
+	char pad_0x128[0x100];  //0x160
 public:
-	bool canUseKeys;  //0x250
+	bool canUseKeys;  //0x260
 
 	C_Font* getTheGoodFontThankYou() {
 		return fontRepository->fontList->fontEntries[7].font;
@@ -231,32 +231,30 @@ private:
 	MinecraftGame* N0000080C;  //0x00A0
 public:
 	MinecraftGame* N0000080D;  //0x00A8
-private:
-	MinecraftGame* N0000080E;  //0x00B0
 public:
-	Minecraft* minecraft;  //0x00B8
+	Minecraft* minecraft;  //0x00B0
 private:
-	char pad_0x0068[0x8];  //0x00C0
+	char pad_0x0068[0x8];  //0x00B8
 public:
-	LevelRenderer* levelRenderer;  //0x00C8
+	LevelRenderer* levelRenderer;  //0x00C0
 private:
-	char pad_0x0078[0x8];  //0x00D0
+	char pad_0x0078[0x8];  //0x00C8
 public:
-	C_LoopbackPacketSender* loopbackPacketSender;  //0x00D8
+	C_LoopbackPacketSender* loopbackPacketSender;  //0x00D0
 private:
-	char pad_0x0088[0x18];  //0x00E0
+	char pad_0x0088[0x18];  //0x00D8
 public:
-	PtrToGameSettings1* ptr;  //0x00F8
+	PtrToGameSettings1* ptr;  //0x00F0
 private:
-	char pad_0x00B0[0x8];  //0x0100
+	char pad_0x00B0[0x8];  //0x00F8
 public:
-	HitDetectSystem* hitDetectSystem;  //0x0108
+	HitDetectSystem* hitDetectSystem;  //0x0100
 private:
-	char pad_0x00B8[0x30];  //0x0110
+	char pad_0x00B8[0x30];  //0x0108
 public:
-	C_LocalPlayer* localPlayer;  //0x0140
+	C_LocalPlayer* localPlayer;  //0x0138
 private:
-	char pad[0x380]; // 0x0148
+	char pad[0x380]; // 0x0140
 public:
 	struct {
 		char pad[0x238];
@@ -264,7 +262,7 @@ public:
 			__int64 materialPtr;
 			size_t refCount;
 		} entityLineMaterial;
-	} *itemInHandRenderer; // 0x04C8
+	} *itemInHandRenderer; // 0x04C0
 
 private:
 	virtual __int64 destructorClientInstance();
@@ -391,7 +389,11 @@ private:
 	virtual __int64 onGuiScaleOffsetChanged(void);
 	virtual __int64 onSafeZoneChanged(void);
 	virtual __int64 quit(std::string const&, std::string const&);
+
+public:
 	virtual __int64 getMinecraftGame(void) const;
+
+private:
 	virtual __int64 getAutomationClient(void) const;
 	virtual __int64 getScreenshotStreamer(void) const;
 	virtual __int64 getEventing(void) const;

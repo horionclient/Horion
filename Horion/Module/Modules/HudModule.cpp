@@ -82,7 +82,7 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			float y = windowSize.y - 57.5f;
 			for (int i = 0; i < 4; i++) {
 				C_ItemStack* stack = player->getArmor(i);
-				if (stack->item != nullptr) {
+				if (stack->isValid()) {
 					DrawUtils::drawItem(stack, vec2_t(x, y), opacity, scale, stack->isEnchanted());
 					x += scale * spacing;
 				}
@@ -90,7 +90,7 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 			C_ItemStack* item = supplies->inventory->getItemStack(supplies->selectedHotbarSlot);
 			//x += scale * spacing;
-			if (item->item != nullptr)
+			if (item->isValid())
 				DrawUtils::drawItem(item, vec2_t(x, y), opacity, scale, item->isEnchanted());
 		}
 	}
