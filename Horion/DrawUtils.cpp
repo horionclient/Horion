@@ -34,11 +34,12 @@ Tessellator__initializeFormat_t Tessellator__initializeFormat;
 
 bool hasInitializedSigs = false;
 void initializeSigs() {
-	hasInitializedSigs = true;
-	tess_vertex = reinterpret_cast<tess_vertex_t>(FindSignature("48 8B C4 48 89 78 ?? 55 48 8D 68"));
+	
+	tess_vertex = reinterpret_cast<tess_vertex_t>(FindSignature("48 89 5C 24 ?? 48 89 7C 24 ?? 55 48 8D ?? ?? ?? 48 81 EC ?? ?? ?? ?? 44 0F 29"));
 	tess_end = reinterpret_cast<tess_end_t>(FindSignature("40 53 56 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 49 8B F0 48 8B DA 48 8B F9"));
-	mce__VertexFormat__disableHalfFloats = reinterpret_cast<mce__VertexFormat__disableHalfFloats_t>(FindSignature("48 83 EC 28 4C 8B C9 C7 81 ?? ?? ?? ?? ?? ?? ?? ?? C6 81 ?? ?? ?? ?? ?? C6 81 ?? ?? ?? ?? ?? C6 81"));
+	mce__VertexFormat__disableHalfFloats = reinterpret_cast<mce__VertexFormat__disableHalfFloats_t>(FindSignature("40 53 48 83 EC ?? 48 8B D9 C7 81 ?? ?? ?? ?? 00 00 00 00 C6 81 ?? ?? ?? ?? 00"));
 	Tessellator__initializeFormat = reinterpret_cast<Tessellator__initializeFormat_t>(FindSignature("48 89 74 24 ?? 57 48 83 EC 20 4C 8B 41 ?? 48 8B FA 4C 2B 41 ?? 48 8B F1 48 83 C1 08 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 49 F7 E8 48 D1 FA 48 8B C2 48 C1 E8 3F 48 03 D0 48 3B FA"));
+	hasInitializedSigs = true;
 }
 
 void DrawUtils::setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* gui) {
@@ -101,13 +102,13 @@ void DrawUtils::setColor(float r, float g, float b, float a) {
 C_Font* DrawUtils::getFont(Fonts font) {
 
 	if (true)
-		return g_Data.getClientInstance()->N0000080D->getOldFont();
+		return g_Data.getClientInstance()->minecraftGame->getOldFont();
 	switch (font) {
 	case Fonts::SMOOTH:
-		return g_Data.getClientInstance()->N0000080D->getTheGoodFontThankYou();
+		return g_Data.getClientInstance()->minecraftGame->getTheGoodFontThankYou();
 		break;
 	case Fonts::UNICOD:
-		return g_Data.getClientInstance()->N0000080D->getTheBetterFontYes();
+		return g_Data.getClientInstance()->minecraftGame->getTheBetterFontYes();
 		break;
 	case Fonts::RUNE:
 		return g_Data.getClientInstance()->_getRuneFont();
@@ -558,11 +559,12 @@ void DrawUtils::tess__begin(Tessellator* tess, int vertexFormat, int numVertices
 		mce__VertexFormat__disableHalfFloats(tesselator, 0, 0);
 		*(unsigned char*)(tesselator + 8) = vertexFormat;
 		*(unsigned char*)(tesselator + 0x1B4) = 0;
-		*(unsigned short*)(tesselator + 0x1FC) = 1;
+		*(unsigned char*)(tesselator + 0x1FC) = 1;
+		*(unsigned char*)(tesselator + 0x1FD) = 0;
 		*(unsigned int*)(tesselator + 0x16C) = 0;
 		*(__int64*)(tesselator + 0x150) = *(__int64*)(tesselator + 0x148);
 		if (!*(unsigned char*)tesselator)
-			*(unsigned char*)(tesselator + 0xD0) = 1;
+			*(unsigned char*)(tesselator + 0xC8) = 1;
 		if (numVerticesReserved != 0)
 			Tessellator__initializeFormat(tesselator + 8, numVerticesReserved);
 	}

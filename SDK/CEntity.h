@@ -141,6 +141,7 @@ private:
 
 public:
 	virtual void setPos(vec3_t const &);
+	virtual vec3_t *getPredictedMovementValues(void) const;
 	virtual vec3_t *getPos(void) const;
 	virtual vec3_t *getPosOld(void) const;
 	virtual vec3_t *getPosExtrapolated(float) const;
@@ -151,6 +152,7 @@ private:
 
 public:
 	virtual void setRot(vec2_t const &);
+	virtual void move(class IActorMovementProxy &, vec3_t const &);
 	virtual void move(vec3_t const &);
 	virtual __int64 getInterpolatedRidingPosition(float) const;
 	virtual __int64 getInterpolatedBodyRot(float) const;
