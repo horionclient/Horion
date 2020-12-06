@@ -16,6 +16,9 @@ jobs:
 
     runs-on: windows-latest
     
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+    
     steps:
     - uses: actions/checkout@v2.3.2
 
