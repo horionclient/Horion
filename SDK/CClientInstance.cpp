@@ -7,8 +7,8 @@ __int64 MinecraftGame::getServerEntries() {
 	return Utils::CallVFunc<30, __int64>(this);
 }
 void C_GuiData::displayClientMessage(std::string *a2) {
-	using displayClientMessage = void(__thiscall*)(void*, TextHolder);  // This signature actually exists 2 times but we got luck that our function is the first in memory
-	static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(FindSignature("4C 8B DC 48 ?? ?? ?? ?? ?? ?? 49 ?? ?? ?? ?? ?? ?? ?? 49 ?? ?? ?? ?? ?? ?? ?? 33 C0 49 89 43 D8 41 88 43 C8 49"));
+	using displayClientMessage = void(__thiscall*)(void*, TextHolder&);  
+	static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(FindSignature("48 8B C4 57 48 81 EC ?? ?? ?? ?? 48 C7 40 ?? FE FF FF FF 48 89 58 18 48 8B DA 48 8B F9 66"));
 
 	TextHolder text = TextHolder(*a2);
 

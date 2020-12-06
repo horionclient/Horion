@@ -106,7 +106,7 @@ void Hooks::Init() {
 	}
 
 	// d3d11
-	{
+	/*{
 		/*const auto hModDXGI = GetModuleHandle(L"DXGI.dll");
 		const auto hModD3D11 = GetModuleHandle(L"D3D11.dll");
 
@@ -166,12 +166,12 @@ void Hooks::Init() {
 		if (pSwapChain) {
 			logF("swap vtable: %llX", *pSwapChain);
 			pSwapChain->Release();
-		}*/
+		}*
 		
 		uintptr_t sigOffset = FindSignature("48 8B 0D ?? ?? ?? ?? 48 8B 91 ?? ?? ?? ?? E8");
 		if (sigOffset != 0x0) {
 			int startOffsetOffset = *reinterpret_cast<int*>((sigOffset + 3));
-			uintptr_t startOffset = sigOffset + startOffsetOffset + /*length of instruction*/ 7;  
+			uintptr_t startOffset = sigOffset + startOffsetOffset + /*length of instruction/ 7;  
 			size_t secondOffset = (size_t) *reinterpret_cast<int*>((sigOffset + 10));
 			auto swapChain = g_Data.getSlimMem()->ReadPtr<__int64>(startOffset, {0, secondOffset, 0x170});
 			auto vtable = *reinterpret_cast<uintptr_t**>(swapChain);
@@ -181,7 +181,7 @@ void Hooks::Init() {
 			g_Hooks.swapchain__presentHook = std::make_unique<FuncHook>(vtable[8], Hooks::swapChain__present);
 			g_Hooks.swapchain__resizeBuffersHook = std::make_unique<FuncHook>(vtable[13], Hooks::swapChain__ResizeBuffers);
 		}
-	}
+	}*/
 
 	// Signatures
 	{
@@ -353,7 +353,7 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 	static auto oSendMessage = g_Hooks.ChatScreenController_sendChatMessageHook->GetFastcall<void, void*>();
 
 	using addCommandToChatHistory_t = void(__fastcall*)(__int64, char*);
-	static addCommandToChatHistory_t addCommandToChatHistory = reinterpret_cast<addCommandToChatHistory_t>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 83 79 ?? ?? 48 8B FA 48 8B D9 76 46 48 8B 41 ?? 48 89 74 24 ?? 33 F6"));
+	static addCommandToChatHistory_t addCommandToChatHistory = reinterpret_cast<addCommandToChatHistory_t>(FindSignature("48 89 5C 24 ?? 55 56 57 48 83 EC ?? 48 8B D9 48 8B F2"));
 
 	uintptr_t* textLength = reinterpret_cast<uintptr_t*>(_this + 0xA80);
 	if (*textLength) {
@@ -365,7 +365,7 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 			cmdMgr->execute(message);
 
 			__int64 a1 = 0;
-			a1 = (*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x968i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
+			a1 = (*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x988i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
 
 			addCommandToChatHistory(a1, (char*)(_this + 0xA70));  // This will put the command in the chat history (Arrow up/down)
 
@@ -374,9 +374,9 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 			__int64 v16 = *v15;
 
 			if (*(BYTE*)(_this + 0xA9A))
-				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x970))(v15);
+				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x990))(v15);
 			else
-				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x968))(v15);
+				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x988))(v15);
 			*(DWORD*)(_this + 0xA94) = *(DWORD*)(v17 + 0x20);
 
 			*reinterpret_cast<__int64*>(_this + 0xA80) = 0i64;
@@ -1008,8 +1008,7 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 	if (syncShit == nullptr) {
 		uintptr_t sigOffset = 0;
 		// sig of function: (present 3 times in the exe)
-		//sigOffset = FindSignature("40 57 48 83 EC 40 48 C7 44 24 ? ? ? ? ? 48 89 5C 24 ? 48 89 74 24 ? 48 8B F2 48 8D 3D ? ? ? ? 48 8B CF");
-		sigOffset = FindSignature("49 8B D6 E8 ?? ?? ?? ?? 48 8B 5D ?? 48 85") + 4;
+		sigOffset = FindSignature("48 8B D7 48 8B 8B ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B 9C") + 11;
 		auto funcOffset = *reinterpret_cast<int*>(sigOffset);
 		sigOffset += 4 + funcOffset;
 

@@ -11,14 +11,10 @@ C_InventoryTransactionManager *C_Entity::getTransactionManager() {
 	return reinterpret_cast<C_InventoryTransactionManager *>(reinterpret_cast<__int64>(this) + offset);
 }
 C_PlayerInventoryProxy *C_Player::getSupplies() {
-	static unsigned int offset = 0;
-	if (offset == 0) {
-		//offset = *reinterpret_cast<int *>(FindSignature("4C 8B 82 ?? ?? ?? ?? 48 8B B2") + 3);  // GameMode::startDestroyBlock -> GameMode::_canDestroy -> getSupplies
-		if (g_Data.getVersion() == GAMEVERSION::g_1_16_0)
-			offset = *reinterpret_cast<int *>(FindSignature("48 8B 53 ? 48 8B F0 4C 8B 8A ? ? ? ? 41 80 B9 ? ? ? ? ? 75 18 49 8B 89 ? ? ? ? 41 8B 51 ? 4C 8B 01 41 FF 50") + 10);  // GameMode::startDestroyBlock -> GameMode::_canDestroy -> getSupplies
-		else
-			offset = *reinterpret_cast<int *>(FindSignature("48 8B 51 ? 4C 8B 82 ? ? ? ? 48 8B B2 ? ? ? ? 41 80 B8 ? ? ? ? ? ") + 7);  // GameMode::startDestroyBlock -> GameMode::_canDestroy -> getSupplies
-	}
+	static unsigned int offset = 0xBD0;
+	/*if (offset == 0) {
+		offset = *reinterpret_cast<int *>(FindSignature("48 8B 51 ?? 4C 8B 82 ?? ?? ?? ?? 48 8B B2 ?? ?? ?? ?? 41 80 B8") + 7);  // GameMode::startDestroyBlock -> GameMode::_canDestroy -> getSupplies
+	}*/
 	return *reinterpret_cast<C_PlayerInventoryProxy **>(reinterpret_cast<__int64>(this) + offset);
 }
 void C_LocalPlayer::unlockAchievments() {  // MinecraftEventing::fireEventAwardAchievement
