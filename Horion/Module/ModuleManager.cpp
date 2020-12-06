@@ -101,6 +101,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new	Compass()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new	Radar()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new VanillaPlus()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new AutoWalk()));
 
 		this->moduleList.push_back(std::shared_ptr<IModule>(new FollowPathModule()));
 
