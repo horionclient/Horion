@@ -10,14 +10,14 @@ void GameData::retrieveClientInstance() {
 	static uintptr_t clientInstanceOffset = 0x0;
 	uintptr_t sigOffset = 0x0;
 	if (clientInstanceOffset == 0x0) {
-		sigOffset = FindSignature("48 8B 1D ?? ?? ?? ?? 48 8B 3D ?? ?? ?? ?? 48 3B DF 74 23 66 90");
+		sigOffset = FindSignature("48 8B 05 ? ? ? ? 48 85 C0 74 06 F0 4C 0F C1 78 ? 48 89 3D");
 		if (sigOffset != 0x0) {
 			int offset = *reinterpret_cast<int*>((sigOffset + 3));                                                 // Get Offset from code
 			clientInstanceOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instruction*/ 7;  // Offset is relative
 			logF("clinet: %llX", clientInstanceOffset);
 		}
 	}
-	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + clientInstanceOffset, {0x0, 0x0, 0x380, 0x10}));
+	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + clientInstanceOffset, {0x0, 0x38}));
 
 #ifdef _DEBUG
 	if (g_Data.clientInstance == 0)
@@ -28,7 +28,7 @@ void GameData::retrieveClientInstance() {
 void GameData::checkGameVersion() {
 	static uintptr_t sigOffset = 0;
 	if (sigOffset == 0)
-		sigOffset = FindSignature("48 8D 1D ?? ?? ?? ?? 8B 04 0A 39 05 ?? ?? ?? ?? 0F 8F ?? ?? ?? ?? 4C 8B CB 48 83 3D ?? ?? ?? ?? 10 4C 0F 43 0D ?? ?? ?? ??");
+		sigOffset = FindSignature("48 8D 15 ?? ?? ?? ?? 4C 8B CA 48 83 3D");
 	int offset = *reinterpret_cast<int*>((sigOffset + 3));
 	std::string ver = reinterpret_cast<TextHolder*>(sigOffset + offset + 7)->getText();
 	auto lastDot = ver.find_last_of(".");

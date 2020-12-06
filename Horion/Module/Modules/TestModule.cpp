@@ -183,8 +183,8 @@ void TestModule::onTick(C_GameMode* gm) {
 	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()))  // Block in hand?
 		return;
 
-	int radius = 6;
-	int numBlocksPerTick = 6;
+	int radius = 4;
+	int numBlocksPerTick = 1;
 	for (int x = -radius; x < radius; x++) {
 		for (int y = -radius; y < radius; y++) {
 			for (int z = -radius; z < radius; z++) {
