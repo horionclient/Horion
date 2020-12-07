@@ -3,7 +3,6 @@
 
 class AutoWalk : public IModule {
 private:
-	bool alldirections = true;
 	float speed = 0.325f;
 
 public:
