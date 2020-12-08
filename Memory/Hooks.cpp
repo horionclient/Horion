@@ -42,19 +42,19 @@ void Hooks::Init() {
 		}
 
 		// BlockLegacy::vtable
-		/*{
+		{
 			//uintptr_t sigOffset = FindSignature("48 8D ?? ?? ?? ?? ?? 48 89 ?? 4C 39");  // BlockLegacy constructor
-			intptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 4C 39 7A ? 75 1A 48 C7 45");  // BlockLegacy constructor
+			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 03 33 D2 48 8B CB E8 ?? ?? ?? ?? C7 73");  // BlockLegacy constructor
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
-			uintptr_t** blockLegacyVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + 7);
+			uintptr_t** blockLegacyVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 			if (blockLegacyVtable == 0x0 || sigOffset == 0x0)
 				logF("C_BlockLegacy signature not working!!!");
 			else {
-				g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(blockLegacyVtable[125], Hooks::BlockLegacy_getRenderLayer);
+				g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(blockLegacyVtable[166], Hooks::BlockLegacy_getRenderLayer);
 
-				g_Hooks.BlockLegacy_getLightEmissionHook = std::make_unique<FuncHook>(blockLegacyVtable[16], Hooks::BlockLegacy_getLightEmission);
+				g_Hooks.BlockLegacy_getLightEmissionHook = std::make_unique<FuncHook>(blockLegacyVtable[170], Hooks::BlockLegacy_getLightEmission);
 			}
-		}*/
+		}
 
 		// LocalPlayer::vtable
 		{
