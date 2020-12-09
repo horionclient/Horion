@@ -64,7 +64,7 @@ class C_PlayerActionPacket : public C_Packet {
 public:
 	C_PlayerActionPacket();
 	char pad_0x8[0x20];  //0x8
-	vec3_t blockPosition; // 0x28
+	vec3_ti blockPosition; // 0x28
 	int face; // 0x34
 	int action; // 0x38
 	__int64 entityRuntimeId; // 0x40
