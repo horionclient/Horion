@@ -18,7 +18,7 @@ void C_GameMode::survivalDestroyBlockHack(vec3_ti const &block, int face, bool &
 
 	C_PlayerActionPacket action;
 	action.action = 18;
-	action.blockPosition = vec3_t(block.x, block.y, block.z);
+	action.blockPosition = vec3_ti(block.x, block.y, block.z);
 	action.face = face;
 	action.entityRuntimeId = p->entityRuntimeId;
 	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&action);
