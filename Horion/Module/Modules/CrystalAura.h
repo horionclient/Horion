@@ -8,10 +8,10 @@ private:
 	int delay = 0;
 	int eRange = 3;
 	int range = 10;
-	bool autoplace = false;
+	bool autoplace = true;
 	bool pEnhanced = true;
 	bool dEnhanced = true;
-
+	//C_Input* Inp = nullptr;
 public:
 	CrystalAura();
 	~CrystalAura();

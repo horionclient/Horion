@@ -86,8 +86,12 @@ void CrystalAura::CDestroy(C_Entity* ent) {
 			}
 	}
 }
+bool shouldChange = false;
 
 void CrystalAura::onTick(C_GameMode* gm) {
+	if (shouldChange) {
+		shouldChange = false;
+	}
 	this->delay++;
 	targetList.clear();
 	g_Data.forEachEntity(CfindEntity);
@@ -97,8 +101,9 @@ void CrystalAura::onTick(C_GameMode* gm) {
 			if (pEnhanced)
 				for (auto& i : targetList)
 					CPlace(gm, i->getPos());
-			else
+			else {
 				CPlace(gm, gm->player->getPos());
+			}
 		}
 		g_Data.forEachEntity([](C_Entity* ent, bool b) {
 			moduleMgr->getModule<CrystalAura>()->CDestroy(ent);
