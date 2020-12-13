@@ -39,7 +39,8 @@ void C_Camera::getForwardVector(vec3_t* forward) {
 }
 
 C_Camera* C_CameraManager::getCameraOrDebugCamera() {
-	using camerManager_getCameraOrDebugCamera_t = C_Camera*(__fastcall*)(C_CameraManager*);
+	/*using camerManager_getCameraOrDebugCamera_t = C_Camera*(__fastcall*)(C_CameraManager*);
 	static auto camerManager_getCameraOrDebugCamera = reinterpret_cast<camerManager_getCameraOrDebugCamera_t>(FindSignature("40 53 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 80 39 00 48 8B D9 74 ?? 48"));
-	return camerManager_getCameraOrDebugCamera(this);
+	return camerManager_getCameraOrDebugCamera(this);*/
+	return reinterpret_cast<C_Camera*>(reinterpret_cast<__int64>(this) + 0x40);
 }
