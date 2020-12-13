@@ -12,7 +12,8 @@ void C_GuiData::displayClientMessage(std::string *a2) {
 
 	TextHolder text = TextHolder(*a2);
 
-	displayMessageFunc(this, text);
+	if (displayMessageFunc != nullptr)
+		displayMessageFunc(this, text);
 }
 void C_GuiData::displayClientMessageF(const char *fmt, ...) {
 	va_list arg;

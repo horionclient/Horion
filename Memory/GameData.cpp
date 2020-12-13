@@ -17,7 +17,8 @@ void GameData::retrieveClientInstance() {
 			logF("clinet: %llX", clientInstanceOffset);
 		}
 	}
-	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + clientInstanceOffset, {0x0, 0x38}));
+	clientInstanceOffset = 0x03A30F18;
+	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + clientInstanceOffset, {0x0, 0x0, 0x40}));
 
 #ifdef _DEBUG
 	if (g_Data.clientInstance == 0)
@@ -27,8 +28,9 @@ void GameData::retrieveClientInstance() {
 
 void GameData::checkGameVersion() {
 	static uintptr_t sigOffset = 0;
+	// near string MinimumCompatibleClientVersion
 	if (sigOffset == 0)
-		sigOffset = FindSignature("48 8D 15 ?? ?? ?? ?? 4C 8B CA 48 83 3D");
+		sigOffset = FindSignature("48 8D 15 ?? ?? ?? ?? 48 3B CA 74 ?? 48 83 3D ?? ?? ?? ?? 10 48 0F 43 15 ?? ?? ?? ?? 4C 8B 05 ?? ?? ?? ?? E8 ?? ?? ?? ?? 49 8B C7");
 	int offset = *reinterpret_cast<int*>((sigOffset + 3));
 	std::string ver = reinterpret_cast<TextHolder*>(sigOffset + offset + 7)->getText();
 	auto lastDot = ver.find_last_of(".");
@@ -53,7 +55,7 @@ bool GameData::canUseMoveKeys() {
 bool GameData::isKeyDown(int key) {
 	static uintptr_t keyMapOffset = 0x0;
 	if (keyMapOffset == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 0D ?? ?? ?? ?? 89 1C 81 48");
+		uintptr_t sigOffset = FindSignature("48 8D 0D ?? ?? ?? ?? 89 1C B9");
 		if (sigOffset != 0x0) {
 			int offset = *reinterpret_cast<int*>((sigOffset + 3));                                         // Get Offset from code
 			keyMapOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instruction*/ 7;  // Offset is relative
