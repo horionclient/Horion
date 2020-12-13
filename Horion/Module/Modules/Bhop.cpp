@@ -17,7 +17,7 @@ void Bhop::onMove(C_MoveInputHandler* input) {
 
 	if (player->isInLava() == 1 || player->isInWater() == 1) 
 		return;
-
+	
 	if (player->isSneaking()) 
 		return;
 

@@ -625,6 +625,7 @@ void DrawUtils::drawLinestrip3d(const std::vector<vec3_t>& points) {
 		auto pD = p.sub(origin);
 		tess_vertex(myTess, pD.x, pD.y, pD.z);
 	}
+	
 
 	meshHelper_renderImm(game3dContext, myTess, entityFlatStaticMaterial);
 }
