@@ -188,17 +188,17 @@ void Hooks::Init() {
 		void* surv_tick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 48 89 74 24 18 55 57 41 56 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 8B F9 F3"));
 		g_Hooks.SurvivalMode_tickHook = std::make_unique<FuncHook>(surv_tick, Hooks::SurvivalMode_tick);
 
-		void* _sendChatMessage = reinterpret_cast<void*>(FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? 00 00 48 8B D9 48 83 B9"));
+		void* _sendChatMessage = reinterpret_cast<void*>(FindSignature("48 89 5C 24 08 57 48 83 EC ?? 48 8B D9 48 83 B9"));
 		g_Hooks.ChatScreenController_sendChatMessageHook = std::make_unique<FuncHook>(_sendChatMessage, Hooks::ChatScreenController_sendChatMessage);
 
 		void* _renderText = reinterpret_cast<void*>(FindSignature("48 8B C4 48 89 58 18 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 0F 29 70 ?? 0F 29 78 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 4C 8B F2 48 89 54 24"));
 		g_Hooks.RenderTextHook = std::make_unique<FuncHook>(_renderText, Hooks::RenderText);
 		g_Hooks.RenderTextHook->enableHook();
 
-		void* setupRender = reinterpret_cast<void*>(FindSignature("40 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B DA 48 8B F9 33 D2 ?? ?? ?? ?? ?? ?? 48 8D 4C 24 30 E8 ?? ?? ?? ?? 4C 8B CF 4C 8B C3 48 8B 57 ?? 48 8D 4C 24"));
+		void* setupRender = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B DA 48 8B F9 33 D2 41 B8"));
 		g_Hooks.UIScene_setupAndRenderHook = std::make_unique<FuncHook>(setupRender, Hooks::UIScene_setupAndRender);
 
-		void* render = reinterpret_cast<void*>(FindSignature("40 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? ?? ?? ?? ?? 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B DA 48 8B F9 B9 ?? ?? ?? ?? 65 48 8B 04 25 ?? ?? ?? ?? 48 8B 10 8B 04 11 39 05"));
+		void* render = reinterpret_cast<void*>(FindSignature("48 89 5C 24 18 56 57 41 56 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B FA 48 8B D9 41"));
 		g_Hooks.UIScene_renderHook = std::make_unique<FuncHook>(render, Hooks::UIScene_render);
 
 		void* fogColorFunc = reinterpret_cast<void*>(FindSignature("41 0F 10 08 48 8B C2 0F"));
@@ -348,22 +348,17 @@ void Hooks::SurvivalMode_tick(C_GameMode* _this) {
 void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 	static auto oSendMessage = g_Hooks.ChatScreenController_sendChatMessageHook->GetFastcall<void, void*>();
 
-	using addCommandToChatHistory_t = void(__fastcall*)(__int64, char*);
-	static addCommandToChatHistory_t addCommandToChatHistory = reinterpret_cast<addCommandToChatHistory_t>(FindSignature("48 89 5C 24 ?? 55 56 57 48 83 EC ?? 48 8B D9 48 8B F2"));
+	using addCommandToChatHistory_t = void(__fastcall*)(uint8_t*, TextHolder*);
+	static addCommandToChatHistory_t addCommandToChatHistory = reinterpret_cast<addCommandToChatHistory_t>(FindSignature("48 89 5C 24 08 48 89 74 24 10 57 48 83 EC ?? 48 8B 99 ?? ?? ?? ?? 48 8B F2 80"));
 
-	uintptr_t* textLength = reinterpret_cast<uintptr_t*>(_this + 0xA80);
-	if (*textLength) {
-		char* message = reinterpret_cast<char*>(_this + 0xA70);
-		if (*reinterpret_cast<__int64*>(_this + 0xA88) >= 0x10)
-			message = *reinterpret_cast<char**>(message);
+	TextHolder* messageHolder = reinterpret_cast<TextHolder*>(_this + 0xA70);
+	if (messageHolder->getTextLength() > 0) {
+		char* message = messageHolder->getText();
 
 		if (*message == cmdMgr->prefix) {
 			cmdMgr->execute(message);
 
-			__int64 a1 = 0;
-			a1 = (*(__int64(__cdecl**)(__int64))(**(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64) + 0x988i64))(*(__int64*)(*(__int64*)(_this + 0xA58) + 0x20i64));
-
-			addCommandToChatHistory(a1, (char*)(_this + 0xA70));  // This will put the command in the chat history (Arrow up/down)
+			addCommandToChatHistory(_this, messageHolder);  // This will put the command in the chat history (Arrow up/down)
 
 			__int64 v17 = 0;
 			__int64* v15 = *(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64);
@@ -375,9 +370,7 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x988))(v15);
 			*(DWORD*)(_this + 0xA94) = *(DWORD*)(v17 + 0x20);
 
-			*reinterpret_cast<__int64*>(_this + 0xA80) = 0i64;
-			*message = 0x0;     // Remove command in textbox
-			*textLength = 0x0;  // text length
+			messageHolder->resetWithoutDelete();
 			return;
 		} else if (*message == '.') {
 			// maybe the user forgot his prefix, give him some helpful advice
@@ -410,9 +403,10 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	TextHolder alloc = {};
 	uiscene->getScreenName(&alloc);
 
-	if (alloc.getTextLength() < 100)
+	if (alloc.getTextLength() < 100) {
 		strcpy_s(g_Hooks.currentScreenName, alloc.getText());
-
+	}
+	
 	if (!g_Hooks.shouldRender) {
 		g_Hooks.shouldRender = alwaysRender || (strcmp(alloc.getText(), "start_screen") == 0 || (alloc.getTextLength() >= 11 && strncmp(alloc.getText(), "play_screen", 11)) == 0);
 	}
