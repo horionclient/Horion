@@ -50,7 +50,7 @@ public:
 	PlayerAuthInputPacket(__int64 entityRuntimeId, vec3_t pos, float pitch, float yaw, float yawUnused);
 };
 
-class C_ActorFallPacket : public C_Packet {
+/*class C_ActorFallPacket : public C_Packet {
 private:
 	char pad_0x8[0x20];  //0x8
 public:
@@ -58,7 +58,7 @@ public:
 	__int64 runtimeId;  // 0x28
 	float fallDistance;
 	bool isInVoid;
-};
+};*/
 
 class C_PlayerActionPacket : public C_Packet {
 public:

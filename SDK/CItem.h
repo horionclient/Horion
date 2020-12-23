@@ -22,7 +22,7 @@ private:
 public:
 	C_ItemRenderer* renderer;  //0x0058
 private:
-	char pad_0x50[0x228];  //0x60
+	char pad_0x50[0x238];  //0x60
 public:
 	C_BaseActorRenderContext(C_ScreenContext* ScreenCtx, C_ClientInstance* client, MinecraftGame* game);
 };

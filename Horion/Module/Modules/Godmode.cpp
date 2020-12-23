@@ -24,8 +24,8 @@ void Godmode::onSendPacket(C_Packet* p) {
 	if (p->isInstanceOf<C_MovePlayerPacket>()) {
 		C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(p);
 		movePacket->onGround = true;
-	} else if (p->isInstanceOf<C_ActorFallPacket>()) {
+	} /*else if (p->isInstanceOf<C_ActorFallPacket>()) {
 		C_ActorFallPacket* fallPacket = reinterpret_cast<C_ActorFallPacket*>(p);
 		fallPacket->fallDistance = 0.f;
-	}
+	}*/
 }

@@ -17,7 +17,7 @@ void GameData::retrieveClientInstance() {
 			logF("clinet: %llX", clientInstanceOffset);
 		}
 	}*/
-	clientInstanceOffset = 0x03A30F18; // pointer scanned, can't find good signatures so it'll stay
+	clientInstanceOffset = 0x03A30ED8;  // pointer scanned, can't find good signatures so it'll stay
 	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + clientInstanceOffset, {0x0, 0x0, 0x40}));
 
 #ifdef _DEBUG
@@ -199,7 +199,7 @@ void GameData::forEachEntity(std::function<void(C_Entity*, bool)> callback) {
 		C_EntityList* entList = g_Data.getEntityList();
 		if (entList == 0) {
 #ifdef _DEBUG
-			logF("EntityList broken btw");
+			logF("EntityList broken btw yeeeeeeyt");
 #endif
 		} else {
 			size_t listSize = entList->getListSize();
