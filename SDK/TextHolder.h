@@ -11,7 +11,6 @@ public:
 
 	size_t textLength;         //0x0010
 	size_t alignedTextLength;  //0x0018
-	size_t idk; //0x0020
 
 	TextHolder() {
 		memset(this, 0, sizeof(TextHolder));

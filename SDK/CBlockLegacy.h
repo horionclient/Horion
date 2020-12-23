@@ -31,9 +31,13 @@ class C_BlockLegacy {
 public:
 	uintptr_t** Vtable;   //0x0000
 	TextHolder tileName;  // 0x0008
-	TextHolder name;      //0x0028
 private:
-	char pad_0x0048[0x78];  //0x0048
+	char idk[0x8];        //0x0028
+public:
+	TextHolder name;      //0x0030
+private:
+	char idk1[0x8];        //0x0050
+	char pad_0x0048[0x78];  //0x0058
 public:
 	C_Material* material;  //0x00C0
 private:
