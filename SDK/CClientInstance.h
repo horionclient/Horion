@@ -101,7 +101,7 @@ private:
 public:
 	BlockTessellator* blockTessellator; // 0x02D8
 private:
-	char pad_0x02F0[0x5B0];  //0x02E0
+	char pad_0x02F0[0x5EC];  //0x02E0
 public:
 	vec3_t origin;  //0x0890
 
