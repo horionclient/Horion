@@ -1,5 +1,28 @@
 #include "LevelFunctions.h"
 
+JsValueRef createBlock(C_BlockLegacy *block) {
+	JsValueRef ref;
+	chakra.JsCreateObject_(&ref);
+
+	std::wstring blockName = Utils::stringToWstring(block->name.getText());
+
+	JsValueRef bName;
+	chakra.JsPointerToString_(blockName.c_str(), blockName.size(), &bName);
+
+	std::wstring tileName = Utils::stringToWstring(block->tileName.getText());
+
+	JsValueRef tName;
+	chakra.JsPointerToString_(tileName.c_str(), tileName.size(), &tName);
+
+	JsValueRef id = chakra.toNumber(block->blockId);
+
+	chakra.addPropertyToObj(ref, L"name", bName);
+	chakra.addPropertyToObj(ref, L"tileName", tName);
+	chakra.addPropertyToObj(ref, L"blockId", id);
+
+	return ref;
+}
+
 JsValueRef CALLBACK LevelFunctions::isValid(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
 	return chakra.toBoolean(g_Data.isInGame() && g_Data.getLocalPlayer()->isAlive());
 }
@@ -43,4 +66,20 @@ JsValueRef CALLBACK LevelFunctions::getAllTargetEntities(JsValueRef callee, bool
 	}
 
 	return jsList;
+}
+
+JsValueRef CALLBACK LevelFunctions::getBlock(JsValueRef callee, bool isConstructCall, JsValueRef* arguments, unsigned short argumentCount, void* callbackState) {
+	auto plr = g_Data.getLocalPlayer();
+
+	if (plr == nullptr) {
+		THROW(L"Player not valid");
+	}
+
+	auto vecOpt = Vector3Functions::getVec3FromArguments(&arguments[1], argumentCount - 1);
+	if (!vecOpt.has_value()) {
+		THROW(L"Invalid vector!");
+	}
+
+	auto block = plr->region->getBlock(vecOpt.value())->toLegacy();
+	return createBlock(block);
 }

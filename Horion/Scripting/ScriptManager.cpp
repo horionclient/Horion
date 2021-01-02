@@ -325,6 +325,7 @@ void ScriptManager::prepareLevelFunctions(JsValueRef global, ContextObjects* obj
 	chakra.defineFunction(objs->levelObject, L"isValid", LevelFunctions::isValid, objs);
 	chakra.defineFunction(objs->levelObject, L"getAllEntities", LevelFunctions::getAllEntities, objs);
 	chakra.defineFunction(objs->levelObject, L"getAllTargetEntities", LevelFunctions::getAllTargetEntities, objs);
+	chakra.defineFunction(objs->levelObject, L"getBlock", LevelFunctions::getBlock, objs);
 }
 
 JsValueRef ScriptManager::getLocalPlayer(ContextObjects* obs) {
