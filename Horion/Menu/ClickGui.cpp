@@ -38,8 +38,12 @@ static constexpr float paddingRight = 13.5f;
 static constexpr float crossSize = textHeight / 2.f;
 static constexpr float crossWidth = 0.3f;
 static constexpr float backgroundAlpha = 1;
-static const MC_Color selectedModuleColor = MC_Color(28, 107, 201);
-static const MC_Color moduleColor = MC_Color(13, 29, 48);
+static const MC_Color selectedModuleColor = MC_Color(30, 110, 200);
+static const MC_Color selectedSettingColor1 = MC_Color(20, 100, 195);
+static const MC_Color selectedSettingColor2 = MC_Color(40, 120, 205);
+static const MC_Color moduleColor = MC_Color(15, 30, 50);
+static const MC_Color SettingColor1 = MC_Color(10, 25, 45);
+static const MC_Color SettingColor2 = MC_Color(20, 35, 55);
 
 float currentYOffset = 0;
 float currentXOffset = 0;
@@ -347,7 +351,84 @@ void ClickGui::renderCategory(Category category) {
 									DrawUtils::drawText(textPos, &elTexto, isFocused ? MC_Color(1.0f, 1.0f, 1.0f) : MC_Color(0.8f, 0.8f, 0.8f), textSize);
 									currentYOffset += textHeight + (textPadding * 2);
 								}
-							} break;
+								break;
+							}
+							case ValueType::ENUM_T: {
+								// Text and background
+								{
+									char name[0x21];
+									sprintf_s(name, 0x21, "%s:", setting->name);
+									// Convert first letter to uppercase for more friendlieness
+									if (name[0] != 0)
+										name[0] = toupper(name[0]);
+
+									std::string elTexto = name;
+									rectPos.w = currentYOffset + textHeight + (textPadding * 2);
+									windowSize->x = fmax(windowSize->x, DrawUtils::getTextWidth(&elTexto, textSize) + 5 /* because we add 5 to text padding*/ + crossSize);
+									DrawUtils::fillRectangle(rectPos, moduleColor, backgroundAlpha);
+									DrawUtils::drawText(textPos, &elTexto, MC_Color(1.0f, 1.0f, 1.0f), textSize);
+									GuiUtils::drawCrossLine(vec2_t(
+																currentXOffset + windowSize->x + paddingRight - (crossSize / 2) - 1.f,
+																currentYOffset + textPadding + (textHeight / 2)),
+															MC_Color(255, 255, 255), crossWidth, crossSize, !setting->minValue->_bool);
+									if (rectPos.contains(&mousePos) && shouldToggleRightClick && !ourWindow->isInAnimation) {
+										shouldToggleRightClick = false;
+										setting->minValue->_bool = !setting->minValue->_bool;
+									}
+									currentYOffset += textHeight + (textPadding * 2);
+								}
+								if (setting->minValue->_bool) {
+									int e = 0;
+									for (auto it = setting->maxValue->Enum->Entrys.begin();
+										 it != setting->maxValue->Enum->Entrys.end(); it++, e++) {
+										if ((currentYOffset - ourWindow->pos.y) > cutoffHeight) {
+											overflowing = true;
+											break;
+										}
+										bool isEven = e % 2 == 0;
+										rectPos.y = currentYOffset;
+										rectPos.w = currentYOffset + textHeight + (textPadding * 2);
+										EnumEntry i = *it._Ptr;
+										char name[0x21];
+										sprintf_s(name, 0x21, "   %s", i.GetName().c_str());
+										// Convert first letter to uppercase for more friendlieness
+										if (name[0] != 0)
+											name[0] = toupper(name[0]);
+										std::string elTexto = name;
+										windowSize->x = fmax(windowSize->x, DrawUtils::getTextWidth(
+																				&elTexto, textSize) +
+																				5);  //because we add 5 to text padding
+										textPos.y = currentYOffset + textPadding;
+										vec4_t selectableSurface = vec4_t(
+											textPos.x + textPadding,
+											textPos.y + textPadding,
+											xEnd - textPadding,
+											textPos.y + textHeight - textPadding);
+										MC_Color col;
+										if (setting->value->_int == e || (selectableSurface.contains(&mousePos) && !ourWindow->isInAnimation)) {
+											if (isEven)
+												col = selectedSettingColor1;
+											else
+												col = selectedSettingColor2;
+										} else {
+											if (isEven)
+												col = SettingColor1;
+											else
+												col = SettingColor2;
+										}
+										DrawUtils::fillRectangle(rectPos, col, backgroundAlpha);
+										DrawUtils::drawText(textPos, &elTexto, MC_Color(1.f, 1.f, 1.f));
+										// logic
+										if (selectableSurface.contains(&mousePos) &&
+											shouldToggleLeftClick && !ourWindow->isInAnimation) {
+											shouldToggleLeftClick = false;
+											setting->value->_int = e;
+										}
+										currentYOffset += textHeight + (textPadding * 2);
+									}
+								}
+								break;
+							}
 							case ValueType::FLOAT_T: {
 								// Text and background
 								{
