@@ -9,6 +9,7 @@ CrystalAura::CrystalAura() : IModule(VK_NUMPAD0, Category::COMBAT, "Destroys nea
 	registerBoolSetting("Autoplace", &this->autoplace, this->autoplace);
 	registerBoolSetting("Enhance place", &this->pEnhanced, this->pEnhanced);
 	registerBoolSetting("Enhance destroy", &this->dEnhanced, this->dEnhanced);
+	registerBoolSetting("preview", &this->Preview, this->Preview);
 	delay = 0;
 }
 CrystalAura::~CrystalAura() {
@@ -53,13 +54,24 @@ bool CanPlaceC(vec3_ti* pos) {
 	g_Data.forEachEntity([](C_Entity* ent, bool b) {
 		if (!space)
 			return;
-		if (ent->aabb.intersects(*new AABB(_pos, _pos.add(1.f))))
+		if (ent->aabb.intersects(*new AABB(_pos, 1.f, 1.f)))
 			space = false;
 	});
 	return space;
 }
 
 void CrystalAura::CPlace(C_GameMode* gm, vec3_t* pos) {
+	if (!pEnhanced) {
+#pragma warning(push)
+#pragma warning(disable : 4244)
+		vec3_ti blockPos = vec3_ti(pos->x, pos->y, pos->z);
+		vec3_ti upperBlockPos = vec3_ti(pos->x, pos->y + 1, pos->z);
+#pragma warning(pop)
+		C_Block* block = gm->player->region->getBlock(blockPos);
+		C_Block* upperBlock = gm->player->region->getBlock(upperBlockPos);
+		gm->buildBlock(&blockPos, g_Data.getClientInstance()->getPointerStruct()->blockSide);
+		return;
+	}
 	vec3_ti bestPos;
 	bool ValidPos = false;
 	for (int x = (int)pos->x - eRange; x < pos->x + eRange; x++) {
@@ -73,10 +85,7 @@ void CrystalAura::CPlace(C_GameMode* gm, vec3_t* pos) {
 					int blockId = block->toLegacy()->blockId;
 					int upperBlockId = upperBlock->toLegacy()->blockId;
 					if ((blockId == 49 || blockId == 7) && upperBlockId == 0 && CanPlaceC(&blockPos)) {  //Check for awailable block
-						if (!pEnhanced) {
-							gm->buildBlock(&blockPos, 0);
-							return;
-						} else if (!ValidPos) {
+						if (!ValidPos) {
 							ValidPos = true;
 							bestPos = blockPos;
 						} else if (blockPos.toVec3t().dist(*pos) < bestPos.toVec3t().dist(*pos)) {
@@ -121,18 +130,21 @@ void CrystalAura::onTick(C_GameMode* gm) {
 	g_Data.forEachEntity(CfindEntity);
 	if (this->delay == 0) {
 		// place block around players?
+		return;
 	}
 	if (this->delay == 1 && AutoSelect) {
-		int slot = supplies->selectedHotbarSlot;
-		prevSlot = slot;
+		prevSlot = supplies->selectedHotbarSlot;
+		FinishSelect = true;
 		for (int n = 0; n < 9; n++) {
 			C_ItemStack* stack = inv->getItemStack(n);
 			if (stack->item != nullptr) {
 				if (stack->getItem()->itemId == 0x1aa) {
-					slot = n;
+					supplies->selectedHotbarSlot = n;
+					return;
 				}
 			}
 		}
+		return;
 	}
 	if (this->delay == 2) {
 		if (autoplace && g_Data.getLocalPlayer()->getSelectedItemId() == 0x1aa) {  //endcrystal
@@ -142,12 +154,15 @@ void CrystalAura::onTick(C_GameMode* gm) {
 			else {
 				auto ptr = g_Data.getClientInstance()->getPointerStruct();
 				if (ptr->entityPtr == nullptr && ptr->rayHitType == 0)
-					gm->buildBlock(&ptr->block, 0);
+					CPlace(gm, &ptr->block.toFloatVector());
 			}
 		}
+		return;
 	}
-	if (this->delay == 3) {
+	if (this->delay == 3 && FinishSelect) {
 		supplies->selectedHotbarSlot = prevSlot;
+		FinishSelect = false;
+		return;
 	}
 	if (this->delay == 4) {
 		g_Data.forEachEntity([](C_Entity* ent, bool b) {
@@ -160,18 +175,25 @@ void CrystalAura::onTick(C_GameMode* gm) {
 				range = moduleMgr->getModule<CrystalAura>()->range;
 			moduleMgr->getModule<CrystalAura>()->DestroyC(ent, range);
 		});
+		return;
 	}
 	if (this->delay >= 5) {
 		this->delay = 0;
+		return;
 	}
 }
 
-void CrystalAura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
+void CrystalAura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
+	if (g_Data.getClientInstance() == nullptr || !Preview || (!pEnhanced && autoplace)) return;
 	auto ptr = g_Data.getClientInstance()->getPointerStruct();
-	if (ptr->block != nullptr) {
-		DrawUtils::setColor(.75f, .25f, .5f, 1.f);
-		DrawUtils::drawBox(ptr->block.toVec3t(), ptr->block.add(1).toVec3t(), .3f);
-	}
+	if (ptr != nullptr)
+		if (ptr->entityPtr == nullptr && ptr->rayHitType == 0)
+			if (g_Data.getLocalPlayer()->region->getBlock(ptr->block)->toLegacy()->blockId == 49 ||
+				g_Data.getLocalPlayer()->region->getBlock(ptr->block)->toLegacy()->blockId == 7) {
+				DrawUtils::setColor(.75f, .25f, .5f, 1.f);
+				DrawUtils::drawBox(ptr->block.toVec3t().add(0.f, 1.5f, 0.f),
+								   ptr->block.add(1).toVec3t().add(0.f, 1.5f, 0.f), .3f);
+			}
 }
 
 void CrystalAura::onDisable() {

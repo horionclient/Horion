@@ -11,7 +11,9 @@ private:
 	bool autoplace = true;
 	bool pEnhanced = true;
 	bool dEnhanced = true;
+	bool Preview = true;
 	bool AutoSelect = true;
+	bool FinishSelect = false;
 	C_PlayerInventoryProxy* supplies = nullptr;
 	C_Inventory* inv = nullptr;
 
@@ -22,7 +24,7 @@ public:
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
-	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
+	virtual void onPreRender(C_MinecraftUIRenderContext* renderCtx) override;
 	virtual void onEnable() override;
 	virtual void onDisable() override;
 
