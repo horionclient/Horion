@@ -30,8 +30,6 @@ bool CfindEntity(C_Entity* curEnt, bool isRegularEntity) {
 	if (curEnt == g_Data.getLocalPlayer()) return false;  // Skip Local player
 	if (!curEnt->isAlive()) return false;
 	if (!g_Data.getLocalPlayer()->isAlive()) return false;
-	//if (!g_Data.getLocalPlayer()->canAttack(curEnt, false)) return false;
-	//if (Target::VanillaAttac(curEnt, true)) return false;
 	if (curEnt->getEntityTypeId() == 71) return false;  // endcrystal
 	if (curEnt->getEntityTypeId() == 66) return false;  // falling block
 	if (curEnt->getEntityTypeId() == 64) return false;  // item
@@ -54,7 +52,7 @@ bool CanPlaceC(vec3_ti* pos) {
 	g_Data.forEachEntity([](C_Entity* ent, bool b) {
 		if (!space)
 			return;
-		if (ent->aabb.intersects(*new AABB(_pos, 1.f, 1.f)))
+		if (ent->aabb.intersects(AABB(_pos, _pos.add(1.f))))
 			space = false;
 	});
 	return space;
@@ -184,7 +182,12 @@ void CrystalAura::onTick(C_GameMode* gm) {
 }
 
 void CrystalAura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
-	if (g_Data.getClientInstance() == nullptr || !Preview || (!pEnhanced && autoplace)) return;
+	if (!Preview || (!pEnhanced && autoplace) ||
+		g_Data.getClientInstance() == nullptr ||
+		g_Data.getPtrLocalPlayer() == nullptr ||
+		g_Data.getLocalPlayer() == nullptr)
+		return;
+	
 	auto ptr = g_Data.getClientInstance()->getPointerStruct();
 	if (ptr != nullptr)
 		if (ptr->entityPtr == nullptr && ptr->rayHitType == 0)
