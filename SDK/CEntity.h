@@ -648,7 +648,7 @@ private:
 	virtual __int64 initBodyControl(void);
 
 public:
-	virtual __int64 jumpFromGround(__int64);
+	virtual __int64 jumpFromGround0(__int64);
 	virtual __int64 jumpFromGround(void);
 
 private:
@@ -664,6 +664,7 @@ private:
 	virtual __int64 prepareRegion(__int64 &);
 	virtual __int64 destroyRegion(void);
 	virtual __int64 suspendRegion(void);
+	virtual void resendAllChunks(void);
 	virtual __int64 _fireWillChangeDimension(void);
 	virtual __int64 _fireDimensionChanged(void);
 	virtual __int64 changeDimensionWithCredits(__int64);

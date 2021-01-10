@@ -4,7 +4,7 @@
 #include "../Utils/Utils.h"
 C_Block* C_BlockSource::getBlock(const vec3_ti& block) {
 	using getBlock_t = C_Block*(__fastcall*)(C_BlockSource*, const vec3_ti&);
-	static getBlock_t getBlock = reinterpret_cast<getBlock_t>(FindSignature("40 53 48 83 EC ?? 48 8B DA 8B 52 ?? 85 D2"));
+	static getBlock_t getBlock = reinterpret_cast<getBlock_t>(FindSignature("48 89 5C 24 ? 57 48 83 EC ? 48 8B F9 48 8B DA 8B 4A"));
 	return getBlock(this, block);
 }
 C_BlockActor* C_BlockSource::getBlockEntity(const vec3_ti& block) {

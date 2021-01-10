@@ -37,7 +37,7 @@ public:
 	TextHolder name;      //0x0030
 private:
 	char idk1[0x8];        //0x0050
-	char pad_0x0048[0x78];  //0x0058
+	char pad_0x0048[0x80];  //0x0058
 public:
 	C_Material* material;  //0x00C0
 private:
@@ -63,9 +63,9 @@ private:
 	char pad[0x7];
 
 public:
-	C_BlockLegacy** blockLegacy; // 0x10
+	C_BlockLegacy* blockLegacy; // 0x10
 
-	inline C_BlockLegacy* toLegacy() { return *blockLegacy; }
+	inline C_BlockLegacy* toLegacy() { return blockLegacy; }
 
 	virtual ~C_Block();
 	virtual int getRenderLayer();
