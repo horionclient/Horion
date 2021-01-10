@@ -27,26 +27,23 @@ bool GiveCommand::execute(std::vector<std::string>* args) {
 	auto transactionManager = g_Data.getLocalPlayer()->getTransactionManager();
 
 	if (itemId == 0) {
-		void* ItemPtr = malloc(0x8);
-		void* idk = malloc(0x0);
 		TextHolder tempText(args->at(1));
-		C_Item*** cStack = ItemRegistry::lookUpByName(ItemPtr, idk, tempText);
+		std::unique_ptr<void*> ItemPtr = std::make_unique<void*>();
+		std::unique_ptr<void*> buffer = std::make_unique<void*>();
+		C_Item*** cStack = ItemRegistry::lookUpByName(ItemPtr.get(), buffer.get(), tempText);
 		if (*cStack == nullptr) {
 			clientMessageF("%sInvalid item name!", RED);
 			return true;
 		}
 		yot = new C_ItemStack(***cStack, count, itemData);
-		free(ItemPtr);
-		free(idk);
 	} else {
-		void* ItemPtr = malloc(0x8);
-		C_Item*** cStack = ItemRegistry::getItemFromId(ItemPtr, itemId);
+		std::unique_ptr<void*> ItemPtr = std::make_unique<void*>();
+		C_Item*** cStack = ItemRegistry::getItemFromId(ItemPtr.get(), itemId);
 		if (cStack == nullptr || *cStack == nullptr || **cStack == nullptr) {
 			clientMessageF("%sInvalid item ID!", RED);
 			return true;
 		}
 		yot = new C_ItemStack(***cStack, count, itemData);
-		free(ItemPtr);
 	}
 
 	if (yot != nullptr)
