@@ -37,5 +37,6 @@ bool TestCommand::execute(std::vector<std::string>* args) {
 	logF("%i %i", inv->getFirstEmptySlot(), inv->getEmptySlotsCount());
 	
 	inv->swapSlots(1, 2);
+
 	return true;
 }
