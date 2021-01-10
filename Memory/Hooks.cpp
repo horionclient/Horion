@@ -1584,7 +1584,15 @@ __int64 Hooks::PaintingRenderer__render(__int64 _this, __int64 a2, __int64 a3) {
 bool Hooks::DirectoryPackAccessStrategy__isTrusted(__int64 _this) {
 	static auto func = g_Hooks.DirectoryPackAccessStrategy__isTrustedHook->GetFastcall<bool, __int64>();
 
-	if (Utils::getRttiBaseClassName(reinterpret_cast<void*>(_this)) == "DirectoryPackAccessStrategy")
+	static uintptr_t** directoryPackAccessStrategyVtable = 0;
+
+	if (!directoryPackAccessStrategyVtable) {
+		uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 49 89 06 49 8D 76 50");
+		int offset = *reinterpret_cast<int*>(sigOffset + 3);
+		directoryPackAccessStrategyVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + 7);
+	}
+	
+	if (*reinterpret_cast<uintptr_t*>(_this) == (uintptr_t)directoryPackAccessStrategyVtable)
 		return true;
 
 	return func(_this);
