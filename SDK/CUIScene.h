@@ -159,10 +159,10 @@ private:
 
 public:
 	bool isPlayScreen() {
-		return Utils::CallVFunc<52, bool>(this);
+		return Utils::CallVFunc<55, bool>(this);
 	}
 
 	void getScreenName(TextHolder* txt) {
-		Utils::CallVFunc<64, void, TextHolder*>(this, txt);
+		Utils::CallVFunc<67, void, TextHolder*>(this, txt);
 	}
 };

@@ -204,9 +204,13 @@ public:
 	};
 
 	void enableHook(bool enable = true) {
-		int ret = enable ? MH_EnableHook(funcPtr) : MH_DisableHook(funcPtr);
-		if (ret != MH_OK)
-			logF("MH_EnableHook = %i", ret);
+		if (funcPtr != nullptr) {
+			int ret = enable ? MH_EnableHook(funcPtr) : MH_DisableHook(funcPtr);
+			if (ret != MH_OK)
+				logF("MH_EnableHook = %i", ret);
+		}else
+			logF("enableHook() called with nullptr func!");
+		
 	}
 
 	~FuncHook() {

@@ -158,7 +158,7 @@ bool tryPlace(const vec3_ti& blockPos) {
 		for (const auto& current : checklist) {
 			
 			vec3_ti calc = blockPos.sub(current);
-			if (!(*(g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy))->material->isReplaceable) {
+			if (!((g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy))->material->isReplaceable) {
 				// Found a solid block to click
 				g_Data.getCGameMode()->buildBlock(&calc, i);
 

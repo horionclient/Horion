@@ -17,7 +17,7 @@ bool Scaffold::tryScaffold(vec3_t blockBelow) {
 	blockBelow = blockBelow.floor();
 
 	C_Block* block = g_Data.getLocalPlayer()->region->getBlock(vec3_ti(blockBelow));
-	C_BlockLegacy* blockLegacy = *(block->blockLegacy);
+	C_BlockLegacy* blockLegacy = (block->blockLegacy);
 	if (blockLegacy->material->isReplaceable) {
 		vec3_ti blok(blockBelow);
 
@@ -38,7 +38,8 @@ bool Scaffold::tryScaffold(vec3_t blockBelow) {
 		int i = 0;
 		for (auto current : checklist) {
 			vec3_ti calc = blok.sub(*current);
-			if (!(*(g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy))->material->isReplaceable) {
+			bool Y = ((g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy))->material->isReplaceable;
+			if (!((g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy))->material->isReplaceable) {
 				// Found a solid block to click
 				foundCandidate = true;
 				blok = calc;

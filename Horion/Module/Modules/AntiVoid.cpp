@@ -17,7 +17,7 @@ void AntiVoid::onTick(C_GameMode* gm) {
 	blockBelow.y -= player->height;
 	blockBelow.y -= 0.5f;
 
-	if ((*(player->region->getBlock(blockBelow)->blockLegacy))->blockId != 0 && (*(player->region->getBlock(blockBelow)->blockLegacy))->material->isSolid) {
+	if (((player->region->getBlock(blockBelow)->blockLegacy))->blockId != 0 && ((player->region->getBlock(blockBelow)->blockLegacy))->material->isSolid) {
 		savepos = blockBelow;
 		savepos.y += player->height;
 		savepos.y += 0.5f;

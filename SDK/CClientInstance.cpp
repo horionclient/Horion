@@ -8,11 +8,12 @@ __int64 MinecraftGame::getServerEntries() {
 }
 void C_GuiData::displayClientMessage(std::string *a2) {
 	using displayClientMessage = void(__thiscall*)(void*, TextHolder&);  
-	static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(FindSignature("48 8B C4 57 48 81 EC ?? ?? ?? ?? 48 C7 40 ?? FE FF FF FF 48 89 58 18 48 8B DA 48 8B F9 66"));
+	static displayClientMessage displayMessageFunc = reinterpret_cast<displayClientMessage>(FindSignature("48 89 5C 24 ?? 55 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 4F ?? ?? ?? ?? 33 DB 48 89 5D ?? 88 5D"));
 
 	TextHolder text = TextHolder(*a2);
 
-	displayMessageFunc(this, text);
+	if (displayMessageFunc != nullptr)
+		displayMessageFunc(this, text);
 }
 void C_GuiData::displayClientMessageF(const char *fmt, ...) {
 	va_list arg;

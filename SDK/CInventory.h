@@ -49,11 +49,11 @@ public:
 	virtual __int64 initializeContainerContents(C_BlockSource&);
 	virtual __int64 add(C_ItemStack&);
 	virtual __int64 canAdd(const C_ItemStack&);
-	virtual void unknown();
+	//virtual void unknown();
 	virtual __int64 clearSlot(int);
 	virtual __int64 clearInventory(int);
 	virtual __int64 load(); // ListTag const&,SemVersion const&,Level &
-	virtual void unknown2();
+	//virtual void unknown2();
 	virtual __int64 getEmptySlotsCount();
 	virtual int getFirstEmptySlot();
 	virtual __int64 setContainerSize();

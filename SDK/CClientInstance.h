@@ -101,9 +101,9 @@ private:
 public:
 	BlockTessellator* blockTessellator; // 0x02D8
 private:
-	char pad_0x02F0[0x590];  //0x02E0
+	char pad_0x02F0[0x5EC];  //0x02E0
 public:
-	vec3_t origin;  //0x0870
+	vec3_t origin;  //0x0890
 
 	__int64 getLevelRendererPlayer(){
 		return reinterpret_cast<__int64>(this) + 0x310;
@@ -410,6 +410,7 @@ private:
 	virtual __int64 getResourcePackManager(void) const;
 	virtual __int64 getSkinRepository(void) const;
 	virtual __int64 getSkinRepositoryClientInterface(void) const;
+	virtual __int64 sub_140630650(void) const;
 	virtual __int64 sub_1400CA400(void) const;
 	virtual __int64 getTextures(void) const;
 	virtual __int64 getStoreCacheTextures(void) const;
@@ -587,6 +588,7 @@ private:
 	virtual __int64 getSceneFactory(void) const;
 	virtual __int64 getClientSceneStack(void) const;
 	virtual __int64 getClientSceneStack(void);
+	virtual __int64 sub_140634B30(void) const;
 	virtual __int64 getMainSceneStack(void);
 	virtual __int64 getMainSceneStack(void) const;
 	virtual __int64 getCurrentSceneStack(void) const;
@@ -604,6 +606,8 @@ private:
 	virtual __int64 getScreenTelemetry(void) const;
 	virtual __int64 getTopSceneType(void) const;
 	virtual __int64 getMobEffectsLayout(void);
+	virtual __int64 newFunc2(__int64 a2, __int64 a3, char a4);
+	virtual __int64 newFunc3(__int64 a2, __int64 a3);
 	virtual __int64 onMobEffectsChange(void);
 
 public:
@@ -806,19 +810,19 @@ public:
 	glmatrixf* getRefDef() {
 		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
 		//logF("refderf %llX", _this + 0x258);
-		return reinterpret_cast<glmatrixf*>(_this + 0x2E8);
+		return reinterpret_cast<glmatrixf*>(_this + 0x2E0);
 	};
 
 	vec2_t* getMousePos() {
 		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
-		return reinterpret_cast<vec2_t*>(_this + 0x450);
+		return reinterpret_cast<vec2_t*>(_this + 0x448);
 	}
 
 	vec2_t getFov() {
 		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
 		vec2_t fov;
-		fov.x = *reinterpret_cast<float*>(_this + 0x650);
-		fov.y = *reinterpret_cast<float*>(_this + 0x664);
+		fov.x = *reinterpret_cast<float*>(_this + 0x658);
+		fov.y = *reinterpret_cast<float*>(_this + 0x66C);
 		return fov;
 	}
 
