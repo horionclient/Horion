@@ -1270,7 +1270,9 @@ __int8* Hooks::BlockLegacy_getLightEmission(C_BlockLegacy* a1, __int8* a2) {
 	static auto oFunc = g_Hooks.BlockLegacy_getLightEmissionHook->GetFastcall<__int8*, C_BlockLegacy*, __int8*>();
 
 	static auto xrayMod = moduleMgr->getModule<Xray>();
-	if (xrayMod->isEnabled()) {
+	static auto fullBrightModule = moduleMgr->getModule<FullBright>();
+	
+	if (xrayMod->isEnabled() || fullBrightModule->isEnabled()) {
 		*a2 = 15;
 		return a2;
 	}
