@@ -94,7 +94,7 @@
 #include "Modules/Compass.h"
 #include "Modules/Radar.h"
 #include "Modules/VanillaPlus.h"
-#include "Tornado.h"
+#include "Modules/Tornado.h"
 
 #ifdef _DEBUG
 #include "Modules/PacketLogger.h"
