@@ -1,6 +1,6 @@
 #include "HitboxSize1.h"
 
-HitboxSize::HitboxSize() : IModule(0, Category::PLAYER, "Modifies your hitbox size so you can fit in very tiny holess.") {
+HitboxSize::HitboxSize() : IModule(0, Category::PLAYER, "Modifies your hitbox size so you can fit in very tiny holes.") {
 	registerFloatSetting("PlayerSize", &this->playersize, this->playersize, 0, 10);
 }
 
