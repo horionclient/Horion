@@ -316,6 +316,7 @@
     <ClCompile Include="Horion\Module\Modules\Godmode.cpp" />
     <ClCompile Include="Horion\Module\Modules\HighJump.cpp" />
     <ClCompile Include="Horion\Module\Modules\Hitbox.cpp" />
+	<ClCompile Include="Horion\Module\Modules\HitboxSize.cpp" />
     <ClCompile Include="Horion\Module\Modules\HudModule.cpp" />
     <ClCompile Include="Horion\Module\Modules\ExtendedBlockReach.cpp" />
     <ClCompile Include="Horion\Module\Modules\InfiniteReach.cpp" />
@@ -502,6 +503,7 @@
     <ClInclude Include="Horion\Module\Modules\Godmode.h" />
     <ClInclude Include="Horion\Module\Modules\HighJump.h" />
     <ClInclude Include="Horion\Module\Modules\Hitbox.h" />
+	<ClCompile Include="Horion\Module\Modules\HitboxSize1.h" />
     <ClInclude Include="Horion\Module\Modules\HudModule.h" />
     <ClInclude Include="Horion\Module\Modules\ExtendedBlockReach.h" />
     <ClInclude Include="Horion\Module\Modules\InfiniteReach.h" />
