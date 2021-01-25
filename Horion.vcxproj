@@ -287,6 +287,7 @@
     <ClCompile Include="Horion\Module\Modules\AutoClicker.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoGapple.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSneak.cpp" />
+	<ClCompile Include="Horion\Module\Modules\AutoStaircase.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSprint.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoTotem.cpp" />
     <ClCompile Include="Horion\Module\Modules\Bhop.cpp" />
@@ -474,6 +475,7 @@
     <ClInclude Include="Horion\Module\Modules\AutoClicker.h" />
     <ClInclude Include="Horion\Module\Modules\AutoGapple.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSneak.h" />
+	<ClInclude Include="Horion\Module\Modules\AutoStaircase1.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSprint.h" />
     <ClInclude Include="Horion\Module\Modules\AutoTotem.h" />
     <ClInclude Include="Horion\Module\Modules\Bhop.h" />
@@ -503,7 +505,7 @@
     <ClInclude Include="Horion\Module\Modules\Godmode.h" />
     <ClInclude Include="Horion\Module\Modules\HighJump.h" />
     <ClInclude Include="Horion\Module\Modules\Hitbox.h" />
-	<ClCompile Include="Horion\Module\Modules\HitboxSize1.h" />
+	<ClInclude Include="Horion\Module\Modules\HitboxSize1.h" />
     <ClInclude Include="Horion\Module\Modules\HudModule.h" />
     <ClInclude Include="Horion\Module\Modules\ExtendedBlockReach.h" />
     <ClInclude Include="Horion\Module\Modules\InfiniteReach.h" />
@@ -545,7 +547,7 @@
     <ClInclude Include="Horion\Module\Modules\Timer.h" />
     <ClInclude Include="Horion\Module\Modules\TimeChanger.h" />
     <ClInclude Include="Horion\Module\Modules\Tower.h" />
-    <ClCompile Include="Horion\Module\Modules\Tornado1.h" />
+    <ClInclude Include="Horion\Module\Modules\Tornado1.h" />
     <ClInclude Include="Horion\Module\Modules\Tracer.h" />
     <ClInclude Include="Horion\Module\Modules\TriggerBot.h" />
     <ClInclude Include="Horion\Module\Modules\VanillaPlus.h" />
