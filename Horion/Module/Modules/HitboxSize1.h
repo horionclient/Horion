@@ -2,9 +2,11 @@
 #include "Module.h"
 class HitboxSize : public IModule {
 private:
-	float playersize = 1;
+	float width = 0.5;
+	float height = 0.5;
 	bool active = false;
-	float ogsize = 0;
+	float ogwidth;
+	float ogheight;
 
 public:
 	HitboxSize();
