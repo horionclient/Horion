@@ -1,12 +1,13 @@
 #pragma once
 
 class C_RakNetInstance {
-private:
-	char pad_0x0008[0x368];  //0x0000
+	char pad_0000[856];    //0x0000
 public:
-	TextHolder serverIp; //0x370
+	TextHolder numericalIp;  //0x0360
+	TextHolder serverIp;        //0x0380
+	uint32_t serverPort;   //0x03A0
 
-private:
+	private:
 	virtual ~C_RakNetInstance();
 	virtual __int64 onAppResumed(void);
 	virtual __int64 onAppSuspended(void);
@@ -39,4 +40,9 @@ private:
 	virtual __int64 getIPv4Port(void) const;
 	virtual __int64 getIPv6Port(void) const;
 	virtual __int64 getGUID(void) const;
-};
+
+public:
+	bool isonaServer() { return !(serverIp.textLength == 0); }
+
+};                         //Size: 0x0848
+
