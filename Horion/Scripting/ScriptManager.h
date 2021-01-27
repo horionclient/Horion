@@ -89,6 +89,7 @@ extern ScriptManager scriptMgr;
 #include "Functions/ModuleManagerFunctions.h"
 #include "Functions/LevelFunctions.h"
 #include "Functions/DrawFunctions.h"
+#include "Functions/InventoryFunctions.h"
 
 #include "ScriptInstance.h"
 
@@ -101,6 +102,7 @@ public:
 	JsValueRef vec2Prototype = JS_INVALID_REFERENCE;
 	JsValueRef entityPrototype = JS_INVALID_REFERENCE;
 	JsValueRef localPlayerPrototype = JS_INVALID_REFERENCE;
+	JsValueRef inventoryObject = JS_INVALID_REFERENCE;
 	JsValueRef moduleManager = JS_INVALID_REFERENCE;
 	JsValueRef commandManager = JS_INVALID_REFERENCE;
 	JsValueRef drawUtils = JS_INVALID_REFERENCE;
@@ -122,6 +124,7 @@ private:
 	void prepareEntityPrototype(JsValueRef proto, ContextObjects* objs);
 	void prepareLocalPlayerPrototype(JsValueRef proto, ContextObjects* objs);
 	
+	void prepareInventoryFunctions(JsValueRef proto, ContextObjects* objs);
 	void prepareGameFunctions(JsValueRef global, ContextObjects* objs);
 	void prepareHorionFunctions(JsValueRef global, ContextObjects* obj);
 	void prepareDrawFunctions(JsValueRef global, ContextObjects* obj);
