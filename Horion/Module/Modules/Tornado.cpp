@@ -20,7 +20,7 @@ void Tornado::onTick(C_GameMode* gm) {
 		} else if (player->onGround) {
 			player->setDamageNearbyMobs(false);
 		}
-	} else if (!onlyJump) {
+	} else {
 		player->setDamageNearbyMobs(true);
 	}
 }
