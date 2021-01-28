@@ -4,6 +4,7 @@
 
 Scaffold::Scaffold() : IModule(VK_NUMPAD1, Category::WORLD, "Automatically build blocks beneath you") {
 	registerBoolSetting("Spoof", &this->spoof, this->spoof);
+	registerBoolSetting("Staircase Mode", &this->staircaseMode, this->staircaseMode);
 }
 
 Scaffold::~Scaffold() {
@@ -86,24 +87,57 @@ void Scaffold::onTick(C_GameMode* gm) {
 	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()) && !spoof)  // Block in hand?
 		return;
 
-	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block below the player
-	blockBelow.y -= g_Data.getLocalPlayer()->height;
-	blockBelow.y -= 0.5f;
 
 	// Adjustment by velocity
 	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
 	vec3_t vel = g_Data.getLocalPlayer()->velocity;
 	vel = vel.normalize();  // Only use values from 0 - 1
 
-	if (!tryScaffold(blockBelow)) {
-		if (speed > 0.05f) {  // Are we actually walking?
-			blockBelow.z -= vel.z * 0.4f;
-			if (!tryScaffold(blockBelow)) {
-				blockBelow.x -= vel.x * 0.4f;
-				if (!tryScaffold(blockBelow) && g_Data.getLocalPlayer()->isSprinting()) {
-					blockBelow.z += vel.z;
-					blockBelow.x += vel.x;
-					tryScaffold(blockBelow);
+
+
+
+	if (this->staircaseMode) {
+		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
+		blockBelow.y -= g_Data.getLocalPlayer()->height;
+		blockBelow.y -= 1.5f;
+
+		vec3_t blockBelowBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 2 blocks below the player
+		blockBelowBelow.y -= g_Data.getLocalPlayer()->height;
+		blockBelowBelow.y -= 2.0f;
+
+		if (!tryScaffold(blockBelow) && !tryScaffold(blockBelowBelow)) {
+			if (speed > 0.05f) {  // Are we actually walking?
+				blockBelow.z -= vel.z * 0.4f;
+				blockBelowBelow.z -= vel.z * 0.4f;
+				if (!tryScaffold(blockBelow) && !tryScaffold(blockBelowBelow)) {
+					blockBelow.x -= vel.x * 0.4f;
+					blockBelowBelow.x -= vel.x * 0.4f;
+					if (!tryScaffold(blockBelow) && !tryScaffold(blockBelowBelow) && g_Data.getLocalPlayer()->isSprinting()) {
+						blockBelow.z += vel.z;
+						blockBelow.x += vel.x;
+						blockBelowBelow.z += vel.z;
+						blockBelowBelow.x += vel.x;
+						tryScaffold(blockBelow);
+						tryScaffold(blockBelowBelow);
+					}
+				}
+			}
+		}
+	} else {
+		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block below the player
+		blockBelow.y -= g_Data.getLocalPlayer()->height;
+		blockBelow.y -= 0.5f;
+
+		if (!tryScaffold(blockBelow)) {
+			if (speed > 0.05f) {  // Are we actually walking?
+				blockBelow.z -= vel.z * 0.4f;
+				if (!tryScaffold(blockBelow)) {
+					blockBelow.x -= vel.x * 0.4f;
+					if (!tryScaffold(blockBelow) && g_Data.getLocalPlayer()->isSprinting()) {
+						blockBelow.z += vel.z;
+						blockBelow.x += vel.x;
+						tryScaffold(blockBelow);
+					}
 				}
 			}
 		}
