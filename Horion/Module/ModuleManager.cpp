@@ -103,9 +103,6 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new VanillaPlus()));
 
 		this->moduleList.push_back(std::shared_ptr<IModule>(new FollowPathModule()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Tornado()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new HitboxSize()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new AutoStaircase()));
 
 #ifdef _DEBUG
 		this->moduleList.push_back(std::shared_ptr<IModule>(new PacketLogger()));
