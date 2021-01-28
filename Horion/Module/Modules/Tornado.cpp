@@ -14,7 +14,6 @@ void Tornado::onTick(C_GameMode* gm) {
 	auto player = g_Data.getLocalPlayer();
 	bool onlyJump = this->onlyjump;
 
-	auto player = g_Data.getLocalPlayer();
     	if (onlyJump && !player->isJumping())
           return;
     	player->setDamageNearbyMobs(true);
