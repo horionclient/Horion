@@ -21,7 +21,7 @@ JsValueRef ScriptManager::prepareEntity(long long runtimeId, ContextObjects* obj
 		JsValueRef null;
 		chakra.JsGetNullValue_(&null);
 		return null;
-	}
+	
 
 	if (data->isLocalPlayer)
 		chakra.JsSetPrototype_(obj, objs->localPlayerPrototype);
@@ -118,7 +118,6 @@ void ScriptManager::prepareInventoryFunctions(JsValueRef proto, ContextObjects* 
 	chakra.defineFunction(proto, L"moveItem", InventoryFunctions::moveItem, objs);
 
 	chakra.defineProp(proto, L"isFull", InventoryFunctions::isFull, 0);
-	chakra.defineFunction(proto, L"getInventorySlot", LocalPlayerFunctions::getInventorySlot, objs);
 
 	chakra.defineFunction(proto, L"placeBlock", LocalPlayerFunctions::placeBlock, objs);
 	chakra.defineFunction(proto, L"placeBlockRelative", LocalPlayerFunctions::placeBlockRelativeToPlr, objs);
