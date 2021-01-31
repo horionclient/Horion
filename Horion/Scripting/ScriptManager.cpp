@@ -21,7 +21,7 @@ JsValueRef ScriptManager::prepareEntity(long long runtimeId, ContextObjects* obj
 		JsValueRef null;
 		chakra.JsGetNullValue_(&null);
 		return null;
-	
+	}
 
 	if (data->isLocalPlayer)
 		chakra.JsSetPrototype_(obj, objs->localPlayerPrototype);
