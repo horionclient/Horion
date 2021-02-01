@@ -9,13 +9,13 @@ public:
 	bool tabgui = true;
 	bool arraylist = true;
 	bool clickToggle = true;
-	bool watermark = true;
-	bool coordinates = false;
+	bool watermark = false;
+	bool coordinates = true;
 	bool keybinds = true;
 	bool displayArmor = true;
 	bool keystrokes = true;
 	bool fps = true;
-	bool cps = true;
+	bool cps = false;
 	bool alwaysShow = false;
 
 	float scale = 1.f;
