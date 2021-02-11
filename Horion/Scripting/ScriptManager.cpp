@@ -107,6 +107,11 @@ void ScriptManager::prepareLocalPlayerPrototype(JsValueRef proto, ContextObjects
 	chakra.defineFunction(proto, L"setViewAngles", LocalPlayerFunctions::setViewAngles, objs);
 	chakra.defineFunction(proto, L"setIsOnGround", LocalPlayerFunctions::setIsOnGround, objs);
 	chakra.defineFunction(proto, L"getInventory", LocalPlayerFunctions::getInventory, objs);
+
+	chakra.defineFunction(proto, L"placeBlock", LocalPlayerFunctions::placeBlock, objs);
+	chakra.defineFunction(proto, L"placeBlockRelative", LocalPlayerFunctions::placeBlockRelativeToPlr, objs);
+	chakra.defineFunction(proto, L"breakBlock", LocalPlayerFunctions::breakBlock, objs);
+	chakra.defineFunction(proto, L"breakBlockRelative", LocalPlayerFunctions::breakBlockRelativeToPlr, objs);
 }
 
 void ScriptManager::prepareInventoryFunctions(JsValueRef proto, ContextObjects* objs) {
@@ -118,12 +123,6 @@ void ScriptManager::prepareInventoryFunctions(JsValueRef proto, ContextObjects* 
 	chakra.defineFunction(proto, L"moveItem", InventoryFunctions::moveItem, objs);
 
 	chakra.defineProp(proto, L"isFull", InventoryFunctions::isFull, 0);
-	chakra.defineFunction(proto, L"getInventorySlot", LocalPlayerFunctions::getInventorySlot, objs);
-
-	chakra.defineFunction(proto, L"placeBlock", LocalPlayerFunctions::placeBlock, objs);
-	chakra.defineFunction(proto, L"placeBlockRelative", LocalPlayerFunctions::placeBlockRelativeToPlr, objs);
-	chakra.defineFunction(proto, L"breakBlock", LocalPlayerFunctions::breakBlock, objs);
-	chakra.defineFunction(proto, L"breakBlockRelative", LocalPlayerFunctions::breakBlockRelativeToPlr, objs);
 }
 
 void ScriptManager::prepareGameFunctions(JsValueRef global, ContextObjects* objs) {
