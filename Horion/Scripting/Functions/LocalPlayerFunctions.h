@@ -2,11 +2,11 @@
 
 #include "../ScriptManager.h"
 #include "Vector3Functions.h"
+#include "InventoryFunctions.h"
 
 
 class LocalPlayerFunctions {
 public:
-
 	DECL_FUN(setPosition);
 	DECL_FUN(setVelocity);
 	DECL_FUN(toString);

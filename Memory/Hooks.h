@@ -98,7 +98,7 @@ private:
 	static void ClickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
 	static __int64 MoveInputHandler_tick(C_MoveInputHandler* _this, C_Entity* a2);
 	static __int64 ChestScreenController_tick(C_ChestScreenController* _this);
-	static __int64 GetGamma(__int64 a1);
+	static float GetGamma(uintptr_t* a1);
 	static bool Actor_isInWater(C_Entity* _this);
 	static void JumpPower(C_Entity* _this, float a2);
 	static __int64 MinecraftGame_onAppSuspended(__int64 _this);

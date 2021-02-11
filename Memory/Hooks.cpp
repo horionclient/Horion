@@ -238,8 +238,8 @@ void Hooks::Init() {
 		void* chestScreenControllerTick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 08 57 48 83 EC 20 48 8B F9 E8 ?? ?? ?? ?? 48 8B 17 48 8B CF 8B D8 FF 92 ?? ?? ?? ?? 84 C0 74 31"));
 		g_Hooks.ChestScreenController_tickHook = std::make_unique<FuncHook>(chestScreenControllerTick, Hooks::ChestScreenController_tick);
 
-		//void* fullbright = reinterpret_cast<void*>(FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? ? ?? ? ?? 48 89 5C 24 ?? 48 89 74 24 ?? 48 8B 05 ?? ? ?? ? 48 33 C4 48 89 44 24 ?? 33 C0 48 89 44 24 ?? 48 89 44 24 ?? 48 8B 01 48 8D 54 24 ?? FF 90"));
-		//g_Hooks.GetGammaHook = std::make_unique<FuncHook>(fullbright, Hooks::GetGamma);
+		void* fullbright = reinterpret_cast<void*>(FindSignature("48 83 EC 28 80 B9 ?? ?? ?? ?? 00 48 8D 54 24 30 74 36 41 B8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B 10 48 85 D2 74 3C 48 8B 8A ?? ?? ?? ?? 48 85 C9 74 0A E8 ?? ?? ?? ?? 48 83 C4 28 C3"));
+		g_Hooks.GetGammaHook = std::make_unique<FuncHook>(fullbright, Hooks::GetGamma);
 
 		// Mob::_jumpFromGround
 		void* jump = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B 19 48 8D"));
@@ -1346,54 +1346,14 @@ __int64 Hooks::ChestScreenController_tick(C_ChestScreenController* a1) {
 	return oFunc(a1);
 }
 
-__int64 Hooks::GetGamma(__int64 a1) {
-	static auto oFunc = g_Hooks.GetGammaHook->GetFastcall<__int64, __int64>();
-
+float Hooks::GetGamma(uintptr_t* a1) {
 	static auto fullBrightModule = moduleMgr->getModule<FullBright>();
+	if (fullBrightModule->isEnabled())
+		return 25.f;
 
-	struct Option {
-		void* vtable;
-		char filler[0x20];        // 0x008
-		TextHolder internalName;  // 0x0028
-		TextHolder friendlyName;  // 0x0048 // only exists when the value is present in the options
-		int optionId; // 0x68
-		char filler2[0xC]; // 0x6C
-		TextHolder nameInConfigFile; // 0x78
-		char filler3[0x50];  // 0x098
-		union {
-			struct {
-				float min;
-				float max;
-				float value;
-				float defaultValue;
-			} _float;
-			bool _bool;
-		} value;
-	};
-
-	static Option* gfx_gamma = 0;
-	if (gfx_gamma == 0) {
-		__int64 v6 = oFunc(a1);  // Calls to ClientInstance, returns options ptr
-
-		static int numOptions = (*reinterpret_cast<int*>(FindSignature("49 8D B6 ?? ?? ?? ?? 48 3B FE") + 3) - 16) / 8;
-
-		//logF("%llX", v6);
-		//logF("Num Options: %i", numOptions);
-
-		for (int i = 0; i < numOptions; i++) {
-			Option* ptr = *reinterpret_cast<Option**>(v6 + 0x10 + i * 8);
-			//if (ptr)
-			//	logF("%llX %s %s", v6 + 0x10 + i * 8, ptr->internalName.getText(), ptr->friendlyName.getText());
-			if (ptr && strcmp(ptr->internalName.getText(), "gfx_gamma") == 0) {
-				gfx_gamma = ptr;
-				//logF("%llX %s %s %llX", v6 + 0x10 + i * 8, ptr->internalName.getText(), ptr->friendlyName.getText(), &ptr->value);
-			}
-		}
-	}
-	if (gfx_gamma)
-		fullBrightModule->gammaPtr = &gfx_gamma->value._float.value;
-
-	return oFunc(a1);
+	//Get the normal gamma value
+	float* gamer = (float*)*(a1 + 0x27);
+	return *(gamer + 0x7A);
 }
 
 bool Hooks::Actor_isInWater(C_Entity* _this) {
