@@ -42,24 +42,10 @@ public:
 	SettingEnum(std::vector<EnumEntry> entr, IModule* mod = nullptr);
 	SettingEnum(IModule* mod = nullptr);
 	//SettingEnum();
-	AddResult addEntry(EnumEntry entr);
-	EnumEntry* GetEntry(int ind);
-	EnumEntry* GetEntry();
+	SettingEnum& addEntry(EnumEntry entr);
+	EnumEntry& GetEntry(int ind);
+	EnumEntry& GetSelectedEntry();
 	int GetCount();
-};
-
-struct AddResult {
-	union {
-		bool Succes;
-		SettingEnum* Enum;
-	};
-	AddResult(bool succ, SettingEnum* e) {
-		Succes = succ;
-		Enum = e;
-	}
-	inline AddResult addEntry(EnumEntry entr) {
-		return Enum->addEntry(entr);
-	}
 };
 
 enum class ValueType {
@@ -91,6 +77,7 @@ struct SettingEntry {
 	SettingValue* defaultValue = nullptr;
 	SettingValue* minValue = nullptr;
 	SettingValue* maxValue = nullptr;
+	void* extraData; // Only used by enum for now
 
 	// ClickGui Data
 	bool isDragging = false;  // This is incredibly hacky and i wanted to avoid this as much as possible but i want to get this clickgui done

@@ -356,8 +356,8 @@ void ClickGui::renderCategory(Category category) {
 							case ValueType::ENUM_T: {
 								// Text and background
 								{
-									char name[0x21];
-									sprintf_s(name, 0x21, "%s:", setting->name);
+									char name[0x22];
+									sprintf_s(name, "%s:", setting->name);
 									// Convert first letter to uppercase for more friendlieness
 									if (name[0] != 0)
 										name[0] = toupper(name[0]);
@@ -379,8 +379,9 @@ void ClickGui::renderCategory(Category category) {
 								}
 								if (setting->minValue->_bool) {
 									int e = 0;
-									for (auto it = setting->maxValue->Enum->Entrys.begin();
-										 it != setting->maxValue->Enum->Entrys.end(); it++, e++) {
+									auto enumData = reinterpret_cast<SettingEnum*>(setting->extraData);
+									for (auto it = enumData->Entrys.begin();
+										 it != enumData->Entrys.end(); it++, e++) {
 										if ((currentYOffset - ourWindow->pos.y) > cutoffHeight) {
 											overflowing = true;
 											break;
@@ -400,10 +401,10 @@ void ClickGui::renderCategory(Category category) {
 																				5);  //because we add 5 to text padding
 										textPos.y = currentYOffset + textPadding;
 										vec4_t selectableSurface = vec4_t(
-											textPos.x + textPadding,
-											textPos.y + textPadding,
-											xEnd - textPadding,
-											textPos.y + textHeight - textPadding);
+											textPos.x,
+											rectPos.y,
+											xEnd,
+											rectPos.w);
 										MC_Color col;
 										if (setting->value->_int == e || (selectableSurface.contains(&mousePos) && !ourWindow->isInAnimation)) {
 											if (isEven)
@@ -416,7 +417,8 @@ void ClickGui::renderCategory(Category category) {
 											else
 												col = SettingColor2;
 										}
-										DrawUtils::fillRectangle(rectPos, col, backgroundAlpha);
+										DrawUtils::fillRectangle(rectPos, moduleColor, backgroundAlpha);
+										DrawUtils::fillRectangle(selectableSurface, col, backgroundAlpha);
 										DrawUtils::drawText(textPos, &elTexto, MC_Color(1.f, 1.f, 1.f));
 										// logic
 										if (selectableSurface.contains(&mousePos) &&
@@ -433,8 +435,8 @@ void ClickGui::renderCategory(Category category) {
 								// Text and background
 								{
 									// Convert first letter to uppercase for more friendlieness
-									char name[0x21];
-									sprintf_s(name, 0x21, "%s:", setting->name);
+									char name[0x22];
+									sprintf_s(name, "%s:", setting->name);
 									if (name[0] != 0)
 										name[0] = toupper(name[0]);
 
@@ -529,8 +531,8 @@ void ClickGui::renderCategory(Category category) {
 								// Text and background
 								{
 									// Convert first letter to uppercase for more friendlieness
-									char name[0x21];
-									sprintf_s(name, 0x21, "%s:", setting->name);
+									char name[0x22];
+									sprintf_s(name, "%s:", setting->name);
 									if (name[0] != 0)
 										name[0] = toupper(name[0]);
 

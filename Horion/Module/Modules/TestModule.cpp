@@ -20,8 +20,11 @@ using json = nlohmann::json;
 
 
 TestModule::TestModule() : IModule(0, Category::MISC, "For testing purposes") {
-	enum1 = *(*new SettingEnum(this)).addEntry(EnumEntry("1", 1)).addEntry(EnumEntry("2", 2))
-		.addEntry(EnumEntry("3", 3)).Enum;
+	enum1 = SettingEnum(this)
+		.addEntry(EnumEntry("1", 1))
+		.addEntry(EnumEntry("2", 2))
+		.addEntry(EnumEntry("3", 3));
+	
 	registerFloatSetting("float1", &this->float1, 0, -10, 10);
 	registerIntSetting("int1", &this->int1, 0, -10, 10);
 	registerEnumSetting("Enum1", &enum1, 0);
@@ -38,8 +41,6 @@ const char* TestModule::getModuleName() {
 bool TestModule::isFlashMode() {
 	return false;
 }
-
-
 
 __forceinline unsigned __int64 rotBy(int in, unsigned int by) {
 	auto mut = static_cast<unsigned __int64>(in);

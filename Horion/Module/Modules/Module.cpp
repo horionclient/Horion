@@ -29,24 +29,24 @@ SettingEnum::SettingEnum(IModule* mod) {
 	owner = mod;
 }
 
-AddResult SettingEnum::addEntry(EnumEntry entr) {
-	auto etr = new EnumEntry(entr);
+SettingEnum& SettingEnum::addEntry(EnumEntry entr) {
+	auto etr = EnumEntry(entr);
 	bool SameVal = false;
 	for (auto it = this->Entrys.begin(); it != this->Entrys.end(); it++) {
-		SameVal |= it->GetValue() == etr->GetValue();
+		SameVal |= it->GetValue() == etr.GetValue();
 	}
 	if (!SameVal) {
-		Entrys.push_back(*etr);
+		Entrys.push_back(etr);
 		std::sort(Entrys.begin(), Entrys.end(), [](EnumEntry rhs, EnumEntry lhs) {
 			return rhs.GetValue() < lhs.GetValue();
 		});
 	}
-	return AddResult(SameVal, this);
+	return *this;
 }
-EnumEntry* SettingEnum::GetEntry(int ind) {
-	return &Entrys.at(ind);
+EnumEntry& SettingEnum::GetEntry(int ind) {
+	return Entrys.at(ind);
 }
-EnumEntry* SettingEnum::GetEntry() {
+EnumEntry& SettingEnum::GetSelectedEntry() {
 	return GetEntry(selected);
 }
 int SettingEnum::GetCount() {
@@ -128,24 +128,27 @@ void IModule::registerIntSetting(std::string name, int* intPtr, int defaultValue
 void IModule::registerEnumSetting(std::string name, SettingEnum* ptr, int defaultValue) {
 	SettingEntry* setting = new SettingEntry();
 	setting->valueType = ValueType::ENUM_T;
+	if (defaultValue < 0 || defaultValue >= ptr->GetCount())
+		defaultValue = 0;
+
 	// Actual Value
 	setting->value = reinterpret_cast<SettingValue*>(&ptr->selected);
+	setting->value->_int = defaultValue;
+
 	// Default Value
 	SettingValue* defaultVal = new SettingValue();
 	defaultVal->_int = defaultValue;
 	setting->defaultValue = defaultVal;
+
 	// Min Value (is Extended)
 	SettingValue* minVal = new SettingValue();
 	minVal->_bool = false;
 	setting->minValue = minVal;
-	// Max Value (The Enum)
-	SettingValue* maxVal = new SettingValue();
-	maxVal->Enum = ptr;
-	setting->maxValue = maxVal;
-	// Name
+
+	// Enum data
+	setting->extraData = ptr;
+
 	strcpy_s(setting->name, 19, name.c_str());
-	setting->value->_int = setting->defaultValue->_int;
-	// Add to list
 	settings.push_back(setting);
 }
 
@@ -365,7 +368,7 @@ void IModule::clientMessageF(const char* fmt, ...) {
 void SettingEntry::makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
 	switch (valueType) {
 		case ValueType::ENUM_T: 
-			value->_int = std::max(0, std::min(maxValue->Enum->GetCount()-1, value->_int));
+			value->_int = std::max(0, std::min(reinterpret_cast<SettingEnum*>(extraData)->GetCount()-1, value->_int));
 			break;
 		case ValueType::BOOL_T:
 			break;
