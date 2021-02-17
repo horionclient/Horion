@@ -1315,11 +1315,24 @@ void Hooks::ClickFunc(__int64 a1, char mouseButton, char isDown, __int16 mouseX,
 	static auto oFunc = g_Hooks.ClickFuncHook->GetFastcall<void, __int64, char, char, __int16, __int16, __int16, __int16, char>();
 	static auto clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 
+	//MouseButtons
+	//0 = mouse move
+	//1 = left click
+	//2 = right click
+	//3 = middle click
+	//4 = scroll   (isDown: 120 (SCROLL UP) and -120 (SCROLL DOWN))
+
+	ClickGui::onMouseClickUpdate((int)mouseButton, isDown);
+	HImGui.onMouseClickUpdate((int)mouseButton, isDown);
+
+	if (isDown)
+		if (mouseButton == 1)
+			g_Data.leftclickCount++;
+		else if (mouseButton == 2)
+			g_Data.rightclickCount++;
+
 	if (clickGuiModule->isEnabled()) {
 		if (mouseButton == 4) {
-			// mouseButton = 4 (WHEEL)
-			// isDown = -120 (SCROLL DOWN)
-			// isDown = 120 (SCROLL UP)
 			ClickGui::onWheelScroll(isDown > 0);
 		}
 		if (mouseButton != 0)  // Mouse click event
