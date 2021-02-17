@@ -14,7 +14,7 @@ JsValueRef createBlock(C_BlockLegacy *block) {
 	JsValueRef tName;
 	chakra.JsPointerToString_(tileName.c_str(), tileName.size(), &tName);
 
-	JsValueRef id = chakra.toNumber(block->blockId);
+	JsValueRef id = chakra.toNumber((double)block->blockId);
 
 	chakra.addPropertyToObj(ref, L"name", bName);
 	chakra.addPropertyToObj(ref, L"tileName", tName);
