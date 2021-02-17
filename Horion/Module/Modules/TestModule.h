@@ -6,6 +6,9 @@ private:
 
 public:
 	float float1 = 0;
+	int int1 = 0;
+	bool bool1 = true;
+	SettingEnum enum1;
 
 	TestModule();
 	~TestModule();

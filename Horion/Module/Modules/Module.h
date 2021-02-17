@@ -1,9 +1,10 @@
 #pragma once
-
 #include "../../../Memory/GameData.h"
 #include "../../FriendList/FriendList.h"
-//#include "../../DrawUtils.h"
 #include "../../../Utils/keys.h"
+//#include "../../DrawUtils.h"
+
+class IModule;
 
 enum class Category {
 	COMBAT = 0,
@@ -15,13 +16,46 @@ enum class Category {
 	CUSTOM = 6
 };
 
+struct EnumEntry {
+private:
+	/*const */ std::string name;
+	/*const */ unsigned char val;
+
+public:
+	/// <summary>Use this however you want</summary>
+	void* ptr = nullptr;
+	EnumEntry(const std::string _name, const unsigned char value);
+	std::string GetName();
+	unsigned char GetValue();
+};
+
+struct AddResult;
+
+class SettingEnum {
+private:
+	IModule* owner = nullptr;
+
+public:
+	std::vector<EnumEntry> Entrys;
+	int selected = -1;
+
+	SettingEnum(std::vector<EnumEntry> entr, IModule* mod = nullptr);
+	SettingEnum(IModule* mod = nullptr);
+	//SettingEnum();
+	SettingEnum& addEntry(EnumEntry entr);
+	EnumEntry& GetEntry(int ind);
+	EnumEntry& GetSelectedEntry();
+	int GetCount();
+};
+
 enum class ValueType {
 	FLOAT_T,
 	DOUBLE_T,
 	INT64_T,
 	INT_T,
 	BOOL_T,
-	TEXT_T
+	TEXT_T,
+	ENUM_T
 };
 
 struct SettingValue {
@@ -32,6 +66,7 @@ struct SettingValue {
 		int _int;
 		bool _bool;
 		std::string* text;
+		SettingEnum* Enum;
 	};
 };
 
@@ -42,6 +77,7 @@ struct SettingEntry {
 	SettingValue* defaultValue = nullptr;
 	SettingValue* minValue = nullptr;
 	SettingValue* maxValue = nullptr;
+	void* extraData; // Only used by enum for now
 
 	// ClickGui Data
 	bool isDragging = false;  // This is incredibly hacky and i wanted to avoid this as much as possible but i want to get this clickgui done
@@ -66,6 +102,7 @@ protected:
 
 	void registerFloatSetting(std::string name, float* floatPtr, float defaultValue, float minValue, float maxValue);
 	void registerIntSetting(std::string name, int* intpTr, int defaultValue, int minValue, int maxValue);
+	void registerEnumSetting(std::string name, SettingEnum* intPtr, int defaultValue);
 	void registerBoolSetting(std::string name, bool* boolPtr, bool defaultValue);
 
 	void clientMessageF(const char* fmt, ...);

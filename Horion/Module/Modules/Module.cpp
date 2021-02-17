@@ -1,10 +1,58 @@
 #include "Module.h"
-
 #include "../../../Utils/Json.hpp"
 #include "../../../Utils/Logger.h"
 #include <cstdarg>
 
 using json = nlohmann::json;
+
+#pragma region EnumEntry
+EnumEntry::EnumEntry(const std::string _name, const unsigned char value) {
+	name = _name;
+	val = value;
+}
+std::string EnumEntry::GetName() {
+	return name;
+}
+unsigned char EnumEntry::GetValue() {
+	return val;
+}
+#pragma endregion
+#pragma region SettingEnum
+SettingEnum::SettingEnum(std::vector<EnumEntry> entr, IModule* mod) {
+	Entrys = entr;
+	owner = mod;
+	std::sort(Entrys.begin(), Entrys.end(), [](EnumEntry rhs, EnumEntry lhs) {
+		return rhs.GetValue() < lhs.GetValue();
+	});
+}
+SettingEnum::SettingEnum(IModule* mod) {
+	owner = mod;
+}
+
+SettingEnum& SettingEnum::addEntry(EnumEntry entr) {
+	auto etr = EnumEntry(entr);
+	bool SameVal = false;
+	for (auto it = this->Entrys.begin(); it != this->Entrys.end(); it++) {
+		SameVal |= it->GetValue() == etr.GetValue();
+	}
+	if (!SameVal) {
+		Entrys.push_back(etr);
+		std::sort(Entrys.begin(), Entrys.end(), [](EnumEntry rhs, EnumEntry lhs) {
+			return rhs.GetValue() < lhs.GetValue();
+		});
+	}
+	return *this;
+}
+EnumEntry& SettingEnum::GetEntry(int ind) {
+	return Entrys.at(ind);
+}
+EnumEntry& SettingEnum::GetSelectedEntry() {
+	return GetEntry(selected);
+}
+int SettingEnum::GetCount() {
+	return (int)Entrys.size();
+}
+#pragma endregion
 
 IModule::IModule(int key, Category c, const char* tooltip) {
 	this->keybind = key;
@@ -75,6 +123,33 @@ void IModule::registerIntSetting(std::string name, int* intPtr, int defaultValue
 	strcpy_s(setting->name, 19, name.c_str());
 
 	settings.push_back(setting);  // Add to list
+}
+
+void IModule::registerEnumSetting(std::string name, SettingEnum* ptr, int defaultValue) {
+	SettingEntry* setting = new SettingEntry();
+	setting->valueType = ValueType::ENUM_T;
+	if (defaultValue < 0 || defaultValue >= ptr->GetCount())
+		defaultValue = 0;
+
+	// Actual Value
+	setting->value = reinterpret_cast<SettingValue*>(&ptr->selected);
+	setting->value->_int = defaultValue;
+
+	// Default Value
+	SettingValue* defaultVal = new SettingValue();
+	defaultVal->_int = defaultValue;
+	setting->defaultValue = defaultVal;
+
+	// Min Value (is Extended)
+	SettingValue* minVal = new SettingValue();
+	minVal->_bool = false;
+	setting->minValue = minVal;
+
+	// Enum data
+	setting->extraData = ptr;
+
+	strcpy_s(setting->name, 19, name.c_str());
+	settings.push_back(setting);
 }
 
 void IModule::registerBoolSetting(std::string name, bool* boolPtr, bool defaultValue) {
@@ -178,6 +253,13 @@ void IModule::onLoadConfig(void* confVoid) {
 					case ValueType::TEXT_T:
 						sett->value->text = new std::string(value.get<std::string>());
 						break;
+					case ValueType::ENUM_T:
+						try {
+							sett->value->_int = value.get<int>();
+						} catch (const std::exception& e) {
+							logF("Config Load Error(Enum) (%s): %s ", this->getRawModuleName(), e.what());
+						}
+						break;
 					}
 					sett->makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt();
 					continue;
@@ -220,6 +302,9 @@ void IModule::onSaveConfig(void* confVoid) {
 			break;
 		case ValueType::TEXT_T:
 			obj.emplace(sett->name, *sett->value->text);
+			break;
+		case ValueType::ENUM_T:
+			obj.emplace(sett->name, sett->value->_int);
 			break;
 		}
 	}
@@ -282,7 +367,9 @@ void IModule::clientMessageF(const char* fmt, ...) {
 
 void SettingEntry::makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
 	switch (valueType) {
-		case ValueType::TEXT_T:
+		case ValueType::ENUM_T: 
+			value->_int = std::max(0, std::min(reinterpret_cast<SettingEnum*>(extraData)->GetCount()-1, value->_int));
+			break;
 		case ValueType::BOOL_T:
 			break;
 		case ValueType::INT64_T:
@@ -297,7 +384,10 @@ void SettingEntry::makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt() {
 		case ValueType::INT_T:
 			value->_int = std::max(minValue->_int, std::min(maxValue->_int, value->_int));
 			break;
+		case ValueType::TEXT_T:
+			//break;
 		default:
 			logF("unrecognized value %i", valueType);
+			break;
 	}
 }
