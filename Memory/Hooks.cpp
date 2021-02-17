@@ -438,7 +438,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			float elapsedFlot = (float)elapsed.QuadPart / frequency.QuadPart;
 			if (elapsedFlot > 1.5f && !hasSentWarning) {
 				hasSentWarning = true;
-				auto box = g_Data.addInfoBox("Warning", "Your injector doesn't seem to connect to Horion correctly. \nYou can ignore this, but some features may not work as expected.");
+				auto box = g_Data.addInfoBox("Warning", "Your injector doesn't seem to connect to Horion correctly.\nYou can ignore this, but some features may not work as expected.");
 				box->closeTimer = 5;
 				/*vec2_t windowSize = dat->windowSize;
 
@@ -861,9 +861,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			std::string substring = box->message;
 			while (lines < 5) {
 				auto brea = substring.find("\n");
-				if (brea == std::string::npos)
+				if (brea == std::string::npos || brea + 1 >= substring.size())
 					break;
-				substring = substring.substr(brea);
+				substring = substring.substr(brea + 1);
 				lines++;
 			}
 			if (box->message.size() == 0)
