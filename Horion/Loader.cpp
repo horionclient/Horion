@@ -52,25 +52,6 @@ DWORD WINAPI keyThread(LPVOID lpParam) {
 			}
 		}
 
-		if (*hidController != nullptr) {
-			for (uintptr_t key = 0; key < 5; key++) {
-				bool newKey = (*hidController)->clickMap[key];
-				bool* oldKey = reinterpret_cast<bool*>(clickMap + key);
-				if (newKey != *oldKey) {
-					ClickGui::onMouseClickUpdate((int)key, newKey);
-					HImGui.onMouseClickUpdate((int)key, newKey);
-					if (newKey) {
-						if ((int)key == 0)
-							g_Data.leftclickCount++;
-						else if ((int)key == 1)
-							g_Data.rightclickCount++;
-					}
-				}
-			}
-
-			memcpy(reinterpret_cast<void*>(clickMap), &(*hidController)->leftClickDown, 5);
-		}
-
 		memcpy_s(keyMap, 0xFF * 4, keyMapAddr, 0xFF * 4);
 
 		Sleep(2);
@@ -352,13 +333,13 @@ DWORD WINAPI start(LPVOID lpParam) {
 	CreateThread(nullptr, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, &keyThreadId);  // Checking Keypresses
 	logF("KeyT: %i", keyThreadId);
 
-	logF("Waiting for injector");
+	/*logF("Waiting for injector");
 	while (!g_Data.isInjectorConnectionActive()) {
 		Sleep(10);
 		if (!isRunning)
 			ExitThread(0);
 	}
-	logF("Injector found");
+	logF("Injector found");*/
 
 	cmdMgr->initCommands();
 	logF("Initialized command manager (1/3)");

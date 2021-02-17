@@ -11,7 +11,7 @@ class C_GameMode;
 
 class PointingStruct {
 private:
-	char pad_0x0000[0x8E0];  //0x0000
+	char pad_0x0000[0x938];  //0x0000
 public:
 	int rayHitType;       //0x08E0
 	int blockSide;        //0x08E4
@@ -38,10 +38,10 @@ public:
 	};
 	union {
 		struct {
-			float pitch2;  
-			float yaw2;    
+			float pitch2;
+			float yaw2;
 		};
-		vec2_t viewAngles2; // 0x128
+		vec2_t viewAngles2;  // 0x128
 	};
 
 private:
@@ -51,12 +51,12 @@ public:
 private:
 	char pad_0x11C[0x70];  //0x14C
 public:
-	float fallDistance; //0x1BC
-	bool onGround;  //0x01C0
+	float fallDistance;  //0x1BC
+	bool onGround;       //0x01C0
 private:
 	char pad_0x179[0x5F];  //0x1C1
 public:
-	float stepHeight; //0x220
+	float stepHeight;  //0x220
 private:
 	char pad_0x228[0x10];  //0x224
 public:
@@ -76,7 +76,7 @@ public:
 private:
 	char pad_0x340[0x148];  //0x350
 public:
-	AABB aabb;  //0x0498
+	AABB aabb;          //0x0498
 	float width;        //0x04B4
 	float height;       //0x04B8
 	vec3_t currentPos;  //0x04BC
@@ -105,8 +105,8 @@ public:
 private:
 	char pad_0x0A95[0x6C3];  //0x092D
 public:
-	int16_t itemData;        //0x0FF0
-	int16_t itemId;          //0x0FF2
+	int16_t itemData;  //0x0FF0
+	int16_t itemId;    //0x0FF2
 private:
 	char pad_10CC[0x1FC];  //0x0FF4
 public:
@@ -316,7 +316,7 @@ private:
 	virtual __int64 feed(int);
 	virtual __int64 handleEntityEvent(__int64, int);
 	virtual __int64 getPickRadius(void);
-	virtual const class HashedString* getActorRendererId(void);
+	virtual const class HashedString *getActorRendererId(void);
 	virtual __int64 spawnAtLocation(int, int);
 	virtual __int64 spawnAtLocation(int, int, float);
 	virtual __int64 spawnAtLocation(__int64 const &, int);
@@ -373,8 +373,7 @@ private:
 	virtual __int64 getPortalWaitTime(void) const;
 
 public:
-	virtual int* getDimensionId(int* dimOut) const;
-
+	virtual int *getDimensionId(int *dimOut) const;
 
 	virtual bool canChangeDimensions(void) const;
 
@@ -496,7 +495,7 @@ private:
 
 public:
 	virtual bool shouldTryMakeStepSound(void) const;
-	
+
 private:
 	virtual __int64 getNextStep(float) const;
 	virtual __int64 idk();
@@ -690,18 +689,17 @@ public:
 		return result;
 	}
 
-	int getTicksUsingItem(){
-		return *reinterpret_cast<int*>(reinterpret_cast<__int64>(this) + 0xF60);
+	int getTicksUsingItem() {
+		return *reinterpret_cast<int *>(reinterpret_cast<__int64>(this) + 0xF60);
 	}
 
 	bool isSneaking() {
-		return false; // TODO
+		return false;  // TODO
 	}
 
 	bool isSprinting() {
-		return false; // TODO
+		return false;  // TODO
 	}
-
 };
 
 #pragma pack(pop)
@@ -710,7 +708,8 @@ class C_ServerPlayer;
 
 class C_Player : public C_Entity {
 public:
-	C_PlayerInventoryProxy *getSupplies();;
+	C_PlayerInventoryProxy *getSupplies();
+	;
 
 	C_ItemStack *getSelectedItem() {
 		auto supplies = this->getSupplies();
@@ -758,7 +757,7 @@ public:
 public:
 	virtual bool returnFalse0() const;
 	virtual bool returnFalse1() const;
-	
+
 	virtual __int64 openTrading(__int64 const &, bool);
 
 public:
@@ -856,7 +855,6 @@ class C_ServerPlayer : public C_Player {
 
 class C_LocalPlayer : public C_Player {
 public:
-
 	void unlockAchievments();
 
 	void swingArm() {

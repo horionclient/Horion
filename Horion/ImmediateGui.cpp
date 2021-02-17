@@ -54,11 +54,11 @@ void ButtonInfo::draw(vec2_t mousePos, const char* label) {
 
 void ImmediateGui::onMouseClickUpdate(int key, bool isDown) {
 	switch (key) {
-	case 0:  // Left Click
-		this->leftMb.nextIsDown = isDown;
+	case 1:  // Left Click
+		this->leftMb.nextIsDown = true;
 		break;
-	case 1:  // Right Click
-		this->rightMb.nextIsDown = isDown;
+	case 2:  // Right Click
+		this->rightMb.nextIsDown = true;
 		break;
 	}
 }

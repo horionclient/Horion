@@ -18,7 +18,7 @@ void AutoTotem::onTick(C_GameMode* gm) {
 	if (current->item == NULL) {
 		for (int i = 0; i < 36; i++) {
 			C_ItemStack* totem = inv->getItemStack(i);
-			if (totem->item != NULL && (*totem->item)->itemId == 450) {
+			if (totem->item != NULL && (*totem->item)->itemId == 558) {
 				C_InventoryAction first(i, totem, nullptr);
 				C_InventoryAction second(37, nullptr, totem);
 				g_Data.getLocalPlayer()->setOffhandSlot(totem);

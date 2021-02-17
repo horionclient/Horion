@@ -786,23 +786,24 @@ void ClickGui::init() { initialised = true; }
 
 void ClickGui::onMouseClickUpdate(int key, bool isDown) {
 	switch (key) {
-	case 0:  // Left Click
+	case 1:  // Left Click
 		isLeftClickDown = isDown;
-		shouldToggleLeftClick = isDown;
+		if (isDown)
+			shouldToggleLeftClick = true;
 		break;
-	case 1:  // Right Click
+	case 2:  // Right Click
 		isRightClickDown = isDown;
-		shouldToggleRightClick = isDown;
+		if (isDown)
+			shouldToggleRightClick = true;
 		break;
 	}
 }
 
 void ClickGui::onWheelScroll(bool direction) {
-	if (!direction) {
+	if (!direction) 
 		scrollingDirection++;
-	} else {
+	 else 
 		scrollingDirection--;
-	}
 }
 
 void ClickGui::onKeyUpdate(int key, bool isDown) {
