@@ -427,15 +427,20 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			QueryPerformanceFrequency(&frequency);
 			QueryPerformanceCounter(&start);
 		}
-		if (!g_Data.isInjectorConnectionActive()) {
+		static bool hasSentWarning = false;
+		if (!g_Data.isInjectorConnectionActive() && !hasSentWarning) {
+			
 			__int64 retval = oText(a1, renderCtx);
 
 			LARGE_INTEGER end, elapsed;
 			QueryPerformanceCounter(&end);
 			elapsed.QuadPart = end.QuadPart - start.QuadPart;
 			float elapsedFlot = (float)elapsed.QuadPart / frequency.QuadPart;
-			if (elapsedFlot > 1.5f) {
-				vec2_t windowSize = dat->windowSize;
+			if (elapsedFlot > 1.5f && !hasSentWarning) {
+				hasSentWarning = true;
+				auto box = g_Data.addInfoBox("Warning", "Your injector doesn't seem to connect to Horion correctly. \nYou can ignore this, but some features may not work as expected.");
+				box->closeTimer = 5;
+				/*vec2_t windowSize = dat->windowSize;
 
 				DrawUtils::fillRectangle(vec4_t(0, 0, windowSize.x, windowSize.y), MC_Color(0.2f, 0.2f, 0.2f), 0.8f);
 
@@ -447,10 +452,11 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				text = "Uninject by holding down CTRL + L";
 				DrawUtils::drawText(vec2_t(windowSize.x / 2 - DrawUtils::getTextWidth(&text, 0.7f) / 2, windowSize.y * 0.8f), &text, MC_Color(), 0.7f);
 
-				DrawUtils::flush();
+				DrawUtils::flush();*/
 			}
 
-			return retval;
+			if(!hasSentWarning) // Wait for injector, it might connect in time
+				return retval;
 		} else
 			wasConnectedBefore = true;
 	}
@@ -506,7 +512,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			}*/
 
 			// Draw Custom Geo Button
-			if (g_Data.allowWIPFeatures()) {
+			if (g_Data.allowWIPFeatures() && g_Data.isInjectorConnectionActive()) {
 				if (HImGui.Button("Load Script Folder", vec2_t(wid.x * (0.765f - 0.5f), wid.y * 0.92f), true)) {
 					HorionDataPacket packet;
 					packet.cmd = CMD_FOLDERCHOOSER;
@@ -1210,7 +1216,7 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* _this, vec3_ti* a2, uint8_t f
 		const bool isAutoMode = nukerModule->isAutoMode();
 
 		C_BlockSource* region = g_Data.getLocalPlayer()->region;
-		int selectedBlockId = ((region->getBlock(*a2)->blockLegacy))->blockId;
+		auto selectedBlockId = ((region->getBlock(*a2)->blockLegacy))->blockId;
 		uint8_t selectedBlockData = region->getBlock(*a2)->data;
 
 		if (!isAutoMode) {
@@ -1223,7 +1229,7 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* _this, vec3_ti* a2, uint8_t f
 						if (tempPos.y > 0) {
 							C_Block* blok = region->getBlock(tempPos);
 							uint8_t data = blok->data;
-							int id = blok->blockLegacy->blockId;
+							auto id = blok->blockLegacy->blockId;
 							if (blok->blockLegacy->material->isSolid == true && (!isVeinMiner || (id == selectedBlockId && data == selectedBlockData)))
 								_this->destroyBlock(&tempPos, face);
 						}

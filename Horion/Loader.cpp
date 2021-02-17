@@ -333,13 +333,13 @@ DWORD WINAPI start(LPVOID lpParam) {
 	CreateThread(nullptr, NULL, (LPTHREAD_START_ROUTINE)keyThread, lpParam, NULL, &keyThreadId);  // Checking Keypresses
 	logF("KeyT: %i", keyThreadId);
 
-	logF("Waiting for injector");
+	/*logF("Waiting for injector");
 	while (!g_Data.isInjectorConnectionActive()) {
 		Sleep(10);
 		if (!isRunning)
 			ExitThread(0);
 	}
-	logF("Injector found");
+	logF("Injector found");*/
 
 	cmdMgr->initCommands();
 	logF("Initialized command manager (1/3)");
