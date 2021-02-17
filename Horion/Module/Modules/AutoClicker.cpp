@@ -3,6 +3,7 @@
 AutoClicker::AutoClicker() : IModule(0, Category::COMBAT, "A simple autoclicker, automatically clicks for you.") {
 	this->registerBoolSetting("rightclick", &this->rightclick, rightclick);
 	this->registerBoolSetting("only weapons", &this->weapons, this->weapons);
+	this->registerBoolSetting("break blocks", &this->breakBlocks, this->breakBlocks);
 	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
 	this->registerBoolSetting("hold", &this->hold, this->hold);
 }
@@ -17,7 +18,7 @@ const char* AutoClicker::getModuleName() {
 void AutoClicker::onTick(C_GameMode* gm) {
 	if ((GameData::isLeftClickDown() || !hold) && GameData::canUseMoveKeys()) {
 		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
-		C_Entity* target = g_Data.getClientInstance()->getPointerStruct()->entityPtr;
+		PointingStruct* pointing = g_Data.getClientInstance()->getPointerStruct();
 		Odelay++;
 
 		if (Odelay >= delay) {
@@ -27,11 +28,18 @@ void AutoClicker::onTick(C_GameMode* gm) {
 
 			g_Data.leftclickCount++;
 
-			if(!moduleMgr->getModule<NoSwing>()->isEnabled()) 
+			if (!moduleMgr->getModule<NoSwing>()->isEnabled())
 				localPlayer->swingArm();
 
-			if (target != 0)
-				gm->attack(target);
+			if (pointing->entityPtr != 0)
+				gm->attack(pointing->entityPtr);
+			else if (breakBlocks) {
+				bool isDestroyed = false;
+				gm->startDestroyBlock(pointing->block, pointing->blockSide, isDestroyed);
+				gm->stopDestroyBlock(pointing->block);
+				if (isDestroyed && localPlayer->region->getBlock(pointing->block)->blockLegacy->blockId != 0)
+					gm->destroyBlock(&pointing->block, 0);
+			}
 			Odelay = 0;
 		}
 	}

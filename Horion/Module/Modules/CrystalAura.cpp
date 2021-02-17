@@ -130,13 +130,15 @@ void CrystalAura::onTick(C_GameMode* gm) {
 		// place block around players?
 		return;
 	}
+
 	if (this->delay == 1 && AutoSelect) {
 		prevSlot = supplies->selectedHotbarSlot;
 		FinishSelect = true;
 		for (int n = 0; n < 9; n++) {
 			C_ItemStack* stack = inv->getItemStack(n);
 			if (stack->item != nullptr) {
-				if (stack->getItem()->itemId == 0x1aa) {
+				if (stack->getItem()->itemId == 615) {
+					if (prevSlot != n)
 					supplies->selectedHotbarSlot = n;
 					return;
 				}
@@ -145,7 +147,7 @@ void CrystalAura::onTick(C_GameMode* gm) {
 		return;
 	}
 	if (this->delay == 2) {
-		if (autoplace && g_Data.getLocalPlayer()->getSelectedItemId() == 0x1aa) {  //endcrystal
+		if (autoplace && g_Data.getLocalPlayer()->getSelectedItemId() == 615) {  //endcrystal
 			if (pEnhanced)
 				for (auto& i : targetList)
 					CPlace(gm, i->getPos());

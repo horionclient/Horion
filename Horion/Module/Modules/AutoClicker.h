@@ -7,6 +7,7 @@ private:
 	int delay = 0;
 	int Odelay = 0;
 	bool weapons = true;
+	bool breakBlocks = true;
 	bool rightclick = false;
 	bool hold = false;
 
