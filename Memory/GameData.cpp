@@ -217,12 +217,12 @@ void GameData::forEachEntity(std::function<void(C_Entity*, bool)> callback) {
 }
 
 void GameData::addChestToList(C_ChestBlockActor* chest) {
-	if (chest == nullptr || !chest->isMainSubchest())
-		return;
+	/*if (chest == nullptr || !chest->isMainSubchest())
+		return;*/
 	AABB chestAabb = chest->getFullAABB();
 	std::lock_guard<std::mutex> listGuard(g_Data.chestListMutex);
 	for (auto it = g_Data.chestList.begin(); it != g_Data.chestList.end(); ++it)
-		if (**it == chestAabb)
+		if (**it == chestAabb)	
 			return;
 
 	auto toAdd = std::make_shared<AABB>(chestAabb);
