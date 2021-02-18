@@ -42,8 +42,8 @@ void BowAimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 	if (localPlayer == nullptr)
 		return;
-
-	if (localPlayer->getSelectedItemId() != 261)  // Bow in hand?
+	auto selectedItemId = localPlayer->getSelectedItemId();
+	if (!(selectedItemId == 300 || selectedItemId == 565 || selectedItemId == 536))  // Item in hand?
 		return;
 
 	if (!(GameData::isRightClickDown() && GameData::canUseMoveKeys())) // is aiming?

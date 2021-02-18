@@ -22,8 +22,9 @@ void AutoClicker::onTick(C_GameMode* gm) {
 		Odelay++;
 
 		if (Odelay >= delay) {
-			auto selectedItem = localPlayer->getSelectedItem();
-			if (weapons && selectedItem->getAttackingDamageWithEnchants() < 1)
+			auto selectedItemId = localPlayer->getSelectedItemId();
+			if (weapons && !(selectedItemId == 308 || selectedItemId == 307 || selectedItemId == 312 || selectedItemId == 316 || selectedItemId == 322 || selectedItemId == 592 || selectedItemId == 536 /*swords*/
+						   || selectedItemId == 311 || selectedItemId == 315 || selectedItemId == 319 || selectedItemId == 325 || selectedItemId == 298 || selectedItemId == 595 /*axes*/))
 				return;
 
 			g_Data.leftclickCount++;

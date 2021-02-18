@@ -3,7 +3,7 @@
 Aimbot::Aimbot() : IModule(0, Category::COMBAT, "Automatically aims at the nearest entity") {
 	this->registerFloatSetting("range", &this->range, this->range, 3.f, 8.f);
 	this->registerBoolSetting("Require click", &this->click, this->click);
-	this->registerBoolSetting("only swords/axes", &this->sword, this->sword);
+	this->registerBoolSetting("only weapons", &this->weapons, this->weapons);
 	this->registerBoolSetting("vertical", &this->vertical, this->vertical);
 	this->registerFloatSetting("horizontal speed", &this->horizontalspeed, this->horizontalspeed, 10.f, 90.f);
 	this->registerFloatSetting("vertical speed", &this->verticalspeed, this->verticalspeed, 10.f, 90.f);
@@ -63,7 +63,8 @@ void Aimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		appl.x = -appl.x;
 		if ((appl.x < verticalrange && appl.x > -verticalrange) && (appl.y < horizontalrange && appl.y > -horizontalrange) && GameData::canUseMoveKeys()) {
 			auto selectedItemId = localPlayer->getSelectedItemId();
-			if (sword && !(selectedItemId == 268 || selectedItemId == 267 || selectedItemId == 272 || selectedItemId == 276 || selectedItemId == 283 /*swords*/ || selectedItemId == 271 || selectedItemId == 275 || selectedItemId == 279 || selectedItemId == 286 || selectedItemId == 258 /*axes*/))
+			if (weapons && !(selectedItemId == 308 || selectedItemId == 307 || selectedItemId == 312 || selectedItemId == 316 || selectedItemId == 322 || selectedItemId == 592 || selectedItemId == 536 /*swords*/
+							 || selectedItemId == 311 || selectedItemId == 315 || selectedItemId == 319 || selectedItemId == 325 || selectedItemId == 298 || selectedItemId == 595 /*axes*/))
 				return;
 
 			if (click && !g_Data.isLeftClickDown())
