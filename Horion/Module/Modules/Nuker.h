@@ -7,6 +7,8 @@ private:
 	int nukerRadius = 4;
 	bool veinMiner = false;
 	bool autodestroy = true;
+	bool autotool = true;
+	void findTool();
 
 public:
 	Nuker();

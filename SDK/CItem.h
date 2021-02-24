@@ -213,6 +213,14 @@ public:
 		if (itemId == 259) return true;                   // Flint n Steel
 		return false;
 	}
+	bool isMiningTool(void) {
+		if (itemId == 318) return true;  // Diamond Picaxe
+		if (itemId == 297) return true;  // Iron Picaxe
+		if (itemId == 324) return true;  // Gold Picaxe
+		if (itemId == 314) return true;  // Stone Picaxe
+		if (itemId == 310) return true;  // Wood Picaxe
+		return false;
+	}
 	bool isFood(void) {
 		if (itemId == 322 || itemId == 466) return true;                                                                      // Golden Apple
 		if (itemId == 260) return true;                                                                                       // Apple
