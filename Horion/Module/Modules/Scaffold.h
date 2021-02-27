@@ -7,6 +7,8 @@ private:
 	bool tryScaffold(vec3_t blockBelow);
 	bool findBlock();
 
+	SettingEnum Mode;
+
 public:
 	Scaffold();
 	~Scaffold();

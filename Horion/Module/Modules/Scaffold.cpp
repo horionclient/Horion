@@ -4,7 +4,9 @@
 
 Scaffold::Scaffold() : IModule(VK_NUMPAD1, Category::WORLD, "Automatically build blocks beneath you") {
 	registerBoolSetting("Spoof", &this->spoof, this->spoof);
-	registerBoolSetting("Staircase Mode", &this->staircaseMode, this->staircaseMode);
+	//registerBoolSetting("Staircase Mode", &this->staircaseMode, this->staircaseMode);
+	Mode = SettingEnum(this).addEntry(EnumEntry("Normal", 1)).addEntry(EnumEntry("Staircase", 2));
+	registerEnumSetting("Mode", &this->Mode, 0);
 }
 
 Scaffold::~Scaffold() {
@@ -96,7 +98,7 @@ void Scaffold::onTick(C_GameMode* gm) {
 
 
 
-	if (this->staircaseMode) {
+	if (this->Mode.selected == 1) {
 		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
 		blockBelow.y -= g_Data.getLocalPlayer()->height;
 		blockBelow.y -= 1.5f;
