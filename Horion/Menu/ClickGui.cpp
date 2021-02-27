@@ -42,6 +42,7 @@ static const MC_Color selectedModuleColor = MC_Color(30, 110, 200);
 static const MC_Color selectedSettingColor1 = MC_Color(20, 100, 195);
 static const MC_Color selectedSettingColor2 = MC_Color(40, 120, 205);
 static const MC_Color moduleColor = MC_Color(15, 30, 50);
+static const MC_Color activeModuleColor = MC_Color(32, 64, 107);
 static const MC_Color SettingColor1 = MC_Color(10, 25, 45);
 static const MC_Color SettingColor2 = MC_Color(20, 35, 55);
 
@@ -252,7 +253,7 @@ void ClickGui::renderCategory(Category category) {
 						shouldToggleLeftClick = false;
 					}
 				} else {
-					DrawUtils::fillRectangle(rectPos, moduleColor, backgroundAlpha);
+					DrawUtils::fillRectangle(rectPos, mod->isEnabled() ? activeModuleColor : moduleColor, backgroundAlpha);
 				}
 			}
 
