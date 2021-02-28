@@ -5,7 +5,19 @@
 Scaffold::Scaffold() : IModule(VK_NUMPAD1, Category::WORLD, "Automatically build blocks beneath you") {
 	registerBoolSetting("Spoof", &this->spoof, this->spoof);
 	//registerBoolSetting("Staircase Mode", &this->staircaseMode, this->staircaseMode);
+
+
+	//remove this line once settingEnum is updated:
 	Mode = SettingEnum(this).addEntry(EnumEntry("Normal", 1)).addEntry(EnumEntry("Staircase", 2));
+
+
+	//and activate this block when settingEnum is updated:
+	/*Mode = SettingEnum(this,
+		{
+			{"Normal", 1},
+			{"Staircase", 2}
+		}
+	);*/
 	registerEnumSetting("Mode", &this->Mode, 0);
 }
 
