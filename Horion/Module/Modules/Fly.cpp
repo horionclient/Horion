@@ -1,28 +1,29 @@
 #include "Fly.h"
 
+#define FlyMode 0
+#define CubeMode 1
+
 Fly::Fly() : IModule(0, Category::MOVEMENT, "Enables fly like in creative mode") {
-	mode = (*new SettingEnum(this)).addEntry(EnumEntry("Fly", 1)).addEntry(EnumEntry("CubeGlide", 2));
+	mode = SettingEnum(this,
+							{
+								{"Fly", 1},
+								{"Cube glide", 2}
+							});
 	registerEnumSetting("Mode", &mode, 0);
 	registerFloatSetting("CubeGlide Speed", &this->speed, this->speed, 1.f, 3.f);
 }
-
 Fly::~Fly() {
 }
-
-
-
 const char* Fly::getModuleName() {
 	return ("Fly");
 }
 
 bool Fly::isFlashMode() {
 	switch (mode.selected) {
-	case 0:
-		return false;
-		break;
-	case 1:
-		return true;
-		break;
+		case CubeMode:
+			return true;
+		default:
+			return false;
 	}
 }
 
@@ -37,10 +38,10 @@ void Fly::onTick(C_GameMode* gm) {
 	gm->player->canFly = true;
 
 	switch (mode.selected) {
-	case 0:
+	case FlyMode:
 		gm->player->canFly = true;
 		break;
-	case 1:
+	case CubeMode:
 		float calcYaw = (gm->player->yaw + 90) * (PI / 180);
 
 		gameTick++;
@@ -76,12 +77,13 @@ void Fly::onTick(C_GameMode* gm) {
 
 void Fly::onDisable() {
 	switch (mode.selected) {
-	case 0:
-		if (g_Data.getLocalPlayer() != nullptr)
-			if (g_Data.getLocalPlayer()->gamemode != 1)
-				g_Data.getLocalPlayer()->canFly = false;
-		break;
-	case 1:
-		g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
+		case FlyMode:
+			if (g_Data.getLocalPlayer() != nullptr)
+				if (g_Data.getLocalPlayer()->gamemode != 1)
+					g_Data.getLocalPlayer()->canFly = false;
+			break;
+		case CubeMode:
+			g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
+			break;
 	}
 }

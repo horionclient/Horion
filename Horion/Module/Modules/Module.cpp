@@ -10,6 +10,15 @@ EnumEntry::EnumEntry(const std::string _name, const unsigned char value) {
 	name = _name;
 	val = value;
 }
+EnumEntry::EnumEntry(std::tuple<int, std::string> value) {
+	val = std::get<0>(value);
+	name = std::get<1>(value);
+}
+EnumEntry::EnumEntry (std::tuple<int, std::string, void*> value) {
+	val = std::get<0>(value);
+	name = std::get<1>(value);
+	ptr = std::get<2>(value);
+}
 std::string EnumEntry::GetName() {
 	return name;
 }
@@ -25,6 +34,10 @@ SettingEnum::SettingEnum(std::vector<EnumEntry> entr, IModule* mod) {
 		return rhs.GetValue() < lhs.GetValue();
 	});
 }
+SettingEnum::SettingEnum(IModule* mod, std::vector<EnumEntry> entr) {
+	owner = mod;
+	Entrys = entr;
+}
 SettingEnum::SettingEnum(IModule* mod) {
 	owner = mod;
 }
@@ -34,6 +47,8 @@ SettingEnum& SettingEnum::addEntry(EnumEntry entr) {
 	bool SameVal = false;
 	for (auto it = this->Entrys.begin(); it != this->Entrys.end(); it++) {
 		SameVal |= it->GetValue() == etr.GetValue();
+		if (SameVal)
+			break;
 	}
 	if (!SameVal) {
 		Entrys.push_back(etr);
@@ -146,7 +161,7 @@ void IModule::registerEnumSetting(std::string name, SettingEnum* ptr, int defaul
 	setting->minValue = minVal;
 
 	// Enum data
-	setting->extraData = ptr;
+	setting->extraData = ptr; // Why is this not using maxVal like inteded?
 
 	strcpy_s(setting->name, 19, name.c_str());
 	settings.push_back(setting);

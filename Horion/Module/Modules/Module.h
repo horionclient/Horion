@@ -1,4 +1,5 @@
 #pragma once
+#include <tuple>
 #include "../../../Memory/GameData.h"
 #include "../../FriendList/FriendList.h"
 #include "../../../Utils/keys.h"
@@ -18,18 +19,21 @@ enum class Category {
 
 struct EnumEntry {
 private:
-	/*const */ std::string name;
-	/*const */ unsigned char val;
+	/*const */std::string name;
+	/*const */unsigned char val;
 
 public:
 	/// <summary>Use this however you want</summary>
 	void* ptr = nullptr;
+
 	EnumEntry(const std::string _name, const unsigned char value);
+
+	/*operator*/ EnumEntry (std::tuple<int, std::string> value);
+	/*operator*/ EnumEntry (std::tuple<int, std::string, void*> value);
+
 	std::string GetName();
 	unsigned char GetValue();
 };
-
-struct AddResult;
 
 class SettingEnum {
 private:
@@ -40,6 +44,7 @@ public:
 	int selected = -1;
 
 	SettingEnum(std::vector<EnumEntry> entr, IModule* mod = nullptr);
+	SettingEnum(IModule* mod, std::vector<EnumEntry> entr);
 	SettingEnum(IModule* mod = nullptr);
 	//SettingEnum();
 	SettingEnum& addEntry(EnumEntry entr);
@@ -55,7 +60,7 @@ enum class ValueType {
 	INT_T,
 	BOOL_T,
 	TEXT_T,
-	ENUM_T
+	ENUM_T,
 };
 
 struct SettingValue {
@@ -101,8 +106,8 @@ protected:
 	IModule(int key, Category c, const char* tooltip);
 
 	void registerFloatSetting(std::string name, float* floatPtr, float defaultValue, float minValue, float maxValue);
-	void registerIntSetting(std::string name, int* intpTr, int defaultValue, int minValue, int maxValue);
 	void registerEnumSetting(std::string name, SettingEnum* intPtr, int defaultValue);
+	void registerIntSetting(std::string name, int* intPtr, int defaultValue, int minValue, int maxValue);
 	void registerBoolSetting(std::string name, bool* boolPtr, bool defaultValue);
 
 	void clientMessageF(const char* fmt, ...);
