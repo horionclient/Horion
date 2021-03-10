@@ -2,10 +2,7 @@
   <img src="https://raw.githubusercontent.com/horionclient/Horion/master/.github/horion-banner.png"/>
 </p>
 <br/>
-
-**Horion** is a minecraft bedrock edition utility mod designed to enhance a users gameplay. We do not take responsibility.
-If you want to contribute to this project, feel free to fork this repository and submit a pull request.
-**As of 09/01/20, this project is under no active development by the horion team anymore. We will still review PRs.**
+**The Horion Project has been discontinued and this github will no longer function. The data has been removed from the github.**
 
 [![Discord](https://img.shields.io/discord/732833913705201736?label=chat&logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/pS3pKkQ)
 [![Download the injector](https://img.shields.io/badge/download-injector-brightgreen?style=for-the-badge "Download the injector")](https://horionbeta.club/injector "Download the injector")
