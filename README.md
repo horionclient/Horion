@@ -5,6 +5,9 @@
 
 **Horion** is a minecraft bedrock edition utility mod designed to enhance a users gameplay. We do not take responsibility.
 If you want to contribute to this project, feel free to fork this repository and submit a pull request.
+
+also no, horion isnt updated yet stop asking noob - thatong
+
 **As of 09/01/20, this project is under no active development by the horion team anymore. We will still review PRs.**
 
 [![Discord](https://img.shields.io/discord/732833913705201736?label=chat&logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/WPe3WeNtgv)
