@@ -33,6 +33,9 @@ void AutoSneak::onDisable() {
 }
 
 void AutoSneak::onEnable() {
+	if (g_Data.getLocalPlayer() == nullptr)
+		return; //fixed crash
+	
 	if (doSilent) {
 		C_PlayerActionPacket p;
 		p.action = 11;  //start crouch packet
