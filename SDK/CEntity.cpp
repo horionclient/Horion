@@ -11,7 +11,7 @@ C_InventoryTransactionManager *C_Entity::getTransactionManager() {
 	return reinterpret_cast<C_InventoryTransactionManager *>(reinterpret_cast<__int64>(this) + offset);
 }
 C_PlayerInventoryProxy *C_Player::getSupplies() {
-	static unsigned int offset = 0xBE8;
+	static unsigned int offset = 0xBE0;
 	/*if (offset == 0) {
 		offset = *reinterpret_cast<int *>(FindSignature("48 8B 51 ?? 4C 8B 82 ?? ?? ?? ?? 48 8B B2 ?? ?? ?? ?? 41 80 B8") + 7);  // GameMode::startDestroyBlock -> GameMode::_canDestroy -> getSupplies
 	}*/
