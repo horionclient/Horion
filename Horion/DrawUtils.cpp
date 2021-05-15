@@ -35,7 +35,7 @@ meshHelper_renderImm_t meshHelper_renderImm;
 bool hasInitializedSigs = false;
 void initializeSigs() {
 	
-	tess_vertex = reinterpret_cast<tess_vertex_t>(FindSignature("4C 8B DC 57 48 81 EC ?? ?? ?? ?? 41 0F"));
+	tess_vertex = reinterpret_cast<tess_vertex_t>(FindSignature("40 57 48 83 EC ? 0F 29 74 24 ? 0F 29 7C 24"));
 	meshHelper_renderImm = reinterpret_cast<meshHelper_renderImm_t>(FindSignature("40 53 56 57 48 81 EC ?? ?? ?? ?? 49 8B F0 48 8B DA"));
 	//mce__VertexFormat__disableHalfFloats = reinterpret_cast<mce__VertexFormat__disableHalfFloats_t>(FindSignature("40 53 48 83 EC ?? 48 8B D9 C7 81 ?? ?? ?? ?? 00 00 00 00 C6 81 ?? ?? ?? ?? 00"));
 	//Tessellator__initializeFormat = reinterpret_cast<Tessellator__initializeFormat_t>(FindSignature("48 89 74 24 ?? 57 48 83 EC 20 4C 8B 41 ?? 48 8B FA 4C 2B 41 ?? 48 8B F1 48 83 C1 08 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 49 F7 E8 48 D1 FA 48 8B C2 48 C1 E8 3F 48 03 D0 48 3B FA"));
@@ -54,7 +54,8 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* gui) {
 	ElapsedMicroseconds.QuadPart *= 1000000;
 	int ticksPerSecond = 20;
 	if(g_Data.getClientInstance()->minecraft)
-		ticksPerSecond = (int)*g_Data.getClientInstance()->minecraft->timer;
+		if (g_Data.getClientInstance()->minecraft->timer != nullptr)
+			ticksPerSecond = (int)*g_Data.getClientInstance()->minecraft->timer;
 	if(ticksPerSecond < 1)
 		ticksPerSecond = 1;
 	ElapsedMicroseconds.QuadPart /= Frequency.QuadPart / ticksPerSecond;
