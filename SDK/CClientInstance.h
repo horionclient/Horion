@@ -138,28 +138,25 @@ public:
 
 class MinecraftGame {
 private:
-	char filler[0x128];  //0x0000
+	char filler[256];  //0x0000
 public:
-	C_FontRepository* fontRepository; //0x128
+	C_FontRepository* fontRepository;  //0xF8
 private:
-	char pad_0x148[0x28]; //0x130
+	char pad_0x128[0x1F0];  //0x100
 public:
-	C_FontRepository* fontRepository1;  //0x158
-private:
-	char pad_0x128[0x100];  //0x160
-public:
-	bool canUseKeys;  //0x260
+	bool canUseKeys;  //0x2F0
+	// 0x2F0
 
 	C_Font* getTheGoodFontThankYou() {
 		return fontRepository->fontList->fontEntries[7].font;
 	};
 
 	C_Font* getOldFont() {
-		return fontRepository1->fontList->fontEntries[7].font;
+		return fontRepository->fontList->fontEntries[7].font;
 	};
 
 	C_Font* getTheBetterFontYes() {
-		return fontRepository->fontList->fontEntries[0].font;
+		return fontRepository->fontList->fontEntries[3].font;
 	}
 
 	const bool canUseKeybinds() {
