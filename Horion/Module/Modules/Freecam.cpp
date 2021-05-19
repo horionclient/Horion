@@ -19,6 +19,7 @@ void Freecam::onTick(C_GameMode* gm) {
 void Freecam::onEnable() {
 	if (g_Data.getLocalPlayer() != nullptr) {
 		oldPos = *g_Data.getLocalPlayer()->getPos();
+		g_Data.getLocalPlayer()->canFly = true;
 	}
 }
 
