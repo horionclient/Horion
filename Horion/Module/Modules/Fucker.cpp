@@ -7,7 +7,13 @@ Fucker::Fucker() : IModule(VK_NUMPAD9, Category::MISC, "Destroys beds around you
 	registerBoolSetting("Cakes", &this->cakes, this->cakes);
 	registerBoolSetting("Treasures", &this->treasures, this->treasures);
 	registerBoolSetting("Chests", &this->chests, this->chests);
-	registerBoolSetting("Barrels", &this->barrels, this->barrels);
+	registerBoolSetting("Redstone", &this->redstone, this->redstone);
+	registerBoolSetting("Diamond", &this->diamond, this->diamond);
+	registerBoolSetting("Emerald", &this->emerald, this->emerald);
+	registerBoolSetting("Gold", &this->gold, this->gold);
+	registerBoolSetting("Iron", &this->iron, this->iron);
+	registerBoolSetting("Lapis", &this->lapis, this->lapis);
+
 }
 
 Fucker::~Fucker() {
@@ -31,6 +37,13 @@ void Fucker::onTick(C_GameMode* gm) {
 				if (id == 92 && this->cakes) destroy = true;     // Cakes
 				if (id == 54 && this->chests) destroy = true;    // Chests
 				if (id == 458 && this->barrels) destroy = true;  // Barrels
+				if (id == 73 && this->redstone) destroy = true;  // Redstone
+				if (id == 56 && this->diamond) destroy = true;  // Diamond
+				if (id == 129 && this->emerald) destroy = true;   // Emerald
+				if (id == 14 && this->gold) destroy = true;  // Gold
+				if (id == 15 && this->iron) destroy = true;   // Iron
+				if (id == 21 && this->lapis) destroy = true;  // Lapis
+				if (id == 74 && this->redstone) destroy = true;  // Redstone
 
 				if (destroy) {
 					gm->destroyBlock(&blockPos, 0);
