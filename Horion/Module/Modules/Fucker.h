@@ -11,6 +11,12 @@ private:
 	bool treasures = true;
 	bool chests = false;
 	bool barrels = false;
+	bool redstone = false;
+	bool diamond = false;
+	bool emerald = false;
+	bool gold = false;
+	bool iron = false;
+	bool lapis = false;
 
 public:
 	Fucker();
