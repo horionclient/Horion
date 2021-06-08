@@ -32,7 +32,8 @@ enum GAMEVERSION : int {
 	g_1_16_0 = 0,
 	g_1_16_1 = 1,
 	g_1_16_10 = 10,
-	g_1_16_20 = 20
+	g_1_16_20 = 20,
+	g_1_16_221 = 221
 };
 
 struct HorionDataPacket {
