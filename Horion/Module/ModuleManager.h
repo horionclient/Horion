@@ -22,6 +22,7 @@
 #include "Modules/Fucker.h"
 #include "Modules/Bhop.h"
 #include "Modules/Blink.h"
+#include "Modules/FastFall.h"
 #include "Modules/BowAimbot.h"
 #include "Modules/AntiVoid.h"
 #include "Modules/ChestAura.h"
