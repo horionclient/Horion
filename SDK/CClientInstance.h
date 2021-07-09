@@ -408,6 +408,8 @@ private:
 	virtual __int64 getSkinRepository(void) const;
 	virtual __int64 getSkinRepositoryClientInterface(void) const;
 	virtual __int64 sub_140630650(void) const;
+	virtual void test0();
+	virtual void test1();
 	virtual __int64 sub_1400CA400(void) const;
 	virtual __int64 getTextures(void) const;
 	virtual __int64 getStoreCacheTextures(void) const;
@@ -422,6 +424,7 @@ public:
 	virtual bool isAdhocEnabled(void) const;
 
 private:
+	virtual char sub_1406A1620(void) const;
 	virtual __int64 linkToOffer(std::string const&, bool, std::string const&, __int64);
 	virtual __int64 linkToAllOffers(std::string const&, std::string const&, bool, std::string const&, bool);
 	virtual __int64 navigateToBrazeScreen(std::string const&, std::string const&, std::string const&, std::string const&, std::string const&, std::string const&, std::string const&);
@@ -482,6 +485,7 @@ public:
 	virtual bool isShowingDeathScreen(void) const;
 	virtual bool isScreenReplaceable(void) const;
 	virtual bool isInGame(void) const;
+	virtual bool sub_14070D6F0(void) const;
 	virtual bool isInRealm(void);
 
 private:
@@ -679,6 +683,10 @@ public:
 	virtual void setSuspendInput(bool);
 	virtual void setDisableInput(bool);
 
+private:
+	virtual void subFunction(void) const;
+
+public:
 	virtual void grabMouse(void);
 	virtual void releaseMouse(void);
 	virtual void refocusMouse(void);

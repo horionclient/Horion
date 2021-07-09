@@ -62,11 +62,11 @@ void Hooks::Init() {
 			if (localPlayerVtable == 0x0 || sigOffset == 0x0)
 				logF("C_LocalPlayer signature not working!!!");
 			else {
-				g_Hooks.Actor_isInWaterHook = std::make_unique<FuncHook>(localPlayerVtable[65], Hooks::Actor_isInWater);
+				/*g_Hooks.Actor_isInWaterHook = std::make_unique<FuncHook>(localPlayerVtable[65], Hooks::Actor_isInWater);
 
 				g_Hooks.Actor_startSwimmingHook = std::make_unique<FuncHook>(localPlayerVtable[182], Hooks::Actor_startSwimming);
 
-				g_Hooks.Actor_ascendLadderHook = std::make_unique<FuncHook>(localPlayerVtable[333], Hooks::Actor_ascendLadder);
+				g_Hooks.Actor_ascendLadderHook = std::make_unique<FuncHook>(localPlayerVtable[333], Hooks::Actor_ascendLadder);*/
 			}
 		}
 
@@ -189,7 +189,7 @@ void Hooks::Init() {
 		void* _sendChatMessage = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B D9 48 83 B9"));
 		g_Hooks.ChatScreenController_sendChatMessageHook = std::make_unique<FuncHook>(_sendChatMessage, Hooks::ChatScreenController_sendChatMessage);
 
-		void* _renderText = reinterpret_cast<void*>(FindSignature("48 8B C4 48 89 58 18 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 0F 29 70 ?? 0F 29 78 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 4C 8B F2 48 89 54 24"));
+		void* _renderText = reinterpret_cast<void*>(FindSignature("48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 B8 0F 29 78 A8 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA 48 89 54 24 ? 4C 8B E9"));
 		g_Hooks.RenderTextHook = std::make_unique<FuncHook>(_renderText, Hooks::RenderText);
 		g_Hooks.RenderTextHook->enableHook();
 
@@ -349,7 +349,7 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 	using addCommandToChatHistory_t = void(__fastcall*)(uint8_t*, TextHolder*);
 	static addCommandToChatHistory_t addCommandToChatHistory = reinterpret_cast<addCommandToChatHistory_t>(FindSignature("48 89 5C 24 08 48 89 74 24 10 57 48 83 EC ?? 48 8B 99 ?? ?? ?? ?? 48 8B F2 80"));
 
-	TextHolder* messageHolder = reinterpret_cast<TextHolder*>(_this + 0xA70);
+	TextHolder* messageHolder = reinterpret_cast<TextHolder*>(_this + 0xA98);
 	if (messageHolder->getTextLength() > 0) {
 		char* message = messageHolder->getText();
 
@@ -359,14 +359,14 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 			addCommandToChatHistory(_this, messageHolder);  // This will put the command in the chat history (Arrow up/down)
 
 			__int64 v17 = 0;
-			__int64* v15 = *(__int64**)(*(__int64*)(_this + 0xA58) + 0x20i64);
+			__int64* v15 = *(__int64**)(*(__int64*)(_this + 0xA80) + 0x20i64);
 			__int64 v16 = *v15;
 
 			if (*(BYTE*)(_this + 0xA9A))
-				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x990))(v15);
+				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x9B8))(v15);
 			else
-				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x988))(v15);
-			*(DWORD*)(_this + 0xA94) = *(DWORD*)(v17 + 0x20);
+				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x9B0))(v15);
+			*(DWORD*)(_this + 0xABC) = *(DWORD*)(v17 + 0x20);
 
 			messageHolder->resetWithoutDelete();
 			return;
@@ -415,7 +415,9 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 
 __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	static auto oText = g_Hooks.RenderTextHook->GetFastcall<__int64, __int64, C_MinecraftUIRenderContext*>();
-	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
+
+	C_ClientInstance* op = g_Data.getClientInstance();
+	C_GuiData* dat = op->getGuiData();
 
 	DrawUtils::setCtx(renderCtx, dat);
 

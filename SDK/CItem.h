@@ -37,7 +37,7 @@ class C_Item {
 
 	
 private:
-	char pad_0028[136];     //0x0028
+	char pad_0008[0x70];     //0x0008
 public:
 	int16_t maxStackSize;   //0x0090
 	int16_t itemId;         //0x0092
@@ -261,6 +261,17 @@ public:
 		auto val = *reinterpret_cast<__int64***>(reinterpret_cast<__int64>(this) + 0x1D0);
 		return val != nullptr && *val != nullptr;
 	}
+};
+
+
+class ItemDescriptor {
+private:
+	char pad_0x0[0x48]; //0x0000
+public:
+	ItemDescriptor() {
+		memset(this, 0x0, sizeof(ItemDescriptor));
+	}
+	ItemDescriptor(int id, int16_t itemData);
 };
 
 class C_ItemStack {

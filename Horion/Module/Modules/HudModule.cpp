@@ -73,6 +73,7 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		}
 	}
 	{  // ArmorHUD
+		/*
 		if (!(g_Data.getLocalPlayer() == nullptr || !this->displayArmor || !GameData::canUseMoveKeys())) {
 			static float constexpr scale = 1.f;
 			static float constexpr opacity = 0.25f;
@@ -92,7 +93,7 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			//x += scale * spacing;
 			if (item->isValid())
 				DrawUtils::drawItem(item, vec2_t(x, y), opacity, scale, item->isEnchanted());
-		}
+		}*/
 	}
 	{  // Keystrokes
 		if (!(g_Data.getLocalPlayer() == nullptr || !this->keystrokes || !GameData::canUseMoveKeys())) {

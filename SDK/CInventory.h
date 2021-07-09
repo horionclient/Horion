@@ -47,6 +47,7 @@ public:
 	virtual __int64 addAdditionalSaveData();   //  CompoundTag &
 	virtual __int64 createTransactionContext();  // std::function<void(C_Inventory&, int, const C_ItemStack&, const C_ItemStack&)>, std::function<void(void)>
 	virtual __int64 initializeContainerContents(C_BlockSource&);
+	virtual char isEmpty();
 	virtual __int64 add(C_ItemStack&);
 	virtual __int64 canAdd(const C_ItemStack&);
 	//virtual void unknown();

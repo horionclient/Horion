@@ -84,3 +84,9 @@ C_Item ***ItemRegistry::lookUpByName(void *a1, void *a2, TextHolder &text) {
 	static ItemRegistry__lookupByName_t ItemRegistry__lookupByNameF = reinterpret_cast<ItemRegistry__lookupByName_t>(FindSignature("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B EA 48 89 54 24 ? 48 89 4C 24 ? 48 89 4D"));
 	return ItemRegistry__lookupByNameF(a1, a2, text);
 }
+
+ItemDescriptor::ItemDescriptor(int id, int16_t itemData) {
+	using ItemDescriptor__ItemDescriptor_t = ItemDescriptor*(__fastcall *)(ItemDescriptor*,int,int16_t);
+	static ItemDescriptor__ItemDescriptor_t func = reinterpret_cast<ItemDescriptor__ItemDescriptor_t>(FindSignature("48 89 5C 24 ? 55 56 57 48 83 EC ? 33 ED 48 8B D9 48 89 29 41 8B F8 48 89 69 ? 8B F2 48 89 69 ? 66 89 69 ? C6 41"));
+	func(this, id, itemData);
+}
