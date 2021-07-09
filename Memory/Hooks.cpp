@@ -416,8 +416,7 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	static auto oText = g_Hooks.RenderTextHook->GetFastcall<__int64, __int64, C_MinecraftUIRenderContext*>();
 
-	C_ClientInstance* op = g_Data.getClientInstance();
-	C_GuiData* dat = op->getGuiData();
+	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
 
 	DrawUtils::setCtx(renderCtx, dat);
 
