@@ -36,6 +36,7 @@ EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enc
 	enchantMap["piercing"] = 34;
 	enchantMap["luck_of_sea"] = 23;
 	enchantMap["lure"] = 24;
+	enchantMap["soul_speed"] = 36;
 }
 
 EnchantCommand::~EnchantCommand() {
