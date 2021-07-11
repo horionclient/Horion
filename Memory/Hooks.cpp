@@ -257,7 +257,7 @@ void Hooks::Init() {
 		void* RakNetInstance__tick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 48 89 74 24 18 55 57 41 54 41 56 41 57 48 8D ?? 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 8B F9 45 33 E4 4C"));
 		g_Hooks.RakNetInstance_tickHook = std::make_unique<FuncHook>(RakNetInstance__tick, Hooks::RakNetInstance_tick);
 
-		void* ConnectionRequest__create = reinterpret_cast<void*>(FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 49 8B D9 4D 8B F8"));
+		void* ConnectionRequest__create = reinterpret_cast<void*>(FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 49 8B D9"));
 		g_Hooks.ConnectionRequest_createHook = std::make_unique<FuncHook>(ConnectionRequest__create, Hooks::ConnectionRequest_create);
 
 		void* PaintingRenderer__renderAddr = reinterpret_cast<void*>(FindSignature("48 8B C4 57 41 54 41 55 41 56 41 57 48 ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 58 ?? 48 89 68 ?? 48 89 70 ?? 4D 8B F0 4C 8B FA 48 8B F1 B9 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??"));
@@ -269,7 +269,7 @@ void Hooks::Init() {
 		void* _toStyledString = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 81 EC ? ? ? ? 49 8B D8 48 8B F9"));
 		g_Hooks.toStyledStringHook = std::make_unique<FuncHook>(_toStyledString, Hooks::toStyledString);
 		 
-		void* InGamePlayScreen___renderLevel = reinterpret_cast<void*>(FindSignature("48 89 5C 24 20 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 0F 29 B4 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 49 8B D8 4C"));
+		void* InGamePlayScreen___renderLevel = reinterpret_cast<void*>(FindSignature("48 89 5C 24 20 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 0F 29 B4 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 49 8B D8"));
 		g_Hooks.InGamePlayScreen___renderLevelHook = std::make_unique<FuncHook>(InGamePlayScreen___renderLevel, Hooks::InGamePlayScreen___renderLevel);
 
 #ifdef TEST_DEBUG
@@ -280,7 +280,7 @@ void Hooks::Init() {
 		void* localPlayerUpdateFromCam = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 80 BA"));
 		g_Hooks.LocalPlayer__updateFromCameraHook = std::make_unique<FuncHook>(localPlayerUpdateFromCam, Hooks::LocalPlayer__updateFromCamera);
 
-		void* MobIsImmobile = reinterpret_cast<void*>(FindSignature("40 53 48 83 EC ? 48 8B D9 E8 ? ? ? ? 84 C0 75 ? 48 8B 03 48 8B CB"));
+		void* MobIsImmobile = reinterpret_cast<void*>(FindSignature("40 53 48 83 EC 20 80 B9 ? ? ? ? ? 48 8B D9 75"));
 		g_Hooks.Mob__isImmobileHook = std::make_unique<FuncHook>(MobIsImmobile, Hooks::Mob__isImmobile);
 
 		void* renderNameTags = reinterpret_cast<void*>(FindSignature("4C 8B DC 49 89 5B ? 55 56 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 41 0F 29 73 ? 41 0F 29 7B ? 45 0F 29 43 ? 48 8B 05"));
@@ -976,9 +976,9 @@ void Hooks::Actor_lerpMotion(C_Entity* _this, vec3_t motVec) {
 
 		if (!networkSender) {
 			if (g_Data.getVersion() == GAMEVERSION::g_1_16_0)
-				networkSender = reinterpret_cast<void*>(6 + FindSignature("FF 90 ?? ?? ?? ?? 4C 8D 9C 24 ?? ?? ?? ?? 49 8B 5B 18 49 8B 73 28 49 8B E3 5F C3"));
+				networkSender = reinterpret_cast<void*>(6 + FindSignature("FF 90 ?? ?? ?? ?? 4C 8D 9C 24 ?? ?? ?? ?? 49 8B 5B 18 49 8B 73"));
 			else
-				networkSender = reinterpret_cast<void*>(3 + FindSignature("FF 50 ? 41 80 BE ? ? ? ? ? 0F 85 ? ? ? ? EB 76"));
+				networkSender = reinterpret_cast<void*>(3 + FindSignature("FF 50 ? 41 80 BE ? ? ? ? ? 0F"));
 		}
 		
 		if (networkSender == _ReturnAddress()) {
@@ -1009,7 +1009,7 @@ void Hooks::PleaseAutoComplete(__int64 a1, __int64 a2, TextHolder* text, int a4)
 	if (syncShit == nullptr) {
 		uintptr_t sigOffset = 0;
 		// sig of function: (present 3 times in the exe)
-		sigOffset = FindSignature("48 8B D7 48 8B 8B ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B 9C") + 11;
+		sigOffset = FindSignature("48 8B D7 48 8B 8B ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B") + 11;
 		auto funcOffset = *reinterpret_cast<int*>(sigOffset);
 		sigOffset += 4 + funcOffset;
 
@@ -1181,7 +1181,7 @@ float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3) {
 	static auto oGetFov = g_Hooks.LevelRendererPlayer_getFovHook->GetFastcall<float, __int64, float, bool>();
 	static void* renderItemInHand = reinterpret_cast<void*>(FindSignature("0F 28 C8 F3 0F 59 0D ?? ?? ?? ?? 41 0F 28 F9"));
 
-	static void* setupCamera = reinterpret_cast<void*>(FindSignature("44 0F 28 D8 F3 44 0F 59 1D ?? ?? ?? ?? 0F"));
+	static void* setupCamera = reinterpret_cast<void*>(FindSignature("44 0F 28 D8 F3 44 0F 59 1D ?? ?? ?? ??"));
 
 	static auto zoomModule = moduleMgr->getModule<Zoom>();
 
