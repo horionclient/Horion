@@ -1,4 +1,4 @@
-﻿#include "Hooks.h"
+#include "Hooks.h"
 
 #include "../SDK/Tag.h"
 
@@ -183,7 +183,7 @@ void Hooks::Init() {
 
 	// Signatures
 	{
-		void* surv_tick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 48 89 74 24 18 55 57 41 56 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 8B F9 F3"));
+		void* surv_tick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 55 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 4F 48 8B D9 48 8B 89 ? ? ? ?"));
 		g_Hooks.SurvivalMode_tickHook = std::make_unique<FuncHook>(surv_tick, Hooks::SurvivalMode_tick);
 
 		void* _sendChatMessage = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B D9 48 83 B9"));
@@ -220,7 +220,7 @@ void Hooks::Init() {
 		void* getGameEdition = reinterpret_cast<void*>(FindSignature("8B 91 ?? ?? ?? ?? 85 D2 74 1C 83 EA 01"));
 		g_Hooks.AppPlatform_getGameEditionHook = std::make_unique<FuncHook>(getGameEdition, Hooks::AppPlatform_getGameEdition);
 
-		void* autoComplete = reinterpret_cast<void*>(FindSignature("48 8B C4 55 57 41 56 48 8D 68 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 41 8B F9"));
+		void* autoComplete = reinterpret_cast<void*>(FindSignature("48 8B C4 55 57 41 56 48 8D 68 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 89 58 ?? 48 89 70 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ??"));
 		g_Hooks.PleaseAutoCompleteHook = std::make_unique<FuncHook>(autoComplete, Hooks::PleaseAutoComplete);
 
 		uintptr_t** packetSenderVtable = reinterpret_cast<uintptr_t**>(*(uintptr_t*)g_Data.getClientInstance()->loopbackPacketSender);
@@ -273,7 +273,7 @@ void Hooks::Init() {
 		g_Hooks.InGamePlayScreen___renderLevelHook = std::make_unique<FuncHook>(InGamePlayScreen___renderLevel, Hooks::InGamePlayScreen___renderLevel);
 
 #ifdef TEST_DEBUG
-		void* addAction = reinterpret_cast<void*>(FindSignature("40 56 57 41 54 41 56 41 57 48 83 EC 30 48 C7 44 24 ? ? ? ? ? 48 89 5C 24 ? 48 89 6C 24 ? 45 0F B6 F8 4C 8B F2 48 8B F9 48 8B 01 48 8B 88 ? ? ? ?"));
+		void* addAction = reinterpret_cast<void*>(FindSignature("E8 ? ? ? ? 90 48 8D 4D 80 E8 ? ? ? ? EB"));
 		g_Hooks.InventoryTransactionManager__addActionHook = std::make_unique<FuncHook>(addAction, Hooks::InventoryTransactionManager__addAction);
 #endif
 		
@@ -1179,7 +1179,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 
 float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3) {
 	static auto oGetFov = g_Hooks.LevelRendererPlayer_getFovHook->GetFastcall<float, __int64, float, bool>();
-	static void* renderItemInHand = reinterpret_cast<void*>(FindSignature("0F 28 C8 F3 0F 59 0D ?? ?? ?? ?? 41 0F 28 F9"));
+	static void* renderItemInHand = reinterpret_cast<void*>(FindSignature("0F 28 C8 F3 0F 59 0D ?? ?? ?? ?? 41 0F 28"));
 
 	static void* setupCamera = reinterpret_cast<void*>(FindSignature("44 0F 28 D8 F3 44 0F 59 1D ?? ?? ?? ??"));
 
