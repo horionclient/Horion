@@ -30,7 +30,7 @@ void C_BlockLegacy::liquidGetFlow(vec3_t* flowOut, C_BlockSource* reg, const vec
 	static liquid_getFlow_t liquid_getDepth = nullptr;
 	if(liquid_getDepth == nullptr){
 		if(g_Data.getVersion() == GAMEVERSION::g_1_16_0)
-			liquid_getDepth = reinterpret_cast<liquid_getFlow_t>(FindSignature("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 48 C7 45 ? ? ? ? ? 48 89 58 ? 0F 29 70 ? 0F 29 78 ? 44 0F 29 40 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F1 4C 89 4C 24"));
+			liquid_getDepth = reinterpret_cast<liquid_getFlow_t>(FindSignature("E8 ? ? ? ? 48 8B 4C 24 ? F3 0F 10 01"));
 		else
 			liquid_getDepth = reinterpret_cast<liquid_getFlow_t>(FindSignature("40 55  56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? ?? ?? ?? ?? 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 49 8B F1 4C 89 4C"));
 	}
