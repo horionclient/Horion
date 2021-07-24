@@ -65,7 +65,7 @@ class Hooks {
 private:
 	bool shouldRender = true;
 	char currentScreenName[100];
-		 
+
 public:
 	std::vector<std::shared_ptr<FuncHook>> lambdaHooks;
 
@@ -124,6 +124,7 @@ private:
 	static bool Mob__isImmobile(C_Entity*);
 	static void InventoryTransactionManager__addAction(C_InventoryTransactionManager*, C_InventoryAction &);
 	static void LevelRendererPlayer__renderNameTags(__int64 a1, __int64 a2,TextHolder* name, __int64 a4);
+	static void* Player_tickWorld(C_Player* _this, __int64 tick);
 
 	std::unique_ptr<FuncHook> GameMode_tickHook;
 	std::unique_ptr<FuncHook> SurvivalMode_tickHook;
@@ -176,6 +177,7 @@ private:
 	std::unique_ptr<FuncHook> Mob__isImmobileHook;
 	std::unique_ptr<FuncHook> InventoryTransactionManager__addActionHook;
 	std::unique_ptr<FuncHook> LevelRendererPlayer__renderNameTagsHook;
+	std::unique_ptr<FuncHook> Player_tickWorldHook;
 };
 
 extern Hooks g_Hooks;
@@ -210,7 +212,6 @@ public:
 				logF("MH_EnableHook = %i", ret);
 		}else
 			logF("enableHook() called with nullptr func!");
-		
 	}
 
 	~FuncHook() {

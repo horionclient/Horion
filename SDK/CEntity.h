@@ -141,6 +141,9 @@ private:
 
 public:
 	virtual void setPos(vec3_t const &);
+private:
+	virtual void unknown0();
+public:
 	virtual vec3_t *getPredictedMovementValues(void) const;
 	virtual vec3_t *getPos(void) const;
 	virtual vec3_t *getPosOld(void) const;
@@ -162,7 +165,6 @@ public:
 	virtual __int64 getInterpolatedWalkAnimSpeed(float) const;
 	virtual __int64 getWorldPosition();
 	virtual void checkBlockCollisions(AABB const &);
-	virtual void checkBlockCollisions(void);
 	virtual bool isFireImmune();
 	virtual bool breaksFallingBlocks(void) const;
 	virtual bool blockedByShield(__int64 const &, C_Entity &);
@@ -224,7 +226,8 @@ public:
 	virtual bool isOverWater(void) const;
 
 private:
-	virtual __int64 makeStuckInBlock(float);
+	virtual __int64 setBlockMovementSlowdownMultiplier(vec3_t const&);
+	virtual __int64 resetBlockMovementSlowdownMultiplier(void);
 	virtual __int64 getCameraOffset(void) const;
 	virtual __int64 getShadowHeightOffs(void);
 	virtual __int64 getShadowRadius(void) const;
@@ -263,6 +266,7 @@ public:
 private:
 	virtual bool unk1(void) const;
 	virtual bool unk2(void) const;
+	virtual bool isAffectedByWaterBottle(void);
 
 public:
 	virtual bool canAttack(C_Entity *, bool) const;
