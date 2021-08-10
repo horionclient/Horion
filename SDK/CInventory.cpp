@@ -2,7 +2,7 @@
 #include "../Utils/Utils.h"
 #include "../Memory/GameData.h"
 void C_Inventory::dropSlot(int slot) {
-	// FillingContainer::dropSlot
+	// FillingContainer::dropSlot or Inventory::dropSlot(int,bool,bool,bool) (Maybe)
 	using drop_t = void(__fastcall*)(C_Inventory*, int, char);
 	static drop_t func = reinterpret_cast<drop_t>(FindSignature("85 D2 0F 88 ?? ?? ?? ?? 55 56 57 41 54 41 55 41 56 41 57 48"));
 	if (func != 0)
@@ -66,7 +66,7 @@ void C_Inventory::moveItem(int from, int to = -1) {
 		*item1 = a;
 	}
 }
-
+//Probably PlayerInventory::swapSlots(int,int)
 void C_Inventory::swapSlots(int from, int to) {
 	C_InventoryTransactionManager* manager = g_Data.getLocalPlayer()->getTransactionManager();
 
