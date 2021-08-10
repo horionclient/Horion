@@ -24,7 +24,15 @@ void C_ItemRenderer::renderGuiItemInChunk(C_BaseActorRenderContext* BaseActorRen
 
 	renderGuiItem(this, BaseActorRenderCtx, 2, item, x, y, 1, 1, scale, 0);
 }
-
+//Probably one of these 
+/*
+ItemStack::ItemStack(ItemStack const &)	
+ItemStack::ItemStack(ItemInstance const &)
+ItemStack::ItemStack(Item const &,int,int,CompoundTag const *)
+ItemStack::ItemStack(Item const &,int,int)	
+ItemStack::ItemStack(Item const &,int)	
+ItemStack::ItemStack(Item const &)
+*/
 C_ItemStack::C_ItemStack(const C_ItemStack &src) {
 	memset(this, 0x0, sizeof(C_ItemStack));
 	using ItemStackCopyConstructor_t = void(__fastcall *)(C_ItemStack &, C_ItemStack const &);
@@ -32,6 +40,15 @@ C_ItemStack::C_ItemStack(const C_ItemStack &src) {
 	ItemStackCopyConstructor(*this, src);
 	this->setVtable();
 }
+//Probably one of these 
+/*
+ItemStack::ItemStack(ItemStack const &)	
+ItemStack::ItemStack(ItemInstance const &)
+ItemStack::ItemStack(Item const &,int,int,CompoundTag const *)
+ItemStack::ItemStack(Item const &,int,int)	
+ItemStack::ItemStack(Item const &,int)	
+ItemStack::ItemStack(Item const &)
+*/
 C_ItemStack::C_ItemStack(const Tag &tag) {
 	memset(this, 0x0, sizeof(C_ItemStack));
 	this->setVtable();
@@ -40,6 +57,9 @@ C_ItemStack::C_ItemStack(const Tag &tag) {
 	static ItemStackBase__loadItemF ItemStackBase__loadItem = reinterpret_cast<ItemStackBase__loadItemF>(FindSignature("48 8B C4 55 57 41 56 48 8D 68 A1 48 81 EC ? ? ? ? 48 C7 45 ? ? ? ? ? 48 89 58 ? 48 89 70 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 48 8B DA 48 8B F9 48 89 4D ? 33 D2 41 B8 ? ? ? ? 48 8D 4D A7 E8 ? ? ? ? 48 8D 05 ? ? ? ?"));
 	ItemStackBase__loadItem(this, tag);*/
 }
+//One of these Function
+//ItemStack::fromTag(CompoundTag const &,Level &)
+//ItemStack::fromTag(CompoundTag const &)
 void C_ItemStack::fromTag(const Tag &tag) {
 	using ItemStackBase__loadItemF = void(__fastcall *)(C_ItemStack *, Tag const &);
 	static ItemStackBase__loadItemF fromTag = reinterpret_cast<ItemStackBase__loadItemF>(FindSignature("48 89 5C 24 ? 48 89 74 24 ? 55 57 41 56 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 37 48 8B DA 48 8B F9 48 89 4D 97 0F 57 C0 0F 11 45 A7 0F 11 45 B7 0F 11 45 C7 0F 11 45 D7 0F 11 45 E7 0F 11 45 F7 0F 11 45 07"));
@@ -55,10 +75,12 @@ void C_ItemStack::setUserData(std::unique_ptr<Tag> tag) {
 	setUserData_t setUserData = reinterpret_cast<setUserData_t>(FindSignature("40 53 48 83 EC ? 48 8B DA 48 8D 51 10 48 3B D3 74 1F 48 8B 03 48 C7 03 ? ? ? ?"));
 	setUserData(this, std::move(tag));
 }
+//Probably this ItemStack::reinit(BlockLegacy const &,int)
 void C_ItemStack::reinit(C_BlockLegacy &legacy, int count) {
 	this->setVtable();
 	Utils::CallVFunc<2, void>(this, &legacy, count);
 }
+//Probably this ItemStack::reinit(Item const &,int,int)
 void C_ItemStack::reinit(C_Item &item, int count, int itemData) {
 	this->setVtable();
 	Utils::CallVFunc<3, void>(this, &item, count, itemData);
@@ -84,7 +106,7 @@ C_Item ***ItemRegistry::lookUpByName(void *a1, void *a2, TextHolder &text) {
 	static ItemRegistry__lookupByName_t ItemRegistry__lookupByNameF = reinterpret_cast<ItemRegistry__lookupByName_t>(FindSignature("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B EA 48 89 54 24 ? 48 89 4C 24 ? 48 89 4D"));
 	return ItemRegistry__lookupByNameF(a1, a2, text);
 }
-
+//Probably ItemDescriptor::ItemDescriptor(int,int)
 ItemDescriptor::ItemDescriptor(int id, int16_t itemData) {
 	using ItemDescriptor__ItemDescriptor_t = ItemDescriptor*(__fastcall *)(ItemDescriptor*,int,int16_t);
 	static ItemDescriptor__ItemDescriptor_t func = reinterpret_cast<ItemDescriptor__ItemDescriptor_t>(FindSignature("48 89 5C 24 ? 55 56 57 48 83 EC ? 33 ED 48 8B D9 48 89 29 41 8B F8 48 89 69 ? 8B F2 48 89 69 ? 66 89 69 ? C6 41"));
