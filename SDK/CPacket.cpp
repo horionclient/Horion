@@ -4,6 +4,7 @@
 TextHolder* C_Packet::getName() {
 	return Utils::CallVFunc<2, TextHolder*>(this, new TextHolder());
 }
+//LevelSoundEventPacket::LevelSoundEventPacket(void)
 LevelSoundEventPacket::LevelSoundEventPacket() {
 	static uintptr_t** LevelSoundEventPacketVtable = 0x0;
 	if (LevelSoundEventPacketVtable == 0x0) {
@@ -19,6 +20,7 @@ LevelSoundEventPacket::LevelSoundEventPacket() {
 	vTable = LevelSoundEventPacketVtable;
 	this->entityType.setText("minecraft:player");
 }
+//PlayerAuthInputPacket::PlayerAuthInputPacket(void)
 PlayerAuthInputPacket::PlayerAuthInputPacket() {
 	static uintptr_t** PlayerAuthInputPacketVtable = 0x0;
 	if (PlayerAuthInputPacketVtable == 0x0) {
@@ -66,6 +68,7 @@ PlayerAuthInputPacket::PlayerAuthInputPacket(__int64 entityRuntimeId, vec3_t pos
 	memset(this, 0, sizeof(C_ActorFallPacket));  // Avoid overwriting vtable
 	vTable = ActorFallPacketVtable;
 }*/
+//MobEquipmentPacket::MobEquipmentPacket(void)
 C_MobEquipmentPacket::C_MobEquipmentPacket() {
 	static uintptr_t** MobEquipmentPacketVtable = 0x0;
 	if (MobEquipmentPacketVtable == 0x0) {
@@ -88,6 +91,7 @@ C_MobEquipmentPacket::C_MobEquipmentPacket(__int64 entityRuntimeId, C_ItemStack&
 	if (MobEquimentPacketConstructor != 0)
 		MobEquimentPacketConstructor(this, entityRuntimeId, item, hotbarSlot, inventorySlot, 0);
 }
+//InventoryTransactionPacket::InventoryTransactionPacket(void)
 C_InventoryTransactionPacket::C_InventoryTransactionPacket() {
 	static uintptr_t** InventoryTransactionPacketVtable = 0x0;
 	if (InventoryTransactionPacketVtable == 0x0) {
@@ -102,6 +106,7 @@ C_InventoryTransactionPacket::C_InventoryTransactionPacket() {
 	memset(this, 0, sizeof(C_InventoryTransactionPacket));  // Avoid overwriting vtable
 	vTable = InventoryTransactionPacketVtable;
 }
+//TextPacket::TextPacket(void)
 C_TextPacket::C_TextPacket() {
 	static uintptr_t** textPacketVtable = 0x0;
 	if (textPacketVtable == 0x0) {
@@ -118,6 +123,7 @@ C_TextPacket::C_TextPacket() {
 
 	messageType = 1;  // TYPE_CHAT
 }
+//MovePlayerPacket::MovePlayerPacket(void)
 C_MovePlayerPacket::C_MovePlayerPacket() {
 	static uintptr_t** movePlayerPacketVtable = 0x0;
 	if (movePlayerPacketVtable == 0x0) {
@@ -132,6 +138,7 @@ C_MovePlayerPacket::C_MovePlayerPacket() {
 	memset(this, 0, sizeof(C_MovePlayerPacket));  // Avoid overwriting vtable
 	vTable = movePlayerPacketVtable;
 }
+//Probably MovePlayerPacket::MovePlayerPacket(Player &,Vec3 const &)
 C_MovePlayerPacket::C_MovePlayerPacket(C_LocalPlayer* player, vec3_t pos) {
 	static uintptr_t** movePlayerPacketVtable = 0x0;
 	if (movePlayerPacketVtable == 0x0) {
@@ -153,6 +160,7 @@ C_MovePlayerPacket::C_MovePlayerPacket(C_LocalPlayer* player, vec3_t pos) {
 	onGround = true;
 	mode = 0;
 }
+//PlayerActionPacket::PlayerActionPacket(void)
 C_PlayerActionPacket::C_PlayerActionPacket() {
 	static uintptr_t** playerActionPacketVtable = 0x0;
 	if (playerActionPacketVtable == 0x0) {
