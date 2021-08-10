@@ -10,6 +10,7 @@ C_InventoryTransactionManager *C_Entity::getTransactionManager() {
 	}
 	return reinterpret_cast<C_InventoryTransactionManager *>(reinterpret_cast<__int64>(this) + offset);
 }
+//Player::getSupplies(void)
 C_PlayerInventoryProxy *C_Player::getSupplies() {
 	static unsigned int offset = 0xC88;
 	/*if (offset == 0) {
@@ -17,7 +18,8 @@ C_PlayerInventoryProxy *C_Player::getSupplies() {
 	}*/
 	return *reinterpret_cast<C_PlayerInventoryProxy **>(reinterpret_cast<__int64>(this) + offset);
 }
-void C_LocalPlayer::unlockAchievments() {  // MinecraftEventing::fireEventAwardAchievement
+// MinecraftEventing::fireEventAwardAchievement
+void C_LocalPlayer::unlockAchievments() {
 	using fireEventAward = void(__fastcall *)(void *, int);
 	static fireEventAward fireEventAwardFunc = reinterpret_cast<fireEventAward>(FindSignature("48 85 C9 0F 84 ?? ?? ?? ?? 55 56 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 8B"));
 	for (int i = 0; i < 100; i++)
