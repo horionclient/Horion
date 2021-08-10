@@ -1,6 +1,6 @@
 #include "CGameMode.h"
 #include "../Memory/GameData.h"
-
+// GameMode::destroyBlock(BlockPos const &,uchar) (Not Sure)
 void C_GameMode::survivalDestroyBlockHack(vec3_ti const &block, int face, bool &isDestroyedOut, bool isFirst) {
 	auto p = this->player;
 	p->swing();
