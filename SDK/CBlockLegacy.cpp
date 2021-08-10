@@ -2,16 +2,19 @@
 
 #include "../Memory/GameData.h"
 #include "../Utils/Utils.h"
+//BlockSource::getBlock(int,int,int) or BlockSource::getBlock(BlockPos const &) (Not sure)
 C_Block* C_BlockSource::getBlock(const vec3_ti& block) {
 	using getBlock_t = C_Block*(__fastcall*)(C_BlockSource*, const vec3_ti&);
 	static getBlock_t getBlock = reinterpret_cast<getBlock_t>(FindSignature("48 89 5C 24 ? 57 48 83 EC ? 48 8B F9 48 8B DA 8B 4A"));
 	return getBlock(this, block);
 }
+//BlockSource::getBlockEntity(int,int,int) or BlockSource::getBlockEntity(BlockPos const &) (Not sure)
 C_BlockActor* C_BlockSource::getBlockEntity(const vec3_ti& block) {
 	using getBlockEntity_t = C_BlockActor*(__fastcall*)(C_BlockSource*, const vec3_ti&);
 	static getBlockEntity_t getBlockEntity = reinterpret_cast<getBlockEntity_t>(FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 8B 02 48 8B DA C1 F8 ? 48 8B F1 89 44 24 ? 8B 42"));
 	return getBlockEntity(this, block);
 }
+//BlockSource::getLiquidBlock(BlockPos const &)
 C_Block* C_BlockSource::getLiquidBlock(const vec3_ti& block) {
 	using getLiquidBlock_t = C_Block*(__fastcall*)(C_BlockSource*, const vec3_ti&);
 	static getLiquidBlock_t getLiquidBlock = reinterpret_cast<getLiquidBlock_t>(FindSignature("48 89 5C 24 08 57 48 83 EC ?? 83 7A ?? 00 48 8B DA 48 8B F9 7C"));
