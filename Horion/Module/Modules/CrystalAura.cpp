@@ -80,8 +80,8 @@ void CrystalAura::CPlace(C_GameMode* gm, vec3_t* pos) {
 				C_Block* block = gm->player->region->getBlock(blockPos);
 				C_Block* upperBlock = gm->player->region->getBlock(upperBlockPos);
 				if (block != nullptr) {
-					int blockId = block->toLegacy()->blockId;
-					int upperBlockId = upperBlock->toLegacy()->blockId;
+					auto blockId = block->toLegacy()->blockId;
+					auto upperBlockId = upperBlock->toLegacy()->blockId;
 					if ((blockId == 49 || blockId == 7) && upperBlockId == 0 && CanPlaceC(&blockPos)) {  //Check for awailable block
 						if (!ValidPos) {
 							ValidPos = true;
