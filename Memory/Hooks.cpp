@@ -1365,7 +1365,7 @@ __int64 Hooks::ChestScreenController_tick(C_ChestScreenController* a1) {
 float Hooks::GetGamma(uintptr_t* a1) {
 	static auto fullBrightModule = moduleMgr->getModule<FullBright>();
 	if (fullBrightModule->isEnabled())
-		return 25.f;
+		return fullBrightModule->intensity;
 
 	//Get the normal gamma value
 	float* gamer = (float*)*(a1 + 0x27);
