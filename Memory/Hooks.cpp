@@ -33,8 +33,6 @@ void Hooks::Init() {
 			else {
 				g_Hooks.GameMode_startDestroyBlockHook = std::make_unique<FuncHook>(gameModeVtable[1], Hooks::GameMode_startDestroyBlock);
 
-				g_Hooks.GameMode_tickHook = std::make_unique<FuncHook>(gameModeVtable[9], Hooks::GameMode_tick);
-				
 				g_Hooks.GameMode_getPickRangeHook = std::make_unique<FuncHook>(gameModeVtable[10], Hooks::GameMode_getPickRange);
 				
 				g_Hooks.GameMode_attackHook = std::make_unique<FuncHook>(gameModeVtable[14], Hooks::GameMode_attack);
@@ -183,8 +181,8 @@ void Hooks::Init() {
 
 	// Signatures
 	{
-		void* surv_tick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 48 89 74 24 18 55 57 41 56 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 8B F9 F3"));
-		g_Hooks.SurvivalMode_tickHook = std::make_unique<FuncHook>(surv_tick, Hooks::SurvivalMode_tick);
+		void* player_tickworld = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 0F 29 B4 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 89 55 ?? 48 8B F9"));
+		g_Hooks.Player_tickWorldHook = std::make_unique<FuncHook>(player_tickworld, Hooks::Player_tickWorld);
 
 		void* _sendChatMessage = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B D9 48 83 B9"));
 		g_Hooks.ChatScreenController_sendChatMessageHook = std::make_unique<FuncHook>(_sendChatMessage, Hooks::ChatScreenController_sendChatMessage);
@@ -330,23 +328,18 @@ void Hooks::Enable() {
 	
 }
 
-void Hooks::GameMode_tick(C_GameMode* _this) {
-	static auto oTick = g_Hooks.GameMode_tickHook->GetFastcall<void, C_GameMode*>();
-	oTick(_this);
-
-	GameData::updateGameData(_this);
-	if (_this->player == g_Data.getLocalPlayer() && _this->player != nullptr) {
-		moduleMgr->onTick(_this);
+void* Hooks::Player_tickWorld(C_Player* _this, __int64 unk) {
+	static auto oTick = g_Hooks.Player_tickWorldHook->GetFastcall<void*, C_Player*, __int64>();
+	auto o = oTick(_this, unk);
+	
+	if (_this == g_Data.getLocalPlayer()){
+		// scuffed
+		// TODO: refactor all modules to not use GameMode
+		C_GameMode* gm = *reinterpret_cast<C_GameMode**>(reinterpret_cast<__int64>(_this) + 4656);
+		GameData::updateGameData(gm);
+		moduleMgr->onTick(gm);
 	}
-}
-
-void Hooks::SurvivalMode_tick(C_GameMode* _this) {
-	static auto oTick = g_Hooks.SurvivalMode_tickHook->GetFastcall<void, C_GameMode*>();
-	oTick(_this);
-	GameData::updateGameData(_this);
-	if (_this->player == g_Data.getLocalPlayer() && _this->player != nullptr) {
-		moduleMgr->onTick(_this);
-	}
+	return o;
 }
 
 void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {

@@ -27,7 +27,7 @@ class C_Entity {
 public:
 	uintptr_t *ptrToPtrToEntList;  //0x0008
 private:
-	char pad_0010[0x110];  //0x0010
+	char pad_0010[0x130];  //0x0010
 public:
 	union {
 		struct {
@@ -141,8 +141,9 @@ private:
 
 public:
 	virtual void setPos(vec3_t const &);
+	virtual bool filler(); 
 	virtual vec3_t *getPredictedMovementValues(void) const;
-	virtual vec3_t *getPos(void) const;
+	virtual vec3_t *getPos(void) const; // getStateVectorComponent
 	virtual vec3_t *getPosOld(void) const;
 	virtual vec3_t *getPosExtrapolated(float) const;
 
@@ -162,7 +163,8 @@ public:
 	virtual __int64 getInterpolatedWalkAnimSpeed(float) const;
 	virtual __int64 getWorldPosition();
 	virtual void checkBlockCollisions(AABB const &);
-	virtual void checkBlockCollisions(void);
+	virtual void updateEntityInside();
+	virtual void updateEntityInside(AABB const &);
 	virtual bool isFireImmune();
 	virtual bool breaksFallingBlocks(void) const;
 	virtual bool blockedByShield(__int64 const &, C_Entity &);
@@ -218,13 +220,13 @@ public:
 	virtual bool isInWater(void) const;
 	virtual bool hasEnteredWater(void) const;
 	virtual bool isImmersedInWater(void) const;
-	virtual bool isInWaterOrRain(void) const;
 	virtual bool isInLava(void) const;
 	virtual bool isUnderLiquid(__int64) const;
 	virtual bool isOverWater(void) const;
 
 private:
-	virtual __int64 makeStuckInBlock(float);
+	virtual __int64 setBlockMovementSlowdownMultiplier(vec3_t const&);
+	virtual __int64 resetBlockMovementSlowdownMultiplier();
 	virtual __int64 getCameraOffset(void) const;
 	virtual __int64 getShadowHeightOffs(void);
 	virtual __int64 getShadowRadius(void) const;
@@ -265,6 +267,7 @@ private:
 	virtual bool unk2(void) const;
 
 public:
+	virtual bool isAffectedByWaterBottle(void) const;
 	virtual bool canAttack(C_Entity *, bool) const;
 	virtual void setTarget(C_Entity *);
 

@@ -92,6 +92,7 @@ void GameData::hide() {
 }
 
 void GameData::updateGameData(C_GameMode* gameMode) {
+	
 	retrieveClientInstance();
 	g_Data.localPlayer = g_Data.getLocalPlayer();
 
@@ -101,10 +102,11 @@ void GameData::updateGameData(C_GameMode* gameMode) {
 
 		if (g_Data.localPlayer != nullptr) {
 			C_GuiData* guiData = g_Data.clientInstance->getGuiData();
-
+			
 			
 			if (guiData != nullptr) {
 				{
+					logF("we out hjere");
 					auto vecLock = Logger::GetTextToPrintLock();
 					auto* stringPrintVector = Logger::GetTextToPrint();
 #ifdef _DEBUG
