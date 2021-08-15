@@ -18,11 +18,7 @@ const char* NoSlowDown::getModuleName() {
 void NoSlowDown::onEnable() {
 	if (opcode == 0 || opcode1 == 0) {
 		opcode = reinterpret_cast<uint8_t*>(FindSignature("F3 0F 11 46 ? 45 89 ? ? F3 0F 10 46 ?"));
-
-		if (g_Data.getVersion() == GAMEVERSION::g_1_16_0)
-			opcode1 = reinterpret_cast<uint8_t*>(FindSignature("F3 0F 11 47 ? F3 0F 10 05"));
-		else
-			opcode1 = reinterpret_cast<uint8_t*>(FindSignature("F3 0F 11 46 ? F3 0F 10 4E ?"));
+		opcode1 = reinterpret_cast<uint8_t*>(FindSignature("F3 0F 11 46 ? F3 0F 10 4E ?"));
 	}
 
 	DWORD oldProtect = 0;
@@ -58,11 +54,7 @@ void NoSlowDown::onEnable() {
 void NoSlowDown::onDisable() {
 	if (opcode == 0 || opcode1 == 0) {
 		opcode = reinterpret_cast<uint8_t*>(FindSignature("F3 0F 11 46 ? 45 89 ? ? F3 0F 10 46 ?"));
-
-		if (g_Data.getVersion() == GAMEVERSION::g_1_16_0)
-			opcode1 = reinterpret_cast<uint8_t*>(FindSignature("F3 0F 11 47 ? F3 0F 10 05"));
-		else
-			opcode1 = reinterpret_cast<uint8_t*>(FindSignature("F3 0F 11 46 ? F3 0F 10 4E ?"));
+		opcode1 = reinterpret_cast<uint8_t*>(FindSignature("F3 0F 11 46 ? F3 0F 10 4E ?"));
 	}
 
 	DWORD oldProtect = 0;
@@ -91,10 +83,7 @@ void NoSlowDown::onDisable() {
 		opcode1[1] = 0x0F;
 		opcode1[2] = 0x11;
 
-		if (g_Data.getVersion() == GAMEVERSION::g_1_16_0)
-			opcode1[3] = 0x47;
-		else
-			opcode1[3] = 0x46;
+		opcode1[3] = 0x46;
 
 		opcode1[4] = 0x0C;
 		//opcode[5] = {0xF3; 0x0F, 0x11, 0x46, 0x0C};

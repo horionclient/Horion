@@ -25,23 +25,6 @@ void GameData::retrieveClientInstance() {
 #endif
 }
 
-void GameData::checkGameVersion() {
-	static uintptr_t sigOffset = 0;
-	// near string MinimumCompatibleClientVersion
-	if (sigOffset == 0)
-		sigOffset = FindSignature("48 8D 15 ?? ?? ?? ?? 48 3B CA 74 ?? 48 83 3D ?? ?? ?? ?? 10 48 0F 43 15 ?? ?? ?? ?? 4C 8B 05 ?? ?? ?? ?? E8 ?? ?? ?? ?? 49 8B C7");
-	int offset = *reinterpret_cast<int*>((sigOffset + 3));
-	std::string ver = reinterpret_cast<TextHolder*>(sigOffset + offset + 7)->getText();
-	auto lastDot = ver.find_last_of(".");
-	if (lastDot == std::string::npos || lastDot >= ver.size() - 1) {
-		this->version = static_cast<GAMEVERSION>(0);
-		return;
-	}
-
-	int num = std::stoi(ver.substr(lastDot + 1));
-	this->version = static_cast<GAMEVERSION>(num);
-}
-
 bool GameData::canUseMoveKeys() {
 	MinecraftGame* mc = g_Data.clientInstance->minecraftGame;
 	if (mc == nullptr) {
