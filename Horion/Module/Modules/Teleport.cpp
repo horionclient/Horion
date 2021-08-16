@@ -9,7 +9,7 @@ Teleport::~Teleport() {
 }
 
 const char* Teleport::getModuleName() {
-	return "Teleport";
+	return "ClickTP";
 }
 
 void Teleport::onTick(C_GameMode* gm) {
@@ -31,22 +31,14 @@ void Teleport::onTick(C_GameMode* gm) {
 		tpPos = pos;
 		shouldTP = true;
 
-		g_Data.getGuiData()->displayClientMessageF("%sTeleport position set to %sX: %.1f Y: %.1f Z: %.1f%s. Sneak to teleport!", GREEN, GRAY, pos.x, pos.y, pos.z, GREEN);
+		g_Data.getGuiData()->displayClientMessageF("%sTeleported!", GREEN, GRAY, pos.x, pos.y, pos.z, GREEN);
 	}
 	if (!GameData::isRightClickDown()) 
 		hasClicked = false;
 
-	if (shouldTP && gm->player->isSneaking()) {
+	if (shouldTP) {
 		tpPos.y += (gm->player->getPos()->y - gm->player->getAABB()->lower.y) + 1;  // eye height + 1
 		if (bypass) {
-			/*int dist = (int)gm->player->getPos()->dist(tpPos);
-			int i = (int)dist / 5;
-			for (int n = 0; n < i; n++) {
-				vec3_t offs = tpPos.sub(*gm->player->getPos()).div(i).mul(n);
-				C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), gm->player->getPos()->add(offs));
-				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
-			}
-			gm->player->setPos(tpPos);*/
 			float dist = gm->player->getPos()->dist(tpPos);
 			g_Data.getLocalPlayer()->lerpTo(tpPos, vec2_t(1, 1), (int)fmax((int)dist * 0.1, 1));
 		}
