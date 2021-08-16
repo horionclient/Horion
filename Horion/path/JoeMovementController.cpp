@@ -42,7 +42,7 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 
 	auto walkTarget = end;
 	bool enableNextSegmentSmoothing = true;
-	float dComp = 1;
+	float dComp = 0.5f;
 	vec3_t addedDiff{0, 0, 0};
 
 	// we should probably make seperate classes for each segment type at some point, but im just doing it here for now for faster prototyping
@@ -85,6 +85,7 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 	case DROP: {
 		bool inWater = player->isInWater();
 		if(player->onGround || inWater){
+			dComp = 1;
 			if(fabsf(pPos.y - end.y) < (inWater ? 0.2f : 0.1f) && pPos.sub(end).magnitudexz() < 0.5f && player->velocity.y > -0.1f){// Check for end condition
 				this->stateInfo.nextSegment();
 				break;
@@ -93,16 +94,15 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 					movementHandler->isJumping = 1;
 			}
 		}else{
-			dComp = 4;
-			enableNextSegmentSmoothing = false;	
+			dComp = 3;
 		}
-		if (start.sub(end).magnitudexz() < 1.1f) {
+		/* if (start.sub(end).magnitudexz() < 1.1f) {
 			// hug the wall on drop
 			auto tangent = end.sub(start);
 			tangent.y = 0;
 			walkTarget = start.add(tangent.mul(0.5f + player->width * 0.5f + 0.1f));
 			walkTarget.y = end.y;
-		}
+		}*/
 
 		goto WALK;
 	} break;
@@ -149,7 +149,7 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 			tangent.y = 0;
 			tangent = tangent.normalize();
 			walkTarget = end.sub(tangent.mul(0.4f));
-			dComp = 3;
+			dComp = 2;
 			goto WALK;
 		}
 	} break;
@@ -210,8 +210,8 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 
 		auto pPosD = pPos; // p
 
-		if(!player->onGround && dComp < 4){
-			dComp = 4;
+		if(!player->onGround && dComp < 2){
+			dComp = 2;
 		}
 
 		pPosD = pPosD.add(player->velocity.mul(dComp, 0, dComp));  // d
