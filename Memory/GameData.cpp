@@ -162,11 +162,11 @@ void GameData::forEachEntity(std::function<void(C_Entity*, bool)> callback) {
 	{
 		// MultiplayerLevel::directTickEntities
 		__int64 region = reinterpret_cast<__int64>(g_Data.getLocalPlayer()->region);
-		__int64* entityIdMap = *(__int64**)(*(__int64*)(region + 0x20) + 0x130i64);
+		__int64* entityIdMap = *(__int64**)(*(__int64*)(region + 0x20) + 0x148i64);
 		for (__int64* i = (__int64*)*entityIdMap; i != entityIdMap; i = (__int64*)*i) {
 			__int64 actor = i[3];
 			// !isRemoved() && !isGlobal()
-			if (actor && !*(char*)(actor + 0x3C1) && !*(char*)(actor + 0x3C2)) {
+			if (actor && !*(char*)(actor + 0x3E1) && !*(char*)(actor + 0x3E2)) {
 				C_Entity* ent = reinterpret_cast<C_Entity*>(actor);
 				if (std::find(tickedEntities.begin(), tickedEntities.end(), ent) == tickedEntities.end()) {
 					callback(ent, false);

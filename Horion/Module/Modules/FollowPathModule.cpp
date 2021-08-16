@@ -134,7 +134,7 @@ void FollowPathModule::onMove(C_MoveInputHandler *handler) {
 
 			this->clientMessageF("%sCalculating next path...", YELLOW);
 
-			float timeForSearch = std::clamp(timeSpent - 0.5f, 5.f, 10.f);
+			float timeForSearch = std::clamp(timeSpent - 0.5f, 1.f, 3.f);
 			auto lastSeg = curPath->getSegment(curPath->getNumSegments() - 1);
 			this->nextPath.reset();
 			this->startSearch(lastSeg.getEnd(), g_Data.getLocalPlayer()->region, timeForSearch, [&](bool succeeded, JoePath tempPath){
