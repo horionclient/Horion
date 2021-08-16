@@ -38,15 +38,7 @@ void Bhop::onMove(C_MoveInputHandler* input) {
 	moveVec.y = player->velocity.y;
 	moveVec.z = moveVec2d.y * speed;
 	if(pressed) player->lerpMotion(moveVec);
-	if (counter == 2) {
-		counter = 0;
-	} else {
-		counter++;
-	}
-
-	if (counter == 1) {
-		if (pressed && lowhop) {
-			player->velocity.y += -upVal;
-		}
-	}
+	
+	if (this->lowhop && player->onGround && pressed && !input->isJumping)
+		player->velocity.y -= upVal;
 }
