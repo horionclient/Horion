@@ -54,7 +54,7 @@ void Freecam::onMove(C_MoveInputHandler* input) {
 void Freecam::onDisable() {
 	if (g_Data.getLocalPlayer() != nullptr) {
 		g_Data.getLocalPlayer()->setPos(oldPos);
-		if (g_Data.getLocalPlayer()->gamemode != 1)
+		
 			*g_Data.getClientInstance()->minecraft->timer = 20.f;
 	}
 }
