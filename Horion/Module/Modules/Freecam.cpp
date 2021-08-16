@@ -26,6 +26,8 @@ void Freecam::onMove(C_MoveInputHandler* input) {
 	auto player = g_Data.getLocalPlayer();  
 	if (player == nullptr) return;          
 
+	
+
 	vec2_t moveVec2d = { input->forwardMovement, -input->sideMovement };  
 	bool pressed = moveVec2d.magnitude() > 0.01f;                       
 
@@ -53,6 +55,6 @@ void Freecam::onDisable() {
 	if (g_Data.getLocalPlayer() != nullptr) {
 		g_Data.getLocalPlayer()->setPos(oldPos);
 		if (g_Data.getLocalPlayer()->gamemode != 1)
-			
+			*g_Data.getClientInstance()->minecraft->timer = 20.f;
 	}
 }
