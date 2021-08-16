@@ -70,7 +70,8 @@ __forceinline bool isDangerous(const vec3_ti& pos, C_BlockSource* reg, bool allo
 		return true;
 
 	// contact damage based
-	{
+	// TODO: refactor this to use tile names and cache vtables
+	if(false){
 		// there is a function called dealsContactDamage but it takes in so many parameters + plant growth that its not useful anymore
 		static uintptr_t** cactusBlockVtable = nullptr;
 		if (cactusBlockVtable == nullptr) {
