@@ -14,7 +14,8 @@ private:
 	char pad_0x004A[0x5]; //0x004A
 public:
 	unsigned char isJumping; //0x004F
-	unsigned char autoJumpInWater; //0x0050
+	unsigned char autoJumpInWater; // 50
+
 private:
 	char pad_0x0051[0xE]; //0x0051
 public:

@@ -108,7 +108,7 @@ void loadFile(std::wstring filePath) {
 }
 
 void TestModule::onEnable() {
-	renderPos.clear();
+	/* renderPos.clear();
 
 	HorionDataPacket packet;
 	packet.cmd = CMD_FILECHOOSER;
@@ -138,7 +138,7 @@ void TestModule::onEnable() {
 		}
 	});
 
-	g_Data.sendPacketToInjector(packet);
+	g_Data.sendPacketToInjector(packet);*/
 }
 
 bool tryPlace(const vec3_ti& blockPos) {
@@ -178,7 +178,8 @@ bool tryPlace(const vec3_ti& blockPos) {
 }
 
 void TestModule::onTick(C_GameMode* gm) {
-	if (g_Data.getLocalPlayer() == nullptr)
+	
+	/* if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	if (!g_Data.canUseMoveKeys())
 		return;
@@ -202,11 +203,10 @@ void TestModule::onTick(C_GameMode* gm) {
 			}
 		}
 
-	}
+	}*/
 }
 
 void TestModule::onMove(C_MoveInputHandler* hand){
-
 }
 
 void TestModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
@@ -224,6 +224,7 @@ void TestModule::onDisable() {
 float t = 0;
 void TestModule::onLevelRender() {
 
+	/*
 	DrawUtils::setColor(0.8f, 0.4f, 0.4f, 1);
 	int radius = 50;
 	
@@ -240,6 +241,6 @@ void TestModule::onLevelRender() {
 		if (!blockLegacy->material->isReplaceable)
 			continue;
 		DrawUtils::drawBox3d(pos.toFloatVector(), pos.add(1, 1, 1).toFloatVector());
-	}
+	}*/
 	
 }

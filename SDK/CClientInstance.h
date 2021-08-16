@@ -101,7 +101,7 @@ private:
 public:
 	BlockTessellator* blockTessellator; // 0x02D8
 private:
-	char pad_0x02F0[0x5EC];  //0x02E0
+	char pad_0x02F0[0x568];  //0x02E0
 public:
 	vec3_t origin;  //0x0890
 
@@ -251,7 +251,7 @@ private:
 public:
 	C_LocalPlayer* localPlayer;  //0x0138
 private:
-	char pad[0x380]; // 0x0140
+	char pad[0x388]; // 0x0140
 public:
 	struct {
 		char pad[0x238];
@@ -259,7 +259,7 @@ public:
 			__int64 materialPtr;
 			size_t refCount;
 		} entityLineMaterial;
-	} *itemInHandRenderer; // 0x04C0
+	} *itemInHandRenderer; // 0x04C8
 
 private:
 	virtual __int64 destructorClientInstance();
@@ -826,8 +826,8 @@ public:
 	vec2_t getFov() {
 		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
 		vec2_t fov;
-		fov.x = *reinterpret_cast<float*>(_this + 0x658);
-		fov.y = *reinterpret_cast<float*>(_this + 0x66C);
+		fov.x = *reinterpret_cast<float*>(_this + 0x660);
+		fov.y = *reinterpret_cast<float*>(_this + 0x674);
 		return fov;
 	}
 

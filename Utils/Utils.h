@@ -340,6 +340,11 @@ public:
 		return (*static_cast<Fn**>(thisptr))[IIdx](thisptr, argList...);
 	}
 
+	template < typename ret>
+	static inline auto FuncFromSigOffset(uintptr_t sig, int offset) -> ret {
+		return reinterpret_cast<ret>(sig + offset + 4 + *reinterpret_cast<int*>(sig + offset));
+	}
+
 	// https://stackoverflow.com/a/34571089
 	static std::string base64_encode(const std::string& in) {
 		std::string out;

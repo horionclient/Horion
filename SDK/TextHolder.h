@@ -183,7 +183,8 @@ public:
 	}
 
 	void resetWithoutDelete() {
-		memset(this, 0, sizeof(TextHolder));
+		*getText() = 0;
+		textLength = 0;
 	}
 };
 
