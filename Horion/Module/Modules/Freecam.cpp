@@ -41,11 +41,11 @@ void Freecam::onMove(C_MoveInputHandler* input) {
 	C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());   
 	if (input->isJumping) {
 		player->velocity.y += 0.50f;
-		*g_Data.getClientInstance()->minecraft->timer = 20.f;
+		
 	}
 	if (input->isSneakDown) {
 		player->velocity.y -= 0.50f;
-		*g_Data.getClientInstance()->minecraft->timer = 20.f;
+		
 	}
 }
 
@@ -53,6 +53,6 @@ void Freecam::onDisable() {
 	if (g_Data.getLocalPlayer() != nullptr) {
 		g_Data.getLocalPlayer()->setPos(oldPos);
 		if (g_Data.getLocalPlayer()->gamemode != 1)
-			*g_Data.getClientInstance()->minecraft->timer = 20.f;
+			
 	}
 }
