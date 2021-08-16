@@ -70,46 +70,28 @@ __forceinline bool isDangerous(const vec3_ti& pos, C_BlockSource* reg, bool allo
 		return true;
 
 	// contact damage based
-	// TODO: refactor this to use tile names and cache vtables
-	if(false){
+	{
 		// there is a function called dealsContactDamage but it takes in so many parameters + plant growth that its not useful anymore
-		static uintptr_t** cactusBlockVtable = nullptr;
-		if (cactusBlockVtable == nullptr) {
-			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 49 89 06 41 88 9E ?? ?? ?? ?? 41 C6");
-			int offset = *reinterpret_cast<int*>(sigOffset + 3);
-			cactusBlockVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
-		}
-		static uintptr_t** cobwebVtable = nullptr;
-		if (cobwebVtable == nullptr) {
-			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 06 C6 86 ?? 00 00 00 00 0F B6 05 ?? ?? ?? ?? 88 86 ?? ?? ?? ?? C6 86 ?? ?? ?? ?? ?? C7 86 ?? ?? ?? ?? ?? ?? ?? ?? 48");
-			int offset = *reinterpret_cast<int*>(sigOffset + 3);
-			cobwebVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
-		}
-		static uintptr_t** witherRoseVtable = nullptr;
-		if (witherRoseVtable == nullptr) {
-			uintptr_t sigOffset = 0;
-			sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 06 48 B9");
-			int offset = *reinterpret_cast<int*>(sigOffset + 3);
-			witherRoseVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
-		}
-		static uintptr_t** magmaBlockVtable = nullptr;
-		if (magmaBlockVtable == nullptr) {
-			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 49 89 06 41 88 9E ?? ?? ?? ?? 41 88 9E ?? ?? ?? ?? 41");
-			int offset = *reinterpret_cast<int*>(sigOffset + 3);
-			magmaBlockVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
-		}
+		static std::set<uintptr_t**> knownVtableSet;
+		static std::vector<const char*> dangerousTiles{"sweet_berry_bush", "magma", "wither_rose", "cactus", "web"};
 
-		if(obs1->Vtable == cactusBlockVtable)
+		for (uintptr_t** vtable : knownVtableSet) 
+			if (obs1->Vtable == vtable)
+				return true;
+		
+
+		if (obs1->tileName.getTextLength() < 6)
+			return false;
+
+		for (int i = 0; i < dangerousTiles.size(); i++){
+			const char* tile = dangerousTiles[i];
+			if (strcmp(obs1->tileName.getText() + 5 /*cutoff tile. prefix*/, tile) != 0)
+				continue;
+
+			knownVtableSet.insert(obs1->Vtable);
+			dangerousTiles.erase(dangerousTiles.begin() + i);
 			return true;
-		if(obs1->Vtable == cobwebVtable)
-			return true;
-		if(obs1->Vtable == witherRoseVtable)
-			return true;
-		if(obs1->Vtable == magmaBlockVtable)
-			return true;
-		// there should be a sweet berry vtable here as well but the vtable was really aids so i resorted to block names
-		if(obs1->tileName.getTextLength() > 20 && strcmp(obs1->tileName.getText() + 5 /*cutoff tile. prefix*/, "sweet_berry_bush") == 0)
-			return true;
+		}
 	}
 	return false;
 }
