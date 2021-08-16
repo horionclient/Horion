@@ -343,6 +343,13 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 	using addCommandToChatHistory_t = void(__fastcall*)(uint8_t*, TextHolder*);
 	static addCommandToChatHistory_t addCommandToChatHistory = reinterpret_cast<addCommandToChatHistory_t>(FindSignature("48 89 5C 24 08 48 89 74 24 10 57 48 83 EC ?? 48 8B 99 ?? ?? ?? ?? 48 8B F2 80"));
 
+	using updateTextbox_t = void(__fastcall*)(__int64, TextHolder*);
+	static updateTextbox_t updateTextbox = reinterpret_cast<updateTextbox_t>(0);
+	if (updateTextbox == nullptr) {
+		auto sig = FindSignature("E8 ? ? ? ? 48 8D 8B ? ? ? ? 0F 57 C0");
+		updateTextbox = reinterpret_cast<updateTextbox_t>(sig + 5 + *reinterpret_cast<int*>(sig + 1)); 
+	}
+
 	TextHolder* messageHolder = reinterpret_cast<TextHolder*>(_this + 0xA98);
 	if (messageHolder->getTextLength() > 0) {
 		char* message = messageHolder->getText();
@@ -353,16 +360,19 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 			addCommandToChatHistory(_this, messageHolder);  // This will put the command in the chat history (Arrow up/down)
 
 			__int64 v17 = 0;
-			__int64* v15 = *(__int64**)(*(__int64*)(_this + 0xA80) + 0x20i64);
-			__int64 v16 = *v15;
+			C_ClientInstance* v15 = g_Data.getClientInstance();
+			__int64 vtable = *reinterpret_cast<__int64*>(v15);
 
-			if (*(BYTE*)(_this + 0xA9A))
-				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x9B8))(v15);
+			if (*(BYTE*)(_this + 0xA9A)) // isDevConsole
+				v17 = (*(__int64(__cdecl**)(C_ClientInstance*))(vtable + 0x9B8))(v15);
 			else
-				v17 = (*(__int64(__cdecl**)(__int64*))(v16 + 0x9B0))(v15);
+				v17 = (*(__int64(__cdecl**)(C_ClientInstance*))(vtable + 0x9B0))(v15);
 			*(DWORD*)(_this + 0xABC) = *(DWORD*)(v17 + 0x20);
 
 			messageHolder->resetWithoutDelete();
+			// MinecraftScreenModel::updateTextBoxText
+			updateTextbox(0, messageHolder);
+
 			return;
 		} else if (*message == '.') {
 			// maybe the user forgot his prefix, give him some helpful advice
