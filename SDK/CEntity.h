@@ -60,21 +60,22 @@ public:
 private:
 	char pad_0x228[0x10];  //0x224
 public:
-	float web;  //0x0234
+	vec3_t slowdownFactor;
+
 private:
-	char pad_0x23C[0xD];  //0x0238
+	char pad_0x23C[0x5];  //0x0238
 public:
 	bool didEnterWaterBool;  //0x0245
 private:
-	char pad_023E[0x4E];  //0x0246
+	char pad_023E[0x4A];  //0x0246
 public:
 	int ticksAlive;  //0x0294
 private:
-	char pad_0290[0xB0];  //0x0298
+	char pad_0290[0xB4];  //0x0298
 public:
 	C_BlockSource *region;  //0x348
 private:
-	char pad_0x340[0x148];  //0x350
+	char pad_0x340[0x160];  //0x350
 public:
 	AABB aabb;          //0x0498
 	float width;        //0x04B4
@@ -87,7 +88,7 @@ private:
 public:
 	__int64 entityRuntimeId;  //0x538
 private:
-	char pad_0478[0x148];  //0x0540
+	char pad_0478[0x1A8];  //0x0540
 public:
 	float bodyYaw;     //0x0688
 	float oldBodyYaw;  //0x068C
@@ -99,7 +100,13 @@ private:
 public:
 	int timeSinceDeath;  //0x0728
 private:
-	char pad_08B0[0x200];  //0x072C
+	char pad_08B0[0x15C];  //0x072C
+public:
+	TextHolder playerName;
+
+private:
+	char pad_08B8[0x8C];
+
 public:
 	bool canFly;  //0x092C
 private:

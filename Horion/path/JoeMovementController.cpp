@@ -58,14 +58,15 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 			tangent = tangent.normalize();
 			auto crossTangent = tangent.cross({0, 1, 0});
 
-			if((player->getTicksUsingItem() > 0 || fabsf(player->velocity.dot(crossTangent)) > 0.1f) && fabsf(pPos.y - end.y) > 0.1f){
+			if((player->getTicksUsingItem() > 0 || fabsf(player->velocity.dot(crossTangent)) > 0.02f) && fabsf(pPos.y - end.y) > 0.1f){
 				walkTarget = start;
 				goto WALK;
 			}
 
-			if(pPos.y - end.y > -0.01f)
+			if (pPos.y - end.y > -0.01f) {
 				goto WALK;
-
+			}
+				
 			auto lastPossibleJumpTarget = start.add(tangent.mul(0.25f));
 			walkTarget = start.add(tangent); // This is not actually on a block anymore, but if we make this smaller the movement controller will stop moving at the jump target
 
