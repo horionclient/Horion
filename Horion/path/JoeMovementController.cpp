@@ -42,7 +42,7 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 
 	auto walkTarget = end;
 	bool enableNextSegmentSmoothing = true;
-	float dComp = 4;
+	float dComp = 1;
 	vec3_t addedDiff{0, 0, 0};
 
 	// we should probably make seperate classes for each segment type at some point, but im just doing it here for now for faster prototyping
@@ -93,9 +93,17 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 					movementHandler->isJumping = 1;
 			}
 		}else{
-			dComp = 10;
-			enableNextSegmentSmoothing = false;
+			dComp = 4;
+			enableNextSegmentSmoothing = false;	
 		}
+		if (start.sub(end).magnitudexz() < 1.1f) {
+			// hug the wall on drop
+			auto tangent = end.sub(start);
+			tangent.y = 0;
+			walkTarget = start.add(tangent.mul(0.5f + player->width * 0.5f + 0.1f));
+			walkTarget.y = end.y;
+		}
+
 		goto WALK;
 	} break;
 	case PARKOUR_JUMP_SINGLE: {
@@ -141,7 +149,7 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 			tangent.y = 0;
 			tangent = tangent.normalize();
 			walkTarget = end.sub(tangent.mul(0.4f));
-			dComp = 5;
+			dComp = 3;
 			goto WALK;
 		}
 	} break;
@@ -202,30 +210,31 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 
 		auto pPosD = pPos; // p
 
-		if(!player->onGround && dComp < 8){
-			dComp = 8;
+		if(!player->onGround && dComp < 4){
+			dComp = 4;
 		}
 
-		pPosD.add(player->velocity.mul(dComp, 0, dComp)); // d
+		pPosD = pPosD.add(player->velocity.mul(dComp, 0, dComp));  // d
 
 		if(player->onGround && end.y < start.y && fabsf(start.y - pPosD.y) < 0.1f && player->getTicksUsingItem() > 0 && end.sub(start).magnitudexz() > 1.5f){
 			// drop with a gap
+			// player is using item, walk back to start pos
 			walkTarget = start;
 		}
 
 		vec3_t diff3d = walkTarget.sub(pPosD);
 		vec2_t diff2d = {diff3d.x, diff3d.z};
 		float diffMag = diff2d.magnitude();
-		if(enableNextSegmentSmoothing && hasNextSeg && diffMag < 0.15f && fabsf(end.y - pPosD.y) < (player->isInWater() ? 0.5f : 0.1f)){ // Start taking the next segment into account when we're very close to our destination
+		if(enableNextSegmentSmoothing && hasNextSeg && diffMag < 0.2f && fabsf(end.y - pPosD.y) < (player->isInWater() ? 0.5f : 0.1f)){ // Start taking the next segment into account when we're very close to our destination
 			auto tangent = nextSegEnd.sub(end).normalize();
-			diff3d = end.add(tangent.mul(0.2f)).sub(pPosD);
+			diff3d = end.add(tangent.mul(0.3f)).sub(pPosD);
 			diff2d = {diff3d.x, diff3d.z};
 			diffMag = diff2d.magnitude();
 		}
 		diff2d = diff2d.div(fmaxf(0.15f, diffMag));
 
 		addedDiff.y = 0;
-		if(!addedDiff.iszero()){
+		if(!addedDiff.iszero()){ // water flow
 			diff2d = diff2d.add(addedDiff.x, addedDiff.z);
 			diff2d = diff2d.div(fmaxf(1, diff2d.magnitude()));
 		}
