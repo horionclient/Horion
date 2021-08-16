@@ -405,7 +405,6 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	TextHolder alloc{};
 	uiscene->getScreenName(&alloc);
 
-
 	if (alloc.getTextLength() < 100) {
 		strcpy_s(g_Hooks.currentScreenName, alloc.getText());
 	}
@@ -414,7 +413,6 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 		g_Hooks.shouldRender = alwaysRender || (strcmp(alloc.getText(), "start_screen") == 0 || (alloc.getTextLength() >= 11 && strncmp(alloc.getText(), "play_screen", 11)) == 0);
 	}
 	alloc.alignedTextLength = 0;
-	alloc.resetWithoutDelete();
 
 	return oRender(uiscene, screencontext);
 }

@@ -99,7 +99,7 @@ void FollowPathModule::onMove(C_MoveInputHandler *handler) {
 				}else if(!pathFinder){
 					this->setEnabled(false);
 				}else if(g_Data.getLocalPlayer()->isInWater()){
-					handler->autoJumpInWater = true;
+					handler->isJumping = true;
 				}
 			}else{
 				this->clientMessageF("%sDone!", GREEN);

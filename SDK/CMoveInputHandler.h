@@ -11,12 +11,11 @@ private:
 public:
 	unsigned char isSneakDown; //0x0049
 private:
-	char pad_0x004A[0x5]; //0x004A
+	char pad_0x004A[0x11]; //0x004A
 public:
-	unsigned char isJumping; //0x004F
-	unsigned char autoJumpInWater; //0x0050
+	unsigned char isJumping; //0x005B
 private:
-	char pad_0x0051[0xE]; //0x0051
+	char pad_0x0051[0x3]; //0x005C
 public:
 	bool forward; //0x005F
 	bool backward; //0x0060

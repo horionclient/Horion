@@ -89,7 +89,7 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 				break;
 			}else if(inWater){
 				if(pPos.y < end.y || player->velocity.y < 0.12f)
-					movementHandler->autoJumpInWater = 1;
+					movementHandler->isJumping = 1;
 			}
 		}else{
 			dComp = 10;
@@ -156,14 +156,14 @@ void JoeMovementController::step(C_LocalPlayer *player, C_MoveInputHandler *move
 				}
 
 				if(pPos.y + 0.1f < end.y)
-					movementHandler->autoJumpInWater = 1;
+					movementHandler->isJumping = 1;
 				else if(pPos.y > end.y)
 					movementHandler->isSneakDown = 1;
 
 			}else{
 
 				if(player->isInWater())
-					movementHandler->autoJumpInWater = 1;
+					movementHandler->isJumping = 1;
 
 				tangent.y = 0;
 				tangent = tangent.normalize();
