@@ -2,6 +2,8 @@
 
 Bhop::Bhop() : IModule(0, Category::MOVEMENT, "Hop around like a bunny!") {
 	registerFloatSetting("Speed", &this->speed, this->speed, 0.1f, 0.8f);
+	registerBoolSetting("Lowhop", &this->lowhop, this->lowhop);
+	registerFloatSetting("Lowhop Value", &this->upVal, this->upVal, 0.05f, 0.50f);
 }
 
 Bhop::~Bhop() {
@@ -36,4 +38,15 @@ void Bhop::onMove(C_MoveInputHandler* input) {
 	moveVec.y = player->velocity.y;
 	moveVec.z = moveVec2d.y * speed;
 	if(pressed) player->lerpMotion(moveVec);
+	if (counter == 2) {
+		counter = 0;
+	} else {
+		counter++;
+	}
+
+	if (counter == 1) {
+		if (pressed && lowhop) {
+			player->velocity.y += -upVal;
+		}
+	}
 }
