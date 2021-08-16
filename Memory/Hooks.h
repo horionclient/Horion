@@ -12,6 +12,7 @@
 #include "../Horion/Menu/TabGui.h"
 #include "../Horion/Module/ModuleManager.h"
 #include "../SDK/CBlockLegacy.h"
+#include "../SDK/CCamera.h"
 #include "../SDK/CChestBlockActor.h"
 #include "../SDK/CGameMode.h"
 #include "../SDK/CMinecraftUIRenderContext.h"
@@ -19,19 +20,19 @@
 #include "../SDK/CRakNetInstance.h"
 #include "../SDK/CUIScene.h"
 #include "../SDK/TextHolder.h"
-#include "../SDK/CCamera.h"
-#include "../Utils/TextFormat.h"
 #include "../Utils/SkinUtil.h"
+#include "../Utils/TextFormat.h"
 #include "../resource.h"
 #include "GameData.h"
 #include "MinHook.h"
 //#include "../Horion/Game/Game.h"
 
-#include <intrin.h>
-#include <thread>
-#include <dxgi.h>
 #include <d3d11.h>
 #include <d3dcompiler.h>
+#include <dxgi.h>
+#include <intrin.h>
+
+#include <thread>
 
 #include "../include/d3dx11async.h"
 
@@ -42,12 +43,12 @@ struct CoolSkinData {
 	TextHolder unknown;
 	TextHolder unknown2;
 	TextHolder skinResourcePatch;  // 0x040
-	TextHolder geometryName; // 0x060 "geometry.humanoid.custom"
+	TextHolder geometryName;       // 0x060 "geometry.humanoid.custom"
 	unsigned char gap2[0x40];      // 0x080
 	void* startAnimatedFrames;     // 0x0C0
 	void* endAnimatedFrames;       // 0x0C8
-	unsigned char gap3[0x8];      // 0x0D0
-	TextHolder geometryData;		// 0x0D8
+	unsigned char gap3[0x8];       // 0x0D0
+	TextHolder geometryData;       // 0x0D8
 	TextHolder skinAnimationData;  // 0x0F8
 	unsigned char gap4[0x20];      // 0x118
 	bool isPremiumSkin;            // 0x138
@@ -117,13 +118,12 @@ private:
 	static __int64 prepFeaturedServersFirstTime(__int64 a1, __int64 a2);
 	static HRESULT swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT flags);
 	static __int64 InGamePlayScreen___renderLevel(__int64 playScreen, __int64 a2, __int64 a3);
-	static HRESULT swapChain__ResizeBuffers(IDXGISwapChain* chain, UINT bufferCount, UINT Width, UINT Height,DXGI_FORMAT Newformat,UINT SwapChainFlags);
+	static HRESULT swapChain__ResizeBuffers(IDXGISwapChain* chain, UINT bufferCount, UINT Width, UINT Height, DXGI_FORMAT Newformat, UINT SwapChainFlags);
 	static __int64 Cube__compile(__int64 a1, __int64 a2);
 	static void LocalPlayer__updateFromCamera(__int64 a1, C_Camera* a2);
 	static bool Mob__isImmobile(C_Entity*);
-	static void InventoryTransactionManager__addAction(C_InventoryTransactionManager*, C_InventoryAction &);
-	static void LevelRendererPlayer__renderNameTags(__int64 a1, __int64 a2,TextHolder* name, __int64 a4);
-	static void* Player_tickWorld(C_Player* _this, __int64 tick);
+	static void InventoryTransactionManager__addAction(C_InventoryTransactionManager*, C_InventoryAction&);
+	static void LevelRendererPlayer__renderNameTags(__int64 a1, __int64 a2, TextHolder* name, __int64 a4);
 
 	std::unique_ptr<FuncHook> Player_tickWorldHook;
 	std::unique_ptr<FuncHook> ChatScreenController_sendChatMessageHook;
@@ -175,7 +175,6 @@ private:
 	std::unique_ptr<FuncHook> Mob__isImmobileHook;
 	std::unique_ptr<FuncHook> InventoryTransactionManager__addActionHook;
 	std::unique_ptr<FuncHook> LevelRendererPlayer__renderNameTagsHook;
-	std::unique_ptr<FuncHook> Player_tickWorldHook;
 };
 
 extern Hooks g_Hooks;
@@ -208,7 +207,7 @@ public:
 			int ret = enable ? MH_EnableHook(funcPtr) : MH_DisableHook(funcPtr);
 			if (ret != MH_OK)
 				logF("MH_EnableHook = %i", ret);
-		}else
+		} else
 			logF("enableHook() called with nullptr func!");
 	}
 

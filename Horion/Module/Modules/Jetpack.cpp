@@ -1,4 +1,5 @@
 #include "Jetpack.h"
+
 #include "../../../Utils/Logger.h"
 
 Jetpack::Jetpack() : IModule('F', Category::MOVEMENT, "Fly around like you had a Jetpack!") {
@@ -18,7 +19,6 @@ const char* Jetpack::getModuleName() {
 }
 
 void Jetpack::onTick(C_GameMode* gm) {
-	logF("hello");
 	float calcYaw = (gm->player->yaw + 90) * (PI / 180);
 	float calcPitch = (gm->player->pitch) * -(PI / 180);
 
@@ -27,8 +27,7 @@ void Jetpack::onTick(C_GameMode* gm) {
 		moveVec.x = cos(calcYaw) * cos(calcPitch) * speedMod;
 		moveVec.y = sin(calcPitch) * speedMod;
 		moveVec.z = sin(calcYaw) * cos(calcPitch) * speedMod;
-		
-		__debugbreak();
+
 		gm->player->lerpMotion(moveVec);
 	} else {
 		delay++;

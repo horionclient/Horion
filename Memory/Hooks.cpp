@@ -1,16 +1,14 @@
 ﻿#include "Hooks.h"
 
-#include "../SDK/Tag.h"
-
 #include <algorithm>
-
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/ext/matrix_relational.hpp>
+#include <glm/ext/matrix_transform.hpp>  // perspective, translate, rotate
+#include <glm/gtc/constants.hpp>
 #include <glm/mat4x4.hpp>         // mat4
 #include <glm/trigonometric.hpp>  //radians
 
-#include <glm/ext/matrix_transform.hpp> // perspective, translate, rotate
-#include <glm/ext/matrix_relational.hpp>
-#include <glm/ext/matrix_clip_space.hpp>
-#include <glm/gtc/constants.hpp>
+#include "../SDK/Tag.h"
 
 Hooks g_Hooks;
 bool isTicked = false;
@@ -207,10 +205,10 @@ void Hooks::Init() {
 
 		void* lerpFunc = reinterpret_cast<void*>(FindSignature("8B 02 89 81 ? ? ? ? 8B 42 ? 89 81 ? ? ? ? 8B 42 ? 89 81 ? ? ? ? C3 CC CC CC CC CC 48 89 5C 24"));
 		g_Hooks.Actor_lerpMotionHook = std::make_unique<FuncHook>(lerpFunc, Hooks::Actor_lerpMotion);
-		
+
 		void* ascendLadder = reinterpret_cast<void*>(FindSignature("C7 81 ? ? ? ? ? ? ? ? C3 CC CC CC CC CC C7 81 ? ? ? ? ? ? ? ? C3 CC CC CC CC CC C7 81"));
 		g_Hooks.Actor_ascendLadderHook = std::make_unique<FuncHook>(ascendLadder, Hooks::Actor_ascendLadder);
-		
+
 		void* isInWater = reinterpret_cast<void*>(FindSignature("0F B6 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 0F B6 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ? 48 89 6C 24"));
 		g_Hooks.Actor_isInWaterHook = std::make_unique<FuncHook>(isInWater, Hooks::Actor_isInWater);
 
@@ -308,11 +306,6 @@ void Hooks::Init() {
 
 		g_Hooks.lambdaHooks.push_back(bobViewHook);
 
-		{
-			void* onTick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 0F 29 B4 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 89 55 ?? 48 8B F9"));
-			g_Hooks.Player_tickWorldHook = std::make_unique<FuncHook>(onTick, Hooks::Player_tickWorld);
-		}
-
 		#undef lambda_counter
 
 		logF("Hooks initialized");
@@ -334,11 +327,10 @@ void Hooks::Enable() {
 void* Hooks::Player_tickWorld(C_Player* _this, __int64 unk) {
 	static auto oTick = g_Hooks.Player_tickWorldHook->GetFastcall<void*, C_Player*, __int64>();
 	auto o = oTick(_this, unk);
-	
-	if (_this == g_Data.getLocalPlayer()){
-		// scuffed
+
+	if (_this == g_Data.getLocalPlayer()) {
 		// TODO: refactor all modules to not use GameMode
-		C_GameMode* gm = *reinterpret_cast<C_GameMode**>(reinterpret_cast<__int64>(_this) + 4656);
+		C_GameMode* gm = *reinterpret_cast<C_GameMode**>(reinterpret_cast<__int64>(_this) + 4840);
 		GameData::updateGameData(gm);
 		moduleMgr->onTick(gm);
 	}
@@ -457,7 +449,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				DrawUtils::flush();*/
 			}
 
-			if(!hasSentWarning) // Wait for injector, it might connect in time
+			if (!hasSentWarning)  // Wait for injector, it might connect in time
 				return retval;
 		} else
 			wasConnectedBefore = true;
@@ -1152,7 +1144,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 		auto* pp = reinterpret_cast<C_PlayerActionPacket*>(packet);
 
 		if (pp->action == 12 && pp->entityRuntimeId == g_Data.getLocalPlayer()->entityRuntimeId)
-			return; //dont send uncrouch
+			return;  //dont send uncrouch
 	}
 
 	moduleMgr->onSendPacket(packet);
@@ -1357,7 +1349,7 @@ __int64 Hooks::ChestScreenController_tick(C_ChestScreenController* a1) {
 	static auto oFunc = g_Hooks.ChestScreenController_tickHook->GetFastcall<__int64, C_ChestScreenController*>();
 
 	static auto chestStealerMod = moduleMgr->getModule<ChestStealer>();
-	if(chestStealerMod->isEnabled()) chestStealerMod->chestScreenController_tick(a1);
+	if (chestStealerMod->isEnabled()) chestStealerMod->chestScreenController_tick(a1);
 
 	return oFunc(a1);
 }
@@ -1554,7 +1546,7 @@ __int64 Hooks::PaintingRenderer__render(__int64 _this, __int64 a2, __int64 a3) {
 	if (NoPaintingCrashMod->isEnabled())
 		return 0;
 
-	return Func(_this,a2,a3);
+	return Func(_this, a2, a3);
 }
 
 bool Hooks::DirectoryPackAccessStrategy__isTrusted(__int64 _this) {
@@ -2068,18 +2060,4 @@ void Hooks::LevelRendererPlayer__renderNameTags(__int64 a1, __int64 a2, TextHold
 	}
 
 	return func(a1, a2, a3, a4);
-}
-
-void* Hooks::Player_tickWorld(C_Player * _this, __int64 tick)
-{
-	static auto func = g_Hooks.Player_tickWorldHook->GetFastcall<void*, C_Player*, __int64>();
-	auto ret = func(_this, tick);
-
-	if (_this == g_Data.getLocalPlayer()) {
-		C_GameMode* gm = *reinterpret_cast<C_GameMode**>(reinterpret_cast<__int64>(_this) + 4656);
-		GameData::updateGameData(gm);
-		moduleMgr->onTick(gm);
-	}
-
-	return ret;
 }
