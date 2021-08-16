@@ -24,7 +24,7 @@ void Fucker::onTick(C_GameMode* gm) {
 			for (int y = (int)pos->y - range; y < pos->y + range; y++) {
 				vec3_ti blockPos = vec3_ti(x, y, z);
 				bool destroy = false;
-				int id = gm->player->region->getBlock(blockPos)->toLegacy()->blockId;
+				auto id = gm->player->region->getBlock(blockPos)->toLegacy()->blockId;
 
 				if (id == 26 && this->beds) destroy = true;      // Beds
 				if (id == 122 && this->eggs) destroy = true;     // Dragon Eggs

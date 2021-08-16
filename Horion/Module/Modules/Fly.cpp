@@ -24,6 +24,7 @@ bool Fly::isFlashMode() {
 		return true;
 		break;
 	}
+	return false;
 }
 
 void Fly::onEnable() {

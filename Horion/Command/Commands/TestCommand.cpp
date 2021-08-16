@@ -22,11 +22,11 @@ void listEnts(C_Entity* ent, bool isValid) {
 void showAimedBlockInfo() {
 	PointingStruct* pointingStruct = g_Data.getClientInstance()->getPointerStruct();
 	C_Block* block = g_Data.getLocalPlayer()->region->getBlock(pointingStruct->block);
-	int id = block->toLegacy()->blockId;
+	auto id = block->toLegacy()->blockId;
 	char* name = block->toLegacy()->name.getText();
 	logF("---------------");
 	logF("Block Name: %s", name);
-	logF("Block ID: %d", id);
+	logF("Block ID: %lld", id);
 	logF("---------------");
 }
 

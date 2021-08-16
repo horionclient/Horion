@@ -74,8 +74,7 @@ public:
 	static void Enable();
 
 private:
-	static void GameMode_tick(C_GameMode* _this);
-	static void SurvivalMode_tick(C_GameMode* _this);
+	static void* Player_tickWorld(C_Player* _this, __int64);
 	static void ChatScreenController_sendChatMessage(uint8_t* _this);
 	static __int64 UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext);
 	static __int64 UIScene_render(C_UIScene* uiscene, __int64 screencontext);
@@ -126,8 +125,7 @@ private:
 	static void LevelRendererPlayer__renderNameTags(__int64 a1, __int64 a2,TextHolder* name, __int64 a4);
 	static void* Player_tickWorld(C_Player* _this, __int64 tick);
 
-	std::unique_ptr<FuncHook> GameMode_tickHook;
-	std::unique_ptr<FuncHook> SurvivalMode_tickHook;
+	std::unique_ptr<FuncHook> Player_tickWorldHook;
 	std::unique_ptr<FuncHook> ChatScreenController_sendChatMessageHook;
 	std::unique_ptr<FuncHook> UIScene_setupAndRenderHook;
 	std::unique_ptr<FuncHook> UIScene_renderHook;

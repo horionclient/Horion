@@ -33,8 +33,6 @@ void Hooks::Init() {
 			else {
 				g_Hooks.GameMode_startDestroyBlockHook = std::make_unique<FuncHook>(gameModeVtable[1], Hooks::GameMode_startDestroyBlock);
 
-				g_Hooks.GameMode_tickHook = std::make_unique<FuncHook>(gameModeVtable[9], Hooks::GameMode_tick);
-
 				g_Hooks.GameMode_getPickRangeHook = std::make_unique<FuncHook>(gameModeVtable[10], Hooks::GameMode_getPickRange);
 
 				g_Hooks.GameMode_attackHook = std::make_unique<FuncHook>(gameModeVtable[14], Hooks::GameMode_attack);
@@ -182,8 +180,8 @@ void Hooks::Init() {
 
 	// Signatures
 	{
-		void* surv_tick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 55 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 8B F9 48 8B 89 ?? ?? ?? ?? 48 8B 01"));
-		g_Hooks.SurvivalMode_tickHook = std::make_unique<FuncHook>(surv_tick, Hooks::SurvivalMode_tick);
+		void* player_tickworld = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 0F 29 B4 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 89 55 ?? 48 8B F9"));
+		g_Hooks.Player_tickWorldHook = std::make_unique<FuncHook>(player_tickworld, Hooks::Player_tickWorld);
 
 		void* _sendChatMessage = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B D9 48 83 B9"));
 		g_Hooks.ChatScreenController_sendChatMessageHook = std::make_unique<FuncHook>(_sendChatMessage, Hooks::ChatScreenController_sendChatMessage);
@@ -207,8 +205,14 @@ void Hooks::Init() {
 		void* chestTick = reinterpret_cast<void*>(FindSignature("40 53 57 48 83 EC ? 48 83 79"));
 		g_Hooks.ChestBlockActor_tickHook = std::make_unique<FuncHook>(chestTick, Hooks::ChestBlockActor_tick);
 
-		void* lerpFunc = reinterpret_cast<void*>(FindSignature("8B 02 89 81 ?? 04 ?? ?? 8B 42 04 89 81 ?? ?? ?? ?? 8B 42 08 89 81 ?? ?? ?? ?? C3"));
+		void* lerpFunc = reinterpret_cast<void*>(FindSignature("8B 02 89 81 ? ? ? ? 8B 42 ? 89 81 ? ? ? ? 8B 42 ? 89 81 ? ? ? ? C3 CC CC CC CC CC 48 89 5C 24"));
 		g_Hooks.Actor_lerpMotionHook = std::make_unique<FuncHook>(lerpFunc, Hooks::Actor_lerpMotion);
+		
+		void* ascendLadder = reinterpret_cast<void*>(FindSignature("C7 81 ? ? ? ? ? ? ? ? C3 CC CC CC CC CC C7 81 ? ? ? ? ? ? ? ? C3 CC CC CC CC CC C7 81"));
+		g_Hooks.Actor_ascendLadderHook = std::make_unique<FuncHook>(ascendLadder, Hooks::Actor_ascendLadder);
+		
+		void* isInWater = reinterpret_cast<void*>(FindSignature("0F B6 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 0F B6 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ? 48 89 6C 24"));
+		g_Hooks.Actor_isInWaterHook = std::make_unique<FuncHook>(isInWater, Hooks::Actor_isInWater);
 
 		void* getGameEdition = reinterpret_cast<void*>(FindSignature("8B 91 ?? ?? ?? ?? 85 D2 74 1C 83 EA 01"));
 		g_Hooks.AppPlatform_getGameEditionHook = std::make_unique<FuncHook>(getGameEdition, Hooks::AppPlatform_getGameEdition);
@@ -273,7 +277,7 @@ void Hooks::Init() {
 		void* localPlayerUpdateFromCam = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 80 BA"));
 		g_Hooks.LocalPlayer__updateFromCameraHook = std::make_unique<FuncHook>(localPlayerUpdateFromCam, Hooks::LocalPlayer__updateFromCamera);
 
-		void* MobIsImmobile = reinterpret_cast<void*>(FindSignature("40 53 48 83 EC ? 80 B9 ? ? ? ? ? 48 8B D9 75 5E"));
+		void* MobIsImmobile = reinterpret_cast<void*>(FindSignature("40 53 48 83 EC ? 48 8B D9 E8 ? ? ? ? 84 C0 75 ? 48 8B 03 48 8B CB"));
 		g_Hooks.Mob__isImmobileHook = std::make_unique<FuncHook>(MobIsImmobile, Hooks::Mob__isImmobile);
 
 		void* renderNameTags = reinterpret_cast<void*>(FindSignature("4C 8B DC 49 89 5B ? 55 56 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 41 0F 29 73 ? 41 0F 29 7B ? 45 0F 29 43 ? 48 8B 05"));
@@ -327,24 +331,18 @@ void Hooks::Enable() {
 	MH_EnableHook(MH_ALL_HOOKS);
 }
 
-void Hooks::GameMode_tick(C_GameMode* _this) {
-	static auto oTick = g_Hooks.GameMode_tickHook->GetFastcall<void, C_GameMode*>();
-	oTick(_this);
-
-	GameData::updateGameData(_this);
-	if (_this->player == g_Data.getLocalPlayer() && _this->player != nullptr) {
-		moduleMgr->onTick(_this);
+void* Hooks::Player_tickWorld(C_Player* _this, __int64 unk) {
+	static auto oTick = g_Hooks.Player_tickWorldHook->GetFastcall<void*, C_Player*, __int64>();
+	auto o = oTick(_this, unk);
+	
+	if (_this == g_Data.getLocalPlayer()){
+		// scuffed
+		// TODO: refactor all modules to not use GameMode
+		C_GameMode* gm = *reinterpret_cast<C_GameMode**>(reinterpret_cast<__int64>(_this) + 4656);
+		GameData::updateGameData(gm);
+		moduleMgr->onTick(gm);
 	}
-}
-
-void Hooks::SurvivalMode_tick(C_GameMode* _this) {
-	static auto oTick = g_Hooks.SurvivalMode_tickHook->GetFastcall<void, C_GameMode*>();
-	oTick(_this);
-	// No longer updates like usual, now only updates during certain actions
-	//GameData::updateGameData(_this);
-	//if (_this->player == g_Data.getLocalPlayer() && _this->player != nullptr) {
-	//	moduleMgr->onTick(_this);
-	//}
+	return o;
 }
 
 void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
@@ -970,10 +968,7 @@ void Hooks::Actor_lerpMotion(C_Entity* _this, vec3_t motVec) {
 		static void* networkSender = nullptr;
 
 		if (!networkSender) {
-			if (g_Data.getVersion() == GAMEVERSION::g_1_16_0)
-				networkSender = reinterpret_cast<void*>(6 + FindSignature("FF 90 ?? ?? ?? ?? 4C 8D 9C 24 ?? ?? ?? ?? 49 8B 5B 18 49 8B 73 28 49 8B E3 5F C3"));
-			else
-				networkSender = reinterpret_cast<void*>(3 + FindSignature("FF 50 ? 41 80 BE ? ? ? ? ? 0F 85 ? ? ? ? EB 76"));
+			networkSender = reinterpret_cast<void*>(3 + FindSignature("FF 50 ? 41 80 BE ? ? ? ? ? 0F 85 ? ? ? ? EB 76"));
 		}
 
 		if (networkSender == _ReturnAddress()) {
