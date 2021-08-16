@@ -125,3 +125,28 @@ void Killaura::onSendPacket(C_Packet* packet) {
 		}
 	}
 }
+
+void Killaura::onPostRender(C_MinecraftUIRenderContext* ctx) {
+	if (!targetList.empty() && targetHUD && g_Data.isInGame()) {
+		static float rcolors[4];          // Rainbow color array RGBA
+		static float disabledRcolors[4];  // Rainbow Colors, but for disabled modules
+		static float currColor[4];        // ArrayList colors
+	
+		// Rainbow color updates
+		{
+			Utils::ApplyRainbow(rcolors);  // Increase Hue of rainbow color array
+			disabledRcolors[0] = std::min(1.f, rcolors[0] * 0.4f + 0.2f);
+			disabledRcolors[1] = std::min(1.f, rcolors[1] * 0.4f + 0.2f);
+			disabledRcolors[2] = std::min(1.f, rcolors[2] * 0.4f + 0.2f);
+			disabledRcolors[3] = 1;
+		}
+		std::string name = targetList[0]->getNameTag()->getText();
+		std::string distance = "Distance: " + std::to_string((*targetList[0]->getPos()).dist(*g_Data.getLocalPlayer()->getPos()));
+
+		DrawUtils::drawRectangle(pos, rcolors, 1.f);
+		DrawUtils::fillRectangle(pos, MC_Color(13, 29, 48), 1.f);
+		DrawUtils::drawText(textPos, &name, currColor, 1.f);
+		textPos.y += 10.f;
+		DrawUtils::drawText(textPos, &distance, currColor, 1.f);
+	}
+}
