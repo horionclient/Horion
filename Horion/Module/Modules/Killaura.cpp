@@ -24,7 +24,7 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 
 	if (currentEntity == nullptr)
 		return;
-	
+
 	if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
 		return;
 
@@ -34,17 +34,18 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 	if (!g_Data.getLocalPlayer()->isAlive())
 		return;
 
-	if(!currentEntity->isAlive())
+	if (!currentEntity->isAlive())
 		return;
 
 	if (killauraMod->isMobAura) {
 		if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)
 			return;
-		if(currentEntity->width <= 0.01f || currentEntity->height <= 0.01f) // Don't hit this pesky antibot on 2b2e.org
+		if (currentEntity->width <= 0.01f || currentEntity->height <= 0.01f) // Don't hit this pesky antibot on 2b2e.org
 			return;
-		if(currentEntity->getEntityTypeId() == 64) // item
+		if (currentEntity->getEntityTypeId() == 64) // item
 			return;
-	} else {
+	}
+	else {
 		if (!Target::isValidTarget(currentEntity))
 			return;
 	}
@@ -99,7 +100,8 @@ void Killaura::onTick(C_GameMode* gm) {
 					g_Data.getCGameMode()->attack(i);
 				}
 			}
-		} else {
+		}
+		else {
 			if (!(targetList[0]->damageTime > 1 && hurttime)) {
 				g_Data.getLocalPlayer()->swing();
 				g_Data.getCGameMode()->attack(targetList[0]);
