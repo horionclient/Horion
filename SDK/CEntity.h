@@ -141,9 +141,9 @@ private:
 
 public:
 	virtual void setPos(vec3_t const &);
-	virtual bool filler(); 
+	virtual bool filler();
 	virtual vec3_t *getPredictedMovementValues(void) const;
-	virtual vec3_t *getPos(void) const; // getStateVectorComponent
+	virtual vec3_t *getPos(void) const;  // getStateVectorComponent
 	virtual vec3_t *getPosOld(void) const;
 	virtual vec3_t *getPosExtrapolated(float) const;
 
@@ -225,7 +225,7 @@ public:
 	virtual bool isOverWater(void) const;
 
 private:
-	virtual __int64 setBlockMovementSlowdownMultiplier(vec3_t const&);
+	virtual __int64 setBlockMovementSlowdownMultiplier(vec3_t const &);
 	virtual __int64 resetBlockMovementSlowdownMultiplier();
 	virtual __int64 getCameraOffset(void) const;
 	virtual __int64 getShadowHeightOffs(void);
@@ -265,7 +265,6 @@ public:
 private:
 	virtual bool unk1(void) const;
 	virtual bool unk2(void) const;
-	virtual bool isAffectedByWaterBottle(void);
 
 public:
 	virtual bool isAffectedByWaterBottle(void) const;
