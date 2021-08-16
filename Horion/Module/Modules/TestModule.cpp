@@ -178,6 +178,7 @@ bool tryPlace(const vec3_ti& blockPos) {
 }
 
 void TestModule::onTick(C_GameMode* gm) {
+	
 	/* if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	if (!g_Data.canUseMoveKeys())

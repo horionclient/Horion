@@ -101,7 +101,7 @@ private:
 public:
 	BlockTessellator* blockTessellator; // 0x02D8
 private:
-	char pad_0x02F0[0x5EC];  //0x02E0
+	char pad_0x02F0[0x568];  //0x02E0
 public:
 	vec3_t origin;  //0x0890
 
@@ -826,8 +826,8 @@ public:
 	vec2_t getFov() {
 		uintptr_t _this = reinterpret_cast<uintptr_t>(this);
 		vec2_t fov;
-		fov.x = *reinterpret_cast<float*>(_this + 0x658);
-		fov.y = *reinterpret_cast<float*>(_this + 0x66C);
+		fov.x = *reinterpret_cast<float*>(_this + 0x660);
+		fov.y = *reinterpret_cast<float*>(_this + 0x674);
 		return fov;
 	}
 
