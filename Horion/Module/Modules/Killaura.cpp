@@ -8,6 +8,7 @@ Killaura::Killaura() : IModule('P', Category::COMBAT, "Attacks entities around y
 	this->registerBoolSetting("hurttime", &this->hurttime, this->hurttime);
 	this->registerBoolSetting("AutoWeapon", &this->autoweapon, this->autoweapon);
 	this->registerBoolSetting("Silent Rotations", &this->silent, this->silent);
+	this->registerBoolSetting("Target HUD", &this->targetHUD, this->targetHUD);
 }
 
 Killaura::~Killaura() {
@@ -125,3 +126,31 @@ void Killaura::onSendPacket(C_Packet* packet) {
 		}
 	}
 }
+if (!targetList.empty() && targetHUD && g_Data.isInGame()) {
+		vec4_t tempPos = vec4_t(70.f, 70.f, 50.f, 40.f); //ignore some of the useless stuff this was time ago
+		vec2_t textPos = vec2_t(tempPos.y, tempPos.x); //text pos
+		vec4_t pos = vec4_t(70.f, 70.f, 100.f + textPos.x, 90.f); //pos for using
+		static float rcolors[4];          // Rainbow color array RGBA
+		static float disabledRcolors[4];  // Rainbow Colors, but for disabled modules
+		static float currColor[4];        // ArrayList colors
+
+		// Rainbow color updates
+		{
+			Utils::ApplyRainbow(rcolors);  // Increase Hue of rainbow color array
+			disabledRcolors[0] = std::min(1.f, rcolors[0] * 0.4f + 0.2f);
+			disabledRcolors[1] = std::min(1.f, rcolors[1] * 0.4f + 0.2f);
+			disabledRcolors[2] = std::min(1.f, rcolors[2] * 0.4f + 0.2f);
+			disabledRcolors[3] = 1;
+		}
+		currColor[3] = rcolors2[3];
+		Utils::ColorConvertRGBtoHSV(rcolors2[0], rcolors2[1], rcolors2[2], currColor[0], currColor[2], currColor[2]);
+		Utils::ColorConvertHSVtoRGB(currColor[0], currColor[2], currColor[3], currColor[0], currColor[0], currColor[1]);
+		std::string name = targetList[0]->getNameTag()->getText();
+		std::string distance = "Distance: " + std::to_string((*targetList[0]->getPos()).dist(*g_Data.getLocalPlayer()->getPos()));
+
+		DrawUtils::drawRectangle(pos, currColor, 1.f);
+		DrawUtils::fillRectangle(pos, MC_Color(0, 0, 0), 1.f);
+		DrawUtils::drawText(textPos, &name, currColor, 1.f);
+		textPos.y += 10.f;
+		DrawUtils::drawText(textPos, &distance, currColor, 1.f);
+	}
