@@ -134,6 +134,8 @@ __forceinline bool canStandOn(const vec3_ti& pos, C_BlockSource* reg, bool inWat
 
 	if(validWater)
 		return true;
+	if (true)
+		return true;
 
 	AABB aabb;
 	if(!standOn->getCollisionShape(&aabb, block, reg, &pos, nullptr))
@@ -381,7 +383,7 @@ std::vector<Edge> findEdges(std::unordered_map<unsigned __int64, Node>& allNodes
 			if(isInWater){
 				// check if the block is a flowing block
 				auto block = reg->getBlock(newPos)->toLegacy();
-				if(block->material->isLiquid){
+				if (block->material->isLiquid) {
 					vec3_t flow{};
 					block->liquidGetFlow(&flow, reg, &newPos);
 					if(!flow.iszero()){
@@ -483,7 +485,7 @@ JoePath JoePathFinder::findPath() {
 		auto edges = findEdges(allNodes, cur, this->region, curRef); // cur gets invalidated here
 		cur = allNodes.at(curRef.hash);
 		numEdges += (int)edges.size();
-		for(auto edge : edges){
+		for(const auto& edge : edges){
 			auto& edgeEndNode = allNodes.at(edge.endNode.hash);
 			//logF("(%i %i %i) %i -> (%i %i %i)", cur.pos.x, cur.pos.y, cur.pos.z, edge.type, edgeEndNode.pos.x, edgeEndNode.pos.y, edgeEndNode.pos.z);
 			if(edgeEndNode.isClosed)

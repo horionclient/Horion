@@ -15,7 +15,7 @@ void FollowPathModule::startSearch(vec3_ti startNode, C_BlockSource* region, flo
 	}
 	this->pathFinder = std::make_shared<JoePathFinder>(startNode, region, this->goal);
 	this->pathFinder->pathSearchTimeout = searchTimeout;
-	std::thread([this, callback](){
+	//std::thread([this, callback](){
 		auto ref = this->pathFinder; // so it won't get deleted when followpathmodule is disabled
 		auto tempPath = this->pathFinder->findPath();
 		this->pathFinder.reset();
@@ -24,9 +24,11 @@ void FollowPathModule::startSearch(vec3_ti startNode, C_BlockSource* region, flo
 			return;
 		}
 		callback(true, tempPath);
-	}).detach();
+	//}).detach();
 }
 
+
+bool shouldStartSearch = false;
 void FollowPathModule::onEnable() {
 	if(!g_Data.isInGame() || !g_Data.getLocalPlayer()->isAlive()){
 		setEnabled(false);
@@ -38,34 +40,11 @@ void FollowPathModule::onEnable() {
 		setEnabled(false);
 		return;
 	}
-
-	auto player = g_Data.getLocalPlayer();
-	auto pPos = player->eyePos0;
-	vec3_ti startNode((int)floorf(pPos.x), (int)roundf(pPos.y - 1.62f), (int)floorf(pPos.z));
-
-	this->startSearch(startNode, player->region, 3, [&](bool succeeded, JoePath tempPath){
-		if(!succeeded){
-			this->path.reset();
-			this->movementController.reset();
-			this->setEnabled(false);
-			this->clientMessageF("%sCould not find a path!", RED);
-			this->engageDelay = -1;
-			return;
-		}
-
-		this->clientMessageF("%sFound %s path!", tempPath.isIncomplete1() ? YELLOW : GREEN, tempPath.isIncomplete1() ? "incomplete" : "complete");
-
-		if(tempPath.isIncomplete1()){
-			tempPath.cutoff(0.9f);
-		}
-		this->engageDelay = 10;
-
-		this->path = std::make_shared<JoePath>(tempPath.getAllSegments(), tempPath.isIncomplete1());
-		this->movementController = std::make_unique<JoeMovementController>(path);
-	});
+	shouldStartSearch = true;
 }
 
 void FollowPathModule::onDisable() {
+	shouldStartSearch = false;
 	if(this->pathFinder)
 		this->pathFinder->terminateSearch = true;
 	this->engageDelay = -1;
@@ -78,7 +57,34 @@ void FollowPathModule::onDisable() {
 }
 
 void FollowPathModule::onTick(C_GameMode *mode) {
+	if (!shouldStartSearch)
+		return;
+	shouldStartSearch = false;
 
+	auto player = g_Data.getLocalPlayer();
+	auto pPos = player->eyePos0;
+	vec3_ti startNode((int)floorf(pPos.x), (int)roundf(pPos.y - 1.62f), (int)floorf(pPos.z));
+
+	this->startSearch(startNode, player->region, 0.5f, [&](bool succeeded, JoePath tempPath) {
+		if (!succeeded) {
+			this->clientMessageF("%sCould not find a path!", RED);
+			this->path.reset();
+			this->movementController.reset();
+			this->setEnabled(false);
+			this->engageDelay = -1;
+			return;
+		}
+
+		this->clientMessageF("%sFound %s path!", tempPath.isIncomplete1() ? YELLOW : GREEN, tempPath.isIncomplete1() ? "incomplete" : "complete");
+
+		if (tempPath.isIncomplete1()) {
+			tempPath.cutoff(0.9f);
+		}
+		this->engageDelay = 10;
+
+		this->path = std::make_shared<JoePath>(tempPath.getAllSegments(), tempPath.isIncomplete1());
+		this->movementController = std::make_unique<JoeMovementController>(path);
+	});
 }
 
 void FollowPathModule::onMove(C_MoveInputHandler *handler) {
@@ -158,8 +164,8 @@ void FollowPathModule::onLevelRender() {
 
 	if(this->movementController && this->path){
 		this->path->draw(this->movementController->getCurrentPathSegment());
-	}else if(this->pathFinder){
+	} /* else if (this->pathFinder) {
 		JoePath localPath = this->pathFinder->getCurrentPath();
 		localPath.draw(-1); // copy so we avoid drawing while its being updated by the pathfinder
-	}
+	}*/
 }

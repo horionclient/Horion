@@ -371,7 +371,7 @@ void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
 
 			messageHolder->resetWithoutDelete();
 			// MinecraftScreenModel::updateTextBoxText
-			updateTextbox(0, messageHolder);
+			//updateTextbox(0, messageHolder);
 
 			return;
 		} else if (*message == '.') {

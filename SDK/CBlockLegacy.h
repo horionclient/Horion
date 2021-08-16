@@ -44,7 +44,6 @@ private:
 public:
 	int64_t blockId;  //0x0148
 
-	int liquidGetDepth(C_BlockSource*, const vec3_ti* pos);
 	void liquidGetFlow(vec3_t* flowOut, C_BlockSource*, const vec3_ti* pos);
 	bool getCollisionShape(AABB* collShapeOut, C_Block* block, C_BlockSource* blockSource, const vec3_ti* pos, C_Entity* actor);
 	bool hasWater(C_BlockSource*, const vec3_ti& pos);
