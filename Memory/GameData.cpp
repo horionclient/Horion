@@ -1,6 +1,7 @@
 #include "GameData.h"
 
 #include <Windows.h>
+
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
 
@@ -92,7 +93,6 @@ void GameData::hide() {
 }
 
 void GameData::updateGameData(C_GameMode* gameMode) {
-	
 	retrieveClientInstance();
 	g_Data.localPlayer = g_Data.getLocalPlayer();
 
@@ -102,11 +102,9 @@ void GameData::updateGameData(C_GameMode* gameMode) {
 
 		if (g_Data.localPlayer != nullptr) {
 			C_GuiData* guiData = g_Data.clientInstance->getGuiData();
-			
-			
+
 			if (guiData != nullptr) {
 				{
-					logF("we out hjere");
 					auto vecLock = Logger::GetTextToPrintLock();
 					auto* stringPrintVector = Logger::GetTextToPrint();
 #ifdef _DEBUG
@@ -114,7 +112,7 @@ void GameData::updateGameData(C_GameMode* gameMode) {
 					std::vector<TextForPrint>::iterator it;
 					for (it = stringPrintVector->begin(); it != stringPrintVector->end(); ++it) {
 						numPrinted++;
-						if(numPrinted > 20){
+						if (numPrinted > 20) {
 							break;
 						}
 
@@ -133,7 +131,7 @@ void GameData::updateGameData(C_GameMode* gameMode) {
 					std::vector<std::string>::iterator it;
 					for (it = stringPrintVector.begin(); it != stringPrintVector.end(); ++it) {
 						numPrinted++;
-						if(numPrinted > 20){
+						if (numPrinted > 20) {
 							break;
 						}
 
@@ -223,7 +221,7 @@ void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::
 	logF("base: %llX", g_Data.getModule()->ptrBase);
 	logF("clientInstance %llX", g_Data.clientInstance);
 	logF("localPlayer %llX", g_Data.getLocalPlayer());
-	if (g_Data.clientInstance != nullptr){
+	if (g_Data.clientInstance != nullptr) {
 		logF("minecraftGame: %llX", g_Data.clientInstance->minecraftGame);
 		logF("levelRenderer: %llX", g_Data.clientInstance->levelRenderer);
 	}

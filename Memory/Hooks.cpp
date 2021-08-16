@@ -1,16 +1,14 @@
 ﻿#include "Hooks.h"
 
-#include "../SDK/Tag.h"
-
 #include <algorithm>
-
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/ext/matrix_relational.hpp>
+#include <glm/ext/matrix_transform.hpp>  // perspective, translate, rotate
+#include <glm/gtc/constants.hpp>
 #include <glm/mat4x4.hpp>         // mat4
 #include <glm/trigonometric.hpp>  //radians
 
-#include <glm/ext/matrix_transform.hpp> // perspective, translate, rotate
-#include <glm/ext/matrix_relational.hpp>
-#include <glm/ext/matrix_clip_space.hpp>
-#include <glm/gtc/constants.hpp>
+#include "../SDK/Tag.h"
 
 Hooks g_Hooks;
 bool isTicked = false;
@@ -34,7 +32,7 @@ void Hooks::Init() {
 				g_Hooks.GameMode_startDestroyBlockHook = std::make_unique<FuncHook>(gameModeVtable[1], Hooks::GameMode_startDestroyBlock);
 
 				g_Hooks.GameMode_getPickRangeHook = std::make_unique<FuncHook>(gameModeVtable[10], Hooks::GameMode_getPickRange);
-				
+
 				g_Hooks.GameMode_attackHook = std::make_unique<FuncHook>(gameModeVtable[14], Hooks::GameMode_attack);
 			}
 		}
@@ -85,7 +83,7 @@ void Hooks::Init() {
 			uintptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 49 89 06 49 8D 76 50");
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
 			uintptr_t** directoryPackVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset +  7);
-			
+
 			{
 				g_Hooks.DirectoryPackAccessStrategy__isTrustedHook = std::make_unique<FuncHook>(directoryPackVtable[6], Hooks::DirectoryPackAccessStrategy__isTrusted);
 			}
@@ -93,11 +91,11 @@ void Hooks::Init() {
 			uintptr_t sigOffset2 = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 03 49 8D 57");
 			int offset2 = *reinterpret_cast<int*>(sigOffset2 + 3);
 			uintptr_t** directoryPackVtable2 = reinterpret_cast<uintptr_t**>(sigOffset2 + offset2 +  7);
-			
+
 			{
 				g_Hooks.ZipPackAccessStrategy__isTrustedHook = std::make_unique<FuncHook>(directoryPackVtable2[6], Hooks::ReturnTrue);
 			}
-			g_Hooks.SkinRepository___checkSignatureFileInPack = std::make_unique<FuncHook>(FindSignature("48 89 5C 24 ? 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B 39 48 8B 59 ? 48 85 DB"), Hooks::ReturnTrue);			
+			g_Hooks.SkinRepository___checkSignatureFileInPack = std::make_unique<FuncHook>(FindSignature("48 89 5C 24 ? 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B 39 48 8B 59 ? 48 85 DB"), Hooks::ReturnTrue);
 		}
 	}
 
@@ -111,7 +109,6 @@ void Hooks::Init() {
 		const D3D_FEATURE_LEVEL featureLevelArray[3] = {
 			D3D_FEATURE_LEVEL_10_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_11_0
 		};
-
 
 		DXGI_SWAP_CHAIN_DESC sd;
 		{
@@ -130,7 +127,7 @@ void Hooks::Init() {
 			sd.Windowed = TRUE;
 			sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		}
-	
+
         IDXGISwapChain* pSwapChain;
 
 		const auto hr11 = static_cast<HRESULT(WINAPI *)(
@@ -163,11 +160,11 @@ void Hooks::Init() {
 			logF("swap vtable: %llX", *pSwapChain);
 			pSwapChain->Release();
 		}*
-		
+
 		uintptr_t sigOffset = FindSignature("48 8B 0D ?? ?? ?? ?? 48 8B 91 ?? ?? ?? ?? E8");
 		if (sigOffset != 0x0) {
 			int startOffsetOffset = *reinterpret_cast<int*>((sigOffset + 3));
-			uintptr_t startOffset = sigOffset + startOffsetOffset + /*length of instruction/ 7;  
+			uintptr_t startOffset = sigOffset + startOffsetOffset + /*length of instruction/ 7;
 			size_t secondOffset = (size_t) *reinterpret_cast<int*>((sigOffset + 10));
 			auto swapChain = g_Data.getSlimMem()->ReadPtr<__int64>(startOffset, {0, secondOffset, 0x170});
 			auto vtable = *reinterpret_cast<uintptr_t**>(swapChain);
@@ -208,10 +205,10 @@ void Hooks::Init() {
 
 		void* lerpFunc = reinterpret_cast<void*>(FindSignature("8B 02 89 81 ? ? ? ? 8B 42 ? 89 81 ? ? ? ? 8B 42 ? 89 81 ? ? ? ? C3 CC CC CC CC CC 48 89 5C 24"));
 		g_Hooks.Actor_lerpMotionHook = std::make_unique<FuncHook>(lerpFunc, Hooks::Actor_lerpMotion);
-		
+
 		void* ascendLadder = reinterpret_cast<void*>(FindSignature("C7 81 ? ? ? ? ? ? ? ? C3 CC CC CC CC CC C7 81 ? ? ? ? ? ? ? ? C3 CC CC CC CC CC C7 81"));
 		g_Hooks.Actor_ascendLadderHook = std::make_unique<FuncHook>(ascendLadder, Hooks::Actor_ascendLadder);
-		
+
 		void* isInWater = reinterpret_cast<void*>(FindSignature("0F B6 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 0F B6 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ? 48 89 6C 24"));
 		g_Hooks.Actor_isInWaterHook = std::make_unique<FuncHook>(isInWater, Hooks::Actor_isInWater);
 
@@ -263,10 +260,10 @@ void Hooks::Init() {
 
 		void* _getSkinPack = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B E2 48 8B F1"));
 		g_Hooks.SkinRepository___loadSkinPackHook = std::make_unique<FuncHook>(_getSkinPack, Hooks::SkinRepository___loadSkinPack);
-		
+
 		void* _toStyledString = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 81 EC ? ? ? ? 49 8B D8 48 8B F9"));
 		g_Hooks.toStyledStringHook = std::make_unique<FuncHook>(_toStyledString, Hooks::toStyledString);
-		 
+
 		void* InGamePlayScreen___renderLevel = reinterpret_cast<void*>(FindSignature("48 89 5C 24 20 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 0F 29 B4 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 49 8B D8 4C"));
 		g_Hooks.InGamePlayScreen___renderLevelHook = std::make_unique<FuncHook>(InGamePlayScreen___renderLevel, Hooks::InGamePlayScreen___renderLevel);
 
@@ -274,7 +271,7 @@ void Hooks::Init() {
 		void* addAction = reinterpret_cast<void*>(FindSignature("40 56 57 41 54 41 56 41 57 48 83 EC 30 48 C7 44 24 ? ? ? ? ? 48 89 5C 24 ? 48 89 6C 24 ? 45 0F B6 F8 4C 8B F2 48 8B F9 48 8B 01 48 8B 88 ? ? ? ?"));
 		g_Hooks.InventoryTransactionManager__addActionHook = std::make_unique<FuncHook>(addAction, Hooks::InventoryTransactionManager__addAction);
 #endif
-		
+
 		void* localPlayerUpdateFromCam = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 80 BA"));
 		g_Hooks.LocalPlayer__updateFromCameraHook = std::make_unique<FuncHook>(localPlayerUpdateFromCam, Hooks::LocalPlayer__updateFromCamera);
 
@@ -283,28 +280,28 @@ void Hooks::Init() {
 
 		void* renderNameTags = reinterpret_cast<void*>(FindSignature("4C 8B DC 49 89 5B ? 55 56 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 41 0F 29 73 ? 41 0F 29 7B ? 45 0F 29 43 ? 48 8B 05"));
 		g_Hooks.LevelRendererPlayer__renderNameTagsHook = std::make_unique<FuncHook>(renderNameTags, Hooks::LevelRendererPlayer__renderNameTags);
-	
+
 		static constexpr auto counterStart = __COUNTER__ + 1;
 		#define lambda_counter (__COUNTER__ - counterStart)
-		
+
 		void* levelRendererBobView = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 57 48 81 EC ?? ?? ?? ?? 48 8B D9 0F 29 B4 24 ?? ?? ?? ?? 48 8B 89"));
 
 		static auto bobViewHookF = [](__int64 _this, glm::mat4& matrix, float lerpT){
 			static auto origFunc = g_Hooks.lambdaHooks.at(lambda_counter)->GetFastcall<void, __int64, glm::mat4&, float>();
-			
+
 			/*auto p = g_Data.getLocalPlayer();
 			float degrees = fmodf(p->getPosOld()->lerp(p->getPos(), lerpT).x, 5) - 2.5f;
 			degrees *= 180 / 2.5f;
 
 			auto pos = g_Data.getClientInstance()->levelRenderer->origin;
-			
+
 			glm::mat4 View = matrix;
-			
+
 			matrix = View;
 			//matrix = glm::rotate<float>(matrix, glm::radians<float>(degrees), glm::vec3(0, 0, 1));*/
 			return origFunc(_this, matrix, lerpT);
 		};
-		
+
 		std::shared_ptr<FuncHook> bobViewHook = std::make_shared<FuncHook>(levelRendererBobView, (decltype(&bobViewHookF.operator()))bobViewHookF);
 
 		g_Hooks.lambdaHooks.push_back(bobViewHook);
@@ -325,17 +322,15 @@ void Hooks::Restore() {
 void Hooks::Enable() {
 	logF("Hooks enabled");
 	MH_EnableHook(MH_ALL_HOOKS);
-	
 }
 
 void* Hooks::Player_tickWorld(C_Player* _this, __int64 unk) {
 	static auto oTick = g_Hooks.Player_tickWorldHook->GetFastcall<void*, C_Player*, __int64>();
 	auto o = oTick(_this, unk);
-	
-	if (_this == g_Data.getLocalPlayer()){
-		// scuffed
+
+	if (_this == g_Data.getLocalPlayer()) {
 		// TODO: refactor all modules to not use GameMode
-		C_GameMode* gm = *reinterpret_cast<C_GameMode**>(reinterpret_cast<__int64>(_this) + 4656);
+		C_GameMode* gm = *reinterpret_cast<C_GameMode**>(reinterpret_cast<__int64>(_this) + 4840);
 		GameData::updateGameData(gm);
 		moduleMgr->onTick(gm);
 	}
@@ -403,7 +398,7 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	if (alloc.getTextLength() < 100) {
 		strcpy_s(g_Hooks.currentScreenName, alloc.getText());
 	}
-	
+
 	if (!g_Hooks.shouldRender) {
 		g_Hooks.shouldRender = alwaysRender || (strcmp(alloc.getText(), "start_screen") == 0 || (alloc.getTextLength() >= 11 && strncmp(alloc.getText(), "play_screen", 11)) == 0);
 	}
@@ -429,7 +424,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		}
 		static bool hasSentWarning = false;
 		if (!g_Data.isInjectorConnectionActive() && !hasSentWarning) {
-			
 			__int64 retval = oText(a1, renderCtx);
 
 			LARGE_INTEGER end, elapsed;
@@ -455,7 +449,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				DrawUtils::flush();*/
 			}
 
-			if(!hasSentWarning) // Wait for injector, it might connect in time
+			if (!hasSentWarning)  // Wait for injector, it might connect in time
 				return retval;
 		} else
 			wasConnectedBefore = true;
@@ -623,7 +617,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					g_Data.sendPacketToInjector(packet);
 				}
 			}
-
 		} else {
 			shouldRenderTabGui = hudModule->tabgui && hudModule->isEnabled();
 			shouldRenderArrayList = hudModule->arraylist && hudModule->isEnabled();
@@ -684,7 +677,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 				// Draw ArrayList
 				if (moduleMgr->isInitialized() && shouldRenderArrayList) {
-
 					// Parameters
 					float textSize = hudModule->scale;
 					float textPadding = 1.0f * textSize;
@@ -970,12 +962,12 @@ void Hooks::Actor_lerpMotion(C_Entity* _this, vec3_t motVec) {
 		if (!networkSender) {
 			networkSender = reinterpret_cast<void*>(3 + FindSignature("FF 50 ? 41 80 BE ? ? ? ? ? 0F 85 ? ? ? ? EB 76"));
 		}
-		
+
 		if (networkSender == _ReturnAddress()) {
 			motVec = _this->velocity.lerp(motVec, noKnockbackmod->xModifier, noKnockbackmod->yModifier, noKnockbackmod->xModifier);
 		}
 	}
-	
+
 	oLerp(_this, motVec);
 }
 
@@ -1150,11 +1142,11 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 
 	if (autoSneakMod->isEnabled() && g_Data.getLocalPlayer() != nullptr && autoSneakMod->doSilent && packet->isInstanceOf<C_PlayerActionPacket>()) {
 		auto* pp = reinterpret_cast<C_PlayerActionPacket*>(packet);
-		
-		if (pp->action == 12 && pp->entityRuntimeId == g_Data.getLocalPlayer()->entityRuntimeId) 
-			return; //dont send uncrouch
+
+		if (pp->action == 12 && pp->entityRuntimeId == g_Data.getLocalPlayer()->entityRuntimeId)
+			return;  //dont send uncrouch
 	}
-	
+
 	moduleMgr->onSendPacket(packet);
 
 	if (strcmp(packet->getName()->getText(), "EmotePacket") == 0) {
@@ -1357,7 +1349,7 @@ __int64 Hooks::ChestScreenController_tick(C_ChestScreenController* a1) {
 	static auto oFunc = g_Hooks.ChestScreenController_tickHook->GetFastcall<__int64, C_ChestScreenController*>();
 
 	static auto chestStealerMod = moduleMgr->getModule<ChestStealer>();
-	if(chestStealerMod->isEnabled()) chestStealerMod->chestScreenController_tick(a1);
+	if (chestStealerMod->isEnabled()) chestStealerMod->chestScreenController_tick(a1);
 
 	return oFunc(a1);
 }
@@ -1554,7 +1546,7 @@ __int64 Hooks::PaintingRenderer__render(__int64 _this, __int64 a2, __int64 a3) {
 	if (NoPaintingCrashMod->isEnabled())
 		return 0;
 
-	return Func(_this,a2,a3);
+	return Func(_this, a2, a3);
 }
 
 bool Hooks::DirectoryPackAccessStrategy__isTrusted(__int64 _this) {
@@ -1567,7 +1559,7 @@ bool Hooks::DirectoryPackAccessStrategy__isTrusted(__int64 _this) {
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		directoryPackAccessStrategyVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + 7);
 	}
-	
+
 	if (*reinterpret_cast<uintptr_t*>(_this) == (uintptr_t)directoryPackAccessStrategyVtable)
 		return true;
 
@@ -1742,7 +1734,6 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 		_D3DVECTOR4 color;
 	};
 
-
 	static bool init = false;
 	static ID3D11Device* device;
 	static ID3D11DeviceContext* context;
@@ -1766,7 +1757,6 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 				{"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 				{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0}
 			};
-			
 
 		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 		bufferDesc.ByteWidth = 50 * sizeof(VertexType);
@@ -1869,7 +1859,6 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 			result = device->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
 			if (FAILED(result)) {
 				logF("CreateBuffer2 %llX", result);
-
 			}
 		}
 
@@ -1877,7 +1866,7 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 	}
 
 	/*
-	
+
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 
@@ -1888,7 +1877,6 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 	}
 
 	ImGui::NewFrame();
-
 
 	ImGui::Begin("bean");
 
@@ -1931,7 +1919,7 @@ HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT
 	context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	context->IASetInputLayout(m_pInputLayout);
-	
+
 	context->DrawIndexed(3, 0, 0);
 #endif
 
@@ -1967,7 +1955,6 @@ __int64 Hooks::Cube__compile(__int64 a1, __int64 a2) {
 	auto it = *reinterpret_cast<__int64*>(a1 + 0x30);
 	auto boi = it + 0x1C;
 	while (it != end) {  // loop through PolygonQuad
-
 		if (it != boi + 0x34) {
 			auto iter2 = boi - 0xC;
 			do {
@@ -1975,7 +1962,6 @@ __int64 Hooks::Cube__compile(__int64 a1, __int64 a2) {
 				float* floatyBoi = reinterpret_cast<float*>(iter2 - 16);
 				logF("%.1f %.1f %.1f", floatyBoi[0], floatyBoi[1], floatyBoi[2]);
 				iter2 += 0x14;
-
 			} while (iter2 - 0x10 != boi + 0x34);
 		}
 		boi += 0x50;
