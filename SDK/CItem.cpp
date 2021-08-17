@@ -47,12 +47,12 @@ void C_ItemStack::fromTag(const Tag &tag) {
 }
 void C_ItemStack::save(CompoundTag **tag) {
 	using ItemStackBase__saveF = void(__fastcall *)(C_ItemStack *, CompoundTag **);
-	ItemStackBase__saveF save = reinterpret_cast<ItemStackBase__saveF>(FindSignature("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B FA 48 8B F1 48 89 55 F7 45 33 ED"));
+	ItemStackBase__saveF save = reinterpret_cast<ItemStackBase__saveF>(FindSignature("48 89 5C 24 ?? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC 90 ?? ?? ?? 48 8B F2 48 8B F9 48 89 55 17 4C 8B 79"));
 	return save(this, tag);
 }
 void C_ItemStack::setUserData(std::unique_ptr<Tag> tag) {
 	using setUserData_t = void(__fastcall *)(C_ItemStack *, std::unique_ptr<Tag>);
-	setUserData_t setUserData = reinterpret_cast<setUserData_t>(FindSignature("40 53 48 83 EC ? 48 8B DA 48 8D 51 10 48 3B D3 74 1F 48 8B 03 48 C7 03 ? ? ? ?"));
+	setUserData_t setUserData = reinterpret_cast<setUserData_t>(FindSignature("40 53 48 83 EC ? 48 8B DA 48 8D 51 20 48 3B D3 74 1F 48 8B 03 48 C7 03 ? ? ? ?"));
 	setUserData(this, std::move(tag));
 }
 void C_ItemStack::reinit(C_BlockLegacy &legacy, int count) {

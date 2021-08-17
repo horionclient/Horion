@@ -81,13 +81,16 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 	C_InventoryAction* firstAction = nullptr;
 	C_InventoryAction* secondAction = nullptr;
 
+	ItemDescriptor* desc = nullptr;
+	desc = new ItemDescriptor((*item->item)->itemId, 0); 
+
 	if (isAuto) {
 		{
-			firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, item, nullptr);
+			firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, desc, nullptr, item, nullptr, item->count);
 			if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0)
-				secondAction = new C_InventoryAction(0, nullptr, item, 32766, 100);
+				secondAction = new C_InventoryAction(0, nullptr, desc, nullptr, item, item->count, 32766, 100);
 			else 
-				secondAction = new C_InventoryAction(0, nullptr, item, 507, 99999);
+				secondAction = new C_InventoryAction(0, nullptr, desc, nullptr, item, item->count, 507, 99999);
 			manager->addInventoryAction(*firstAction);
 			manager->addInventoryAction(*secondAction);
 			delete firstAction;
@@ -159,10 +162,10 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 
 	if (isAuto) {
 		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0)
-			firstAction = new C_InventoryAction(0, item, nullptr, 32766, 100);
+			firstAction = new C_InventoryAction(0, desc, nullptr, item, nullptr, item->count, 32766, 100);
 		else
-			firstAction = new C_InventoryAction(0, item, nullptr, 507, 99999);
-		secondAction = new C_InventoryAction(supplies->selectedHotbarSlot, nullptr, item);
+			firstAction = new C_InventoryAction(0, desc, nullptr, item, nullptr, item->count, 507, 99999);
+		secondAction = new C_InventoryAction(supplies->selectedHotbarSlot, nullptr, desc, nullptr, item, item->count);
 		manager->addInventoryAction(*firstAction);
 		manager->addInventoryAction(*secondAction);
 		delete firstAction;
