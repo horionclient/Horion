@@ -376,6 +376,11 @@ private:
 public:
 	virtual void setOnFire(int);
 
+	virtual __int64 extinguishFire(void);
+	virtual __int64 thawFreezeEffect(void);
+	virtual bool canFreeze(void);
+	virtual bool isWearingLeatherArmor(void);
+
 private:
 	virtual __int64 getHandleWaterAABB(void) const;
 	virtual __int64 handleInsidePortal(vec3_ti const &);
@@ -390,7 +395,7 @@ public:
 private:
 	virtual __int64 changeDimension(__int64, bool);
 	virtual __int64 changeDimension(__int64 const &);
-	virtual __int64 getControllingPlayer(void) const;
+	virtual __int64 getControllingPlayer(void) const; // getSourceUniqueID2
 	virtual __int64 checkFallDamage(float, bool);
 
 public:
@@ -437,8 +442,8 @@ public:
 	virtual __int64 getDeathTime(void) const;
 	virtual __int64 heal(int);
 	virtual bool isInvertedHealAndHarm(void) const;
-	virtual bool canBeAffected(int) const;
 	virtual bool canBeAffected(__int64 const &) const;
+	virtual bool canBeAffected(int) const;
 	virtual bool canBeAffectedByArrow(__int64 const &) const;
 
 private:
