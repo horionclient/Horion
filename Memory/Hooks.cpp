@@ -38,17 +38,16 @@ void Hooks::Init() {
 		}
 
 		// BlockLegacy::vtable
-		{
-			intptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 4C 8B 72 ? 48 B9");  // BlockLegacy constructor
-			int offset = *reinterpret_cast<int*>(sigOffset + 3);
-			uintptr_t** blockLegacyVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + 7);
-			if (blockLegacyVtable == 0x0 || sigOffset == 0x0)
-				logF("C_BlockLegacy signature not working!!!");
-			else {
-				g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(blockLegacyVtable[180], Hooks::BlockLegacy_getRenderLayer);
-				g_Hooks.BlockLegacy_getLightEmissionHook = std::make_unique<FuncHook>(blockLegacyVtable[183], Hooks::BlockLegacy_getLightEmission);
-			}
-		}
+        {
+            intptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 4C 8B 72 ? 48 B9");  // BlockLegacy constructor
+            int offset = *reinterpret_cast<int*>(sigOffset + 3);
+            uintptr_t** blockLegacyVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + 7);
+            if (blockLegacyVtable == 0x0 || sigOffset == 0x0)
+                logF("C_BlockLegacy signature not working!!!");
+            else {
+                g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(blockLegacyVtable[180], Hooks::BlockLegacy_getRenderLayer);
+            }
+        }
 
 		// LocalPlayer::vtable
 		{
@@ -221,7 +220,7 @@ void Hooks::Init() {
 		uintptr_t** packetSenderVtable = reinterpret_cast<uintptr_t**>(*(uintptr_t*)g_Data.getClientInstance()->loopbackPacketSender);
 		g_Hooks.LoopbackPacketSender_sendToServerHook = std::make_unique<FuncHook>(packetSenderVtable[2], Hooks::LoopbackPacketSender_sendToServer);
 
-		void* getFov = reinterpret_cast<void*>(FindSignature("40 53 48 83 EC 70 0F 29 7C 24 ? 44 0F 29 4C 24 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? F3 0F 10 3D ? ? ? ? 44 0F"));
+		void* getFov = reinterpret_cast<void*>(FindSignature("40 53 48 83 EC ?? 0F 29 7C 24 ?? 44"));
 		g_Hooks.LevelRendererPlayer_getFovHook = std::make_unique<FuncHook>(getFov, Hooks::LevelRendererPlayer_getFov);
 
 		void* tick_entityList = reinterpret_cast<void*>(FindSignature("48 89 ?? ?? ?? 57 48 83 EC ?? 48 8B ?? E8 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B D8 ?? ?? ?? ?? ?? ?? 48 99"));
@@ -239,8 +238,8 @@ void Hooks::Init() {
 		void* chestScreenControllerTick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 08 57 48 83 EC 20 48 8B F9 E8 ?? ?? ?? ?? 48 8B 17 48 8B CF 8B D8 FF 92 ?? ?? ?? ?? 84 C0 74 31"));
 		g_Hooks.ChestScreenController_tickHook = std::make_unique<FuncHook>(chestScreenControllerTick, Hooks::ChestScreenController_tick);
 
-		void* fullbright = reinterpret_cast<void*>(FindSignature("48 83 EC ? 80 B9 ? ? ? ? ? 48 8D 54 24 ? 74 ? 41 B8 ? ? ? ? E8 ? ? ? ? 48 8B 10 48 85 D2 74 ? 48 8B 42 ? 48 8B 88 ? ? ? ? 48 85 C9 74 ? E8 ? ? ? ? 48 83 C4 ? C3 F3 0F 10 42"));
-		g_Hooks.GetGammaHook = std::make_unique<FuncHook>(fullbright, Hooks::GetGamma);
+		void* fullbright = reinterpret_cast<void*>(FindSignature("48 83 EC ?? 80 B9 ?? ?? ?? ?? ?? 48 8D 54 24 ?? 48 8B 01 74 35 41 B8 0D 01 00 00"));
+        g_Hooks.GetGammaHook = std::make_unique<FuncHook>(fullbright, Hooks::GetGamma);
 
 		// Mob::_jumpFromGround
 		void* jump = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B 19 48 8D"));
@@ -1171,9 +1170,9 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 
 float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3) {
 	static auto oGetFov = g_Hooks.LevelRendererPlayer_getFovHook->GetFastcall<float, __int64, float, bool>();
-	static void* renderItemInHand = reinterpret_cast<void*>(FindSignature("0F 28 C8 F3 0F 59 0D ?? ?? ?? ?? 41 0F 28 F9"));
+	static void* renderItemInHand = reinterpret_cast<void*>(FindSignature("F3 0F 59 05 ?? ?? ?? ?? 45 0F 28 C2 F3"));
 
-	static void* setupCamera = reinterpret_cast<void*>(FindSignature("44 0F 28 D8 F3 44 0F 59 1D ?? ?? ?? ?? 0F"));
+	static void* setupCamera = reinterpret_cast<void*>(FindSignature("0F 28 F8 F3 0F 59 3D ?? ?? ?? ?? F3 0F 11 7C 24 24 F3 0F 10 87"));
 
 	static auto zoomModule = moduleMgr->getModule<Zoom>();
 
@@ -1264,9 +1263,17 @@ int Hooks::BlockLegacy_getRenderLayer(C_BlockLegacy* a1) {
 			if (strcmp(text, "lava") != NULL)
 				if (strcmp(text, "water") != NULL)
 					if (strcmp(text, "portal") != NULL)
-						if (strcmp(text, "ancient_debris") != NULL)
-							if (strcmp(text, "command_block") != NULL)
-								return 10;
+						if (strcmp(text, "amethyst_block") != NULL)
+							if (strcmp(text, "ancient_debris") != NULL)
+								if (strcmp(text, "command_block") != NULL)
+									if (strcmp(text, "repeating_command_block") != NULL)
+										if (strcmp(text, "chain_command_block") != NULL)
+											if (strcmp(text, "structure_block") != NULL)
+												if (strcmp(text, "deny") != NULL)
+													if (strcmp(text, "allow") != NULL)
+														if (strcmp(text, "bedrock") != NULL)
+															if (strcmp(text, "border_block") != NULL)
+																return 10;
 	}
 	return oFunc(a1);
 }
@@ -1365,13 +1372,45 @@ __int64 Hooks::ChestScreenController_tick(C_ChestScreenController* a1) {
 }
 
 float Hooks::GetGamma(uintptr_t* a1) {
-	static auto fullBrightModule = moduleMgr->getModule<FullBright>();
-	if (fullBrightModule->isEnabled())
-		return fullBrightModule->intensity;
+	static auto fullbright = moduleMgr->getModule<FullBright>();
+	static auto xrayMod = moduleMgr->getModule<Xray>();
+	static auto nametagmod = moduleMgr->getModule<NameTags>();
 
-	//Get the normal gamma value
-	float* gamer = (float*)*(a1 + 0x27);
-	return *(gamer + 0x7A);
+	uintptr_t** list = (uintptr_t**)a1;
+
+	char obtainedSettings = 0;
+	bool hadIt = false;
+	for (uint16_t i = 3; i < 450; i++) {
+		if (list[i] == nullptr) continue;
+		uintptr_t* info = *(uintptr_t**)((uintptr_t)list[i] + 8);
+		if (info == nullptr) continue;
+
+		TextHolder* translateName = (TextHolder*)((uintptr_t)info + 0x1D8);
+		TextHolder* settingname = (TextHolder*)((uintptr_t)info + 0x188);
+
+		if (!strcmp(translateName->getText(), "options.smoothlighting")) {
+			if (hadIt) continue;
+			bool* smoothlightning = (bool*)((uintptr_t)list[i] + 16);
+			xrayMod->smoothLightningSetting = smoothlightning;
+			obtainedSettings++;
+			hadIt = true;
+		} else if (!strcmp(settingname->getText(), "gfx_ingame_player_names")) {
+			bool* ingamePlayerName = (bool*)((uintptr_t)list[i] + 16);
+			nametagmod->ingameNametagSetting = ingamePlayerName;
+			obtainedSettings++;
+		}
+
+		if (obtainedSettings == 2) break;
+	}
+
+	if (xrayMod->isEnabled())
+		return 25.f;
+
+	if (fullbright->isEnabled())
+		return 100.f;
+
+	static auto ofunc = g_Hooks.GetGammaHook->GetFastcall<float, uintptr_t*>();
+	return ofunc(a1);
 }
 
 bool Hooks::Actor_isInWater(C_Entity* _this) {
