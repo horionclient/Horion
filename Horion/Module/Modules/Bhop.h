@@ -5,10 +5,10 @@
 class Bhop : public IModule {
 private:
 	float speed = 0.325f;
-	bool lowhop = true;
-	float upVal = 0.325f;
+	float lowhopVal = 0.325f;
 
 public:
+	SettingEnum type;
 	Bhop();
 	~Bhop();
 

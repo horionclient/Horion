@@ -1,9 +1,12 @@
 #include "Bhop.h"
 
 Bhop::Bhop() : IModule(0, Category::MOVEMENT, "Hop around like a bunny!") {
+	registerEnumSetting("Mode", &type, 0);
+	type = SettingEnum(this)
+			   .addEntry(EnumEntry("Normal", 0))
+			   .addEntry(EnumEntry("Lowhop", 1));
 	registerFloatSetting("Speed", &this->speed, this->speed, 0.1f, 0.8f);
-	registerBoolSetting("Lowhop", &this->lowhop, this->lowhop);
-	registerFloatSetting("Lowhop Value", &this->upVal, this->upVal, 0.05f, 0.50f);
+	registerFloatSetting("Lowhop Value", &this->lowhopVal, this->lowhopVal, 0.05f, 0.60f);
 }
 
 Bhop::~Bhop() {
@@ -14,31 +17,58 @@ const char* Bhop::getModuleName() {
 }
 
 void Bhop::onMove(C_MoveInputHandler* input) {
-	auto player = g_Data.getLocalPlayer();
-	if (player == nullptr) return;
+	if (type.selected == 0) {
+		auto player = g_Data.getLocalPlayer();
+		if (player == nullptr) return;
 
-	if (player->isInLava() == 1 || player->isInWater() == 1) 
-		return;
-	
-	if (player->isSneaking()) 
-		return;
+		if (player->isInLava() == 1 || player->isInWater() == 1)
+			return;
 
-	vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
-	bool pressed = moveVec2d.magnitude() > 0.01f;
+		if (player->isSneaking())
+			return;
 
-	if (player->onGround && pressed)
-		player->jumpFromGround();
-	
-	float calcYaw = (player->yaw + 90) * (PI / 180);
-	vec3_t moveVec;
-	float c = cos(calcYaw);
-	float s = sin(calcYaw);
-	moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
-	moveVec.x = moveVec2d.x * speed;
-	moveVec.y = player->velocity.y;
-	moveVec.z = moveVec2d.y * speed;
-	if(pressed) player->lerpMotion(moveVec);
-	
-	if (this->lowhop && player->onGround && pressed && !input->isJumping)
-		player->velocity.y -= upVal;
-}
+		vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
+		bool pressed = moveVec2d.magnitude() > 0.01f;
+
+		if (player->onGround && pressed)
+			player->jumpFromGround();
+
+		float calcYaw = (player->yaw + 90) * (PI / 180);
+		vec3_t moveVec;
+		float c = cos(calcYaw);
+		float s = sin(calcYaw);
+		moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
+		moveVec.x = moveVec2d.x * speed;
+		moveVec.y = player->velocity.y;
+		moveVec.z = moveVec2d.y * speed;
+		if (pressed) player->lerpMotion(moveVec);
+	}
+	if (type.selected == 1) {
+		auto player = g_Data.getLocalPlayer();
+		if (player == nullptr) return;
+
+		if (player->isInLava() == 1 || player->isInWater() == 1)
+			return;
+
+		if (player->isSneaking())
+			return;
+
+		vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
+		bool pressed = moveVec2d.magnitude() > 0.01f;
+
+		if (player->onGround && pressed)
+			player->jumpFromGround();
+
+		float calcYaw = (player->yaw + 90) * (PI / 180);
+		vec3_t moveVec;
+		float c = cos(calcYaw);
+		float s = sin(calcYaw);
+		moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
+		moveVec.x = moveVec2d.x * speed;
+		moveVec.y = player->velocity.y;
+		moveVec.z = moveVec2d.y * speed;
+		if (pressed) player->lerpMotion(moveVec);
+			if (player->onGround && pressed && !input->isJumping)
+				player->velocity.y -= lowhopVal;
+		}
+	}
