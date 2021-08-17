@@ -35,12 +35,12 @@ bool NbtCommand::execute(std::vector<std::string>* args) {
 			boy->write(build);
 			delete boy;
 		} else {
-			if (pointingStruct->entityPtr != nullptr) {
+			if (pointingStruct->getEntity() != nullptr) {
 				if (g_Data.getRakNetInstance()->serverIp.getTextLength() >= 1) {
 					clientMessageF("%sNBT tags for mobs only works in local world!", RED);
 					return true;
 				}
-				pointingStruct->entityPtr->save(tag.get());
+				pointingStruct->getEntity()->save(tag.get());
 				tag->write(build);
 			} else if (blockActor != nullptr) {
 				blockActor->save(tag.get());

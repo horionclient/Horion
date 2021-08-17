@@ -153,7 +153,7 @@ void CrystalAura::onTick(C_GameMode* gm) {
 					CPlace(gm, i->getPos());
 			else {
 				auto ptr = g_Data.getClientInstance()->getPointerStruct();
-				if (ptr->entityPtr == nullptr && ptr->rayHitType == 0)
+				if (ptr->getEntity() == nullptr && ptr->rayHitType == 0)
 					CPlace(gm, &ptr->block.toFloatVector());
 			}
 		}
@@ -192,7 +192,7 @@ void CrystalAura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	
 	auto ptr = g_Data.getClientInstance()->getPointerStruct();
 	if (ptr != nullptr)
-		if (ptr->entityPtr == nullptr && ptr->rayHitType == 0)
+		if (ptr->getEntity() == nullptr && ptr->rayHitType == 0)
 			if (g_Data.getLocalPlayer()->region->getBlock(ptr->block)->toLegacy()->blockId == 49 ||
 				g_Data.getLocalPlayer()->region->getBlock(ptr->block)->toLegacy()->blockId == 7) {
 				DrawUtils::setColor(.75f, .25f, .5f, 1.f);
