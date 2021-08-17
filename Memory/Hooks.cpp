@@ -181,8 +181,8 @@ void Hooks::Init() {
 		void* player_tickworld = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 0F 29 B4 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 89 55 ?? 48 8B F9"));
 		g_Hooks.Player_tickWorldHook = std::make_unique<FuncHook>(player_tickworld, Hooks::Player_tickWorld);
 
-		void* _sendChatMessage = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B D9 48 83 B9"));
-		g_Hooks.ChatScreenController_sendChatMessageHook = std::make_unique<FuncHook>(_sendChatMessage, Hooks::ChatScreenController_sendChatMessage);
+		void* _sendChatMessage = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 4C 8B EA 4C 8B F9 48 8B 49"));
+		g_Hooks.ClientInstanceScreenModel_sendChatMessageHook = std::make_unique<FuncHook>(_sendChatMessage, Hooks::ClientInstanceScreenModel_sendChatMessage);
 
 		void* _renderText = reinterpret_cast<void*>(FindSignature("48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 B8 0F 29 78 A8 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA 48 89 54 24 ? 4C 8B E9"));
 		g_Hooks.RenderTextHook = std::make_unique<FuncHook>(_renderText, Hooks::RenderText);
@@ -337,41 +337,15 @@ void* Hooks::Player_tickWorld(C_Player* _this, __int64 unk) {
 	return o;
 }
 
-void Hooks::ChatScreenController_sendChatMessage(uint8_t* _this) {
-	static auto oSendMessage = g_Hooks.ChatScreenController_sendChatMessageHook->GetFastcall<void, void*>();
+void Hooks::ClientInstanceScreenModel_sendChatMessage(void* _this, TextHolder* text) {
+	static auto oSendMessage = g_Hooks.ClientInstanceScreenModel_sendChatMessageHook->GetFastcall<void, void*>();
 
-	using addCommandToChatHistory_t = void(__fastcall*)(uint8_t*, TextHolder*);
-	static addCommandToChatHistory_t addCommandToChatHistory = reinterpret_cast<addCommandToChatHistory_t>(FindSignature("48 89 5C 24 08 48 89 74 24 10 57 48 83 EC ?? 48 8B 99 ?? ?? ?? ?? 48 8B F2 80"));
 
-	using updateTextbox_t = void(__fastcall*)(__int64, TextHolder*);
-	static updateTextbox_t updateTextbox = reinterpret_cast<updateTextbox_t>(0);
-	if (updateTextbox == nullptr) {
-		auto sig = FindSignature("E8 ? ? ? ? 48 8D 8B ? ? ? ? 0F 57 C0");
-		updateTextbox = reinterpret_cast<updateTextbox_t>(sig + 5 + *reinterpret_cast<int*>(sig + 1)); 
-	}
-
-	TextHolder* messageHolder = reinterpret_cast<TextHolder*>(_this + 0xA98);
-	if (messageHolder->getTextLength() > 0) {
-		char* message = messageHolder->getText();
+	if (text->getTextLength() > 0) {
+		char* message = text->getText();
 
 		if (*message == cmdMgr->prefix) {
 			cmdMgr->execute(message);
-
-			addCommandToChatHistory(_this, messageHolder);  // This will put the command in the chat history (Arrow up/down)
-
-			__int64 v17 = 0;
-			C_ClientInstance* v15 = g_Data.getClientInstance();
-			__int64 vtable = *reinterpret_cast<__int64*>(v15);
-
-			if (*(BYTE*)(_this + 0xA9A)) // isDevConsole
-				v17 = (*(__int64(__cdecl**)(C_ClientInstance*))(vtable + 0x9B8))(v15);
-			else
-				v17 = (*(__int64(__cdecl**)(C_ClientInstance*))(vtable + 0x9B0))(v15);
-			*(DWORD*)(_this + 0xABC) = *(DWORD*)(v17 + 0x20);
-
-			messageHolder->resetWithoutDelete();
-			// MinecraftScreenModel::updateTextBoxText
-			//updateTextbox(0, messageHolder);
 
 			return;
 		} else if (*message == '.') {
