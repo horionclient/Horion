@@ -1407,7 +1407,7 @@ float Hooks::GetGamma(uintptr_t* a1) {
 		return 25.f;
 
 	if (fullbright->isEnabled())
-		return 100.f;
+		return fullbright->intensity;
 
 	static auto ofunc = g_Hooks.GetGammaHook->GetFastcall<float, uintptr_t*>();
 	return ofunc(a1);

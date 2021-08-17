@@ -372,13 +372,16 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 		rectPos.w = textPos.y + textHeight + 2.f * textSize;
 		vec4_t subRectPos = rectPos;
 		subRectPos.y = subRectPos.w - 1.f * textSize;
-		fillRectangle(rectPos, MC_Color(13, 29, 48), 0.8f);
-		fillRectangle(subRectPos, MC_Color(28, 107, 201), 0.9f);
+		auto nametagsMod = moduleMgr->getModule<NameTags>();
+		fillRectangle(rectPos, MC_Color(0, 0, 0), nametagsMod->opacity);
+		if (nametagsMod->underline) {
+			fillRectangle(subRectPos, MC_Color(255, 255, 255), 0.9f);
+		}
 		drawText(textPos, &text, MC_Color(255, 255, 255), textSize);
 
 		static auto nameTagsMod = moduleMgr->getModule<NameTags>();
 
-		if (ent->getEntityTypeId() == 63 && nameTagsMod->displayArmor) {  // is player, show armor
+		if (ent->getEntityTypeId() == 319 && nameTagsMod->displayArmor) {  // is player, show armor
 			auto* player = reinterpret_cast<C_Player*>(ent);
 			float scale = textSize * 0.6f;
 			float spacing = scale + 15.f;
@@ -399,7 +402,6 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 					DrawUtils::drawItem(stack, vec2_t(rectPos.z - 1.f - 15.f * scale, y), 1.f, scale, stack->isEnchanted());
 				}
 			}
-			
 		}
 	}
 }
