@@ -287,25 +287,34 @@ void Hooks::Init() {
 
 		static auto bobViewHookF = [](__int64 _this, glm::mat4& matrix, float lerpT){
 			static auto origFunc = g_Hooks.lambdaHooks.at(lambda_counter)->GetFastcall<void, __int64, glm::mat4&, float>();
-
-			/*auto p = g_Data.getLocalPlayer();
+			
+			static auto testMod = moduleMgr->getModule<ViewModel>();
+			auto p = g_Data.getLocalPlayer();
 			float degrees = fmodf(p->getPosOld()->lerp(p->getPos(), lerpT).x, 5) - 2.5f;
 			degrees *= 180 / 2.5f;
 
 			auto pos = g_Data.getClientInstance()->levelRenderer->origin;
-
+			
 			glm::mat4 View = matrix;
-
+			
 			matrix = View;
-			//matrix = glm::rotate<float>(matrix, glm::radians<float>(degrees), glm::vec3(0, 0, 1));*/
+			if (testMod->isEnabled()) {
+				if (testMod->doTranslate)
+					matrix = glm::translate<float>(matrix, glm::vec3(testMod->xTrans, testMod->yTrans, testMod->zTrans));
+
+				if (testMod->doScale)
+					matrix = glm::scale<float>(matrix, glm::vec3(testMod->xMod, testMod->yMod, testMod->zMod));
+			}
 			return origFunc(_this, matrix, lerpT);
 		};
-
+		
 		std::shared_ptr<FuncHook> bobViewHook = std::make_shared<FuncHook>(levelRendererBobView, (decltype(&bobViewHookF.operator()))bobViewHookF);
 
 		g_Hooks.lambdaHooks.push_back(bobViewHook);
 
 		#undef lambda_counter
+		
+		
 
 		logF("Hooks initialized");
 	}
