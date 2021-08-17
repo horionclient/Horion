@@ -10,20 +10,14 @@
 class C_GameMode;
 
 class PointingStruct {
-	char pad_0x0000[0x980];  //0x0000
-public:
-	int rayHitType;    //0x08E0
-	int blockSide;     //0x08E4
-	vec3_ti block;     //0x08E8
-	vec3_t rayHitVec;  //0x08F4
 private:
-	C_Entity *entityPtr;          //0x0900
-	C_Entity *entityPtr2;         //0x0908
-	uint64_t GamingEntityFinder;  //0x0910
-
+	char pad_0x0000[0x938];  //0x0000
 public:
-	bool hasEntity();       //to not go trough the entity list twice
-	C_Entity *getEntity();  //returns the entity that the player is looking at
+	int rayHitType;       //0x08E0
+	int blockSide;        //0x08E4
+	vec3_ti block;        //0x08E8
+	vec3_t rayHitVec;     //0x08F4
+	C_Entity *entityPtr;  //0x0900
 };
 
 class C_Player;
@@ -382,6 +376,11 @@ private:
 public:
 	virtual void setOnFire(int);
 
+	virtual __int64 extinguishFire(void);
+	virtual __int64 thawFreezeEffect(void);
+	virtual bool canFreeze(void);
+	virtual bool isWearingLeatherArmor(void);
+
 private:
 	virtual __int64 getHandleWaterAABB(void) const;
 	virtual __int64 handleInsidePortal(vec3_ti const &);
@@ -396,7 +395,7 @@ public:
 private:
 	virtual __int64 changeDimension(__int64, bool);
 	virtual __int64 changeDimension(__int64 const &);
-	virtual __int64 getControllingPlayer(void) const;
+	virtual __int64 getControllingPlayer(void) const; // getSourceUniqueID2
 	virtual __int64 checkFallDamage(float, bool);
 
 public:
@@ -443,8 +442,8 @@ public:
 	virtual __int64 getDeathTime(void) const;
 	virtual __int64 heal(int);
 	virtual bool isInvertedHealAndHarm(void) const;
-	virtual bool canBeAffected(int) const;
 	virtual bool canBeAffected(__int64 const &) const;
+	virtual bool canBeAffected(int) const;
 	virtual bool canBeAffectedByArrow(__int64 const &) const;
 
 private:

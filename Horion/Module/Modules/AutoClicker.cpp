@@ -31,8 +31,8 @@ void AutoClicker::onTick(C_GameMode* gm) {
 			if (!moduleMgr->getModule<NoSwing>()->isEnabled())
 				localPlayer->swingArm();
 
-			if (pointing->hasEntity() != 0)
-				gm->attack(pointing->getEntity());
+			if (pointing->entityPtr != 0)
+				gm->attack(pointing->entityPtr);
 			else if (breakBlocks) {
 				bool isDestroyed = false;
 				gm->startDestroyBlock(pointing->block, pointing->blockSide, isDestroyed);

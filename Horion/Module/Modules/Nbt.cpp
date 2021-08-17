@@ -19,12 +19,12 @@ void Nbt::onTick(C_GameMode* gm) {
 	PointingStruct* pointingStruct = g_Data.getClientInstance()->getPointerStruct();
 	
 	if (GameData::isRightClickDown()) {  // && Utils::getClipboardText() != this->lastCopy) {
-		if (pointingStruct->getEntity() != nullptr) {
+		if (pointingStruct->entityPtr != nullptr) {
 
 			if (!(g_Data.getRakNetInstance()->serverIp.getTextLength() < 1))
 				return;
 			std::unique_ptr<CompoundTag> tag = std::make_unique<CompoundTag>();
-			pointingStruct->getEntity()->save(tag.get());
+			pointingStruct->entityPtr->save(tag.get());
 			std::stringstream build;
 			tag->write(build);
 			auto str = build.str();

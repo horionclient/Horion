@@ -34,19 +34,3 @@ void C_LocalPlayer::setGameModeType(int gma) {
 	//static setGameMode Game_Mode = reinterpret_cast<setGameMode>(FindSignature("48 8B C4 56 57 41 56 48 81 EC ? ? ? ? 48 C7 44 24 ? ? ? ? ? 48 89 58 ? 48 89 68 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 8B EA 48 8B D9 44 8B B1 ? ? ? ? 83 FA ? 75 2D"));
 	this->setC_PlayerGameType(gma);
 }
-
-bool PointingStruct::hasEntity() {
-	return rayHitType == 1;
-}
-
-C_Entity *PointingStruct::getEntity() {
-	if (rayHitType != 1) return nullptr;
-	C_Entity *retval = nullptr;
-	g_Data.forEachEntity([this, &retval](C_Entity *ent, bool b) {
-		if (*(__int64 *)((__int64)ent + 0x10) == GamingEntityFinder) {
-			retval = ent;
-			return;
-		}
-	});
-	return retval;
-}
