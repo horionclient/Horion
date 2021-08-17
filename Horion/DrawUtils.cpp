@@ -372,7 +372,7 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 		rectPos.w = textPos.y + textHeight + 2.f * textSize;
 		vec4_t subRectPos = rectPos;
 		subRectPos.y = subRectPos.w - 1.f * textSize;
-		auto nametagsMod = moduleMgr->getModule<NameTags>();
+		static auto nametagsMod = moduleMgr->getModule<NameTags>();
 		fillRectangle(rectPos, MC_Color(13, 29, 48), nametagsMod->opacity);
 		if (nametagsMod->underline) {
 			fillRectangle(subRectPos, MC_Color(30, 110, 20), 0.9f);
