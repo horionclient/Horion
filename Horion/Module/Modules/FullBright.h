@@ -2,8 +2,8 @@
 #include "Module.h"
 class FullBright : public IModule {
 public:
-	float intensity = 25.f;
 	float* gammaPtr = nullptr;
+	float gamma = 10.0f;
 	FullBright();
 	~FullBright();
 
