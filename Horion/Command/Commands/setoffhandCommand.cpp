@@ -3,7 +3,7 @@
 #include "../../../SDK/Tag.h"
 #include "../../../Utils/Utils.h"
 
-setoffhandCommand::setoffhandCommand() : IMCCommand("setoffhand", "spawn items in ur offhand", "<itemName> <count> <itemData>") {
+setoffhandCommand::setoffhandCommand() : IMCCommand("setoffhand", "Spawn items in ur offhand", "<itemName> <count> <itemData>") {
 	registerAlias("soh");
 }
 
