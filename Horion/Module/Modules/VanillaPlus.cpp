@@ -21,7 +21,7 @@ void VanillaPlus::onEnable() {
 	// flying items
 	{
 		if (flyingItemsFuncPtr == nullptr)
-			flyingItemsFuncPtr = reinterpret_cast<unsigned char*>(9 + FindSignature("48 3B D8 0F 84 F8 01 00 00"));
+			flyingItemsFuncPtr = reinterpret_cast<unsigned char*>(10 + FindSignature("48 3B 5E ?? 0F 84 ?? ?? ?? ?? 4C 8D 25"));
 		memcpy(flyingItemsPrevCodeBuf, flyingItemsFuncPtr, 26);
 
 		DWORD oldProtect = 0;
