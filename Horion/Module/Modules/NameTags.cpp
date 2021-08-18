@@ -3,8 +3,10 @@
 #include "../../../Utils/Target.h"
 #include "../ModuleManager.h"
 
-NameTags::NameTags() : IModule(0, Category::VISUAL, "Shows better nametags above players that can be seen from a lot more far aways") {
-	this->registerBoolSetting("Display Armor", &this->displayArmor, this->displayArmor);
+NameTags::NameTags() : IModule(0, Category::VISUAL, "Shows betterar aways") {
+	this->registerBoolSetting("Underline", &this->underline, this->underline);
+	this->registerBoolSetting("Armor", &this->displayArmor, this->displayArmor);
+	this->registerFloatSetting("Opacity", &this->opacity, this->opacity, 0.f, 1.f);
 }
 
 NameTags::~NameTags() {
@@ -14,7 +16,7 @@ const char* NameTags::getModuleName() {
 	return ("NameTags");
 }
 
-void drawNameTags(C_Entity* ent, bool isRegularEntitie) {
+void drawNameTags(C_Entity* ent, bool) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 	static auto nameTagsMod = moduleMgr->getModule<NameTags>();
 
@@ -29,26 +31,27 @@ void drawNameTags(C_Entity* ent, bool isRegularEntitie) {
 			DrawUtils::drawNameTags(ent, fmax(0.6f, 3.f / dist));
 			DrawUtils::flush();
 		}
-			
 	}
 }
 
 void NameTags::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
+	if (localPlayer == nullptr || !GameData::canUseMoveKeys()) return;
 
-	if (nameTags.size() > 100)
-		nameTags.clear();
+	if (ingameNametagSetting)
+		if (!gotPrevSetting) {
+			lastSetting = *ingameNametagSetting;
+			gotPrevSetting = true;
+			*ingameNametagSetting = false;
+		} else
+			*ingameNametagSetting = false;  //disable other ppl's nametags
 
-	if (localPlayer != nullptr && GameData::canUseMoveKeys()) {
-		std::vector<C_Entity*> temp;
-		for (int i = 0; i < g_Data.getEntityList()->getListSize(); i++)
-			temp.push_back(g_Data.getEntityList()->get(i));
-		std::sort(temp.begin(), temp.end(), [localPlayer](const C_Entity* lhs, const C_Entity* rhs) {
-			return localPlayer->getPos()->dist(*lhs->getPos()) > localPlayer->getPos()->dist(*rhs->getPos());
-		});
-		for (C_Entity* ent : temp)
-			drawNameTags(ent, true);
-	} else {
-		nameTags.clear();
+	g_Data.forEachEntity(drawNameTags);
+}
+
+void NameTags::onDisable() {
+	if (ingameNametagSetting && gotPrevSetting) {
+		*ingameNametagSetting = lastSetting;
+		gotPrevSetting = false;
 	}
 }
