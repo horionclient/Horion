@@ -47,7 +47,7 @@ void Hooks::Init() {
 			else {
 				g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(blockLegacyVtable[180], Hooks::BlockLegacy_getRenderLayer);
 			}
-			}
+		}
 
 		// LocalPlayer::vtable
 		{
