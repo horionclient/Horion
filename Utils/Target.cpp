@@ -24,10 +24,10 @@ bool Target::isValidTarget(C_Entity* ent) {
 	if (!ent->isAlive())
 		return false;
 
-	if (ent->getEntityTypeId() <= 122 && ent->getEntityTypeId() != 63 && antibot->isEntityIdCheckEnabled())
+	if (ent->getEntityTypeId() <= 122 && ent->getEntityTypeId() != 319 && antibot->isEntityIdCheckEnabled())
 		return false;
 
-	if (ent->getEntityTypeId() == 63) {
+	if (ent->getEntityTypeId() == 319) {
 		if (teams->isColorCheckEnabled()) {
 			std::string targetName = ent->getNameTag()->getText();
 			std::string localName = g_Data.getLocalPlayer()->getNameTag()->getText();
