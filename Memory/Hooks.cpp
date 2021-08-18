@@ -38,16 +38,16 @@ void Hooks::Init() {
 		}
 		
 		// BlockLegacy::vtable
-        {
-            intptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 4C 8B 72 ? 48 B9");  // BlockLegacy constructor
-            int offset = *reinterpret_cast<int*>(sigOffset + 3);
+		{
+			intptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 4C 8B 72 ? 48 B9");  // BlockLegacy constructor
+			int offset = *reinterpret_cast<int*>(sigOffset + 3);
             uintptr_t** blockLegacyVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + 7);
-            if (blockLegacyVtable == 0x0 || sigOffset == 0x0)
-                logF("C_BlockLegacy signature not working!!!");
-            else {
-                g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(blockLegacyVtable[180], Hooks::BlockLegacy_getRenderLayer);
-            }
-        }
+			if (blockLegacyVtable == 0x0 || sigOffset == 0x0)
+				logF("C_BlockLegacy signature not working!!!");
+			else {
+				g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(blockLegacyVtable[180], Hooks::BlockLegacy_getRenderLayer);
+			}
+			}
 
 		// LocalPlayer::vtable
 		{
