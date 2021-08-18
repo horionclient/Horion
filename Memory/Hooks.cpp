@@ -358,7 +358,7 @@ void Hooks::ClientInstanceScreenModel_sendChatMessage(void* _this, TextHolder* t
 			}
 		}
 	}
-	oSendMessage(_this);
+	oSendMessage(_this, text);
 }
 
 __int64 Hooks::UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext) {
