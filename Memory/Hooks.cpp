@@ -62,6 +62,8 @@ void Hooks::Init() {
 				g_Hooks.Actor_startSwimmingHook = std::make_unique<FuncHook>(localPlayerVtable[182], Hooks::Actor_startSwimming);
 
 				g_Hooks.Actor_ascendLadderHook = std::make_unique<FuncHook>(localPlayerVtable[333], Hooks::Actor_ascendLadder);*/
+
+				g_Hooks.Actor_swingHook = std::make_unique<FuncHook>(localPlayerVtable[214], Hooks::Actor_swing);
 			}
 		}
 
@@ -1434,6 +1436,12 @@ void Hooks::Actor_ascendLadder(C_Entity* _this) {
 		return;
 	}
 	return oFunc(_this);
+}
+
+void Hooks::Actor_swing(C_Entity* _this) {
+	static auto oFunc = g_Hooks.Actor_swingHook->GetFastcall<void, C_Entity*>();
+	static auto noSwingMod = moduleMgr->getModule<NoSwing>();
+	if(!noSwingMod->isEnabled()) return oFunc(_this);
 }
 
 void Hooks::Actor_startSwimming(C_Entity* _this) {
