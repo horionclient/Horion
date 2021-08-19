@@ -374,9 +374,7 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 		subRectPos.y = subRectPos.w - 1.f * textSize;
 		static auto nametagsMod = moduleMgr->getModule<NameTags>();
 		fillRectangle(rectPos, MC_Color(13, 29, 48), nametagsMod->opacity);
-		if (nametagsMod->underline) {
-			fillRectangle(subRectPos, MC_Color(30, 110, 20), 0.9f);
-		}
+		fillRectangle(subRectPos, MC_Color(30, 110, 20), 0.9f);
 		drawText(textPos, &text, MC_Color(255, 255, 255), textSize);
 
 		static auto nameTagsMod = moduleMgr->getModule<NameTags>();
