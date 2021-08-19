@@ -10,7 +10,7 @@ C_Block* C_BlockSource::getBlock(const vec3_ti& block) {
 }
 C_BlockActor* C_BlockSource::getBlockEntity(const vec3_ti& block) {
 	using getBlockEntity_t = C_BlockActor*(__fastcall*)(C_BlockSource*, const vec3_ti&);
-	static getBlockEntity_t getBlockEntity = reinterpret_cast<getBlockEntity_t>(FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 8B 02 48 8B DA C1 F8 ? 48 8B F1 89 44 24 ? 8B 42"));
+	static getBlockEntity_t getBlockEntity = reinterpret_cast<getBlockEntity_t>(FindSignature("40 55 56 57 48 83 EC ?? 8B 02"));
 	return getBlockEntity(this, block);
 }
 C_Block* C_BlockSource::getLiquidBlock(const vec3_ti& block) {

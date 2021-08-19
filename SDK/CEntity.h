@@ -11,13 +11,17 @@ class C_GameMode;
 
 class PointingStruct {
 private:
-	char pad_0x0000[0x938];  //0x0000
+	char pad_0x0000[0x980];  //0x0000
 public:
-	int rayHitType;       //0x08E0
-	int blockSide;        //0x08E4
-	vec3_ti block;        //0x08E8
-	vec3_t rayHitVec;     //0x08F4
-	C_Entity *entityPtr;  //0x0900
+	int rayHitType;    //0x08E0
+	int blockSide;     //0x08E4
+	vec3_ti block;     //0x08E8
+	vec3_t rayHitVec;  //0x08F4
+	C_Entity *entityPtr;          //0x0900
+	C_Entity *entityPtr2;         //0x0908
+	uint64_t GamingEntityFinder;  //0x0910
+	bool hasEntity();       //to not go trough the entity list twice
+	C_Entity *getEntity();  //returns the entity that the player is looking at
 };
 
 class C_Player;
