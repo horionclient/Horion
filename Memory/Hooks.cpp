@@ -338,7 +338,7 @@ void* Hooks::Player_tickWorld(C_Player* _this, __int64 unk) {
 }
 
 void Hooks::ClientInstanceScreenModel_sendChatMessage(void* _this, TextHolder* text) {
-	static auto oSendMessage = g_Hooks.ClientInstanceScreenModel_sendChatMessageHook->GetFastcall<void, void*>();
+	static auto oSendMessage = g_Hooks.ClientInstanceScreenModel_sendChatMessageHook->GetFastcall<void, void*, TextHolder*>();
 
 
 	if (text->getTextLength() > 0) {
