@@ -3,6 +3,7 @@
 Killaura::Killaura() : IModule('P', Category::COMBAT, "Attacks entities around you automatically") {
 	this->registerBoolSetting("MultiAura", &this->isMulti, this->isMulti);
 	this->registerBoolSetting("MobAura", &this->isMobAura, this->isMobAura);
+	this->registerBoolSetting("NoSwing", &this->NoSwing, this->NoSwing);
 	this->registerFloatSetting("range", &this->range, this->range, 2.f, 20.f);
 	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
 	this->registerBoolSetting("hurttime", &this->hurttime, this->hurttime);
@@ -91,17 +92,26 @@ void Killaura::onTick(C_GameMode* gm) {
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);  // make sure to update rotation if player is standing still
 		}
 
-		// Attack all entitys in targetList
 		if (isMulti) {
 			for (auto& i : targetList) {
 				if (!(i->damageTime > 1 && hurttime)) {
-					g_Data.getLocalPlayer()->swing();
+					if (NoSwing) {
+						//g_Data.getLocalPlayer()->swing();
+					}
+					if (!NoSwing) {
+						g_Data.getLocalPlayer()->swing();
+					}
 					g_Data.getCGameMode()->attack(i);
 				}
 			}
 		} else {
 			if (!(targetList[0]->damageTime > 1 && hurttime)) {
-				g_Data.getLocalPlayer()->swing();
+				if (NoSwing) {
+					//g_Data.getLocalPlayer()->swing();
+				}
+				if (!NoSwing) {
+					g_Data.getLocalPlayer()->swing();
+				}
 				g_Data.getCGameMode()->attack(targetList[0]);
 			}
 		}
