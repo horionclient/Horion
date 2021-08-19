@@ -101,14 +101,12 @@ void CrystalAura::CPlace(C_GameMode* gm, vec3_t* pos) {
 void CrystalAura::DestroyC(C_Entity* ent, int range) {
 	if (g_Data.getLocalPlayer()->getPos()->dist(*ent->getPos()) < range && !dEnhanced) {
 		g_Data.getCGameMode()->attack(ent);
-		if (!moduleMgr->getModule<NoSwing>()->isEnabled())
-			g_Data.getLocalPlayer()->swingArm();
+		g_Data.getLocalPlayer()->swingArm();
 	} else if (dEnhanced) {
 		for (auto& i : targetList)
 			if (ent->getPos()->dist(*i->getPos()) < range) {
 				g_Data.getCGameMode()->attack(ent);
-				if (!moduleMgr->getModule<NoSwing>()->isEnabled())
-					g_Data.getLocalPlayer()->swingArm();
+				g_Data.getLocalPlayer()->swingArm();
 				return;
 			}
 	}

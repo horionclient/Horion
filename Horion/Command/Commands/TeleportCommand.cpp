@@ -14,7 +14,7 @@ bool TeleportCommand::execute(std::vector<std::string>* args) {
 
 	vec3_t pos;
 	pos.x = assertFloat(args->at(1));
-	pos.y = assertFloat(args->at(2));
+	pos.y = assertFloat(args->at(2)) + 1;
 	pos.z = assertFloat(args->at(3));
 
 	g_Data.getLocalPlayer()->setPos(pos);
