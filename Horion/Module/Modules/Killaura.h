@@ -6,6 +6,7 @@
 class Killaura : public IModule
 {
 private:
+	bool NoSwing = false;
 	bool isMulti = true;
 	int delay = 0;
 	int Odelay = 0;
