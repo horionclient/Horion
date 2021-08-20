@@ -34,8 +34,7 @@ void Fucker::onTick(C_GameMode* gm) {
 
 				if (destroy) {
 					gm->destroyBlock(&blockPos, 0);
-					if (!moduleMgr->getModule<NoSwing>()->isEnabled()) 
-						g_Data.getLocalPlayer()->swingArm();
+					g_Data.getLocalPlayer()->swingArm();
 					return;
 				}
 			}
@@ -48,8 +47,7 @@ void Fucker::onTick(C_GameMode* gm) {
 			int id = ent->getEntityTypeId();
 			if (name.find("Treasure") != std::string::npos && g_Data.getLocalPlayer()->getPos()->dist(*ent->getPos()) <= 5) {
 				g_Data.getCGameMode()->attack(ent);
-				if (!moduleMgr->getModule<NoSwing>()->isEnabled())
-					g_Data.getLocalPlayer()->swingArm();
+				g_Data.getLocalPlayer()->swingArm();
 			}
 		});
 	}
