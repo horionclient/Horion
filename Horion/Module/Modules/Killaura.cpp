@@ -37,6 +37,9 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 	if(!currentEntity->isAlive())
 		return;
 
+	if (currentEntity->getEntityTypeId() == 69)  // XP
+		return;
+
 	if (killauraMod->isMobAura) {
 		if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 319)
 			return;
