@@ -103,6 +103,7 @@ private:
 	static void JumpPower(C_Entity* _this, float a2);
 	static __int64 MinecraftGame_onAppSuspended(__int64 _this);
 	static void Actor_ascendLadder(C_Entity* _this);
+	static void Actor_swing(C_Entity* _this);
 	static void Actor_startSwimming(C_Entity* _this);
 	static void RakNetInstance_tick(C_RakNetInstance* _this, __int64 a2, __int64 a3);
 	static float GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3);
@@ -153,6 +154,7 @@ private:
 	std::unique_ptr<FuncHook> JumpPowerHook;
 	std::unique_ptr<FuncHook> MinecraftGame_onAppSuspendedHook;
 	std::unique_ptr<FuncHook> Actor_ascendLadderHook;
+	std::unique_ptr<FuncHook> Actor_swingHook;
 	std::unique_ptr<FuncHook> Actor_startSwimmingHook;
 	std::unique_ptr<FuncHook> RakNetInstance_tickHook;
 	std::unique_ptr<FuncHook> GameMode_getPickRangeHook;
