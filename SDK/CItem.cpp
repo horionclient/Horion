@@ -7,7 +7,7 @@
 C_BaseActorRenderContext::C_BaseActorRenderContext(C_ScreenContext *ScreenCtx, C_ClientInstance *client, MinecraftGame *game) {
 	memset(this, 0, sizeof(C_BaseActorRenderContext));
 	using BaseActorRenderContext_t = __int64(__fastcall *)(C_BaseActorRenderContext *, C_ScreenContext *, C_ClientInstance *, MinecraftGame *);
-	static BaseActorRenderContext_t BaseActorRenderContext_constructor = reinterpret_cast<BaseActorRenderContext_t>(FindSignature("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8D 05 ? ? ? ? 33 F6 48 89 01 49 8B D8 48 89 71 ? 48 8B F9 8B 42"));
+	static BaseActorRenderContext_t BaseActorRenderContext_constructor = reinterpret_cast<BaseActorRenderContext_t>(FindSignature("48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8D 05 ?? ?? ?? ?? 8B EA 48 89 01 48 8B F9 48 8B 71 ?? 48 8B 59 30 48"));
 	BaseActorRenderContext_constructor(this, ScreenCtx, client, game);
 }
 void C_ItemRenderer::renderGuiItemNew(C_BaseActorRenderContext *BaseActorRenderCtx, C_ItemStack *item, MinecraftGame *game, float x, float y, float opacity, float scale, bool isEnchanted) {
