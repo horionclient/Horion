@@ -156,7 +156,7 @@ C_MovePlayerPacket::C_MovePlayerPacket(C_LocalPlayer* player, vec3_t pos) {
 C_PlayerActionPacket::C_PlayerActionPacket() {
 	static uintptr_t** playerActionPacketVtable = 0x0;
 	if (playerActionPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? 48 89 4C 24 ? 48 89 74 24 ? 48 89 74 24 ? 8B CF 83 F1");
+		uintptr_t sigOffset = FindSignature("48 8D 0D ?? ?? ?? ?? 48 89 4C 24 30 F3 0F 11 44 24 60 F3");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		playerActionPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
