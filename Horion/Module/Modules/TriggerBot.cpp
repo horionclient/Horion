@@ -14,7 +14,7 @@ const char* TriggerBot::getModuleName() {
 }
 void TriggerBot::onTick(C_GameMode* gm) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
-	C_Entity* target = g_Data.getClientInstance()->getPointerStruct()->entityPtr;
+	C_Entity* target = g_Data.getClientInstance()->getPointerStruct()->getEntity();
 	
 	Odelay++;
 	if (target != 0 && Odelay >= delay) {
