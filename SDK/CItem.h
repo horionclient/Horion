@@ -264,12 +264,12 @@ public:
 		if (itemId == 267) return true;			//Iron Sword
 		if (itemId == 276) return true;			//Diamond Sword
 		if (itemId == 743) return true;			//Netherite Sword
-		if (itemId == 271) return true;         //Wooden Axe
-		if (itemId == 275) return true;         //Stone Axe
-		if (itemId == 286) return true;         //Gold Axe
-		if (itemId == 258) return true;         //Iron Axe
-		if (itemId == 279) return true;         //Diamond Axe
-		if (itemId == 746) return true;         //Netherite Axe
+		if (itemId == 271) return true;			//Wooden Axe
+		if (itemId == 275) return true;			//Stone Axe
+		if (itemId == 286) return true;			//Gold Axe
+		if (itemId == 258) return true;			//Iron Axe
+		if (itemId == 279) return true;			//Diamond Axe
+		if (itemId == 746) return true;			//Netherite Axe
 		return false;
 	}
 	bool isBlock(void) {
