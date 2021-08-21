@@ -1,4 +1,4 @@
-#include "setoffhandCommand.h"
+#include "SetOffhandCommand.h"
 
 #include "../../../SDK/Tag.h"
 #include "../../../Utils/Utils.h"
