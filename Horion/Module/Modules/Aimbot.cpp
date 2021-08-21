@@ -63,7 +63,9 @@ void Aimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		appl.x = -appl.x;
 		if ((appl.x < verticalrange && appl.x > -verticalrange) && (appl.y < horizontalrange && appl.y > -horizontalrange) && GameData::canUseMoveKeys()) {
 			auto selectedItemId = localPlayer->getSelectedItemId();
-			if (sword && !(selectedItemId == 268 || selectedItemId == 267 || selectedItemId == 272 || selectedItemId == 276 || selectedItemId == 283 /*swords*/ || selectedItemId == 271 || selectedItemId == 275 || selectedItemId == 279 || selectedItemId == 286 || selectedItemId == 258 /*axes*/))
+			C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
+			C_ItemStack* item = supplies->inventory->getItemStack(supplies->selectedHotbarSlot);
+			if (sword && !(item->getItem()->isWeapon()))
 				return;
 
 			if (click && !g_Data.isLeftClickDown())
