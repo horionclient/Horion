@@ -62,7 +62,6 @@ void Aimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		vec2_t appl = angle.sub(localPlayer->viewAngles).normAngles();
 		appl.x = -appl.x;
 		if ((appl.x < verticalrange && appl.x > -verticalrange) && (appl.y < horizontalrange && appl.y > -horizontalrange) && GameData::canUseMoveKeys()) {
-			auto selectedItemId = localPlayer->getSelectedItemId();
 			C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 			C_ItemStack* item = supplies->inventory->getItemStack(supplies->selectedHotbarSlot);
 			if (sword && !(item->getItem()->isWeapon()))
