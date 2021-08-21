@@ -4,10 +4,10 @@
 
 #include "ICommand.h"
 
-class setoffhandCommand : public IMCCommand {
+class SetOffhandCommand : public IMCCommand {
 public:
-	setoffhandCommand();
-	~setoffhandCommand();
+	SetOffhandCommand();
+	~SetOffhandCommand();
 
 	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
