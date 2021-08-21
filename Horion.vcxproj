@@ -257,7 +257,7 @@
     <ClCompile Include="Horion\Command\Commands\SayCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ScriptCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\ServerCommand.cpp" />
-    <ClCompile Include="Horion\Command\Commands\setoffhandCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\SetOffhandCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\SetprefixCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\SpammerCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\TeleportCommand.cpp" />
@@ -359,9 +359,9 @@
     <ClCompile Include="Horion\Module\Modules\Tower.cpp" />
     <ClCompile Include="Horion\Module\Modules\Tracer.cpp" />
     <ClCompile Include="Horion\Module\Modules\TriggerBot.cpp" />
-	<ClCompile Include="Horion\Module\Modules\Twerk.cpp" />
+    <ClCompile Include="Horion\Module\Modules\Twerk.cpp" />
     <ClCompile Include="Horion\Module\Modules\VanillaPlus.cpp" />
-	<ClCompile Include="Horion\Module\Modules\ViewModel.cpp" />
+    <ClCompile Include="Horion\Module\Modules\ViewModel.cpp" />
     <ClCompile Include="Horion\Module\Modules\Velocity.cpp" />
     <ClCompile Include="Horion\Module\Modules\Waypoints.cpp" />
     <ClCompile Include="Horion\Module\Modules\Xray.cpp" />
@@ -445,7 +445,7 @@
     <ClInclude Include="Horion\Command\Commands\SayCommand.h" />
     <ClInclude Include="Horion\Command\Commands\ScriptCommand.h" />
     <ClInclude Include="Horion\Command\Commands\ServerCommand.h" />
-    <ClInclude Include="Horion\Command\Commands\setoffhandCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\SetOffhandCommand.h" />
     <ClInclude Include="Horion\Command\Commands\SetprefixCommand.h" />
     <ClInclude Include="Horion\Command\Commands\SpammerCommand.h" />
     <ClInclude Include="Horion\Command\Commands\TeleportCommand.h" />
@@ -547,9 +547,9 @@
     <ClInclude Include="Horion\Module\Modules\Tower.h" />
     <ClInclude Include="Horion\Module\Modules\Tracer.h" />
     <ClInclude Include="Horion\Module\Modules\TriggerBot.h" />
-	<ClInclude Include="Horion\Module\Modules\Twerk.h" />
+    <ClInclude Include="Horion\Module\Modules\Twerk.h" />
     <ClInclude Include="Horion\Module\Modules\VanillaPlus.h" />
-	<ClInclude Include="Horion\Module\Modules\ViewModel.h" />
+    <ClInclude Include="Horion\Module\Modules\ViewModel.h" />
     <ClInclude Include="Horion\Module\Modules\Velocity.h" />
     <ClInclude Include="Horion\Module\Modules\Waypoints.h" />
     <ClInclude Include="Horion\Module\Modules\Xray.h" />
