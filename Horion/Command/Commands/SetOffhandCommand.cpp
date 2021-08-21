@@ -3,14 +3,14 @@
 #include "../../../SDK/Tag.h"
 #include "../../../Utils/Utils.h"
 
-setoffhandCommand::setoffhandCommand() : IMCCommand("setoffhand", "Spawn items in ur offhand", "<itemName> <count> <itemData>") {
+SetOffhandCommand::SetOffhandCommand() : IMCCommand("setoffhand", "Spawn items in ur offhand", "<itemName> <count> <itemData>") {
 	registerAlias("soh");
 }
 
-setoffhandCommand::~setoffhandCommand() {
+SetOffhandCommand::~SetOffhandCommand() {
 }
 
-bool setoffhandCommand::execute(std::vector<std::string>* args) {
+bool SetOffhandCommand::execute(std::vector<std::string>* args) {
 	assertTrue(args->size() > 2);
 
 	int itemId = 0;
