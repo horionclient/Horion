@@ -1,11 +1,15 @@
 #include "GameData.h"
 
 #include <Windows.h>
-
+#include <set>
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
 
 GameData g_Data;
+
+size_t AABBHasher::operator()(const AABB& i) const {
+	 return Utils::posToHash(i.lower);
+}
 
 void GameData::retrieveClientInstance() {
 	static uintptr_t clientInstanceOffset = 0x0;
@@ -198,12 +202,10 @@ void GameData::addChestToList(C_ChestBlockActor* chest) {
 		return;
 	AABB chestAabb = chest->getFullAABB();
 	std::lock_guard<std::mutex> listGuard(g_Data.chestListMutex);
-	for (auto it = g_Data.chestList.begin(); it != g_Data.chestList.end(); ++it)
-		if (**it == chestAabb)
-			return;
+	if (g_Data.chestList.count(chestAabb) > 0)
+		return;
 
-	auto toAdd = std::make_shared<AABB>(chestAabb);
-	g_Data.chestList.push_back(toAdd);
+	g_Data.chestList.insert(chestAabb);
 }
 
 void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::SlimMem* slimMem, void* hDllInst) {

@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <numeric>
 #include "../../Memory/GameData.h"
+#include <set>
 
 JoePathFinder::JoePathFinder(vec3_ti start, C_BlockSource* reg, std::shared_ptr<JoeGoal> goal) : startPos(start), region(reg), goal(goal) {
 }

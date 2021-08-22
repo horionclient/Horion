@@ -135,43 +135,43 @@ struct vec3_t {
 
 	bool iszero() const { return x == 0 && y == 0 && z == 0; }
 
-	bool operator==(const vec3_t &o) const { return x == o.x && y == o.y && z == o.z; };
+	inline bool operator==(const vec3_t &o) const { return x == o.x && y == o.y && z == o.z; };
 	bool operator!=(const vec3_t &o) const { return x != o.x || y != o.y || z != o.z; };
 	vec3_t operator-() const { return vec3_t(-x, -y, -z); };
 
-	vec3_t mul(const vec3_t& o) {
+	vec3_t mul(const vec3_t &o) const {
 		return vec3_t(x * o.x, y * o.y, z * o.z);
 	};
-	vec3_t mul(float f) {
+	vec3_t mul(float f) const {
 		return vec3_t(x * f, y * f, z * f);
 	};
-	vec3_t mul(float x1, float y1, float z1) {
+	vec3_t mul(float x1, float y1, float z1) const {
 		return vec3_t(x * x1, y * y1, z * z1);
 	};
-	vec3_t div(float f) {
+	vec3_t div(float f) const {
 		return vec3_t(x / f, y / f, z / f);
 	};
-	vec3_t div(float x1, float y1, float z1) {
+	vec3_t div(float x1, float y1, float z1) const {
 		return vec3_t(x / x1, y / y1, z / z1);
 	};
-	vec3_t div(const vec3_t& o) {
+	vec3_t div(const vec3_t &o) const {
 		return vec3_t(x / o.x, y / o.y, z / o.z);
 	};
-	vec3_t add(float f) {
+	vec3_t add(float f) const {
 		return vec3_t(x + f, y + f, z + f);
 	};
-	vec3_t add(float x1, float y1, float z1) {
+	vec3_t add(float x1, float y1, float z1) const {
 		return vec3_t(x + x1, y + y1, z + z1);
 	};
-	vec3_t sub(float f) {
+	vec3_t sub(float f) const {
 		return vec3_t(x - f, y - f, z - f);
 	};
 
-	vec3_t sub(float x1, float y1, float z1) {
+	vec3_t sub(float x1, float y1, float z1) const {
 		return vec3_t(x - x1, y - y1, z - z1);
 	};
 
-	vec3_t floor() {
+	vec3_t floor() const {
 		return vec3_t(floorf(x), floorf(y), floorf(z));
 	};
 
@@ -542,7 +542,7 @@ struct AABB {
 		this->upper = {lower.x + width, lower.y + height, lower.z + width};
 	}
 
-	bool operator==(const AABB &rhs) const {
+	inline bool operator==(const AABB &rhs) const {
 		return lower == rhs.lower && upper == rhs.upper;
 	}
 

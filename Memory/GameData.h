@@ -2,7 +2,7 @@
 
 #include <map>
 #include <queue>
-#include <set>
+#include <unordered_set>
 #include <functional>
 #include <mutex>
 
@@ -63,6 +63,10 @@ struct InfoBoxData {
 
 struct SkinData;
 
+struct AABBHasher {
+	size_t operator()(const AABB& i) const;
+};
+
 class GameData {
 private:
 	C_ClientInstance* clientInstance = nullptr;
@@ -72,7 +76,7 @@ private:
 	C_HIDController* hidController = nullptr;
 	C_RakNetInstance* raknetInstance = nullptr;
 	void* hDllInst = 0;
-	std::vector<std::shared_ptr<AABB>> chestList;
+	std::unordered_set<AABB, AABBHasher> chestList;
 	std::vector<std::string> textPrintList;
 	std::mutex textPrintLock;
 	std::mutex chestListMutex;
@@ -233,7 +237,7 @@ public:
 	C_EntityList* getEntityList() { return entityList; };
 	C_HIDController** getHIDController() { return &hidController; };
 	C_RakNetInstance* getRakNetInstance() { return raknetInstance; };
-	std::vector<std::shared_ptr<AABB>>* getChestList() { return &chestList; };
+	std::unordered_set<AABB, AABBHasher>& getChestList() { return chestList; };
 	auto lockChestList() { return std::lock_guard<std::mutex>(this->chestListMutex); }
 	void setFakeName(TextHolder* name) { fakeName = name; };
 	TextHolder* getFakeName() { return fakeName; };

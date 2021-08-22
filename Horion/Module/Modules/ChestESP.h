@@ -5,7 +5,7 @@
 class ChestESP : public IModule {
 private:
 	int tickTimeout = 0;
-	std::vector<std::shared_ptr<AABB>> bufferedChestList;
+	std::vector<AABB> bufferedChestList;
 	std::mutex listLock;
 
 public:

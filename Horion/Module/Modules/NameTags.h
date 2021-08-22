@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Module.h"
+#include <set>
 
 class NameTags : public IModule {
 public:

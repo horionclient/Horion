@@ -228,7 +228,6 @@ void DrawUtils::drawBox(const vec3_t& lower, const vec3_t& upper, float lineWidt
 	diff.y = upper.y - lower.y;
 	diff.z = upper.z - lower.z;
 
-	
 	vec3_t vertices[8];
 	vertices[0] = vec3_t(lower.x, lower.y, lower.z);
 	vertices[1] = vec3_t(lower.x + diff.x, lower.y, lower.z);
