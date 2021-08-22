@@ -374,15 +374,13 @@ void Hooks::ClientInstanceScreenModel_sendChatMessage(void* _this, TextHolder* t
 __int64 Hooks::UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext) {
 	static auto oSetup = g_Hooks.UIScene_setupAndRenderHook->GetFastcall<__int64, C_UIScene*, __int64>();
 	g_Hooks.shouldRender = false;
-	//g_Hooks.shouldRender = uiscene->isPlayScreen();
-
+	
 	return oSetup(uiscene, screencontext);
 }
 
 __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	static auto oRender = g_Hooks.UIScene_renderHook->GetFastcall<__int64, C_UIScene*, __int64>();
 
-	//g_Hooks.shouldRender = uiscene->isPlayScreen();
 	g_Hooks.shouldRender = false;
 
 	TextHolder alloc{};
