@@ -820,7 +820,6 @@ private:
 	virtual bool returnFalse_5() const;
 
 public:
-	virtual bool returnFalse_6() const;
 	virtual bool isHostingC_Player(void) const;
 	virtual bool isLoading(void) const;
 	virtual bool isC_PlayerInitialized(void) const;
@@ -832,6 +831,7 @@ private:
 
 public:
 	virtual void setC_PlayerGameType(int);
+	virtual __int64 initHUDContainerManager(void);
 	virtual __int64 _crit(C_Entity *);
 
 private:
@@ -856,7 +856,7 @@ private:
 
 public:
 	virtual void setFieldOfViewModifier(float);
-	virtual bool isPositionRelevant(__int64, int, vec3_ti const &);
+	virtual bool isPositionRelevant(__int64, int, vec3_ti const &);  // is2DPositionRelevant((__int64, BlockPos&);
 	virtual bool isEntityRelevant(C_Entity const &);
 	virtual bool isTeacher(void) const;
 
