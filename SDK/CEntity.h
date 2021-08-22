@@ -133,9 +133,6 @@ private:
 public:
 	TextHolder uuid;  //0x1F60
 
-public:
-	virtual bool hasComponent(__int64 const &) const;
-
 private:
 	virtual __int64 reloadHardcoded(__int64, __int64 const &);
 	virtual __int64 reloadHardcodedClient(__int64, __int64 const &);
@@ -143,6 +140,7 @@ private:
 	virtual __int64 reloadComponents(__int64, __int64 const &);
 	virtual __int64 _serverInitItemStackIds();
 	virtual __int64 _doInitialMove();
+	virtual bool hasComponent(__int64 const &) const;
 
 private:
 	virtual void destructor();
@@ -441,6 +439,7 @@ public:
 private:
 	virtual __int64 buildDebugInfo(std::string &) const;
 	virtual __int64 getCommandPermissionLevel(void) const;
+	virtual bool isClientSide(void);
 	virtual __int64 getMutableAttribute(__int64 const &);
 
 public:
@@ -515,14 +514,14 @@ private:
 	virtual __int64 shouldTick(void) const;
 	virtual __int64 createMovementProxy(void);
 	virtual __int64 getMovementProxy(void);
-	virtual __int64 getNextStep(float);
+	virtual __int64 getNextStep(float) const;
 	virtual __int64 updateEntitySpecificMolangVariables(__int64 &);
 
 public:
 	virtual bool shouldTryMakeStepSound(void) const;
 
 private:
-	virtual __int64 getNextStep(float) const;
+	virtual bool canMakeStepSound(void) const;
 	virtual __int64 outOfWorld(void);
 	virtual __int64 _hurt(__int64 const &, int, bool, bool);
 	virtual __int64 markHurt(void);
