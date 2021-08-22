@@ -163,12 +163,16 @@ void GameData::forEachEntity(std::function<void(C_Entity*, bool)> callback) {
 	uintptr_t stop = ((uintptr_t)entityList + 0x78);
 	start = *(uintptr_t*)start;
 	stop = *(uintptr_t*)stop;
-	//logF("size: %i", (stop - start) / sizeof(uintptr_t*));
 
+	std::set<C_Entity*> knownEnts;
+	
 	while (start < stop) {
 		C_Entity* ent = *(C_Entity**)start;
-		if (ent != nullptr)
+		if (ent != nullptr && knownEnts.count(ent) == 0) {
 			callback(ent, false);
+			knownEnts.insert(ent);
+		}
+			
 		start += 8;
 	}
 
@@ -179,10 +183,11 @@ void GameData::forEachEntity(std::function<void(C_Entity*, bool)> callback) {
 		__int64* entityIdMap = *(__int64**)(*(__int64*)(region + 0x20) + 0x138i64);
 		for (__int64* i = (__int64*)*entityIdMap; i != entityIdMap; i = (__int64*)*i) {
 			__int64 actor = i[3];
+			C_Entity* ent = reinterpret_cast<C_Entity*>(actor);
 			// !isRemoved() && !isGlobal()
-			if (actor && !*(char*)(actor + 993) && !*(char*)(actor + 994)) {
-				C_Entity* ent = reinterpret_cast<C_Entity*>(actor);
+			if (actor && !*(char*)(actor + 993) && !*(char*)(actor + 994) && knownEnts.count(ent) == 0) {
 				callback(ent, false);
+				knownEnts.insert(ent);
 			}
 		}
 	}
