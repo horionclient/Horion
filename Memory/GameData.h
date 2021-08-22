@@ -210,18 +210,9 @@ public:
 	inline C_ClientInstance* getClientInstance() { return clientInstance; };
 	inline C_GuiData* getGuiData() { return clientInstance->getGuiData(); };
 	inline C_LocalPlayer* getLocalPlayer() {
-		/*#ifdef _BETA
-		unsigned int converted = networkedData.localPlayerOffset ^ networkedData.xorKey;
-		if (networkedData.localPlayerOffset < 0x110 || converted < 0x125 || converted > 0x191 || networkedData.dataSet == false)
-			localPlayer = nullptr;
-		else
-			localPlayer = *reinterpret_cast<C_LocalPlayer**>(reinterpret_cast<__int64>(clientInstance) + converted);
 		
-		#else*/
 		localPlayer = clientInstance->localPlayer;
-		
-		//#endif
-		
+
 		if (localPlayer == nullptr)
 			gameMode = nullptr;
 		return localPlayer;

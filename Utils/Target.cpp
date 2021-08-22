@@ -11,56 +11,61 @@ void Target::init(C_LocalPlayer** cl) {
 }
 
 bool Target::isValidTarget(C_Entity* ent) {
-	if (ent == NULL)
+	if (ent == nullptr)
 		return false;
 
-	if (ent == g_Data.getLocalPlayer())
+	auto localPlayer = g_Data.getLocalPlayer();
+
+	if (ent == localPlayer)
 		return false;
 
 	static auto antibot = moduleMgr->getModule<AntiBot>();
 	static auto hitboxMod = moduleMgr->getModule<Hitbox>();
 	static auto teams = moduleMgr->getModule<Teams>();
+	static auto noFriends = moduleMgr->getModule<NoFriends>();
 
 	if (!ent->isAlive())
 		return false;
 
-	if (ent->getEntityTypeId() <= 122 && ent->getEntityTypeId() != 63 && antibot->isEntityIdCheckEnabled())
+	auto entityTypeId = ent->getEntityTypeId();
+
+	if (antibot->isEntityIdCheckEnabled() && entityTypeId <= 122 && entityTypeId != 63)
 		return false;
 
-	if (ent->getEntityTypeId() == 63) {
+	if (entityTypeId == 63) {
 		if (teams->isColorCheckEnabled()) {
-			std::string targetName = ent->getNameTag()->getText();
-			std::string localName = g_Data.getLocalPlayer()->getNameTag()->getText();
-			if (targetName.length() > 2 && localName.length() > 2) {
-				targetName = std::regex_replace(targetName, std::regex("\\§r"), "");
-				localName = std::regex_replace(localName, std::regex("\\§r"), "");
-				if (targetName.at(0) == localName.at(0)) return false;
+			auto targetName = ent->getNameTag();
+			auto localName = localPlayer->getNameTag();
+			if (targetName->getTextLength() > 2 && localName->getTextLength() > 2) {
+				auto colorTargetName = std::regex_replace(targetName->getText(), std::regex("\\§r"), "");
+				auto colorLocalName = std::regex_replace(localName->getText(), std::regex("\\§r"), "");
+				if (colorTargetName.at(0) == colorLocalName.at(0)) 
+					return false;
 			}
 		}
 		if (teams->isAlliedCheckEnabled()) {
-			C_LocalPlayer* p = g_Data.getLocalPlayer();
-			if (p->isAlliedTo(ent)) return false;
+			if (localPlayer->isAlliedTo(ent)) return false;
 		}
 	}
 
 	// Temporarily removed from gui, tons of false negatives
-	if (!Target::containsOnlyASCII(ent->getNameTag()->getText()) && antibot->isNameCheckEnabled())
+	if (antibot->isNameCheckEnabled() && !Target::containsOnlyASCII(ent->getNameTag()->getText()))
 		return false;
 
-	if (FriendList::findPlayer(ent->getNameTag()->getText()) && !moduleMgr->getModule<NoFriends>()->isEnabled())
+	if (!noFriends->isEnabled() && FriendList::findPlayer(ent->getNameTag()->getText()))
 		return false;
 
-	if (ent->isInvisible() && antibot->isInvisibleCheckEnabled())
+	if (antibot->isInvisibleCheckEnabled() && ent->isInvisible() )
 		return false;
 
-	if ((ent->isSilent() || ent->isImmobile() || ent->getNameTag()->getTextLength() < 1 || std::string(ent->getNameTag()->getText()).find(std::string("\n")) != std::string::npos) && antibot->isOtherCheckEnabled())
+	if (antibot->isOtherCheckEnabled() && (ent->isSilent() || ent->isImmobile() || ent->getNameTag()->getTextLength() < 1 || std::string(ent->getNameTag()->getText()).find(std::string("\n")) != std::string::npos))
 		return false;
 
 	if (!hitboxMod->isEnabled() && antibot->isHitboxCheckEnabled())
 		if ((ent->height < 1.5f || ent->width < 0.49f || ent->height > 2.1f || ent->width > 0.9f))
 			return false;
 
-	if (!(*localPlayer)->canAttack(ent, false))
+	if (!localPlayer->canAttack(ent, false))
 		return false;
 
 	if (antibot->isExtraCheckEnabled() && !ent->canShowNameTag())

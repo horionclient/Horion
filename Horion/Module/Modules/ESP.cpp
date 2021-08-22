@@ -21,33 +21,35 @@ void doRenderStuff(C_Entity* ent, bool isRegularEntitie) {
 	static auto espMod = moduleMgr->getModule<ESP>();
 	
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
-	if (ent != localPlayer) {
-		if (ent->timeSinceDeath > 0)
+	if (ent == localPlayer)
+		return;
+	if (ent->timeSinceDeath > 0)
+		return;
+	static auto noFriendsModule = moduleMgr->getModule<NoFriends>();
+	if (!noFriendsModule->isEnabled() && FriendList::findPlayer(ent->getNameTag()->getText())) {
+		DrawUtils::setColor(0.1f, 0.9f, 0.1f, (float)fmax(0.1f, (float)fmin(1.f, 15 / (ent->damageTime + 1))));
+	} else if (Target::isValidTarget(ent)) {
+		if (espMod->doRainbow)
+			DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], (float)fmax(0.1f, (float)fmin(1.f, 15 / (ent->damageTime + 1))));
+		else
+			DrawUtils::setColor(0.9f, 0.9f, 0.9f, (float)fmax(0.1f, (float)fmin(1.f, 15 / (ent->damageTime + 1))));
+	} else if (espMod->isMobEsp) {
+		if (ent->getNameTag()->getTextLength() <= 1 && ent->getEntityTypeId() == 63)
 			return;
-		if (FriendList::findPlayer(ent->getNameTag()->getText()) && !moduleMgr->getModule<NoFriends>()->isEnabled()) {
-			DrawUtils::setColor(0.1f, 0.9f, 0.1f, (float)fmax(0.1f, (float)fmin(1.f, 15 / (ent->damageTime + 1))));
-		} else if (Target::isValidTarget(ent)) {
-			if (espMod->doRainbow)
-				DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], (float)fmax(0.1f, (float)fmin(1.f, 15 / (ent->damageTime + 1))));
-			else
-				DrawUtils::setColor(0.9f, 0.9f, 0.9f, (float)fmax(0.1f, (float)fmin(1.f, 15 / (ent->damageTime + 1))));
-		} else if (espMod->isMobEsp) {
-			if (ent->getNameTag()->getTextLength() <= 1 && ent->getEntityTypeId() == 63)
-				return;
 
-			if (ent->isInvisible())
-				return;
-
-			if (!g_Data.getLocalPlayer()->canAttack(ent, false))
-				return;
-			DrawUtils::setColor(0.2f, 0.2f, 0.9f, (float)fmax(0.1f, (float)fmin(1.f, 15 / (ent->damageTime + 1))));
-		} else
+		if (ent->isInvisible())
 			return;
-		if (espMod->is2d)
-			DrawUtils::draw2D(ent, (float)fmax(0.4f, 1 / (float)fmax(1, (*localPlayer->getPos()).dist(*ent->getPos()) * 3.f)));
-		else 
-			DrawUtils::drawEntityBox(ent, (float)fmax(0.2f, 1 / (float)fmax(1, (*localPlayer->getPos()).dist(*ent->getPos()))));
-	}
+
+		if (!localPlayer->canAttack(ent, false))
+			return;
+		DrawUtils::setColor(0.2f, 0.2f, 0.9f, (float)fmax(0.1f, (float)fmin(1.f, 15 / (ent->damageTime + 1))));
+	} else
+		return;
+	if (espMod->is2d)
+		DrawUtils::draw2D(ent, (float)fmax(0.4f, 1 / (float)fmax(1, localPlayer->getPos()->dist(*ent->getPos()) * 3.f)));
+	else 
+		DrawUtils::drawEntityBox(ent, (float)fmax(0.2f, 1 / (float)fmax(1, localPlayer->getPos()->dist(*ent->getPos()))));
+	
 	
 }
 

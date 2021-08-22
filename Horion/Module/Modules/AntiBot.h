@@ -13,22 +13,22 @@ public:
 	AntiBot();
 	~AntiBot();
 
-	bool isHitboxCheckEnabled() {
+	inline bool isHitboxCheckEnabled() {
 		return hitboxCheck && this->isEnabled();
 	}
-	bool isNameCheckEnabled() {
+	inline bool isNameCheckEnabled() {
 		return false && this->isEnabled();
 	}
-	bool isInvisibleCheckEnabled() {
+	inline bool isInvisibleCheckEnabled() {
 		return invisibleCheck && this->isEnabled();
 	}
-	bool isEntityIdCheckEnabled() {
+	inline bool isEntityIdCheckEnabled() {
 		return entityIdCheck && this->isEnabled();
 	}
-	bool isOtherCheckEnabled() {
+	inline bool isOtherCheckEnabled() {
 		return otherCheck && this->isEnabled();
 	}
-	bool isExtraCheckEnabled() {
+	inline bool isExtraCheckEnabled() {
 		return this->extraCheck && this->isEnabled();
 	}
 
