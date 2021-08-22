@@ -49,8 +49,7 @@ void InfiniteReach::onTick(C_GameMode* gm) {
 	Odelay++;
 
 	if (targetList0.size() > 0 && Odelay >= delay) {
-		if (!moduleMgr->getModule<NoSwing>()->isEnabled()) 
-			g_Data.getLocalPlayer()->swingArm();
+		g_Data.getLocalPlayer()->swingArm();
 
 		float calcYaw = (gm->player->yaw + 90) * (PI / 180);
 		float calcPitch = (gm->player->pitch) * -(PI / 180);

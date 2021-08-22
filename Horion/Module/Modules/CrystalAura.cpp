@@ -101,14 +101,12 @@ void CrystalAura::CPlace(C_GameMode* gm, vec3_t* pos) {
 void CrystalAura::DestroyC(C_Entity* ent, int range) {
 	if (g_Data.getLocalPlayer()->getPos()->dist(*ent->getPos()) < range && !dEnhanced) {
 		g_Data.getCGameMode()->attack(ent);
-		if (!moduleMgr->getModule<NoSwing>()->isEnabled())
-			g_Data.getLocalPlayer()->swingArm();
+		g_Data.getLocalPlayer()->swingArm();
 	} else if (dEnhanced) {
 		for (auto& i : targetList)
 			if (ent->getPos()->dist(*i->getPos()) < range) {
 				g_Data.getCGameMode()->attack(ent);
-				if (!moduleMgr->getModule<NoSwing>()->isEnabled())
-					g_Data.getLocalPlayer()->swingArm();
+				g_Data.getLocalPlayer()->swingArm();
 				return;
 			}
 	}
@@ -153,7 +151,7 @@ void CrystalAura::onTick(C_GameMode* gm) {
 					CPlace(gm, i->getPos());
 			else {
 				auto ptr = g_Data.getClientInstance()->getPointerStruct();
-				if (ptr->entityPtr == nullptr && ptr->rayHitType == 0)
+				if (ptr->getEntity() == nullptr && ptr->rayHitType == 0)
 					CPlace(gm, &ptr->block.toFloatVector());
 			}
 		}
@@ -192,7 +190,7 @@ void CrystalAura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	
 	auto ptr = g_Data.getClientInstance()->getPointerStruct();
 	if (ptr != nullptr)
-		if (ptr->entityPtr == nullptr && ptr->rayHitType == 0)
+		if (ptr->getEntity() == nullptr && ptr->rayHitType == 0)
 			if (g_Data.getLocalPlayer()->region->getBlock(ptr->block)->toLegacy()->blockId == 49 ||
 				g_Data.getLocalPlayer()->region->getBlock(ptr->block)->toLegacy()->blockId == 7) {
 				DrawUtils::setColor(.75f, .25f, .5f, 1.f);

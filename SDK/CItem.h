@@ -257,6 +257,21 @@ public:
 		if (itemId == 450) return true;
 		return false;
 	}
+	bool isWeapon(void) {
+		if (itemId == 268) return true;			//Wooden Sword
+		if (itemId == 272) return true;			//Stone Sword
+		if (itemId == 283) return true;			//Gold Sword
+		if (itemId == 267) return true;			//Iron Sword
+		if (itemId == 276) return true;			//Diamond Sword
+		if (itemId == 743) return true;			//Netherite Sword
+		if (itemId == 271) return true;			//Wooden Axe
+		if (itemId == 275) return true;			//Stone Axe
+		if (itemId == 286) return true;			//Gold Axe
+		if (itemId == 258) return true;			//Iron Axe
+		if (itemId == 279) return true;			//Diamond Axe
+		if (itemId == 746) return true;			//Netherite Axe
+		return false;
+	}
 	bool isBlock(void) {
 		auto val = *reinterpret_cast<__int64***>(reinterpret_cast<__int64>(this) + 0x1A0);
 		return val != nullptr && *val != nullptr;
