@@ -32,7 +32,7 @@ void JoePath::cutoff(float percentageKeep) {
 void JoePath::initPathSegments() {
 	// Init segments
 	for(auto& seg : segments){
-		seg.init();
+		//seg.init();
 	}
 
 	// Check whether we can sprint or not
