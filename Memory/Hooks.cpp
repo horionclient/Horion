@@ -937,7 +937,8 @@ float Hooks::Dimension_getSunIntensity(__int64 a1, float a2, vec3_t* a3, float a
 void Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a) {
 	static auto oTick = g_Hooks.ChestBlockActor_tickHook->GetFastcall<void, C_ChestBlockActor*, void*>();
 	oTick(_this, a);
-	if (_this != nullptr)
+	static auto* chestEspMod = moduleMgr->getModule<ChestESP>();
+	if (_this != nullptr && chestEspMod->isEnabled())
 		GameData::addChestToList(_this);
 }
 
