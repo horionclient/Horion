@@ -155,7 +155,7 @@ void DrawUtils::flush() {
 	renderCtx->flushText(0);
 }
 
-void DrawUtils::drawTriangle(vec2_t p1, vec2_t p2, vec2_t p3) {
+void DrawUtils::drawTriangle(const vec2_t& p1, const vec2_t& p2, const vec2_t& p3) {
 	
 	DrawUtils::tess__begin(tesselator, 3, 3);
 
@@ -167,7 +167,7 @@ void DrawUtils::drawTriangle(vec2_t p1, vec2_t p2, vec2_t p3) {
 }
 
 
-void DrawUtils::drawQuad(vec2_t p1, vec2_t p2, vec2_t p3, vec2_t p4) {
+void DrawUtils::drawQuad(const vec2_t& p1, const vec2_t& p2, const vec2_t& p3, const vec2_t& p4) {
 	DrawUtils::tess__begin(tesselator, 1, 4);
 
 	tess_vertex(tesselator, p1.x, p1.y, 0);
@@ -178,7 +178,7 @@ void DrawUtils::drawQuad(vec2_t p1, vec2_t p2, vec2_t p3, vec2_t p4) {
 	meshHelper_renderImm(screenContext2d, tesselator, uiMaterial);
 }
 
-void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth) {
+void DrawUtils::drawLine(const vec2_t& start, const vec2_t& end, float lineWidth) {
 	float modX = 0 - (start.y - end.y);
 	float modY = start.x - end.x;
 
@@ -202,17 +202,16 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth) {
 	meshHelper_renderImm(screenContext2d, tesselator, uiMaterial);
 }
 
-void DrawUtils::drawText(vec2_t pos, std::string* textStr, const MC_Color& color, float textSize, float alpha, Fonts font) {
+void DrawUtils::drawText(const vec2_t& pos, std::string* textStr, const MC_Color& color, float textSize, float alpha, Fonts font) {
 	TextHolder text(*textStr);
 	C_Font* fontPtr = getFont(font);
 	static uintptr_t caretMeasureData = 0xFFFFFFFF;
 
-	pos.y -= 1;
 
 	float posF[4];  // vec4_t(startX, startY, endX, endY);
 	posF[0] = pos.x;
 	posF[1] = pos.x + 1000;
-	posF[2] = pos.y;
+	posF[2] = pos.y - 1;
 	posF[3] = pos.y + 1000;
 
 	TextMeasureData textMeasure{};
@@ -222,7 +221,7 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, const MC_Color& color
 	renderCtx->drawText(fontPtr, posF, &text, color.arr, alpha, 0, &textMeasure, &caretMeasureData);
 }
 
-void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth, bool outline) {
+void DrawUtils::drawBox(const vec3_t& lower, const vec3_t& upper, float lineWidth, bool outline) {
 	
 	vec3_t diff;
 	diff.x = upper.x - lower.x;
@@ -455,7 +454,7 @@ void DrawUtils::draw2D(C_Entity* ent, float lineWidth) {
 	}
 }
 
-void DrawUtils::drawItem(C_ItemStack* item, vec2_t itemPos, float opacity, float scale, bool isEnchanted) {
+void DrawUtils::drawItem(C_ItemStack* item, const vec2_t& itemPos, float opacity, float scale, bool isEnchanted) {
 	__int64 scnCtx = reinterpret_cast<__int64*>(renderCtx)[2];
 	auto* screenCtx = reinterpret_cast<C_ScreenContext*>(scnCtx);
 	C_BaseActorRenderContext baseActorRenderCtx(screenCtx, g_Data.getClientInstance(), g_Data.getClientInstance()->minecraftGame);
@@ -464,7 +463,7 @@ void DrawUtils::drawItem(C_ItemStack* item, vec2_t itemPos, float opacity, float
 
 }
 
-void DrawUtils::drawKeystroke(char key, vec2_t pos) {
+void DrawUtils::drawKeystroke(char key, const vec2_t& pos) {
 	std::string keyString = Utils::getKeybindName(key);
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	if (key == *input->spaceBarKey) keyString = "-";
@@ -501,7 +500,7 @@ void DrawUtils::drawLine3d(const vec3_t& start, const vec3_t& end) {
 
 	meshHelper_renderImm(game3dContext, myTess, entityFlatStaticMaterial);
 }
-void DrawUtils::drawBox3d(vec3_t lower, vec3_t upper) {
+void DrawUtils::drawBox3d(const vec3_t& lower, const vec3_t& upper) {
 	if (game3dContext == 0 || entityFlatStaticMaterial == 0)
 		return;
 
@@ -514,18 +513,18 @@ void DrawUtils::drawBox3d(vec3_t lower, vec3_t upper) {
 	diff.y = upper.y - lower.y;
 	diff.z = upper.z - lower.z;
 
-	lower = lower.sub(origin);
+	auto newLower = lower.sub(origin);
 
 	vec3_t vertices[8];
-	vertices[0] = vec3_t(lower.x, lower.y, lower.z);
-	vertices[1] = vec3_t(lower.x + diff.x, lower.y, lower.z);
-	vertices[2] = vec3_t(lower.x, lower.y, lower.z + diff.z);
-	vertices[3] = vec3_t(lower.x + diff.x, lower.y, lower.z + diff.z);
+	vertices[0] = vec3_t(newLower.x, newLower.y, newLower.z);
+	vertices[1] = vec3_t(newLower.x + diff.x, newLower.y, newLower.z);
+	vertices[2] = vec3_t(newLower.x, newLower.y, newLower.z + diff.z);
+	vertices[3] = vec3_t(newLower.x + diff.x, newLower.y, newLower.z + diff.z);
 
-	vertices[4] = vec3_t(lower.x, lower.y + diff.y, lower.z);
-	vertices[5] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z);
-	vertices[6] = vec3_t(lower.x, lower.y + diff.y, lower.z + diff.z);
-	vertices[7] = vec3_t(lower.x + diff.x, lower.y + diff.y, lower.z + diff.z);
+	vertices[4] = vec3_t(newLower.x, newLower.y + diff.y, newLower.z);
+	vertices[5] = vec3_t(newLower.x + diff.x, newLower.y + diff.y, newLower.z);
+	vertices[6] = vec3_t(newLower.x, newLower.y + diff.y, newLower.z + diff.z);
+	vertices[7] = vec3_t(newLower.x + diff.x, newLower.y + diff.y, newLower.z + diff.z);
 
 	#define line(m, n) tess_vertex(myTess, m.x, m.y, m.z); \
 		tess_vertex(myTess, n.x, n.y, n.z);
@@ -552,29 +551,16 @@ void DrawUtils::drawBox3d(vec3_t lower, vec3_t upper) {
 	
 	meshHelper_renderImm(game3dContext, myTess, entityFlatStaticMaterial);
 }
-void DrawUtils::fillRectangle(vec4_t pos, const MC_Color& col, float alpha) {
+void DrawUtils::fillRectangle(const vec4_t& pos, const MC_Color& col, float alpha) {
 	DrawUtils::setColor(col.r, col.g, col.b, alpha);
 	DrawUtils::drawQuad({pos.x, pos.w}, {pos.z, pos.w}, {pos.z, pos.y}, {pos.x, pos.y});
 }
-void DrawUtils::tess__begin(Tessellator* tess, int vertexFormat, int numVerticesReserved) {
+inline void DrawUtils::tess__begin(Tessellator* tess, int vertexFormat, int numVerticesReserved) {
 	__int64 tesselator = reinterpret_cast<__int64>(tess);
 
 	using tess_begin_t = void(__fastcall*)(Tessellator*, int, int);
 	static tess_begin_t tess_begin = reinterpret_cast<tess_begin_t>(FindSignature("48 89 5C 24 ?? 55 48 83 EC ?? 80 B9 ?? ?? ?? ?? 00 45"));
 	tess_begin(tess, vertexFormat, numVerticesReserved);
-	/*if (!*(unsigned char*)(tesselator + 0x1FC) && !*(unsigned char*)(tesselator + 0x1B5)) {
-		mce__VertexFormat__disableHalfFloats(tesselator, 0, 0);
-		*(unsigned char*)(tesselator + 8) = vertexFormat;
-		*(unsigned char*)(tesselator + 0x1B4) = 0;
-		*(unsigned char*)(tesselator + 0x1FC) = 1;
-		*(unsigned char*)(tesselator + 0x1FD) = 0;
-		*(unsigned int*)(tesselator + 0x16C) = 0;
-		*(__int64*)(tesselator + 0x150) = *(__int64*)(tesselator + 0x148);
-		if (!*(unsigned char*)tesselator)
-			*(unsigned char*)(tesselator + 0xC8) = 1;
-		if (numVerticesReserved != 0)
-			Tessellator__initializeFormat(tesselator + 8, numVerticesReserved);
-	}*/
 }
 void DrawUtils::setGameRenderContext(__int64 ctx) {
 	game3dContext = ctx;
