@@ -373,8 +373,8 @@ void Hooks::ClientInstanceScreenModel_sendChatMessage(void* _this, TextHolder* t
 
 __int64 Hooks::UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext) {
 	static auto oSetup = g_Hooks.UIScene_setupAndRenderHook->GetFastcall<__int64, C_UIScene*, __int64>();
-
-	g_Hooks.shouldRender = uiscene->isPlayScreen();
+	g_Hooks.shouldRender = false;
+	//g_Hooks.shouldRender = uiscene->isPlayScreen();
 
 	return oSetup(uiscene, screencontext);
 }
@@ -382,9 +382,8 @@ __int64 Hooks::UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext)
 __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	static auto oRender = g_Hooks.UIScene_renderHook->GetFastcall<__int64, C_UIScene*, __int64>();
 
-	g_Hooks.shouldRender = uiscene->isPlayScreen();
-
-	bool alwaysRender = moduleMgr->isInitialized() && moduleMgr->getModule<HudModule>()->alwaysShow;
+	//g_Hooks.shouldRender = uiscene->isPlayScreen();
+	g_Hooks.shouldRender = false;
 
 	TextHolder alloc{};
 	uiscene->getScreenName(&alloc);
@@ -392,9 +391,9 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	if (alloc.getTextLength() < 100) {
 		strcpy_s(g_Hooks.currentScreenName, alloc.getText());
 	}
-
+	
 	if (!g_Hooks.shouldRender) {
-		g_Hooks.shouldRender = alwaysRender || (strcmp(alloc.getText(), "start_screen") == 0 || (alloc.getTextLength() >= 11 && strncmp(alloc.getText(), "play_screen", 11)) == 0);
+		g_Hooks.shouldRender = (strcmp(alloc.getText(), "start_screen") == 0 || strcmp(alloc.getText(), "hud_screen") == 0);
 	}
 	alloc.alignedTextLength = 0;
 
