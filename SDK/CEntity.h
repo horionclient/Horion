@@ -401,7 +401,7 @@ public:
 private:
 	virtual __int64 changeDimension(__int64, bool);
 	virtual __int64 changeDimension(__int64 const &);
-	virtual __int64 getControllingPlayer(void) const; // getSourceUniqueID2
+	virtual __int64 getControllingPlayer(void) const;  // getSourceUniqueID2
 	virtual __int64 checkFallDamage(float, bool);
 
 public:
@@ -507,11 +507,15 @@ private:
 	virtual __int64 renderDebugServerState(__int64 const &);
 	virtual __int64 reloadLootTable(void);
 	virtual __int64 reloadLootTable(__int64 const *);
-	virtual __int64 getDeletionDelayTimeSeconds(void) const;
+	virtual __int64 getLootTable(void) const;
+	virtual __int64 filler_2(void) const;
+	virtual __int64 filler_3(void) const;
 	virtual __int64 kill(void);
 	virtual __int64 die(__int64 const &);
 	virtual __int64 shouldTick(void) const;
 	virtual __int64 createMovementProxy(void);
+	virtual __int64 getMovementProxy(void);
+	virtual __int64 getNextStep(float);
 	virtual __int64 updateEntitySpecificMolangVariables(__int64 &);
 
 public:
@@ -519,10 +523,10 @@ public:
 
 private:
 	virtual __int64 getNextStep(float) const;
-	virtual __int64 idk();
 	virtual __int64 outOfWorld(void);
 	virtual __int64 _hurt(__int64 const &, int, bool, bool);
 	virtual __int64 markHurt(void);
+	virtual __int64 _getAnimationComponent(std::shared_ptr<__int64> &, __int64);
 	virtual __int64 readAdditionalSaveData(__int64 const &, __int64 &);
 	virtual __int64 addAdditionalSaveData(__int64 &);
 	virtual __int64 _playStepSound(vec3_ti const &, __int64 const &);
@@ -538,11 +542,12 @@ public:
 private:
 	virtual __int64 spawnTrailBubbles(void);
 	virtual __int64 updateInsideBlock(void);
-	virtual __int64 getLootTable(void);
-	virtual __int64 getDefaultLootTable(void);
 	virtual __int64 _removeRider(__int64 const &, bool, bool);
-	virtual __int64 onSizeUpdated(void);
+	virtual __int64 _onSizeUpdated(void);
 	virtual __int64 _doAutoAttackOnTouch(C_Entity &);
+
+	// Mob only functions
+
 	virtual __int64 knockback(C_Entity *, int, float, float, float, float, float);
 	virtual __int64 resolveDeathLoot(int, __int64 const &);
 	virtual __int64 spawnAnim(void);
@@ -554,6 +559,8 @@ public:
 private:
 	virtual __int64 playAmbientSound(void);
 	virtual __int64 getAmbientSound(void);
+	virtual __int64 getHurtSound(void);
+	virtual __int64 getDeathSound(void);
 	virtual __int64 getAmbientSoundPostponeTicks(void);
 	virtual __int64 getAmbientSoundPostponeTicksRange(void);
 	virtual __int64 getItemInHandIcon(__int64 const &, int);
@@ -663,7 +670,9 @@ private:
 	virtual void unknown(void) const;
 	virtual __int64 ascendLadder(void);
 	virtual __int64 ascendScaffolding(void);
+	virtual __int64 ascendScaffolding2(void);
 	virtual __int64 descendScaffolding(void);
+	virtual __int64 canAscendCurrentBlockByJumping(void);
 	virtual __int64 dropContainer(void);
 	virtual __int64 initBodyControl(void);
 
@@ -681,14 +690,6 @@ private:
 	virtual __int64 tickDeath(void);
 	virtual __int64 updateGliding(void);
 	virtual __int64 _allowAscendingScaffolding(void) const;
-	virtual __int64 prepareRegion(__int64 &);
-	virtual __int64 destroyRegion(void);
-	virtual __int64 suspendRegion(void);
-	virtual void resendAllChunks(void);
-	virtual __int64 _fireWillChangeDimension(void);
-	virtual __int64 _fireDimensionChanged(void);
-	virtual __int64 changeDimensionWithCredits(__int64);
-	virtual __int64 tickWorld(__int64 const &);
 
 public:
 	C_InventoryTransactionManager *getTransactionManager();
@@ -747,6 +748,15 @@ public:
 	}
 
 private:
+	virtual __int64 prepareRegion(__int64 &);
+	virtual __int64 destroyRegion(void);
+	virtual __int64 suspendRegion(void);
+	virtual void resendAllChunks(void);
+	virtual __int64 _fireWillChangeDimension(void);
+	virtual __int64 _fireDimensionChanged(void);
+	virtual __int64 changeDimensionWithCredits(__int64);
+	virtual __int64 tickWorld(__int64 const &);
+
 	virtual __int64 frameUpdate(__int64 &);
 	virtual __int64 getTickingOffsets(void) const;
 	virtual __int64 moveView(void);
