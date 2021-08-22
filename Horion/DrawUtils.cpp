@@ -202,7 +202,7 @@ void DrawUtils::drawLine(vec2_t start, vec2_t end, float lineWidth) {
 	meshHelper_renderImm(screenContext2d, tesselator, uiMaterial);
 }
 
-void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float textSize, float alpha, Fonts font) {
+void DrawUtils::drawText(vec2_t pos, std::string* textStr, const MC_Color& color, float textSize, float alpha, Fonts font) {
 	TextHolder text(*textStr);
 	C_Font* fontPtr = getFont(font);
 	static uintptr_t caretMeasureData = 0xFFFFFFFF;
@@ -552,7 +552,7 @@ void DrawUtils::drawBox3d(vec3_t lower, vec3_t upper) {
 	
 	meshHelper_renderImm(game3dContext, myTess, entityFlatStaticMaterial);
 }
-void DrawUtils::fillRectangle(vec4_t pos, const MC_Color col, float alpha) {
+void DrawUtils::fillRectangle(vec4_t pos, const MC_Color& col, float alpha) {
 	DrawUtils::setColor(col.r, col.g, col.b, alpha);
 	DrawUtils::drawQuad({pos.x, pos.w}, {pos.z, pos.w}, {pos.z, pos.y}, {pos.x, pos.y});
 }
@@ -631,4 +631,8 @@ void DrawUtils::drawLinestrip3d(const std::vector<vec3_t>& points) {
 	
 
 	meshHelper_renderImm(game3dContext, myTess, entityFlatStaticMaterial);
+}
+
+MC_Color MC_Color::lerp(const MC_Color& o, float t) const {
+	return MC_Color(Utils::lerp(r, o.r, t), Utils::lerp(g, o.g, t), Utils::lerp(b, o.b, t), Utils::lerp(a, o.a, t));
 }

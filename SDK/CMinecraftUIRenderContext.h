@@ -57,7 +57,7 @@ public:
 	virtual float getTextAlpha();
 	virtual void setTextAlpha(float alpha);
 	virtual __int64 drawDebugText(const float* pos, TextHolder* text, float* color, float alpha, unsigned int textAlignment, const float* textMeasureData, const void* caretMeasureData);
-	virtual __int64 drawText(C_Font* font, const float* pos, TextHolder* text, float* color, float alpha, unsigned int textAlignment, const TextMeasureData* textMeasureData, const uintptr_t* caretMeasureData);
+	virtual __int64 drawText(C_Font* font, const float* pos, TextHolder* text, const float* color, float alpha, unsigned int textAlignment, const TextMeasureData* textMeasureData, const uintptr_t* caretMeasureData);
 	virtual void flushText(float timeSinceLastFlush);                       // time used for ticking the obfuscated text
 	virtual __int64 drawImage(C_TexturePtr* texturePtr, vec2_t& ImagePos, vec2_t& ImageDimension,__int64& a4,vec2_t& idk);  // didnt bother putting in the parameters
 	virtual __int64 drawNinesliceNOTIMPLEMENTED();

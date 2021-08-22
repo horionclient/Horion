@@ -229,6 +229,11 @@ static inline void ImSwap(T& a, T& b) {
 
 class Utils {
 public:
+	template <typename type>
+	static inline auto lerp(type a, type b, float t) -> type {
+		return a + t * (b - a);
+	};
+
 	static inline unsigned int getCrcHash(const char* str, int seed = 0) {
 		static unsigned int crc32_lut[256] = {0};
 		if (!crc32_lut[1]) {

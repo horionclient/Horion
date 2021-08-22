@@ -72,6 +72,8 @@ struct MC_Color {
 		this->a = a;
 		this->shouldDelete = shouldDelete;
 	};
+
+	MC_Color lerp(const MC_Color& o, float t) const;
 };
 
 enum VertexFormat {
@@ -100,7 +102,7 @@ public:
 	static void drawLinestrip3d(const std::vector<vec3_t>& points);
 	static void drawLine3d(const vec3_t& start, const vec3_t& end);
 	static void drawBox3d(vec3_t lower, vec3_t upper);
-	static void fillRectangle(vec4_t pos, const MC_Color col, float alpha);
+	static void fillRectangle(vec4_t pos, const MC_Color& col, float alpha);
 	static inline void fillRectangle(vec2_t start, vec2_t end) {
 		DrawUtils::drawQuad({start.x, end.y}, {end.x, end.y}, {end.x, start.y}, {start.x, start.y});
 	}
@@ -111,7 +113,7 @@ public:
 		fillRectangle({end.x - lineWidth, start.y}, {end.x + lineWidth, end.y});                              //
 		fillRectangle({start.x - lineWidth, end.y - lineWidth}, {end.x + lineWidth, end.y + lineWidth});
 	}
-	static inline void drawRectangle(vec4_t pos, MC_Color col, float alpha, float lineWidth = 1.0f) {
+	static inline void drawRectangle(vec4_t pos, const MC_Color& col, float alpha, float lineWidth = 1.0f) {
 		lineWidth /= 2;
 		fillRectangle(vec4_t(pos.x - lineWidth, pos.y - lineWidth, pos.z + lineWidth, pos.y + lineWidth), col, alpha);  // TOP
 		fillRectangle(vec4_t(pos.x - lineWidth, pos.y, pos.x + lineWidth, pos.w), col, alpha);                          // LEFT
@@ -120,7 +122,7 @@ public:
 	}
 	static void drawImage(std::string filePath, vec2_t& ImagePos, vec2_t& ImageDimension, vec2_t& idk);
 
-	static void drawText(vec2_t pos, std::string* text, MC_Color color, float textSize = 1, float alpha = 1, Fonts font = Fonts::SMOOTH);
+	static void drawText(vec2_t pos, std::string* text, const MC_Color& color, float textSize = 1, float alpha = 1, Fonts font = Fonts::SMOOTH);
 	static void drawBox(vec3_t lower, vec3_t upper, float lineWidth, bool outline = false);
 	static void drawEntityBox(C_Entity* ent, float lineWidth);
 	static void draw2D(C_Entity* ent, float lineWidth);
