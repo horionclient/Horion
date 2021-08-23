@@ -47,7 +47,7 @@ void ButtonInfo::draw(vec2_t mousePos, const char* label) {
 		DrawUtils::fillRectangle(surface, MC_Color(28, 50, 77), 1);
 		this->canClickB = true;
 	} else {
-		DrawUtils::fillRectangle(surface, MC_Color(13, 29, 48), 1);
+		DrawUtils::fillRectangle(surface, MC_Color(12, 12, 12), 1);
 		this->canClickB = false;
 	}		
 }

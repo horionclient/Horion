@@ -100,7 +100,7 @@ void TabGui::renderLevel() {
 		if (selected[renderedLevel].selectedItemId == i && level >= renderedLevel) {  // We are selected
 			if (renderedLevel == level) {                                             // Are we actually in the menu we are drawing right now?
 				// We are selected in the current menu
-				DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48), 1.f);
+				DrawUtils::fillRectangle(rectPos, MC_Color(12, 12, 12), 1.f);
 				static bool lastVal = toggleCurrentSelection;
 
 				if (toggleCurrentSelection) {
@@ -114,11 +114,11 @@ void TabGui::renderLevel() {
 					label.mod->setEnabled(false);
 				lastVal = toggleCurrentSelection;
 			} else {  // selected, but not what the user is interacting with
-				DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48), 1.f);
+				DrawUtils::fillRectangle(rectPos, MC_Color(12, 12, 12), 1.f);
 			}
 			//selectedYOffset = yOffset;
 		} else {  // We are not selected
-			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48), 1.f);
+			DrawUtils::fillRectangle(rectPos, MC_Color(12, 12, 12), 1.f);
 		}
 
 		std::string tempLabel(label.text);
@@ -143,7 +143,7 @@ void TabGui::renderLevel() {
 			selected[renderedLevel].rollback();
 		} else
 			selected[renderedLevel].rollin();
-		DrawUtils::fillRectangle(selectedPos, MC_Color(28, 107, 201), alphaVal);
+		DrawUtils::fillRectangle(selectedPos, MC_Color(85, 85, 85), alphaVal);
 	}
 
 	// Cleanup
