@@ -371,7 +371,7 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 		vec4_t subRectPos = rectPos;
 		subRectPos.y = subRectPos.w - 1.f * textSize;
 		static auto nametagsMod = moduleMgr->getModule<NameTags>();
-		fillRectangle(rectPos, MC_Color(13, 29, 48), nametagsMod->opacity);
+		fillRectangle(rectPos, MC_Color(12, 12, 12), nametagsMod->opacity);
 		if (nametagsMod->underline) {
 			fillRectangle(subRectPos, MC_Color(30, 110, 20), 0.9f);
 		}
@@ -474,7 +474,7 @@ void DrawUtils::drawKeystroke(char key, const vec2_t& pos) {
 	vec2_t textPos(
 		(rectPos.x + (rectPos.z - rectPos.x) / 2) - (DrawUtils::getTextWidth(&keyString) / 2.f),
 		rectPos.y + 10.f - DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() / 2.f);
-	fillRectangle(rectPos, GameData::isKeyDown(key) ? MC_Color(28, 50, 77) : MC_Color(13, 29, 48), 1.f);
+	fillRectangle(rectPos, GameData::isKeyDown(key) ? MC_Color(85, 85, 85) : MC_Color(12, 12, 12), 1.f);
 	drawText(textPos, &keyString, MC_Color(255, 255, 255), 1.f, 1.f);
 }
 

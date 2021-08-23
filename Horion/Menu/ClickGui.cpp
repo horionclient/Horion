@@ -511,7 +511,7 @@ void ClickGui::renderCategory(Category category) {
 										// Draw Progress
 										{
 											rect.z = rect.x + value;
-											DrawUtils::fillRectangle(rect, MC_Color(28, 107, 201), (areWeFocused || setting->isDragging) ? 1.f : 0.8f);
+											DrawUtils::fillRectangle(rect, MC_Color(85, 85, 85), (areWeFocused || setting->isDragging) ? 1.f : 0.8f);
 										}
 
 										// Drag Logic
@@ -606,7 +606,7 @@ void ClickGui::renderCategory(Category category) {
 										// Draw Progress
 										{
 											rect.z = rect.x + value;
-											DrawUtils::fillRectangle(rect, MC_Color(28, 107, 201), (areWeFocused || setting->isDragging) ? 1.f : 0.8f);
+											DrawUtils::fillRectangle(rect, MC_Color(85, 85, 85), (areWeFocused || setting->isDragging) ? 1.f : 0.8f);
 										}
 
 										// Drag Logic

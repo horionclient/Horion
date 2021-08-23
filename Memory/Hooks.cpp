@@ -661,10 +661,10 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						windowSize.x - margin + borderPadding,
 						windowSize.y - margin);
 
-					DrawUtils::drawRectangle(rect, MC_Color(13, 29, 48), 1.f, 2.f);
-					DrawUtils::fillRectangle(rect, MC_Color(rcolors), 1.f);
-					DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, MC_Color(6, 15, 24), nameTextSize);
-					DrawUtils::drawText(vec2_t(rect.x + borderPadding + nameLength, rect.w - 7), &version, MC_Color(0, 0, 0), versionTextSize);
+					DrawUtils::drawRectangle(rect, MC_Color(rcolors), 1.f, 2.f);
+					DrawUtils::fillRectangle(rect, MC_Color(12, 12, 12), 1.f);
+					DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, MC_Color(rcolors), nameTextSize);
+					DrawUtils::drawText(vec2_t(rect.x + borderPadding + nameLength, rect.w - 7), &version, MC_Color(rcolors), versionTextSize);
 				}
 
 				// Draw ArrayList
@@ -790,7 +790,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						currColor[0] += 1.f / a * c;
 						Utils::ColorConvertHSVtoRGB(currColor[0], currColor[1], currColor[2], currColor[0], currColor[1], currColor[2]);
 
-						DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48), 1.f);
+						DrawUtils::fillRectangle(rectPos, MC_Color(12, 12, 12), 1.f);
 						DrawUtils::fillRectangle(leftRect, MC_Color(currColor), 1.f);
 						if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos) && hudModule->clickToggle) {
 							vec4_t selectedRect = rectPos;
@@ -865,7 +865,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				centerPos.y - paddingVert,
 				centerPos.x + paddingHoriz + std::max(titleWidth, msgWidth) / 2,
 				centerPos.y + paddingVert * 2 + titleTextHeight + messageHeight * lines);
-			DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48), box->fadeVal);
+			DrawUtils::fillRectangle(rectPos, MC_Color(12, 12, 12), box->fadeVal);
 			DrawUtils::drawRectangle(rectPos, rcolors, box->fadeVal, 2.f);
 			DrawUtils::drawText(textPos, &box->title, MC_Color(), titleTextSize, box->fadeVal);
 			DrawUtils::drawText(msgPos, &box->message, MC_Color(), messageTextSize, box->fadeVal);
