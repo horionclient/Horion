@@ -841,10 +841,10 @@ public:
 
 private:
 	virtual __int64 sendEventPacket(__int64 &) const;
-	virtual __int64 addExperience(int);
-	virtual __int64 addLevels(int);
 
 public:
+	virtual void addExperience(int);
+	virtual void addLevels(int);
 	virtual void setContainerData(__int64 &, int, int);
 
 private:

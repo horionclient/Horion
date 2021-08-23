@@ -266,6 +266,7 @@
     <ClCompile Include="Horion\Command\Commands\TopCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\UnbindCommand.cpp" />
     <ClCompile Include="Horion\Command\Commands\WaypointCommand.cpp" />
+    <ClCompile Include="Horion\Command\Commands\XpCommand.cpp" />
     <ClCompile Include="Horion\Config\AccountInformation.cpp" />
     <ClCompile Include="Horion\Config\ConfigManager.cpp" />
     <ClCompile Include="Horion\DrawUtils.cpp" />
@@ -454,6 +455,7 @@
     <ClInclude Include="Horion\Command\Commands\TopCommand.h" />
     <ClInclude Include="Horion\Command\Commands\UnbindCommand.h" />
     <ClInclude Include="Horion\Command\Commands\WaypointCommand.h" />
+    <ClInclude Include="Horion\Command\Commands\XpCommand.h" />
     <ClInclude Include="Horion\Config\AccountInformation.h" />
     <ClInclude Include="Horion\Config\ConfigManager.h" />
     <ClInclude Include="Horion\DrawUtils.h" />
