@@ -12,22 +12,24 @@ Tracer::~Tracer() {
 const char* Tracer::getModuleName() {
 	return "Tracer";
 }
-void Tracer::onLevelRender() {
-
-	auto cameraMgr = g_Data.getClientInstance()->getCameraManager();
-	if(cameraMgr == nullptr)
-		return;
-	auto cam = cameraMgr->getCameraOrDebugCamera();
-	if(cam == nullptr)
-		return;
-	vec3_t forward{};
-	cam->getForwardVector(&forward);
-
-	const vec3_t origin = g_Data.getClientInstance()->levelRenderer->origin.add(forward.mul(0.2f) /*place the start of the line slightly forward so it won't get clipped*/);
+void Tracer::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
+	auto player = g_Data.getLocalPlayer();
+	if (player == nullptr) return;
+	
 	g_Data.forEachEntity([&](C_Entity* ent, bool valid) {
-	  if(ent != g_Data.getLocalPlayer() && Target::isValidTarget(ent)){
-		  DrawUtils::setColor(255, 255, 255, 1);
-		  DrawUtils::drawLine3d(origin, *ent->getPos());
-	  }
+		if (ent == player)
+			return;
+		if (ent->getNameTag()->getTextLength() <= 1 && ent->getEntityTypeId() == 63)
+			return;
+		if (ent->isInvisible())
+			return;
+		if (!player->canAttack(ent, false))
+			return;
+		if (!Target::isValidTarget(ent))
+			return;
+
+		DrawUtils::setColor(255, 255, 255, 1);
+		DrawUtils::drawTracer(ent);
 	});
+
 }

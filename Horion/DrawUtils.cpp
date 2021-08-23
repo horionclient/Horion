@@ -618,6 +618,10 @@ void DrawUtils::drawLinestrip3d(const std::vector<vec3_t>& points) {
 	meshHelper_renderImm(game3dContext, myTess, entityFlatStaticMaterial);
 }
 
+void DrawUtils::drawTracer(C_Entity* ent) {
+	DrawUtils::drawLine(vec2_t(screenSize.x / 2, screenSize.y / 2), DrawUtils::worldToScreen(*ent->getPos()), 0.2f);
+}
+
 MC_Color MC_Color::lerp(const MC_Color& o, float t) const {
 	return MC_Color(Utils::lerp(r, o.r, t), Utils::lerp(g, o.g, t), Utils::lerp(b, o.b, t), Utils::lerp(a, o.a, t));
 }

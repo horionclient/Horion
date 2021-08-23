@@ -7,5 +7,5 @@ public:
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
-	void onLevelRender() override;
+	virtual void onPreRender(C_MinecraftUIRenderContext* renderCtx) override;
 };
