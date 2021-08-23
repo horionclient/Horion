@@ -2,6 +2,7 @@
 #include "Module.h"
 class Scaffold : public IModule {
 private:
+	bool airplace = true;
 	bool spoof = false;
 	bool staircaseMode = false;
 	bool tryScaffold(vec3_t blockBelow);

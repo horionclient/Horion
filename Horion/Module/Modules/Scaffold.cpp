@@ -3,6 +3,7 @@
 #include "../../../Utils/Logger.h"
 
 Scaffold::Scaffold() : IModule(VK_NUMPAD1, Category::WORLD, "Automatically build blocks beneath you") {
+	registerBoolSetting("Airplace", &this->airplace, this->airplace);
 	registerBoolSetting("Spoof", &this->spoof, this->spoof);
 	registerBoolSetting("Staircase Mode", &this->staircaseMode, this->staircaseMode);
 }
@@ -21,7 +22,10 @@ bool Scaffold::tryScaffold(vec3_t blockBelow) {
 	C_BlockLegacy* blockLegacy = (block->blockLegacy);
 	if (blockLegacy->material->isReplaceable) {
 		vec3_ti blok(blockBelow);
-
+		int i = 0;
+		if (airplace) {
+			g_Data.getCGameMode()->buildBlock(&blok, i);
+		}
 		// Find neighbour
 		static std::vector<vec3_ti*> checklist;
 		if (checklist.empty()) {
@@ -34,9 +38,7 @@ bool Scaffold::tryScaffold(vec3_t blockBelow) {
 			checklist.push_back(new vec3_ti(-1, 0, 0));
 			checklist.push_back(new vec3_ti(1, 0, 0));
 		}
-
 		bool foundCandidate = false;
-		int i = 0;
 		for (auto current : checklist) {
 			vec3_ti calc = blok.sub(*current);
 			bool Y = ((g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy))->material->isReplaceable;
