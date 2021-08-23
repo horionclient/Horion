@@ -32,8 +32,10 @@ void Freelook::onDisable() {
 
 			initialViewAngles.y += 180;
 			initialViewAngles = initialViewAngles.normAngles();
-		}else
+		} else {
 			mouseEnd = this->lastCameraAngle;
+			mouseEnd.y += 180;
+		}
 	}else if(!g_Data.isInGame()){
 		this->resetViewTick = -1;
 		this->redirectMouse = false;
