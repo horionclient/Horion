@@ -35,8 +35,9 @@ void Teleport::onTick(C_GameMode* gm) {
 	}
 	if (!GameData::isRightClickDown()) 
 		hasClicked = false;
-
-	if (shouldTP && gm->player->isSneaking()) {
+	
+	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
+		if (shouldTP && GameData::isKeyDown(*input->sneakKey)) {
 		tpPos.y += (gm->player->getPos()->y - gm->player->getAABB()->lower.y) + 1;  // eye height + 1
 		if (bypass) {
 			/*int dist = (int)gm->player->getPos()->dist(tpPos);
