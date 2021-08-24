@@ -5,7 +5,6 @@
 
 **Horion** is a Minecraft: Bedrock Edition utility mod designed to enhance gameplay. We do not take responsibility in anything done with this utility mod.
 If you want to contribute to this project, feel free to fork this repository and submit a pull request.
-**As of 09/01/20, this project is not under active development by the Horion team anymore. We will still review pull requests.**
 
 [![Discord](https://img.shields.io/discord/732833913705201736?label=chat&logo=discord&logoColor=white&style=for-the-badge)](https://horion.download/discord)
 [![Download the injector](https://img.shields.io/badge/download-injector-brightgreen?style=for-the-badge "Download the injector")](https://horion.download/injector "Download the injector")
