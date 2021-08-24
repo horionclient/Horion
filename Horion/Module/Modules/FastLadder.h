@@ -2,6 +2,8 @@
 #include "Module.h"
 class FastLadder : public IModule {
 public:
+	float speed = 0.6f;
+
 	FastLadder();
 	~FastLadder();
 
