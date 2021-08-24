@@ -1431,7 +1431,7 @@ void Hooks::Actor_ascendLadder(C_Entity* _this) {
 
 	static auto fastLadderModule = moduleMgr->getModule<FastLadder>();
 	if (fastLadderModule->isEnabled() && g_Data.getLocalPlayer() == _this) {
-		_this->velocity.y = 0.6f;
+		_this->velocity.y = fastLadderModule->speed;
 		return;
 	}
 	return oFunc(_this);
