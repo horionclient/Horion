@@ -1,6 +1,7 @@
 #include "Teleport.h"
+#include "../../DrawUtils.h"
 
-Teleport::Teleport() : IModule(0, Category::MISC, "Click a block to teleport to it") {
+Teleport::Teleport() : IModule(0, Category::MOVEMENT, "Click a block to teleport to it") {
 	registerBoolSetting("Only Hand", &this->onlyHand, this->onlyHand);
 	registerBoolSetting("Push", &this->bypass, this->bypass);
 }
@@ -9,7 +10,7 @@ Teleport::~Teleport() {
 }
 
 const char* Teleport::getModuleName() {
-	return "Teleport";
+	return "ClickTP";
 }
 
 void Teleport::onTick(C_GameMode* gm) {
@@ -23,7 +24,8 @@ void Teleport::onTick(C_GameMode* gm) {
 		hasClicked = true;
 
 		vec3_ti block = g_Data.getClientInstance()->getPointerStruct()->block;
-		if (block == vec3_ti(0, 0, 0)) return;
+		int rayType = g_Data.getClientInstance()->getPointerStruct()->rayHitType;
+		if (rayType != 0) return;
 		vec3_t pos = block.toFloatVector();
 		pos.x += 0.5f;
 		pos.z += 0.5f;
@@ -36,17 +38,18 @@ void Teleport::onTick(C_GameMode* gm) {
 	if (!GameData::isRightClickDown()) 
 		hasClicked = false;
 
-	if (shouldTP && gm->player->isSneaking()) {
+	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
+		if (shouldTP && GameData::isKeyDown(*input->sneakKey)) {
 		tpPos.y += (gm->player->getPos()->y - gm->player->getAABB()->lower.y) + 1;  // eye height + 1
 		if (bypass) {
-			/*int dist = (int)gm->player->getPos()->dist(tpPos);
-			int i = (int)dist / 5;
+			int dist2 = (int)gm->player->getPos()->dist(tpPos);
+			int i = (int)dist2 / 5;
 			for (int n = 0; n < i; n++) {
 				vec3_t offs = tpPos.sub(*gm->player->getPos()).div(i).mul(n);
 				C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), gm->player->getPos()->add(offs));
 				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
 			}
-			gm->player->setPos(tpPos);*/
+			gm->player->setPos(tpPos);
 			float dist = gm->player->getPos()->dist(tpPos);
 			g_Data.getLocalPlayer()->lerpTo(tpPos, vec2_t(1, 1), (int)fmax((int)dist * 0.1, 1));
 		}
