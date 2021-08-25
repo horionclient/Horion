@@ -1,3 +1,4 @@
+[![Download the injector](https://img.shields.io/badge/download-injector-brightgreen?style=for-the-badge "Download the injector")](https://horion.download/injector "Download the injector")
 <p align="center">
   <img src="https://raw.githubusercontent.com/horionclient/Horion/master/.github/horion-banner.png"/>
 </p>
@@ -5,10 +6,9 @@
 
 **Horion** is a Minecraft: Bedrock Edition utility mod designed to enhance gameplay. We do not take responsibility in anything done with this utility mod.
 If you want to contribute to this project, feel free to fork this repository and submit a pull request.
-**As of 09/01/20, this project is not under active development by the Horion team anymore. We will still review pull requests.**
 
 [![Discord](https://img.shields.io/discord/732833913705201736?label=chat&logo=discord&logoColor=white&style=for-the-badge)](https://horion.download/discord)
-[![Download the injector](https://img.shields.io/badge/download-injector-brightgreen?style=for-the-badge "Download the injector")](https://horion.download/injector "Download the injector")
+
 [![Build Status](https://img.shields.io/azure-devops/build/horionclient/Horion/2?label=dev%20release&style=for-the-badge)](https://dev.azure.com/horionclient/Horion/_build/latest?definitionId=2&branchName=master)
 [![License](https://i.creativecommons.org/l/by-nc/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc/4.0/)
 
