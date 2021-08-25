@@ -1,7 +1,7 @@
 #include "CubeGlide.h"
 
 CubeGlide::CubeGlide() : IModule(0, Category::MOVEMENT, "Glide on Cubecraft") {
-	registerFloatSetting("Speed", &this->speed, this->speed, 1.f, 3.f);
+	registerFloatSetting("Speed", &speed, speed, 1.f, 3.f);
 }
 
 CubeGlide::~CubeGlide() {

@@ -3,7 +3,7 @@
 #include "../../DrawUtils.h"
 
 Tower::Tower() : IModule(0, Category::WORLD, "Like scaffold, but vertically and a lot faster") {
-	registerFloatSetting("motion", &this->motion, this->motion, 0.3f, 1.f);
+	registerFloatSetting("motion", &motion, motion, 0.3f, 1.f);
 }
 
 Tower::~Tower() {

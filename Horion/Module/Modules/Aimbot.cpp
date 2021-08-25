@@ -1,15 +1,15 @@
 #include "Aimbot.h"
 
 Aimbot::Aimbot() : IModule(0, Category::COMBAT, "Automatically aims at the nearest entity") {
-	this->registerFloatSetting("range", &this->range, this->range, 3.f, 8.f);
-	this->registerBoolSetting("Require click", &this->click, this->click);
-	this->registerBoolSetting("only swords/axes", &this->sword, this->sword);
-	this->registerBoolSetting("vertical", &this->vertical, this->vertical);
-	this->registerFloatSetting("horizontal speed", &this->horizontalspeed, this->horizontalspeed, 10.f, 90.f);
-	this->registerFloatSetting("vertical speed", &this->verticalspeed, this->verticalspeed, 10.f, 90.f);
-	this->registerFloatSetting("horizontal range", &this->horizontalrange, this->horizontalrange, 20.f, 180.f);
-	this->registerFloatSetting("vertical range", &this->verticalrange, this->verticalrange, 20.f, 180.f);
-	this->registerBoolSetting("aimlock", &this->lock, this->lock);
+	registerFloatSetting("range", &range, range, 3.f, 8.f);
+	registerBoolSetting("Require click", &click, click);
+	registerBoolSetting("only swords/axes", &sword, sword);
+	registerBoolSetting("vertical", &vertical, vertical);
+	registerFloatSetting("horizontal speed", &horizontalspeed, horizontalspeed, 10.f, 90.f);
+	registerFloatSetting("vertical speed", &verticalspeed, verticalspeed, 10.f, 90.f);
+	registerFloatSetting("horizontal range", &horizontalrange, horizontalrange, 20.f, 180.f);
+	registerFloatSetting("vertical range", &verticalrange, verticalrange, 20.f, 180.f);
+	registerBoolSetting("aimlock", &lock, lock);
 }
 
 Aimbot::~Aimbot() {
@@ -70,7 +70,7 @@ void Aimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			if (click && !g_Data.isLeftClickDown())
 				return;
 
-			if (!this->lock) {
+			if (!lock) {
 				appl.x /= (100.f - verticalspeed);
 				appl.y /= (100.f - horizontalspeed);
 				if (appl.x >= 1 || appl.x <= -1) appl.div(abs(appl.x));

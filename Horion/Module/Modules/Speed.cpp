@@ -1,7 +1,7 @@
 #include "Speed.h"
 
 Speed::Speed() : IModule(VK_NUMPAD2, Category::MOVEMENT, "Speed up!") {
-	registerFloatSetting("speed", &this->speed, 1, 0.1f, 3.f);
+	registerFloatSetting("speed", &speed, 1, 0.1f, 3.f);
 }
 
 Speed::~Speed() {
@@ -26,7 +26,7 @@ void Speed::onTick(C_GameMode* gm) {
 
 void Speed::onEnable() {
 	if (g_Data.getLocalPlayer() == nullptr) {
-		this->setEnabled(false);
+		setEnabled(false);
 		return;
 	} else {
 		origSpeed = *reinterpret_cast<float*>(g_Data.getLocalPlayer()->getSpeed() + 0x84);

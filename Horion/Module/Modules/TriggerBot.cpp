@@ -3,7 +3,7 @@
 #include "../../../Utils/Target.h"
 
 TriggerBot::TriggerBot() : IModule(0, Category::COMBAT, "Attacks entities you're looking at") {
-	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
+	registerIntSetting("delay", &delay, delay, 0, 20);
 }
 
 TriggerBot::~TriggerBot() {

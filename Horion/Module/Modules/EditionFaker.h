@@ -2,6 +2,8 @@
 #include "Module.h"
 class EditionFaker : public IModule {
 public:
+	int osValue = 0;
+
 	EditionFaker();
 	~EditionFaker();
 

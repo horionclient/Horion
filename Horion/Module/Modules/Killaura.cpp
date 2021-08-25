@@ -1,13 +1,13 @@
 #include "Killaura.h"
 
 Killaura::Killaura() : IModule('P', Category::COMBAT, "Attacks entities around you automatically") {
-	this->registerBoolSetting("MultiAura", &this->isMulti, this->isMulti);
-	this->registerBoolSetting("MobAura", &this->isMobAura, this->isMobAura);
-	this->registerFloatSetting("range", &this->range, this->range, 2.f, 20.f);
-	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
-	this->registerBoolSetting("hurttime", &this->hurttime, this->hurttime);
-	this->registerBoolSetting("AutoWeapon", &this->autoweapon, this->autoweapon);
-	this->registerBoolSetting("Silent Rotations", &this->silent, this->silent);
+	registerBoolSetting("MultiAura", &isMulti, isMulti);
+	registerBoolSetting("MobAura", &isMobAura, isMobAura);
+	registerFloatSetting("range", &range, range, 2.f, 20.f);
+	registerIntSetting("delay", &delay, delay, 0, 20);
+	registerBoolSetting("hurttime", &hurttime, hurttime);
+	registerBoolSetting("AutoWeapon", &autoweapon, autoweapon);
+	registerBoolSetting("Silent Rotations", &silent, silent);
 }
 
 Killaura::~Killaura() {
@@ -114,7 +114,7 @@ void Killaura::onTick(C_GameMode* gm) {
 
 void Killaura::onEnable() {
 	if (g_Data.getLocalPlayer() == nullptr)
-		this->setEnabled(false);
+		setEnabled(false);
 }
 
 void Killaura::onSendPacket(C_Packet* packet) {

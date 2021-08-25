@@ -1,7 +1,7 @@
 #include "Bhop.h"
 
 Bhop::Bhop() : IModule(0, Category::MOVEMENT, "Hop around like a bunny!") {
-	registerFloatSetting("Speed", &this->speed, this->speed, 0.1f, 0.8f);
+	registerFloatSetting("Speed", &speed, speed, 0.1f, 0.8f);
 }
 
 Bhop::~Bhop() {

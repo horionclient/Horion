@@ -1,13 +1,13 @@
 #include "Fucker.h"
 
 Fucker::Fucker() : IModule(VK_NUMPAD9, Category::MISC, "Destroys beds around you") {
-	registerIntSetting("Range", &this->range, this->range, 1, 10);
-	registerBoolSetting("Beds", &this->beds, this->beds);
-	registerBoolSetting("Eggs", &this->eggs, this->eggs);
-	registerBoolSetting("Cakes", &this->cakes, this->cakes);
-	registerBoolSetting("Treasures", &this->treasures, this->treasures);
-	registerBoolSetting("Chests", &this->chests, this->chests);
-	registerBoolSetting("Barrels", &this->barrels, this->barrels);
+	registerIntSetting("Range", &range, range, 1, 10);
+	registerBoolSetting("Beds", &beds, beds);
+	registerBoolSetting("Eggs", &eggs, eggs);
+	registerBoolSetting("Cakes", &cakes, cakes);
+	registerBoolSetting("Treasures", &treasures, treasures);
+	registerBoolSetting("Chests", &chests, chests);
+	registerBoolSetting("Barrels", &barrels, barrels);
 }
 
 Fucker::~Fucker() {

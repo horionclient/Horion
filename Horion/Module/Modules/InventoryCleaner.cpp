@@ -3,12 +3,12 @@
 #include "../ModuleManager.h"
 
 InventoryCleaner::InventoryCleaner() : IModule(0, Category::PLAYER, "Automatically throws not needed stuff out of your inventory") {
-	registerBoolSetting("Tools", &this->keepTools, this->keepTools);
-	registerBoolSetting("Armor", &this->keepArmor, this->keepArmor);
-	registerBoolSetting("Food", &this->keepFood, this->keepFood);
-	registerBoolSetting("Blocks", &this->keepBlocks, this->keepBlocks);
-	registerBoolSetting("OpenInv", &this->openInv, this->openInv);
-	registerBoolSetting("AutoSort", &this->autoSort, this->autoSort);
+	registerBoolSetting("Tools", &keepTools, keepTools);
+	registerBoolSetting("Armor", &keepArmor, keepArmor);
+	registerBoolSetting("Food", &keepFood, keepFood);
+	registerBoolSetting("Blocks", &keepBlocks, keepBlocks);
+	registerBoolSetting("OpenInv", &openInv, openInv);
+	registerBoolSetting("AutoSort", &autoSort, autoSort);
 }
 
 InventoryCleaner::~InventoryCleaner() {
