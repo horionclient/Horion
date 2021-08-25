@@ -18,9 +18,9 @@ void Speed::onTick(C_GameMode* gm) {
 	*speedAdr = speed;
 
 	if (localPlayer->onGround == true && GameData::canUseMoveKeys() && localPlayer->velocity.squaredxzlen() > 0.001f) {
-		localPlayer->velocity.x *= 1.39f;
-		localPlayer->velocity.z *= 1.39f;
-		localPlayer->velocity.y = 0.035f;
+		localPlayer->velocity.x *= 0.90f;
+		localPlayer->velocity.z *= 0.90f;
+		localPlayer->velocity.y = 0.020f;
 	}
 }
 
