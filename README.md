@@ -1,4 +1,3 @@
-
 ![Logo](https://raw.githubusercontent.com/horionclient/Horion/master/.github/horion-banner.png)
 
     
@@ -6,7 +5,6 @@
 
 **Horion** is a Minecraft: Bedrock Edition utility mod designed to enhance gameplay. We do not take responsibility for anything done with this utility mod.
 If you want to contribute to this project, feel free to fork this repository and submit a pull request.
-**As of 09/01/20, this project is not under active development by the Horion team anymore. We will still review pull requests.**
 
 ## Acknowledgements
 
