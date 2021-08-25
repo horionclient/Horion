@@ -128,7 +128,6 @@ public:
 	static void draw2D(C_Entity* ent, float lineWidth);
 	static void drawNameTags(C_Entity* ent, float textSize, bool drawHealth = false, bool useUnicodeFont = false);
 	static void drawItem(C_ItemStack* item, const vec2_t& ItemPos, float opacity, float scale, bool isEnchanted);
-	static void drawKeystroke(char key, const vec2_t& pos);
 	static float getLerpTime();
 	static vec3_t getOrigin();
 
