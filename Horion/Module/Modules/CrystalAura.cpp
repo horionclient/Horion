@@ -135,7 +135,7 @@ void CrystalAura::onTick(C_GameMode* gm) {
 		for (int n = 0; n < 9; n++) {
 			C_ItemStack* stack = inv->getItemStack(n);
 			if (stack->item != nullptr) {
-				if (stack->getItem()->itemId == 615) {
+				if (stack->getItem()->itemId == 629) {
 					if (prevSlot != n)
 					supplies->selectedHotbarSlot = n;
 					return;
@@ -145,7 +145,7 @@ void CrystalAura::onTick(C_GameMode* gm) {
 		return;
 	}
 	if (this->delay == 2) {
-		if (autoplace && g_Data.getLocalPlayer()->getSelectedItemId() == 615) {  //endcrystal
+		if (autoplace && g_Data.getLocalPlayer()->getSelectedItemId() == 629) {  //endcrystal
 			if (pEnhanced)
 				for (auto& i : targetList)
 					CPlace(gm, i->getPos());

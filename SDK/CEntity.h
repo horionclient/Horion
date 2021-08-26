@@ -669,10 +669,8 @@ public:
 private:
 	virtual void unknown(void) const;
 	virtual __int64 ascendLadder(void);
-	virtual __int64 ascendScaffolding(void);
-	virtual __int64 ascendScaffolding2(void);
-	virtual __int64 descendScaffolding(void);
-	virtual __int64 canAscendCurrentBlockByJumping(void);
+	virtual __int64 ascendBlockByJumping(void);     // 0x161
+	virtual __int64 descendBlockByCrouching(void);  // 0x162
 	virtual __int64 dropContainer(void);
 	virtual __int64 initBodyControl(void);
 
