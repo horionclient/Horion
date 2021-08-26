@@ -667,7 +667,7 @@ public:
 	virtual bool canExistWhenDisallowMob(void) const;
 
 private:
-	virtual void unknown(void) const;
+	virtual __int64 useNewAi(void);
 	virtual __int64 ascendLadder(void);
 	virtual __int64 ascendBlockByJumping(void);     // 0x161
 	virtual __int64 descendBlockByCrouching(void);  // 0x162
@@ -764,8 +764,8 @@ public:
 
 private:
 	virtual __int64 checkMovementStats(vec3_t const &);
-	virtual __int64 unknown20(void) const;
-	virtual __int64 unknown21(void) const;
+	virtual __int64 getCurrentStructureFeature(void);
+	virtual __int64 isAutoJumpEnabled(void);
 	virtual __int64 respawn(void);
 	virtual __int64 resetRot(void);
 	virtual __int64 resetPos(bool);
