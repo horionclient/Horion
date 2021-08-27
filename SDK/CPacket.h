@@ -63,7 +63,7 @@ public:
 class C_PlayerActionPacket : public C_Packet {
 public:
 	C_PlayerActionPacket();
-	char pad_0x8[0x20];  //0x8
+	char pad_0x8[0x28];  //0x8
 	vec3_ti blockPosition; // 0x28
 	int face; // 0x34
 	int action; // 0x38
@@ -77,7 +77,7 @@ public:
 	C_MobEquipmentPacket(__int64 entityRuntimeId, C_ItemStack& item, int hotbarSlot, int inventorySlot);
 
 private:
-	char pad_0x8[0x20];       //0x0
+	char pad_0x8[0x28];       //0x0
 public:
 	__int64 entityRuntimeId;  //0x28
 	C_ItemStack item;         //0x30
@@ -100,7 +100,7 @@ public:
 	}
 
 private:
-	char pad_0x8[0x20];  //0x8
+	char pad_0x8[0x28];  //0x8
 public:
 	int unknown = 0;//0x28
 	__int64* unknownStart = 0;  //0x30
@@ -114,7 +114,7 @@ class C_TextPacket : public C_Packet {
 public:
 	C_TextPacket();
 
-	unsigned char gap0[0x20];
+	unsigned char gap0[0x28];
 	unsigned __int8 messageType;  // 0x28
 
 	unsigned char gap[7];
@@ -138,7 +138,7 @@ public:
 
 	//uintptr_t** vTable;		// 0x0
 private:
-	char filler[0x20];  // 0x8
+	char filler[0x28];  // 0x8
 public:
 	__int64 entityRuntimeID;  //0x28
 	vec3_t Position;          //0x30
