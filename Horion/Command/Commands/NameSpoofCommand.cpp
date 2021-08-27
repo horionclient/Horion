@@ -3,6 +3,7 @@
 NameSpoofCommand::NameSpoofCommand() : IMCCommand("namespoof", "Spoof your name on realms/bds", "<name/reset> <name>") {
 	registerAlias("ns");
 	registerAlias("fakename");
+	registerAlias("fn");
 }
 
 NameSpoofCommand::~NameSpoofCommand() {

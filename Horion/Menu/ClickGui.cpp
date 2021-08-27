@@ -45,10 +45,10 @@ static const MC_Color moduleColor = MC_Color(0x12, 0x12, 0x12); // background
 static const MC_Color selectedModuleColor = moduleColor.lerp(whiteColor, 0.08f);  // 30, 110, 200
 static const MC_Color enabledModuleColor = moduleColor.lerp(whiteColor, 0.04f);  
 static const MC_Color brightModuleBlendColor = moduleColor.lerp(whiteColor, 0.2f); // tooltip border & category divider
-static const MC_Color selectedSettingColor1 = MC_Color(20, 100, 195);
-static const MC_Color selectedSettingColor2 = MC_Color(40, 120, 205);
-static const MC_Color SettingColor1 = MC_Color(10, 25, 45);
-static const MC_Color SettingColor2 = MC_Color(20, 35, 55);
+static const MC_Color selectedSettingColor1 = MC_Color(85, 85, 85);
+static const MC_Color selectedSettingColor2 = MC_Color(85, 85, 85);
+static const MC_Color SettingColor1 = MC_Color(12, 12, 12);
+static const MC_Color SettingColor2 = MC_Color(12, 12, 12);
 
 float currentYOffset = 0;
 float currentXOffset = 0;
@@ -335,7 +335,7 @@ void ClickGui::renderCategory(Category category) {
 									DrawUtils::drawRectangle(boxPos, whiteColor, isFocused ? 1 : 0.8f, 0.5f);
 
 									if (setting->value->_bool) {
-										DrawUtils::setColor(28, 107, 201, 1);
+										DrawUtils::setColor(85, 85, 85, 1);
 										boxPos.x += 1;
 										boxPos.y += 1;
 										boxPos.z -= 1;
@@ -776,7 +776,7 @@ void ClickGui::render() {
 									 0,
 									 g_Data.getClientInstance()->getGuiData()->widthGame,
 									 g_Data.getClientInstance()->getGuiData()->heightGame),
-								 MC_Color(33, 34, 48), 0.2f);
+								 MC_Color(12, 12, 12), 0.2f);
 	}
 
 	// Render all categorys

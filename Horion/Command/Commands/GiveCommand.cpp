@@ -2,7 +2,7 @@
 #include "../../../Utils/Utils.h"
 #include "../../../SDK/Tag.h"
 
-GiveCommand::GiveCommand() : IMCCommand("give", "spawn items", "<itemName> <count> <itemData> <NBT>") {
+GiveCommand::GiveCommand() : IMCCommand("give", "spawn items", "<itemName> <count> [itemData] [NBT]") {
 }
 
 GiveCommand::~GiveCommand() {
