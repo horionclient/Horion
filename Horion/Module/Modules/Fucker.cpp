@@ -1,6 +1,6 @@
 #include "Fucker.h"
 
-Fucker::Fucker() : IModule(VK_NUMPAD9, Category::MISC, "Destroys beds around you") {
+Fucker::Fucker() : IModule(VK_NUMPAD9, Category::MISC, "Destroys certain blocks around you") {
 	registerIntSetting("Range", &this->range, this->range, 1, 10);
 	registerBoolSetting("Beds", &this->beds, this->beds);
 	registerBoolSetting("Eggs", &this->eggs, this->eggs);
