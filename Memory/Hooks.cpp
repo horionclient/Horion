@@ -789,8 +789,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[1], rcolors[2], currColor[0], currColor[1], currColor[2]);
 						currColor[0] += 1.f / a * c;
 						Utils::ColorConvertHSVtoRGB(currColor[0], currColor[1], currColor[2], currColor[0], currColor[1], currColor[2]);
-
-						DrawUtils::fillRectangle(rectPos, MC_Color(12, 12, 12), 1.f);
+						static auto hudmoduleMod = moduleMgr->getModule<HudModule>();
+						DrawUtils::fillRectangle(rectPos, MC_Color(12, 12, 12), hudmoduleMod->arrayListOpacity);
 						DrawUtils::fillRectangle(leftRect, MC_Color(currColor), 1.f);
 						if (!GameData::canUseMoveKeys() && rectPos.contains(&mousePos) && hudModule->clickToggle) {
 							vec4_t selectedRect = rectPos;

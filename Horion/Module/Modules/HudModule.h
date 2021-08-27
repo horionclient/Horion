@@ -8,6 +8,7 @@ public:
 
 	bool tabgui = true;
 	bool arraylist = true;
+	float arrayListOpacity = 1.f;
 	bool clickToggle = true;
 	bool watermark = true;
 	bool coordinates = false;

@@ -5,6 +5,7 @@
 HudModule::HudModule() : IModule(0, Category::VISUAL, "Displays ArrayList/TabGUI") {
 	registerBoolSetting("TabGui", &this->tabgui, this->tabgui);
 	registerBoolSetting("ArrayList", &this->arraylist, this->arraylist);
+	registerFloatSetting("ArrayList Opacity", &this->arrayListOpacity, this->arrayListOpacity, 0.1f, 1.f);
 	registerBoolSetting("ClickToggle", &this->clickToggle, this->clickToggle);
 	registerBoolSetting("Watermark", &this->watermark, this->watermark);
 	registerBoolSetting("Coordinates", &this->coordinates, this->coordinates);
