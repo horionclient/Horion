@@ -800,6 +800,8 @@ void ClickGui::render() {
 void ClickGui::init() { initialised = true; }
 
 void ClickGui::onMouseClickUpdate(int key, bool isDown) {
+	static auto clickGuiMod = moduleMgr->getModule<ClickGuiMod>();
+	if (clickGuiMod->isEnabled() && g_Data.isInGame())
 	switch (key) {
 	case 1:  // Left Click
 		isLeftClickDown = isDown;
