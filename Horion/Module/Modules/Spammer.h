@@ -6,7 +6,7 @@ private:
 	int Odelay = 0;
 	bool bypass = true;
 	int delay = 2;
-	std::string message = "Horion - the best minecraft bedrock utility mod - horionbeta.club";
+	std::string message = "Horion - the best minecraft bedrock utility mod - horion.download";
 
 public:
 	Spammer();

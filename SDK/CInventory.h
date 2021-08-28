@@ -75,17 +75,16 @@ public:
 };
 
 class C_ContainerScreenController {
-public:
-	void handleAutoPlace(uintptr_t a1, std::string name, int slot);
-
 private:
 	virtual __int64 destructor();
 	virtual __int64 tick(void);
 	virtual __int64 handleEvent(__int64&);
-	virtual __int64 sub_140321330(void) const;
+	virtual __int64 getRoute(void);
+	virtual __int64 setScreenState(__int64, std::string const&);
 	virtual __int64 onOpen(void);
 	virtual __int64 onTerminate(void);
 	virtual __int64 onInit(void);
+	virtual __int64 onDelete(void);
 
 public:
 	virtual bool canExit(void);
@@ -95,6 +94,8 @@ private:
 	virtual __int64 areControllerTabsEnabled(void);
 	virtual __int64 onCreation(void);
 	virtual __int64 logCreationTime(std::string const&, double, double, unsigned char);
+	virtual __int64 unknown1();
+	virtual __int64 unknown2();
 
 public:
 	virtual __int64 onLeave(void);
@@ -108,32 +109,28 @@ private:
 	virtual __int64 onDictationEvent(std::string const&);
 
 public:
-	virtual void setAssociatedvec3_ti(vec3_ti const&);
+	virtual void setAssociatedBlockPos(vec3_ti const&);
 	virtual void setAssociatedEntityUniqueID(__int64);
 	virtual void setSuspendInput(bool);
 
 private:
-	virtual __int64 getCallbackInterval(void) const;
-
-public:
-	virtual void setViewCommand(__int64);
-
-private:
+	virtual __int64 getCallbackInterval(void);
 	virtual __int64 onRender(void);
 	virtual __int64 addStaticScreenVars(__int64&);
-	virtual __int64 getAdditionalScreenInfo(void) const;
-	virtual __int64 getTelemetryOverride(void) const;
+	virtual __int64 getAdditionalScreenInfo(void);
+	virtual __int64 getTelemetryOverride(void);
 	virtual __int64 addEventProperties(__int64) const;
-	virtual __int64 getSceneType(void) const;
-	virtual __int64 getScreenVersion(void) const;
-	virtual __int64 screenHandlesGamepadMenuButton(void) const;
+	virtual __int64 getSceneType(void);
+	virtual __int64 getScreenVersion(void);
+	virtual __int64 screenHandlesGamepadMenuButton(void);
 	virtual __int64 getProxy(void);
 	virtual __int64 onEntered(void);
-	virtual __int64 getNameId(std::string const&) const;
-	virtual __int64 _isStillValid(void) const;
-	virtual __int64 _getGamepadHelperVisible(void) const;
-	virtual __int64 _getMixedHelperVisible(void) const;
-	virtual __int64 _getKeyboardHelperVisible(void) const;
+	virtual __int64 getNameId(std::string const&);
+	virtual __int64 _doesScreenHaveExitBehavior(void);
+	virtual __int64 _isStillValid(void);
+	virtual __int64 _getGamepadHelperVisible(void);
+	virtual __int64 _getMixedHelperVisible(void);
+	virtual __int64 _getKeyboardHelperVisible(void);
 	virtual __int64 _getButtonADescription(void);
 	virtual __int64 _getButtonBDescription(void);
 	virtual __int64 _getButtonXDescription(void);
@@ -144,18 +141,22 @@ public:
 	virtual __int64 _handlePlaceAll(std::string const&, int);
 	virtual __int64 _handlePlaceOne(std::string const&, int);
 	virtual __int64 _handleSelectSlot(std::string const&, int);
-	virtual __int64 _getSelectedItem(void) const;
+	virtual __int64 _getSelectedSlotInfo(void);
 	virtual C_ItemStack* _getItemStack(TextHolder, int) const;
 
 private:
-	virtual __int64 _getVisualItemStack(std::string const&, int) const;
+	virtual __int64 _getVisualItemStack(std::string const&, int);
+	virtual __int64 _getTakeableItemStackBase(std::string const&, int);
 	virtual __int64 _onContainerSlotHovered(std::string const&, int);
 	virtual __int64 _onContainerSlotSelected(std::string const&, int);
 	virtual __int64 _onContainerSlotPressed(std::string const&, int);
-	virtual __int64 _shouldSwap(std::string const&, int, std::string const&, int) const;
-	virtual __int64 _getCollectionName(__int64*) const;
-	virtual __int64 _canSplit(std::string const&, int) const;
+	virtual __int64 _shouldSwap(std::string const&, int, std::string const&, int);
+	virtual __int64 _getCollectionName(__int64*);
+	virtual __int64 _canSplit(std::string const&, int);
 	virtual __int64 _sendFlyingItem(__int64 const&, std::string const&, int, std::string const&, int);
+
+public:
+	void handleAutoPlace(uintptr_t a1, std::string name, int slot);
 };
 
 class C_CraftingScreenController : public C_ContainerScreenController {
