@@ -158,7 +158,6 @@ void CrystalAura::onTick(C_GameMode* gm) {
 		return;
 	}
 	if (this->delay == 3 && FinishSelect) {
-		supplies->selectedHotbarSlot = prevSlot;
 		FinishSelect = false;
 		return;
 	}
