@@ -64,6 +64,8 @@ void Hooks::Init() {
 				g_Hooks.Actor_ascendLadderHook = std::make_unique<FuncHook>(localPlayerVtable[333], Hooks::Actor_ascendLadder);*/
 
 				g_Hooks.Actor_swingHook = std::make_unique<FuncHook>(localPlayerVtable[214], Hooks::Actor_swing);
+
+				g_Hooks.JumpPowerHook = std::make_unique<FuncHook>(localPlayerVtable[357], Hooks::JumpPower);
 			}
 		}
 
@@ -245,8 +247,8 @@ void Hooks::Init() {
 		g_Hooks.GetGammaHook = std::make_unique<FuncHook>(fullbright, Hooks::GetGamma);
 
 		// Mob::_jumpFromGround
-		void* jump = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B 19 48 8D"));
-		g_Hooks.JumpPowerHook = std::make_unique<FuncHook>(jump, Hooks::JumpPower);
+		/*void* jump = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B 19 48 8D"));
+		g_Hooks.JumpPowerHook = std::make_unique<FuncHook>(jump, Hooks::JumpPower);*/
 
 		void* onAppSuspended = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ? 48 89 74 24 ? 55 57 41 56 48 8B EC 48 83 EC ? 48 8B F1 E8"));
 		g_Hooks.MinecraftGame_onAppSuspendedHook = std::make_unique<FuncHook>(onAppSuspended, Hooks::MinecraftGame_onAppSuspended);
