@@ -113,7 +113,7 @@ void CrystalAura::DestroyC(C_Entity* ent, int range) {
 }
 
 bool shouldChange = false;
-void CrystalAura::onTick(C_GameMode* gm) {
+void CrystalAura::onTick(C_Player* plr) {
 	if (shouldChange) {
 		shouldChange = false;
 	}
@@ -148,11 +148,11 @@ void CrystalAura::onTick(C_GameMode* gm) {
 		if (autoplace && g_Data.getLocalPlayer()->getSelectedItemId() == 629) {  //endcrystal
 			if (pEnhanced)
 				for (auto& i : targetList)
-					CPlace(gm, i->getPos());
+					CPlace(plr->getGm(), i->getPos());
 			else {
 				auto ptr = g_Data.getClientInstance()->getPointerStruct();
 				if (ptr->getEntity() == nullptr && ptr->rayHitType == 0)
-					CPlace(gm, &ptr->block.toFloatVector());
+					CPlace(plr->getGm(), &ptr->block.toFloatVector());
 			}
 		}
 		return;

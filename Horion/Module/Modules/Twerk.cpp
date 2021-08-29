@@ -11,15 +11,15 @@ const char* Twerk::getModuleName() {
 	return ("Twerk");
 }
 
-void Twerk::onTick(C_GameMode* gm) {
+void Twerk::onTick(C_Player* player) {
 	Odelay++;
 	if (Odelay > delay * 20) {
 		C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
-		if (gm->player->isSneaking()) {
+		if (player->isSneaking()) {
 			isSneaking = false;
 		} 
 		else {
-			if (!gm->player->isSneaking()) {
+			if (!player->isSneaking()) {
 				isSneaking = true;
 			}
 		}

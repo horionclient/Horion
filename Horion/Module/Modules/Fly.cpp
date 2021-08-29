@@ -34,41 +34,41 @@ void Fly::onEnable() {
 }
 
 
-void Fly::onTick(C_GameMode* gm) {
-	gm->player->canFly = true;
+void Fly::onTick(C_Player* player) {
+	player->canFly = true;
 
 	switch (mode.selected) {
 	case 0:
-		gm->player->canFly = true;
+		player->canFly = true;
 		break;
 	case 1:
-		float calcYaw = (gm->player->yaw + 90) * (PI / 180);
+		float calcYaw = (player->yaw + 90) * (PI / 180);
 
 		gameTick++;
 
 		vec3_t pos = *g_Data.getLocalPlayer()->getPos();
 		pos.y += 1.3f;
-		C_MovePlayerPacket a(g_Data.getLocalPlayer(), pos);
+		C_MovePlayerPacket a(reinterpret_cast<C_LocalPlayer*>(player), pos);
 		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
 		pos.y -= 1.3f;
-		C_MovePlayerPacket a2(g_Data.getLocalPlayer(), pos);
+		C_MovePlayerPacket a2(reinterpret_cast<C_LocalPlayer*>(player), pos);
 		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a2);
 
 		vec3_t moveVec;
 		moveVec.x = cos(calcYaw) * speed;
 		moveVec.z = sin(calcYaw) * speed;
 
-		gm->player->lerpMotion(moveVec);
+		player->lerpMotion(moveVec);
 
 		if (gameTick >= 5) {
 			gameTick = 0;
-			float yaw = gm->player->yaw * (PI / 180);
+			float yaw = player->yaw * (PI / 180);
 			float length = 4.f;
 
 			float x = -sin(yaw) * length;
 			float z = cos(yaw) * length;
 
-			gm->player->setPos(pos.add(vec3_t(x, 0.5f, z)));
+			player->setPos(pos.add(vec3_t(x, 0.5f, z)));
 		}
 		break;
 	}

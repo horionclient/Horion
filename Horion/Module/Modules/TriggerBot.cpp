@@ -12,7 +12,7 @@ TriggerBot::~TriggerBot() {
 const char* TriggerBot::getModuleName() {
 	return ("TriggerBot");
 }
-void TriggerBot::onTick(C_GameMode* gm) {
+void TriggerBot::onTick(C_Player* player) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 	C_Entity* target = g_Data.getClientInstance()->getPointerStruct()->getEntity();
 	
@@ -22,7 +22,7 @@ void TriggerBot::onTick(C_GameMode* gm) {
 			return;
 
 		localPlayer->swingArm();
-		gm->attack(target);
+		player->getGm()->attack(target);
 
 		Odelay = 0;
 	}

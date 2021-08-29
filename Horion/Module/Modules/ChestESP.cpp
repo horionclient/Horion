@@ -40,7 +40,7 @@ void ChestESP::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	}
 }
 
-void ChestESP::onTick(C_GameMode* gm) {
+void ChestESP::onTick(C_Player*) {
 	// Swap list
 	auto listLock = g_Data.lockChestList();
 	auto& chestList = g_Data.getChestList();

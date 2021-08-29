@@ -181,7 +181,7 @@ bool tryPlace(const vec3_ti& blockPos) {
 	return false;
 }
 
-void TestModule::onTick(C_GameMode* gm) {
+void TestModule::onTick(C_Player* gm) {
 	
 	auto player = g_Data.getLocalPlayer();
 	auto pPos = player->eyePos0;

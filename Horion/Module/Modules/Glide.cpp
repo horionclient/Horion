@@ -16,7 +16,7 @@ const char* Glide::getModuleName() {
 		return ("Glide");
 }
 
-void Glide::onTick(C_GameMode* gm) {
+void Glide::onTick(C_Player* player) {
 	glideModEffective = glideMod;
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 
@@ -26,7 +26,7 @@ void Glide::onTick(C_GameMode* gm) {
 		if (GameData::isKeyDown(*input->sneakKey))
 			glideModEffective -= 0.2f;
 	}
-	gm->player->velocity.y = glideModEffective;
+	player->velocity.y = glideModEffective;
 }
 
 const char* Glide::getRawModuleName() {

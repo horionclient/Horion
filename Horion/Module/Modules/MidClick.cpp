@@ -10,7 +10,7 @@ const char* MidClick::getModuleName() {
 	return "MidClick";
 }
 
-void MidClick::onTick(C_GameMode* gm) {
+void MidClick::onTick(C_Player*) {
 	C_Entity* entity = g_Data.getClientInstance()->getPointerStruct()->getEntity();
 	if (entity == nullptr) 
 		return;

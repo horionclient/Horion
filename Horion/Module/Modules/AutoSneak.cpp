@@ -11,7 +11,7 @@ const char* AutoSneak::getModuleName() {
 	return ("AutoSneak");
 }
 
-void AutoSneak::onTick(C_GameMode* gm) {
+void AutoSneak::onTick(C_Player*) {
 
 	if (!doSilent)
 		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = true;

@@ -10,7 +10,7 @@ public:
 	~Blink();
 
 	// Inherited via IModule
-	virtual void onTick(C_GameMode* gm) override;
+	virtual void onTick(C_Player* plr) override;
 	virtual const char* getModuleName() override;
 
 	inline std::vector<C_MovePlayerPacket*>* getMovePlayerPacketHolder() { return &MovePlayerPacketHolder; };

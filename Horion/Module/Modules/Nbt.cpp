@@ -12,7 +12,7 @@ const char* Nbt::getModuleName() {
 	return ("Nbt");
 }
 
-void Nbt::onTick(C_GameMode* gm) {
+void Nbt::onTick(C_Player*) {
 	if (!GameData::canUseMoveKeys()) {
 		return;
 	}

@@ -13,6 +13,6 @@ public:
 	virtual const char* getModuleName() override;
 	virtual bool isFlashMode() override;
 	virtual void onEnable() override;
-	virtual void onTick(C_GameMode* gm) override;
+	virtual void onTick(C_Player* plr) override;
 	virtual void onDisable() override;
 };

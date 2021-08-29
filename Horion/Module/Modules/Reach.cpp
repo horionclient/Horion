@@ -15,7 +15,7 @@ const char* Reach::getModuleName() {
 	return ("Reach");
 }
 
-void Reach::onTick(C_GameMode* gm) {
+void Reach::onTick(C_Player*) {
 	if (reachPtr != 0) {
 		*reachPtr = reachValue;
 	}

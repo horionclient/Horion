@@ -19,8 +19,8 @@ void CubeGlide::onEnable() {
 	g_Data.getLocalPlayer()->setPos((*g_Data.getLocalPlayer()->getPos()).add(vec3_t(0, 1, 0)));
 }
 
-void CubeGlide::onTick(C_GameMode* gm) {
-	float calcYaw = (gm->player->yaw + 90) * (PI / 180);
+void CubeGlide::onTick(C_Player* player) {
+	float calcYaw = (player->yaw + 90) * (PI / 180);
 
 	gameTick++;
 
@@ -36,20 +36,21 @@ void CubeGlide::onTick(C_GameMode* gm) {
 	moveVec.x = cos(calcYaw) * speed;
 	moveVec.z = sin(calcYaw) * speed;
 
-	gm->player->lerpMotion(moveVec);
+	player->lerpMotion(moveVec);
 
 	if (gameTick >= 5) {
 		gameTick = 0;
-		float yaw = gm->player->yaw * (PI / 180);
+		float yaw = player->yaw * (PI / 180);
 		float length = 4.f;
 
 		float x = -sin(yaw) * length;
 		float z = cos(yaw) * length;
 
-		gm->player->setPos(pos.add(vec3_t(x, 0.5f, z)));
+		player->setPos(pos.add(vec3_t(x, 0.5f, z)));
 	}
 }
 
 void CubeGlide::onDisable() {
-	g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
+	if (g_Data.getLocalPlayer())
+		g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
 }

@@ -17,7 +17,7 @@ void AirSwim::onEnable() {
 	g_Data.getLocalPlayer()->startSwimming();
 }
 
-void AirSwim::onTick(C_GameMode* gm) {
+void AirSwim::onTick(C_Player*) {
 	g_Data.getLocalPlayer()->didEnterWaterBool = true;
 	g_Data.getLocalPlayer()->doWaterSplashEffect();
 	g_Data.getLocalPlayer()->startSwimming();

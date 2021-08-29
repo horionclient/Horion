@@ -10,7 +10,7 @@ public:
 	~AutoSneak();
 
 	virtual const char* getModuleName() override;
-	virtual void onTick(C_GameMode* gm) override;
+	virtual void onTick(C_Player* plr) override;
 	virtual void onDisable() override;
 	virtual void onEnable() override;
 };

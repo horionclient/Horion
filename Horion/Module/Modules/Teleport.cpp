@@ -12,7 +12,7 @@ const char* Teleport::getModuleName() {
 	return "Teleport";
 }
 
-void Teleport::onTick(C_GameMode* gm) {
+void Teleport::onTick(C_Player* player) {
 
 	if (!GameData::canUseMoveKeys()) 
 		return;
@@ -38,20 +38,20 @@ void Teleport::onTick(C_GameMode* gm) {
 	
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 		if (shouldTP && GameData::isKeyDown(*input->sneakKey)) {
-		tpPos.y += (gm->player->getPos()->y - gm->player->getAABB()->lower.y) + 1;  // eye height + 1
+		tpPos.y += (player->getPos()->y - player->getAABB()->lower.y) + 1;  // eye height + 1
 		if (bypass) {
-			/*int dist = (int)gm->player->getPos()->dist(tpPos);
+			/*int dist = (int)player->getPos()->dist(tpPos);
 			int i = (int)dist / 5;
 			for (int n = 0; n < i; n++) {
-				vec3_t offs = tpPos.sub(*gm->player->getPos()).div(i).mul(n);
-				C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), gm->player->getPos()->add(offs));
+				vec3_t offs = tpPos.sub(*player->getPos()).div(i).mul(n);
+				C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(offs));
 				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
 			}
-			gm->player->setPos(tpPos);*/
-			float dist = gm->player->getPos()->dist(tpPos);
+			player->setPos(tpPos);*/
+			float dist = player->getPos()->dist(tpPos);
 			g_Data.getLocalPlayer()->lerpTo(tpPos, vec2_t(1, 1), (int)fmax((int)dist * 0.1, 1));
 		}
-		else gm->player->setPos(tpPos);
+		else player->setPos(tpPos);
 		shouldTP = false;
 	}
 }

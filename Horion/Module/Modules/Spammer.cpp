@@ -13,7 +13,7 @@ const char* Spammer::getModuleName() {
 	return ("Spammer");
 }
 
-void Spammer::onTick(C_GameMode* gm) {
+void Spammer::onTick(C_Player*) {
 	Odelay++;
 	if (Odelay > delay * 20) {
 		C_TextPacket textPacket;

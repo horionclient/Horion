@@ -40,7 +40,7 @@ void findEntities(C_Entity* currentEntity, bool isRegularEntitie) {
 	}
 }
 
-void InfiniteReach::onTick(C_GameMode* gm) {
+void InfiniteReach::onTick(C_Player* player) {
 
 	//Loop through all our players and retrieve their information
 	targetList0.clear();
@@ -51,8 +51,8 @@ void InfiniteReach::onTick(C_GameMode* gm) {
 	if (targetList0.size() > 0 && Odelay >= delay) {
 		g_Data.getLocalPlayer()->swingArm();
 
-		float calcYaw = (gm->player->yaw + 90) * (PI / 180);
-		float calcPitch = (gm->player->pitch) * -(PI / 180);
+		float calcYaw = (player->yaw + 90) * (PI / 180);
+		float calcPitch = (player->pitch) * -(PI / 180);
 
 		float teleportX = cos(calcYaw) * cos(calcPitch) * 3.5f;
 		float teleportZ = sin(calcYaw) * cos(calcPitch) * 3.5f;

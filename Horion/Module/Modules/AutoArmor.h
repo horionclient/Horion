@@ -6,6 +6,6 @@ public:
 	AutoArmor();
 	~AutoArmor();
 
-	virtual void onTick(C_GameMode* gm) override;
+	virtual void onTick(C_Player* plr) override;
 	virtual const char* getModuleName() override;
 };

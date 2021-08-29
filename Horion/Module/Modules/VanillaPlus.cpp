@@ -41,7 +41,7 @@ void VanillaPlus::onEnable() {
 }
 
 
-void VanillaPlus::onTick(C_GameMode*) {
+void VanillaPlus::onTick(C_Player*) {
 	if (flyingItemsFuncPtr && lastFastFlyingItems != fastFlyingItems) {
 		DWORD oldProtect = 0;
 		if (!VirtualProtect(flyingItemsFuncPtr, 26, PAGE_EXECUTE_READWRITE, &oldProtect)) {

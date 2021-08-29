@@ -17,14 +17,14 @@ const char* Fucker::getModuleName() {
 	return ("Fucker");
 }
 
-void Fucker::onTick(C_GameMode* gm) {
-	vec3_t* pos = gm->player->getPos();
+void Fucker::onTick(C_Player* player) {
+	vec3_t* pos = player->getPos();
 	for (int x = (int)pos->x - range; x < pos->x + range; x++) {
 		for (int z = (int)pos->z - range; z < pos->z + range; z++) {
 			for (int y = (int)pos->y - range; y < pos->y + range; y++) {
 				vec3_ti blockPos = vec3_ti(x, y, z);
 				bool destroy = false;
-				auto id = gm->player->region->getBlock(blockPos)->toLegacy()->blockId;
+				auto id = player->region->getBlock(blockPos)->toLegacy()->blockId;
 
 				if (id == 26 && this->beds) destroy = true;      // Beds
 				if (id == 122 && this->eggs) destroy = true;     // Dragon Eggs
@@ -33,7 +33,7 @@ void Fucker::onTick(C_GameMode* gm) {
 				if (id == 458 && this->barrels) destroy = true;  // Barrels
 
 				if (destroy) {
-					gm->destroyBlock(&blockPos, 0);
+					player->getGm()->destroyBlock(&blockPos, 0);
 					g_Data.getLocalPlayer()->swingArm();
 					return;
 				}

@@ -10,7 +10,7 @@ const char* StackableItem::getModuleName() {
 	return ("StackableItem");
 }
 
-void StackableItem::onTick(C_GameMode* gm) {
+void StackableItem::onTick(C_Player*) {
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* a = supplies->inventory;
 	for (int i = 0; i < 36; i++) {

@@ -12,11 +12,11 @@ const char* Godmode::getModuleName() {
 	return "Godmode";
 }
 
-void Godmode::onTick(C_GameMode* gm) {
+void Godmode::onTick(C_Player* player) {
 	delay++;
 	if (delay >= regendelay) {
 		delay = 0;
-		gm->player->causeFallDamage((float) regenvalue);
+		player->causeFallDamage((float) regenvalue);
 	}
 }
 

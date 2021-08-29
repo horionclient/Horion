@@ -11,9 +11,9 @@ const char* AirJump::getModuleName() {
 	return ("AirJump");
 }
 
-void AirJump::onTick(C_GameMode* gm) {
+void AirJump::onTick(C_Player* player) {
 	if (legacyMode) {
-		gm->player->onGround = true;
+		player->onGround = true;
 		return;
 	}
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
@@ -22,7 +22,7 @@ void AirJump::onTick(C_GameMode* gm) {
 		return;
 
 	if (GameData::isKeyDown(*input->spaceBarKey) && hasJumped == 0) {
-		gm->player->onGround = true;
+		player->onGround = true;
 		hasJumped = 1;
 	} else if (!GameData::isKeyDown(*input->spaceBarKey)) {
 		hasJumped = 0;

@@ -18,7 +18,7 @@ public:
 	bool isFlashMode() override {
 		return true;
 	}
-	void onTick(C_GameMode* mode) override;
+	void onTick(C_Player*) override;
 	void onEnable() override;
 	void onDisable() override;
 	void onPostRender(C_MinecraftUIRenderContext* ctx) override;

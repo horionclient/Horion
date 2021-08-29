@@ -10,7 +10,7 @@ const char* InventoryMove::getModuleName() {
 	return ("InventoryMove");
 }
 
-void InventoryMove::onTick(C_GameMode* gm) {
+void InventoryMove::onTick(C_Player* player) {
 	if (g_Data.getLocalPlayer()->canOpenContainerScreen())
 		return;
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
@@ -19,10 +19,10 @@ void InventoryMove::onTick(C_GameMode* gm) {
 		return;
 
 	float speed = 0.325f;
-	float yaw = gm->player->yaw;
+	float yaw = player->yaw;
 
-	if (GameData::isKeyDown(*input->spaceBarKey) && gm->player->onGround)
-		gm->player->jumpFromGround();
+	if (GameData::isKeyDown(*input->spaceBarKey) && player->onGround)
+		player->jumpFromGround();
 
 	if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->backKey))
 		return;
@@ -54,13 +54,13 @@ void InventoryMove::onTick(C_GameMode* gm) {
 		yaw -= 360.f;
 
 	float calcYaw = (yaw + 90) * (PI / 180);
-	//float calcPitch = (gm->player->pitch) * -(PI / 180);
+	//float calcPitch = (player->pitch) * -(PI / 180);
 	vec3_t moveVec;
 	moveVec.x = cos(calcYaw) * speed;
-	moveVec.y = gm->player->velocity.y;
+	moveVec.y = player->velocity.y;
 	moveVec.z = sin(calcYaw) * speed;
 	if (keyPressed) {
-		gm->player->lerpMotion(moveVec);
+		player->lerpMotion(moveVec);
 		keyPressed = false;
 	}
 }

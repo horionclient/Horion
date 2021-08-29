@@ -194,7 +194,7 @@ bool IModule::allowAutoStart() {
 	return true;
 }
 
-void IModule::onTick(C_GameMode*) {
+void IModule::onTick(C_Player*) {
 }
 
 void IModule::onKeyUpdate(int key, bool isDown) {

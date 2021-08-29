@@ -11,7 +11,7 @@ const char* Timer::getModuleName() {
 	return ("Timer");
 }
 
-void Timer::onTick(C_GameMode* gm) {
+void Timer::onTick(C_Player*) {
 	*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(this->timer);
 }
 

@@ -69,11 +69,12 @@ void Freelook::onPostRender(C_MinecraftUIRenderContext* mode) {
 		}
 	}
 }
-void Freelook::onTick(C_GameMode* mode) {
+void Freelook::onTick(C_Player* player) {
+	auto loc = reinterpret_cast<C_LocalPlayer*>(player);
+
 	if(this->resetViewTick == 0){
 		this->redirectMouse = false;
 		this->resetViewTick = -1;
-		auto loc = g_Data.getLocalPlayer();
 		vec2_t l = initialViewAngles;
 		l = l.sub(mouseEnd).normAngles();
 		l.x = this->initialViewAngles.x - mouseEnd.x; // dont norm this angle

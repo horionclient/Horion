@@ -11,7 +11,7 @@ const char* Speed::getModuleName() {
 	return ("Speed");  // 48 8D 15 ?? ?? ?? ?? 48 8B CB FF 90 ?? ?? ?? ?? 48 8B D8
 }
 
-void Speed::onTick(C_GameMode* gm) {
+void Speed::onTick(C_Player*) {
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
 	float* speedAdr = reinterpret_cast<float*>(g_Data.getLocalPlayer()->getSpeed() + 0x84);

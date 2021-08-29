@@ -11,8 +11,8 @@ const char* Step::getModuleName() {
 	return ("Step");
 }
 
-void Step::onTick(C_GameMode* gm) {
-	gm->player->stepHeight = height;
+void Step::onTick(C_Player* player) {
+	player->stepHeight = height;
 }
 void Step::onDisable() {
 	if (g_Data.getLocalPlayer() != nullptr)

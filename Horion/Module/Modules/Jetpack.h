@@ -12,7 +12,7 @@ public:
 	Jetpack();
 	~Jetpack();
 
-	virtual void onTick(C_GameMode* gm) override;
+	virtual void onTick(C_Player*) override;
 	virtual bool isFlashMode() override;
 
 	// Inherited via IModule

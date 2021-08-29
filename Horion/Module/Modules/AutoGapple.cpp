@@ -11,6 +11,6 @@ const char* AutoGapple::getModuleName() {
 	return ("AutoGapple");
 }
 
-void AutoGapple::onTick(C_GameMode* gm) {
+void AutoGapple::onTick(C_Player* plr) {
 	
 }

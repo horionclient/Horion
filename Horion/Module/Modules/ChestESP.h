@@ -15,5 +15,5 @@ public:
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 	virtual void onPreRender(C_MinecraftUIRenderContext* renderCtx) override;
-	virtual void onTick(C_GameMode* gm) override;
+	virtual void onTick(C_Player* plr) override;
 };

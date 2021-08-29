@@ -15,7 +15,7 @@ const char* AutoClicker::getModuleName() {
 	return ("AutoClicker");
 }
 
-void AutoClicker::onTick(C_GameMode* gm) {
+void AutoClicker::onTick(C_Player* plr) {
 	if ((GameData::isLeftClickDown() || !hold) && GameData::canUseMoveKeys()) {
 		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 		PointingStruct* pointing = g_Data.getClientInstance()->getPointerStruct();
@@ -31,13 +31,13 @@ void AutoClicker::onTick(C_GameMode* gm) {
 			localPlayer->swingArm();
 
 			if (pointing->hasEntity() != 0)
-				gm->attack(pointing->getEntity());
+				plr->getGm()->attack(pointing->getEntity());
 			else if (breakBlocks) {
 				bool isDestroyed = false;
-				gm->startDestroyBlock(pointing->block, pointing->blockSide, isDestroyed);
-				gm->stopDestroyBlock(pointing->block);
+				plr->getGm()->startDestroyBlock(pointing->block, pointing->blockSide, isDestroyed);
+				plr->getGm()->stopDestroyBlock(pointing->block);
 				if (isDestroyed && localPlayer->region->getBlock(pointing->block)->blockLegacy->blockId != 0)
-					gm->destroyBlock(&pointing->block, 0);
+					plr->getGm()->destroyBlock(&pointing->block, 0);
 			}
 			Odelay = 0;
 		}
@@ -49,7 +49,7 @@ void AutoClicker::onTick(C_GameMode* gm) {
 			Odelay++;
 			if (Odelay >= delay) {
 				g_Data.rightclickCount++;
-				gm->buildBlock(new vec3_ti(pstruct->block), pstruct->blockSide);
+				plr->getGm()->buildBlock(new vec3_ti(pstruct->block), pstruct->blockSide);
 				Odelay = 0;
 			}
 		}

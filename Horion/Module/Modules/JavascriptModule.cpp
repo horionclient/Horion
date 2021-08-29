@@ -23,7 +23,7 @@ const char* JavascriptModule::getModuleName() {
 		return "INVALID_MODULE";
 }
 
-void JavascriptModule::onTick(C_GameMode* gm) {
+void JavascriptModule::onTick(C_Player*) {
 	auto p = this->backingScriptModule.lock();
 	if (!p)
 		return;

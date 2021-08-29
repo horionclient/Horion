@@ -10,6 +10,6 @@ const char* AirStuck::getModuleName() {
 	return ("AirStuck");
 }
 
-void AirStuck::onTick(C_GameMode* gm) {
-	gm->player->velocity = vec3_t(0, 0, 0);
+void AirStuck::onTick(C_Player* player) {
+	player->velocity = vec3_t(0, 0, 0);
 }

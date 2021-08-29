@@ -729,7 +729,6 @@ class C_ServerPlayer;
 class C_Player : public C_Entity {
 public:
 	C_PlayerInventoryProxy *getSupplies();
-	;
 
 	C_ItemStack *getSelectedItem() {
 		auto supplies = this->getSupplies();
@@ -743,6 +742,12 @@ public:
 		if (item->getItem() == nullptr)
 			return 0;
 		return item->getItem()->itemId;
+	}
+
+	
+	C_GameMode *getGm() {
+		C_GameMode *gm = *reinterpret_cast<C_GameMode **>(reinterpret_cast<__int64>(this) + 4840);
+		return gm;
 	}
 
 private:

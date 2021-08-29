@@ -12,6 +12,6 @@ const char* Blink::getModuleName() {
 	return ("Blink");
 }
 
-void Blink::onTick(C_GameMode* gm) {
-	gm->player->fallDistance = 0.f;
+void Blink::onTick(C_Player* player) {
+	player->fallDistance = 0.f;
 }

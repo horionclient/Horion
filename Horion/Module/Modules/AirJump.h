@@ -11,5 +11,5 @@ public:
 	~AirJump();
 
 	virtual const char* getModuleName() override;
-	virtual void onTick(C_GameMode* gm) override;
+	virtual void onTick(C_Player* gm) override;
 };

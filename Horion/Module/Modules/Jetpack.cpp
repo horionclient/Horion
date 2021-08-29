@@ -18,9 +18,9 @@ const char* Jetpack::getModuleName() {
 	return ("Jetpack");
 }
 
-void Jetpack::onTick(C_GameMode* gm) {
-	float calcYaw = (gm->player->yaw + 90) * (PI / 180);
-	float calcPitch = (gm->player->pitch) * -(PI / 180);
+void Jetpack::onTick(C_Player* player) {
+	float calcYaw = (player->yaw + 90) * (PI / 180);
+	float calcPitch = (player->pitch) * -(PI / 180);
 
 	if (!isBypass) {
 		vec3_t moveVec;
@@ -28,7 +28,7 @@ void Jetpack::onTick(C_GameMode* gm) {
 		moveVec.y = sin(calcPitch) * speedMod;
 		moveVec.z = sin(calcYaw) * cos(calcPitch) * speedMod;
 
-		gm->player->lerpMotion(moveVec);
+		player->lerpMotion(moveVec);
 	} else {
 		delay++;
 
@@ -40,21 +40,21 @@ void Jetpack::onTick(C_GameMode* gm) {
 			a = C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
 
-			gm->player->velocity.y = 0.465f;
+			player->velocity.y = 0.465f;
 			vec3_t moveVec;
 			moveVec.x = cos(calcYaw) * cos(calcPitch) * speedMod;
 			moveVec.z = sin(calcYaw) * cos(calcPitch) * speedMod;
 
-			gm->player->velocity.x = moveVec.x;
-			gm->player->velocity.z = moveVec.z;
+			player->velocity.x = moveVec.x;
+			player->velocity.z = moveVec.z;
 
 			float teleportX = cos(calcYaw) * cos(calcPitch) * 0.00000005f;
 			float teleportZ = sin(calcYaw) * cos(calcPitch) * 0.00000005f;
 
-			pos = *gm->player->getPos();
+			pos = *player->getPos();
 			g_Data.getLocalPlayer()->setPos(vec3_t(pos.x + teleportX, pos.y - 0.15f, pos.z + teleportZ));
 
-			gm->player->velocity.y -= 0.15f;
+			player->velocity.y -= 0.15f;
 			delay = 0;
 		}
 	}

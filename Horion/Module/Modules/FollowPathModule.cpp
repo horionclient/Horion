@@ -56,12 +56,11 @@ void FollowPathModule::onDisable() {
 	this->goal.reset();
 }
 
-void FollowPathModule::onTick(C_GameMode *mode) {
+void FollowPathModule::onTick(C_Player* player) {
 	if (!shouldStartSearch)
 		return;
 	shouldStartSearch = false;
 
-	auto player = g_Data.getLocalPlayer();
 	auto pPos = player->eyePos0;
 	vec3_ti startNode((int)floorf(pPos.x), (int)roundf(pPos.y - 1.62f), (int)floorf(pPos.z));
 

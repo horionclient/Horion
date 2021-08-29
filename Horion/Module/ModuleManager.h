@@ -117,7 +117,7 @@ public:
 	void disable();
 	void onLoadConfig(void* conf);
 	void onSaveConfig(void* conf);
-	void onTick(C_GameMode* gameMode);
+	void onTick(C_Player* plr);
 	void onAttack(C_Entity* attackedEnt);
 
 	void onKeyUpdate(int key, bool isDown);
