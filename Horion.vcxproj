@@ -586,10 +586,6 @@
     <ClInclude Include="include\chakra\ChakraCore.h" />
     <ClInclude Include="include\chakra\ChakraCoreWindows.h" />
     <ClInclude Include="include\chakra\ChakraDebug.h" />
-    <ClInclude Include="include\d3dx11.h" />
-    <ClInclude Include="include\d3dx11async.h" />
-    <ClInclude Include="include\d3dx11core.h" />
-    <ClInclude Include="include\d3dx11effect.h" />
     <ClInclude Include="include\imgui\examples\imgui_impl_dx11.h" />
     <ClInclude Include="include\imgui\examples\imgui_impl_win32.h" />
     <ClInclude Include="include\imgui\imconfig.h" />

@@ -34,8 +34,6 @@
 
 #include <thread>
 
-#include "../include/d3dx11async.h"
-
 class VMTHook;
 class FuncHook;
 
@@ -117,9 +115,7 @@ private:
 	static GamerTextHolder* toStyledString(__int64 strIn, GamerTextHolder* strOut);
 	static __int64 prepFeaturedServers(__int64 a1);
 	static __int64 prepFeaturedServersFirstTime(__int64 a1, __int64 a2);
-	static HRESULT swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT flags);
 	static __int64 InGamePlayScreen___renderLevel(__int64 playScreen, __int64 a2, __int64 a3);
-	static HRESULT swapChain__ResizeBuffers(IDXGISwapChain* chain, UINT bufferCount, UINT Width, UINT Height, DXGI_FORMAT Newformat, UINT SwapChainFlags);
 	static __int64 Cube__compile(__int64 a1, __int64 a2);
 	static void LocalPlayer__updateFromCamera(__int64 a1, C_Camera* a2);
 	static bool Mob__isImmobile(C_Entity*);
@@ -169,9 +165,7 @@ private:
 	std::unique_ptr<FuncHook> toStyledStringHook;
 	std::unique_ptr<FuncHook> prepFeaturedServersHook;
 	std::unique_ptr<FuncHook> prepFeaturedServersFirstTimeHook;
-	std::unique_ptr<FuncHook> swapchain__presentHook;
 	std::unique_ptr<FuncHook> InGamePlayScreen___renderLevelHook;
-	std::unique_ptr<FuncHook> swapchain__resizeBuffersHook;
 	std::unique_ptr<FuncHook> cube__compileHook;
 	std::unique_ptr<FuncHook> LocalPlayer__updateFromCameraHook;
 	std::unique_ptr<FuncHook> Mob__isImmobileHook;
