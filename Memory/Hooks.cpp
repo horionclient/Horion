@@ -57,11 +57,15 @@ void Hooks::Init() {
 			if (localPlayerVtable == 0x0 || sigOffset == 0x0)
 				logF("C_LocalPlayer signature not working!!!");
 			else {
-				/*g_Hooks.Actor_isInWaterHook = std::make_unique<FuncHook>(localPlayerVtable[65], Hooks::Actor_isInWater);
+				g_Hooks.Actor_startSwimmingHook = std::make_unique<FuncHook>(localPlayerVtable[196], Hooks::Actor_startSwimming);
 
-				g_Hooks.Actor_startSwimmingHook = std::make_unique<FuncHook>(localPlayerVtable[182], Hooks::Actor_startSwimming);
+				g_Hooks.Actor_ascendLadderHook = std::make_unique<FuncHook>(localPlayerVtable[351], Hooks::Actor_ascendLadder);
 
-				g_Hooks.Actor_ascendLadderHook = std::make_unique<FuncHook>(localPlayerVtable[333], Hooks::Actor_ascendLadder);*/
+				g_Hooks.Actor_lerpMotionHook = std::make_unique<FuncHook>(localPlayerVtable[40], Hooks::Actor_lerpMotion);
+
+				g_Hooks.Mob__isImmobileHook = std::make_unique<FuncHook>(localPlayerVtable[88], Hooks::Mob__isImmobile);
+
+				g_Hooks.Actor_isInWaterHook = std::make_unique<FuncHook>(localPlayerVtable[67], Hooks::Actor_isInWater);
 
 				g_Hooks.Actor_swingHook = std::make_unique<FuncHook>(localPlayerVtable[214], Hooks::Actor_swing);
 
@@ -102,85 +106,25 @@ void Hooks::Init() {
 		}
 	}
 
-	// d3d11
-	/*{
-		/*const auto hModDXGI = GetModuleHandle(L"DXGI.dll");
-		const auto hModD3D11 = GetModuleHandle(L"D3D11.dll");
-
-		const auto hD3D11CreateDeviceAndSwapChain = static_cast<LPVOID>(GetProcAddress(hModD3D11, "D3D11CreateDeviceAndSwapChain"));
-
-		const D3D_FEATURE_LEVEL featureLevelArray[3] = {
-			D3D_FEATURE_LEVEL_10_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_11_0
-		};
-
-		DXGI_SWAP_CHAIN_DESC sd;
-		{
-			ZeroMemory(&sd, sizeof(sd));
-			sd.BufferCount = 2;
-			sd.BufferDesc.Width = 0;
-			sd.BufferDesc.Height = 0;
-			sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-			sd.BufferDesc.RefreshRate.Numerator = 60;
-			sd.BufferDesc.RefreshRate.Denominator = 1;
-			sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-			sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-			sd.OutputWindow = (HWND)0x780f84; // insert window found from process hacker here
-			sd.SampleDesc.Count = 1;
-			sd.SampleDesc.Quality = 0;
-			sd.Windowed = TRUE;
-			sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-		}
-
-        IDXGISwapChain* pSwapChain;
-
-		const auto hr11 = static_cast<HRESULT(WINAPI *)(
-        IDXGIAdapter*,
-        D3D_DRIVER_TYPE,
-        HMODULE,
-        UINT,
-        const D3D_FEATURE_LEVEL*,
-        UINT,
-        UINT,
-        const DXGI_SWAP_CHAIN_DESC*,
-        IDXGISwapChain**,
-        ID3D11Device**,
-        D3D_FEATURE_LEVEL*,
-        ID3D11DeviceContext**)>(hD3D11CreateDeviceAndSwapChain)(
-			nullptr,
-			D3D_DRIVER_TYPE_HARDWARE,
-			nullptr,
-			0,
-			featureLevelArray,
-			1,
-			D3D11_SDK_VERSION,
-			&sd,
-			&pSwapChain,
-			0,
-			0,
-			0);
-
-		if (pSwapChain) {
-			logF("swap vtable: %llX", *pSwapChain);
-			pSwapChain->Release();
-		}*
-
-		uintptr_t sigOffset = FindSignature("48 8B 0D ?? ?? ?? ?? 48 8B 91 ?? ?? ?? ?? E8");
-		if (sigOffset != 0x0) {
-			int startOffsetOffset = *reinterpret_cast<int*>((sigOffset + 3));
-			uintptr_t startOffset = sigOffset + startOffsetOffset + /*length of instruction/ 7;
-			size_t secondOffset = (size_t) *reinterpret_cast<int*>((sigOffset + 10));
-			auto swapChain = g_Data.getSlimMem()->ReadPtr<__int64>(startOffset, {0, secondOffset, 0x170});
-			auto vtable = *reinterpret_cast<uintptr_t**>(swapChain);
-
-			//logF(" %llX",vtable[8]);
-
-			g_Hooks.swapchain__presentHook = std::make_unique<FuncHook>(vtable[8], Hooks::swapChain__present);
-			g_Hooks.swapchain__resizeBuffersHook = std::make_unique<FuncHook>(vtable[13], Hooks::swapChain__ResizeBuffers);
-		}
-	}*/
-
 	// Signatures
 	{
+		// vtables better than sigs
+
+		/*void* lerpFunc = reinterpret_cast<void*>(FindSignature("8B 02 89 81 ? ? ? ? 8B 42 ? 89 81 ? ? ? ? 8B 42 ? 89 81 ? ? ? ? C3 CC CC CC CC CC 48 89 5C 24"));
+		g_Hooks.Actor_lerpMotionHook = std::make_unique<FuncHook>(lerpFunc, Hooks::Actor_lerpMotion);
+
+		void* ascendLadder = reinterpret_cast<void*>(FindSignature("C7 81 ? ? ? ? ? ? ? ? C3 CC CC CC CC CC C7 81 ? ? ? ? ? ? ? ? C3 CC CC CC CC CC C7 81"));
+		g_Hooks.Actor_ascendLadderHook = std::make_unique<FuncHook>(ascendLadder, Hooks::Actor_ascendLadder);
+
+		void* isInWater = reinterpret_cast<void*>(FindSignature("0F B6 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 0F B6 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ? 48 89 6C 24"));
+		g_Hooks.Actor_isInWaterHook = std::make_unique<FuncHook>(isInWater, Hooks::Actor_isInWater);
+
+		void* jump = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B 19 48 8D"));
+		g_Hooks.JumpPowerHook = std::make_unique<FuncHook>(jump, Hooks::JumpPower);
+
+		void* MobIsImmobile = reinterpret_cast<void*>(FindSignature("40 53 48 83 EC ? 48 8B D9 E8 ? ? ? ? 84 C0 75 ? 48 8B 03 48 8B CB"));
+		g_Hooks.Mob__isImmobileHook = std::make_unique<FuncHook>(MobIsImmobile, Hooks::Mob__isImmobile);*/
+
 		void* player_tickworld = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 0F 29 B4 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 89 55 ?? 48 8B F9"));
 		g_Hooks.Player_tickWorldHook = std::make_unique<FuncHook>(player_tickworld, Hooks::Player_tickWorld);
 
@@ -197,7 +141,6 @@ void Hooks::Init() {
 		void* render = reinterpret_cast<void*>(FindSignature("48 89 5C 24 18 56 57 41 56 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B FA 48 8B D9 41"));
 		g_Hooks.UIScene_renderHook = std::make_unique<FuncHook>(render, Hooks::UIScene_render);
 		
-		
 		void* fogColorFunc = reinterpret_cast<void*>(FindSignature("41 0F 10 08 48 8B C2 0F"));
 		g_Hooks.Dimension_getFogColorHook = std::make_unique<FuncHook>(fogColorFunc, Hooks::Dimension_getFogColor);
 		
@@ -206,15 +149,6 @@ void Hooks::Init() {
 		
 		void* chestTick = reinterpret_cast<void*>(FindSignature("40 53 57 48 83 EC ?? 48 83 79 ?? ?? 48"));
 		g_Hooks.ChestBlockActor_tickHook = std::make_unique<FuncHook>(chestTick, Hooks::ChestBlockActor_tick);
-		
-		void* lerpFunc = reinterpret_cast<void*>(FindSignature("8B 02 89 81 ? ? ? ? 8B 42 ? 89 81 ? ? ? ? 8B 42 ? 89 81 ? ? ? ? C3 CC CC CC CC CC 48 89 5C 24"));
-		g_Hooks.Actor_lerpMotionHook = std::make_unique<FuncHook>(lerpFunc, Hooks::Actor_lerpMotion);
-
-		void* ascendLadder = reinterpret_cast<void*>(FindSignature("C7 81 ? ? ? ? ? ? ? ? C3 CC CC CC CC CC C7 81 ? ? ? ? ? ? ? ? C3 CC CC CC CC CC C7 81"));
-		g_Hooks.Actor_ascendLadderHook = std::make_unique<FuncHook>(ascendLadder, Hooks::Actor_ascendLadder);
-
-		void* isInWater = reinterpret_cast<void*>(FindSignature("0F B6 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 0F B6 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ? 48 89 6C 24"));
-		g_Hooks.Actor_isInWaterHook = std::make_unique<FuncHook>(isInWater, Hooks::Actor_isInWater);
 		
 		void* getGameEdition = reinterpret_cast<void*>(FindSignature("8B 91 ?? ?? ?? ?? 85 D2 74 1C 83 EA 01"));
 		g_Hooks.AppPlatform_getGameEditionHook = std::make_unique<FuncHook>(getGameEdition, Hooks::AppPlatform_getGameEdition);
@@ -246,10 +180,6 @@ void Hooks::Init() {
 		void* fullbright = reinterpret_cast<void*>(FindSignature("48 83 EC ?? 80 B9 ?? ?? ?? ?? ?? 48 8D 54 24 ?? 48 8B 01 74 35 41 B8 0D 01 00 00"));
 		g_Hooks.GetGammaHook = std::make_unique<FuncHook>(fullbright, Hooks::GetGamma);
 
-		// Mob::_jumpFromGround
-		/*void* jump = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 57 48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B 19 48 8D"));
-		g_Hooks.JumpPowerHook = std::make_unique<FuncHook>(jump, Hooks::JumpPower);*/
-
 		void* onAppSuspended = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ? 48 89 74 24 ? 55 57 41 56 48 8B EC 48 83 EC ? 48 8B F1 E8"));
 		g_Hooks.MinecraftGame_onAppSuspendedHook = std::make_unique<FuncHook>(onAppSuspended, Hooks::MinecraftGame_onAppSuspended);
 
@@ -278,9 +208,6 @@ void Hooks::Init() {
 
 		void* localPlayerUpdateFromCam = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 80 ?? ?? ?? ?? ?? 00 48 8B FA 48 8B D9"));
 		g_Hooks.LocalPlayer__updateFromCameraHook = std::make_unique<FuncHook>(localPlayerUpdateFromCam, Hooks::LocalPlayer__updateFromCamera);
-
-		void* MobIsImmobile = reinterpret_cast<void*>(FindSignature("40 53 48 83 EC ? 48 8B D9 E8 ? ? ? ? 84 C0 75 ? 48 8B 03 48 8B CB"));
-		g_Hooks.Mob__isImmobileHook = std::make_unique<FuncHook>(MobIsImmobile, Hooks::Mob__isImmobile);
 
 		void* renderNameTags = reinterpret_cast<void*>(FindSignature("4C 8B DC 49 89 5B ? 55 56 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 41 0F 29 73 ? 41 0F 29 7B ? 45 0F 29 43 ? 48 8B 05"));
 		g_Hooks.LevelRendererPlayer__renderNameTagsHook = std::make_unique<FuncHook>(renderNameTags, Hooks::LevelRendererPlayer__renderNameTags);
@@ -1743,247 +1670,6 @@ __int64 Hooks::prepFeaturedServersFirstTime(__int64 a1, __int64 a2) {
 	return ret;
 }
 
-HRESULT Hooks::swapChain__present(IDXGISwapChain* chain, UINT syncInterval, UINT flags) {
-	static auto func = g_Hooks.swapchain__presentHook->GetFastcall<HRESULT, IDXGISwapChain*, UINT, UINT>();
-
-#if 0
-
-#ifndef _D3DVECTOR
-	typedef struct _D3DVECTOR3 {
-		float x;
-		float y;
-		float z;
-
-		_D3DVECTOR3(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {}
-		_D3DVECTOR3() {}
-	} D3DVECTOR3;
-
-	typedef struct _D3DVECTOR4 {
-		float x;
-		float y;
-		float z;
-		float w;
-
-		_D3DVECTOR4(float x1, float y1, float z1, float w1) : x(x1), y(y1), z(z1), w(w1) {}
-		_D3DVECTOR4() {}
-	} D3DVECTOR4;
-#endif
-	struct VertexType {
-		_D3DVECTOR4 position;
-		_D3DVECTOR4 color;
-	};
-
-	static bool init = false;
-	static ID3D11Device* device;
-	static ID3D11DeviceContext* context;
-	static ID3D11Buffer *vertexBuffer, *indexBuffer;
-	static ID3D11InputLayout* m_pInputLayout;
-	static ID3D11VertexShader* m_vertexShader;
-	static VertexType *vertices;
-
-	if (!init) {
-		DXGI_SWAP_CHAIN_DESC desc;
-		chain->GetDesc(&desc);
-
-		chain->GetDevice(__uuidof(ID3D11Device), (void**)&device);
-
-		device->GetImmediateContext(&context);
-
-		D3D11_BUFFER_DESC bufferDesc;
-
-		D3D11_INPUT_ELEMENT_DESC lineRectLayout[] =
-			{
-				{"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0}
-			};
-
-		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-		bufferDesc.ByteWidth = 50 * sizeof(VertexType);
-		bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		bufferDesc.MiscFlags = 0;
-
-		char* shader =
-			"struct VS_INPUT \
-		{														 \
-			float4 vPosition : POSITION;										\
-			 float4 color : COLOR;									\
-		}; \
- \
-		struct VS_OUTPUT { \
-			float4 vPosition : SV_POSITION; \
-			float4 vColor : COLOR;	\
-		}; \
-		VS_OUTPUT VSMain(VS_INPUT Input) { \
-			VS_OUTPUT Output; \
- \
-			Output.vPosition = Input.vPosition;\
-			Output.vColor = Input.color; \
-			return Output; \
-		} \
-		";
-
-		UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
-		ID3DBlob* shaderBlob = nullptr;
-		ID3DBlob* errorBlob = nullptr;
-		auto res = D3DCompile(shader, strlen(shader), 0, 0, 0, "VSMain", "vs_4_0_level_9_1", flags, 0, &shaderBlob, &errorBlob);
-		logF("result: %llX", res);
-		if (!FAILED(res)) {
-			// Create the vertex shader from the buffer.
-			res = device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &m_vertexShader);
-			logF("vresult: %llX", res);
-			if (!FAILED(res)) {
-				res = device->CreateInputLayout(lineRectLayout, 2, shaderBlob->GetBufferPointer(),
-												shaderBlob->GetBufferSize(), &m_pInputLayout);
-				logF("vresult3 : %llX", res);
-			}
-		}
-
-		{
-			unsigned long* indices = new unsigned long[5];
-			D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
-			D3D11_SUBRESOURCE_DATA vertexData, indexData;
-
-			//create the vertex array
-			vertices = new VertexType[3];
-
-			float left = 10 / (float)600, right = 500 / (float)60, top = 50 / (float)60, bottom = 500 / (float)60;
-
-			//load the vertex array with data
-			vertices[0].position = D3DVECTOR4(left, top, 0, 1);
-			vertices[0].color = D3DVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
-			vertices[1].position = D3DVECTOR4(right, top, 0, 1);
-			vertices[1].color = D3DVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
-			vertices[2].position = D3DVECTOR4(right, bottom, 0, 1);
-			vertices[2].color = D3DVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
-			//create the index array
-			indices = new unsigned long[3];
-			//load the index array with data
-			for (int i = 0; i < 3; i++)
-				indices[i] = i;
-
-			HRESULT result;
-
-			//set up the description of the dynamic vertex buffer
-			vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;  //enables recreation and movement of vertices
-			vertexBufferDesc.ByteWidth = sizeof(VertexType) * 3 ;
-			vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-			vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;  //couples with dynamic
-			vertexBufferDesc.MiscFlags = 0;
-			vertexBufferDesc.StructureByteStride = 0;
-			//give the subresource structure a pointer to the vertex data
-			vertexData.pSysMem = vertices;
-			vertexData.SysMemPitch = 0;
-			vertexData.SysMemSlicePitch = 0;
-
-			//now create the vertex buffer
-			result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
-			if (FAILED(result)) {
-				logF("CreateBuffer %llX", result);
-			}
-
-			//set up the description of the static index buffer
-			indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-			indexBufferDesc.ByteWidth = sizeof(unsigned long) * 3;
-			indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-			indexBufferDesc.CPUAccessFlags = 0;
-			indexBufferDesc.MiscFlags = 0;
-			indexBufferDesc.StructureByteStride = 0;
-			//give the subresource structure a pointer to the index data
-			indexData.pSysMem = indices;
-			indexData.SysMemPitch = 0;
-			indexData.SysMemSlicePitch = 0;
-
-			//create the index buffer
-			result = device->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
-			if (FAILED(result)) {
-				logF("CreateBuffer2 %llX", result);
-			}
-		}
-
-		init = true;
-	}
-
-	/*
-
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-
-	ImGuiIO& io = ImGui::GetIO();
-	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
-	if (dat) {
-		io.DisplaySize = ImVec2(dat->windowSizeReal.x, dat->windowSizeReal.y);
-	}
-
-	ImGui::NewFrame();
-
-	ImGui::Begin("bean");
-
-	ImGui::Text("Hello");
-	ImGui::Button("World!");
-
-	ImGui::End();
-
-	ImGui::Begin("wat");
-
-	ImGui::Text("Hello");
-	ImGui::Button("World!");
-
-	ImGui::End();
-
-	ImGui::EndFrame();
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());*/
-
-	unsigned int stride = sizeof(VertexType);
-	unsigned int offset = 0;
-
-	//lock the vertex buffer so it can be written to
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	auto result = context->Map(vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if (FAILED(result)) {
-		return false;
-	}
-
-	auto verticesPtr = (VertexType*)mappedResource.pData;
-
-	//copy the data into the vertex buffer
-	memcpy(verticesPtr, (void*)vertices, (sizeof(VertexType) * 3));
-
-	context->Unmap(vertexBuffer, 0);
-
-	context->VSSetShader(m_vertexShader, 0, 0);
-	context->PSSetShader(0, 0, 0);
-	context->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
-	context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context->IASetInputLayout(m_pInputLayout);
-
-	context->DrawIndexed(3, 0, 0);
-#endif
-
-	//#define TEST_DIRECTX
-
-#ifdef TEST_DIRECTX
-	if (!GameWnd.isInitialized())
-		GameWnd.Init(chain, g_Data.getDllModule());
-	else
-		GameWnd.Render();
-
-#endif  // DEBUG
-	return func(chain, syncInterval, flags);
-}
-
-HRESULT Hooks::swapChain__ResizeBuffers(IDXGISwapChain* chain, UINT bufferCount, UINT Width, UINT Height, DXGI_FORMAT Newformat, UINT SwapChainFlags) {
-	auto func = g_Hooks.swapchain__resizeBuffersHook->GetFastcall<HRESULT, IDXGISwapChain*, UINT, UINT, UINT, DXGI_FORMAT, UINT>();
-
-#ifdef TEST_DIRECTX
-	GameWnd.OnWindowSizeChanged(static_cast<int>(Width), static_cast<int>(Height));
-#endif
-	HRESULT ret = func(chain, bufferCount, Width, Height, Newformat, SwapChainFlags);
-
-	return ret;
-}
 
 __int64 Hooks::Cube__compile(__int64 a1, __int64 a2) {
 	auto func = g_Hooks.cube__compileHook->GetFastcall<__int64, __int64, __int64>();
