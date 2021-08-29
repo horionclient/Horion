@@ -12,7 +12,8 @@ private:
 	bool autoweapon = false;
 	void findWeapon();
 	bool silent = true;
-
+	int prevSlot;
+	
 public:
 	bool isMobAura = false;
 	bool hurttime = true;
