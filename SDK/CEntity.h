@@ -34,7 +34,7 @@ class C_Entity {
 public:
 	uintptr_t *ptrToPtrToEntList;  //0x0008
 private:
-	char pad_0010[0x130];  //0x0010
+	char pad_0010[0x138];  //0x0010
 public:
 	union {
 		struct {
@@ -52,7 +52,7 @@ public:
 	};
 
 private:
-	char pad_0100[0x10];  //0x0130
+	char pad_0100[0x8];  //0x0130
 public:
 	vec3_t eyePos0;  //0x0140
 private:
