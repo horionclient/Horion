@@ -110,23 +110,26 @@ void Killaura::onTick(C_GameMode* gm) {
 		}
 		Odelay = 0;
 	}
+}
+
+void Killaura::onLevelRender() {
 	if (autoweapon) {
-			auto supplies = g_Data.getLocalPlayer()->getSupplies();
-			prevSlot = supplies->selectedHotbarSlot;
-			auto FinishSelect = true;
-			auto inv = supplies->inventory;
-			for (int n = 0; n < 9; n++) {
-				C_ItemStack* stack = inv->getItemStack(n);
-				if (stack->item != nullptr) {
-					if (stack->getItem()->isWeapon()) {
-						if (prevSlot != n)
-							supplies->selectedHotbarSlot = n;
-						return;
-					}
+		auto supplies = g_Data.getLocalPlayer()->getSupplies();
+		prevSlot = supplies->selectedHotbarSlot;
+		auto FinishSelect = true;
+		auto inv = supplies->inventory;
+		for (int n = 0; n < 9; n++) {
+			C_ItemStack* stack = inv->getItemStack(n);
+			if (stack->item != nullptr) {
+				if (stack->getItem()->isWeapon()) {
+					if (prevSlot != n)
+						supplies->selectedHotbarSlot = n;
+					return;
 				}
 			}
-			return;
 		}
+		return;
+	}
 }
 
 void Killaura::onEnable() {
