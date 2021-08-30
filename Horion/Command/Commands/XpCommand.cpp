@@ -1,6 +1,6 @@
 ﻿#include "XpCommand.h"
 
-XpCommand::XpCommand() : IMCCommand("xp", "Add experience to your player", "xp <amount>L") {
+XpCommand::XpCommand() : IMCCommand("xp", "Add experience to your player", "xp <amount>") {
 }
 
 XpCommand::~XpCommand() {
