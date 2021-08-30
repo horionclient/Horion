@@ -3,6 +3,7 @@
 
 class StackableItem : public IModule {
 public:
+	int maxSize = 64;
 	StackableItem();
 	~StackableItem();
 
