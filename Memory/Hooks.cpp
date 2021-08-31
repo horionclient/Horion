@@ -1730,7 +1730,7 @@ void Hooks::LocalPlayer__updateFromCamera(__int64 a1, C_Camera* camera) {
 			rot = rot.normAngles();
 		}
 
-		camera->setOrientationDeg(rot.x, rot.y + 180, 0);
+		camera->setOrientationDeg(rot.x - 1, rot.y + 180, 0);
 	}
 
 	func(a1, camera);
