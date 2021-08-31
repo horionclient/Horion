@@ -3,7 +3,7 @@
 #include "../../../Utils/Logger.h"
 
 Scaffold::Scaffold() : IModule(VK_NUMPAD1, Category::WORLD, "Automatically build blocks beneath you") {
-	registerBoolSetting("Spoof", &this->spoof, this->spoof);
+	//registerBoolSetting("Spoof", &this->spoof, this->spoof);
 	registerBoolSetting("Staircase Mode", &this->staircaseMode, this->staircaseMode);
 }
 
@@ -49,7 +49,7 @@ bool Scaffold::tryScaffold(vec3_t blockBelow) {
 			i++;
 		}
 		if (foundCandidate) {
-			if (spoof) findBlock();
+			//if (spoof) findBlock();
 			g_Data.getCGameMode()->buildBlock(&blok, i);
 
 			return true;
@@ -58,7 +58,7 @@ bool Scaffold::tryScaffold(vec3_t blockBelow) {
 	return false;
 }
 
-bool Scaffold::findBlock() {
+/* bool Scaffold::findBlock() {
 	__int64 id = *g_Data.getLocalPlayer()->getUniqueId();
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
@@ -75,7 +75,7 @@ bool Scaffold::findBlock() {
 	C_MobEquipmentPacket a(id, *g_Data.getLocalPlayer()->getSelectedItem(), supplies->selectedHotbarSlot, supplies->selectedHotbarSlot);
 	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
 	return false;
-}
+}*/
 
 void Scaffold::onTick(C_GameMode* gm) {
 	if (g_Data.getLocalPlayer() == nullptr)
@@ -84,7 +84,7 @@ void Scaffold::onTick(C_GameMode* gm) {
 		return;
 	
 	auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
-	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()) && !spoof)  // Block in hand?
+	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock())) //&& !spoof  // Block in hand?
 		return;
 
 
@@ -147,8 +147,8 @@ void Scaffold::onTick(C_GameMode* gm) {
 void Scaffold::onDisable() {
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
-	__int64 id = *g_Data.getLocalPlayer()->getUniqueId();
+	/* __int64 id = *g_Data.getLocalPlayer()->getUniqueId();
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_MobEquipmentPacket a(id, *g_Data.getLocalPlayer()->getSelectedItem(), supplies->selectedHotbarSlot, supplies->selectedHotbarSlot);
-	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
+	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);*/
 }
