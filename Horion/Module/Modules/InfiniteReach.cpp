@@ -1,15 +1,15 @@
-#include "InfiniteReach.h"
+#include "InfiniteAura.h"
 
-InfiniteReach::InfiniteReach() : IModule(0, Category::COMBAT, "Killaura with infinite reach") {
+InfiniteAura::InfiniteAura() : IModule(0, Category::COMBAT, "Killaura with infinite reach") {
 	this->registerBoolSetting("multiaura", &this->isMulti, this->isMulti);
 	this->registerFloatSetting("range", &this->range, this->range, 15, 100);
 	this->registerIntSetting("delay", &this->delay, this->delay, 15, 20);
 }
 
-InfiniteReach::~InfiniteReach() {
+InfiniteAura::~InfiniteAura() {
 }
 
-const char* InfiniteReach::getModuleName() {
+const char* InfiniteAura::getModuleName() {
 	return ("InfiniteAura");
 }
 
@@ -40,7 +40,7 @@ void findEntities(C_Entity* currentEntity, bool isRegularEntitie) {
 	}
 }
 
-void InfiniteReach::onTick(C_GameMode* gm) {
+void InfiniteAura::onTick(C_GameMode* gm) {
 
 	//Loop through all our players and retrieve their information
 	targetList0.clear();
