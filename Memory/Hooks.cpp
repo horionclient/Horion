@@ -335,6 +335,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 	DrawUtils::setCtx(renderCtx, dat);
 
+	/*
 	{
 		static bool wasConnectedBefore = false;
 		static LARGE_INTEGER start;
@@ -375,6 +376,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		} else
 			wasConnectedBefore = true;
 	}
+	*/
 
 	if (GameData::shouldHide() || !g_Hooks.shouldRender || !moduleMgr->isInitialized())
 		return oText(a1, renderCtx);
