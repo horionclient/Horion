@@ -356,7 +356,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				hasSentWarning = true;
 				auto box = g_Data.addInfoBox("Warning", "Your injector doesn't seem to connect to Horion correctly.\nYou can ignore this, but some features may not work as expected.");
 				box->closeTimer = 5;
-				/*vec2_t windowSize = dat->windowSize;
+				vec2_t windowSize = dat->windowSize;
 
 				DrawUtils::fillRectangle(vec4_t(0, 0, windowSize.x, windowSize.y), MC_Color(0.2f, 0.2f, 0.2f), 0.8f);
 
@@ -368,7 +368,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				text = "Uninject by holding down CTRL + L";
 				DrawUtils::drawText(vec2_t(windowSize.x / 2 - DrawUtils::getTextWidth(&text, 0.7f) / 2, windowSize.y * 0.8f), &text, MC_Color(), 0.7f);
 
-				DrawUtils::flush();*/
+				DrawUtils::flush();
 			}
 
 			if (!hasSentWarning)  // Wait for injector, it might connect in time
