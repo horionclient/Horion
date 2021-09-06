@@ -74,6 +74,7 @@ public:
 	C_Inventory* inventory;  //0x00B0
 };
 
+//Im not sure exactly where these unknown's go but the funcs we use work.
 class C_ContainerScreenController {
 private:
 	virtual __int64 destructor();
@@ -85,6 +86,7 @@ private:
 	virtual __int64 onTerminate(void);
 	virtual __int64 onInit(void);
 	virtual __int64 onDelete(void);
+	virtual __int64 unknown1();
 
 public:
 	virtual bool canExit(void);
@@ -94,8 +96,8 @@ private:
 	virtual __int64 areControllerTabsEnabled(void);
 	virtual __int64 onCreation(void);
 	virtual __int64 logCreationTime(std::string const&, double, double, unsigned char);
-	virtual __int64 unknown1();
 	virtual __int64 unknown2();
+	virtual __int64 unknown3();
 
 public:
 	virtual __int64 onLeave(void);
