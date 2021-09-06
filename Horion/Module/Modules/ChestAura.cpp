@@ -22,7 +22,7 @@ void ChestAura::onTick(C_GameMode* gm) {
 				vec3_ti pos = vec3_ti(x, y, z);
 				C_Block* block = gm->player->region->getBlock(pos);
 				if (block != nullptr && g_Data.canUseMoveKeys()) {
-					if (block->toLegacy()->blockId == 54) {
+					if (block->toLegacy()->blockId == 54 || block->toLegacy()->blockId == 130) {
 						if (!(std::find(chestlist.begin(), chestlist.end(), pos) != chestlist.end())) {
 							gm->buildBlock(&pos, 0);
 							chestlist.push_back(pos);
