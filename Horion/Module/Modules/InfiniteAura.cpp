@@ -16,7 +16,7 @@ const char* InfiniteAura::getModuleName() {
 static std::vector<C_Entity*> targetList0;
 
 void findEntities(C_Entity* currentEntity, bool isRegularEntitie) {
-	static auto InfiniteAuraMod = moduleMgr->getModule<InfiniteAura>();
+	static auto infiniteAuraMod = moduleMgr->getModule<InfiniteAura>();
 	
 	if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
 		return;
@@ -35,7 +35,7 @@ void findEntities(C_Entity* currentEntity, bool isRegularEntitie) {
 
 	float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
 
-	if (dist < InfiniteAuraMod->range) {
+	if (dist < infiniteAuraMod->range) {
 		targetList0.push_back(currentEntity);
 	}
 }
