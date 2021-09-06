@@ -1,16 +1,20 @@
-[![Download the injector](https://img.shields.io/badge/download-injector-brightgreen?style=for-the-badge "Download the injector")](https://horion.download/injector "Download the injector")
-<p align="center">
-  <img src="https://raw.githubusercontent.com/horionclient/Horion/master/.github/horion-banner.png"/>
-</p>
-<br/>
-
-**Horion** is a Minecraft: Bedrock Edition utility mod designed to enhance gameplay. We do not take responsibility in anything done with this utility mod.
+<div align="center">
+  <br />
+    <p>
+      <a href="https://horion.download"><img src="https://raw.githubusercontent.com/horionclient/Horion/master/.github/horion-banner.png" width="600" alt="Horion" /></a>
+    </p>
+  <br />
+  <p>
+    <a href="https://horion.download/injector"><img src="https://img.shields.io/static/v1?label=download&message=latest&color=12c970&logo=docusign&logoColor=white" alt="Download Injector" /></a>
+    <a href="https://horion.download/discord"><img src="https://img.shields.io/discord/732833913705201736?color=5865F2&logo=discord&logoColor=white" alt="Discord server" /></a>
+    <a href="https://dev.azure.com/horionclient/Horion/_build/latest?definitionId=2&branchName=master"><img src="https://img.shields.io/azure-devops/build/horionclient/Horion/2?label=builds&logo=azure%20pipelines" alt="Build Status" /></a>
+    <a href="https://creativecommons.org/licenses/by-nc/4.0/"><img src="https://img.shields.io/static/v1?label=license&message=BY-NC%204.0&color=orange&logo=creative%20commons&logoColor=white" alt="License" /></a>
+  </p>
+  <p>
+    <b>Horion</b> is a Minecraft: Bedrock Edition utility mod designed to enhance gameplay. We do not take responsibility in anything done with this utility mod.
 If you want to contribute to this project, feel free to fork this repository and submit a pull request.
-
-[![Discord](https://img.shields.io/discord/732833913705201736?label=chat&logo=discord&logoColor=white&style=for-the-badge)](https://horion.download/discord)
-
-[![Build Status](https://img.shields.io/azure-devops/build/horionclient/Horion/2?label=dev%20release&style=for-the-badge)](https://dev.azure.com/horionclient/Horion/_build/latest?definitionId=2&branchName=master)
-[![License](https://i.creativecommons.org/l/by-nc/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc/4.0/)
+  </p>
+</div>
 
 ## Contributing
 To contribute, simply **fork the repository**, edit the code, and **submit a pull request**.
