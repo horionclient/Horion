@@ -30,7 +30,7 @@ void ChestStealer::chestScreenController_tick(C_ChestScreenController* c) {
 		} else  {
 			delay++;
 			if (delay > setDelay) {
-				c->leaveScreen();
+				c->tryExit();
 				delay = 0;
 			}
 		}

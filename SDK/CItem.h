@@ -18,7 +18,7 @@ class MinecraftGame;
 
 class C_BaseActorRenderContext {
 private:
-	char pad_0x0[0x58];  //0x0000
+	char pad_0x0[0x60];  //0x0000
 public:
 	C_ItemRenderer* renderer;  //0x0058
 private:
@@ -359,7 +359,7 @@ private:
 
 class C_ArmorItem : public C_Item {
 private:
-	char pad_0x108[0xB8];  //0x100
+	char pad_0x108[0x228 - sizeof(C_Item)];  //0x100
 public:
 	int ArmorSlot;  //0x1B8
 
