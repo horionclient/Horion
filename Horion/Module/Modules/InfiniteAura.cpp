@@ -1,22 +1,22 @@
-#include "InfiniteReach.h"
+#include "InfiniteAura.h"
 
-InfiniteReach::InfiniteReach() : IModule(0, Category::COMBAT, "Killaura with infinite reach") {
+InfiniteAura::InfiniteAura() : IModule(0, Category::COMBAT, "Killaura with infinite reach") {
 	this->registerBoolSetting("multiaura", &this->isMulti, this->isMulti);
 	this->registerFloatSetting("range", &this->range, this->range, 15, 100);
 	this->registerIntSetting("delay", &this->delay, this->delay, 15, 20);
 }
 
-InfiniteReach::~InfiniteReach() {
+InfiniteAura::~InfiniteAura() {
 }
 
-const char* InfiniteReach::getModuleName() {
+const char* InfiniteAura::getModuleName() {
 	return ("InfiniteAura");
 }
 
 static std::vector<C_Entity*> targetList0;
 
 void findEntities(C_Entity* currentEntity, bool isRegularEntitie) {
-	static auto infiniteReachMod = moduleMgr->getModule<InfiniteReach>();
+	static auto infiniteAuraMod = moduleMgr->getModule<InfiniteAura>();
 	
 	if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
 		return;
@@ -35,12 +35,12 @@ void findEntities(C_Entity* currentEntity, bool isRegularEntitie) {
 
 	float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
 
-	if (dist < infiniteReachMod->range) {
+	if (dist < infiniteAuraMod->range) {
 		targetList0.push_back(currentEntity);
 	}
 }
 
-void InfiniteReach::onTick(C_GameMode* gm) {
+void InfiniteAura::onTick(C_GameMode* gm) {
 
 	//Loop through all our players and retrieve their information
 	targetList0.clear();

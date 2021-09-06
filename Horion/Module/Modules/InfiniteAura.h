@@ -3,7 +3,7 @@
 #include "Module.h"
 #include "../ModuleManager.h"
 
-class InfiniteReach : public IModule {
+class InfiniteAura : public IModule {
 private:
 	int delay = 15;
 	int Odelay = 0;
@@ -11,8 +11,8 @@ private:
 
 public:
 	float range = 15;
-	InfiniteReach();
-	~InfiniteReach();
+	InfiniteAura();
+	~InfiniteAura();
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
