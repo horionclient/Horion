@@ -33,7 +33,7 @@ void ChestESP::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 		mathVect.y = floor(mathVect.y);
 
 		if (storageID == 54) DrawUtils::setColor(1.f, 1.f, 1.f, math);                     // Normal Chest
-		if (storageID == 146) DrawUtils::setColor(1.f, 1.f, 1.f, math);                    // Trapped Chest
+		if (storageID == 146) DrawUtils::setColor(.92f, .14f, .14f, math);                 // Trapped Chest
 		if (storageID == 130) DrawUtils::setColor(0.435294f, 0.215686f, 0.631372f, math);  // Ender Chest
 
 		DrawUtils::drawBox(chest.lower, chest.upper, (float)fmax(0.2f, 1 / (float)fmax(1, g_Data.getLocalPlayer()->eyePos0.dist(chest.lower))), true);  // Fancy math to give an illusion of good esp
