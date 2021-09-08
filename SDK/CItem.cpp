@@ -85,6 +85,10 @@ C_Item ***ItemRegistry::lookUpByName(void *a1, void *a2, TextHolder &text) {
 	return ItemRegistry__lookupByNameF(a1, a2, text);
 }
 
+C_Item ***ItemRegistry::lookUpByName(void *a1, void *a2, TextHolder&& text) {
+	return lookUpByName(a1, a2, static_cast<TextHolder&>(text));
+}
+
 ItemDescriptor::ItemDescriptor(int id, int16_t itemData) {
 	using ItemDescriptor__ItemDescriptor_t = ItemDescriptor*(__fastcall *)(ItemDescriptor*,int,int16_t);
 	static ItemDescriptor__ItemDescriptor_t func = reinterpret_cast<ItemDescriptor__ItemDescriptor_t>(FindSignature("48 89 5C 24 ? 55 56 57 48 83 EC ? 33 ED 48 8B D9 48 89 29 41 8B F8 48 89 69 ? 8B F2 48 89 69 ? 66 89 69 ? C6 41"));

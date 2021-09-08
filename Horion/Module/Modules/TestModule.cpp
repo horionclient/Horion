@@ -51,7 +51,7 @@ __forceinline unsigned __int64 rotBy(int in, unsigned int by) {
 	return ((mut & 0x7FFFFFui64) | ((static_cast<unsigned int>(in) >> 8u) & 0x800000u) /*copy sign bit*/) << by;
 }
 
-size_t posToHash(const vec3_ti& pos) {
+static size_t posToHash(const vec3_ti& pos) {
 	return rotBy(pos.x, 0) | rotBy(pos.z, 24) | (static_cast<unsigned __int64>(pos.y) << 48u);
 }
 

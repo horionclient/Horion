@@ -382,4 +382,5 @@ class ItemRegistry {
 public:
 	static C_Item*** getItemFromId(void* ptr, int itemId);
 	static C_Item*** lookUpByName(void*, void*, TextHolder&);
+	static C_Item*** lookUpByName(void*, void*, TextHolder&&);
 };

@@ -4,11 +4,12 @@ SlimUtils::SlimMem mem;
 const SlimUtils::SlimModule* gameModule;
 bool isRunning = true;
 
-#if defined _M_X64
-#pragma comment(lib, "MinHook.x64.lib")
-#elif defined _M_IX86
-#pragma comment(lib, "MinHook.x86.lib")
-#endif
+// Shouldn't be used (breaks stuff)
+// #if defined _M_X64
+// #pragma comment(lib, "MinHook.x64.lib")
+// #elif defined _M_IX86
+// #pragma comment(lib, "MinHook.x86.lib")
+// #endif
 
 DWORD WINAPI keyThread(LPVOID lpParam) {
 	logF("Key thread started");
