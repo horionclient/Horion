@@ -174,6 +174,17 @@ public:
 		}
 		return std::optional<std::shared_ptr<IModule>>();
 	}
+
+	void addModule(std::shared_ptr<IModule> mod) {
+		if (!mod) throw std::exception("mod was null.");
+		if (mod->getModuleName() != "") {
+			if (!getModuleByName(mod->getModuleName()).has_value()) {
+				throw std::exception("The specified module name does already exist.");
+			}
+		}
+		auto lock = this->lockModuleList();
+		moduleList.push_back(mod);
+	}
 };
 
 extern ModuleManager* moduleMgr;
