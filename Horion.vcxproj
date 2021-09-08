@@ -171,7 +171,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/Zc:__cplusplus /DUSING_VS %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
     </ClCompile>
@@ -188,7 +188,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/Zc:__cplusplus /DUSING_VS %(AdditionalOptions)</AdditionalOptions>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <PreprocessorDefinitions>_WINDLL;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -203,7 +203,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/Zc:__cplusplus /DUSING_VS %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_BETA;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <WholeProgramOptimization>false</WholeProgramOptimization>

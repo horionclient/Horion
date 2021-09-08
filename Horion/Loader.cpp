@@ -4,6 +4,10 @@ SlimUtils::SlimMem mem;
 const SlimUtils::SlimModule* gameModule;
 bool isRunning = true;
 
+#ifdef USING_VS
+#pragma comment(lib, "MinHook.x64.lib")
+#endif
+
 // Shouldn't be used (breaks stuff)
 // #if defined _M_X64
 // #pragma comment(lib, "MinHook.x64.lib")
