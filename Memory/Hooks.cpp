@@ -1606,44 +1606,45 @@ void prepCoolBean() {
 		}
 		if (count > 5)  // we already added a server
 			goto end;
-
-		// make new one
-		BeansEntry* epic = new BeansEntry();
-		epic->nextEntry = listEnd;
-		epic->prevEntry = current;
-		epic->masterPlayer.setText("");
-		epic->unk = current->unk;
-		memcpy(epic->filler, current->filler, sizeof(BeansEntry::filler));
-		epic->masterPlayer2.setText("");
-		epic->serverName.setText("Epic");
-		memcpy(epic->filler2, current->filler2, sizeof(BeansEntry::filler2));
-
-		auto cT = current->start[0].get();
-
-		std::shared_ptr<ThirdPartyServer>* start = new std::shared_ptr<ThirdPartyServer>[1];
-
 		{
-			ThirdPartyServer* t = new ThirdPartyServer();
+			// make new one
+			BeansEntry* epic = new BeansEntry();
+			epic->nextEntry = listEnd;
+			epic->prevEntry = current;
+			epic->masterPlayer.setText("");
+			epic->unk = current->unk;
+			memcpy(epic->filler, current->filler, sizeof(BeansEntry::filler));
+			epic->masterPlayer2.setText("");
+			epic->serverName.setText("Epic");
+			memcpy(epic->filler2, current->filler2, sizeof(BeansEntry::filler2));
 
-			t->coolBoye = cT->coolBoye;
-			t->uuid.setText("");
-			t->masterPlayerAccount = cT->masterPlayerAccount;
-			t->lobbyDescription = cT->lobbyDescription;
-			t->pathToServerIcon.setText("");
-			t->serverName.setText("Horion Server");
-			t->serverName2.setText("Horion Server");  // This is the one actually displayed
-			t->domain.setText(".horionbeta.club");
-			t->serverAddress.setText("mc.horionbeta.club");
-			start[0] = std::shared_ptr<ThirdPartyServer>(t);
+			auto cT = current->start[0].get();
+
+			std::shared_ptr<ThirdPartyServer>* start = new std::shared_ptr<ThirdPartyServer>[1];
+
+			{
+				ThirdPartyServer* t = new ThirdPartyServer();
+
+				t->coolBoye = cT->coolBoye;
+				t->uuid.setText("");
+				t->masterPlayerAccount = cT->masterPlayerAccount;
+				t->lobbyDescription = cT->lobbyDescription;
+				t->pathToServerIcon.setText("");
+				t->serverName.setText("Horion Server");
+				t->serverName2.setText("Horion Server");  // This is the one actually displayed
+				t->domain.setText(".horionbeta.club");
+				t->serverAddress.setText("mc.horionbeta.club");
+				start[0] = std::shared_ptr<ThirdPartyServer>(t);
+			}
+
+			epic->start = start;
+			epic->end = &start[1];
+
+			current->nextEntry = epic;
+
+			// increase count
+			*reinterpret_cast<__int64*>(g_Data.getClientInstance()->minecraftGame->getServerEntries() + 0x50) += 1;
 		}
-
-		epic->start = start;
-		epic->end = &start[1];
-
-		current->nextEntry = epic;
-
-		// increase count
-		*reinterpret_cast<__int64*>(g_Data.getClientInstance()->minecraftGame->getServerEntries() + 0x50) += 1;
 	end:;
 	}
 }
