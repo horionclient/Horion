@@ -291,6 +291,8 @@
     <ClCompile Include="Horion\Module\Modules\AutoSprint.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoTotem.cpp" />
     <ClCompile Include="Horion\Module\Modules\Bhop.cpp" />
+    <ClCompile Include="Horion\Module\Modules\BoatFly.cpp" />
+    <ClCompile Include="Horion\Module\Modules\BlockFly.cpp" />
     <ClCompile Include="Horion\Module\Modules\Blink.cpp" />
     <ClCompile Include="Horion\Module\Modules\BowAimbot.cpp" />
     <ClCompile Include="Horion\Module\Modules\ChestAura.cpp" />
@@ -480,6 +482,8 @@
     <ClInclude Include="Horion\Module\Modules\AutoSprint.h" />
     <ClInclude Include="Horion\Module\Modules\AutoTotem.h" />
     <ClInclude Include="Horion\Module\Modules\Bhop.h" />
+    <ClCompile Include="Horion\Module\Modules\BoatFly.cpp" />
+    <ClCompile Include="Horion\Module\Modules\BlockFly.cpp" />
     <ClInclude Include="Horion\Module\Modules\Blink.h" />
     <ClInclude Include="Horion\Module\Modules\BowAimbot.h" />
     <ClInclude Include="Horion\Module\Modules\ChestAura.h" />
