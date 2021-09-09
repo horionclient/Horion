@@ -69,6 +69,8 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new NameTags()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Criticals()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Bhop()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new EntityFly()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new BlockFly()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Tower()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new AntiVoid()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new MidClick()));
