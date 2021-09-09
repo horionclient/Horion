@@ -47,8 +47,8 @@ static const MC_Color enabledModuleColor = moduleColor.lerp(whiteColor, 0.04f);
 static const MC_Color brightModuleBlendColor = moduleColor.lerp(whiteColor, 0.2f); // tooltip border & category divider
 static const MC_Color selectedSettingColor1 = MC_Color(85, 85, 85);
 static const MC_Color selectedSettingColor2 = MC_Color(85, 85, 85);
-static const MC_Color SettingColor1 = MC_Color(12, 12, 12);
-static const MC_Color SettingColor2 = MC_Color(12, 12, 12);
+static const MC_Color SettingColor1 = MC_Color(0, 0, 0);
+static const MC_Color SettingColor2 = MC_Color(100, 100, 100);
 
 float currentYOffset = 0;
 float currentXOffset = 0;
