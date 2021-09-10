@@ -79,7 +79,7 @@ void Hooks::Init() {
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
 			uintptr_t** moveInputVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + 7);
 			if (moveInputVtable == 0x0 || sigOffset == 0x0)
-				logF("C_GameMode signature not working!!!");
+				logF("C_MoveInputHandler signature not working!!!");
 			else {
 				g_Hooks.MoveInputHandler_tickHook = std::make_unique<FuncHook>(moveInputVtable[1], Hooks::MoveInputHandler_tick);
 			}
