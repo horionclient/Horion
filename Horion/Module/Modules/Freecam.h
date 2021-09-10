@@ -2,10 +2,13 @@
 #include "Module.h"
 class Freecam : public IModule {
 private:
+	vec3_t oldPos2;
 	vec3_t oldPos;
 	vec3_t oldOffset = {};
 	float speed = 0.325f;
+
 public:
+	SettingEnum mode;
 	Freecam();
 	~Freecam();
 
