@@ -1,6 +1,7 @@
 #include "GiveCommand.h"
-#include "../../../Utils/Utils.h"
+
 #include "../../../SDK/Tag.h"
+#include "../../../Utils/Utils.h"
 
 GiveCommand::GiveCommand() : IMCCommand("give", "spawn items", "<itemName> <count> [itemData] [NBT]") {
 }
@@ -61,20 +62,9 @@ bool GiveCommand::execute(std::vector<std::string>* args) {
 	ItemDescriptor* desc = nullptr;
 	desc = new ItemDescriptor((*yot->item)->itemId, itemData);
 
-	C_InventoryAction* firstAction = nullptr;
-	C_InventoryAction* secondAction = nullptr;
+	C_InventoryAction invAction(C_InventoryAction(0, desc, nullptr, yot, nullptr, count, 507, 99999));
+	transactionManager->addInventoryAction(invAction);
 
-	firstAction = new C_InventoryAction(0, desc,nullptr,yot, nullptr,count, 507, 99999);
-	secondAction = new C_InventoryAction(slot, nullptr, desc,nullptr, yot,count);
-
-	//firstAction = new C_InventoryAction(0,yot, nullptr, 507, 99999);
-	//secondAction = new C_InventoryAction(slot, nullptr, yot); 
-
-	transactionManager->addInventoryAction(*firstAction);
-	transactionManager->addInventoryAction(*secondAction);
-
-	delete firstAction;
-	delete secondAction;
 	delete desc;
 
 	inv->addItemToFirstEmptySlot(yot);
