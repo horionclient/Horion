@@ -1,17 +1,17 @@
-#include "ChestESP.h"
+#include "StorageESP.h"
 #include "../../DrawUtils.h"
 
-ChestESP::ChestESP() : IModule(0, Category::VISUAL, "ESP for chests") {
+StorageESP::StorageESP() : IModule(0, Category::VISUAL, "ESP for storage blocks") {
 }
 
-ChestESP::~ChestESP() {
+StorageESP::~StorageESP() {
 }
 
-const char* ChestESP::getModuleName() {
-	return ("ChestESP");
+const char* StorageESP::getModuleName() {
+	return ("StorageESP");
 }
 
-void ChestESP::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
+void StorageESP::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	if (!g_Data.isInGame() || !GameData::canUseMoveKeys() || g_Data.getLocalPlayer() == nullptr)
 		return;
 
@@ -43,7 +43,7 @@ void ChestESP::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	}
 }
 
-void ChestESP::onTick(C_GameMode* gm) {
+void StorageESP::onTick(C_GameMode* gm) {
 	// Swap list
 	auto listLock = g_Data.lockChestList();
 	auto& chestList = g_Data.getChestList();
