@@ -2,15 +2,15 @@
 
 #include "Module.h"
 
-class ChestESP : public IModule {
+class StorageESP : public IModule {
 private:
 	int tickTimeout = 0;
 	std::vector<AABB> bufferedChestList;
 	std::mutex listLock;
 
 public:
-	ChestESP();
-	~ChestESP();
+	StorageESP();
+	~StorageESP();
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
