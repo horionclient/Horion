@@ -40,7 +40,9 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 	if (currentEntity->getEntityTypeId() == 69)  // XP
 		return;
 	if (currentEntity->getEntityTypeId() == 80)  // Arrows
-			return;
+		return;
+	if (currentEntity->getEntityTypeId() == 51) // NPC
+		return;
 
 	if (killauraMod->isMobAura) {
 		if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)
