@@ -42,7 +42,10 @@ void doRenderStuff(C_Entity* ent, bool isRegularEntitie) {
 
 		if (!localPlayer->canAttack(ent, false))
 			return;
-		DrawUtils::setColor(0.2f, 0.2f, 0.9f, (float)fmax(0.1f, (float)fmin(1.f, 15 / (ent->damageTime + 1))));
+		if (espMod->doRainbow)
+			DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], (float)fmax(0.1f, (float)fmin(1.f, 15 / (ent->damageTime + 1))));
+		else
+			DrawUtils::setColor(0.9f, 0.9f, 0.9f, (float)fmax(0.1f, (float)fmin(1.f, 15 / (ent->damageTime + 1))));
 	} else
 		return;
 	if (espMod->is2d)
