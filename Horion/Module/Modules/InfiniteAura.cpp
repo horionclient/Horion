@@ -17,7 +17,7 @@ const char* InfiniteAura::getModuleName() {
 static std::vector<C_Entity*> targetList0;
 
 void findEntities(C_Entity* currentEntity, bool isRegularEntitie) {
-	static auto infiniteReachMod = moduleMgr->getModule<InfiniteReach>();
+	static auto infiniteAuraMod = moduleMgr->getModule<InfiniteAura>();
 
 	if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
 		return;
@@ -30,14 +30,14 @@ void findEntities(C_Entity* currentEntity, bool isRegularEntitie) {
 
 	if (FriendList::findPlayer(currentEntity->getNameTag()->getText()))  // Skip Friend
 		return;
-	
-	if (infiniteReachMod->isMobAura) {
+
+	if (infiniteAuraMod->isMobAura) {
 		if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)
 			return;
-		
+
 		if (currentEntity->width <= 0.01f || currentEntity->height <= 0.01f)  // Don't hit this pesky antibot on 2b2e.org
 			return;
-		
+
 		if (currentEntity->getEntityTypeId() == 64)  // item
 			return;
 	} else {
@@ -45,11 +45,11 @@ void findEntities(C_Entity* currentEntity, bool isRegularEntitie) {
 			return;
 	}
 
-		float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
+	float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
 
-		if (dist < infiniteReachMod->range) {
-			targetList0.push_back(currentEntity);
-		}
+	if (dist < infiniteAuraMod->range) {
+		targetList0.push_back(currentEntity);
+	}
 }
 
 void InfiniteAura::onTick(C_GameMode* gm) {
