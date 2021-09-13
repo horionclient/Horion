@@ -10,6 +10,7 @@ private:
 	bool isMulti = false;
 
 public:
+	bool isMobAura = false;
 	float range = 15;
 	InfiniteAura();
 	~InfiniteAura();
