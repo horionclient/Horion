@@ -4,7 +4,7 @@ InfiniteAura::InfiniteAura() : IModule(0, Category::COMBAT, "Killaura with infin
 	registerBoolSetting("multiaura", &this->isMulti, this->isMulti);
 	registerBoolSetting("MobAura", &this->isMobAura, this->isMobAura);
 	registerFloatSetting("range", &this->range, this->range, 15, 100);
-	registerIntSetting("delay", &this->delay, this->delay, 15, 20);
+	registerIntSetting("delay", &this->delay, this->delay, 5, 20);
 }
 
 InfiniteAura::~InfiniteAura() {
