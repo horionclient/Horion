@@ -5,6 +5,8 @@
 Scaffold::Scaffold() : IModule(VK_NUMPAD1, Category::WORLD, "Automatically build blocks beneath you") {
 	registerBoolSetting("Spoof", &this->spoof, this->spoof);
 	registerBoolSetting("Staircase Mode", &this->staircaseMode, this->staircaseMode);
+	registerBoolSetting("InvalidSelect", &this->invalidSelect, this->invalidSelect);
+	registerBoolSetting("AutoSelect", &this->AutoSelect, this->AutoSelect);
 }
 
 Scaffold::~Scaffold() {
@@ -59,25 +61,35 @@ bool Scaffold::tryScaffold(vec3_t blockBelow) {
 }
 
 bool Scaffold::findBlock() {
-	__int64 id = *g_Data.getLocalPlayer()->getUniqueId();
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
-	for (int n = 0; n < 9; n++) {
-		C_ItemStack* stack = inv->getItemStack(n);
-		if (stack->item != nullptr) {
-			if ((*stack->item)->isBlock() && (*stack->item)->itemId != 0) {
-				C_MobEquipmentPacket a(id, *stack, n, n);
-				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
-				return true;
+	auto prevSlot = supplies->selectedHotbarSlot;
+	if (!invalidSelect)
+		for (int n = 0; n < 9; n++) {
+			C_ItemStack* stack = inv->getItemStack(n);
+			if (stack->item != nullptr) {
+				if (stack->getItem()->isBlock()) {
+					if (prevSlot != n)
+						supplies->selectedHotbarSlot = n;
+					return true;
+				}
+			}
+		}
+	else {
+		for (int n = 0; n < 36; n++) {
+			C_ItemStack* stack = inv->getItemStack(n);
+			if (stack->item != nullptr) {
+				if (stack->getItem()->isBlock()) {
+					if (prevSlot != n)
+						supplies->selectedHotbarSlot = n;
+					return true;
+				}
 			}
 		}
 	}
-	C_MobEquipmentPacket a(id, *g_Data.getLocalPlayer()->getSelectedItem(), supplies->selectedHotbarSlot, supplies->selectedHotbarSlot);
-	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
-	return false;
 }
 
-void Scaffold::onTick(C_GameMode* gm) {
+void Scaffold::onLevelRender() {
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	if (!g_Data.canUseMoveKeys())
@@ -87,6 +99,7 @@ void Scaffold::onTick(C_GameMode* gm) {
 	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()) && !spoof)  // Block in hand?
 		return;
 
+	if (AutoSelect) findBlock();
 
 	// Adjustment by velocity
 	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();

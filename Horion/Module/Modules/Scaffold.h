@@ -6,6 +6,8 @@ private:
 	bool staircaseMode = false;
 	bool tryScaffold(vec3_t blockBelow);
 	bool findBlock();
+	bool AutoSelect = false;
+	bool invalidSelect = false;
 
 public:
 	Scaffold();
@@ -13,6 +15,6 @@ public:
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
-	virtual void onTick(C_GameMode* gm) override;
+	virtual void onLevelRender() override;
 	virtual void onDisable() override;
 };
