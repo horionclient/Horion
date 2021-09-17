@@ -79,7 +79,7 @@ bool Scaffold::findBlock() {
 			}
 		}
 	}
-	if (invalid) {
+	if (invalidSelect) {
 		for (int n = 0; n < 36; n++) {
 			C_ItemStack* stack = inv->getItemStack(n);
 			if (stack->item != nullptr) {
