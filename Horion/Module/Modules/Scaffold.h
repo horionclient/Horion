@@ -6,6 +6,7 @@ private:
 	bool staircaseMode = false;
 	bool tryScaffold(vec3_t blockBelow);
 	bool findBlock();
+	bool autoselect = false;
 
 public:
 	Scaffold();
