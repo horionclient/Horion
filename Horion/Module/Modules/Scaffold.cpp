@@ -64,24 +64,30 @@ bool Scaffold::findBlock() {
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
 	auto prevSlot = supplies->selectedHotbarSlot;
-	if (!invalidSelect)
+	auto currentslot = inv->getFirstEmptySlot();
+	if (AutoSelect) {
 		for (int n = 0; n < 9; n++) {
 			C_ItemStack* stack = inv->getItemStack(n);
 			if (stack->item != nullptr) {
 				if (stack->getItem()->isBlock()) {
+					auto stack2 = stack->getItem()->isBlock();
 					if (prevSlot != n)
 						supplies->selectedHotbarSlot = n;
+					//inv->moveItem(stack2, currentslot);
 					return true;
 				}
 			}
 		}
-	else {
+	}
+	if (invalid) {
 		for (int n = 0; n < 36; n++) {
 			C_ItemStack* stack = inv->getItemStack(n);
 			if (stack->item != nullptr) {
 				if (stack->getItem()->isBlock()) {
+					auto stack2 = stack->getItem()->isBlock();
 					if (prevSlot != n)
 						supplies->selectedHotbarSlot = n;
+					//inv->moveItem(stack2, currentslot);
 					return true;
 				}
 			}
