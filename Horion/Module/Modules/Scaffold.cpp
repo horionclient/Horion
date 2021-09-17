@@ -83,6 +83,8 @@ void Scaffold::onTick(C_GameMode* gm) {
 	if (!g_Data.canUseMoveKeys())
 		return;
 	
+	if (autoselect) findBlock();
+	
 	auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
 	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()) && !spoof)  // Block in hand?
 		return;
