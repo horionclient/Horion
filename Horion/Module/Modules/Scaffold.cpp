@@ -105,7 +105,7 @@ void Scaffold::onLevelRender() {
 	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()) && !spoof)  // Block in hand?
 		return;
 
-	if (AutoSelect) findBlock();
+	findBlock();
 
 	// Adjustment by velocity
 	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
