@@ -96,6 +96,8 @@
 #include "Modules/VanillaPlus.h"
 #include "Modules/ViewModel.h"
 #include "Modules/Twerk.h"
+#include "Modules/AutoWalk.h"
+#include "Modules/AutoJump.h"
 
 #ifdef _DEBUG
 #include "Modules/PacketLogger.h"

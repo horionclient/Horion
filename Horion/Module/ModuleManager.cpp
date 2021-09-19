@@ -104,6 +104,8 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new ViewModel()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Twerk()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new FollowPathModule()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new AutoWalk()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new AutoJump()));
 
 #ifdef _DEBUG
 		this->moduleList.push_back(std::shared_ptr<IModule>(new PacketLogger()));
