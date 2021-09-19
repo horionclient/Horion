@@ -13,7 +13,6 @@ const char* AutoWalk::getModuleName() {
 
 void AutoWalk::onTick(C_GameMode* gm) {
 	auto player = g_Data.getLocalPlayer();
-	if (player == nullptr) return;
 
 	g_Data.getClientInstance()->getMoveTurnInput()->forward = true;
 	

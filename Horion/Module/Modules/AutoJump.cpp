@@ -11,7 +11,6 @@ const char* AutoJump::getModuleName() {
 
 void AutoJump::onTick(C_GameMode* gm) {
 	auto player = g_Data.getLocalPlayer();
-	if (player == nullptr) return;
 
 	if (player->onGround) gm->player->jumpFromGround();
 }
