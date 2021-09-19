@@ -11,10 +11,7 @@ GiveCommand::~GiveCommand() {
 
 bool GiveCommand::execute(std::vector<std::string> *args) {
 	assertTrue(args->size() > 2);
-	C_PlayerInventoryProxy *supplies = g_Data.getLocalPlayer()->getSupplies();
-	C_Inventory *inv = supplies->inventory;
-	C_InventoryTransactionManager *manager = g_Data.getLocalPlayer()->getTransactionManager();
-	C_ItemStack *item = g_Data.getLocalPlayer()->getSelectedItem();
+
 	int itemId = 0;
 	uint32_t fullCount = static_cast<uint32_t>(assertInt(args->at(2)));
 	unsigned int stackCount = fullCount / 64;  // Get the amount of stacks we have.
@@ -69,15 +66,17 @@ bool GiveCommand::execute(std::vector<std::string> *args) {
 		}
 		if (!success) return true;
 	}
-	if ((args->at(4) == "1")) {
+	C_Inventory *inv = g_Data.getLocalPlayer()->getSupplies()->inventory;
+	C_ItemStack *item = g_Data.getLocalPlayer()->getSelectedItem();
+	if (args->size() > 4) {
 		std::string tag;
-			tag = Utils::getClipboardText();
-		if (args->at(4) == "1") {
+		tag = Utils::getClipboardText();
+		if (args->size() > 4) {
 			g_Data.getLocalPlayer()->getTransactionManager()->addInventoryAction(C_InventoryAction(0, nullptr, nullptr, item, nullptr, 1, 507, 99999));
 		}
 
 		if (tag.size() > 1 && tag.front() == MojangsonToken::COMPOUND_START.getSymbol() && tag.back() == MojangsonToken::COMPOUND_END.getSymbol()) {
-			if (args->at(4) == "1") {
+			if (args->size() > 4) {
 				item->setUserData(std::move(Mojangson::parseTag(tag)));
 			}
 		} else {
@@ -85,12 +84,12 @@ bool GiveCommand::execute(std::vector<std::string> *args) {
 			return true;
 		}
 
-		if (args->at(4) == "1") {
+		if (args->size() > 4) {
 			g_Data.getLocalPlayer()->getTransactionManager()->addInventoryAction(C_InventoryAction(0, nullptr, nullptr, item, nullptr, 1, 507, 99999));
 		}
 		clientMessageF("%s%s", GREEN, "Successfully loaded mojangson !");
 	}
-	if (args->at(4) == "1") {
+	if (args->size() > 4) {
 		C_InventoryAction *firstAction = nullptr;
 		auto transactionMan = g_Data.getLocalPlayer()->getTransactionManager();
 		firstAction = new C_InventoryAction(0, item, nullptr, 507, 99999);
