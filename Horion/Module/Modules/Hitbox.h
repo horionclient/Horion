@@ -5,6 +5,7 @@
 
 class Hitbox : public IModule {
 public:
+	bool isMobAura = false;
 	float height = 2;
 	float width = 4;
 	float range = 8;

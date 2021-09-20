@@ -1,8 +1,9 @@
 #include "Hitbox.h"
 
 Hitbox::Hitbox() : IModule(0, Category::COMBAT, "Increase an entitys hitbox size") {
-	this->registerFloatSetting("Height", &this->height, this->height, 1.8f, 10);
-	this->registerFloatSetting("Width", &this->width, this->width, 0.6f, 10);
+	registerBoolSetting("Mobs", &this->isMobAura, this->isMobAura);
+	registerFloatSetting("Height", &this->height, this->height, 1.8f, 10);
+	registerFloatSetting("Width", &this->width, this->width, 0.6f, 10);
 }
 
 Hitbox::~Hitbox() {
@@ -14,7 +15,7 @@ const char* Hitbox::getModuleName() {
 
 void findTarget(C_Entity* currentEntity, bool isRegularEntitie) {
 	static auto hitboxMod = moduleMgr->getModule<Hitbox>();
-	
+
 	if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
 		return;
 
@@ -24,8 +25,17 @@ void findTarget(C_Entity* currentEntity, bool isRegularEntitie) {
 	if (currentEntity->timeSinceDeath > 0 || currentEntity->damageTime >= 7)
 		return;
 
-	if (!Target::isValidTarget(currentEntity))
-		return;
+	if (hitboxMod->isMobAura) {
+		if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)
+			return;
+		if (currentEntity->width <= 0.01f || currentEntity->height <= 0.01f)  // Don't hit this pesky antibot on 2b2e.org
+			return;
+		if (currentEntity->getEntityTypeId() == 64)  // item
+			return;
+	} else {
+		if (!Target::isValidTarget(currentEntity))
+			return;
+	}
 
 	float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
 
@@ -33,7 +43,6 @@ void findTarget(C_Entity* currentEntity, bool isRegularEntitie) {
 		currentEntity->width = hitboxMod->width;
 		currentEntity->height = hitboxMod->height;
 	}
-	
 }
 
 void Hitbox::onTick(C_GameMode* gm) {
