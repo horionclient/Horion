@@ -2,6 +2,7 @@
 #include "Module.h"
 class Fly : public IModule {
 private:
+	bool selfhurt = false;
 	float speed = 1.5f;
 	int gameTick = 0;
 

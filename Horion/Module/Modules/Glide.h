@@ -2,6 +2,7 @@
 #include "Module.h"
 class Glide : public IModule {
 private:
+	bool selfhurt = false;
 	float glideMod = -0.01f;
 	float glideModEffective = 0;
 
@@ -10,6 +11,7 @@ public:
 	~Glide();
 
 	// Inherited via IModule
+	virtual void onEnable() override;
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
 	virtual const char* getRawModuleName() override;

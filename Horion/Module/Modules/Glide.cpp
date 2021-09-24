@@ -1,10 +1,18 @@
 #include "Glide.h"
 
 Glide::Glide() : IModule(0, Category::MOVEMENT, "Float down") {
-	this->registerFloatSetting("value", &this->glideMod, this->glideMod, -2, 1);
+	registerBoolSetting("Selfhurt", &this->selfhurt, this->selfhurt);
+	registerFloatSetting("value", &this->glideMod, this->glideMod, -2, 1);
 }
 
 Glide::~Glide() {
+}
+
+void Glide::onEnable() {
+	if (selfhurt) {
+		g_Data.getLocalPlayer()->swing();
+		g_Data.getCGameMode()->attack(g_Data.getLocalPlayer());
+	}
 }
 
 const char* Glide::getModuleName() {

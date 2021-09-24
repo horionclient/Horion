@@ -3,6 +3,7 @@
 Fly::Fly() : IModule(0, Category::MOVEMENT, "Enables fly like in creative mode") {
 	mode = (*new SettingEnum(this)).addEntry(EnumEntry("Fly", 1)).addEntry(EnumEntry("CubeGlide", 2));
 	registerEnumSetting("Mode", &mode, 0);
+	registerBoolSetting("Selfhurt", &this->selfhurt, this->selfhurt);
 	registerFloatSetting("CubeGlide Speed", &this->speed, this->speed, 1.f, 3.f);
 }
 
@@ -30,6 +31,11 @@ bool Fly::isFlashMode() {
 void Fly::onEnable() {
 	if (mode.selected == 1) {
 		g_Data.getLocalPlayer()->setPos((*g_Data.getLocalPlayer()->getPos()).add(vec3_t(0, 1, 0)));
+	}
+
+	if (selfhurt) {
+		g_Data.getLocalPlayer()->swing();
+		g_Data.getCGameMode()->attack(g_Data.getLocalPlayer());
 	}
 }
 

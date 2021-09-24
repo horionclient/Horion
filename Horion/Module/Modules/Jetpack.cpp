@@ -3,11 +3,19 @@
 #include "../../../Utils/Logger.h"
 
 Jetpack::Jetpack() : IModule('F', Category::MOVEMENT, "Fly around like you had a Jetpack!") {
+	registerBoolSetting("Selfhurt", &this->selfhurt, this->selfhurt);
 	registerFloatSetting("speed", &this->speedMod, 1, 0.2f, 3.f);
-	this->registerBoolSetting("Bypass", &this->isBypass, this->isBypass);
+	registerBoolSetting("Bypass", &this->isBypass, this->isBypass);
 }
 
 Jetpack::~Jetpack() {
+}
+
+void Jetpack::onEnable() {
+	if (selfhurt) {
+		g_Data.getLocalPlayer()->swing();
+		g_Data.getCGameMode()->attack(g_Data.getLocalPlayer());
+	}
 }
 
 bool Jetpack::isFlashMode() {

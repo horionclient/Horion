@@ -1,9 +1,17 @@
 #include "AirStuck.h"
 
 AirStuck::AirStuck() : IModule(0, Category::MOVEMENT, "Become stuck.") {
+	registerBoolSetting("Selfhurt", &this->selfhurt, this->selfhurt);
 }
 
 AirStuck::~AirStuck() {
+}
+
+void AirStuck::onEnable() {
+	if (selfhurt) {
+		g_Data.getLocalPlayer()->swing();
+		g_Data.getCGameMode()->attack(g_Data.getLocalPlayer());
+	}
 }
 
 const char* AirStuck::getModuleName() {
