@@ -24,7 +24,7 @@ void Freelook::onEnable() {
 void Freelook::onDisable() {
 	if(g_Data.isInGame() && this->resetViewTick == -1 && this->redirectMouse){
 
-		this->resetViewTick = this->isThirdPerson ? 0 : 100; // give it time
+		this->resetViewTick = this->isThirdPerson ? 0 : 1; // give it time
 		if(this->cameraFacesFront){
 			lastCameraAngle.y += 180;
 			lastCameraAngle = lastCameraAngle.normAngles();
