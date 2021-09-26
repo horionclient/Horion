@@ -12,7 +12,7 @@
   </p>
   <p>
     <b>Horion</b> is a Minecraft: Bedrock Edition utility mod designed to enhance gameplay. We do not take responsibility in anything done with this utility mod.
-If you want to contribute to this project, feel free to fork this repository and submit a pull request.
+It is now a dead project and will not be reviewed anymore. Thanks for all the support along the years and the contribution that has been made.
   </p>
 </div>
 
