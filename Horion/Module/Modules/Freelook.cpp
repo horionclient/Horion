@@ -51,22 +51,6 @@ void Freelook::onPostRender(C_MinecraftUIRenderContext* mode) {
 
 	if(this->resetViewTick > 0){
 		this->resetViewTick--;
-
-		if(this->cameraFacesFront){
-			this->lastCameraAngle.x *= -1;
-		}
-		vec2_t appl = this->initialViewAngles;
-		appl = appl.sub(this->lastCameraAngle).normAngles();
-		appl.x = this->initialViewAngles.x - this->lastCameraAngle.x; // dont norm this angle
-		if(appl.magnitude() < 0.1f)
-			this->resetViewTick = 0;
-
-		appl = appl.div(fmaxf(1, appl.magnitude() / 15));
-
-		this->lastCameraAngle = this->lastCameraAngle.add(appl);
-		if(this->cameraFacesFront){
-			this->lastCameraAngle.x *= -1;
-		}
 	}
 }
 void Freelook::onTick(C_GameMode* mode) {
