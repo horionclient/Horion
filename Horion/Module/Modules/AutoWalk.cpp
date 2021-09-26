@@ -2,7 +2,7 @@
 
 AutoWalk::AutoWalk() : IModule(0, Category::MOVEMENT, "Automatically walk for you") {
 	mode = (*new SettingEnum(this)).addEntry(EnumEntry("Forwards", 1)).addEntry(EnumEntry("Left", 2)).addEntry(EnumEntry("Right", 3)).addEntry(EnumEntry("Backwards", 4));
-	this->registerEnumSetting("Mode", &mode, 0);
+	this->registerEnumSetting("Direction", &mode, 0);
 	this->registerBoolSetting("Sprint", &this->sprint, this->sprint);
 	this->registerBoolSetting("Jump", &this->jump, this->jump);
 }
