@@ -9,6 +9,8 @@ bool jump = false;
 public:
 	AutoWalk();
 	~AutoWalk();
+
+	SettingEnum mode;
 	
 	// Inherited via IModule
 	virtual const char* getModuleName() override;

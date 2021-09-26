@@ -1,6 +1,8 @@
 #include "AutoWalk.h"
 
 AutoWalk::AutoWalk() : IModule(0, Category::MOVEMENT, "Automatically walk for you") {
+	mode = (*new SettingEnum(this)).addEntry(EnumEntry("Forwards", 1)).addEntry(EnumEntry("Left", 2)).addEntry(EnumEntry("Right", 3)).addEntry(EnumEntry("Backwards", 4));
+	this->registerEnumSetting("Mode", &mode, 0);
 	this->registerBoolSetting("Sprint", &this->sprint, this->sprint);
 	this->registerBoolSetting("Jump", &this->jump, this->jump);
 }
@@ -14,8 +16,11 @@ const char* AutoWalk::getModuleName() {
 void AutoWalk::onTick(C_GameMode* gm) {
 	auto player = g_Data.getLocalPlayer();
 
-	g_Data.getClientInstance()->getMoveTurnInput()->forward = true;
-	
+	if (mode.selected == 0) g_Data.getClientInstance()->getMoveTurnInput()->forward = true;
+	if (mode.selected == 1) g_Data.getClientInstance()->getMoveTurnInput()->left = true;
+	if (mode.selected == 2) g_Data.getClientInstance()->getMoveTurnInput()->right = true;
+	if (mode.selected == 3) g_Data.getClientInstance()->getMoveTurnInput()->backward = true;
+
 	if (sprint) gm->player->setSprinting(true);
 	if (!sprint) gm->player->setSprinting(false);
 
@@ -24,4 +29,7 @@ void AutoWalk::onTick(C_GameMode* gm) {
 
 void AutoWalk::onDisable() {
 	g_Data.getClientInstance()->getMoveTurnInput()->forward = false;
+	g_Data.getClientInstance()->getMoveTurnInput()->left = false;
+	g_Data.getClientInstance()->getMoveTurnInput()->right = false;
+	g_Data.getClientInstance()->getMoveTurnInput()->backward = false;
 }
