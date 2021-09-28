@@ -96,6 +96,7 @@
 #include "Modules/VanillaPlus.h"
 #include "Modules/ViewModel.h"
 #include "Modules/Twerk.h"
+#include "Modules/FightBot.h"
 
 #ifdef _DEBUG
 #include "Modules/PacketLogger.h"
