@@ -59,7 +59,7 @@ void FightBot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			
 			float dist = (*targetList[0]->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
 			Odelay++;
-			if (Odelay == delay && reach >= dist) {
+			if (Odelay >= delay && reach >= dist) {
 				g_Data.getLocalPlayer()->swing();
 				g_Data.getCGameMode()->attack(targetList[0]);
 			}
