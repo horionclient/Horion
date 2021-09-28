@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="BetaConf|Win32">
@@ -307,6 +307,7 @@
     <ClCompile Include="Horion\Module\Modules\ESP.cpp" />
     <ClCompile Include="Horion\Module\Modules\FastEast.cpp" />
     <ClCompile Include="Horion\Module\Modules\FastLadder.cpp" />
+	<ClCompile Include="Horion\Module\Modules\FightBot.cpp" />
     <ClCompile Include="Horion\Module\Modules\Fly.cpp" />
     <ClCompile Include="Horion\Module\Modules\FollowPathModule.cpp" />
     <ClCompile Include="Horion\Module\Modules\Freecam.cpp" />
@@ -496,6 +497,7 @@
     <ClInclude Include="Horion\Module\Modules\ESP.h" />
     <ClInclude Include="Horion\Module\Modules\FastEat.h" />
     <ClInclude Include="Horion\Module\Modules\FastLadder.h" />
+	<ClInclude Include="Horion\Module\Modules\FightBot.h" />
     <ClInclude Include="Horion\Module\Modules\Fly.h" />
     <ClInclude Include="Horion\Module\Modules\FollowPathModule.h" />
     <ClInclude Include="Horion\Module\Modules\Freecam.h" />
