@@ -7,6 +7,7 @@ Killaura::Killaura() : IModule('P', Category::COMBAT, "Attacks entities around y
 	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
 	this->registerBoolSetting("hurttime", &this->hurttime, this->hurttime);
 	this->registerBoolSetting("AutoWeapon", &this->autoweapon, this->autoweapon);
+	this->registerBoolSetting("Rotations", &this->rotations, this->rotations);
 	this->registerBoolSetting("Silent Rotations", &this->silent, this->silent);
 }
 
@@ -112,7 +113,10 @@ void Killaura::onTick(C_GameMode* gm) {
 				g_Data.getCGameMode()->attack(targetList[0]);
 			}
 		}
-		Odelay = 0;
+		if (rotations) {
+			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos());
+			gm->player->setRot(angle);
+		}
 	}
 }
 
