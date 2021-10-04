@@ -2,10 +2,10 @@
 #include "../CommandMgr.h"
 
 #include "ICommand.h"
-class SetprefixCommand : public IMCCommand {
+class SetPrefixCommand : public IMCCommand {
 public:
-	SetprefixCommand();
-	~SetprefixCommand();
+	SetPrefixCommand();
+	~SetPrefixCommand();
 
 	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;

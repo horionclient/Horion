@@ -1,17 +1,17 @@
-#include "ChestESP.h"
+#include "StorageESP.h"
 #include "../../DrawUtils.h"
 
-ChestESP::ChestESP() : IModule(0, Category::VISUAL, "ESP for chests") {
+StorageESP::StorageESP() : IModule(0, Category::VISUAL, "ESP for storage blocks") {
 }
 
-ChestESP::~ChestESP() {
+StorageESP::~StorageESP() {
 }
 
-const char* ChestESP::getModuleName() {
-	return ("ChestESP");
+const char* StorageESP::getModuleName() {
+	return ("StorageESP");
 }
 
-void ChestESP::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
+void StorageESP::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	if (!g_Data.isInGame() || !GameData::canUseMoveKeys() || g_Data.getLocalPlayer() == nullptr)
 		return;
 
@@ -35,12 +35,15 @@ void ChestESP::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 		if (storageID == 54) DrawUtils::setColor(1.f, 1.f, 1.f, math);                     // Normal Chest
 		if (storageID == 146) DrawUtils::setColor(.92f, .14f, .14f, math);                 // Trapped Chest
 		if (storageID == 130) DrawUtils::setColor(0.435294f, 0.215686f, 0.631372f, math);  // Ender Chest
+		if (storageID == 458) DrawUtils::setColor(0.62, 0.31, 0.04, math);                 // Barrel
+		if (storageID == 205) DrawUtils::setColor(.49f, .17f, .95f, math);                 // Undyed Shulker Box
+		if (storageID == 218) DrawUtils::setColor(.08f, .91f, .99f, math);                 // Shulker Box
 
 		DrawUtils::drawBox(chest.lower, chest.upper, (float)fmax(0.2f, 1 / (float)fmax(1, g_Data.getLocalPlayer()->eyePos0.dist(chest.lower))), true);  // Fancy math to give an illusion of good esp
 	}
 }
 
-void ChestESP::onTick(C_GameMode* gm) {
+void StorageESP::onTick(C_GameMode* gm) {
 	// Swap list
 	auto listLock = g_Data.lockChestList();
 	auto& chestList = g_Data.getChestList();
