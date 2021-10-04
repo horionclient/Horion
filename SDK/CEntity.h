@@ -153,7 +153,7 @@ private:
 
 public:
 	virtual void setPos(vec3_t const &);
-	virtual bool filler();
+	virtual bool isRuntimePredictedMovementEnabled(void);
 	virtual vec3_t *getPredictedMovementValues(void) const;
 	virtual vec3_t *getPos(void) const;  // getStateVectorComponent
 	virtual vec3_t *getPosOld(void) const;
@@ -273,12 +273,8 @@ public:
 	virtual bool isCreativeModeAllowed(void);
 	virtual bool isSurfaceMob(void) const;
 	virtual bool isTargetable(void) const;
-
-private:
-	virtual bool unk1(void) const;
-	virtual bool unk2(void) const;
-
-public:
+	virtual bool isLocalPlayer(void);
+	virtual bool isPlayer(void);
 	virtual bool isAffectedByWaterBottle(void) const;
 	virtual bool canAttack(C_Entity *, bool) const;
 	virtual void setTarget(C_Entity *);
@@ -508,8 +504,8 @@ private:
 	virtual __int64 reloadLootTable(void);
 	virtual __int64 reloadLootTable(__int64 const *);
 	virtual __int64 getLootTable(void) const;
-	virtual __int64 filler_2(void) const;
-	virtual __int64 filler_3(void) const;
+	virtual __int64 getDefaultLootTable(void);
+	virtual __int64 getDeletionDelayTimeSeconds(void);
 	virtual __int64 kill(void);
 	virtual __int64 die(__int64 const &);
 	virtual __int64 shouldTick(void) const;
