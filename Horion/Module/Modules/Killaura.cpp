@@ -47,6 +47,10 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 			return;
 		if(currentEntity->getEntityTypeId() == 64) // item
 			return;
+		if (currentEntity->getEntityTypeId() == 80)  // Arrows
+			return;
+		if (currentEntity->getEntityTypeId() == 51) // NPC
+			return;
 	} else {
 		if (!Target::isValidTarget(currentEntity))
 			return;
