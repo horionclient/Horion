@@ -25,7 +25,7 @@
 #include "Modules/BowAimbot.h"
 #include "Modules/AntiVoid.h"
 #include "Modules/ChestAura.h"
-#include "Modules/ChestESP.h"
+#include "Modules/StorageESP.h"
 #include "Modules/ChestStealer.h"
 #include "Modules/ClickGuiMod.h"
 #include "Modules/Teleport.h"
