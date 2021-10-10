@@ -73,7 +73,6 @@ bool Scaffold::findBlock() {
 					auto stack2 = stack->getItem()->isBlock();
 					if (prevSlot != n)
 						supplies->selectedHotbarSlot = n;
-					//inv->moveItem(stack2, currentslot);
 					return true;
 				}
 			}
@@ -87,7 +86,6 @@ bool Scaffold::findBlock() {
 					auto stack2 = stack->getItem()->isBlock();
 					if (prevSlot != n)
 						supplies->selectedHotbarSlot = n;
-					//inv->moveItem(stack2, currentslot);
 					return true;
 				}
 			}
