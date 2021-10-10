@@ -22,7 +22,7 @@ void AutoWalk::onTick(C_GameMode* gm) {
 	if (mode.selected == 3) g_Data.getClientInstance()->getMoveTurnInput()->backward = true;
 
 	if (sprint) gm->player->setSprinting(true);
-	if (!sprint) gm->player->setSprinting(false);
+		else gm->player->setSprinting(false);
 
 	if (player->onGround && jump) gm->player->jumpFromGround();
 }

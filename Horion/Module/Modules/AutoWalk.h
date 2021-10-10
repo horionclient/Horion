@@ -3,15 +3,14 @@
 
 class AutoWalk : public IModule {
 private:
-bool sprint = false;
-bool jump = false;
-	
+	bool sprint = false;
+	bool jump = false;
+
 public:
+	SettingEnum mode;
 	AutoWalk();
 	~AutoWalk();
 
-	SettingEnum mode;
-	
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
