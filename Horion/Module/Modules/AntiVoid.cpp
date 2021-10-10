@@ -11,7 +11,7 @@ const char* AntiVoid::getModuleName() {
 	return ("AntiVoid");
 }
 
-void AntiVoid::onTick(C_GameMode* gm) {
+void AntiVoid::onLevelRender() {
 	C_LocalPlayer* player = g_Data.getLocalPlayer();
 	vec3_t blockBelow = player->eyePos0;
 	blockBelow.y -= player->height;

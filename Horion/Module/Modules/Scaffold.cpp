@@ -77,7 +77,7 @@ bool Scaffold::findBlock() {
 	return false;
 }
 
-void Scaffold::onTick(C_GameMode* gm) {
+void Scaffold::onLevelRender() {
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	if (!g_Data.canUseMoveKeys())

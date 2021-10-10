@@ -10,22 +10,23 @@ const char* Jesus::getModuleName() {
 	return "Jesus";
 }
 
-void Jesus::onTick(C_GameMode* gm) {
-	if (gm->player->isSneaking()) return;
+void Jesus::onLevelRender() {
+	C_LocalPlayer* player = g_Data.getLocalPlayer();
+	if (player->isSneaking()) return;
 
-	if (gm->player->hasEnteredWater()) {
-		gm->player->velocity.y = 0.06f;
-		gm->player->onGround = true;
+	if (player->hasEnteredWater()) {
+		player->velocity.y = 0.06f;
+		player->onGround = true;
 		wasInWater = true;
-	} else if (gm->player->isInWater() || gm->player->isInLava()) {
-		gm->player->velocity.y = 0.1f;
-		gm->player->onGround = true;
+	} else if (player->isInWater() || player->isInLava()) {
+		player->velocity.y = 0.1f;
+		player->onGround = true;
 		wasInWater = true;
 	} else {
 		if (wasInWater) {
 			wasInWater = false;
-			gm->player->velocity.x *= 1.2f;
-			gm->player->velocity.x *= 1.2f;
+			player->velocity.x *= 1.2f;
+			player->velocity.x *= 1.2f;
 		}
 	}
 }
