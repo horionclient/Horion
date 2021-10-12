@@ -220,7 +220,7 @@ void Hooks::Init() {
 		static auto bobViewHookF = [](__int64 _this, glm::mat4& matrix, float lerpT){
 			static auto origFunc = g_Hooks.lambdaHooks.at(lambda_counter)->GetFastcall<void, __int64, glm::mat4&, float>();
 			
-			static auto testMod = moduleMgr->getModule<ViewModel>();
+			static auto viewmodelMod = moduleMgr->getModule<ViewModel>();
 			auto p = g_Data.getLocalPlayer();
 			float degrees = fmodf(p->getPosOld()->lerp(p->getPos(), lerpT).x, 5) - 2.5f;
 			degrees *= 180 / 2.5f;
@@ -230,12 +230,12 @@ void Hooks::Init() {
 			glm::mat4 View = matrix;
 			
 			matrix = View;
-			if (testMod->isEnabled()) {
-				if (testMod->doTranslate)
-					matrix = glm::translate<float>(matrix, glm::vec3(testMod->xTrans, testMod->yTrans, testMod->zTrans));
+			if (viewmodelMod->isEnabled()) {
+				if (viewmodelMod->doTranslate)
+					matrix = glm::translate<float>(matrix, glm::vec3(viewmodelMod->xTrans, viewmodelMod->yTrans, viewmodelMod->zTrans));
 
-				if (testMod->doScale)
-					matrix = glm::scale<float>(matrix, glm::vec3(testMod->xMod, testMod->yMod, testMod->zMod));
+				if (viewmodelMod->doScale)
+					matrix = glm::scale<float>(matrix, glm::vec3(viewmodelMod->xMod, viewmodelMod->yMod, viewmodelMod->zMod));
 			}
 			return origFunc(_this, matrix, lerpT);
 		};
@@ -310,6 +310,7 @@ __int64 Hooks::UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext)
 
 __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	static auto oRender = g_Hooks.UIScene_renderHook->GetFastcall<__int64, C_UIScene*, __int64>();
+	static auto hudmoduleMod = moduleMgr->getModule<HudModule>();
 
 	g_Hooks.shouldRender = false;
 
@@ -319,6 +320,8 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	if (alloc.getTextLength() < 100) {
 		strcpy_s(g_Hooks.currentScreenName, alloc.getText());
 	}
+	
+	if (hudmoduleMod->alwaysShow) g_Hooks.shouldRender = true;
 	
 	if (!g_Hooks.shouldRender) {
 		g_Hooks.shouldRender = (strcmp(alloc.getText(), "start_screen") == 0 || strcmp(alloc.getText(), "hud_screen") == 0);
