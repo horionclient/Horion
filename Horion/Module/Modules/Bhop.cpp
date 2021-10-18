@@ -35,5 +35,5 @@ void Bhop::onMove(C_MoveInputHandler* input) {
 	moveVec.x = moveVec2d.x * speed;
 	moveVec.y = player->velocity.y;
 	moveVec.z = moveVec2d.y * speed;
-	if(pressed) player->lerpMotion(moveVec);
+	if (pressed) player->lerpMotion(moveVec);
 }
