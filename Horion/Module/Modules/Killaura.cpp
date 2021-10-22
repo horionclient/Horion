@@ -117,6 +117,7 @@ void Killaura::onTick(C_GameMode* gm) {
 			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos());
 			gm->player->setRot(angle);
 		}
+		Odelay = 0;
 	}
 }
 
