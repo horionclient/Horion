@@ -20,23 +20,16 @@ void listEnts(C_Entity* ent, bool isValid) {
 }
 
 void showAimedBlockInfo() {
+	C_LocalPlayer* player = g_Data.getLocalPlayer();
 	PointingStruct* pointingStruct = g_Data.getClientInstance()->getPointerStruct();
 	C_Block* block = g_Data.getLocalPlayer()->region->getBlock(pointingStruct->block);
-	auto id = block->toLegacy()->blockId;
 	char* name = block->toLegacy()->name.getText();
-	logF("---------------");
-	logF("Block Name: %s", name);
-	logF("Block ID: %lld", id);
-	logF("---------------");
+	auto id = block->toLegacy()->blockId;
+	g_Data.getClientInstance()->getGuiData()->displayClientMessageF("Block Name: %s", name);
+	g_Data.getClientInstance()->getGuiData()->displayClientMessageF("Block ID: %lld", id);
 }
 
 bool TestCommand::execute(std::vector<std::string>* args) {
-	C_LocalPlayer* player = g_Data.getLocalPlayer();
-
-	auto inv = player->getSupplies()->inventory;
-	logF("%i %i", inv->getFirstEmptySlot(), inv->getEmptySlotsCount());
-	
-	inv->swapSlots(1, 2);
-
+	showAimedBlockInfo();
 	return true;
 }
