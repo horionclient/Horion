@@ -10,13 +10,17 @@ TestCommand::TestCommand() : IMCCommand("test", "Test for Debugging purposes", "
 TestCommand::~TestCommand() {
 }
 
-void listEnts(C_Entity* ent, bool isValid) {
-	int id = ent->getEntityTypeId();
-	char* name = ent->getNameTag()->getText();
-	logF("---------------");
-	logF("Entity Name: %s", name);
-	logF("Entity ID: %d", id);
-	logF("---------------");
+void listEnts() {
+	PointingStruct* pointingStruct = g_Data.getClientInstance()->getPointerStruct();
+	auto entity = pointingStruct->getEntity();
+	if (entity != nullptr) {
+		int id = entity->getEntityTypeId();
+		char* name = entity->getNameTag()->getText();
+		g_Data.getClientInstance()->getGuiData()->displayClientMessageF("---------------");
+		g_Data.getClientInstance()->getGuiData()->displayClientMessageF("Entity Name: %s", name);
+		g_Data.getClientInstance()->getGuiData()->displayClientMessageF("Entity ID: %lld", id);
+		g_Data.getClientInstance()->getGuiData()->displayClientMessageF("---------------");
+	}
 }
 
 void showAimedBlockInfo() {
@@ -30,6 +34,7 @@ void showAimedBlockInfo() {
 }
 
 bool TestCommand::execute(std::vector<std::string>* args) {
+	listEnts();
 	showAimedBlockInfo();
 	return true;
 }
