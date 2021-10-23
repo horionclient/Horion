@@ -29,8 +29,10 @@ void showAimedBlockInfo() {
 	C_Block* block = g_Data.getLocalPlayer()->region->getBlock(pointingStruct->block);
 	char* name = block->toLegacy()->name.getText();
 	auto id = block->toLegacy()->blockId;
+	g_Data.getClientInstance()->getGuiData()->displayClientMessageF("---------------");
 	g_Data.getClientInstance()->getGuiData()->displayClientMessageF("Block Name: %s", name);
 	g_Data.getClientInstance()->getGuiData()->displayClientMessageF("Block ID: %lld", id);
+	g_Data.getClientInstance()->getGuiData()->displayClientMessageF("---------------");
 }
 
 bool TestCommand::execute(std::vector<std::string>* args) {
