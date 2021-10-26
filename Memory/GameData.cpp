@@ -19,7 +19,7 @@ void GameData::retrieveClientInstance() {
 		if (sigOffset != 0x0) {
 			int offset = *reinterpret_cast<int*>((sigOffset + 3));                                                 // Get Offset from code
 			clientInstanceOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instruction*/ 7;  // Offset is relative
-			logF("clinet: %llX", clientInstanceOffset);
+			logF("client: %llX", clientInstanceOffset);
 		}
 	}
 	// clientInstanceOffset = 0x03CD5058;  // pointer scanned, can't find good signatures so it'll stay
