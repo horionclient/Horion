@@ -12,6 +12,7 @@ private:
 	bool autoweapon = false;
 	void findWeapon();
 	bool silent = true;
+	bool rotations = false;
 
 public:
 	bool isMobAura = false;
