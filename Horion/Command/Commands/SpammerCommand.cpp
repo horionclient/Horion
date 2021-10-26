@@ -2,7 +2,7 @@
 
 #include "../../Module/ModuleManager.h"
 
-SpammerCommand::SpammerCommand() : IMCCommand("spammer", "Edit spammer delay/text", "<message/delay/bypass/manual> <string/int/bool>") {
+SpammerCommand::SpammerCommand() : IMCCommand("spammer", "Edit spammer delay/text", "<message/delay/bypass/length/manual> <string/int/bool>") {
 	registerAlias("spam");
 }
 
@@ -43,6 +43,15 @@ bool SpammerCommand::execute(std::vector<std::string>* args) {
 		spamMod->getBypass() = state;
 		clientMessageF("%sBypass set to %s%s%s!", GREEN, GRAY, state ? "true" : "false", GREEN);
 		return true;
+	} else if (option == "length") {
+		int length = assertInt(args->at(2));
+		if (length < 1) {
+			clientMessageF("%sLength needs to be 1 or more!", RED);
+			return true;
+		} else {
+			spamMod->getLength() = length;
+			return true;
+		}
 	} else if (option == "manual") {
 		int times = assertInt(args->at(2));
 		std::ostringstream os;
@@ -54,7 +63,7 @@ bool SpammerCommand::execute(std::vector<std::string>* args) {
 		std::string text = os.str().substr(1);
 		for (int i = 0; i < times; i++) {
 			C_TextPacket textPacket;
-			textPacket.message.setText(text + (spamMod->getBypass() ? (" | " + Utils::randomString(8)) : ""));
+			textPacket.message.setText(text + (spamMod->getBypass() ? (" | " + Utils::randomString(spamMod->getLength())) : ""));
 			textPacket.sourceName = *g_Data.getLocalPlayer()->getNameTag();
 			textPacket.xboxUserId = TextHolder(std::to_string(g_Data.getLocalPlayer()->getUserId()));
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&textPacket);

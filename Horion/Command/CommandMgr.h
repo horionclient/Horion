@@ -29,7 +29,7 @@
 #include "Commands/CommandBlockExploitCommand.h"
 #include "Commands/ConfigCommand.h"
 #include "Commands/NameSpoofCommand.h"
-#include "Commands/SetprefixCommand.h"
+#include "Commands/SetPrefixCommand.h"
 #include "Commands/NbtCommand.h"
 #include "Commands/ExecuteCommand.h"
 #include "Commands/WaypointCommand.h"

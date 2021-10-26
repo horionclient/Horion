@@ -53,8 +53,8 @@ void Fucker::onTick(C_GameMode* gm) {
 			std::string name = ent->getNameTag()->getText();
 			int id = ent->getEntityTypeId();
 			if (name.find("Treasure") != std::string::npos && g_Data.getLocalPlayer()->getPos()->dist(*ent->getPos()) <= 5) {
-				g_Data.getCGameMode()->attack(ent);
 				g_Data.getLocalPlayer()->swingArm();
+				g_Data.getCGameMode()->attack(ent);
 			}
 		});
 	}
