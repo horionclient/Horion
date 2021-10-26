@@ -1,13 +1,13 @@
-#include "SetprefixCommand.h"
+#include "SetPrefixCommand.h"
 
-SetprefixCommand::SetprefixCommand() : IMCCommand("setprefix", "Set the prefix for horion commands", "<prefix>") {
+SetPrefixCommand::SetPrefixCommand() : IMCCommand("setprefix", "Set the prefix for horion commands", "<prefix>") {
 	registerAlias("prefix");
 }
 
-SetprefixCommand::~SetprefixCommand() {
+SetPrefixCommand::~SetPrefixCommand() {
 }
 
-bool SetprefixCommand::execute(std::vector<std::string>* args) {
+bool SetPrefixCommand::execute(std::vector<std::string>* args) {
 	assertTrue(args->size() > 1);
 	assertTrue(args->at(1).length() == 1);
 	char prefix = args->at(1).at(0);

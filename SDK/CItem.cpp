@@ -52,7 +52,7 @@ void C_ItemStack::save(CompoundTag **tag) {
 }
 void C_ItemStack::setUserData(std::unique_ptr<Tag> tag) {
 	using setUserData_t = void(__fastcall *)(C_ItemStack *, std::unique_ptr<Tag>);
-	setUserData_t setUserData = reinterpret_cast<setUserData_t>(FindSignature("40 53 48 83 EC ?? 48 8B DA 48 8D 51 50 48 3B D3 74 1F 48 8B 03 48 C7 03 ?? ?? ?? ??"));
+	setUserData_t setUserData = reinterpret_cast<setUserData_t>(FindSignature("48 89 5C 24 18 55 56 57 48 81 EC ? ? ? ? 48 8B 05 8A ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 48 8B FA"));
 	setUserData(this, std::move(tag));
 }
 void C_ItemStack::reinit(C_BlockLegacy &legacy, int count) {

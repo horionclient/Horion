@@ -7,6 +7,7 @@ Killaura::Killaura() : IModule('P', Category::COMBAT, "Attacks entities around y
 	this->registerIntSetting("delay", &this->delay, this->delay, 0, 20);
 	this->registerBoolSetting("hurttime", &this->hurttime, this->hurttime);
 	this->registerBoolSetting("AutoWeapon", &this->autoweapon, this->autoweapon);
+	this->registerBoolSetting("Rotations", &this->rotations, this->rotations);
 	this->registerBoolSetting("Silent Rotations", &this->silent, this->silent);
 }
 
@@ -46,6 +47,10 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 		if(currentEntity->width <= 0.01f || currentEntity->height <= 0.01f) // Don't hit this pesky antibot on 2b2e.org
 			return;
 		if(currentEntity->getEntityTypeId() == 64) // item
+			return;
+		if (currentEntity->getEntityTypeId() == 80)  // Arrows
+			return;
+		if (currentEntity->getEntityTypeId() == 51) // NPC
 			return;
 	} else {
 		if (!Target::isValidTarget(currentEntity))
@@ -107,6 +112,10 @@ void Killaura::onTick(C_GameMode* gm) {
 				g_Data.getLocalPlayer()->swing();
 				g_Data.getCGameMode()->attack(targetList[0]);
 			}
+		}
+		if (rotations) {
+			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos());
+			gm->player->setRot(angle);
 		}
 		Odelay = 0;
 	}
