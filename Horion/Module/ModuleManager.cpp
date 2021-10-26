@@ -25,7 +25,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Jetpack()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Aimbot()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new ChestESP()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new StorageESP()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Velocity()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new RainbowSky()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new AirJump()));
