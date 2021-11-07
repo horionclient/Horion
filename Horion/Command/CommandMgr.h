@@ -25,7 +25,7 @@
 #include "Commands/ToggleCommand.h"
 #include "Commands/TopCommand.h"
 #include "Commands/UnbindCommand.h"
-#include "Commands/setoffhandCommand.h"
+#include "Commands/SetOffhandCommand.h"
 #include "Commands/CommandBlockExploitCommand.h"
 #include "Commands/ConfigCommand.h"
 #include "Commands/NameSpoofCommand.h"
