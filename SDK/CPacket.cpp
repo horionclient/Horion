@@ -121,7 +121,7 @@ C_TextPacket::C_TextPacket() {
 C_MovePlayerPacket::C_MovePlayerPacket() {
 	static uintptr_t** movePlayerPacketVtable = 0x0;
 	if (movePlayerPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 48 8B 82 70 ? ? ? 48 89 41 ? 48 8B 02 48 8B CA");
+		uintptr_t sigOffset = FindSignature("48 89 5c 24 ? 57 48 83 ec ? 48 8b d9 0f 29 74 24 ? 48 8b ca 0f 29 7c 24 ? 48 8b fa e8 ? ? ? ? 48 8b cf 48 89 43");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		movePlayerPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
