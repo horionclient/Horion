@@ -132,8 +132,8 @@ add_library(Horion SHARED
         Horion/Module/Modules/BowAimbot.h
         Horion/Module/Modules/ChestAura.cpp
         Horion/Module/Modules/ChestAura.h
-        Horion/Module/Modules/ChestESP.cpp
-        Horion/Module/Modules/ChestESP.h
+        Horion/Module/Modules/StorageESP.cpp
+        Horion/Module/Modules/StorageESP.h
         Horion/Module/Modules/ChestStealer.cpp
         Horion/Module/Modules/ChestStealer.h
         Horion/Module/Modules/ClickGuiMod.cpp
@@ -176,8 +176,8 @@ add_library(Horion SHARED
         Horion/Module/Modules/HudModule.h
         Horion/Module/Modules/ExtendedBlockReach.cpp
         Horion/Module/Modules/ExtendedBlockReach.h
-        Horion/Module/Modules/InfiniteReach.cpp
-        Horion/Module/Modules/InfiniteReach.h
+        Horion/Module/Modules/InfiniteAura.cpp
+        Horion/Module/Modules/InfiniteAura.h
         Horion/Module/Modules/InstaBreak.cpp
         Horion/Module/Modules/InstaBreak.h
         Horion/Module/Modules/InventoryCleaner.cpp
