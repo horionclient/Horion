@@ -1,6 +1,6 @@
 #include "AirJump.h"
 
-AirJump::AirJump() : IModule('G', Category::MOVEMENT, "Jump even you're not on the ground") {
+AirJump::AirJump() : IModule('G', Category::MOVEMENT, "Jump on Air!") {
 	registerBoolSetting("Legacy", &legacyMode, legacyMode);
 }
 
