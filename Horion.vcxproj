@@ -287,9 +287,11 @@
     <ClCompile Include="Horion\Module\Modules\AutoArmor.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoClicker.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoGapple.cpp" />
+    <ClCompile Include="Horion\Module\Modules\AutoJump.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSneak.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoSprint.cpp" />
     <ClCompile Include="Horion\Module\Modules\AutoTotem.cpp" />
+    <ClCompile Include="Horion\Module\Modules\AutoWalk.cpp" />
     <ClCompile Include="Horion\Module\Modules\Bhop.cpp" />
     <ClCompile Include="Horion\Module\Modules\Blink.cpp" />
     <ClCompile Include="Horion\Module\Modules\BowAimbot.cpp" />
@@ -476,9 +478,11 @@
     <ClInclude Include="Horion\Module\Modules\AutoArmor.h" />
     <ClInclude Include="Horion\Module\Modules\AutoClicker.h" />
     <ClInclude Include="Horion\Module\Modules\AutoGapple.h" />
+    <ClInclude Include="Horion\Module\Modules\AutoJump.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSneak.h" />
     <ClInclude Include="Horion\Module\Modules\AutoSprint.h" />
     <ClInclude Include="Horion\Module\Modules\AutoTotem.h" />
+    <ClInclude Include="Horion\Module\Modules\AutoWalk.h" />
     <ClInclude Include="Horion\Module\Modules\Bhop.h" />
     <ClInclude Include="Horion\Module\Modules\Blink.h" />
     <ClInclude Include="Horion\Module\Modules\BowAimbot.h" />
