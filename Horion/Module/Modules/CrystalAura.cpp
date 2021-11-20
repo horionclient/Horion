@@ -151,8 +151,10 @@ void CrystalAura::onTick(C_GameMode* gm) {
 					CPlace(gm, i->getPos());
 			else {
 				auto ptr = g_Data.getClientInstance()->getPointerStruct();
-				if (ptr->getEntity() == nullptr && ptr->rayHitType == 0)
-					CPlace(gm, &ptr->block.toFloatVector());
+				if (ptr->getEntity() == nullptr && ptr->rayHitType == 0) {
+					auto v = ptr->block.toFloatVector();
+					CPlace(gm, &v);
+				}
 			}
 		}
 		return;

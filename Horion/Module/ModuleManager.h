@@ -174,6 +174,31 @@ public:
 		}
 		return std::optional<std::shared_ptr<IModule>>();
 	}
+
+	void addModule(std::shared_ptr<IModule> mod) {
+		if (!mod) throw std::exception("mod was null.");
+		auto lock = this->lockModuleList();
+		for (auto& m : moduleList) {
+			if (m.get() == mod.get()) {
+				throw "Duplicate found.";
+			}
+		}
+		moduleList.push_back(mod);
+	}
+
+	void removeModule(std::shared_ptr<IModule> mod) {
+		if (mod.get() == nullptr) return;
+		auto lock = this->lockModuleList();
+		auto it = moduleList.begin();
+		for (; it != moduleList.end(); ++it) {
+			if (it->get() == mod.get()) {
+				goto remove_element;
+			}
+		}
+		return;
+	remove_element:
+		moduleList.erase(it);
+	}
 };
 
 extern ModuleManager* moduleMgr;
