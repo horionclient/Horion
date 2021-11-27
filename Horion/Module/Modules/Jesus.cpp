@@ -10,22 +10,23 @@ const char* Jesus::getModuleName() {
 	return "Jesus";
 }
 
-void Jesus::onTick(C_GameMode* gm) {
-	if (gm->player->isSneaking()) return;
+void Jesus::onMove(C_MoveInputHandler* input) {
+	isSneaking = input->isSneakDown;
+}
 
-	if (gm->player->hasEnteredWater()) {
-		gm->player->velocity.y = 0.06f;
+void Jesus::onTick(C_GameMode* gm) {
+	if (isSneaking && !gm->player->isInLava() || !gm->player->isOverWater() && gm->player->isInWater()) return;
+
+	vec3_t pos(*gm->player->getPos());
+	float ofs = 1.620010f;
+	
+	if (gm->player->hasEnteredWater() || gm->player->isInLava()) {
+		pos.y = floorf(pos.y - ofs) + 0.6f + ofs;
+		gm->player->setPos(pos);
+
+		if (gm->player->velocity.y < 0) gm->player->velocity.y = 0;
+		gm->player->fallDistance = 0;
 		gm->player->onGround = true;
-		wasInWater = true;
-	} else if (gm->player->isInWater() || gm->player->isInLava()) {
-		gm->player->velocity.y = 0.1f;
-		gm->player->onGround = true;
-		wasInWater = true;
-	} else {
-		if (wasInWater) {
-			wasInWater = false;
-			gm->player->velocity.x *= 1.2f;
-			gm->player->velocity.x *= 1.2f;
-		}
+		gm->player->didEnterWaterBool = false;
 	}
 }
