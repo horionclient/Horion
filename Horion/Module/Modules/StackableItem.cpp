@@ -17,8 +17,8 @@ void StackableItem::onTick(C_GameMode* gm) {
 		C_ItemStack* stack = a->getItemStack(i);
 		if (stack->item != NULL) {
 			C_Item* item = *stack->item;
-			item->setStackedByData(true);
-			item->setMaxStackSize(64);
+			item->setStackedByData(false);
+			item->setMaxStackSize(127);
 		}
 	}
 }
