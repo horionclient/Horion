@@ -10,7 +10,7 @@ const char* AutoTotem::getModuleName() {
 	return ("AutoTotem");
 }
 
-void AutoTotem::onTick(C_GameMode* gm) {
+void AutoTotem::onLevelRender() {
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
 	C_InventoryTransactionManager* manager = g_Data.getLocalPlayer()->getTransactionManager();

@@ -10,7 +10,7 @@ const char* Xray::getModuleName() {
 	return ("Xray");
 }
 
-void Xray::onTick(C_GameMode* gm) {
+void Xray::onLevelRender() {
 	if (smoothLightningSetting != nullptr) {
 		if (!gotSmoothInfo) {
 			gotSmoothInfo = true;
