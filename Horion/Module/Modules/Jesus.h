@@ -4,7 +4,6 @@ class Jesus :
 	public IModule
 {
 private:
-	bool wasInWater = false;
 	bool isSneaking = false;
 public:
 	Jesus();
