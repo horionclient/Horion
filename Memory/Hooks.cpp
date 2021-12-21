@@ -69,7 +69,7 @@ void Hooks::Init() {
 
 				g_Hooks.Actor_swingHook = std::make_unique<FuncHook>(localPlayerVtable[219], Hooks::Actor_swing);
 
-				g_Hooks.JumpPowerHook = std::make_unique<FuncHook>(localPlayerVtable[283], Hooks::JumpPower);//cant find
+				g_Hooks.JumpPowerHook = std::make_unique<FuncHook>(localPlayerVtable[283], Hooks::JumpPower);
 
 				g_Hooks.Player_tickWorldHook = std::make_unique<FuncHook>(localPlayerVtable[365], Hooks::Player_tickWorld);
 			}
